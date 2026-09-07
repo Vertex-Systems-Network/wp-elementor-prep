@@ -8,9 +8,11 @@ Last updated: 2026-09-08
 
 ## Current phase
 
-**P5 conservative Safe Fix recipes — ~70% on `feat/p5-safe-recipes` / draft PR #14.**
+**P5 conservative Safe Fix recipes — ~90% on `feat/p5-safe-recipes` / draft PR #14.**
 
-Overall roadmap estimate: **63%**.
+Overall roadmap estimate: **66%**.
+
+The supported P5 v1 recipe set is implemented and calibrated. The critical remaining gate is execution of the imported development plugin's compiled runtime self-test before production Safe Fix UI exposure.
 
 ## Completed phases
 
@@ -34,16 +36,21 @@ Overall roadmap estimate: **63%**.
   - Two Column.
 - Semantic linear recipes:
   - Facts List only for `facts-list <- vertical-stack`,
-  - Footer Columns only for `footer-columns <- horizontal-row`.
-- Simple Card Grid only for high-confidence non-fragmented `repeated-cards <- grid`.
-- Safe-plan preview corrected to use `classification.ts` semantic/ranked detections rather than the raw geometry-only classifier.
-- Linear analyzer out-of-bounds regression fixture corrected so it reaches the intended bounds gate.
+  - Footer Columns only for `footer-columns <- horizontal-row`,
+  - Social/Link Strip only for `social-link-strip <- horizontal-row`.
+- Grid recipes:
+  - Simple Card Grid only for high-confidence non-fragmented `repeated-cards <- grid`,
+  - Metric Grid only for high-confidence `metric-grid <- grid` with explicit metric/stat naming evidence and simple text-oriented cells.
+- Metric Grid and Social/Link Strip use 95% confidence gates.
+- Safe-plan preview uses semantic/ranked detections from `classification.ts` rather than raw geometry-only detections.
+- Linear/grid transforms contain direct-child post-mutation geometry guards.
+- Developer-only compiled runtime self-test harness implemented in `src/plugin/p5-runtime-calibration.ts` and exposed as `Developer: P5 Runtime Self-Test`.
 
 ## Live calibration evidence
 
 ### Base linear recipes
 
-Vertical Stack / Horizontal Row / Two Column now preserve synthetic root and direct-child geometry plus exported PNG bytes exactly after fixing Figma manual->Auto Layout root shrink.
+Vertical Stack / Horizontal Row / Two Column preserve synthetic root/direct-child geometry plus exported PNG bytes exactly after fixing Figma manual->Auto Layout root shrink.
 
 ### P5 transaction lifecycle
 
@@ -55,7 +62,7 @@ Disposable text-bearing fixtures proved:
 - bounded checkpoint policy,
 - `0` temporary nodes left.
 
-This calibration used P3-equivalent invariants; compiled `FullFrameValidator` + UI Canvas broker still needs direct runtime proof.
+This lifecycle calibration used P3-equivalent invariants. The actual compiled `FullFrameValidator` + UI Canvas broker path is implemented as a developer self-test but still needs execution from the imported development plugin.
 
 ### Facts List
 
@@ -88,17 +95,51 @@ Disposable 2x2 text-bearing grid:
 - mode: `GRID`
 - leftovers: `0`
 
+### Metric Grid
+
+Disposable text-bearing KPI fixture:
+
+- root/direct-child geometry exact: true
+- PNG exact: true
+- mode: `GRID`
+- image/temporary cleanup: clean
+
+### Social/Link Strip
+
+Disposable text-bearing Social Connect fixture:
+
+- root/direct-child geometry exact: true
+- PNG exact: true
+- mode: `HORIZONTAL`
+- temporary cleanup: clean
+
+### Six-template real image-bearing calibration
+
+Clone-only mutations passed on six different desktop roots:
+
+- `2 - Desktop / 2431:18435` — Horizontal — 1 image
+- `3 - Desktop / 2431:20032` — Grid — 6 images
+- `4 - Desktop / 2431:21512` — Horizontal — 3 images
+- `8 - Desktop / 2431:26203` — Grid — 6 images
+- `11 - Desktop / 2431:32022` — Grid — 6 images
+- `13 - Desktop / 2431:34905` — Horizontal — 3 images
+
+All six preserved root/direct-child geometry, image counts and exported PNG bytes exactly. Approved source nodes remained unchanged and cleanup left `0` temporary nodes.
+
+## CI
+
+CI run #84 completed successfully on the branch after Metric/Social implementation and calibration documentation. Subsequent status/documentation commits should still be rechecked before merge.
+
 ## In progress
 
-- Latest branch CI after semantic/grid additions.
-- Compiled `runSafeFixTransaction -> FullFrameValidator -> UI pixel broker -> P4` runtime proof.
-- Metric Grid semantics + mutation.
-- Social/Link Strip semantics + mutation.
-- Multi-template real-frame/image-bearing mutation calibration.
+- Run the imported development plugin command `Developer: P5 Runtime Self-Test`.
+- Verify the exact compiled path: `runSafeFixTransaction -> FullFrameValidator -> UI Canvas pixel broker -> P4`.
+- Only if that passes, enable an explicit production Safe Fix action with preview/confirmation and rollback controls.
+- Final P5 CI and PR review/merge.
 
 ## Safety status
 
-General production Safe Fix is **not exposed**. Low-confidence, ambiguous, fragmented, decorative, carousel and timeline cases remain non-mutating. Every future recipe must still pass candidate isolation + full P3 + P4 commit/rollback gates.
+General production Safe Fix is **not exposed**. Low-confidence, ambiguous, fragmented, decorative, carousel and timeline cases remain non-mutating. Every recipe still requires candidate isolation + full P3 + P4 commit/rollback.
 
 ## Next phases
 
