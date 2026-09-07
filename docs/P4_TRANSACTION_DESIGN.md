@@ -92,16 +92,17 @@ The adapter resolves original + candidate roots and invokes the injected full P3
 
 After validation passes:
 
-1. re-resolve candidate/original/parent,
-2. verify transaction identity and reject stale metadata,
-3. verify the original has not moved from the recorded parent,
-4. create an invisible top-level backup Frame,
-5. insert the validated candidate at the recorded sibling index,
-6. copy parent-contextual root child layout properties **after insertion** (`layoutAlign`, `layoutGrow`, `layoutPositioning`),
-7. restore recorded x/y for non-Auto-Layout parents,
-8. move the previous approved original into the backup Frame,
-9. store a compact single-step undo token in `figma.clientStorage`,
-10. emit small `CommitEvidence`.
+1. reject the commit if a previous single-step undo checkpoint is still pending,
+2. re-resolve candidate/original/parent,
+3. verify transaction identity and reject stale metadata,
+4. verify the original has not moved from the recorded parent,
+5. create an invisible top-level backup Frame,
+6. insert the validated candidate at the recorded sibling index,
+7. copy parent-contextual root child layout properties **after insertion** (`layoutAlign`, `layoutGrow`, `layoutPositioning`),
+8. restore recorded x/y for non-Auto-Layout parents,
+9. move the previous approved original into the backup Frame,
+10. store a compact single-step undo token in `figma.clientStorage`,
+11. emit small `CommitEvidence`.
 
 No descendant edits are replayed onto the approved original.
 
@@ -109,6 +110,7 @@ No descendant edits are replayed onto the approved original.
 
 If any commit step throws, the adapter attempts to:
 
+- clear a newly written undo token if necessary,
 - put the original back at its recorded parent/index/x/y,
 - move the candidate back to staging if it had entered the parent,
 - remove an empty backup Frame.
@@ -123,12 +125,18 @@ The implemented token format is a compact opaque root reference:
 
 It contains no PNG data, no serialized subtree and no full design snapshot.
 
+The adapter deliberately permits **one pending checkpoint only**. A second commit is rejected until the existing checkpoint is either restored or explicitly finalized. This prevents invisible backup accumulation and makes rollback state unambiguous.
+
+`hasPendingUndo()` reports whether a checkpoint is active.
+
 `restoreLastCommit()` validates that:
 
 - the retained original still exists in the expected backup,
 - the committed candidate still exists in the expected parent.
 
 It then restores the original root at the recorded slot/geometry, removes the committed candidate, removes the empty backup and clears the clientStorage token.
+
+`finalizeLastCommit()` is the explicit irreversible acceptance path. It validates that the retained original is still in the expected backup, removes that backup/original, clears the token and leaves the committed candidate as the approved root.
 
 ## Automated test evidence
 
@@ -168,4 +176,5 @@ P4 proves the transaction boundary, not recipe correctness. P5 may only mutate w
 - the recipe transforms the staged candidate only,
 - full P3 validation passes,
 - commit goes through this P4 root transaction,
+- any previous undo checkpoint is explicitly restored or finalized before another commit,
 - ambiguous/low-confidence cases remain REVIEW.
