@@ -1,10 +1,12 @@
-export type BatchItemStatus = 'PENDING' | 'RUNNING' | 'SUCCEEDED' | 'FAILED' | 'SKIPPED' | 'CANCELLED';
+export type BatchItemStatus = 'PENDING' | 'RUNNING' | 'AWAITING_CHECKPOINT' | 'SUCCEEDED' | 'FAILED' | 'SKIPPED' | 'CANCELLED';
 export type BatchQueueStatus = 'IDLE' | 'RUNNING' | 'CANCELLING' | 'PAUSED' | 'COMPLETED' | 'CANCELLED';
+export type BatchSkipReason = 'ALREADY_PROCESSED' | 'RESTORED_CHECKPOINT';
+export type BatchCheckpointResolution = 'FINALIZED' | 'RESTORED';
 
 export interface BatchQueueInput {
   frameId: string;
   frameName: string;
-  /** Optional versioned processing key recorded by a previous successful run. */
+  /** Optional versioned processing key recorded by a previous finalized successful run. */
   previousRunKey?: string | null;
 }
 
@@ -14,7 +16,7 @@ export interface BatchQueueItem {
   status: BatchItemStatus;
   attempts: number;
   error: string | null;
-  skipReason: 'ALREADY_PROCESSED' | null;
+  skipReason: BatchSkipReason | null;
 }
 
 export interface BatchQueueState {
@@ -23,10 +25,7 @@ export interface BatchQueueState {
   status: BatchQueueStatus;
   items: BatchQueueItem[];
   cancelRequested: boolean;
-  /**
-   * Non-destructive inter-frame pause. This is required for P5 compatibility because a successful
-   * Safe Fix can retain one bounded restore/finalize checkpoint before another mutation is allowed.
-   */
+  /** Inter-frame safety pause. A pending P5 checkpoint must be explicitly finalized or restored. */
   pauseReason: string | null;
 }
 
@@ -34,6 +33,7 @@ export interface BatchQueueSummary {
   total: number;
   pending: number;
   running: number;
+  awaitingCheckpoint: number;
   succeeded: number;
   failed: number;
   skipped: number;
@@ -44,8 +44,11 @@ export interface BatchQueueSummary {
 
 export type BatchItemOutcome =
   | { status: 'SUCCEEDED' }
+  | { status: 'CHECKPOINT_PENDING'; reason?: string }
   | { status: 'FAILED'; error: string }
-  | { status: 'SKIPPED'; reason?: 'ALREADY_PROCESSED' };
+  | { status: 'SKIPPED'; reason?: BatchSkipReason };
+
+const DEFAULT_CHECKPOINT_PAUSE_REASON = 'Resolve the pending Safe Fix checkpoint by finalizing or restoring it before the batch continues.';
 
 function normalizedInput(inputs: BatchQueueInput[]): BatchQueueInput[] {
   const seen = new Set<string>();
@@ -62,6 +65,10 @@ function hasRunningItem(state: BatchQueueState): boolean {
   return state.items.some((item) => item.status === 'RUNNING');
 }
 
+function hasAwaitingCheckpoint(state: BatchQueueState): boolean {
+  return state.items.some((item) => item.status === 'AWAITING_CHECKPOINT');
+}
+
 function hasPendingItem(state: BatchQueueState): boolean {
   return state.items.some((item) => item.status === 'PENDING');
 }
@@ -69,6 +76,13 @@ function hasPendingItem(state: BatchQueueState): boolean {
 function settleQueueStatus(state: BatchQueueState): BatchQueueState {
   if (hasRunningItem(state)) {
     return { ...state, status: state.cancelRequested ? 'CANCELLING' : 'RUNNING' };
+  }
+  if (hasAwaitingCheckpoint(state)) {
+    return {
+      ...state,
+      status: 'PAUSED',
+      pauseReason: state.pauseReason ?? DEFAULT_CHECKPOINT_PAUSE_REASON,
+    };
   }
   if (state.cancelRequested) {
     return { ...state, status: 'CANCELLED' };
@@ -111,7 +125,13 @@ export function createBatchQueue(inputs: BatchQueueInput[], runKey: string): Bat
 
 /** Starts exactly one pending item. A paused/cancelling queue or second concurrent item is never started. */
 export function startNextBatchItem(state: BatchQueueState): BatchQueueState {
-  if (state.cancelRequested || state.pauseReason || hasRunningItem(state)) return settleQueueStatus(state);
+  if (
+    state.cancelRequested
+    || state.pauseReason
+    || hasRunningItem(state)
+    || hasAwaitingCheckpoint(state)
+  ) return settleQueueStatus(state);
+
   const index = state.items.findIndex((item) => item.status === 'PENDING');
   if (index < 0) return settleQueueStatus(state);
 
@@ -122,8 +142,8 @@ export function startNextBatchItem(state: BatchQueueState): BatchQueueState {
 }
 
 /**
- * Settles the one running item. Failures are isolated to that frame; remaining pending frames stay
- * available for the next sequential start.
+ * Settles the one running item. A committed P5 mutation is not a durable success yet: callers must
+ * return CHECKPOINT_PENDING until the bounded restore/finalize checkpoint is explicitly resolved.
  */
 export function finishRunningBatchItem(state: BatchQueueState, outcome: BatchItemOutcome): BatchQueueState {
   const runningIndex = state.items.findIndex((item) => item.status === 'RUNNING');
@@ -142,21 +162,56 @@ export function finishRunningBatchItem(state: BatchQueueState, outcome: BatchIte
         skipReason: outcome.reason ?? null,
       };
     }
+    if (outcome.status === 'CHECKPOINT_PENDING') {
+      return { ...item, status: 'AWAITING_CHECKPOINT', error: null, skipReason: null };
+    }
     return { ...item, status: 'SUCCEEDED', error: null, skipReason: null };
   });
 
-  return settleQueueStatus({ ...state, items });
+  const pauseReason = outcome.status === 'CHECKPOINT_PENDING'
+    ? outcome.reason?.trim() || DEFAULT_CHECKPOINT_PAUSE_REASON
+    : state.pauseReason;
+  return settleQueueStatus({ ...state, items, pauseReason });
 }
 
 /**
- * Requests cancellation without interrupting an in-flight frame transaction. Pending frames are
- * cancelled immediately; the running frame can finish/rollback safely before the queue settles.
+ * Resolves the one checkpoint-owning frame only after the external P5 checkpoint action succeeded.
+ * FINALIZED becomes durable SUCCEEDED. RESTORED becomes a terminal skip and never receives run-key
+ * success metadata, preventing restored frames from being incorrectly treated as processed.
+ */
+export function resolveBatchCheckpoint(
+  state: BatchQueueState,
+  resolution: BatchCheckpointResolution,
+): BatchQueueState {
+  const awaitingIndex = state.items.findIndex((item) => item.status === 'AWAITING_CHECKPOINT');
+  if (awaitingIndex < 0) return settleQueueStatus(state);
+
+  const items = state.items.map((item, index): BatchQueueItem => {
+    if (index !== awaitingIndex) return item;
+    if (resolution === 'FINALIZED') {
+      return { ...item, status: 'SUCCEEDED', error: null, skipReason: null };
+    }
+    return {
+      ...item,
+      status: 'SKIPPED',
+      error: null,
+      skipReason: 'RESTORED_CHECKPOINT',
+    };
+  });
+
+  return settleQueueStatus({ ...state, items, pauseReason: null });
+}
+
+/**
+ * Requests cancellation without interrupting an in-flight transaction or silently resolving a P5
+ * checkpoint. Pending frames are cancelled immediately; an awaiting checkpoint remains paused until
+ * it is explicitly finalized/restored, then the queue settles cancelled.
  */
 export function requestBatchCancel(state: BatchQueueState): BatchQueueState {
   const items = state.items.map((item): BatchQueueItem => item.status === 'PENDING'
     ? { ...item, status: 'CANCELLED' }
     : item);
-  return settleQueueStatus({ ...state, items, cancelRequested: true, pauseReason: null });
+  return settleQueueStatus({ ...state, items, cancelRequested: true });
 }
 
 /**
@@ -170,13 +225,15 @@ export function requestBatchPause(state: BatchQueueState, reason: string): Batch
 }
 
 /**
- * Resumes a paused/cancelled/completed queue without repeating successful or version-matched skipped
- * work. Failed items are retried by default; callers may keep them failed for inspection.
+ * Resumes ordinary paused/cancelled work without repeating durable successes. An unresolved P5
+ * checkpoint cannot be bypassed through resume; it must first pass resolveBatchCheckpoint().
  */
 export function resumeBatchQueue(
   state: BatchQueueState,
   options: { retryFailed?: boolean } = {},
 ): BatchQueueState {
+  if (hasAwaitingCheckpoint(state)) return settleQueueStatus(state);
+
   const retryFailed = options.retryFailed ?? true;
   const items = state.items.map((item): BatchQueueItem => {
     if (item.status === 'CANCELLED' || (retryFailed && item.status === 'FAILED')) {
@@ -192,6 +249,7 @@ export function summarizeBatchQueue(state: BatchQueueState): BatchQueueSummary {
   const total = state.items.length;
   const pending = count('PENDING');
   const running = count('RUNNING');
+  const awaitingCheckpoint = count('AWAITING_CHECKPOINT');
   const succeeded = count('SUCCEEDED');
   const failed = count('FAILED');
   const skipped = count('SKIPPED');
@@ -202,6 +260,7 @@ export function summarizeBatchQueue(state: BatchQueueState): BatchQueueSummary {
     total,
     pending,
     running,
+    awaitingCheckpoint,
     succeeded,
     failed,
     skipped,
