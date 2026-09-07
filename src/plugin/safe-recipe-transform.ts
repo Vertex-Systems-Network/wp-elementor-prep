@@ -1,16 +1,13 @@
 import type { SafeRecipePlan } from '../core/safe-recipe-types';
+import {
+  analyzeLinearLayoutGeometry,
+  type LinearLayoutDirection,
+} from '../core/linear-layout-analysis';
 
 export interface SafeRecipeTransformResult {
   applied: boolean;
   reason: string;
   targetNodeId?: string;
-}
-
-interface AxisGeometry {
-  start: number;
-  end: number;
-  crossStart: number;
-  crossEnd: number;
 }
 
 function resolveFrameByPath(root: FrameNode, path: number[]): FrameNode | null {
@@ -25,110 +22,31 @@ function resolveFrameByPath(root: FrameNode, path: number[]): FrameNode | null {
   return current.type === 'FRAME' ? current : null;
 }
 
-function visibleChildren(frame: FrameNode): readonly SceneNode[] {
-  return frame.children.filter((child) => child.visible);
-}
+function applyLinearAutoLayout(frame: FrameNode, direction: LinearLayoutDirection): SafeRecipeTransformResult {
+  const analysis = analyzeLinearLayoutGeometry(
+    {
+      width: frame.width,
+      height: frame.height,
+      children: frame.children.map((child) => ({
+        id: child.id,
+        x: child.x,
+        y: child.y,
+        width: child.width,
+        height: child.height,
+        visible: child.visible,
+        absolutePositioned: 'layoutPositioning' in child && child.layoutPositioning === 'ABSOLUTE',
+      })),
+    },
+    direction,
+  );
 
-function childAxisGeometry(child: SceneNode, direction: 'VERTICAL' | 'HORIZONTAL'): AxisGeometry {
-  if (direction === 'VERTICAL') {
-    return {
-      start: child.y,
-      end: child.y + child.height,
-      crossStart: child.x,
-      crossEnd: child.x + child.width,
-    };
-  }
-  return {
-    start: child.x,
-    end: child.x + child.width,
-    crossStart: child.y,
-    crossEnd: child.y + child.height,
-  };
-}
+  if (!analysis.ok) return { applied: false, reason: analysis.reason, targetNodeId: frame.id };
 
-function near(a: number, b: number, tolerance = 1): boolean {
-  return Math.abs(a - b) <= tolerance;
-}
+  const geometry = analysis.plan;
 
-function strictUniformGeometry(
-  frame: FrameNode,
-  direction: 'VERTICAL' | 'HORIZONTAL',
-): { ok: true; gap: number; startPadding: number; endPadding: number; crossStartPadding: number; crossEndPadding: number }
-  | { ok: false; reason: string } {
-  const children = [...visibleChildren(frame)];
-  if (children.length < 2) return { ok: false, reason: 'At least two visible direct children are required.' };
-
-  for (const child of children) {
-    if ('layoutPositioning' in child && child.layoutPositioning === 'ABSOLUTE') {
-      return { ok: false, reason: 'Visible absolute-positioned child blocks the simple Auto Layout recipe.' };
-    }
-  }
-
-  const visuallySorted = [...children].sort((a, b) => {
-    const ga = childAxisGeometry(a, direction);
-    const gb = childAxisGeometry(b, direction);
-    return ga.start - gb.start;
-  });
-
-  if (children.some((child, index) => child.id !== visuallySorted[index]?.id)) {
-    return { ok: false, reason: 'Layer order differs from visual flow order; automatic reordering is intentionally refused.' };
-  }
-
-  const geometry = children.map((child) => childAxisGeometry(child, direction));
-  const crossStart = geometry[0]?.crossStart ?? 0;
-  if (!geometry.every((item) => near(item.crossStart, crossStart))) {
-    return { ok: false, reason: 'Cross-axis origins are not aligned within 1 px.' };
-  }
-
-  const gaps: number[] = [];
-  for (let index = 1; index < geometry.length; index += 1) {
-    const previous = geometry[index - 1];
-    const current = geometry[index];
-    if (!previous || !current) continue;
-    const gap = current.start - previous.end;
-    if (gap < -0.5) return { ok: false, reason: 'Children overlap on the primary axis.' };
-    gaps.push(gap);
-  }
-
-  const gap = gaps[0] ?? 0;
-  if (!gaps.every((value) => near(value, gap))) {
-    return { ok: false, reason: 'Primary-axis gaps are not uniform within 1 px.' };
-  }
-
-  const first = geometry[0];
-  const last = geometry.at(-1);
-  if (!first || !last) return { ok: false, reason: 'Visible child geometry is unavailable.' };
-
-  const framePrimarySize = direction === 'VERTICAL' ? frame.height : frame.width;
-  const frameCrossSize = direction === 'VERTICAL' ? frame.width : frame.height;
-  const maxCrossEnd = Math.max(...geometry.map((item) => item.crossEnd));
-
-  const startPadding = first.start;
-  const endPadding = framePrimarySize - last.end;
-  const crossStartPadding = crossStart;
-  const crossEndPadding = frameCrossSize - maxCrossEnd;
-
-  if ([startPadding, endPadding, crossStartPadding, crossEndPadding].some((value) => value < -0.5)) {
-    return { ok: false, reason: 'Child geometry extends outside the candidate frame bounds.' };
-  }
-
-  return {
-    ok: true,
-    gap: Math.max(0, gap),
-    startPadding: Math.max(0, startPadding),
-    endPadding: Math.max(0, endPadding),
-    crossStartPadding: Math.max(0, crossStartPadding),
-    crossEndPadding: Math.max(0, crossEndPadding),
-  };
-}
-
-function applyLinearAutoLayout(frame: FrameNode, direction: 'VERTICAL' | 'HORIZONTAL'): SafeRecipeTransformResult {
-  const geometry = strictUniformGeometry(frame, direction);
-  if (!geometry.ok) return { applied: false, reason: geometry.reason, targetNodeId: frame.id };
-
-  // Switching a manual Frame into Auto Layout initially defaults the primary axis to HUG in Figma,
-  // which can immediately shrink the Frame. Capture and restore the approved candidate bounds after
-  // the fixed sizing modes/padding are configured.
+  // Figma can temporarily switch a manual Frame's primary axis to content-driven sizing when
+  // layoutMode changes. Record the approved candidate bounds and restore them after configuring
+  // fixed sizing/padding so P3 sees no root shrink.
   const originalWidth = frame.width;
   const originalHeight = frame.height;
 
@@ -153,7 +71,11 @@ function applyLinearAutoLayout(frame: FrameNode, direction: 'VERTICAL' | 'HORIZO
 
   frame.resize(originalWidth, originalHeight);
 
-  return { applied: true, reason: `Applied strict ${direction.toLowerCase()} Auto Layout to staged candidate.`, targetNodeId: frame.id };
+  return {
+    applied: true,
+    reason: `Applied strict ${direction.toLowerCase()} Auto Layout to staged candidate.`,
+    targetNodeId: frame.id,
+  };
 }
 
 /**
