@@ -62,6 +62,7 @@ export type PatternKind =
   | 'unknown';
 
 export type SemanticHint =
+  | 'carousel-viewport'
   | 'repeated-cards'
   | 'split-header'
   | 'facts-list'
