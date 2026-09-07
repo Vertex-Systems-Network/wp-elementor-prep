@@ -2,6 +2,22 @@
 
 ## 2026-09-08
 
+### P3 validator foundation + pixel layer
+- Merged P2 classifier semantics through PR #11 and closed issue #3.
+- Created `feat/p3-validator` and draft PR #12.
+- Added versioned P3 integrity snapshot/result types.
+- Added deterministic text-content fingerprints and image-fill integrity fingerprints.
+- Added section-relative text/image anchor geometry and duplicate matching independent of Figma node IDs.
+- Allowed wrapper/node-count changes when visible invariants remain equivalent.
+- Added explicit failures for root, text, image and invalid snapshot drift.
+- Added section-level PNG export using Figma `exportAsync()` with a 2048 px longest-edge cap.
+- Added plugin-UI Canvas/ImageData decoding and deterministic RGBA pixel comparison.
+- Added pixel failure reasons for dimension mismatch and excessive visual drift.
+- Added `p3-v1` pixel thresholds: channel tolerance 8/255, changed pixels <=0.5%, mean channel delta <=0.5.
+- Added pixel regression tests for exact no-op, tolerated deltas, changed pixels, dimension mismatch, malformed buffers and threshold failures.
+- Ran live read-only no-op export calibration on Marcus About, Journey and Contact; repeated PNG exports were byte-identical for all three sections.
+- Pixel-validation code head `f9941b46df19f4e46554c52beac57dab695ddf86` passed typecheck, tests and build.
+
 ### P2 semantic hardening
 - Completed representative read-only semantic review across the five-template calibration set.
 - Confirmed positive semantics for Marcus/Doctor/Lawyer Journey, Marcus About facts, and Marcus/Doctor/Legacy contact-channel rows.
@@ -10,7 +26,7 @@
 - Found and fixed Legacy Numbers/Media false timeline semantics by requiring at least five repeated vertical-stack items before timeline inference.
 - Added regression fixtures for tall lower card rows, loose text/divider pseudo-lists and four-item non-timeline stacks.
 - Confirmed the hardened rules preserve real positive cases after the fixes.
-- Latest code/test head passed typecheck, tests and build.
+- PR #11 merged to `main`; issue #3 closed.
 
 ## 2026-09-07
 
@@ -43,7 +59,6 @@
 - Confirmed section-level scoring works across highly structured, manual and mixed files.
 
 ### P2 classifier semantics
-- Started `feat/p2-classifier-semantics` and draft PR #11.
 - Added same-target specificity ranking so specific patterns suppress redundant generic interpretations.
 - Added semantic hints without replacing underlying geometry: repeated-cards, split-header, facts-list, footer-columns, timeline-chapter and carousel-viewport.
 - Added special preservation roles: background-layer, absolute-overlay, decorative-overlay.

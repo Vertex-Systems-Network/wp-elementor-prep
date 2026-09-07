@@ -4,32 +4,36 @@ Last updated: 2026-09-08
 
 Execute in this order:
 
-1. Commit the final P2 calibration/docs/memory synchronization to `feat/p2-classifier-semantics`.
-2. Confirm CI remains green on that final P2 head.
-3. Update PR #11 with final evidence: five-template semantic review, false-positive regressions, positive-case preservation, role safety and read-only status.
-4. Mark PR #11 ready, merge it to `main`, and close issue #3 only if CI is green and there is no known high-confidence semantic/role false positive.
-5. Create `feat/p3-validator` from the merged `main` head.
-6. Start P3 with a pure validation model before any PNG/UI work:
-   - geometry snapshots,
-   - text-content fingerprints,
-   - image-fill fingerprints,
-   - structural sanity,
-   - versioned threshold/result types,
-   - no-op and known-drift fixtures.
-7. Add section-level Figma `exportAsync()` capture and plugin-UI Canvas pixel-diff only after deterministic integrity checks are stable.
-8. Keep all P3 behavior read-only; validator code may inspect/export, but must not apply layout transformations.
-9. Do **not** enable Safe Fix before P4 transaction/rollback foundations also exist.
+1. Confirm CI is green on the final P3 documentation/code head.
+2. Update PR #12 with completed P3 evidence:
+   - integrity snapshots and fingerprints,
+   - geometry/content/image failure reasons,
+   - section-level PNG export,
+   - Canvas/ImageData pixel diff,
+   - versioned pixel thresholds,
+   - representative live no-op export calibration,
+   - read-only safety boundary.
+3. Verify issue #4 acceptance criteria against the current branch and add any missing regression fixture before merge.
+4. Mark PR #12 ready and merge only if CI remains green and P3 still contains no design mutation path.
+5. Close issue #4 after merge.
+6. Create `feat/p4-transaction-engine` from merged `main`.
+7. Implement P4 around the invariant flow:
+   `clone -> transform candidate -> validate -> commit/swap OR discard`.
+8. First P4 milestone must prove a forced validation failure leaves the approved working section unchanged and candidate cleanup is reliable.
+9. Do **not** enable general Safe Fix recipes until P4 rollback guarantees are proven.
 
 ## Immediate definition of success
 
-P2 is complete when PR #11 is merged and issue #3 is closed with green CI.
+P3 is complete when:
 
-P3 foundation is successful when:
-
-- identical snapshots pass,
-- geometry drift produces explicit failure evidence,
-- text-content drift produces explicit failure evidence,
-- image-fill drift produces explicit failure evidence,
+- identical integrity snapshots pass,
+- geometry/text/image drift fails with explicit evidence,
+- section-level PNG pixel comparison is implemented,
+- pixel dimension/drift failures are explicit,
 - thresholds are versioned/configurable,
-- validation result is deterministic and serializable,
-- no Figma design mutation is required to run tests.
+- representative live no-op exports are deterministic,
+- typecheck/tests/build are green,
+- runtime remains read-only,
+- PR #12 is merged and issue #4 is closed.
+
+P4 foundation is successful when a candidate can be cloned and validated transactionally without any failed candidate altering the approved original.

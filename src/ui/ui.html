@@ -20,7 +20,8 @@
     .name { font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .badge { font-size: 10px; font-weight: 700; opacity: .75; white-space: nowrap; }
     .recipe { font-size: 10px; opacity: .72; margin-top: 3px; }
-    .finding { font-size: 10px; opacity: .72; margin-top: 4px; line-height: 1.35; }
+    .finding { font-size: 10px; opacity: .78; margin-top: 4px; line-height: 1.35; }
+    .finding.error { opacity: 1; }
     .patternList, .roleList { margin-top: 5px; display: grid; gap: 3px; }
     .pattern, .role { font-size: 9px; opacity: .72; display: flex; justify-content: space-between; gap: 8px; }
     .role { opacity: .82; }
@@ -28,22 +29,34 @@
     details { margin-top: 5px; }
     summary { font-size: 10px; cursor: pointer; opacity: .65; }
     pre { white-space: pre-wrap; word-break: break-word; font-size: 9px; opacity: .7; margin: 5px 0 0; }
-    button { width: 100%; margin-top: 12px; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    button { width: 100%; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; }
     .empty { border: 1px dashed var(--figma-color-border); border-radius: 8px; padding: 18px; font-size: 12px; line-height: 1.5; opacity: .75; }
+    .metricGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin-top: 10px; }
+    .metric { font-size: 10px; opacity: .72; }
+    .metric strong { display: block; font-size: 12px; opacity: 1; }
   </style>
 </head>
 <body>
   <div class="app">
     <h1>Pella Elementor Prep</h1>
-    <div class="sub">Audit-Only · deterministic semantics · no design mutations</div>
-    <div id="root" class="empty">Select one desktop Frame in Figma.</div>
-    <button id="audit">Run audit</button>
+    <div class="sub">Audit + P3 read-only validator · no design mutations</div>
+    <div id="root" class="empty">Select one Frame to audit, or two Frames to compare original vs candidate.</div>
+    <div class="actions">
+      <button id="audit">Run audit</button>
+      <button id="validate">Compare 2 frames</button>
+    </div>
   </div>
 
   <script>
     const root = document.getElementById('root');
     document.getElementById('audit').addEventListener('click', () => {
       parent.postMessage({ pluginMessage: { type: 'audit-request' } }, '*');
+    });
+    document.getElementById('validate').addEventListener('click', () => {
+      root.className = 'empty';
+      root.textContent = 'Exporting and comparing selected section frames…';
+      parent.postMessage({ pluginMessage: { type: 'validation-request' } }, '*');
     });
 
     function escapeHtml(value) {
@@ -55,18 +68,76 @@
         .replaceAll("'", '&#039;');
     }
 
-    window.onmessage = (event) => {
-      const message = event.data.pluginMessage;
-      if (!message) return;
+    function round(value, digits = 4) {
+      const scale = 10 ** digits;
+      return Math.round(value * scale) / scale;
+    }
 
-      if (message.type === 'audit-error') {
-        root.className = 'empty';
-        root.textContent = message.message;
-        return;
+    async function decodePng(bytes) {
+      const blob = new Blob([bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes)], { type: 'image/png' });
+      const bitmap = await createImageBitmap(blob);
+      const canvas = document.createElement('canvas');
+      canvas.width = bitmap.width;
+      canvas.height = bitmap.height;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      if (!context) throw new Error('Canvas 2D context is unavailable.');
+      context.drawImage(bitmap, 0, 0);
+      const imageData = context.getImageData(0, 0, bitmap.width, bitmap.height);
+      if (typeof bitmap.close === 'function') bitmap.close();
+      return { width: imageData.width, height: imageData.height, data: imageData.data };
+    }
+
+    function comparePixels(before, after, channelTolerance) {
+      const sameDimensions = before.width === after.width && before.height === after.height;
+      if (!sameDimensions) {
+        return {
+          sameDimensions: false,
+          widthBefore: before.width,
+          heightBefore: before.height,
+          widthAfter: after.width,
+          heightAfter: after.height,
+          totalPixels: 0,
+          changedPixels: 0,
+          changedPixelPct: 100,
+          meanChannelDelta: 255,
+          maxChannelDelta: 255,
+          channelTolerance,
+        };
       }
 
-      if (message.type !== 'audit-result') return;
-      const report = message.report;
+      const totalPixels = before.width * before.height;
+      let changedPixels = 0;
+      let sumChannelDelta = 0;
+      let maxChannelDelta = 0;
+
+      for (let pixel = 0; pixel < totalPixels; pixel += 1) {
+        const offset = pixel * 4;
+        let changed = false;
+        for (let channel = 0; channel < 4; channel += 1) {
+          const delta = Math.abs(before.data[offset + channel] - after.data[offset + channel]);
+          sumChannelDelta += delta;
+          maxChannelDelta = Math.max(maxChannelDelta, delta);
+          if (delta > channelTolerance) changed = true;
+        }
+        if (changed) changedPixels += 1;
+      }
+
+      return {
+        sameDimensions: true,
+        widthBefore: before.width,
+        heightBefore: before.height,
+        widthAfter: after.width,
+        heightAfter: after.height,
+        totalPixels,
+        changedPixels,
+        changedPixelPct: totalPixels ? round((changedPixels / totalPixels) * 100) : 0,
+        meanChannelDelta: totalPixels ? round(sumChannelDelta / (totalPixels * 4)) : 0,
+        maxChannelDelta,
+        channelTolerance,
+      };
+    }
+
+    function renderAudit(report) {
       const sections = report.sections.map((section) => {
         const first = section.findings[0];
         const detections = Array.isArray(section.detections)
@@ -117,6 +188,77 @@
           <div class="meta">Auto Layout coverage ${report.stats.autoLayoutCoveragePct}% · ${report.sections.length} sections discovered</div>
         </div>
         <div>${sections || '<div class="empty">No sections discovered yet.</div>'}</div>`;
+    }
+
+    function renderValidation(message) {
+      const report = message.report;
+      const pixel = report.metrics.pixel;
+      const findingRows = report.findings.map((item) => `
+        <div class="row">
+          <div class="rowHead"><div class="name">${escapeHtml(item.code)}</div><div class="badge">FAIL</div></div>
+          <div class="finding error">${escapeHtml(item.title)} — ${escapeHtml(item.detail)}</div>
+          <details><summary>Evidence</summary><pre>${escapeHtml(JSON.stringify(item.evidence, null, 2))}</pre></details>
+        </div>`).join('');
+
+      root.className = '';
+      root.innerHTML = `
+        <div class="hero">
+          <div class="score">${report.passed ? 'PASS' : 'FAIL'}</div>
+          <div class="status">P3 ${escapeHtml(report.thresholdVersion)} VALIDATION</div>
+          <div class="meta">Before: ${escapeHtml(message.labels.before)}</div>
+          <div class="meta">Candidate: ${escapeHtml(message.labels.after)}</div>
+          <div class="meta">Render scale: ${round(message.renderScale * 100, 2)}%</div>
+          <div class="metricGrid">
+            <div class="metric"><strong>${report.metrics.textAnchorCountBefore}/${report.metrics.textAnchorCountAfter}</strong>text anchors</div>
+            <div class="metric"><strong>${report.metrics.imageAnchorCountBefore}/${report.metrics.imageAnchorCountAfter}</strong>image anchors</div>
+            <div class="metric"><strong>${round(report.metrics.maxTextPositionDriftPx, 3)} px</strong>max text move</div>
+            <div class="metric"><strong>${round(report.metrics.maxImagePositionDriftPx, 3)} px</strong>max image move</div>
+            <div class="metric"><strong>${pixel ? pixel.changedPixelPct : '—'}%</strong>changed pixels</div>
+            <div class="metric"><strong>${pixel ? pixel.meanChannelDelta : '—'}</strong>mean channel Δ</div>
+          </div>
+        </div>
+        ${findingRows || '<div class="empty">All current integrity and rendered-pixel gates passed.</div>'}`;
+    }
+
+    window.onmessage = async (event) => {
+      const message = event.data.pluginMessage;
+      if (!message) return;
+
+      if (message.type === 'audit-error' || message.type === 'validation-error') {
+        root.className = 'empty';
+        root.textContent = message.message;
+        return;
+      }
+
+      if (message.type === 'audit-result') {
+        renderAudit(message.report);
+        return;
+      }
+
+      if (message.type === 'validation-pixel-request') {
+        try {
+          const [before, after] = await Promise.all([
+            decodePng(message.beforePng),
+            decodePng(message.afterPng),
+          ]);
+          const pixelMetrics = comparePixels(before, after, message.channelTolerance);
+          parent.postMessage({
+            pluginMessage: {
+              type: 'validation-pixel-result',
+              validationId: message.validationId,
+              pixelMetrics,
+            },
+          }, '*');
+        } catch (error) {
+          root.className = 'empty';
+          root.textContent = `Pixel comparison failed: ${error instanceof Error ? error.message : String(error)}`;
+        }
+        return;
+      }
+
+      if (message.type === 'validation-result') {
+        renderValidation(message);
+      }
     };
   </script>
 </body>
