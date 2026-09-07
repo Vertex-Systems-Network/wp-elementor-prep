@@ -29,7 +29,10 @@ Runtime must not require generative AI or an external AI backend.
 - Successful commit returns small serializable evidence; large PNG/node snapshots are not stored in transaction metadata.
 - Concrete `FigmaCandidateTransactionAdapter` implemented with off-layout candidate staging, stale-parent/transaction guards, root-boundary replacement, hidden bounded backup and compact clientStorage undo token.
 - Auto Layout child properties are restored after root insertion, matching Figma parent-context behavior.
+- Undo storage is bounded to one checkpoint: another commit is rejected until the existing checkpoint is restored or explicitly finalized.
 - `restoreLastCommit()` restores the retained original root and removes the committed candidate when the checkpoint is still valid.
+- `finalizeLastCommit()` explicitly accepts the committed candidate, removes the retained previous original/backup and clears the checkpoint.
+- Commit rollback clears any newly written checkpoint before restoring original/candidate root positions.
 - Pure unit fixtures prove forced transform failure and rejected validation leave the approved original unchanged and candidate cleanup occurs.
 - Live isolated Figma calibration proved forced candidate failure leaves the original root/index/geometry/content unchanged and removes the candidate.
 - Live manual-parent root swap + undo restored the original exactly and left zero temporary nodes.
@@ -37,7 +40,7 @@ Runtime must not require generative AI or an external AI backend.
 
 ## In progress
 
-- Final P4 branch CI after adapter hardening and documentation synchronization.
+- Final P4 branch CI after bounded-checkpoint hardening and documentation synchronization.
 - PR #13 acceptance synchronization and merge decision.
 
 ## Next phases
@@ -71,7 +74,8 @@ Before P5 can mutate an approved section:
 - transformation must run only on the staged candidate,
 - full P3 validation must pass before root swap,
 - low-confidence/ambiguous cases must remain REVIEW,
-- the bounded undo checkpoint must remain available after commit.
+- the bounded undo checkpoint must remain available after commit,
+- a previous checkpoint must be restored or finalized before another root commit.
 
 ## Release target
 
