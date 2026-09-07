@@ -4,36 +4,43 @@ Last updated: 2026-09-08
 
 Execute in this order:
 
-1. Confirm CI is green on the final P3 documentation/code head.
-2. Update PR #12 with completed P3 evidence:
-   - integrity snapshots and fingerprints,
-   - geometry/content/image failure reasons,
-   - section-level PNG export,
-   - Canvas/ImageData pixel diff,
-   - versioned pixel thresholds,
-   - representative live no-op export calibration,
-   - read-only safety boundary.
-3. Verify issue #4 acceptance criteria against the current branch and add any missing regression fixture before merge.
-4. Mark PR #12 ready and merge only if CI remains green and P3 still contains no design mutation path.
-5. Close issue #4 after merge.
-6. Create `feat/p4-transaction-engine` from merged `main`.
-7. Implement P4 around the invariant flow:
-   `clone -> transform candidate -> validate -> commit/swap OR discard`.
-8. First P4 milestone must prove a forced validation failure leaves the approved working section unchanged and candidate cleanup is reliable.
-9. Do **not** enable general Safe Fix recipes until P4 rollback guarantees are proven.
+1. Confirm CI is green on the final P4 adapter/documentation head.
+2. Update PR #13 with final P4 acceptance evidence:
+   - candidate-only transform boundary,
+   - P3-required commit gate,
+   - discard behavior on transform/validation failure,
+   - concrete Figma root-swap adapter,
+   - bounded backup/undo token,
+   - live manual + Auto Layout synthetic transaction calibration,
+   - zero-leftover cleanup evidence.
+3. Mark PR #13 ready and merge only if CI remains green.
+4. Close issue #5 after merge.
+5. Create `feat/p5-safe-recipes` from merged `main`.
+6. Start P5 with the smallest high-confidence recipes only:
+   - Vertical Stack,
+   - Horizontal Row,
+   - Two Column,
+   - Facts List,
+   - Footer Columns,
+   - Simple Card Grid,
+   - Metric Grid,
+   - Social/Link Strip.
+7. Every P5 mutation must use the P4 candidate transaction adapter and full P3 validation before commit.
+8. Low-confidence or semantically ambiguous targets must return REVIEW and must not mutate.
+9. Do not begin P6 advanced timeline/carousel/page normalization until P5 simple recipes have live success/failure calibration across multiple template families.
 
 ## Immediate definition of success
 
-P3 is complete when:
+P4 is complete when:
 
-- identical integrity snapshots pass,
-- geometry/text/image drift fails with explicit evidence,
-- section-level PNG pixel comparison is implemented,
-- pixel dimension/drift failures are explicit,
-- thresholds are versioned/configurable,
-- representative live no-op exports are deterministic,
+- forced transform failure leaves the approved original unchanged,
+- validation rejection/crash leaves the approved original unchanged,
+- failed candidate cleanup is reliable and explicit,
+- root commit is available only after passing validation,
+- successful commit returns auditable small metadata,
+- bounded undo restores the original root when checkpoint assumptions still hold,
+- manual and Auto Layout root swap/undo mechanics are live-calibrated on disposable synthetic Frames,
 - typecheck/tests/build are green,
-- runtime remains read-only,
-- PR #12 is merged and issue #4 is closed.
+- PR #13 is merged and issue #5 is closed.
 
-P4 foundation is successful when a candidate can be cloned and validated transactionally without any failed candidate altering the approved original.
+P5 foundation is successful when at least the first simple high-confidence recipe can mutate only a candidate, pass P3, commit through P4, and roll back safely without any unvalidated edit reaching the approved original.
