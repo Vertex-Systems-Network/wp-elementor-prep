@@ -68,6 +68,32 @@ describe('detectBestPattern', () => {
     expect(detection?.evidence.rows).toBe(3);
   });
 
+  it('detects a fragmented final grid cell using dominant card anchors', () => {
+    const anchors = [
+      [0, 0], [500, 0],
+      [0, 180], [500, 180],
+      [0, 360],
+    ].map(([x, y], index) => node({
+      id: `anchor-${index}`,
+      geometry: { x: x ?? 0, y: y ?? 0, width: 500, height: 180 },
+    }));
+    const fragments = [
+      node({ id: 'frag-value', geometry: { x: 540, y: 385, width: 100, height: 55 } }),
+      node({ id: 'frag-unit', geometry: { x: 650, y: 420, width: 40, height: 18 } }),
+      node({ id: 'frag-title', geometry: { x: 540, y: 455, width: 420, height: 28 } }),
+      node({ id: 'frag-copy', geometry: { x: 540, y: 495, width: 420, height: 22 } }),
+      node({ id: 'frag-accent', geometry: { x: 500, y: 360, width: 3, height: 36 } }),
+    ];
+    const section = withChildren(node({ id: 'fragmented-grid', geometry: { x: 0, y: 0, width: 1000, height: 540 } }), [...anchors, ...fragments]);
+
+    const detection = detectBestPattern(section);
+    expect(detection?.pattern).toBe('grid');
+    expect(detection?.evidence.fragmentedCellCandidate).toBe(true);
+    expect(detection?.evidence.columns).toBe(2);
+    expect(detection?.evidence.rows).toBe(3);
+    expect(detection?.evidence.missingSlots).toBe(1);
+  });
+
   it('ignores a full-size background sibling when detecting a grid', () => {
     const background = node({ id: 'bg', name: 'Background', geometry: { x: 0, y: 0, width: 1000, height: 600 } });
     const cards = [
@@ -99,20 +125,27 @@ describe('detectBestPattern', () => {
 });
 
 describe('detectPatterns', () => {
-  it('reports multiple meaningful targets in a complex section', () => {
-    const metricCards = [
+  it('reports grid and two-column targets in a Numbers-like complex section', () => {
+    const anchors = [
       [0, 0], [500, 0],
       [0, 180], [500, 180],
-      [0, 360], [500, 360],
+      [0, 360],
     ].map(([x, y], index) => node({
-      id: `metric-${index}`,
+      id: `metric-anchor-${index}`,
       geometry: { x: x ?? 0, y: y ?? 0, width: 500, height: 180 },
     }));
+    const fragments = [
+      node({ id: 'metric-frag-1', geometry: { x: 540, y: 385, width: 100, height: 55 } }),
+      node({ id: 'metric-frag-2', geometry: { x: 650, y: 420, width: 40, height: 18 } }),
+      node({ id: 'metric-frag-3', geometry: { x: 540, y: 455, width: 420, height: 28 } }),
+      node({ id: 'metric-frag-4', geometry: { x: 540, y: 495, width: 420, height: 22 } }),
+      node({ id: 'metric-frag-5', geometry: { x: 500, y: 360, width: 3, height: 36 } }),
+    ];
     const metricGrid = withChildren(node({
       id: 'metric-grid',
       name: 'Metric Grid',
       geometry: { x: 0, y: 0, width: 1000, height: 540 },
-    }), metricCards);
+    }), [...anchors, ...fragments]);
 
     const lowerLeft = node({ id: 'lower-left', geometry: { x: 0, y: 0, width: 480, height: 300 } });
     const lowerRight = node({ id: 'lower-right', geometry: { x: 520, y: 0, width: 480, height: 300 } });

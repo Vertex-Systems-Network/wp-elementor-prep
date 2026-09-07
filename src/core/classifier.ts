@@ -74,13 +74,17 @@ function meaningfulChildren(node: AuditNode): AuditNode[] {
   return filtered;
 }
 
-function widthConsistency(nodes: AuditNode[]): number {
+function dimensionConsistency(nodes: AuditNode[], dimension: 'width' | 'height'): number {
   if (nodes.length === 0) return 0;
-  const widths = nodes.map((node) => node.geometry.width).filter((width) => width > 0);
-  if (widths.length === 0) return 0;
-  const average = widths.reduce((sum, width) => sum + width, 0) / widths.length;
-  const consistent = widths.filter((width) => Math.abs(width - average) <= average * 0.12).length;
-  return consistent / widths.length;
+  const values = nodes.map((node) => node.geometry[dimension]).filter((value) => value > 0);
+  if (values.length === 0) return 0;
+  const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+  const consistent = values.filter((value) => Math.abs(value - average) <= average * 0.12).length;
+  return consistent / values.length;
+}
+
+function widthConsistency(nodes: AuditNode[]): number {
+  return dimensionConsistency(nodes, 'width');
 }
 
 function detectTwoColumn(node: AuditNode, children: AuditNode[]): PatternDetection | null {
@@ -120,7 +124,7 @@ function detectTwoColumn(node: AuditNode, children: AuditNode[]): PatternDetecti
   };
 }
 
-function detectGrid(node: AuditNode, children: AuditNode[]): PatternDetection | null {
+function strictGrid(node: AuditNode, children: AuditNode[]): PatternDetection | null {
   if (children.length < 4) return null;
   const xTolerance = Math.max(8, node.geometry.width * 0.04);
   const yTolerance = Math.max(8, node.geometry.height * 0.06);
@@ -148,8 +152,74 @@ function detectGrid(node: AuditNode, children: AuditNode[]): PatternDetection | 
       rows: yClusters.length,
       widthConsistencyPct: Math.round(consistency * 100),
       occupancyPct: Math.round(occupancy * 100),
+      fragmentedCellCandidate: false,
     },
   };
+}
+
+function dominantSizeAnchors(children: AuditNode[]): AuditNode[] {
+  let best: AuditNode[] = [];
+  for (const seed of children) {
+    if (seed.geometry.width <= 0 || seed.geometry.height <= 0) continue;
+    const group = children.filter((child) => {
+      const widthDelta = Math.abs(child.geometry.width - seed.geometry.width) / seed.geometry.width;
+      const heightDelta = Math.abs(child.geometry.height - seed.geometry.height) / seed.geometry.height;
+      return widthDelta <= 0.15 && heightDelta <= 0.15;
+    });
+    if (group.length > best.length) best = group;
+  }
+  return best;
+}
+
+/**
+ * Detects a repeated grid when one or two visual cells are fragmented into sibling text/line nodes
+ * instead of being wrapped in a single card frame. This is audit evidence only; synthesis happens later.
+ */
+function fragmentedGrid(node: AuditNode, children: AuditNode[]): PatternDetection | null {
+  if (children.length < 6) return null;
+  const anchors = dominantSizeAnchors(children);
+  if (anchors.length < 4 || anchors.length >= children.length) return null;
+
+  const xClusters = clusterBy(anchors, 'x', Math.max(8, node.geometry.width * 0.04));
+  const yClusters = clusterBy(anchors, 'y', Math.max(8, node.geometry.height * 0.06));
+  if (xClusters.length < 2 || yClusters.length < 2) return null;
+
+  const slots = xClusters.length * yClusters.length;
+  const missingSlots = slots - anchors.length;
+  const occupancy = anchors.length / Math.max(1, slots);
+  if (missingSlots < 1 || missingSlots > 2 || occupancy < 0.66) return null;
+
+  const widthCons = dimensionConsistency(anchors, 'width');
+  const heightCons = dimensionConsistency(anchors, 'height');
+  if (widthCons < 0.75 || heightCons < 0.75) return null;
+
+  const fragmentCount = children.length - anchors.length;
+  const confidence = clamp(
+    52 + widthCons * 10 + heightCons * 10 + (occupancy >= 0.75 ? 10 : 5) + (missingSlots === 1 ? 5 : 0),
+  );
+
+  return {
+    pattern: 'grid',
+    confidence,
+    targetNodeId: node.id,
+    targetNodeName: node.name,
+    evidence: {
+      itemCount: children.length,
+      anchorCount: anchors.length,
+      fragmentCount,
+      columns: xClusters.length,
+      rows: yClusters.length,
+      missingSlots,
+      occupancyPct: Math.round(occupancy * 100),
+      widthConsistencyPct: Math.round(widthCons * 100),
+      heightConsistencyPct: Math.round(heightCons * 100),
+      fragmentedCellCandidate: true,
+    },
+  };
+}
+
+function detectGrid(node: AuditNode, children: AuditNode[]): PatternDetection | null {
+  return strictGrid(node, children) ?? fragmentedGrid(node, children);
 }
 
 function detectHorizontalRow(node: AuditNode, children: AuditNode[]): PatternDetection | null {
