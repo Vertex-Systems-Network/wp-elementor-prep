@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pella Elementor Prep</title>
+  <style>
+    :root { font-family: Inter, system-ui, sans-serif; color-scheme: light dark; }
+    body { margin: 0; background: var(--figma-color-bg); color: var(--figma-color-text); }
+    .app { padding: 16px; }
+    h1 { font-size: 16px; margin: 0 0 4px; }
+    .sub { font-size: 11px; opacity: .65; margin-bottom: 16px; }
+    .hero { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+    .score { font-size: 34px; font-weight: 700; line-height: 1; }
+    .status { font-size: 11px; font-weight: 700; margin-top: 5px; }
+    .meta { font-size: 11px; opacity: .7; margin-top: 8px; }
+    .row { border-top: 1px solid var(--figma-color-border); padding: 10px 0; }
+    .row:first-child { border-top: 0; }
+    .rowHead { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+    .name { font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .badge { font-size: 10px; font-weight: 700; opacity: .75; }
+    .recipe { font-size: 10px; opacity: .65; margin-top: 3px; }
+    .finding { font-size: 10px; opacity: .72; margin-top: 4px; line-height: 1.35; }
+    button { width: 100%; margin-top: 12px; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; }
+    .empty { border: 1px dashed var(--figma-color-border); border-radius: 8px; padding: 18px; font-size: 12px; line-height: 1.5; opacity: .75; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Pella Elementor Prep</h1>
+    <div class="sub">Audit-Only MVP · no design mutations</div>
+    <div id="root" class="empty">Select one desktop Frame in Figma.</div>
+    <button id="audit">Run audit</button>
+  </div>
+
+  <script>
+    const root = document.getElementById('root');
+    document.getElementById('audit').addEventListener('click', () => {
+      parent.postMessage({ pluginMessage: { type: 'audit-request' } }, '*');
+    });
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    window.onmessage = (event) => {
+      const message = event.data.pluginMessage;
+      if (!message) return;
+
+      if (message.type === 'audit-error') {
+        root.className = 'empty';
+        root.textContent = message.message;
+        return;
+      }
+
+      if (message.type !== 'audit-result') return;
+      const report = message.report;
+      const sections = report.sections.map((section) => {
+        const first = section.findings[0];
+        const recipe = section.recommendedRecipe ? `Recipe candidate: ${section.recommendedRecipe}` : 'Recipe candidate: not classified yet';
+        return `
+          <div class="row">
+            <div class="rowHead">
+              <div class="name">${escapeHtml(section.name)}</div>
+              <div class="badge">${section.score} · ${section.status}</div>
+            </div>
+            <div class="recipe">${escapeHtml(recipe)} · Auto Layout ${section.stats.autoLayoutCoveragePct}%</div>
+            ${first ? `<div class="finding">${escapeHtml(first.title)}</div>` : ''}
+          </div>`;
+      }).join('');
+
+      root.className = '';
+      root.innerHTML = `
+        <div class="hero">
+          <div class="score">${report.score}</div>
+          <div class="status">${report.status}</div>
+          <div class="meta">${escapeHtml(report.root.name)} · ${Math.round(report.root.width)} × ${Math.round(report.root.height)} · ${report.stats.nodes} nodes</div>
+          <div class="meta">Auto Layout coverage ${report.stats.autoLayoutCoveragePct}% · ${report.sections.length} sections discovered</div>
+        </div>
+        <div>${sections || '<div class="empty">No sections discovered yet.</div>'}</div>`;
+    };
+  </script>
+</body>
+</html>
