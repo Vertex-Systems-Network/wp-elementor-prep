@@ -17,7 +17,8 @@ function resolveFrameByPath(root: FrameNode, path: number[]): FrameNode | null {
   let current: SceneNode = root;
   for (const index of path) {
     if (!('children' in current)) return null;
-    const child = current.children[index];
+    const children = (current as SceneNode & ChildrenMixin).children;
+    const child: SceneNode | undefined = children[index];
     if (!child) return null;
     current = child;
   }
@@ -125,6 +126,12 @@ function applyLinearAutoLayout(frame: FrameNode, direction: 'VERTICAL' | 'HORIZO
   const geometry = strictUniformGeometry(frame, direction);
   if (!geometry.ok) return { applied: false, reason: geometry.reason, targetNodeId: frame.id };
 
+  // Switching a manual Frame into Auto Layout initially defaults the primary axis to HUG in Figma,
+  // which can immediately shrink the Frame. Capture and restore the approved candidate bounds after
+  // the fixed sizing modes/padding are configured.
+  const originalWidth = frame.width;
+  const originalHeight = frame.height;
+
   frame.layoutMode = direction;
   frame.primaryAxisSizingMode = 'FIXED';
   frame.counterAxisSizingMode = 'FIXED';
@@ -143,6 +150,8 @@ function applyLinearAutoLayout(frame: FrameNode, direction: 'VERTICAL' | 'HORIZO
     frame.paddingTop = geometry.crossStartPadding;
     frame.paddingBottom = geometry.crossEndPadding;
   }
+
+  frame.resize(originalWidth, originalHeight);
 
   return { applied: true, reason: `Applied strict ${direction.toLowerCase()} Auto Layout to staged candidate.`, targetNodeId: frame.id };
 }
