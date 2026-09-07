@@ -45,6 +45,14 @@ function containsNode(root: AuditNode, targetId: string): boolean {
   return root.children.some((child) => containsNode(child, targetId));
 }
 
+function horizontalCoverage(target: AuditNode): number {
+  const children = target.children.filter((child) => child.visible);
+  if (children.length === 0) return 0;
+  const left = Math.min(...children.map((child) => child.geometry.x));
+  const right = Math.max(...children.map((child) => child.geometry.x + child.geometry.width));
+  return Math.max(0, right - left) / Math.max(1, target.geometry.width);
+}
+
 function chapterLikeStack(target: AuditNode): { matched: boolean; evidence: Record<string, string | number | boolean> } {
   const children = target.children.filter((child) => child.visible && child.isContainer);
   if (children.length < 5) return { matched: false, evidence: {} };
@@ -161,19 +169,23 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
   if (detection.pattern === 'horizontal-row') {
     const itemCount = Number(detection.evidence.itemCount ?? 0);
     const topRatio = located.offsetY / sectionHeight;
-    const heightRatio = target.geometry.height / sectionHeight;
-    if (itemCount >= 3 && itemCount <= 6 && topRatio >= 0.45 && heightRatio >= 0.15) {
-      const withText = target.children.filter((child) => child.visible && textDescendants(child) > 0).length;
-      const visibleCount = Math.max(1, target.children.filter((child) => child.visible).length);
-      if (withText / visibleCount >= 0.6) {
-        return {
-          hint: 'footer-columns',
-          evidence: {
-            semanticRule: 'lower-page-text-columns',
-            semanticTextColumnPct: Math.round((withText / visibleCount) * 100),
-          },
-        };
-      }
+    const withText = target.children.filter((child) => child.visible && textDescendants(child) > 0).length;
+    const visibleCount = Math.max(1, target.children.filter((child) => child.visible).length);
+    const textRatio = withText / visibleCount;
+    const coverage = horizontalCoverage(target);
+
+    // Real contact/footer channel rows are often shallow. Require lower-page placement,
+    // predominantly textual columns and broad horizontal coverage instead of arbitrary height.
+    if (itemCount >= 3 && itemCount <= 6 && topRatio >= 0.55 && textRatio >= 0.75 && coverage >= 0.65) {
+      return {
+        hint: 'footer-columns',
+        evidence: {
+          semanticRule: 'lower-page-text-columns',
+          semanticTopPct: Math.round(topRatio * 100),
+          semanticTextColumnPct: Math.round(textRatio * 100),
+          semanticHorizontalCoveragePct: Math.round(coverage * 100),
+        },
+      };
     }
   }
 
