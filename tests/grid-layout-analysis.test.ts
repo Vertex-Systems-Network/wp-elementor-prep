@@ -52,8 +52,17 @@ describe('analyzeGridLayoutGeometry', () => {
   });
 
   it('refuses incomplete/fragmented occupancy', () => {
-    const fixture = gridFixture();
-    fixture.children.pop();
+    const fixture: GridLayoutFrameGeometry = {
+      width: 540,
+      height: 520,
+      children: [
+        { id: 'a', x: 40, y: 30, width: 210, height: 130, visible: true, absolutePositioned: false },
+        { id: 'b', x: 290, y: 30, width: 210, height: 130, visible: true, absolutePositioned: false },
+        { id: 'c', x: 40, y: 190, width: 210, height: 130, visible: true, absolutePositioned: false },
+        { id: 'd', x: 290, y: 190, width: 210, height: 130, visible: true, absolutePositioned: false },
+        { id: 'e', x: 40, y: 350, width: 210, height: 130, visible: true, absolutePositioned: false },
+      ],
+    };
     const result = analyzeGridLayoutGeometry(fixture);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.reason).toMatch(/incomplete|fragmented/);
