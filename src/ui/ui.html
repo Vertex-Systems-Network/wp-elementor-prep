@@ -250,8 +250,16 @@
             },
           }, '*');
         } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
           root.className = 'empty';
-          root.textContent = `Pixel comparison failed: ${error instanceof Error ? error.message : String(error)}`;
+          root.textContent = `Pixel comparison failed: ${errorMessage}`;
+          parent.postMessage({
+            pluginMessage: {
+              type: 'validation-pixel-error',
+              validationId: message.validationId,
+              message: errorMessage,
+            },
+          }, '*');
         }
         return;
       }
