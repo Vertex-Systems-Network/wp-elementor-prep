@@ -6,6 +6,10 @@
   "main": "code.js",
   "ui": "ui.html",
   "documentAccess": "dynamic-page",
+  "menu": [
+    { "name": "Open", "command": "open" },
+    { "name": "Developer: P5 Runtime Self-Test", "command": "p5-runtime-self-test" }
+  ],
   "networkAccess": {
     "allowedDomains": ["none"]
   }

@@ -4,6 +4,7 @@ import { planSafeRecipes } from '../core/safe-recipe-planner';
 import { scanSceneNode } from '../core/scanner';
 import { buildAuditReport } from '../core/scoring';
 import { FullFrameValidator } from './full-frame-validator';
+import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import type { PixelDiffMetrics } from '../core/validation-types';
 
 declare const __html__: string;
@@ -103,6 +104,21 @@ async function runValidation(): Promise<void> {
   }
 }
 
+async function runRuntimeSelfTest(): Promise<void> {
+  figma.ui.postMessage({ type: 'runtime-calibration-started' });
+  try {
+    const result = await runP5RuntimeCalibration(async (before, after) => {
+      const validation = await fullFrameValidator.validate(before, after);
+      return validation.report;
+    });
+    figma.ui.postMessage({ type: 'runtime-calibration-result', result });
+    figma.notify(result.passed ? 'P5 compiled runtime self-test passed.' : 'P5 compiled runtime self-test failed.');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    postError(`P5 runtime self-test failed: ${message}`, 'validation-error');
+  }
+}
+
 figma.ui.onmessage = async (message: unknown) => {
   if (typeof message !== 'object' || message === null || !('type' in message)) return;
   const type = (message as { type?: unknown }).type;
@@ -119,6 +135,11 @@ figma.ui.onmessage = async (message: unknown) => {
 
   if (type === 'validation-request') {
     await runValidation();
+    return;
+  }
+
+  if (type === 'runtime-calibration-request') {
+    await runRuntimeSelfTest();
     return;
   }
 
@@ -153,4 +174,8 @@ figma.on('selectionchange', () => {
   if (figma.currentPage.selection.length === 1) runAudit();
 });
 
-if (figma.currentPage.selection.length === 1) runAudit();
+if (figma.command === 'p5-runtime-self-test') {
+  void runRuntimeSelfTest();
+} else if (figma.currentPage.selection.length === 1) {
+  runAudit();
+}
