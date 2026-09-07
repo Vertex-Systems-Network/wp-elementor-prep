@@ -136,6 +136,9 @@ function strictGrid(node: AuditNode, children: AuditNode[]): PatternDetection | 
   if (xClusters.length * yClusters.length < children.length) return null;
 
   const occupancy = children.length / (xClusters.length * yClusters.length);
+  // Irregular scatter should not be promoted to a grid merely because clusters can be formed.
+  if (occupancy < 0.6 || consistency < 0.65) return null;
+
   let confidence = 45;
   confidence += Math.min(25, xClusters.length * 5 + yClusters.length * 3);
   confidence += consistency * 20;
