@@ -43,6 +43,20 @@ describe('detectSpecialRoles', () => {
     expect(roles.some((role) => role.targetNodeId === background.id && role.role === 'background-layer')).toBe(true);
   });
 
+  it('does not classify a full-size Auto Layout content wrapper as a background', () => {
+    const wrapper = node({
+      name: 'Content wrapper',
+      geometry: { x: 0, y: 0, width: 1000, height: 600 },
+      layoutMode: 'VERTICAL',
+      isAutoLayout: true,
+    });
+    const aside = node({ geometry: { x: 800, y: 50, width: 150, height: 100 } });
+    const section = withChildren(node({ id: 'section' }), [wrapper, aside]);
+
+    const roles = detectSpecialRoles(section);
+    expect(roles.some((role) => role.targetNodeId === wrapper.id && role.role === 'background-layer')).toBe(false);
+  });
+
   it('preserves explicit absolute children as overlays', () => {
     const content = node({ geometry: { x: 0, y: 0, width: 700, height: 500 } });
     const badge = node({
