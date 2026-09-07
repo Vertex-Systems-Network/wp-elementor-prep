@@ -45,6 +45,7 @@ async function frameById(nodeId: string): Promise<FrameNode> {
 }
 
 function copyRootChildLayout(original: FrameNode, candidate: FrameNode): void {
+  // Figma AutoLayoutChildrenMixin properties are parent-contextual, so call this only after insertion.
   if ('layoutAlign' in original && 'layoutAlign' in candidate) candidate.layoutAlign = original.layoutAlign;
   if ('layoutGrow' in original && 'layoutGrow' in candidate) candidate.layoutGrow = original.layoutGrow;
   if ('layoutPositioning' in original && 'layoutPositioning' in candidate) candidate.layoutPositioning = original.layoutPositioning;
@@ -172,9 +173,9 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
     try {
       candidate.locked = false;
       candidate.name = metadata.originalName;
-      copyRootChildLayout(original, candidate);
       parent.insertChild(metadata.siblingIndex, candidate);
       candidateInserted = true;
+      copyRootChildLayout(original, candidate);
 
       if (!('layoutMode' in parentNode) || String((parentNode as BaseNode & { layoutMode?: unknown }).layoutMode) === 'NONE') {
         candidate.x = metadata.originalX;
