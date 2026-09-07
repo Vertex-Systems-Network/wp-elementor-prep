@@ -9,18 +9,18 @@ Last updated: 2026-09-08
 | P2 | Deterministic classifier semantics + confidence/role evidence | COMPLETE — PR #11 merged, issue #3 closed |
 | P3 | Geometry/content/image + pixel validation | COMPLETE — PR #12 merged, issue #4 closed |
 | P4 | Candidate transaction + rollback | COMPLETE — PR #13 merged, issue #5 closed |
-| P5 | Safe high-confidence recipes | IN PROGRESS — 90%, issue #6, PR #14 |
+| P5 | Safe high-confidence recipes | IN PROGRESS — 95%, issue #6, PR #14 |
 | P6 | Advanced timeline/carousel/milestones/page normalization | NOT STARTED — issue #7 |
 | P7 | Multi-frame/page batch queue | NOT STARTED — issue #8 |
 | P8 | Optional Elementor schema exporters | NOT STARTED — issue #9 |
 
 ## Overall progress
 
-`█████████████░░░░░░░ 66%`
+`█████████████░░░░░░░ 67%`
 
 ## P5 progress
 
-`█████████░ 90%`
+`██████████░ 95%`
 
 - [x] P4 merged with final green CI
 - [x] Safe Recipe plan/result types
@@ -43,15 +43,20 @@ Last updated: 2026-09-08
 - [x] bounded checkpoint proof
 - [x] reusable FullFrameValidator broker
 - [x] P5 -> P4 transaction integration seam
-- [x] compiled runtime self-test harness + developer menu command
+- [x] compiled runtime self-test harness + developer menu/UI action
 - [x] read-only Safe Fix preview UI
+- [x] versioned compiled-runtime proof gate
+- [x] explicit gated Safe Fix apply action that re-audits the selected Frame
+- [x] production restore/finalize checkpoint controls
+- [x] low-confidence/ambiguous plans remain non-mutating in UI
 - [x] semantic classifier wired into Safe Fix preview
 - [x] pure linear/grid geometry regression suites
 - [x] six-template real image-bearing clone-only mutation calibration
-- [x] CI green through run #84 after Metric/Social implementation
+- [x] explicit per-recipe Elementor mapping documentation
+- [x] CI green through run #97 on gated production-UI head
 - [ ] execute compiled `runSafeFixTransaction -> FullFrameValidator -> UI pixel broker -> P4` self-test from imported dev plugin
-- [ ] production Safe Fix UI gate with explicit user action + rollback controls
-- [ ] final current-head CI / PR review
+- [ ] exercise gated production apply -> restore and apply -> finalize on disposable real-section copies after proof unlocks
+- [ ] final PR review / mark ready
 - [ ] PR #14 merged / issue #6 closed
 
 ## Production gate before Safe Fix exposure
@@ -67,5 +72,7 @@ Last updated: 2026-09-08
 - [x] Metric Grid / Social Link Strip preserve exact synthetic geometry/render
 - [x] synthetic reject/discard + commit/restore/finalize lifecycle demonstrated
 - [x] real image-bearing mutation primitives calibrated across six different desktop roots with exact PNG equality
-- [ ] compiled full-P3 broker exercised through actual P5 transaction runtime
-- [ ] low-confidence/ambiguous cases remain non-mutating in production Safe Fix UI
+- [x] production mutation control is guarded by a versioned runtime proof and bounded checkpoint state
+- [x] explicit restore/finalize controls implemented
+- [ ] compiled full-P3 broker exercised through actual imported-plugin P5 transaction runtime
+- [ ] post-proof disposable production-UI smoke test passes
