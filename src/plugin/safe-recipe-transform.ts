@@ -22,6 +22,31 @@ function resolveFrameByPath(root: FrameNode, path: number[]): FrameNode | null {
   return current.type === 'FRAME' ? current : null;
 }
 
+/**
+ * Resolve only the P5 recipes that can reuse the strict linear-layout transformer.
+ * Semantic recipes are accepted only when their underlying geometric pattern matches the
+ * classifier contract that produced them; malformed or hand-crafted plans are refused.
+ */
+export function linearDirectionForSafeRecipe(plan: SafeRecipePlan): LinearLayoutDirection | null {
+  if (plan.recipe === 'vertical-stack' && plan.pattern === 'vertical-stack') return 'VERTICAL';
+  if (plan.recipe === 'horizontal-row' && plan.pattern === 'horizontal-row') return 'HORIZONTAL';
+  if (plan.recipe === 'two-column' && plan.pattern === 'two-column') return 'HORIZONTAL';
+
+  if (
+    plan.recipe === 'facts-list'
+    && plan.pattern === 'vertical-stack'
+    && plan.semanticHint === 'facts-list'
+  ) return 'VERTICAL';
+
+  if (
+    plan.recipe === 'footer-columns'
+    && plan.pattern === 'horizontal-row'
+    && plan.semanticHint === 'footer-columns'
+  ) return 'HORIZONTAL';
+
+  return null;
+}
+
 function applyLinearAutoLayout(frame: FrameNode, direction: LinearLayoutDirection): SafeRecipeTransformResult {
   const analysis = analyzeLinearLayoutGeometry(
     {
@@ -91,8 +116,16 @@ export function applySafeRecipeToCandidate(candidateRoot: FrameNode, plan: SafeR
   const target = resolveFrameByPath(candidateRoot, plan.targetPath);
   if (!target) return { applied: false, reason: 'Candidate target path no longer resolves to a Frame.' };
 
-  if (plan.recipe === 'vertical-stack') return applyLinearAutoLayout(target, 'VERTICAL');
-  if (plan.recipe === 'horizontal-row' || plan.recipe === 'two-column') return applyLinearAutoLayout(target, 'HORIZONTAL');
+  const linearDirection = linearDirectionForSafeRecipe(plan);
+  if (linearDirection) return applyLinearAutoLayout(target, linearDirection);
+
+  if (plan.recipe === 'facts-list' || plan.recipe === 'footer-columns') {
+    return {
+      applied: false,
+      reason: `${plan.recipe} plan does not match its required semantic/geometric classifier contract.`,
+      targetNodeId: target.id,
+    };
+  }
 
   return {
     applied: false,
