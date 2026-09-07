@@ -2,6 +2,20 @@
 
 ## 2026-09-08
 
+### P5 conservative Safe Fix foundation
+- Merged P4 candidate transaction/rollback through PR #13 and closed issue #5.
+- Added a GitHub-visible README roadmap progress bar and per-phase status table.
+- Created `feat/p5-safe-recipes` from the merged P4 head.
+- Added deterministic Safe Recipe types with `ELIGIBLE`, `REVIEW`, `NOOP` and `UNSUPPORTED` decisions.
+- Added conservative v1 confidence gates for Vertical Stack, Horizontal Row, Two Column, Facts List, Footer Columns and non-fragmented repeated-card grids.
+- Added clone-stable candidate target mapping using child-index paths instead of descendant node IDs.
+- Added hard blockers for missing targets, special visual roles, visible absolute direct children, fragmented grids and ambiguous geometric grids.
+- Deferred carousel/timeline mutation to P6.
+- Added strict candidate-only Figma transform foundations for Vertical Stack, Horizontal Row and Two Column.
+- Linear transforms refuse mutation unless visual/layer order already matches, cross-axis origins align within 1 px, primary-axis gaps are uniform within 1 px, children do not overlap and geometry stays inside target bounds.
+- Linear transforms do not reorder layers and still require full P3 validation before any P4 commit.
+- Added P5 planner regression tests and `docs/P5_SAFE_RECIPES.md`.
+
 ### P4 candidate transaction + rollback
 - Merged P3 validator through PR #12 and closed issue #4.
 - Created `feat/p4-transaction-engine` and draft PR #13.
@@ -14,11 +28,13 @@
 - Added unit fixtures proving forced transform failure and rejected validation leave the approved original unchanged.
 - Added concrete Figma transaction adapter with top-level off-layout candidate staging, stale-parent/transaction guards and root-boundary commit.
 - Added hidden bounded original backup and `restoreLastCommit()` through a compact clientStorage checkpoint.
+- Added `finalizeLastCommit()` and a single-pending-checkpoint guard so backup roots cannot accumulate silently.
 - Fixed adapter null-safety after CI caught nullable parent accesses.
 - Applied Auto Layout child properties only after candidate insertion into the destination parent.
 - Ran live isolated forced-failure calibration in the connected Figma file: original root/index/geometry/content remained unchanged, failed candidate was removed and cleanup left 0 temporary nodes.
 - Ran live manual-parent swap + undo calibration: original restored exactly, candidate/backup removed, 0 temporary nodes remained.
 - Ran live vertical Auto Layout parent swap + undo calibration: sibling order, layoutAlign/layoutGrow/layoutPositioning and resolved root geometry were preserved and restored; 0 temporary nodes remained.
+- PR #13 merged to `main`; issue #5 closed.
 
 ### P3 validator foundation + pixel layer
 - Merged P2 classifier semantics through PR #11 and closed issue #3.
@@ -87,4 +103,4 @@
 - Hardened background-role inference so normal Auto Layout wrappers are not treated as backgrounds.
 
 ### Safety status
-- General Safe Fix remains disabled until P4 is merged and each P5 recipe proves its own confidence + validation path.
+- P5 remains confidence-gated, candidate-only and blocked from production exposure until each recipe passes CI, full P3 and live calibration.
