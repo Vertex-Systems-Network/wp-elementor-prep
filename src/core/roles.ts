@@ -34,7 +34,16 @@ function classifyChild(parent: AuditNode, child: AuditNode, siblings: AuditNode[
   const originNear = Math.abs(child.geometry.x) <= 3 && Math.abs(child.geometry.y) <= 3;
   const descendants = descendantCount(child);
 
-  if (siblings.length >= 2 && widthCoverage >= 0.94 && heightCoverage >= 0.9 && originNear && descendants <= 8) {
+  // Full-size Auto Layout wrappers are often real content containers. Background inference is
+  // intentionally limited to non-Auto-Layout layers so future mutation cannot skip valid content.
+  if (
+    siblings.length >= 2
+    && !child.isAutoLayout
+    && widthCoverage >= 0.94
+    && heightCoverage >= 0.9
+    && originNear
+    && descendants <= 8
+  ) {
     return {
       role: 'background-layer',
       confidence: 96,
@@ -45,6 +54,7 @@ function classifyChild(parent: AuditNode, child: AuditNode, siblings: AuditNode[
         widthCoveragePct: Math.round(widthCoverage * 100),
         heightCoveragePct: Math.round(heightCoverage * 100),
         originNear,
+        isAutoLayout: child.isAutoLayout,
         descendantCount: descendants,
       },
     };
