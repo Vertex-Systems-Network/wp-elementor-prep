@@ -32,7 +32,7 @@ A caller supplies a versioned `runKey`, for example:
 
 A frame with the same previously recorded key is initialized as `SKIPPED / ALREADY_PROCESSED`. A changed plugin/recipe key makes that frame pending again.
 
-`batch-run-metadata.ts` provides the compact persistence codec for these successful keys:
+`batch-run-metadata.ts` provides the compact persistence codec:
 
 - unknown schema versions fail closed to empty metadata,
 - malformed entries are ignored,
@@ -40,7 +40,7 @@ A frame with the same previously recorded key is initialized as `SKIPPED / ALREA
 - caller-provided previous keys are never overwritten during hydration,
 - metadata storage is bounded by pruning the oldest completion records.
 
-The codec is storage-agnostic; the later Figma runtime adapter can persist it through `figma.clientStorage` without coupling clientStorage into the queue core.
+`p7-run-metadata-storage.ts` provides the Figma `clientStorage` adapter. It persists only that compact metadata and never stores scene trees, candidates, PNG bytes or validation reports. Storage read failure fails closed to an empty metadata set.
 
 ## Sequential scheduling
 
@@ -54,20 +54,23 @@ P5 intentionally retains one bounded restore/finalize checkpoint after a success
 
 Therefore P7 must **not** immediately start the next frame after a committed mutation.
 
-The queue now supports a non-destructive `PAUSED` state:
+The queue supports a non-destructive `PAUSED` state:
 
 - `shouldPause` is evaluated only between frame transactions,
+- sync and async safety gates are supported,
 - a running frame is never interrupted,
 - pending frames remain `PENDING`,
 - the current successful frame remains `SUCCEEDED`,
 - the pause reason explains the unresolved safety gate,
-- `resumeBatchQueue` clears the pause only after the caller has resolved the external condition.
+- `resumeBatchQueue` clears the pause only after the external condition is resolved.
 
-The intended P5 integration is:
+`p7-checkpoint-gate.ts` queries the existing async `hasPendingSafeFixCheckpoint()` function and returns a pause reason without auto-restoring or auto-finalizing anything.
 
-`frame transaction settles -> checkpoint pending? -> PAUSED -> user/system restore or finalize -> resume -> next frame`
+`p7-batch-runtime.ts` composes that real P5 checkpoint gate with the sequential runner while keeping the actual single-frame processor injected. This preserves the rule that P7 schedules P5 behavior rather than duplicating it.
 
-This makes the checkpoint lifecycle explicit instead of silently finalizing or bypassing undo protection.
+The intended lifecycle is:
+
+`frame transaction settles -> checkpoint pending? -> PAUSED -> user/system explicitly restore or finalize -> resume -> next frame`
 
 ## Cancellation
 
@@ -84,7 +87,7 @@ This prevents cancellation from leaving a half-mutated Figma candidate.
 
 Resuming clears an inter-frame pause, converts cancelled items back to pending, and retries failed items by default. Successful and version-matched skipped items are preserved and are not repeated.
 
-## Current stress evidence
+## Current stress and regression evidence
 
 `tests/p7-batch-stress.test.ts` exercises a 60-frame synthetic queue with:
 
@@ -95,21 +98,23 @@ Resuming clears an inter-frame pause, converts cancelled items back to pending, 
 - 100% terminal progress
 - compact queue entry shape checks
 
-Additional regression suites prove:
+Additional suites prove:
 
 - pending frames cannot start while a checkpoint pause is active,
 - a checkpoint appearing during one frame takes effect only after that frame settles,
+- async pause checks are awaited before the next frame,
+- the P7 runtime composition stops on the checkpoint gate,
 - resume does not repeat an already successful frame,
-- persisted run metadata records successes only and remains bounded.
+- persisted run metadata records successes only and remains bounded,
+- Figma storage adapter read failure fails closed without writing corrupt replacement data.
 
-This is core-state evidence only. Real Figma runtime memory calibration remains required before P7 can be considered production-ready.
+This is core/runtime-seam evidence only. Real Figma batch memory calibration remains required before P7 can be considered production-ready.
 
 ## Remaining production gates
 
-1. Wire a Figma adapter to the proven P5 single-frame runtime without duplicating mutation logic.
-2. Connect the adapter's pending-checkpoint state to `shouldPause` and require explicit restore/finalize before resume.
-3. Add UI progress/cancel/pause/resume controls.
-4. Persist the compact run metadata through `figma.clientStorage`.
-5. Run realistic 60+ frame calibration in Figma and record peak memory/runtime evidence.
-6. Prove cancellation during a long validation cycle settles safely after the active transaction.
-7. Keep P7 stacked behind P5 until P5 runtime proof and merge are complete.
+1. Implement the canonical single-frame Figma processor that the P7 runtime will inject; do not duplicate P5 mutation logic.
+2. Add UI progress/cancel/pause/resume controls plus explicit restore/finalize checkpoint controls.
+3. Invoke the run metadata storage adapter from the real batch lifecycle after successful items settle.
+4. Run realistic 60+ frame calibration in Figma and record peak memory/runtime evidence.
+5. Prove cancellation during a long validation cycle settles safely after the active transaction.
+6. Keep P7 stacked behind P5 until P5 runtime proof and merge are complete.
