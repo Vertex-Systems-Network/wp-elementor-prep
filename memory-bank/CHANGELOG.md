@@ -2,6 +2,24 @@
 
 ## 2026-09-08
 
+### P4 candidate transaction + rollback
+- Merged P3 validator through PR #12 and closed issue #4.
+- Created `feat/p4-transaction-engine` and draft PR #13.
+- Added explicit transaction states and serializable event journal.
+- Added candidate handle + adapter boundary so transformers never receive the approved original root.
+- Added deterministic `clone -> transform candidate -> validate -> commit/swap OR discard` state machine.
+- Added discard behavior for transform failures, validator crashes and rejected validation reports.
+- Added explicit cleanup-failure and commit-stage failure handling.
+- Added small commit evidence and opaque undo-token contract; no large node/PNG snapshots are stored in transaction metadata.
+- Added unit fixtures proving forced transform failure and rejected validation leave the approved original unchanged.
+- Added concrete Figma transaction adapter with top-level off-layout candidate staging, stale-parent/transaction guards and root-boundary commit.
+- Added hidden bounded original backup and `restoreLastCommit()` through a compact clientStorage checkpoint.
+- Fixed adapter null-safety after CI caught nullable parent accesses.
+- Applied Auto Layout child properties only after candidate insertion into the destination parent.
+- Ran live isolated forced-failure calibration in the connected Figma file: original root/index/geometry/content remained unchanged, failed candidate was removed and cleanup left 0 temporary nodes.
+- Ran live manual-parent swap + undo calibration: original restored exactly, candidate/backup removed, 0 temporary nodes remained.
+- Ran live vertical Auto Layout parent swap + undo calibration: sibling order, layoutAlign/layoutGrow/layoutPositioning and resolved root geometry were preserved and restored; 0 temporary nodes remained.
+
 ### P3 validator foundation + pixel layer
 - Merged P2 classifier semantics through PR #11 and closed issue #3.
 - Created `feat/p3-validator` and draft PR #12.
@@ -16,7 +34,7 @@
 - Added `p3-v1` pixel thresholds: channel tolerance 8/255, changed pixels <=0.5%, mean channel delta <=0.5.
 - Added pixel regression tests for exact no-op, tolerated deltas, changed pixels, dimension mismatch, malformed buffers and threshold failures.
 - Ran live read-only no-op export calibration on Marcus About, Journey and Contact; repeated PNG exports were byte-identical for all three sections.
-- Pixel-validation code head `f9941b46df19f4e46554c52beac57dab695ddf86` passed typecheck, tests and build.
+- PR #12 merged to `main`; issue #4 closed.
 
 ### P2 semantic hardening
 - Completed representative read-only semantic review across the five-template calibration set.
@@ -69,5 +87,4 @@
 - Hardened background-role inference so normal Auto Layout wrappers are not treated as backgrounds.
 
 ### Safety status
-- No Auto-Fix mutation behavior enabled.
-- All runtime functionality remains read-only.
+- General Safe Fix remains disabled until P4 is merged and each P5 recipe proves its own confidence + validation path.

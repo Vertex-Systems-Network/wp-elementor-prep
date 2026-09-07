@@ -4,42 +4,48 @@ Last updated: 2026-09-08
 
 ## Product
 
-`wp-elementor-prep` is a deterministic, AI-free Figma plugin that audits and later safely refactors approved desktop Figma layouts into structures that map cleanly to WordPress Elementor.
+`wp-elementor-prep` is a deterministic, AI-free Figma plugin that audits and safely prepares approved desktop Figma layouts for structures that map cleanly to WordPress Elementor.
 
-Runtime must not require generative AI or external network access.
+Runtime must not require generative AI or an external AI backend.
 
 ## Current phase
 
-**P3 validator is active on `feat/p3-validator` / PR #12. P2 classifier semantics is merged to `main`; issue #3 is closed.**
+**P4 candidate transaction/rollback is merge-ready on `feat/p4-transaction-engine` / PR #13 with final CI green. P3 validator is merged to `main`; issue #4 is closed.**
 
 ## Completed
 
 - P0 foundation merged via PR #1.
 - P1 Audit-Only MVP merged via PR #10; issue #2 closed.
 - P2 deterministic classifier semantics merged via PR #11; issue #3 closed.
+- P3 deterministic integrity + rendered pixel validator merged via PR #12; issue #4 closed.
 - Five materially different real-template audit/semantic calibration set completed: Marcus, Doctor, Esthetic, Lawyer and Legacy mixed.
-- P2 same-target ranking, semantic hints and preservation roles are implemented and regression-hardened.
-- P3 integrity snapshot model implemented with versioned `p3-v1` thresholds.
-- Text-content fingerprints and image-fill fingerprints implemented without requiring stable Figma node IDs.
-- Text/image geometry is normalized to section coordinates so wrapper-tree changes can remain valid when visible invariants are preserved.
-- Duplicate visible content is paired by stable visual order rather than node ID/path.
-- Root, text, image and invalid-geometry drift produce explicit failure codes and evidence.
-- Section-level PNG export is implemented with the longest render edge capped at 2048 px.
-- Plugin UI decodes PNGs through Canvas/ImageData and performs deterministic RGBA comparison.
-- Pixel findings implemented: `PIXEL_DIMENSION_MISMATCH` and `PIXEL_DIFF_EXCEEDED`.
-- Unit tests cover no-op, wrapper changes, text/image content drift, geometry drift, duplicate content, malformed snapshots, exact pixel no-op, tolerated channel drift, changed pixels, dimension mismatch and pixel-threshold failure.
-- Live read-only PNG no-op calibration passed on Marcus About, Journey and Contact; repeated exports were byte-identical in all three cases.
-- Latest pixel-validation code head `f9941b46df19f4e46554c52beac57dab695ddf86` passed CI: typecheck, tests and build.
+- P3 validates root geometry, text-content fingerprints, image-fill fingerprints, section-relative anchors and section-level rendered PNG pixel drift.
+- P3 representative no-op render calibration passed on Marcus About, Journey and Contact.
+- P4 pure transaction state machine implemented around `clone -> transform candidate -> validate -> commit/swap OR discard`.
+- Transformer receives only the candidate handle; the approved original is never passed to candidate transform code.
+- Commit is unreachable until P3 validation returns `passed: true`.
+- Transform failure, validation crash and validation rejection discard the candidate without committing.
+- Cleanup failure and commit-stage failure are surfaced explicitly with auditable transaction events.
+- Successful commit returns small serializable evidence; large PNG/node snapshots are not stored in transaction metadata.
+- Concrete `FigmaCandidateTransactionAdapter` implemented with off-layout candidate staging, stale-parent/transaction guards, root-boundary replacement, hidden bounded backup and compact clientStorage undo token.
+- Auto Layout child properties are restored after root insertion, matching Figma parent-context behavior.
+- `restoreLastCommit()` restores the retained original root and removes the committed candidate when the checkpoint is still valid.
+- `finalizeLastCommit()` explicitly accepts the latest commit and removes the retained backup checkpoint.
+- Only one pending undo checkpoint is allowed; a second commit is rejected until the prior checkpoint is restored or finalized.
+- Pure unit fixtures prove forced transform failure and rejected validation leave the approved original unchanged and candidate cleanup occurs.
+- Live isolated Figma calibration proved forced candidate failure leaves the original root/index/geometry/content unchanged and removes the candidate.
+- Live manual-parent root swap + undo restored the original exactly and left zero temporary nodes.
+- Live vertical Auto Layout parent root swap + undo preserved sibling order, `layoutAlign`, `layoutGrow`, `layoutPositioning`, resolved geometry and exact restoration; cleanup left zero temporary nodes.
+- Final P4 documentation/checkpoint head `1880f27aa5bd2efb086500f5eed59beb3b32e6a0` passed CI: typecheck, tests and build.
 
 ## In progress
 
-- Final P3 documentation/memory synchronization.
-- PR #12 acceptance update and final CI verification after documentation synchronization.
-- Final P3 merge decision against issue #4 acceptance criteria.
+- Mark PR #13 ready and merge P4.
+- Close issue #5 after merge.
+- Start P5 conservative high-confidence Safe Fix recipes.
 
 ## Next phases
 
-- P4: clone -> candidate -> validate -> commit/discard transaction engine.
 - P5: conservative high-confidence Safe Fix recipes.
 - P6: advanced timeline/carousel/milestone/page normalization recipes.
 - P7: batch queue for 60+ frames/pages.
@@ -53,19 +59,24 @@ See:
 - `docs/CROSS_TEMPLATE_CALIBRATION.md`
 - `docs/P3_VALIDATOR_DESIGN.md`
 - `docs/P3_PIXEL_CALIBRATION.md`
+- `docs/P4_TRANSACTION_DESIGN.md`
+- `docs/P4_LIVE_TRANSACTION_CALIBRATION.md`
 
 ## Safety status
 
-All current Figma runtime behavior remains read-only with respect to approved design structure. Audit and P3 validation may inspect/export Frames, but no Auto-Fix transformation is enabled.
+General Safe Fix recipes remain disabled. P4 mutation infrastructure is candidate-isolated and has only been live-calibrated on disposable synthetic Frames, not on approved customer sections.
 
 ## Production mutation gate
 
-Do not enable Safe Fix until:
+Before P5 can mutate an approved section:
 
-- P3 validator is merged,
-- P4 transaction/rollback exists,
-- forced validation failure demonstrably leaves the working design untouched.
+- P4 must be merged with green CI,
+- a recipe must be high-confidence and explicitly supported,
+- transformation must run only on the staged candidate,
+- full P3 validation must pass before root swap,
+- low-confidence/ambiguous cases must remain REVIEW,
+- the bounded undo checkpoint must remain available after commit.
 
 ## Release target
 
-Current usable line: `0.1.x` Audit-Only + read-only validator development. Next engineering milestone after P3 merge: P4 transaction/rollback foundation.
+Current merged usable line: Audit-Only + P3 read-only validator. Next milestone after P4 merge: P5 conservative Safe Fix recipes behind the P3/P4 gates.
