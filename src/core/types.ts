@@ -61,11 +61,32 @@ export type PatternKind =
   | 'carousel-track'
   | 'unknown';
 
+export type SemanticHint =
+  | 'carousel-viewport'
+  | 'repeated-cards'
+  | 'split-header'
+  | 'facts-list'
+  | 'footer-columns'
+  | 'timeline-chapter';
+
 export interface PatternDetection {
   pattern: PatternKind;
   confidence: number;
   targetNodeId: string;
   targetNodeName: string;
+  evidence: Record<string, string | number | boolean>;
+  /** Optional higher-level interpretation derived conservatively from geometry + subtree evidence. */
+  semanticHint?: SemanticHint;
+}
+
+export type RoleKind = 'background-layer' | 'absolute-overlay' | 'decorative-overlay';
+
+export interface RoleDetection {
+  role: RoleKind;
+  confidence: number;
+  targetNodeId: string;
+  targetNodeName: string;
+  parentNodeId: string;
   evidence: Record<string, string | number | boolean>;
 }
 
@@ -80,6 +101,8 @@ export interface SectionAudit {
   detection: PatternDetection | null;
   /** Multiple explainable targets for complex sections such as Numbers or Journey. */
   detections: PatternDetection[];
+  /** Special visual roles that must be preserved rather than normalized into ordinary flow. */
+  roleDetections: RoleDetection[];
   recommendedRecipe: string | null;
 }
 

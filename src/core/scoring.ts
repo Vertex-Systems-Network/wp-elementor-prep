@@ -7,7 +7,8 @@ import type {
   SectionAudit,
 } from './types';
 import { computeStats, discoverSections } from './scanner';
-import { detectPatterns, recipeForPattern } from './classifier';
+import { detectPatterns, recipeForDetection } from './classification';
+import { detectSpecialRoles } from './roles';
 
 function clamp(value: number, min = 0, max = 100): number {
   return Math.max(min, Math.min(max, Math.round(value)));
@@ -87,7 +88,7 @@ export function findingsFor(stats: AuditStats): AuditFinding[] {
       code: 'ABSOLUTE_POSITIONING_PRESENT',
       severity: 'info',
       title: 'Absolute positioning requires role classification',
-      detail: 'Absolute positioning is valid for overlays and decoration. It must not be auto-penalized or removed before decorative-role classification.',
+      detail: 'Absolute positioning is valid for overlays and decoration. P2 reports special roles separately so future mutation does not normalize them blindly.',
       evidence: { absolutePositionedNodes: stats.absolutePositionedNodes },
     });
   }
@@ -109,6 +110,7 @@ export function auditSection(section: AuditNode): SectionAudit {
   const stats = computeStats(section);
   const detections = detectPatterns(section);
   const detection = detections[0] ?? null;
+  const roleDetections = detectSpecialRoles(section);
   let score = scoreStats(stats);
 
   // Detection is evidence that the layout is understandable, not that it is already structurally ready.
@@ -124,8 +126,9 @@ export function auditSection(section: AuditNode): SectionAudit {
     findings: findingsFor(stats),
     detection,
     detections,
+    roleDetections,
     // Already-compliant sections do not need a repair recipe even when a pattern is recognized.
-    recommendedRecipe: status === 'PASS' || !detection ? null : recipeForPattern(detection.pattern),
+    recommendedRecipe: status === 'PASS' || !detection ? null : recipeForDetection(detection),
   };
 }
 

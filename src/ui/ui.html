@@ -21,9 +21,10 @@
     .badge { font-size: 10px; font-weight: 700; opacity: .75; white-space: nowrap; }
     .recipe { font-size: 10px; opacity: .72; margin-top: 3px; }
     .finding { font-size: 10px; opacity: .72; margin-top: 4px; line-height: 1.35; }
-    .patternList { margin-top: 5px; display: grid; gap: 3px; }
-    .pattern { font-size: 9px; opacity: .72; display: flex; justify-content: space-between; gap: 8px; }
-    .patternTarget { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .patternList, .roleList { margin-top: 5px; display: grid; gap: 3px; }
+    .pattern, .role { font-size: 9px; opacity: .72; display: flex; justify-content: space-between; gap: 8px; }
+    .role { opacity: .82; }
+    .patternTarget, .roleTarget { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     details { margin-top: 5px; }
     summary { font-size: 10px; cursor: pointer; opacity: .65; }
     pre { white-space: pre-wrap; word-break: break-word; font-size: 9px; opacity: .7; margin: 5px 0 0; }
@@ -34,7 +35,7 @@
 <body>
   <div class="app">
     <h1>Pella Elementor Prep</h1>
-    <div class="sub">Audit-Only MVP · deterministic · no design mutations</div>
+    <div class="sub">Audit-Only · deterministic semantics · no design mutations</div>
     <div id="root" class="empty">Select one desktop Frame in Figma.</div>
     <button id="audit">Run audit</button>
   </div>
@@ -71,16 +72,28 @@
         const detections = Array.isArray(section.detections)
           ? section.detections
           : (section.detection ? [section.detection] : []);
+        const roles = Array.isArray(section.roleDetections) ? section.roleDetections : [];
         const primary = detections[0] || null;
-        const recipe = primary
-          ? `${primary.pattern} · confidence ${primary.confidence}%`
+        const primaryLabel = primary
+          ? `${primary.semanticHint ? `${primary.semanticHint} ← ` : ''}${primary.pattern}`
           : 'pattern not classified yet';
-        const patternRows = detections.slice(0, 4).map((detection) => `
+        const recipe = primary ? `${primaryLabel} · confidence ${primary.confidence}%` : primaryLabel;
+        const patternRows = detections.slice(0, 4).map((detection) => {
+          const label = `${detection.semanticHint ? `${detection.semanticHint} ← ` : ''}${detection.pattern}`;
+          return `
           <div class="pattern">
-            <span class="patternTarget">${escapeHtml(detection.pattern)} @ ${escapeHtml(detection.targetNodeName)}</span>
+            <span class="patternTarget">${escapeHtml(label)} @ ${escapeHtml(detection.targetNodeName)}</span>
             <span>${detection.confidence}%</span>
+          </div>`;
+        }).join('');
+        const roleRows = roles.slice(0, 3).map((role) => `
+          <div class="role">
+            <span class="roleTarget">preserve ${escapeHtml(role.role)} @ ${escapeHtml(role.targetNodeName)}</span>
+            <span>${role.confidence}%</span>
           </div>`).join('');
-        const evidence = detections.length > 0 ? JSON.stringify(detections, null, 2) : '';
+        const evidence = (detections.length || roles.length)
+          ? JSON.stringify({ detections, roles }, null, 2)
+          : '';
         return `
           <div class="row">
             <div class="rowHead">
@@ -90,7 +103,8 @@
             <div class="recipe">${escapeHtml(recipe)} · Auto Layout ${section.stats.autoLayoutCoveragePct}%</div>
             ${first ? `<div class="finding">${escapeHtml(first.title)}</div>` : ''}
             ${patternRows ? `<div class="patternList">${patternRows}</div>` : ''}
-            ${detections.length ? `<details><summary>All detection evidence (${detections.length})</summary><pre>${escapeHtml(evidence)}</pre></details>` : ''}
+            ${roleRows ? `<div class="roleList">${roleRows}</div>` : ''}
+            ${evidence ? `<details><summary>Detection evidence (${detections.length} patterns · ${roles.length} special roles)</summary><pre>${escapeHtml(evidence)}</pre></details>` : ''}
           </div>`;
       }).join('');
 
