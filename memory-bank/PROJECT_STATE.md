@@ -10,7 +10,7 @@ Runtime must not require generative AI or an external AI backend.
 
 ## Current phase
 
-**P5 conservative Safe Fix recipes are active on `feat/p5-safe-recipes`. P4 transaction/rollback is merged through PR #13 and issue #5 is closed.**
+**P5 conservative Safe Fix recipes are active on `feat/p5-safe-recipes` / draft PR #14. P4 transaction/rollback is merged through PR #13 and issue #5 is closed.**
 
 ## Completed
 
@@ -22,7 +22,7 @@ Runtime must not require generative AI or an external AI backend.
 - Five materially different real-template audit/semantic calibration set completed: Marcus, Doctor, Esthetic, Lawyer and Legacy mixed.
 - P3 validates root geometry, text-content fingerprints, image-fill fingerprints, section-relative anchors and section-level rendered PNG pixel drift.
 - P4 enforces `clone -> transform candidate -> validate -> commit/swap OR discard` and bounded single-step undo/finalize.
-- README now exposes a GitHub-visible roadmap progress bar and per-phase status table.
+- README exposes a GitHub-visible overall roadmap progress bar, phase table and P5 sub-progress bar.
 
 ## P5 foundation implemented
 
@@ -44,13 +44,31 @@ Runtime must not require generative AI or an external AI backend.
 - Planner regression tests added.
 - P5 design documented in `docs/P5_SAFE_RECIPES.md`.
 
+## P5 live linear calibration
+
+- First disposable-Figma run exposed a Figma transition behavior: setting `layoutMode` on a manual Frame could shrink its primary axis before fixed sizing was fully established.
+- Initial observed drift:
+  - Vertical `420x360 -> 420x210`,
+  - Horizontal `560x220 -> 360x220`,
+  - Two Column `620x300 -> 490x300`.
+- Recipe was corrected to capture and restore exact target Frame width/height after applying fixed Auto Layout sizing/padding.
+- Second disposable-Figma run passed all three linear recipes:
+  - root geometry exactly preserved,
+  - direct child geometry exactly preserved,
+  - original/candidate exported PNG bytes exactly identical,
+  - cleanup left `0` temporary nodes.
+- Exact repeat PNG hashes:
+  - Vertical: `1991:fc5b25d0:56432610`,
+  - Horizontal: `1605:91f4b947:a5b5e509`,
+  - Two Column: `1872:18640bfc:5135a1c0`.
+- Calibration evidence documented in `docs/P5_LINEAR_LIVE_CALIBRATION.md`.
+
 ## In progress
 
-- Open draft P5 PR and run CI.
-- Fix any compile/test issues.
-- Live disposable-Figma calibration for Vertical Stack, Horizontal Row and Two Column.
-- Full P3 pass/fail validation after candidate recipe transforms.
-- P4 commit/discard/undo proof around accepted and rejected recipe candidates.
+- Resolve remaining P5 CI/typecheck feedback on the latest branch head.
+- Wire the linear recipe transformer through the complete full-P3 validation and P4 transaction path.
+- Prove forced P3 rejection discards the recipe candidate with approved original untouched.
+- Prove a passing recipe candidate commits through P4 and remains restorable/finalizable through the bounded checkpoint.
 
 ## Next phases
 
@@ -70,10 +88,11 @@ See:
 - `docs/P4_TRANSACTION_DESIGN.md`
 - `docs/P4_LIVE_TRANSACTION_CALIBRATION.md`
 - `docs/P5_SAFE_RECIPES.md`
+- `docs/P5_LINEAR_LIVE_CALIBRATION.md`
 
 ## Safety status
 
-General Safe Fix is still not exposed as a production action. P5 planning and candidate-transform foundations exist, but each recipe remains gated by confidence, candidate isolation, mandatory full P3 validation and live calibration before commit availability is considered production-ready.
+General Safe Fix is still not exposed as a production action. The first linear transforms have exact synthetic render-equivalence evidence, but production-capable status still requires the complete candidate transform -> P3 -> P4 orchestration and multi-template calibration.
 
 ## Production mutation gate
 
