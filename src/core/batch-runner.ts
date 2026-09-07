@@ -1,6 +1,7 @@
 import {
   finishRunningBatchItem,
   requestBatchCancel,
+  requestBatchPause,
   startNextBatchItem,
   type BatchItemOutcome,
   type BatchQueueItem,
@@ -15,6 +16,11 @@ export interface BatchRunnerOptions {
    * by the batch layer; it must settle/rollback through its own canonical lifecycle first.
    */
   shouldCancel?: () => boolean;
+  /**
+   * Optional inter-frame safety gate. Return a non-empty reason to pause before another frame starts.
+   * This supports P5's bounded restore/finalize checkpoint without treating it as failure/cancel.
+   */
+  shouldPause?: (state: BatchQueueState) => string | null;
   /** Receives immutable queue snapshots after meaningful state transitions. */
   onState?: (state: BatchQueueState) => void;
 }
@@ -40,6 +46,11 @@ function errorMessage(error: unknown): string {
   return 'Unknown batch frame processing failure';
 }
 
+function pauseReason(state: BatchQueueState, options: BatchRunnerOptions): string | null {
+  const reason = options.shouldPause?.(copyState(state)) ?? null;
+  return reason && reason.trim() ? reason : null;
+}
+
 /**
  * Runs the compact P7 queue strictly one frame at a time through an injected canonical single-frame
  * processor. The runner owns scheduling only; it does not audit, transform or commit Figma nodes.
@@ -55,6 +66,13 @@ export async function runBatchQueue(
   while (true) {
     if (options.shouldCancel?.()) {
       state = requestBatchCancel(state);
+      notify(state, options.onState);
+      return state;
+    }
+
+    const beforeStartPause = pauseReason(state, options);
+    if (beforeStartPause) {
+      state = requestBatchPause(state, beforeStartPause);
       notify(state, options.onState);
       return state;
     }
@@ -84,6 +102,14 @@ export async function runBatchQueue(
       return state;
     }
 
-    if (state.status === 'COMPLETED' || state.status === 'CANCELLED') return state;
+    // A checkpoint or other safety condition pauses before the next frame can enter RUNNING.
+    const afterFramePause = pauseReason(state, options);
+    if (afterFramePause) {
+      state = requestBatchPause(state, afterFramePause);
+      notify(state, options.onState);
+      return state;
+    }
+
+    if (state.status === 'COMPLETED' || state.status === 'CANCELLED' || state.status === 'PAUSED') return state;
   }
 }
