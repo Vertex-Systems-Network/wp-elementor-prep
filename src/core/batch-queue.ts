@@ -1,5 +1,5 @@
 export type BatchItemStatus = 'PENDING' | 'RUNNING' | 'SUCCEEDED' | 'FAILED' | 'SKIPPED' | 'CANCELLED';
-export type BatchQueueStatus = 'IDLE' | 'RUNNING' | 'CANCELLING' | 'COMPLETED' | 'CANCELLED';
+export type BatchQueueStatus = 'IDLE' | 'RUNNING' | 'CANCELLING' | 'PAUSED' | 'COMPLETED' | 'CANCELLED';
 
 export interface BatchQueueInput {
   frameId: string;
@@ -23,6 +23,11 @@ export interface BatchQueueState {
   status: BatchQueueStatus;
   items: BatchQueueItem[];
   cancelRequested: boolean;
+  /**
+   * Non-destructive inter-frame pause. This is required for P5 compatibility because a successful
+   * Safe Fix can retain one bounded restore/finalize checkpoint before another mutation is allowed.
+   */
+  pauseReason: string | null;
 }
 
 export interface BatchQueueSummary {
@@ -68,6 +73,9 @@ function settleQueueStatus(state: BatchQueueState): BatchQueueState {
   if (state.cancelRequested) {
     return { ...state, status: 'CANCELLED' };
   }
+  if (state.pauseReason) {
+    return { ...state, status: 'PAUSED' };
+  }
   if (hasPendingItem(state)) {
     return { ...state, status: 'IDLE' };
   }
@@ -97,12 +105,13 @@ export function createBatchQueue(inputs: BatchQueueInput[], runKey: string): Bat
     status: 'IDLE',
     items,
     cancelRequested: false,
+    pauseReason: null,
   });
 }
 
-/** Starts exactly one pending item. A second concurrent RUNNING item is never created. */
+/** Starts exactly one pending item. A paused/cancelling queue or second concurrent item is never started. */
 export function startNextBatchItem(state: BatchQueueState): BatchQueueState {
-  if (state.cancelRequested || hasRunningItem(state)) return settleQueueStatus(state);
+  if (state.cancelRequested || state.pauseReason || hasRunningItem(state)) return settleQueueStatus(state);
   const index = state.items.findIndex((item) => item.status === 'PENDING');
   if (index < 0) return settleQueueStatus(state);
 
@@ -147,12 +156,22 @@ export function requestBatchCancel(state: BatchQueueState): BatchQueueState {
   const items = state.items.map((item): BatchQueueItem => item.status === 'PENDING'
     ? { ...item, status: 'CANCELLED' }
     : item);
-  return settleQueueStatus({ ...state, items, cancelRequested: true });
+  return settleQueueStatus({ ...state, items, cancelRequested: true, pauseReason: null });
 }
 
 /**
- * Resumes a cancelled/completed queue without repeating successful or version-matched skipped work.
- * Failed items are retried by default; callers may keep them failed for inspection.
+ * Pauses scheduling between frame transactions without changing pending item state. If called while
+ * a frame is still running, the running transaction is allowed to settle first and the pause becomes
+ * effective before another frame can start.
+ */
+export function requestBatchPause(state: BatchQueueState, reason: string): BatchQueueState {
+  const pauseReason = reason.trim() || 'Batch paused by safety policy.';
+  return settleQueueStatus({ ...state, pauseReason });
+}
+
+/**
+ * Resumes a paused/cancelled/completed queue without repeating successful or version-matched skipped
+ * work. Failed items are retried by default; callers may keep them failed for inspection.
  */
 export function resumeBatchQueue(
   state: BatchQueueState,
@@ -165,7 +184,7 @@ export function resumeBatchQueue(
     }
     return item;
   });
-  return settleQueueStatus({ ...state, items, cancelRequested: false });
+  return settleQueueStatus({ ...state, items, cancelRequested: false, pauseReason: null });
 }
 
 export function summarizeBatchQueue(state: BatchQueueState): BatchQueueSummary {
