@@ -15,6 +15,12 @@
 - Added AGENTS instructions for future AI/human sessions.
 - Added initial TypeScript/Figma plugin audit-only scaffold.
 - Added initial unit-test/build/CI scaffold.
+- Opened PR #1 for the foundation.
+- Created roadmap issues #2–#9 covering Audit MVP through optional Elementor exporter.
+
+### Verification
+- GitHub Actions CI run #1 passed successfully.
+- `npm install`, TypeScript typecheck, Vitest suite and production build all passed.
 
 ### Safety status
 - No Auto-Fix mutation behavior enabled.

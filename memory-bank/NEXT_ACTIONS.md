@@ -4,9 +4,9 @@ Last updated: 2026-09-07
 
 Execute in this order:
 
-1. Merge/review the Phase 0 foundation PR after CI passes.
-2. Fix any build/type/test failures in the scaffold before adding features.
-3. Implement robust `discoverSections()` using selected-frame/page-wrapper geometry rather than names alone.
+1. Review and merge PR #1 after confirming the already-passing CI remains green on the latest head.
+2. Start issue #2 on a focused feature branch.
+3. Harden `discoverSections()` using selected-frame/page-wrapper geometry rather than names alone.
 4. Replace the simple score with an evidence-based weighted finding model.
 5. Add normalized JSON fixtures for:
    - strong Auto Layout section,
@@ -17,7 +17,7 @@ Execute in this order:
    - timeline chapter.
 6. Add classifier unit tests for row/column/grid clustering.
 7. Run the Audit-Only plugin against the live golden Figma page and compare section scores to the manual audit.
-8. Record discrepancies in `memory-bank/PROJECT_STATE.md` and create focused issues.
+8. Record discrepancies in `memory-bank/PROJECT_STATE.md` and create focused issues where needed.
 9. Do **not** implement mutation recipes until P2 classifier confidence is validated and P3/P4 safety foundations are underway.
 
 ## Immediate definition of success

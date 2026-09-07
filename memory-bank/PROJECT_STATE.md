@@ -10,36 +10,36 @@ Core runtime must not require generative AI or external network access.
 
 ## Current phase
 
-**Phase 0 foundation + Phase 1 Audit-Only scaffold**
+**Phase 0 foundation complete on PR #1; Phase 1 Audit-Only scaffold started.**
 
 ## Completed
 
 - Product direction established.
 - Deep technical/product audit completed.
 - AI-native development model defined.
-- Memory-bank architecture defined.
+- Mandatory memory-bank architecture implemented.
 - Elementor-readiness rules documented.
 - Feature roadmap and pre-development plan documented.
-- Initial TypeScript/Figma plugin scaffold prepared.
-- Initial read-only scanner/scoring MVP prepared.
-- CI/test/build scaffold prepared.
+- Initial TypeScript/Figma plugin scaffold implemented.
+- Initial read-only scanner/scoring/report UI implemented.
+- CI/test/build scaffold implemented.
+- CI run #1 passed: install, typecheck, tests, and build all successful.
+- Roadmap issues #2–#9 created for P1–P8.
 
 ## In progress
 
-- Validate the scaffold in CI.
-- Calibrate the initial readiness score against the golden Figma fixture.
-- Improve section discovery and explainable findings.
+- PR #1 review/merge.
+- Issue #2: Audit-Only MVP hardening and golden-fixture calibration.
 
 ## Not started
 
-- Geometric classifier recipes.
-- Decoration/background classifier.
-- Carousel/timeline classifiers.
-- Visual/pixel diff validator.
-- Transaction clone/rollback engine.
-- Safe Auto-Fix recipes.
-- Batch queue.
-- Elementor JSON exporter.
+- Geometric classifier recipes (#3).
+- Visual/integrity validator (#4).
+- Transaction clone/rollback engine (#5).
+- Safe Auto-Fix recipes (#6).
+- Advanced timeline/carousel/milestone recipes (#7).
+- Batch queue for 60+ frames/pages (#8).
+- Elementor JSON exporter adapters (#9).
 
 ## Golden fixture observations
 
