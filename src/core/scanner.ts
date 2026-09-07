@@ -42,6 +42,11 @@ function clipsContent(node: SceneNode): boolean {
   return Boolean((node as SceneNode & { clipsContent: unknown }).clipsContent);
 }
 
+function readOpacity(node: SceneNode): number {
+  if (!('opacity' in node)) return 1;
+  return numeric((node as SceneNode & { opacity: unknown }).opacity, 1);
+}
+
 export function scanSceneNode(node: SceneNode): AuditNode {
   const children = childNodes(node).map(scanSceneNode);
   const mode = readLayoutMode(node);
@@ -68,7 +73,7 @@ export function scanSceneNode(node: SceneNode): AuditNode {
     textAutoResize: textAutoResize(node),
     absolutePositioned: isAbsolute(node),
     clipsContent: clipsContent(node),
-    opacity: numeric(node.opacity, 1),
+    opacity: readOpacity(node),
     visible: node.visible,
     childIds: children.map((child) => child.id),
     children,
