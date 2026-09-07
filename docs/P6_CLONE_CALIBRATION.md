@@ -15,6 +15,7 @@ A passing validation result is evidence only. It does not mutate, replace or aut
 - Only `AdvancedRecipePlan.decision === CALIBRATE` can start calibration.
 - `REVIEW`, `PRESERVE` and `NOOP` plans are skipped without cloning.
 - The adapter must return a candidate handle tied to the requested original id.
+- A stale/different plan cannot be substituted after the Figma calibration adapter is created.
 - Transform failure triggers candidate discard.
 - Validation crash triggers candidate discard.
 - Validation rejection still triggers candidate discard and is recorded as `REJECTED` evidence.
@@ -22,22 +23,63 @@ A passing validation result is evidence only. It does not mutate, replace or aut
 - Candidate discard failure returns `FAILED` with `leftoverCandidateRisk: true`; production wiring must remain blocked until the leftover is inspected/removed.
 - `productionCommitAttempted` is always `false`.
 
-## What this proves
+## Concrete Figma calibration adapter
 
-The core harness proves the calibration state machine cannot accidentally reach a production commit and that cleanup behavior is explicit across pass/reject/failure cases.
+`FigmaAdvancedCalibrationAdapter` wraps the existing P4 candidate staging machinery but exposes only:
 
-It does **not** yet prove any specific advanced Figma transformer is safe.
+- clone
+- transform
+- validate
+- discard
 
-## Remaining per-recipe evidence
+The wrapper does not expose `commitCandidate` through the P6 calibration interface.
 
-Before a P6 recipe can be connected to P4, each recipe still needs:
+## First transformer candidate: page vertical flow
 
-1. a Figma clone transformer that consumes the corresponding `AdvancedRecipePlan`,
-2. synthetic golden fixtures,
+The first concrete P6 transformer is intentionally narrow and calibration-only.
+
+`page-vertical-flow` is attempted only when all of these gates pass:
+
+- decision is `CALIBRATE`,
+- recipe/pattern is exactly `page-vertical-flow`,
+- `preserveNodeIds` is empty,
+- mandatory future Full-P3 + P4 rollback flags are present,
+- target is still a manual-layout Frame,
+- every direct child is visible,
+- no visible direct child is absolute-positioned,
+- visual order matches layer order,
+- cross-axis origins align within the existing strict linear tolerance,
+- primary-axis gaps are uniform within the existing strict linear tolerance,
+- all content remains within frame bounds.
+
+The transformer converts only the staged clone to fixed vertical Auto Layout, restores the original root dimensions, and requires direct-child geometry to remain exact within the existing 0.5 px guard. If that guard fails, the transform throws through the calibration runner and the clone is discarded.
+
+`runP6PageFlowCloneCalibration` composes this transformer with the commitless Figma adapter and mandatory Full P3 validator. It is not wired to production Safe Fix UI.
+
+## Current synthetic evidence
+
+CI golden fixtures now cover:
+
+- exact manual geometry -> fixed vertical Auto Layout mapping,
+- root width/height preservation,
+- direct-child geometry preservation in the synthetic Figma-like fixture,
+- refusal when preservation relationships exist,
+- refusal with hidden direct children,
+- refusal with absolute direct children,
+- refusal of non-uniform section gaps,
+- refusal of non-CALIBRATE plans.
+
+This is deterministic synthetic evidence only. It does **not** substitute for imported-plugin Figma runtime calibration or real image-bearing template evidence.
+
+## Remaining page-flow evidence
+
+Before this transformer can be considered for P4 production wiring it still needs:
+
+1. imported-plugin clone calibration inside real Figma,
+2. full P3 Canvas pixel broker PASS,
 3. image-bearing real-template clones,
-4. full P3 visual/content exactness evidence,
-5. preservation evidence for every `preserveNodeIds` relationship,
-6. zero leftover candidate nodes across pass/reject/failure calibration,
-7. explicit production transaction integration review.
+4. zero leftover candidate nodes across pass/reject/failure cases,
+5. confirmation that any page with header/hero or other preservation relationships stays refused by this first recipe,
+6. explicit production transaction integration review.
 
-Initial priorities should be the least structurally invasive recipes first. `page-vertical-flow` and simple milestone structures are better calibration candidates than fragmented-card synthesis or carousel/timeline relationships, which should remain REVIEW/PRESERVE until their wrapper/overflow semantics are proven.
+Other advanced recipes remain read-only/review-only until they independently earn the same evidence. Fragmented-card synthesis and carousel/timeline relationships should remain deferred because their wrapper/overflow/preservation semantics are materially more invasive.
