@@ -123,7 +123,7 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
     const topRatio = located.offsetY / sectionHeight;
     const heightRatio = target.geometry.height / sectionHeight;
     const parentTopRatio = located.parentOffsetY / sectionHeight;
-    const topLevelContext = located.depth <= 1 || parentTopRatio <= 0.05;
+    const topLevelContext = located.depth <= 1 || parentTopRatio <= 0.02;
 
     // A split header must belong to the section's top-level context. Nested chapter/content rows
     // can also be shallow and near the top, so position alone is not sufficient.
