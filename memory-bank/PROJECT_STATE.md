@@ -8,11 +8,11 @@ Last updated: 2026-09-08
 
 ## Current phase
 
-**P5 conservative Safe Fix recipes — ~90% on `feat/p5-safe-recipes` / draft PR #14.**
+**P5 conservative Safe Fix recipes — ~95% on `feat/p5-safe-recipes` / draft PR #14.**
 
-Overall roadmap estimate: **66%**.
+Overall roadmap estimate: **67%**.
 
-The supported P5 v1 recipe set is implemented and calibrated. The critical remaining gate is execution of the imported development plugin's compiled runtime self-test before production Safe Fix UI exposure.
+All eight P5 v1 recipe families are implemented, calibrated and mapped to Elementor intent. The explicit production Safe Fix UI path is now implemented behind a versioned compiled-runtime proof gate. The critical remaining gate is execution of the imported development plugin's compiled runtime self-test before mutation can unlock on a real plugin installation.
 
 ## Completed phases
 
@@ -29,7 +29,7 @@ The supported P5 v1 recipe set is implemented and calibrated. The critical remai
 - Clone-stable child-index target paths.
 - `runSafeFixTransaction` P5 -> P4 integration seam.
 - Reusable `FullFrameValidator` broker.
-- Read-only `Preview safe fixes` UI; production mutation remains disabled.
+- Read-only `Preview safe fixes` UI.
 - Base linear recipes:
   - Vertical Stack,
   - Horizontal Row,
@@ -44,7 +44,18 @@ The supported P5 v1 recipe set is implemented and calibrated. The critical remai
 - Metric Grid and Social/Link Strip use 95% confidence gates.
 - Safe-plan preview uses semantic/ranked detections from `classification.ts` rather than raw geometry-only detections.
 - Linear/grid transforms contain direct-child post-mutation geometry guards.
-- Developer-only compiled runtime self-test harness implemented in `src/plugin/p5-runtime-calibration.ts` and exposed as `Developer: P5 Runtime Self-Test`.
+- Developer compiled runtime self-test harness implemented in `src/plugin/p5-runtime-calibration.ts` and exposed as both `Developer: P5 Runtime Self-Test` and the UI `Runtime self-test` action.
+- Versioned local runtime-proof gate added; missing/stale/failed proof keeps mutation locked.
+- Explicit gated production Safe Fix action implemented:
+  - re-audits the current selected Frame before applying,
+  - accepts only a freshly `ELIGIBLE` target/recipe pair,
+  - stages a P4 candidate,
+  - requires full P3 including UI Canvas pixel diff,
+  - commits only on pass,
+  - keeps exactly one bounded restore/finalize checkpoint,
+  - blocks further mutation while a checkpoint is pending.
+- `Restore original` and explicit irreversible `Finalize fix` UI controls implemented.
+- P5 recipe-to-Elementor mappings documented in `docs/P5_SAFE_RECIPES.md` and `docs/ELEMENTOR_RULES.md`.
 
 ## Live calibration evidence
 
@@ -62,7 +73,7 @@ Disposable text-bearing fixtures proved:
 - bounded checkpoint policy,
 - `0` temporary nodes left.
 
-This lifecycle calibration used P3-equivalent invariants. The actual compiled `FullFrameValidator` + UI Canvas broker path is implemented as a developer self-test but still needs execution from the imported development plugin.
+This lifecycle calibration used P3-equivalent invariants. The exact compiled `FullFrameValidator` + UI Canvas broker path is implemented as a developer self-test but still needs execution from the imported development plugin.
 
 ### Facts List
 
@@ -128,18 +139,19 @@ All six preserved root/direct-child geometry, image counts and exported PNG byte
 
 ## CI
 
-CI run #84 completed successfully on the branch after Metric/Social implementation and calibration documentation. Subsequent status/documentation commits should still be rechecked before merge.
+CI run #97 completed successfully on the gated production-UI/documentation head: install, typecheck, tests and build all passed.
 
 ## In progress
 
-- Run the imported development plugin command `Developer: P5 Runtime Self-Test`.
-- Verify the exact compiled path: `runSafeFixTransaction -> FullFrameValidator -> UI Canvas pixel broker -> P4`.
-- Only if that passes, enable an explicit production Safe Fix action with preview/confirmation and rollback controls.
-- Final P5 CI and PR review/merge.
+- Import the current development plugin and run `Developer: P5 Runtime Self-Test` (or the UI `Runtime self-test`).
+- Require the exact compiled `runSafeFixTransaction -> FullFrameValidator -> UI Canvas pixel broker -> P4` path to pass both forced-reject and pass/commit/restore cases.
+- Confirm the runtime proof unlocks Safe Fix only after PASS and is cleared on failure/stale version.
+- Exercise one production-gated Safe Fix on a disposable real section, then restore it; separately exercise commit -> finalize on a disposable copy.
+- Final PR review, mark PR #14 ready, merge and close issue #6 only when the runtime proof is green.
 
 ## Safety status
 
-General production Safe Fix is **not exposed**. Low-confidence, ambiguous, fragmented, decorative, carousel and timeline cases remain non-mutating. Every recipe still requires candidate isolation + full P3 + P4 commit/rollback.
+Production Safe Fix controls are implemented but **mutation remains locked until the compiled runtime proof passes in the imported plugin**. Low-confidence, ambiguous, fragmented, decorative, carousel and timeline cases remain non-mutating. Every recipe still requires candidate isolation + full P3 + P4 commit/rollback.
 
 ## Next phases
 
