@@ -21,6 +21,8 @@ export interface AuditNode {
   textLength: number;
   textAutoResize: string | null;
   absolutePositioned: boolean;
+  clipsContent: boolean;
+  opacity: number;
   visible: boolean;
   childIds: string[];
   children: AuditNode[];
@@ -51,6 +53,22 @@ export interface AuditFinding {
 
 export type AuditStatus = 'PASS' | 'REVIEW' | 'NEEDS_WORK';
 
+export type PatternKind =
+  | 'two-column'
+  | 'grid'
+  | 'horizontal-row'
+  | 'vertical-stack'
+  | 'carousel-track'
+  | 'unknown';
+
+export interface PatternDetection {
+  pattern: PatternKind;
+  confidence: number;
+  targetNodeId: string;
+  targetNodeName: string;
+  evidence: Record<string, string | number | boolean>;
+}
+
 export interface SectionAudit {
   id: string;
   name: string;
@@ -58,6 +76,7 @@ export interface SectionAudit {
   status: AuditStatus;
   stats: AuditStats;
   findings: AuditFinding[];
+  detection: PatternDetection | null;
   recommendedRecipe: string | null;
 }
 

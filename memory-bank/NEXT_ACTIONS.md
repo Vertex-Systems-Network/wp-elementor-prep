@@ -4,22 +4,20 @@ Last updated: 2026-09-07
 
 Execute in this order:
 
-1. Review and merge PR #1 after confirming the already-passing CI remains green on the latest head.
-2. Start issue #2 on a focused feature branch.
-3. Harden `discoverSections()` using selected-frame/page-wrapper geometry rather than names alone.
-4. Replace the simple score with an evidence-based weighted finding model.
-5. Add normalized JSON fixtures for:
-   - strong Auto Layout section,
-   - manual two-column section,
-   - 2x3 grid,
-   - carousel-like overflow,
-   - decorative-background overlap,
-   - timeline chapter.
-6. Add classifier unit tests for row/column/grid clustering.
-7. Run the Audit-Only plugin against the live golden Figma page and compare section scores to the manual audit.
-8. Record discrepancies in `memory-bank/PROJECT_STATE.md` and create focused issues where needed.
-9. Do **not** implement mutation recipes until P2 classifier confidence is validated and P3/P4 safety foundations are underway.
+1. Commit the P1 classifier/scanner updates on `feat/p1-audit-engine`.
+2. Run CI; fix all typecheck/test/build failures before adding more classifier logic.
+3. Run the Audit-Only engine against the live golden Figma frame and capture:
+   - discovered section count/order,
+   - score per section,
+   - detected pattern/confidence per section.
+4. Compare results to manual expectations:
+   - strong: Hero/Identity/Recognition/Expertise/Credentials/Quote/Testimonials,
+   - weak/needs work: About/Philosophy/Journey/Numbers/Sector/Beyond Work/Media/Milestones/Contact/Social Strip.
+5. Tune section discovery and scoring without hard-coding section names.
+6. Add split-header, decorative-overlap and timeline fixtures.
+7. Open/merge the P1 PR only when CI is green and golden calibration is recorded.
+8. Do not implement mutation recipes yet.
 
 ## Immediate definition of success
 
-The next checkpoint is reached when the plugin can scan a selected desktop frame and produce a stable, explainable, read-only report that correctly separates strong and weak sections on the golden fixture.
+P1 checkpoint is reached when the read-only report consistently discovers the real page sections and produces explainable scores/pattern detections close enough to the manual audit that discrepancies can be reasoned about rather than guessed.

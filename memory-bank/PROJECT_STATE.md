@@ -10,36 +10,37 @@ Core runtime must not require generative AI or external network access.
 
 ## Current phase
 
-**Phase 0 foundation complete on PR #1; Phase 1 Audit-Only scaffold started.**
+**Phase 1 Audit-Only engine active on branch `feat/p1-audit-engine`.**
 
 ## Completed
 
-- Product direction established.
-- Deep technical/product audit completed.
-- AI-native development model defined.
-- Mandatory memory-bank architecture implemented.
-- Elementor-readiness rules documented.
-- Feature roadmap and pre-development plan documented.
-- Initial TypeScript/Figma plugin scaffold implemented.
-- Initial read-only scanner/scoring/report UI implemented.
-- CI/test/build scaffold implemented.
-- CI run #1 passed: install, typecheck, tests, and build all successful.
-- Roadmap issues #2–#9 created for P1–P8.
+- Phase 0 foundation merged to `main` via PR #1.
+- Product direction, deep audit, architecture, feature plan and pre-development plan established.
+- Mandatory AI-native memory-bank implemented.
+- TypeScript/Figma plugin scaffold implemented.
+- Read-only scanner/scoring/report UI implemented.
+- CI/test/build pipeline verified green.
+- Roadmap issues #2–#9 created.
+- P1 deterministic pattern-classifier foundation implemented for two-column, grid, horizontal row, vertical stack and carousel-track detection.
+- P1 detection evidence/confidence payload added.
+- P1 unit tests added for two-column, 2x3 grid, background exclusion and carousel overflow.
 
 ## In progress
 
-- PR #1 review/merge.
 - Issue #2: Audit-Only MVP hardening and golden-fixture calibration.
+- Validate new classifier branch in CI.
+- Calibrate section discovery/pattern results against the live Marcus Vane golden fixture.
 
 ## Not started
 
-- Geometric classifier recipes (#3).
+- Full decoration/background role classifier beyond conservative full-size background screening.
+- Timeline/chapter-specific classifier (#3 scope).
 - Visual/integrity validator (#4).
 - Transaction clone/rollback engine (#5).
 - Safe Auto-Fix recipes (#6).
-- Advanced timeline/carousel/milestone recipes (#7).
-- Batch queue for 60+ frames/pages (#8).
-- Elementor JSON exporter adapters (#9).
+- Advanced transformations (#7).
+- Batch queue (#8).
+- Elementor exporter (#9).
 
 ## Golden fixture observations
 
@@ -53,23 +54,11 @@ Initial reference desktop:
 - ~38% Auto Layout coverage,
 - ~433 text nodes.
 
-Strong structured sections exist alongside weak ones; therefore the plugin must support `PASS/no change` as a first-class outcome.
+Known pattern families: two-column, split header, metric grid, timeline chapters, card grids, carousel track, milestones, footer columns, social/link strip.
 
-Known pattern families include two-column, split header, metric grid, timeline chapters, card grids, carousel track, milestones, footer columns, and social/link strip.
+## Safety status
 
-## Current architecture constraints
-
-- selected-frame scope first,
-- `documentAccess: dynamic-page`,
-- network access disabled,
-- TypeScript strict mode,
-- audit before mutation,
-- future mutations use clone/candidate/validate/commit-or-discard,
-- internal neutral layout model separated from future Elementor schema adapters.
-
-## Current risk level
-
-Low for read-only audit development. High for any mutation work until validator + transaction engine exist.
+All current runtime behavior remains read-only. No Auto-Fix mutation behavior is enabled.
 
 ## Release target
 

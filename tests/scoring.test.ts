@@ -18,7 +18,7 @@ function stats(overrides: Partial<AuditStats> = {}): AuditStats {
   };
 }
 
-function node(overrides: Partial<AuditNode> = {}): AuditNode {
+export function node(overrides: Partial<AuditNode> = {}): AuditNode {
   return {
     id: '1:1',
     name: 'Desktop',
@@ -33,6 +33,8 @@ function node(overrides: Partial<AuditNode> = {}): AuditNode {
     textLength: 0,
     textAutoResize: null,
     absolutePositioned: false,
+    clipsContent: false,
+    opacity: 1,
     visible: true,
     childIds: [],
     children: [],

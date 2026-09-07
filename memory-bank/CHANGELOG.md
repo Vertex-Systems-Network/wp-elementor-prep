@@ -2,26 +2,24 @@
 
 ## 2026-09-07
 
-### Planning and audit
+### Foundation
 - Established AI-native development approach with mandatory memory-bank.
-- Completed initial repository audit; baseline was effectively empty except README.
-- Completed product/technical audit using the Marcus Vane desktop as a golden reference pattern set.
+- Completed repository/product/technical audit.
 - Defined deterministic, AI-free runtime direction.
 - Defined Elementor-readiness rules and neutral-schema architecture.
-- Defined confidence-gated audit -> candidate -> validate -> commit/rollback strategy.
+- Added TypeScript/Figma plugin Audit-Only scaffold, tests and CI.
+- PR #1 merged to `main` after green CI.
+- Created roadmap issues #2–#9.
 
-### Repository foundation
-- Added architecture, feature plan, pre-development plan and deep-audit docs.
-- Added AGENTS instructions for future AI/human sessions.
-- Added initial TypeScript/Figma plugin audit-only scaffold.
-- Added initial unit-test/build/CI scaffold.
-- Opened PR #1 for the foundation.
-- Created roadmap issues #2–#9 covering Audit MVP through optional Elementor exporter.
-
-### Verification
-- GitHub Actions CI run #1 passed successfully.
-- `npm install`, TypeScript typecheck, Vitest suite and production build all passed.
+### P1 Audit engine
+- Started `feat/p1-audit-engine`.
+- Extended normalized node snapshots with clipping and opacity signals.
+- Added explainable deterministic detection for two-column, grid, horizontal row, vertical stack and carousel-track patterns.
+- Added shallow best-pattern search and confidence/evidence payloads.
+- Added conservative full-size background exclusion to reduce obvious false overlap/layout classification.
+- Updated audit UI to show detected pattern, confidence and evidence.
+- Added unit tests for two-column, 2x3 grid, background exclusion and carousel overflow.
 
 ### Safety status
 - No Auto-Fix mutation behavior enabled.
-- Current engineering focus remains read-only Audit-Only MVP.
+- All current runtime functionality remains read-only.

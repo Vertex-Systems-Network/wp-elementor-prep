@@ -18,9 +18,12 @@
     .row:first-child { border-top: 0; }
     .rowHead { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
     .name { font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .badge { font-size: 10px; font-weight: 700; opacity: .75; }
-    .recipe { font-size: 10px; opacity: .65; margin-top: 3px; }
+    .badge { font-size: 10px; font-weight: 700; opacity: .75; white-space: nowrap; }
+    .recipe { font-size: 10px; opacity: .72; margin-top: 3px; }
     .finding { font-size: 10px; opacity: .72; margin-top: 4px; line-height: 1.35; }
+    details { margin-top: 5px; }
+    summary { font-size: 10px; cursor: pointer; opacity: .65; }
+    pre { white-space: pre-wrap; word-break: break-word; font-size: 9px; opacity: .7; margin: 5px 0 0; }
     button { width: 100%; margin-top: 12px; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; }
     .empty { border: 1px dashed var(--figma-color-border); border-radius: 8px; padding: 18px; font-size: 12px; line-height: 1.5; opacity: .75; }
   </style>
@@ -28,7 +31,7 @@
 <body>
   <div class="app">
     <h1>Pella Elementor Prep</h1>
-    <div class="sub">Audit-Only MVP · no design mutations</div>
+    <div class="sub">Audit-Only MVP · deterministic · no design mutations</div>
     <div id="root" class="empty">Select one desktop Frame in Figma.</div>
     <button id="audit">Run audit</button>
   </div>
@@ -62,7 +65,11 @@
       const report = message.report;
       const sections = report.sections.map((section) => {
         const first = section.findings[0];
-        const recipe = section.recommendedRecipe ? `Recipe candidate: ${section.recommendedRecipe}` : 'Recipe candidate: not classified yet';
+        const detection = section.detection;
+        const recipe = detection
+          ? `${detection.pattern} · confidence ${detection.confidence}%`
+          : 'pattern not classified yet';
+        const evidence = detection ? JSON.stringify(detection.evidence, null, 2) : '';
         return `
           <div class="row">
             <div class="rowHead">
@@ -71,6 +78,7 @@
             </div>
             <div class="recipe">${escapeHtml(recipe)} · Auto Layout ${section.stats.autoLayoutCoveragePct}%</div>
             ${first ? `<div class="finding">${escapeHtml(first.title)}</div>` : ''}
+            ${detection ? `<details><summary>Detection evidence</summary><pre>${escapeHtml(evidence)}</pre></details>` : ''}
           </div>`;
       }).join('');
 
