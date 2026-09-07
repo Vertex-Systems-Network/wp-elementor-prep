@@ -1,27 +1,20 @@
 import { scanSceneNode } from '../core/scanner';
 import { buildAuditReport } from '../core/scoring';
-import { captureIntegritySnapshot } from './integrity-snapshot';
-import { DEFAULT_VALIDATION_THRESHOLDS, mergePixelValidation, validateIntegrity } from '../core/validator';
-import type { PixelDiffMetrics, ValidationReport } from '../core/validation-types';
+import { FullFrameValidator } from './full-frame-validator';
+import type { PixelDiffMetrics } from '../core/validation-types';
 
 declare const __html__: string;
 
 const PLUGIN_VERSION = '0.1.0-alpha.1';
-const MAX_VALIDATION_RENDER_DIMENSION = 2048;
-let validationSequence = 0;
-
-interface PendingValidation {
-  report: ValidationReport;
-  labels: { before: string; after: string };
-  renderScale: number;
-}
-
-const pendingValidations = new Map<number, PendingValidation>();
 
 figma.showUI(__html__, {
   width: 440,
   height: 680,
   themeColors: true,
+});
+
+const fullFrameValidator = new FullFrameValidator((message) => {
+  figma.ui.postMessage(message);
 });
 
 function postError(message: string, type: 'audit-error' | 'validation-error' = 'audit-error'): void {
@@ -67,58 +60,17 @@ async function runValidation(): Promise<void> {
   }
 
   try {
-    const beforeSnapshot = captureIntegritySnapshot(before);
-    const afterSnapshot = captureIntegritySnapshot(after);
-    const report = validateIntegrity(beforeSnapshot, afterSnapshot, DEFAULT_VALIDATION_THRESHOLDS);
-
-    const largestDimension = Math.max(before.width, before.height, after.width, after.height, 1);
-    const renderScale = Math.min(1, MAX_VALIDATION_RENDER_DIMENSION / largestDimension);
-    const exportSettings: ExportSettingsImage = {
-      format: 'PNG',
-      constraint: { type: 'SCALE', value: renderScale },
-    };
-
-    const [beforePng, afterPng] = await Promise.all([
-      before.exportAsync(exportSettings),
-      after.exportAsync(exportSettings),
-    ]);
-
-    validationSequence += 1;
-    const validationId = validationSequence;
-    pendingValidations.set(validationId, {
-      report,
-      labels: { before: before.name, after: after.name },
-      renderScale,
-    });
-
+    const result = await fullFrameValidator.validate(before, after);
     figma.ui.postMessage({
-      type: 'validation-pixel-request',
-      validationId,
-      beforePng,
-      afterPng,
-      channelTolerance: DEFAULT_VALIDATION_THRESHOLDS.pixelChannelDelta,
+      type: 'validation-result',
+      report: result.report,
+      labels: result.labels,
+      renderScale: result.renderScale,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     postError(`Validation failed: ${message}`, 'validation-error');
   }
-}
-
-function finishPixelValidation(validationId: number, pixelMetrics: PixelDiffMetrics): void {
-  const pending = pendingValidations.get(validationId);
-  if (!pending) {
-    postError('Validation result expired or is no longer pending.', 'validation-error');
-    return;
-  }
-
-  pendingValidations.delete(validationId);
-  const report = mergePixelValidation(pending.report, pixelMetrics);
-  figma.ui.postMessage({
-    type: 'validation-result',
-    report,
-    labels: pending.labels,
-    renderScale: pending.renderScale,
-  });
 }
 
 figma.ui.onmessage = async (message: unknown) => {
@@ -144,7 +96,21 @@ figma.ui.onmessage = async (message: unknown) => {
       postError('Pixel validator returned an invalid payload.', 'validation-error');
       return;
     }
-    finishPixelValidation(payload.validationId, payload.pixelMetrics as PixelDiffMetrics);
+    if (!fullFrameValidator.finish(payload.validationId, payload.pixelMetrics as PixelDiffMetrics)) {
+      postError('Validation result expired or is no longer pending.', 'validation-error');
+    }
+    return;
+  }
+
+  if (type === 'validation-pixel-error') {
+    const payload = message as { validationId?: unknown; message?: unknown };
+    if (typeof payload.validationId !== 'number' || typeof payload.message !== 'string') {
+      postError('Pixel validator returned an invalid error payload.', 'validation-error');
+      return;
+    }
+    if (!fullFrameValidator.fail(payload.validationId, payload.message)) {
+      postError('Validation result expired or is no longer pending.', 'validation-error');
+    }
   }
 };
 
