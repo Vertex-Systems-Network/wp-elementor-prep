@@ -28,11 +28,30 @@ export interface IntegritySnapshot {
   nodeTypeCounts: Record<string, number>;
 }
 
+export interface PixelDiffMetrics {
+  sameDimensions: boolean;
+  widthBefore: number;
+  heightBefore: number;
+  widthAfter: number;
+  heightAfter: number;
+  totalPixels: number;
+  changedPixels: number;
+  changedPixelPct: number;
+  meanChannelDelta: number;
+  maxChannelDelta: number;
+  channelTolerance: number;
+}
+
 export interface ValidationThresholds {
   version: string;
   rootSizePx: number;
   anchorPositionPx: number;
   anchorSizePx: number;
+  /** Per-channel 0–255 delta ignored when deciding whether a pixel changed. */
+  pixelChannelDelta: number;
+  /** Percentage on a 0–100 scale. */
+  maxChangedPixelPct: number;
+  maxMeanChannelDelta: number;
 }
 
 export type ValidationFailureCode =
@@ -41,7 +60,9 @@ export type ValidationFailureCode =
   | 'TEXT_CONTENT_DRIFT'
   | 'IMAGE_CONTENT_DRIFT'
   | 'TEXT_GEOMETRY_DRIFT'
-  | 'IMAGE_GEOMETRY_DRIFT';
+  | 'IMAGE_GEOMETRY_DRIFT'
+  | 'PIXEL_DIMENSION_MISMATCH'
+  | 'PIXEL_DIFF_EXCEEDED';
 
 export interface ValidationFinding {
   code: ValidationFailureCode;
@@ -63,6 +84,7 @@ export interface ValidationMetrics {
   maxImageSizeDriftPx: number;
   visibleNodeCountBefore: number;
   visibleNodeCountAfter: number;
+  pixel?: PixelDiffMetrics;
 }
 
 export interface ValidationReport {

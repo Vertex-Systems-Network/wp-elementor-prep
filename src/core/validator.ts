@@ -1,6 +1,7 @@
 import type {
   IntegrityAnchor,
   IntegritySnapshot,
+  PixelDiffMetrics,
   ValidationFinding,
   ValidationGeometry,
   ValidationMetrics,
@@ -13,6 +14,9 @@ export const DEFAULT_VALIDATION_THRESHOLDS: ValidationThresholds = {
   rootSizePx: 2,
   anchorPositionPx: 2,
   anchorSizePx: 2,
+  pixelChannelDelta: 8,
+  maxChangedPixelPct: 0.5,
+  maxMeanChannelDelta: 0.5,
 };
 
 /**
@@ -134,13 +138,15 @@ export function validateIntegrity(
   thresholds: ValidationThresholds = DEFAULT_VALIDATION_THRESHOLDS,
 ): ValidationReport {
   const findings: ValidationFinding[] = [];
+  const beforeValid = snapshotGeometryValid(before);
+  const afterValid = snapshotGeometryValid(after);
 
-  if (!snapshotGeometryValid(before) || !snapshotGeometryValid(after)) {
+  if (!beforeValid || !afterValid) {
     findings.push(finding(
       'INVALID_SNAPSHOT_GEOMETRY',
       'Snapshot contains invalid geometry',
       'Validation cannot trust a snapshot containing non-finite, negative, or zero-sized root geometry.',
-      { beforeValid: snapshotGeometryValid(before), afterValid: snapshotGeometryValid(after) },
+      { beforeValid, afterValid },
     ));
   }
 
@@ -236,5 +242,49 @@ export function validateIntegrity(
     thresholds,
     findings,
     metrics,
+  };
+}
+
+/** Append section-level rendered-pixel evidence to an existing integrity report. */
+export function mergePixelValidation(report: ValidationReport, pixel: PixelDiffMetrics): ValidationReport {
+  const findings = [...report.findings];
+  const thresholds = report.thresholds;
+
+  if (!pixel.sameDimensions) {
+    findings.push(finding(
+      'PIXEL_DIMENSION_MISMATCH',
+      'Rendered dimensions differ',
+      'Original and candidate PNG exports decoded to different pixel dimensions.',
+      {
+        widthBefore: pixel.widthBefore,
+        heightBefore: pixel.heightBefore,
+        widthAfter: pixel.widthAfter,
+        heightAfter: pixel.heightAfter,
+      },
+    ));
+  } else if (
+    pixel.changedPixelPct > thresholds.maxChangedPixelPct
+    || pixel.meanChannelDelta > thresholds.maxMeanChannelDelta
+  ) {
+    findings.push(finding(
+      'PIXEL_DIFF_EXCEEDED',
+      'Rendered pixel drift exceeded threshold',
+      'The candidate render differs from the original beyond the configured section-level visual tolerance.',
+      {
+        changedPixelPct: pixel.changedPixelPct,
+        allowedChangedPixelPct: thresholds.maxChangedPixelPct,
+        meanChannelDelta: pixel.meanChannelDelta,
+        allowedMeanChannelDelta: thresholds.maxMeanChannelDelta,
+        maxChannelDelta: pixel.maxChannelDelta,
+        channelTolerance: pixel.channelTolerance,
+      },
+    ));
+  }
+
+  return {
+    ...report,
+    passed: findings.length === 0,
+    findings,
+    metrics: { ...report.metrics, pixel },
   };
 }
