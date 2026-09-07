@@ -20,6 +20,9 @@ declare const __html__: string;
 const PLUGIN_VERSION = '0.1.0-alpha.1';
 const RUNTIME_PROOF_STORAGE_KEY = 'pella-elementor-prep:p5-runtime-proof';
 
+type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize';
+let p5OperationInFlight: P5ExclusiveOperation | null = null;
+
 figma.showUI(__html__, {
   width: 440,
   height: 680,
@@ -35,6 +38,19 @@ function postError(
   type: 'audit-error' | 'validation-error' | 'safe-fix-error' = 'audit-error',
 ): void {
   figma.ui.postMessage({ type, message });
+}
+
+function beginExclusiveP5Operation(operation: P5ExclusiveOperation, errorType: 'validation-error' | 'safe-fix-error'): boolean {
+  if (p5OperationInFlight) {
+    postError(`Another P5 operation (${p5OperationInFlight}) is still running. Wait for it to finish before starting ${operation}.`, errorType);
+    return false;
+  }
+  p5OperationInFlight = operation;
+  return true;
+}
+
+function endExclusiveP5Operation(operation: P5ExclusiveOperation): void {
+  if (p5OperationInFlight === operation) p5OperationInFlight = null;
 }
 
 function selectedFrame(): FrameNode | null {
@@ -93,10 +109,11 @@ async function runSafePlanPreview(): Promise<void> {
       root: { id: root.id, name: root.name, width: root.geometry.width, height: root.geometry.height },
       plans,
       roles,
-      mutationEnabled: proof.valid && !pendingUndo,
+      mutationEnabled: proof.valid && !pendingUndo && !p5OperationInFlight,
       runtimeProofValid: proof.valid,
       runtimeProofPassedAt: proof.passedAt,
       pendingUndo,
+      operationInFlight: p5OperationInFlight,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -133,6 +150,9 @@ async function runValidation(): Promise<void> {
 }
 
 async function runRuntimeSelfTest(): Promise<void> {
+  const operation: P5ExclusiveOperation = 'runtime-self-test';
+  if (!beginExclusiveP5Operation(operation, 'validation-error')) return;
+
   figma.ui.postMessage({ type: 'runtime-calibration-started' });
   try {
     const result = await runP5RuntimeCalibration(async (before, after) => {
@@ -158,6 +178,8 @@ async function runRuntimeSelfTest(): Promise<void> {
     await figma.clientStorage.deleteAsync(RUNTIME_PROOF_STORAGE_KEY);
     const message = error instanceof Error ? error.message : String(error);
     postError(`P5 runtime self-test failed: ${message}`, 'validation-error');
+  } finally {
+    endExclusiveP5Operation(operation);
   }
 }
 
@@ -167,6 +189,9 @@ async function runSafeFixApply(message: { targetNodeId: string; recipe: SafeReci
     postError('Select exactly one Frame before applying a Safe Fix.', 'safe-fix-error');
     return;
   }
+
+  const operation: P5ExclusiveOperation = 'safe-fix-apply';
+  if (!beginExclusiveP5Operation(operation, 'safe-fix-error')) return;
 
   try {
     const [proof, pendingUndo] = await Promise.all([
@@ -223,10 +248,15 @@ async function runSafeFixApply(message: { targetNodeId: string; recipe: SafeReci
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     postError(`Safe Fix failed: ${errorMessage}`, 'safe-fix-error');
+  } finally {
+    endExclusiveP5Operation(operation);
   }
 }
 
 async function runSafeFixRestore(): Promise<void> {
+  const operation: P5ExclusiveOperation = 'safe-fix-restore';
+  if (!beginExclusiveP5Operation(operation, 'safe-fix-error')) return;
+
   try {
     const evidence = await restoreLastSafeFix();
     figma.ui.postMessage({ type: 'safe-fix-restore-result', restored: Boolean(evidence), evidence });
@@ -234,10 +264,15 @@ async function runSafeFixRestore(): Promise<void> {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     postError(`Safe Fix restore failed: ${message}`, 'safe-fix-error');
+  } finally {
+    endExclusiveP5Operation(operation);
   }
 }
 
 async function runSafeFixFinalize(): Promise<void> {
+  const operation: P5ExclusiveOperation = 'safe-fix-finalize';
+  if (!beginExclusiveP5Operation(operation, 'safe-fix-error')) return;
+
   try {
     const finalized = await finalizeLastSafeFix();
     figma.ui.postMessage({ type: 'safe-fix-finalize-result', finalized });
@@ -245,6 +280,8 @@ async function runSafeFixFinalize(): Promise<void> {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     postError(`Safe Fix finalize failed: ${message}`, 'safe-fix-error');
+  } finally {
+    endExclusiveP5Operation(operation);
   }
 }
 
