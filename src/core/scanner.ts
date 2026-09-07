@@ -2,8 +2,8 @@ import type { AuditNode, AuditStats, LayoutMode } from './types';
 
 const GENERIC_NAME = /^(frame|group|container|rectangle|text|paragraph|heading|section|line)(\b|\s|\d|\s+copy)/i;
 
-function numeric(value: unknown): number {
-  return typeof value === 'number' && Number.isFinite(value) ? value : 0;
+function numeric(value: unknown, fallback = 0): number {
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 }
 
 function readLayoutMode(node: SceneNode): LayoutMode {
@@ -37,6 +37,16 @@ function textAutoResize(node: SceneNode): string | null {
   return String(node.textAutoResize);
 }
 
+function clipsContent(node: SceneNode): boolean {
+  if (!('clipsContent' in node)) return false;
+  return Boolean((node as SceneNode & { clipsContent: unknown }).clipsContent);
+}
+
+function readOpacity(node: SceneNode): number {
+  if (!('opacity' in node)) return 1;
+  return numeric((node as SceneNode & { opacity: unknown }).opacity, 1);
+}
+
 export function scanSceneNode(node: SceneNode): AuditNode {
   const children = childNodes(node).map(scanSceneNode);
   const mode = readLayoutMode(node);
@@ -62,6 +72,8 @@ export function scanSceneNode(node: SceneNode): AuditNode {
     textLength: isText ? node.characters.length : 0,
     textAutoResize: textAutoResize(node),
     absolutePositioned: isAbsolute(node),
+    clipsContent: clipsContent(node),
+    opacity: readOpacity(node),
     visible: node.visible,
     childIds: children.map((child) => child.id),
     children,
@@ -119,7 +131,11 @@ function candidateScore(root: AuditNode, candidate: AuditNode): number {
   const sectionishChildren = candidate.children.filter(
     (child) => child.isContainer && child.geometry.width >= candidate.geometry.width * 0.6,
   );
-  return sectionishChildren.length * 10 + candidate.children.length;
+  const verticalSpread = candidate.children.length > 1
+    ? Math.max(...candidate.children.map((child) => child.geometry.y)) - Math.min(...candidate.children.map((child) => child.geometry.y))
+    : 0;
+
+  return sectionishChildren.length * 10 + candidate.children.length + Math.min(20, verticalSpread / 200);
 }
 
 /**
@@ -136,7 +152,7 @@ export function discoverSections(root: AuditNode): AuditNode[] {
   const wrapper = candidates[0]?.node;
   if (!wrapper) {
     return root.children
-      .filter((child) => child.isContainer)
+      .filter((child) => child.isContainer && child.visible)
       .sort((a, b) => a.geometry.y - b.geometry.y);
   }
 

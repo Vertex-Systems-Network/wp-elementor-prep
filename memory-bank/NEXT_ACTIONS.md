@@ -4,22 +4,24 @@ Last updated: 2026-09-07
 
 Execute in this order:
 
-1. Review and merge PR #1 after confirming the already-passing CI remains green on the latest head.
-2. Start issue #2 on a focused feature branch.
-3. Harden `discoverSections()` using selected-frame/page-wrapper geometry rather than names alone.
-4. Replace the simple score with an evidence-based weighted finding model.
-5. Add normalized JSON fixtures for:
-   - strong Auto Layout section,
-   - manual two-column section,
-   - 2x3 grid,
-   - carousel-like overflow,
-   - decorative-background overlap,
-   - timeline chapter.
-6. Add classifier unit tests for row/column/grid clustering.
-7. Run the Audit-Only plugin against the live golden Figma page and compare section scores to the manual audit.
-8. Record discrepancies in `memory-bank/PROJECT_STATE.md` and create focused issues where needed.
-9. Do **not** implement mutation recipes until P2 classifier confidence is validated and P3/P4 safety foundations are underway.
+1. Synchronize P1 golden-calibration docs and memory-bank with the confirmed fragmented Numbers grid and green CI.
+2. Update draft PR #10 with the final P1 scope/results and mark it ready for review.
+3. Merge PR #10 only if latest CI remains green and the diff still contains no design-mutation behavior.
+4. After merge, start a focused P2 branch for broader classifier semantics (decorative/overlay roles, timeline/chapter semantics, target de-duplication/ranking).
+5. In parallel with P2, identify at least four additional materially different real desktop templates and run Audit-Only calibration on them.
+6. Record every meaningful false positive/negative in `PROJECT_STATE`, `CHANGELOG`, and calibration docs; never hard-code customer copy/node IDs into the engine.
+7. Begin P3 validator design only after the P2 evidence model is stable enough to specify what a candidate transformation must preserve.
+8. Do **not** enable Safe Fix before P3 validator and P4 transaction/rollback foundations exist.
 
 ## Immediate definition of success
 
-The next checkpoint is reached when the plugin can scan a selected desktop frame and produce a stable, explainable, read-only report that correctly separates strong and weak sections on the golden fixture.
+P1 is merge-ready when:
+
+- selected desktop scan works,
+- real section discovery works on the golden fixture,
+- strong vs weak readiness is explainable,
+- multi-target layout evidence works,
+- fragmented grid is detected without inventing a wrapped node,
+- Journey false positive remains fixed,
+- typecheck/tests/build are green,
+- no Figma mutation exists in runtime code.

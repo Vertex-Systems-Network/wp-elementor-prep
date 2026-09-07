@@ -7,6 +7,7 @@ import type {
   SectionAudit,
 } from './types';
 import { computeStats, discoverSections } from './scanner';
+import { detectPatterns, recipeForPattern } from './classifier';
 
 function clamp(value: number, min = 0, max = 100): number {
   return Math.max(min, Math.min(max, Math.round(value)));
@@ -14,7 +15,7 @@ function clamp(value: number, min = 0, max = 100): number {
 
 function statusFor(score: number): AuditStatus {
   if (score >= 80) return 'PASS';
-  if (score >= 55) return 'REVIEW';
+  if (score >= 70) return 'REVIEW';
   return 'NEEDS_WORK';
 }
 
@@ -23,14 +24,19 @@ function ratio(numerator: number, denominator: number, fallback = 1): number {
   return numerator / denominator;
 }
 
+/**
+ * Screening score only. It intentionally does not claim that Auto Layout percentage equals
+ * Elementor readiness; later phases will add deeper sizing, overlay and repeated-pattern signals.
+ */
 export function scoreStats(stats: AuditStats): number {
-  const layout = ratio(stats.autoLayoutContainers, stats.containers) * 55;
-  const naming = (1 - ratio(stats.genericNames, stats.nodes, 0)) * 15;
+  const layout = ratio(stats.autoLayoutContainers, stats.containers) * 50;
+  const naming = (1 - ratio(stats.genericNames, stats.nodes, 0)) * 10;
   const textBehavior = ratio(stats.autoHeightTextNodes, stats.textNodes) * 12;
   const absoluteSafety = (1 - Math.min(1, ratio(stats.absolutePositionedNodes, stats.nodes, 0) * 3)) * 8;
   const structuralBaseline = stats.containers > 0 ? 10 : 5;
+  const contentBaseline = stats.textNodes > 0 || stats.imageLikeNodes > 0 ? 10 : 5;
 
-  return clamp(layout + naming + textBehavior + absoluteSafety + structuralBaseline);
+  return clamp(layout + naming + textBehavior + absoluteSafety + structuralBaseline + contentBaseline);
 }
 
 export function findingsFor(stats: AuditStats): AuditFinding[] {
@@ -60,7 +66,7 @@ export function findingsFor(stats: AuditStats): AuditFinding[] {
       code: 'GENERIC_LAYER_NAMES',
       severity: 'warning',
       title: 'Layer semantics are weak',
-      detail: 'Generic names are common. Names are only an advisory signal and will not be used as the primary layout classifier.',
+      detail: 'Generic names are common. Names remain secondary evidence only; geometry and node relationships drive classification.',
       evidence: { genericNames: stats.genericNames, nodes: stats.nodes },
     });
   }
@@ -81,7 +87,7 @@ export function findingsFor(stats: AuditStats): AuditFinding[] {
       code: 'ABSOLUTE_POSITIONING_PRESENT',
       severity: 'info',
       title: 'Absolute positioning requires role classification',
-      detail: 'Absolute positioning is valid for overlays and decoration. Future analysis must classify these nodes before applying any penalty or fix.',
+      detail: 'Absolute positioning is valid for overlays and decoration. It must not be auto-penalized or removed before decorative-role classification.',
       evidence: { absolutePositionedNodes: stats.absolutePositionedNodes },
     });
   }
@@ -91,7 +97,7 @@ export function findingsFor(stats: AuditStats): AuditFinding[] {
       code: 'NO_MAJOR_SCREENING_ISSUES',
       severity: 'info',
       title: 'No major screening issue detected',
-      detail: 'This is an initial audit signal only; geometric recipe classification still needs to run before any future mutation.',
+      detail: 'This remains an audit signal only; high-confidence mutation requires later validation and transaction phases.',
       evidence: { autoLayoutCoveragePct: stats.autoLayoutCoveragePct },
     });
   }
@@ -99,41 +105,27 @@ export function findingsFor(stats: AuditStats): AuditFinding[] {
   return findings;
 }
 
-function near(a: number, b: number, tolerance = 3): boolean {
-  return Math.abs(a - b) <= tolerance;
-}
-
-export function recommendRecipe(section: AuditNode): string | null {
-  const visible = section.children.filter((child) => child.visible && child.isContainer);
-  const only = visible.length === 1 ? visible[0] : undefined;
-  const candidates = only ? only.children.filter((child) => child.visible && child.isContainer) : visible;
-
-  if (candidates.length === 2) {
-    const [a, b] = candidates;
-    if (a && b && near(a.geometry.y, b.geometry.y, 5)) return 'two-column';
-  }
-
-  if (candidates.length >= 4) {
-    const widths = candidates.map((child) => child.geometry.width).filter((width) => width > 0);
-    const average = widths.reduce((sum, width) => sum + width, 0) / Math.max(1, widths.length);
-    const consistent = widths.filter((width) => Math.abs(width - average) <= average * 0.12).length;
-    if (consistent >= Math.ceil(widths.length * 0.7)) return 'grid';
-  }
-
-  return null;
-}
-
 export function auditSection(section: AuditNode): SectionAudit {
   const stats = computeStats(section);
-  const score = scoreStats(stats);
+  const detections = detectPatterns(section);
+  const detection = detections[0] ?? null;
+  let score = scoreStats(stats);
+
+  // Detection is evidence that the layout is understandable, not that it is already structurally ready.
+  if (detection && detection.confidence >= 85) score = clamp(score + 3);
+
+  const status = statusFor(score);
   return {
     id: section.id,
     name: section.name,
     score,
-    status: statusFor(score),
+    status,
     stats,
     findings: findingsFor(stats),
-    recommendedRecipe: recommendRecipe(section),
+    detection,
+    detections,
+    // Already-compliant sections do not need a repair recipe even when a pattern is recognized.
+    recommendedRecipe: status === 'PASS' || !detection ? null : recipeForPattern(detection.pattern),
   };
 }
 

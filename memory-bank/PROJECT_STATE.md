@@ -4,72 +4,76 @@ Last updated: 2026-09-07
 
 ## Product
 
-`wp-elementor-prep` is a deterministic Figma plugin that audits and eventually safely refactors approved desktop Figma layouts into structures that map cleanly to WordPress Elementor.
+`wp-elementor-prep` is a deterministic, AI-free Figma plugin that audits and later safely refactors approved desktop Figma layouts into structures that map cleanly to WordPress Elementor.
 
-Core runtime must not require generative AI or external network access.
+Runtime must not require generative AI or external network access.
 
 ## Current phase
 
-**Phase 0 foundation complete on PR #1; Phase 1 Audit-Only scaffold started.**
+**P1 Audit-Only MVP is functionally complete on `feat/p1-audit-engine`; final PR/merge and broader real-template calibration remain.**
 
 ## Completed
 
-- Product direction established.
-- Deep technical/product audit completed.
-- AI-native development model defined.
-- Mandatory memory-bank architecture implemented.
-- Elementor-readiness rules documented.
-- Feature roadmap and pre-development plan documented.
-- Initial TypeScript/Figma plugin scaffold implemented.
-- Initial read-only scanner/scoring/report UI implemented.
-- CI/test/build scaffold implemented.
-- CI run #1 passed: install, typecheck, tests, and build all successful.
-- Roadmap issues #2–#9 created for P1–P8.
+- P0 foundation merged via PR #1.
+- AI-native planning, deep audit, architecture, feature plan and pre-development plan established.
+- Mandatory memory-bank implemented.
+- TypeScript/Figma plugin scaffold, read-only scanner, scoring and report UI implemented.
+- Deterministic pattern detection implemented for two-column, grid, horizontal row, vertical stack and carousel-track.
+- Confidence/evidence model implemented.
+- Multi-target pattern reporting implemented while retaining strongest `detection` for compatibility.
+- Conservative background exclusion implemented.
+- Calibrated PASS/REVIEW/NEEDS_WORK thresholds implemented.
+- PASS-section repair recipe suppression implemented.
+- Journey small-pair two-column false positive removed.
+- Fragmented-grid detection added for visually repeated grids with an unwrapped cell.
+- Live Numbers calibration confirms the 2×3 metric region as a fragmented grid at 87% confidence and its lower region as a separate two-column target.
+- Live Media calibration remains intentionally carousel-oriented; wide clipped track must not be compressed.
+- CI currently passes typecheck, tests and build on the latest calibrated classifier line.
 
 ## In progress
 
-- PR #1 review/merge.
-- Issue #2: Audit-Only MVP hardening and golden-fixture calibration.
+- Draft PR #10 finalization.
+- Memory/docs synchronization after latest live fragmented-grid calibration.
+- Decide P1 merge after final PR review.
+- Assemble four additional materially different real Figma templates for production calibration.
 
-## Not started
+## Next phases
 
-- Geometric classifier recipes (#3).
-- Visual/integrity validator (#4).
-- Transaction clone/rollback engine (#5).
-- Safe Auto-Fix recipes (#6).
-- Advanced timeline/carousel/milestone recipes (#7).
-- Batch queue for 60+ frames/pages (#8).
-- Elementor JSON exporter adapters (#9).
+- P2: broaden classifier roles, decoration/overlay and timeline semantics.
+- P3: geometry/text/image/pixel validator.
+- P4: clone -> candidate -> validate -> commit/discard transaction engine.
+- P5: conservative high-confidence Safe Fix recipes.
+- P6: advanced timeline/carousel/milestone/page normalization recipes.
+- P7: batch queue for 60+ frames/pages.
+- P8: optional versioned Elementor exporter adapters.
 
-## Golden fixture observations
+## Golden fixture facts
 
-Initial reference desktop:
+- frame: `Desktop — Elementor Ready`
+- node: `3501:2`
+- 1143 × 18794
+- 1152 nodes
+- 715 container-like nodes
+- 270 Auto Layout containers
+- 445 manual containers
+- 38% Auto Layout coverage
+- 433 text nodes
+- 17 image-like nodes
+- 16 content sections under `App`
 
-- 1143 × 18794,
-- ~1152 nodes,
-- ~715 frame-like nodes,
-- ~270 Auto Layout frames,
-- ~445 non-Auto-Layout frames,
-- ~38% Auto Layout coverage,
-- ~433 text nodes.
+## Safety status
 
-Strong structured sections exist alongside weak ones; therefore the plugin must support `PASS/no change` as a first-class outcome.
+All runtime behavior is still read-only. No Auto-Fix design mutation is enabled.
 
-Known pattern families include two-column, split header, metric grid, timeline chapters, card grids, carousel track, milestones, footer columns, and social/link strip.
+## Production mutation gate
 
-## Current architecture constraints
+Do not enable Safe Fix until:
 
-- selected-frame scope first,
-- `documentAccess: dynamic-page`,
-- network access disabled,
-- TypeScript strict mode,
-- audit before mutation,
-- future mutations use clone/candidate/validate/commit-or-discard,
-- internal neutral layout model separated from future Elementor schema adapters.
-
-## Current risk level
-
-Low for read-only audit development. High for any mutation work until validator + transaction engine exist.
+- at least 5 materially different real templates have explainable audit results,
+- no known high-confidence false positive remains,
+- P3 validator exists,
+- P4 transaction/rollback exists,
+- forced validation failure demonstrably leaves the working design untouched.
 
 ## Release target
 
