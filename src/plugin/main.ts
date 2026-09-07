@@ -1,3 +1,6 @@
+import { detectPatterns } from '../core/classifier';
+import { detectSpecialRoles } from '../core/roles';
+import { planSafeRecipes } from '../core/safe-recipe-planner';
 import { scanSceneNode } from '../core/scanner';
 import { buildAuditReport } from '../core/scoring';
 import { FullFrameValidator } from './full-frame-validator';
@@ -21,17 +24,17 @@ function postError(message: string, type: 'audit-error' | 'validation-error' = '
   figma.ui.postMessage({ type, message });
 }
 
-function runAudit(): void {
+function selectedFrame(): FrameNode | null {
   const selection = figma.currentPage.selection;
-
-  if (selection.length !== 1) {
-    postError('Select exactly one desktop frame to audit.');
-    return;
-  }
-
+  if (selection.length !== 1) return null;
   const selected = selection[0];
-  if (!selected || selected.type !== 'FRAME') {
-    postError('Audit currently supports one selected Figma Frame.');
+  return selected?.type === 'FRAME' ? selected : null;
+}
+
+function runAudit(): void {
+  const selected = selectedFrame();
+  if (!selected) {
+    postError('Select exactly one desktop Frame to audit.');
     return;
   }
 
@@ -42,6 +45,31 @@ function runAudit(): void {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     postError(`Audit failed: ${message}`);
+  }
+}
+
+function runSafePlanPreview(): void {
+  const selected = selectedFrame();
+  if (!selected) {
+    postError('Select exactly one Frame to preview Safe Fix eligibility.');
+    return;
+  }
+
+  try {
+    const root = scanSceneNode(selected);
+    const detections = detectPatterns(root);
+    const roles = detectSpecialRoles(root);
+    const plans = planSafeRecipes(root, detections, roles);
+    figma.ui.postMessage({
+      type: 'safe-plan-result',
+      root: { id: root.id, name: root.name, width: root.geometry.width, height: root.geometry.height },
+      plans,
+      roles,
+      mutationEnabled: false,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    postError(`Safe Fix preview failed: ${message}`);
   }
 }
 
@@ -79,6 +107,11 @@ figma.ui.onmessage = async (message: unknown) => {
 
   if (type === 'audit-request') {
     runAudit();
+    return;
+  }
+
+  if (type === 'safe-plan-request') {
+    runSafePlanPreview();
     return;
   }
 
