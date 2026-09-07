@@ -9,7 +9,7 @@ Last updated: 2026-09-08
 | P2 | Deterministic classifier semantics + confidence/role evidence | COMPLETE — PR #11 merged, issue #3 closed |
 | P3 | Geometry/content/image + pixel validation | COMPLETE — PR #12 merged, issue #4 closed |
 | P4 | Candidate transaction + rollback | COMPLETE — PR #13 merged, issue #5 closed |
-| P5 | Safe high-confidence recipes | IN PROGRESS — issue #6, `feat/p5-safe-recipes` |
+| P5 | Safe high-confidence recipes | IN PROGRESS — issue #6, PR #14 |
 | P6 | Advanced timeline/carousel/milestones/page normalization | NOT STARTED — issue #7 |
 | P7 | Multi-frame/page batch queue | NOT STARTED — issue #8 |
 | P8 | Optional Elementor schema exporters | NOT STARTED — issue #9 |
@@ -18,6 +18,7 @@ Last updated: 2026-09-08
 
 - [x] P4 merged with final green CI
 - [x] P5 branch created from merged P4 head
+- [x] draft PR #14 opened
 - [x] safe recipe plan/result types
 - [x] explicit `ELIGIBLE` / `REVIEW` / `NOOP` / `UNSUPPORTED` decisions
 - [x] conservative per-recipe confidence gates
@@ -33,11 +34,17 @@ Last updated: 2026-09-08
 - [x] Two Column candidate-transform foundation
 - [x] strict live geometry prechecks for linear transforms
 - [x] planner regression tests added
-- [ ] P5 branch CI green
-- [ ] live disposable-Figma Vertical Stack calibration
-- [ ] live disposable-Figma Horizontal Row calibration
-- [ ] live disposable-Figma Two Column calibration
+- [x] initial CI failures diagnosed and patched
+- [x] live disposable-Figma Vertical Stack calibration
+- [x] live disposable-Figma Horizontal Row calibration
+- [x] live disposable-Figma Two Column calibration
+- [x] Figma manual->Auto Layout root-shrink behavior found and fixed
+- [x] post-fix linear fixtures preserve root/child geometry exactly
+- [x] post-fix linear fixture PNG exports are byte-identical
+- [x] live calibration cleanup leaves `0` temporary nodes
+- [ ] P5 branch final CI green after latest typing fix
 - [ ] full P3 validation pass/fail calibration after recipe transforms
+- [ ] P4 discard/commit/undo orchestration proof for recipe transforms
 - [ ] Facts List mutation
 - [ ] Footer Columns mutation
 - [ ] Simple Card Grid mutation
@@ -67,6 +74,7 @@ Every recipe must run through P4 candidate isolation and full P3 validation. Low
 - [x] P4 transaction/rollback engine merged
 - [x] P4 forced candidate failure demonstrated to leave original unchanged on a live disposable Figma fixture
 - [x] P4 manual and Auto Layout root swap/undo mechanics live-calibrated
-- [ ] individual P5 recipe has high-confidence classifier + transformation + regression/live calibration evidence
-- [ ] transformed candidate passes full P3 before any commit
+- [x] first three P5 linear transforms have exact synthetic render-equivalence evidence
+- [ ] transformed recipe candidate passes the complete P3->P4 orchestration before commit exposure
 - [ ] low-confidence/ambiguous cases demonstrably remain REVIEW with no mutation
+- [ ] each production-enabled recipe has multi-template success/failure calibration evidence
