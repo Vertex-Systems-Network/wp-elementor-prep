@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { analyzeLinearLayoutGeometry, type LinearLayoutFrameGeometry } from '../src/core/linear-layout-analysis';
+import { analyzeLinearLayoutGeometry } from '../src/core/linear-layout-analysis';
+import type { LinearLayoutFrameGeometry } from '../src/core/linear-layout-analysis';
 
 function verticalFixture(): LinearLayoutFrameGeometry {
   return {
@@ -28,41 +29,39 @@ function horizontalFixture(): LinearLayoutFrameGeometry {
 describe('analyzeLinearLayoutGeometry', () => {
   it('derives exact vertical padding and uniform gap', () => {
     const result = analyzeLinearLayoutGeometry(verticalFixture(), 'VERTICAL');
-    expect(result).toEqual({
-      ok: true,
-      plan: {
-        gap: 20,
-        startPadding: 30,
-        endPadding: 80,
-        crossStartPadding: 40,
-        crossEndPadding: 80,
-      },
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.plan).toEqual({
+      gap: 20,
+      startPadding: 30,
+      endPadding: 80,
+      crossStartPadding: 40,
+      crossEndPadding: 80,
     });
   });
 
   it('derives exact horizontal padding and uniform gap', () => {
     const result = analyzeLinearLayoutGeometry(horizontalFixture(), 'HORIZONTAL');
-    expect(result).toEqual({
-      ok: true,
-      plan: {
-        gap: 20,
-        startPadding: 30,
-        endPadding: 130,
-        crossStartPadding: 40,
-        crossEndPadding: 70,
-      },
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.plan).toEqual({
+      gap: 20,
+      startPadding: 30,
+      endPadding: 130,
+      crossStartPadding: 40,
+      crossEndPadding: 70,
     });
   });
 
   it('allows <=1 px alignment/gap noise but rejects larger ambiguity', () => {
-    const within = verticalFixture();
-    within.children[1]!.x += 0.75;
-    within.children[2]!.y += 0.5;
-    expect(analyzeLinearLayoutGeometry(within, 'VERTICAL').ok).toBe(true);
+    const allowed = verticalFixture();
+    allowed.children[1]!.x = 40.8;
+    allowed.children[2]!.y = 210.7;
+    expect(analyzeLinearLayoutGeometry(allowed, 'VERTICAL').ok).toBe(true);
 
-    const beyond = verticalFixture();
-    beyond.children[1]!.x += 2;
-    const result = analyzeLinearLayoutGeometry(beyond, 'VERTICAL');
+    const rejected = verticalFixture();
+    rejected.children[1]!.x = 42;
+    const result = analyzeLinearLayoutGeometry(rejected, 'VERTICAL');
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.reason).toMatch(/Cross-axis/);
   });
@@ -76,17 +75,17 @@ describe('analyzeLinearLayoutGeometry', () => {
   });
 
   it('refuses visible absolute children', () => {
-    const fixture = horizontalFixture();
+    const fixture = verticalFixture();
     fixture.children[1]!.absolutePositioned = true;
-    const result = analyzeLinearLayoutGeometry(fixture, 'HORIZONTAL');
+    const result = analyzeLinearLayoutGeometry(fixture, 'VERTICAL');
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.reason).toMatch(/absolute-positioned/);
   });
 
   it('refuses overlaps', () => {
-    const fixture = horizontalFixture();
-    fixture.children[1]!.x = 140;
-    const result = analyzeLinearLayoutGeometry(fixture, 'HORIZONTAL');
+    const fixture = verticalFixture();
+    fixture.children[1]!.y = 80;
+    const result = analyzeLinearLayoutGeometry(fixture, 'VERTICAL');
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.reason).toMatch(/overlap/);
   });
@@ -113,8 +112,9 @@ describe('analyzeLinearLayoutGeometry', () => {
     expect(analyzeLinearLayoutGeometry(badFrame, 'VERTICAL').ok).toBe(false);
 
     const out = verticalFixture();
-    out.children[2]!.y = 310;
-    out.children[2]!.height = 70;
+    // Keep the same 20 px primary-axis gap so this fixture reaches the bounds check
+    // instead of being rejected earlier as a non-uniform layout.
+    out.children[2]!.height = 160;
     const result = analyzeLinearLayoutGeometry(out, 'VERTICAL');
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.reason).toMatch(/outside/);
