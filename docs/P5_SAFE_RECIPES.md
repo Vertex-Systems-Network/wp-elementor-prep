@@ -4,44 +4,30 @@ Date: 2026-09-08
 
 ## Goal
 
-P5 enables the first conservative candidate-only Auto Layout fixes after P3 validation and P4 transaction safety are in place.
+P5 provides the first conservative candidate-only structural fixes for approved Figma sections after P3 validation and P4 transaction safety are in place.
 
-The invariant remains:
+The invariant is:
 
-`audit -> classify -> plan -> clone candidate -> transform candidate -> full P3 validate -> P4 commit OR discard`
+`audit -> classify -> plan -> clone candidate -> transform candidate -> full P3 validate -> P4 commit OR discard -> bounded restore/finalize`
 
-No P5 recipe may mutate the approved original directly.
+No P5 recipe mutates the approved original directly.
 
-## Initial recipe set
+## Implemented P5 v1 recipe set
 
-Planned P5 recipes:
+| Detection contract | Recipe | Minimum confidence | Candidate mutation | Elementor intent |
+|---|---|---:|---|---|
+| `vertical-stack` | Vertical Stack | 90% | strict `VERTICAL` Auto Layout | column/flex container |
+| `horizontal-row` | Horizontal Row | 90% | strict `HORIZONTAL` Auto Layout | row/flex container |
+| `two-column` | Two Column | 92% | strict `HORIZONTAL` Auto Layout | two-child row container |
+| `facts-list <- vertical-stack` | Facts List | 92% | strict `VERTICAL` Auto Layout | stacked fact/list container |
+| `footer-columns <- horizontal-row` | Footer Columns | 92% | strict `HORIZONTAL` Auto Layout | footer column row |
+| `repeated-cards <- grid` | Simple Card Grid | 94% | strict fixed-track `GRID` | repeated-card grid container |
+| `metric-grid <- grid` | Metric Grid | 95% | strict fixed-track `GRID` | KPI/stat grid container |
+| `social-link-strip <- horizontal-row` | Social/Link Strip | 95% | strict `HORIZONTAL` Auto Layout | compact social/link row |
 
-1. Vertical Stack
-2. Horizontal Row
-3. Two Column
-4. Facts List
-5. Footer Columns
-6. Simple Card Grid
-7. Metric Grid
-8. Social/Link Strip
+Below a recipe gate the plan remains `REVIEW`; P5 never falls back to a guessed mutation.
 
-The initial implementation deliberately enables planning before mutation for all recipes. Mutation code is enabled first only for the simplest linear patterns.
-
-## Confidence gates v1
-
-| Detection | Recipe | Minimum confidence | Current mutation status |
-|---|---|---:|---|
-| `vertical-stack` | Vertical Stack | 90% | candidate transform foundation enabled |
-| `horizontal-row` | Horizontal Row | 90% | candidate transform foundation enabled |
-| `two-column` | Two Column | 92% | candidate transform foundation enabled |
-| `facts-list` semantic | Facts List | 92% | planning only |
-| `footer-columns` semantic | Footer Columns | 92% | planning only |
-| `repeated-cards` + non-fragmented grid | Simple Card Grid | 94% | planning only |
-| ambiguous geometric grid | none | — | REVIEW |
-| fragmented grid | none | — | REVIEW |
-| carousel/timeline | none | — | deferred to P6 |
-
-Thresholds are intentionally conservative and will be calibrated against live template families before recipe availability expands.
+Carousel, timeline and advanced milestone/page-normalization structures remain deferred to P6.
 
 ## Structural target mapping
 
@@ -51,68 +37,147 @@ Before mutation, the planner resolves the classifier target in the audited origi
 
 `section root -> child index -> child index -> target`
 
-Because the P4 candidate is an exact clone before the recipe begins, this path maps deterministically to the candidate target. If the path no longer resolves, mutation is refused.
+Because the P4 candidate is an exact clone before transformation, this path maps deterministically to the corresponding candidate target. If the path no longer resolves, mutation is refused.
 
 ## Planner decisions
 
 Every detection becomes one of:
 
-- `ELIGIBLE` — supported recipe and confidence/safety gates pass,
-- `REVIEW` — potentially useful but unsafe or ambiguous for automatic mutation,
-- `NOOP` — target already has the matching Auto Layout direction,
-- `UNSUPPORTED` — pattern is outside current P5 scope.
+- `ELIGIBLE` — supported recipe and all confidence/safety gates pass,
+- `REVIEW` — potentially useful but unsafe, ambiguous or below threshold,
+- `NOOP` — target already uses the matching Auto Layout/Grid mode,
+- `UNSUPPORTED` — pattern is intentionally outside P5 scope.
 
-Explainable reason codes are stored with each plan.
+Explainable reason codes are stored with every plan.
 
 ## Hard safety blockers
 
-The first recipes refuse automatic mutation when:
+P5 refuses automatic mutation when:
 
 - confidence is below the recipe threshold,
-- target cannot be resolved,
+- target cannot be resolved on the current audited tree,
 - a special visual preservation role is on/inside the target,
 - visible direct children are absolute-positioned,
 - a grid is fragmented,
 - grid semantics are ambiguous,
 - the pattern is carousel/timeline,
-- the requested semantic recipe is not implemented.
+- semantic and geometric classifier contracts do not match the requested recipe,
+- another committed Safe Fix still has a pending restore/finalize checkpoint.
 
-Low-confidence or ambiguous cases remain REVIEW; there is no fallback guessing behavior.
+Low-confidence or ambiguous cases remain `REVIEW`; there is no fallback guessing behavior.
 
-## Linear Auto Layout transform foundation
+## Linear transform contract
 
-Candidate mutation is currently implemented only for:
+The linear transformer is shared only by recipes whose classifier contracts match exactly:
 
-- Vertical Stack,
-- Horizontal Row,
-- Two Column (horizontal linear transform).
+- Vertical Stack -> `VERTICAL`,
+- Horizontal Row -> `HORIZONTAL`,
+- Two Column -> `HORIZONTAL`,
+- Facts List only when `facts-list <- vertical-stack` -> `VERTICAL`,
+- Footer Columns only when `footer-columns <- horizontal-row` -> `HORIZONTAL`,
+- Social/Link Strip only when `social-link-strip <- horizontal-row` -> `HORIZONTAL`.
 
-Before changing a candidate Frame, the transform re-checks stricter live geometry than the classifier:
+Before changing a staged candidate Frame, the transformer re-checks stricter live geometry than the classifier:
 
 - at least two visible direct children,
-- no visible absolute-positioned child,
-- layer order must already match visual flow order,
+- no visible absolute-positioned direct child,
+- layer order already matches visual flow order,
 - cross-axis origins aligned within 1 px,
 - primary-axis gaps uniform within 1 px,
-- no overlap,
-- all child geometry remains inside the target bounds.
+- no direct-child overlap,
+- all direct-child geometry remains inside the target bounds.
 
-Only then does it apply fixed-size Auto Layout using the measured padding and gap. It does not reorder layers.
+Only then does it apply fixed-size Auto Layout using measured padding and gap. It does not reorder layers. After Figma layout conversion, the original root width/height is restored and direct-child geometry must still match within 0.5 px or the transform is refused.
 
-This local transform result is **not** enough to commit. The entire candidate section must still pass full P3 content/geometry/render validation and then go through P4 commit.
+## Grid transform contract
 
-## Why grid/facts/footer mutation is not enabled yet
+Simple Card Grid and Metric Grid share the strict fixed-grid transformer only when their semantic contract is present and `fragmentedCellCandidate` is false.
 
-These recipes may require extra structure, grid track inference or semantic-specific child sizing. Planning is implemented first so confidence and target mapping can be calibrated without prematurely enabling mutation.
+The grid analyzer requires:
 
-## P5 acceptance direction
+- a complete rectangular occupancy,
+- row-major visual/layer order,
+- consistent fixed column widths and row heights,
+- uniform column and row gaps,
+- in-bounds padding,
+- no hidden/absolute direct children that would invalidate layout reconstruction.
+
+The candidate receives explicit Figma `GRID` mode, fixed row/column counts, fixed track sizes, measured gaps/padding and exact original root-size restoration. Direct-child geometry must remain equivalent after conversion.
+
+## Mandatory full-P3 validation
+
+A successful local recipe transform is never sufficient for commit.
+
+Every `ELIGIBLE` production action must run through:
+
+1. P4 clone of the approved original,
+2. recipe transform on the staged candidate only,
+3. full P3 geometry/content/image validation,
+4. rendered PNG export,
+5. plugin-UI Canvas pixel decode and diff,
+6. P4 commit only when the entire validation report passes,
+7. otherwise candidate discard with the approved original untouched.
+
+## Compiled runtime proof gate
+
+Production mutation is version-gated by a local compiled-runtime proof.
+
+`Developer: P5 Runtime Self-Test` (also exposed as the UI `Runtime self-test` action) creates disposable off-canvas fixtures and exercises the actual compiled path:
+
+`SafeRecipePlan -> runSafeFixTransaction -> P4 clone -> candidate transform -> FullFrameValidator -> UI Canvas pixel broker -> P4 reject/commit -> restore`
+
+The proof is stored only when the complete self-test passes. A missing, malformed or stale gate-version proof keeps Safe Fix mutation locked. A failed rerun clears the proof.
+
+This prevents a read-only preview from becoming a production mutation control merely because recipe code exists.
+
+## Production Safe Fix UI contract
+
+The UI always re-audits the currently selected Frame before mutation and never trusts a stale preview plan.
+
+When the compiled runtime proof is valid and no checkpoint is pending:
+
+- each currently `ELIGIBLE` plan may expose an explicit `Apply this Safe Fix` action,
+- the selected target/recipe is re-resolved from fresh classifier output,
+- full P3 validation remains mandatory,
+- `REJECTED`/`FAILED` candidates are discarded safely,
+- a `COMMITTED` result creates one bounded restore/finalize checkpoint.
+
+While a checkpoint is pending, all further mutation is locked until the user chooses one of:
+
+- **Restore original** — remove the committed candidate and return the retained approved original to its exact slot,
+- **Finalize fix** — explicitly accept the committed candidate and irreversibly remove the retained previous-original backup.
+
+Only one checkpoint can exist at a time.
+
+## Calibration evidence
+
+Implemented recipe primitives have disposable exact-geometry/render evidence. Real image-bearing clone calibration also passed on materially different desktop roots from six template families with:
+
+- exact root geometry,
+- exact direct-child geometry,
+- preserved image counts,
+- byte-identical exported PNGs,
+- approved originals unchanged,
+- `0` temporary nodes.
+
+See:
+
+- `P5_LINEAR_LIVE_CALIBRATION.md`
+- `P5_END_TO_END_TRANSACTION_CALIBRATION.md`
+- `P5_SEMANTIC_AND_GRID_LIVE_CALIBRATION.md`
+- `P5_METRIC_SOCIAL_LIVE_CALIBRATION.md`
+- `P5_REAL_TEMPLATE_IMAGE_CALIBRATION.md`
+- `P5_COMPILED_RUNTIME_SELF_TEST.md`
+
+## P5 completion gate
 
 P5 is complete only when:
 
-- recipe eligibility is confidence-gated,
+- all eight v1 recipes remain confidence/semantic/geometry gated,
 - every mutation operates on a P4 staged candidate only,
 - full P3 validation is mandatory before commit,
-- low-confidence cases remain REVIEW,
-- each enabled recipe has pure tests + live disposable Figma calibration,
-- each enabled recipe has an Elementor mapping documented,
-- multi-template success/failure evidence exists before moving to P6.
+- low-confidence/ambiguous cases remain non-mutating,
+- the imported compiled plugin runtime self-test passes end-to-end,
+- the gated production Safe Fix UI is CI-green,
+- restore/finalize behavior remains bounded and explicit,
+- final PR review passes and P5 is merged.
