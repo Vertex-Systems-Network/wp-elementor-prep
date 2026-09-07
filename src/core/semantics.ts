@@ -57,6 +57,14 @@ function horizontalCoverage(target: AuditNode): number {
   return Math.max(0, right - left) / Math.max(1, target.geometry.width);
 }
 
+function heightConsistency(nodes: AuditNode[]): number {
+  if (nodes.length === 0) return 0;
+  const heights = nodes.map((node) => node.geometry.height).filter((height) => height > 0);
+  if (heights.length === 0) return 0;
+  const average = heights.reduce((sum, height) => sum + height, 0) / heights.length;
+  return heights.filter((height) => Math.abs(height - average) <= average * 0.2).length / heights.length;
+}
+
 function chapterLikeStack(target: AuditNode): { matched: boolean; evidence: Record<string, string | number | boolean> } {
   const children = target.children.filter((child) => child.visible && child.isContainer);
   if (children.length < 5) return { matched: false, evidence: {} };
@@ -87,6 +95,32 @@ function chapterLikeStack(target: AuditNode): { matched: boolean; evidence: Reco
       semanticSubstantialChildCount: substantial.length,
       semanticTextRichPct: textRichPct,
       semanticSequentialPairPct: sequentialPct,
+    },
+  };
+}
+
+function factsLikeStack(target: AuditNode): { matched: boolean; evidence: Record<string, string | number | boolean> } {
+  const items = target.children.filter((child) => child.visible && child.isContainer);
+  if (items.length < 5) return { matched: false, evidence: {} };
+
+  const textItemCount = items.filter((item) => {
+    const texts = textDescendants(item);
+    return texts >= 1 && texts <= 4;
+  }).length;
+  const broadItemCount = items.filter((item) => item.geometry.width >= target.geometry.width * 0.8).length;
+  const textItemPct = Math.round((textItemCount / items.length) * 100);
+  const broadItemPct = Math.round((broadItemCount / items.length) * 100);
+  const heightConsistencyPct = Math.round(heightConsistency(items) * 100);
+  const matched = textItemPct >= 80 && broadItemPct >= 80 && heightConsistencyPct >= 70;
+
+  return {
+    matched,
+    evidence: {
+      semanticRule: 'repeated-container-text-items',
+      semanticFactItemCount: items.length,
+      semanticFactLikePct: textItemPct,
+      semanticBroadItemPct: broadItemPct,
+      semanticHeightConsistencyPct: heightConsistencyPct,
     },
   };
 }
@@ -143,7 +177,10 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
 
   if (detection.pattern === 'vertical-stack') {
     const itemCount = Number(detection.evidence.itemCount ?? 0);
-    if (itemCount >= 4) {
+
+    // Timeline semantics require at least five repeated stack items. Four-item content blocks
+    // are common in metric/media sections and were a real cross-template false-positive source.
+    if (itemCount >= 5) {
       const nestedTwoColumns = all.filter((candidate) => {
         if (candidate.pattern !== 'two-column' || candidate.targetNodeId === detection.targetNodeId) return false;
         return containsNode(target, candidate.targetNodeId);
@@ -151,7 +188,11 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
       if (nestedTwoColumns >= 2) {
         return {
           hint: 'timeline-chapter',
-          evidence: { semanticRule: 'stack-with-repeated-two-column-chapters', semanticNestedTwoColumnCount: nestedTwoColumns },
+          evidence: {
+            semanticRule: 'stack-with-repeated-two-column-chapters',
+            semanticNestedTwoColumnCount: nestedTwoColumns,
+            semanticStackItemCount: itemCount,
+          },
         };
       }
 
@@ -160,19 +201,9 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
         return { hint: 'timeline-chapter', evidence: chapterStack.evidence };
       }
 
-      const visibleChildren = target.children.filter((child) => child.visible);
-      const factLike = visibleChildren.filter((child) => {
-        const texts = textDescendants(child) + (child.isText ? 1 : 0);
-        return texts >= 1 && texts <= 4;
-      }).length;
-      if (visibleChildren.length >= 4 && factLike / visibleChildren.length >= 0.7) {
-        return {
-          hint: 'facts-list',
-          evidence: {
-            semanticRule: 'compact-text-item-stack',
-            semanticFactLikePct: Math.round((factLike / visibleChildren.length) * 100),
-          },
-        };
+      const factStack = factsLikeStack(target);
+      if (factStack.matched) {
+        return { hint: 'facts-list', evidence: factStack.evidence };
       }
     }
   }
@@ -180,19 +211,29 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
   if (detection.pattern === 'horizontal-row') {
     const itemCount = Number(detection.evidence.itemCount ?? 0);
     const topRatio = located.offsetY / sectionHeight;
+    const heightRatio = target.geometry.height / sectionHeight;
     const withText = target.children.filter((child) => child.visible && textDescendants(child) > 0).length;
     const visibleCount = Math.max(1, target.children.filter((child) => child.visible).length);
     const textRatio = withText / visibleCount;
     const coverage = horizontalCoverage(target);
 
-    // Real contact/footer channel rows are often shallow. Require lower-page placement,
-    // predominantly textual columns and broad horizontal coverage instead of arbitrary height.
-    if (itemCount >= 3 && itemCount <= 6 && topRatio >= 0.55 && textRatio >= 0.75 && coverage >= 0.65) {
+    // Footer/contact channel rows are typically shallow, lower in their section, text-heavy and
+    // span a broad horizontal region. The maximum-height gate prevents About/card rows from being
+    // mislabeled merely because they also contain three or four text columns near the section end.
+    if (
+      itemCount >= 3 &&
+      itemCount <= 6 &&
+      topRatio >= 0.55 &&
+      heightRatio <= 0.18 &&
+      textRatio >= 0.75 &&
+      coverage >= 0.65
+    ) {
       return {
         hint: 'footer-columns',
         evidence: {
-          semanticRule: 'lower-page-text-columns',
+          semanticRule: 'shallow-lower-page-text-columns',
           semanticTopPct: Math.round(topRatio * 100),
+          semanticHeightPct: Math.round(heightRatio * 100),
           semanticTextColumnPct: Math.round(textRatio * 100),
           semanticHorizontalCoveragePct: Math.round(coverage * 100),
         },
