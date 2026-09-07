@@ -12,17 +12,16 @@ The batch layer must never bypass validation, share mutation candidates between 
 
 ## Queue memory contract
 
-`BatchQueueState` stores only:
+`BatchQueueState` stores only compact execution metadata:
 
-- frame id
-- frame name
+- frame id/name
 - status
 - attempt count
 - compact error text
-- version-match skip reason
-- one compact inter-frame pause reason
+- skip reason
+- inter-frame pause reason
 
-It must not retain `AuditNode` trees, exported PNG bytes, candidate Figma nodes, snapshots, or full validation reports between items. Those remain local to the one in-flight single-frame operation and are released before the next item starts.
+It must not retain `AuditNode` trees, exported PNG bytes, candidate Figma nodes, snapshots, or full validation reports between items.
 
 ## Versioned skip key
 
@@ -32,60 +31,71 @@ A caller supplies a versioned `runKey`, for example:
 
 A frame with the same previously recorded key is initialized as `SKIPPED / ALREADY_PROCESSED`. A changed plugin/recipe key makes that frame pending again.
 
-`batch-run-metadata.ts` provides the compact persistence codec:
+Only **durably finalized `SUCCEEDED`** frames may receive the current run key.
 
-- unknown schema versions fail closed to empty metadata,
-- malformed entries are ignored,
-- only `SUCCEEDED` frames receive the current run key,
-- caller-provided previous keys are never overwritten during hydration,
-- metadata storage is bounded by pruning the oldest completion records.
-
-`p7-run-metadata-storage.ts` provides the Figma `clientStorage` adapter. It persists only that compact metadata and never stores scene trees, candidates, PNG bytes or validation reports. Storage read failure fails closed to an empty metadata set.
+`batch-run-metadata.ts` and `p7-run-metadata-storage.ts` enforce compact, bounded, fail-closed persistence through Figma `clientStorage`.
 
 ## Sequential scheduling
 
 At most one item may be `RUNNING`.
 
-A frame failure settles that item as `FAILED`; remaining pending frames continue. Batch completion may therefore contain a mixture of succeeded, failed and skipped results.
+A frame failure settles that item as `FAILED`; remaining pending frames stay available. Batch completion may therefore contain a mixture of succeeded, failed and skipped results.
 
-## Bounded-checkpoint compatibility
+## Commit is not yet success
 
-P5 intentionally retains one bounded restore/finalize checkpoint after a successful Safe Fix and blocks another mutation while that checkpoint is pending.
+A P5 candidate can pass Full P3 and commit while one bounded restore/finalize checkpoint remains pending. That committed state is reversible, so P7 must **not** mark it as durable success yet.
 
-Therefore P7 must **not** immediately start the next frame after a committed mutation.
+The queue therefore distinguishes:
 
-The queue supports a non-destructive `PAUSED` state:
+- `RUNNING` — active single-frame transaction
+- `AWAITING_CHECKPOINT` — mutation committed, but restore/finalize decision is still pending
+- `SUCCEEDED` — checkpoint was explicitly finalized; durable success
+- `SKIPPED / RESTORED_CHECKPOINT` — committed change was explicitly restored; not a success and receives no run key
 
-- `shouldPause` is evaluated only between frame transactions,
-- sync and async safety gates are supported,
-- a running frame is never interrupted,
-- pending frames remain `PENDING`,
-- the current successful frame remains `SUCCEEDED`,
-- the pause reason explains the unresolved safety gate,
-- `resumeBatchQueue` clears the pause only after the external condition is resolved.
+A canonical P7 single-frame processor should return `CHECKPOINT_PENDING` when P5 returns a committed transaction with a bounded checkpoint.
 
-`p7-checkpoint-gate.ts` queries the existing async `hasPendingSafeFixCheckpoint()` function and returns a pause reason without auto-restoring or auto-finalizing anything.
+### Resolution rules
 
-`p7-batch-runtime.ts` composes that real P5 checkpoint gate with the sequential runner while keeping the actual single-frame processor injected. This preserves the rule that P7 schedules P5 behavior rather than duplicating it.
+`resolveBatchCheckpoint(state, 'FINALIZED')`
+
+- `AWAITING_CHECKPOINT -> SUCCEEDED`
+- allows successful run-key persistence
+- queue may continue when other safety gates are clear
+
+`resolveBatchCheckpoint(state, 'RESTORED')`
+
+- `AWAITING_CHECKPOINT -> SKIPPED / RESTORED_CHECKPOINT`
+- no successful run key is recorded
+- avoids incorrectly skipping a restored frame on a later run
+
+`resumeBatchQueue()` cannot bypass `AWAITING_CHECKPOINT`; explicit resolution is mandatory first.
+
+## Defensive P5 checkpoint gate
+
+`p7-checkpoint-gate.ts` queries the existing async `hasPendingSafeFixCheckpoint()` between frame transactions.
+
+`p7-batch-runtime.ts` composes that real P5 checkpoint gate with the sequential runner while keeping the actual single-frame processor injected.
 
 The intended lifecycle is:
 
-`frame transaction settles -> checkpoint pending? -> PAUSED -> user/system explicitly restore or finalize -> resume -> next frame`
+`frame transaction -> COMMITTED -> CHECKPOINT_PENDING -> AWAITING_CHECKPOINT/PAUSED -> explicit FINALIZE or RESTORE -> next frame`
+
+The checkpoint gate is read-only; it never auto-restores or auto-finalizes.
 
 ## Cancellation
 
 Cancellation is cooperative between frame transactions.
 
+- an in-flight transaction is never interrupted by the batch layer
 - pending items become `CANCELLED`
-- the in-flight frame is not interrupted by the batch layer
-- the existing single-frame transaction must finish, reject or rollback first
-- the queue then settles as `CANCELLED`
+- an `AWAITING_CHECKPOINT` item remains unresolved and keeps the queue paused
+- cancellation completes only after that checkpoint is explicitly finalized/restored
 
-This prevents cancellation from leaving a half-mutated Figma candidate.
+This prevents cancellation from becoming an implicit checkpoint action.
 
 ## Resume
 
-Resuming clears an inter-frame pause, converts cancelled items back to pending, and retries failed items by default. Successful and version-matched skipped items are preserved and are not repeated.
+Resuming ordinary paused/cancelled work clears non-checkpoint pauses, restores cancelled items to pending, and retries failed items by default. Durable successes and version-matched skips are preserved. Unresolved checkpoints cannot be resumed around.
 
 ## Current stress and regression evidence
 
@@ -100,21 +110,25 @@ Resuming clears an inter-frame pause, converts cancelled items back to pending, 
 
 Additional suites prove:
 
-- pending frames cannot start while a checkpoint pause is active,
-- a checkpoint appearing during one frame takes effect only after that frame settles,
-- async pause checks are awaited before the next frame,
-- the P7 runtime composition stops on the checkpoint gate,
-- resume does not repeat an already successful frame,
-- persisted run metadata records successes only and remains bounded,
-- Figma storage adapter read failure fails closed without writing corrupt replacement data.
+- pending frames cannot start while a checkpoint pause is active
+- async pause checks are awaited
+- P7 runtime composition stops on the P5 checkpoint gate
+- committed-but-unresolved frames are not counted as succeeded/finished
+- unresolved checkpoints cannot receive persisted run keys
+- FINALIZED checkpoints become durable success
+- RESTORED checkpoints become terminal non-success skips
+- resume cannot bypass an unresolved checkpoint
+- cancellation cannot silently resolve a checkpoint
+- persisted run metadata remains bounded and fail-closed
+- Figma storage read failure does not trigger corrupt replacement writes
 
-This is core/runtime-seam evidence only. Real Figma batch memory calibration remains required before P7 can be considered production-ready.
+This is core/runtime-seam evidence only. Real Figma batch memory/cancellation calibration remains required before P7 is production-ready.
 
 ## Remaining production gates
 
-1. Implement the canonical single-frame Figma processor that the P7 runtime will inject; do not duplicate P5 mutation logic.
-2. Add UI progress/cancel/pause/resume controls plus explicit restore/finalize checkpoint controls.
-3. Invoke the run metadata storage adapter from the real batch lifecycle after successful items settle.
+1. Implement/inject the canonical single-frame Figma processor; map committed P5 transactions to `CHECKPOINT_PENDING` without duplicating P5 mutation logic.
+2. Add UI progress/cancel/pause/resume plus explicit restore/finalize controls that call `resolveBatchCheckpoint` only after the real P5 action succeeds.
+3. Invoke run metadata persistence only after durable `SUCCEEDED` transitions.
 4. Run realistic 60+ frame calibration in Figma and record peak memory/runtime evidence.
-5. Prove cancellation during a long validation cycle settles safely after the active transaction.
+5. Prove cancellation during a long real validation cycle settles safely after the active transaction/checkpoint lifecycle.
 6. Keep P7 stacked behind P5 until P5 runtime proof and merge are complete.
