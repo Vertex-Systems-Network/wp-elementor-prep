@@ -12,9 +12,9 @@ The core runtime is deterministic and must not depend on Figma AI, OpenAI, Claud
 
 ## Development status
 
-**Overall roadmap: 66% — P0 through P4 complete, P5 near completion**
+**Overall roadmap: 67% — P0 through P4 complete, P5 at final integration gate**
 
-`█████████████░░░░░░░ 66%`
+`█████████████░░░░░░░ 67%`
 
 | Phase | Scope | Status |
 |---|---|---|
@@ -23,16 +23,16 @@ The core runtime is deterministic and must not depend on Figma AI, OpenAI, Claud
 | P2 | Deterministic classifier semantics + role evidence | ✅ Complete |
 | P3 | Geometry/content/image + rendered pixel validator | ✅ Complete |
 | P4 | Candidate transaction engine + rollback/undo | ✅ Complete |
-| P5 | Conservative high-confidence Safe Fix recipes | 🟡 In progress |
+| P5 | Conservative high-confidence Safe Fix recipes | 🟡 95% — imported-plugin proof pending |
 | P6 | Advanced timeline/carousel/milestone normalization | ⬜ Planned |
 | P7 | Multi-frame/page batch queue | ⬜ Planned |
 | P8 | Optional versioned Elementor exporter adapters | ⬜ Planned |
 
 ### P5 progress
 
-**P5: 90%**
+**P5: 95%**
 
-`█████████░ 90%`
+`██████████░ 95%`
 
 - ✅ deterministic recipe plan/result types
 - ✅ high-confidence eligibility gates
@@ -50,17 +50,23 @@ The core runtime is deterministic and must not depend on Figma AI, OpenAI, Claud
 - ✅ Figma manual -> Auto Layout root-shrink behavior discovered and guarded
 - ✅ synthetic reject/discard, pass/commit/restore and pass/commit/finalize evidence
 - ✅ reusable FullFrameValidator broker + P5/P4 runtime seam
-- ✅ compiled P5 runtime self-test harness + developer menu command
+- ✅ compiled P5 runtime self-test harness + developer menu/UI action
 - ✅ six-template real image-bearing clone-only mutation calibration
 - ✅ read-only Safe Fix preview UI
+- ✅ versioned compiled-runtime proof gate
+- ✅ explicit gated `Apply this Safe Fix` production path with fresh re-audit
+- ✅ bounded `Restore original` / `Finalize fix` checkpoint controls
+- ✅ explicit P5 recipe -> Elementor mapping documentation
+- ✅ CI #97 green: install, typecheck, tests, build
 - 🟡 imported-plugin compiled runtime self-test execution
-- ⬜ production Safe Fix UI gate after the compiled runtime proof
+- ⬜ post-proof disposable production-UI smoke test
+- ⬜ PR #14 ready/merge + issue #6 close
 
 ### Safety pipeline
 
-`Audit -> classify -> plan -> clone candidate -> transform candidate -> full P3 validate -> P4 commit OR discard -> bounded undo/finalize`
+`Audit -> classify -> plan -> clone candidate -> transform candidate -> full P3 validate -> P4 commit OR discard -> bounded restore/finalize`
 
-P4 guarantees candidate isolation. P5 adds conservative semantic/confidence/geometry gates. General production mutation is still disabled until the imported development plugin completes the compiled full-P3 runtime self-test successfully.
+P4 guarantees candidate isolation. P5 adds conservative semantic/confidence/geometry gates. Production mutation controls now exist but remain **locked** until the current plugin build passes its versioned compiled-runtime self-test.
 
 Canonical engineering status lives in `memory-bank/PROJECT_STATE.md`, `memory-bank/ROADMAP.md`, and `memory-bank/NEXT_ACTIONS.md`.
 
@@ -71,13 +77,40 @@ P5 v1 mutation gates:
 - Vertical Stack >= 90%
 - Horizontal Row >= 90%
 - Two Column >= 92%
-- Facts List >= 92%
-- Footer Columns >= 92%
+- Facts List >= 92% only for `facts-list <- vertical-stack`
+- Footer Columns >= 92% only for `footer-columns <- horizontal-row`
 - non-fragmented Repeated Card Grid >= 94%
 - Metric Grid >= 95% with explicit metric/stat/KPI/number naming evidence + simple text-oriented cells
 - Social/Link Strip >= 95% with explicit social/follow/connect naming evidence + compact horizontal items
 
-Carousel/timeline structures remain deferred to P6. Fragmented grids remain REVIEW.
+Carousel/timeline structures remain deferred to P6. Fragmented or ambiguous grids remain REVIEW.
+
+## Runtime proof gate
+
+The imported development plugin must pass:
+
+`SafeRecipePlan -> runSafeFixTransaction -> P4 clone -> candidate transform -> FullFrameValidator -> UI Canvas pixel broker -> P4 reject/commit -> restore`
+
+Run either:
+
+`Plugins -> Pella Elementor Prep -> Developer: P5 Runtime Self-Test`
+
+or use the plugin UI `Runtime self-test` action.
+
+A full PASS writes a versioned local proof and unlocks eligible Safe Fix buttons. A failed or stale proof keeps mutation locked.
+
+## Production Safe Fix behavior
+
+When the proof gate is unlocked and no checkpoint is pending:
+
+1. Preview conservative Safe Fix plans.
+2. Click `Apply this Safe Fix` on one currently eligible target.
+3. The plugin re-audits the selected Frame and refuses stale eligibility.
+4. It clones a P4 candidate and transforms the candidate only.
+5. Full P3 content/geometry/image/render validation runs, including UI Canvas pixel diff.
+6. `REJECTED`/`FAILED` candidates are discarded; the approved original stays unchanged.
+7. `COMMITTED` creates one bounded checkpoint.
+8. Choose `Restore original` or explicitly `Finalize fix` before any further mutation.
 
 ## Real-template calibration
 
@@ -103,10 +136,6 @@ npm run build
 ```
 
 Then import the generated development plugin from `dist/manifest.json` after setting a valid Figma plugin ID.
-
-Developer runtime gate:
-
-`Plugins -> Pella Elementor Prep -> Developer: P5 Runtime Self-Test`
 
 ## Project docs
 
