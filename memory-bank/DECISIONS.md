@@ -38,8 +38,6 @@ Status: ACCEPTED
 
 The Figma scanner/classifier uses a neutral semantic layout model. Any future Elementor JSON exporter is isolated behind versioned adapters.
 
-Reason: Elementor supports modern nested containers and is evolving atomic elements; exporter schema changes must not destabilize core audit logic.
-
 ## D-007 — Selected-frame MVP
 Date: 2026-09-07  
 Status: ACCEPTED
@@ -57,3 +55,19 @@ Date: 2026-09-07
 Status: ACCEPTED
 
 Project status, decisions, roadmap, next actions and changelog must be persisted in-repo so future humans/AI agents can resume without relying on prior chat context.
+
+## D-010 — Separate geometry, semantics and visual roles
+Date: 2026-09-07  
+Status: ACCEPTED
+
+A geometric layout classification (for example `horizontal-row` or `grid`) is not the same thing as a semantic interpretation (`footer-columns`, `repeated-cards`, `timeline-chapter`) or a preservation role (`background-layer`, `absolute-overlay`).
+
+Reason: future Auto-Fix must know both how content is arranged and which visual elements must not be normalized into ordinary flow.
+
+## D-011 — Specific pattern wins on the same target
+Date: 2026-09-07  
+Status: ACCEPTED
+
+When one target satisfies multiple geometric classifiers, report the most specific valid interpretation rather than redundant generic ones. Current specificity order is carousel track > grid > two-column > horizontal row > vertical stack.
+
+Reason: a carousel track is also a row geometrically, but exposing both as competing repair targets creates noise and increases mutation risk.

@@ -11,33 +11,44 @@
 - PR #1 merged to `main` after green CI.
 - Created roadmap issues #2–#9.
 
-### P1 Audit engine
-- Started `feat/p1-audit-engine` and draft PR #10.
-- Added selected-frame scanner, section discovery, readiness stats, scoring and report UI.
-- Added deterministic two-column, grid, horizontal row, vertical stack and carousel-track detection.
+### P1 Audit-Only engine
+- Implemented selected-frame scanner, section discovery, readiness stats, scoring and report UI.
+- Implemented deterministic two-column, grid, horizontal row, vertical stack and carousel-track detection.
 - Added confidence/evidence payloads and conservative full-size background exclusion.
-- Added calibrated PASS/REVIEW/NEEDS_WORK thresholds.
-- Added PASS-section repair-recipe suppression.
-- Fixed SceneNode opacity typing and kept CI green.
+- Added multi-target pattern reporting.
+- Added fragmented-grid detection for unwrapped visual cells.
+- Removed Journey tiny-child two-column false positive.
+- Calibrated PASS/REVIEW/NEEDS_WORK thresholds and PASS recipe suppression.
+- Confirmed Numbers fragmented 2×3 grid and Media clipped carousel behavior on live Figma.
+- PR #10 merged to `main`; issue #2 closed.
 
-### Golden calibration
-- Ran the read-only engine against `Desktop — Elementor Ready`.
-- Correctly discovered `App` and all 16 content sections in order.
-- Confirmed strong sections cluster at PASS while weak/manual sections classify NEEDS_WORK.
-- Removed a high-confidence Journey false-positive by adding parent-coverage and minimum-column-width gates.
-- Confirmed Media remains a clipped wider carousel-track case and must not be compressed.
+### Five-template calibration
+- Completed broad read-only calibration on Marcus, Doctor, Esthetic, Lawyer and Legacy mixed desktops.
+- Doctor (88% root Auto Layout) returned 19/19 PASS.
+- Esthetic (~1% root Auto Layout) returned 19/19 NEEDS_WORK.
+- Lawyer (~0% root Auto Layout) returned 18/18 NEEDS_WORK.
+- Legacy mixed (64% root Auto Layout) returned 9 PASS, 6 REVIEW, 3 NEEDS_WORK.
+- Confirmed section-level scoring works across highly structured, manual and mixed files.
 
-### Multi-target reporting
-- Added `detections[]` so complex sections can expose multiple target-level patterns while retaining strongest `detection` for compatibility.
-- Expanded UI to display multiple target detections.
-- Added split-header-style and timeline/chapter structural fixtures.
+### P2 classifier semantics
+- Started `feat/p2-classifier-semantics` and draft PR #11.
+- Added same-target specificity ranking so specific patterns suppress redundant generic interpretations.
+- Added semantic hints without replacing underlying geometry: repeated-cards, split-header, facts-list, footer-columns, timeline-chapter.
+- Added special preservation roles: background-layer, absolute-overlay, decorative-overlay.
+- Updated Audit UI to show semantic hints and role evidence.
+- Added ranking, semantic and role tests including adversarial overlap coverage.
+- First P2 semantic/role CI run passed typecheck, tests and build.
 
-### Fragmented grid support
-- Added dominant-card-anchor analysis for grids where one visual card is fragmented into sibling text/line nodes.
-- Live Numbers metric region calibration confirms 5 full card anchors + 5 fragments forming a 2×3 visual grid with one missing wrapped slot.
-- Fragmented-grid confidence on the golden Numbers metric region is 87% with 83% occupancy and 100% repeated-card dimension consistency.
-- Tightened strict-grid detection so irregular scatter cannot mask the fragmented-grid path.
-- Latest CI passes typecheck, tests and build.
+### P2 live role/timeline calibration
+- Ran role heuristics read-only across all five real templates.
+- Marcus: 5 background layers, 7 absolute overlays.
+- Doctor: 4 background layers.
+- Esthetic: 1 background layer.
+- Lawyer: 13 background layers in image/card structures.
+- Legacy: 1 background layer, 5 absolute overlays.
+- No low-opacity decorative-overlay rule fired in this sample set, preserving conservative behavior.
+- Inspected Marcus, Doctor and Lawyer Journey structures.
+- Added a manual full-width sequential text-rich chapter-stack fallback so timeline semantics do not depend on existing Auto Layout/two-column structure.
 
 ### Safety status
 - No Auto-Fix mutation behavior enabled.

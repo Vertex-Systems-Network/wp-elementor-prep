@@ -10,36 +10,33 @@ Runtime must not require generative AI or external network access.
 
 ## Current phase
 
-**P1 Audit-Only MVP is functionally complete on `feat/p1-audit-engine`; final PR/merge and broader real-template calibration remain.**
+**P2 classifier semantics is active on `feat/p2-classifier-semantics`, draft PR #11. P1 Audit-Only is merged to `main`.**
 
 ## Completed
 
 - P0 foundation merged via PR #1.
-- AI-native planning, deep audit, architecture, feature plan and pre-development plan established.
-- Mandatory memory-bank implemented.
-- TypeScript/Figma plugin scaffold, read-only scanner, scoring and report UI implemented.
-- Deterministic pattern detection implemented for two-column, grid, horizontal row, vertical stack and carousel-track.
-- Confidence/evidence model implemented.
-- Multi-target pattern reporting implemented while retaining strongest `detection` for compatibility.
-- Conservative background exclusion implemented.
-- Calibrated PASS/REVIEW/NEEDS_WORK thresholds implemented.
-- PASS-section repair recipe suppression implemented.
-- Journey small-pair two-column false positive removed.
-- Fragmented-grid detection added for visually repeated grids with an unwrapped cell.
-- Live Numbers calibration confirms the 2×3 metric region as a fragmented grid at 87% confidence and its lower region as a separate two-column target.
-- Live Media calibration remains intentionally carousel-oriented; wide clipped track must not be compressed.
-- CI currently passes typecheck, tests and build on the latest calibrated classifier line.
+- P1 Audit-Only MVP merged via PR #10; issue #2 closed.
+- Selected-frame scanner, normalized model, section discovery, calibrated readiness scoring, explainable findings and report UI implemented.
+- Deterministic geometric classifiers implemented for two-column, grid, fragmented grid, horizontal row, vertical stack and carousel track.
+- Multi-target reporting, confidence/evidence, PASS recipe suppression and Journey false-positive protection implemented.
+- Five materially different real-template calibration set completed: Marcus, Doctor, Esthetic, Lawyer and Legacy mixed.
+- Calibration demonstrates strong/manual/mixed separation rather than a page-wide guess.
+- P2 same-target ranking implemented so specific interpretations such as carousel suppress redundant generic row output on the same target.
+- P2 semantic hints implemented conservatively: repeated-cards, split-header, facts-list, footer-columns, timeline-chapter.
+- P2 special visual-role evidence implemented: background-layer, absolute-overlay, decorative-overlay.
+- P2 audit UI surfaces semantic hints and special roles.
+- P2 timeline semantics calibrated against Marcus, Doctor and Lawyer Journey structures, including a manual full-width chapter-stack fallback.
+- P2 first CI run after semantic/role integration passed typecheck, tests and build; latest timeline test commit must still be verified before merge.
 
 ## In progress
 
-- Draft PR #10 finalization.
-- Memory/docs synchronization after latest live fragmented-grid calibration.
-- Decide P1 merge after final PR review.
-- Assemble four additional materially different real Figma templates for production calibration.
+- Issue #3 / PR #11: semantic and role classifier hardening.
+- Cross-template review for semantic false positives/negatives.
+- Latest CI verification after timeline fallback + regression fixture.
+- Memory/docs synchronization for five-template and P2 role calibration.
 
 ## Next phases
 
-- P2: broaden classifier roles, decoration/overlay and timeline semantics.
 - P3: geometry/text/image/pixel validator.
 - P4: clone -> candidate -> validate -> commit/discard transaction engine.
 - P5: conservative high-confidence Safe Fix recipes.
@@ -47,19 +44,14 @@ Runtime must not require generative AI or external network access.
 - P7: batch queue for 60+ frames/pages.
 - P8: optional versioned Elementor exporter adapters.
 
-## Golden fixture facts
+## Calibration fixtures
 
-- frame: `Desktop — Elementor Ready`
-- node: `3501:2`
-- 1143 × 18794
-- 1152 nodes
-- 715 container-like nodes
-- 270 Auto Layout containers
-- 445 manual containers
-- 38% Auto Layout coverage
-- 433 text nodes
-- 17 image-like nodes
-- 16 content sections under `App`
+See:
+
+- `docs/GOLDEN_CALIBRATION.md`
+- `docs/CROSS_TEMPLATE_CALIBRATION.md`
+
+Five-template production calibration gate is now satisfied at the broad audit level.
 
 ## Safety status
 
@@ -69,12 +61,11 @@ All runtime behavior is still read-only. No Auto-Fix design mutation is enabled.
 
 Do not enable Safe Fix until:
 
-- at least 5 materially different real templates have explainable audit results,
-- no known high-confidence false positive remains,
+- P2 semantic/role classifications are explainable with no known high-confidence false positive,
 - P3 validator exists,
 - P4 transaction/rollback exists,
 - forced validation failure demonstrably leaves the working design untouched.
 
 ## Release target
 
-First useful release: `0.1.x` Audit-Only plugin.
+Current usable line: `0.1.x` Audit-Only. Next classifier milestone: P2 completion before validator work.

@@ -4,24 +4,25 @@ Last updated: 2026-09-07
 
 Execute in this order:
 
-1. Synchronize P1 golden-calibration docs and memory-bank with the confirmed fragmented Numbers grid and green CI.
-2. Update draft PR #10 with the final P1 scope/results and mark it ready for review.
-3. Merge PR #10 only if latest CI remains green and the diff still contains no design-mutation behavior.
-4. After merge, start a focused P2 branch for broader classifier semantics (decorative/overlay roles, timeline/chapter semantics, target de-duplication/ranking).
-5. In parallel with P2, identify at least four additional materially different real desktop templates and run Audit-Only calibration on them.
-6. Record every meaningful false positive/negative in `PROJECT_STATE`, `CHANGELOG`, and calibration docs; never hard-code customer copy/node IDs into the engine.
-7. Begin P3 validator design only after the P2 evidence model is stable enough to specify what a candidate transformation must preserve.
-8. Do **not** enable Safe Fix before P3 validator and P4 transaction/rollback foundations exist.
+1. Confirm CI on the latest P2 timeline fallback + regression-test head; fix any typecheck/test/build failure immediately.
+2. Run read-only semantic calibration on representative sections from the five-template set and record any false positive/negative.
+3. Harden semantic hints only with general geometric/subtree evidence; never use customer copy or calibration node IDs in production rules.
+4. Add/verify dedicated fixtures for facts-list and footer-columns, including adversarial non-footer rows and ordinary stacked content.
+5. Review special-role output from Marcus/Doctor/Esthetic/Lawyer/Legacy; keep low-opacity decorative detection conservative.
+6. Update PR #11 with final P2 acceptance evidence and mark ready only when CI is green and no known high-confidence semantic false positive remains.
+7. Close issue #3 only after P2 acceptance criteria are satisfied.
+8. After P2 merge, start P3 validator design: geometry snapshot, text integrity, image integrity, export/pixel diff and threshold policy.
+9. Do **not** enable Safe Fix before P3 validator and P4 transaction/rollback foundations exist.
 
 ## Immediate definition of success
 
-P1 is merge-ready when:
+P2 is merge-ready when:
 
-- selected desktop scan works,
-- real section discovery works on the golden fixture,
-- strong vs weak readiness is explainable,
-- multi-target layout evidence works,
-- fragmented grid is detected without inventing a wrapped node,
-- Journey false positive remains fixed,
+- same-target redundant patterns are de-duplicated by specificity,
+- semantic hints remain explainable and conservative,
+- timeline semantics work for both structured and manual chapter stacks,
+- background/absolute/decorative roles are reported without mutation,
+- adversarial overlap/overflow tests pass,
+- five real templates remain broadly explainable,
 - typecheck/tests/build are green,
-- no Figma mutation exists in runtime code.
+- runtime remains read-only.
