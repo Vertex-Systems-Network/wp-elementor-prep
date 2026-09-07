@@ -27,7 +27,7 @@ function committedQueue() {
   return finishRunningBatchItem(queue, { status: 'CHECKPOINT_PENDING' });
 }
 
-function actions(options: { restore?: CommitEvidence | null; finalize?: CommitEvidence | null } = {}) {
+function actions(options: { restore?: CommitEvidence | null; finalize?: boolean } = {}) {
   const calls: string[] = [];
   const adapter: P7CheckpointActions = {
     async restore() {
@@ -36,19 +36,20 @@ function actions(options: { restore?: CommitEvidence | null; finalize?: CommitEv
     },
     async finalize() {
       calls.push('finalize');
-      return options.finalize === undefined ? evidence() : options.finalize;
+      return options.finalize ?? true;
     },
   };
   return { adapter, calls };
 }
 
 describe('P7 real checkpoint action composition', () => {
-  it('marks durable success only after P5 finalize returns evidence', async () => {
+  it('marks durable success only after P5 finalize returns true', async () => {
     const fixture = actions();
     const result = await finalizeP7BatchCheckpoint(committedQueue(), fixture.adapter);
 
     expect(fixture.calls).toEqual(['finalize']);
     expect(result.resolution).toBe('FINALIZED');
+    expect(result.proof).toEqual({ resolution: 'FINALIZED', finalized: true });
     expect(result.state.items[0]?.status).toBe('SUCCEEDED');
     expect(result.state.status).toBe('IDLE');
   });
@@ -59,15 +60,16 @@ describe('P7 real checkpoint action composition', () => {
 
     expect(fixture.calls).toEqual(['restore']);
     expect(result.resolution).toBe('RESTORED');
+    expect(result.proof.resolution).toBe('RESTORED');
     expect(result.state.items[0]?.status).toBe('SKIPPED');
     expect(result.state.items[0]?.skipReason).toBe('RESTORED_CHECKPOINT');
   });
 
-  it('fails closed when P5 finalize returns no evidence', async () => {
-    const fixture = actions({ finalize: null });
+  it('fails closed when P5 finalize returns false', async () => {
+    const fixture = actions({ finalize: false });
     const queue = committedQueue();
 
-    await expect(finalizeP7BatchCheckpoint(queue, fixture.adapter)).rejects.toThrow('returned no evidence');
+    await expect(finalizeP7BatchCheckpoint(queue, fixture.adapter)).rejects.toThrow('returned false');
     expect(queue.items[0]?.status).toBe('AWAITING_CHECKPOINT');
     expect(queue.status).toBe('PAUSED');
   });
