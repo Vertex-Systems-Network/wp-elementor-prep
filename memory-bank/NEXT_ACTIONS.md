@@ -4,15 +4,24 @@ Last updated: 2026-09-07
 
 Execute in this order:
 
-1. Commit the multi-pattern Audit-Only upgrade on `feat/p1-audit-engine`.
-2. Run CI and fix any typecheck/test/build failure immediately.
-3. Rerun the live golden Figma audit using multi-pattern reporting; confirm Numbers exposes both its metric grid and lower two-column target without regressing Journey/Media.
-4. If multi-pattern calibration is stable, update PR #10 from draft to ready and merge only with green CI.
-5. Test Audit-Only on at least four more materially different real templates and record section-discovery/classifier discrepancies.
-6. Finish issue #2 only when no known high-confidence false positive remains on the five-template calibration set.
-7. Continue issue #3 with broader decoration/timeline classification after P1 is stable.
-8. Do **not** implement Safe Fix before P3 validator and P4 transaction foundations exist.
+1. Synchronize P1 golden-calibration docs and memory-bank with the confirmed fragmented Numbers grid and green CI.
+2. Update draft PR #10 with the final P1 scope/results and mark it ready for review.
+3. Merge PR #10 only if latest CI remains green and the diff still contains no design-mutation behavior.
+4. After merge, start a focused P2 branch for broader classifier semantics (decorative/overlay roles, timeline/chapter semantics, target de-duplication/ranking).
+5. In parallel with P2, identify at least four additional materially different real desktop templates and run Audit-Only calibration on them.
+6. Record every meaningful false positive/negative in `PROJECT_STATE`, `CHANGELOG`, and calibration docs; never hard-code customer copy/node IDs into the engine.
+7. Begin P3 validator design only after the P2 evidence model is stable enough to specify what a candidate transformation must preserve.
+8. Do **not** enable Safe Fix before P3 validator and P4 transaction/rollback foundations exist.
 
 ## Immediate definition of success
 
-P1 checkpoint is reached when the plugin scans a selected desktop frame, discovers real sections, separates strong/weak readiness, and exposes multiple explainable layout targets in complex sections without mutating the Figma document.
+P1 is merge-ready when:
+
+- selected desktop scan works,
+- real section discovery works on the golden fixture,
+- strong vs weak readiness is explainable,
+- multi-target layout evidence works,
+- fragmented grid is detected without inventing a wrapped node,
+- Journey false positive remains fixed,
+- typecheck/tests/build are green,
+- no Figma mutation exists in runtime code.

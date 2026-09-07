@@ -13,28 +13,32 @@
 
 ### P1 Audit engine
 - Started `feat/p1-audit-engine` and draft PR #10.
-- Extended normalized node snapshots with clipping and opacity signals.
-- Added explainable deterministic detection for two-column, grid, horizontal row, vertical stack and carousel-track patterns.
+- Added selected-frame scanner, section discovery, readiness stats, scoring and report UI.
+- Added deterministic two-column, grid, horizontal row, vertical stack and carousel-track detection.
 - Added confidence/evidence payloads and conservative full-size background exclusion.
-- Updated audit UI to show detected pattern evidence.
-- Added unit tests for two-column, 2x3 grid, background exclusion and carousel overflow.
-- Fixed SceneNode opacity typing so CI typecheck/build/test is green.
+- Added calibrated PASS/REVIEW/NEEDS_WORK thresholds.
+- Added PASS-section repair-recipe suppression.
+- Fixed SceneNode opacity typing and kept CI green.
 
-### Live golden calibration
-- Ran the read-only classifier against the live `Desktop — Elementor Ready` golden frame.
-- Correctly discovered `App` and all 16 sections in order.
-- Calibrated status thresholds to PASS >=80, REVIEW 70–79, NEEDS_WORK <70.
-- Confirmed useful detection for About two-column, Philosophy/Sector 2×2 grids, Media carousel track and Milestones repeated grid.
-- Tightened two-column gating after a Journey false-positive.
-- Reran the live fixture and confirmed Journey now reports its outer vertical stack instead of the invalid tiny two-column candidate.
-- Suppressed repair recipes for already-PASS sections.
+### Golden calibration
+- Ran the read-only engine against `Desktop — Elementor Ready`.
+- Correctly discovered `App` and all 16 content sections in order.
+- Confirmed strong sections cluster at PASS while weak/manual sections classify NEEDS_WORK.
+- Removed a high-confidence Journey false-positive by adding parent-coverage and minimum-column-width gates.
+- Confirmed Media remains a clipped wider carousel-track case and must not be compressed.
 
-### Multi-pattern reporting
-- Added a multi-target detection model so complex sections can expose more than one meaningful layout pattern.
-- Kept the strongest `detection` field for backwards compatibility while adding `detections[]`.
-- Expanded the Audit UI to show multiple targets and their confidence values.
-- Added regression fixtures for a Numbers-like metric-grid + lower two-column section, split-header-style pair and timeline/chapter structure.
+### Multi-target reporting
+- Added `detections[]` so complex sections can expose multiple target-level patterns while retaining strongest `detection` for compatibility.
+- Expanded UI to display multiple target detections.
+- Added split-header-style and timeline/chapter structural fixtures.
+
+### Fragmented grid support
+- Added dominant-card-anchor analysis for grids where one visual card is fragmented into sibling text/line nodes.
+- Live Numbers metric region calibration confirms 5 full card anchors + 5 fragments forming a 2×3 visual grid with one missing wrapped slot.
+- Fragmented-grid confidence on the golden Numbers metric region is 87% with 83% occupancy and 100% repeated-card dimension consistency.
+- Tightened strict-grid detection so irregular scatter cannot mask the fragmented-grid path.
+- Latest CI passes typecheck, tests and build.
 
 ### Safety status
 - No Auto-Fix mutation behavior enabled.
-- All current runtime functionality remains read-only.
+- All runtime functionality remains read-only.
