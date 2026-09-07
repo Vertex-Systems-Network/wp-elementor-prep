@@ -154,10 +154,18 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
     this.metadata.delete(handle.candidateNodeId);
   }
 
+  async hasPendingUndo(): Promise<boolean> {
+    const token = await figma.clientStorage.getAsync(UNDO_STORAGE_KEY);
+    return typeof token === 'string' && token.length > 0;
+  }
+
   async commitCandidate(handle: CandidateHandle, transactionId: string): Promise<CommitEvidence> {
     const metadata = this.metadata.get(handle.candidateNodeId);
     if (!metadata) throw new Error('Candidate metadata is missing; refusing commit.');
     if (metadata.transactionId !== transactionId) throw new Error('Candidate belongs to a different transaction.');
+    if (await this.hasPendingUndo()) {
+      throw new Error('A previous P4 undo checkpoint is still pending. Restore or finalize it before another commit.');
+    }
 
     const original = await frameById(handle.originalNodeId);
     const candidate = await frameById(handle.candidateNodeId);
@@ -169,6 +177,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
     const backup = createBackupFrame(transactionId);
     let candidateInserted = false;
     let originalBackedUp = false;
+    let undoStored = false;
 
     try {
       candidate.locked = false;
@@ -199,6 +208,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
         backupFrameId: backup.id,
       });
       await figma.clientStorage.setAsync(UNDO_STORAGE_KEY, undoToken);
+      undoStored = true;
       this.metadata.delete(handle.candidateNodeId);
 
       return {
@@ -212,6 +222,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
     } catch (error) {
       let rollbackError: unknown = null;
       try {
+        if (undoStored) await figma.clientStorage.deleteAsync(UNDO_STORAGE_KEY);
         if (originalBackedUp || original.parent?.id !== metadata.parentNodeId) {
           parent.insertChild(metadata.siblingIndex, original);
           original.x = metadata.originalX;
@@ -266,5 +277,23 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
       parentNodeId: undo.parentNodeId,
       siblingIndex: undo.siblingIndex,
     };
+  }
+
+  /**
+   * Explicitly accept the latest committed candidate and discard the retained previous original.
+   * This keeps undo storage bounded to one checkpoint and is intentionally irreversible.
+   */
+  async finalizeLastCommit(): Promise<boolean> {
+    const token = await figma.clientStorage.getAsync(UNDO_STORAGE_KEY);
+    if (typeof token !== 'string' || token.length === 0) return false;
+    const undo = decodeUndo(token);
+    const original = await frameById(undo.originalNodeId);
+    const backupNode = await figma.getNodeByIdAsync(undo.backupFrameId);
+    if (!backupNode || backupNode.type !== 'FRAME') throw new Error('Undo backup Frame is unavailable; refusing to finalize stale checkpoint.');
+    if (original.parent?.id !== backupNode.id) throw new Error('Retained original moved outside its backup; refusing to finalize stale checkpoint.');
+
+    backupNode.remove();
+    await figma.clientStorage.deleteAsync(UNDO_STORAGE_KEY);
+    return true;
   }
 }
