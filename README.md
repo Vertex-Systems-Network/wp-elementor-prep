@@ -12,9 +12,9 @@ The plugin is intentionally deterministic. It must not depend on Figma AI, OpenA
 
 ## Development status
 
-**Overall roadmap: 56% — P0 through P4 engineered**
+**Overall roadmap: 58% — P0 through P4 complete, P5 in progress**
 
-`███████████░░░░░░░░░ 56%`
+`████████████░░░░░░░░ 58%`
 
 | Phase | Scope | Status |
 |---|---|---|
@@ -22,25 +22,46 @@ The plugin is intentionally deterministic. It must not depend on Figma AI, OpenA
 | P1 | Audit-only scanner, discovery and scoring | ✅ Complete |
 | P2 | Deterministic classifier semantics + role evidence | ✅ Complete |
 | P3 | Geometry/content/image + rendered pixel validator | ✅ Complete |
-| P4 | Candidate transaction engine + rollback/undo | 🟢 Merge-ready |
-| P5 | Conservative high-confidence Safe Fix recipes | ⏭️ Next |
+| P4 | Candidate transaction engine + rollback/undo | ✅ Complete |
+| P5 | Conservative high-confidence Safe Fix recipes | 🟡 In progress |
 | P6 | Advanced timeline/carousel/milestone normalization | ⬜ Planned |
 | P7 | Multi-frame/page batch queue | ⬜ Planned |
 | P8 | Optional versioned Elementor exporter adapters | ⬜ Planned |
 
+### P5 recipe progress
+
+`███░░░░░░░ 30% foundation`
+
+- ✅ deterministic recipe plan/result types
+- ✅ high-confidence eligibility gates
+- ✅ clone-stable child-index target mapping
+- ✅ REVIEW/NOOP/UNSUPPORTED safety decisions
+- ✅ special-role / absolute-child / fragmented-grid blockers
+- ✅ strict candidate-only Vertical Stack transform foundation
+- ✅ strict candidate-only Horizontal Row transform foundation
+- ✅ strict candidate-only Two Column transform foundation
+- 🟡 live Figma calibration pending
+- ⬜ Facts List mutation
+- ⬜ Footer Columns mutation
+- ⬜ Simple Card Grid mutation
+- ⬜ Metric Grid semantics + mutation
+- ⬜ Social/Link Strip semantics + mutation
+
 ### Safety pipeline
 
-`Audit -> classify -> clone candidate -> transform candidate -> P3 validate -> commit/swap OR discard -> bounded undo/finalize`
+`Audit -> classify -> plan -> clone candidate -> transform candidate -> P3 validate -> commit/swap OR discard -> bounded undo/finalize`
 
 P4 enforces candidate isolation: the approved original is never passed to the transformer, a commit cannot occur until validation passes, and only one pending undo checkpoint may exist at a time.
+
+P5 adds a second gate: low-confidence or semantically ambiguous detections stay in REVIEW and do not receive a mutation plan.
 
 Canonical engineering status lives in `memory-bank/PROJECT_STATE.md` and `memory-bank/ROADMAP.md`.
 
 ## Current phase
 
-**P4: candidate-isolated transaction + rollback is merge-ready. P5 Safe Fix recipes are next.**
+**P5: conservative Safe Fix recipe foundation.**
 
-General Safe Fix remains disabled until P4 is merged and each P5 recipe proves its own confidence gate, candidate-only mutation path, full P3 validation and live calibration.
+P4 is merged and issue #5 is closed. P5 currently enables planning for the initial recipe family and candidate-only transform foundations for the simplest linear layouts. General Safe Fix is not yet exposed as a production action until the new recipes pass CI and live disposable-Figma calibration through P3/P4.
 
 ## Core principles
 
@@ -74,6 +95,7 @@ Then register/import the development plugin in Figma using the generated `dist/m
 - `docs/P3_PIXEL_CALIBRATION.md`
 - `docs/P4_TRANSACTION_DESIGN.md`
 - `docs/P4_LIVE_TRANSACTION_CALIBRATION.md`
+- `docs/P5_SAFE_RECIPES.md`
 - `memory-bank/` — canonical project state for humans and AI agents
 
 ## Golden fixture
