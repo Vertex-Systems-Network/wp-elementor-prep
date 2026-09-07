@@ -76,6 +76,15 @@ describe('enrichSemanticHints', () => {
     expect(result[0]?.semanticHint).toBe('split-header');
   });
 
+  it('does not label a nested early chapter row as a split header', () => {
+    const row = node({ id: 'chapter-row', geometry: { x: 80, y: 120, width: 840, height: 180 } });
+    const chapter = withChildren(node({ id: 'chapter', geometry: { x: 0, y: 120, width: 1000, height: 600 } }), [row]);
+    const section = withChildren(node({ id: 'section', geometry: { x: 0, y: 0, width: 1000, height: 4000 } }), [chapter]);
+    const result = enrichSemanticHints(section, [detection({ pattern: 'two-column', targetNodeId: 'chapter-row' })]);
+
+    expect(result[0]?.semanticHint).not.toBe('split-header');
+  });
+
   it('labels a repeated chapter stack with nested two-column targets as timeline/chapter', () => {
     const chapterA = node({ id: 'chapter-a', geometry: { x: 0, y: 100, width: 1000, height: 300 } });
     const chapterB = node({ id: 'chapter-b', geometry: { x: 0, y: 420, width: 1000, height: 300 } });
@@ -134,14 +143,14 @@ describe('enrichSemanticHints', () => {
       node({ id: `col-${index}`, geometry: { x: index * 250, y: 0, width: 230, height: 260 } }),
       [text(`col-${index}-text`)],
     ));
-    const footer = withChildren(node({ id: 'footer', geometry: { x: 0, y: 650, width: 1000, height: 300 } }), columns);
+    const footer = withChildren(node({ id: 'footer', geometry: { x: 0, y: 650, width: 1000, height: 80 } }), columns);
     const section = withChildren(node({ id: 'section', geometry: { x: 0, y: 0, width: 1000, height: 1000 } }), [footer]);
     const footerResult = enrichSemanticHints(section, [detection({
       pattern: 'horizontal-row', targetNodeId: 'footer', evidence: { itemCount: 4 },
     })]);
     expect(footerResult[0]?.semanticHint).toBe('footer-columns');
 
-    const topRow = withChildren(node({ id: 'top-row', geometry: { x: 0, y: 100, width: 1000, height: 300 } }), columns);
+    const topRow = withChildren(node({ id: 'top-row', geometry: { x: 0, y: 100, width: 1000, height: 80 } }), columns);
     const topSection = withChildren(node({ id: 'top-section', geometry: { x: 0, y: 0, width: 1000, height: 1000 } }), [topRow]);
     const topResult = enrichSemanticHints(topSection, [detection({
       pattern: 'horizontal-row', targetNodeId: 'top-row', evidence: { itemCount: 4 },
