@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-08
+
+### P2 semantic hardening
+- Completed representative read-only semantic review across the five-template calibration set.
+- Confirmed positive semantics for Marcus/Doctor/Lawyer Journey, Marcus About facts, and Marcus/Doctor/Legacy contact-channel rows.
+- Found and fixed a Doctor About false footer-columns classification by requiring footer/contact rows to remain shallow relative to section height.
+- Found and fixed a Lawyer Biography Opening false facts-list classification by requiring repeated container items with text, broad-width and height-consistency evidence.
+- Found and fixed Legacy Numbers/Media false timeline semantics by requiring at least five repeated vertical-stack items before timeline inference.
+- Added regression fixtures for tall lower card rows, loose text/divider pseudo-lists and four-item non-timeline stacks.
+- Confirmed the hardened rules preserve real positive cases after the fixes.
+- Latest code/test head passed typecheck, tests and build.
+
 ## 2026-09-07
 
 ### Foundation
@@ -33,22 +45,13 @@
 ### P2 classifier semantics
 - Started `feat/p2-classifier-semantics` and draft PR #11.
 - Added same-target specificity ranking so specific patterns suppress redundant generic interpretations.
-- Added semantic hints without replacing underlying geometry: repeated-cards, split-header, facts-list, footer-columns, timeline-chapter.
+- Added semantic hints without replacing underlying geometry: repeated-cards, split-header, facts-list, footer-columns, timeline-chapter and carousel-viewport.
 - Added special preservation roles: background-layer, absolute-overlay, decorative-overlay.
 - Updated Audit UI to show semantic hints and role evidence.
 - Added ranking, semantic and role tests including adversarial overlap coverage.
-- First P2 semantic/role CI run passed typecheck, tests and build.
-
-### P2 live role/timeline calibration
-- Ran role heuristics read-only across all five real templates.
-- Marcus: 5 background layers, 7 absolute overlays.
-- Doctor: 4 background layers.
-- Esthetic: 1 background layer.
-- Lawyer: 13 background layers in image/card structures.
-- Legacy: 1 background layer, 5 absolute overlays.
-- No low-opacity decorative-overlay rule fired in this sample set, preserving conservative behavior.
-- Inspected Marcus, Doctor and Lawyer Journey structures.
-- Added a manual full-width sequential text-rich chapter-stack fallback so timeline semantics do not depend on existing Auto Layout/two-column structure.
+- Added top-level-context guard for split-header inference.
+- Added manual full-width sequential text-rich chapter-stack fallback for timeline semantics.
+- Hardened background-role inference so normal Auto Layout wrappers are not treated as backgrounds.
 
 ### Safety status
 - No Auto-Fix mutation behavior enabled.

@@ -1,28 +1,35 @@
 # Next Actions
 
-Last updated: 2026-09-07
+Last updated: 2026-09-08
 
 Execute in this order:
 
-1. Confirm CI on the latest P2 timeline fallback + regression-test head; fix any typecheck/test/build failure immediately.
-2. Run read-only semantic calibration on representative sections from the five-template set and record any false positive/negative.
-3. Harden semantic hints only with general geometric/subtree evidence; never use customer copy or calibration node IDs in production rules.
-4. Add/verify dedicated fixtures for facts-list and footer-columns, including adversarial non-footer rows and ordinary stacked content.
-5. Review special-role output from Marcus/Doctor/Esthetic/Lawyer/Legacy; keep low-opacity decorative detection conservative.
-6. Update PR #11 with final P2 acceptance evidence and mark ready only when CI is green and no known high-confidence semantic false positive remains.
-7. Close issue #3 only after P2 acceptance criteria are satisfied.
-8. After P2 merge, start P3 validator design: geometry snapshot, text integrity, image integrity, export/pixel diff and threshold policy.
-9. Do **not** enable Safe Fix before P3 validator and P4 transaction/rollback foundations exist.
+1. Commit the final P2 calibration/docs/memory synchronization to `feat/p2-classifier-semantics`.
+2. Confirm CI remains green on that final P2 head.
+3. Update PR #11 with final evidence: five-template semantic review, false-positive regressions, positive-case preservation, role safety and read-only status.
+4. Mark PR #11 ready, merge it to `main`, and close issue #3 only if CI is green and there is no known high-confidence semantic/role false positive.
+5. Create `feat/p3-validator` from the merged `main` head.
+6. Start P3 with a pure validation model before any PNG/UI work:
+   - geometry snapshots,
+   - text-content fingerprints,
+   - image-fill fingerprints,
+   - structural sanity,
+   - versioned threshold/result types,
+   - no-op and known-drift fixtures.
+7. Add section-level Figma `exportAsync()` capture and plugin-UI Canvas pixel-diff only after deterministic integrity checks are stable.
+8. Keep all P3 behavior read-only; validator code may inspect/export, but must not apply layout transformations.
+9. Do **not** enable Safe Fix before P4 transaction/rollback foundations also exist.
 
 ## Immediate definition of success
 
-P2 is merge-ready when:
+P2 is complete when PR #11 is merged and issue #3 is closed with green CI.
 
-- same-target redundant patterns are de-duplicated by specificity,
-- semantic hints remain explainable and conservative,
-- timeline semantics work for both structured and manual chapter stacks,
-- background/absolute/decorative roles are reported without mutation,
-- adversarial overlap/overflow tests pass,
-- five real templates remain broadly explainable,
-- typecheck/tests/build are green,
-- runtime remains read-only.
+P3 foundation is successful when:
+
+- identical snapshots pass,
+- geometry drift produces explicit failure evidence,
+- text-content drift produces explicit failure evidence,
+- image-fill drift produces explicit failure evidence,
+- thresholds are versioned/configurable,
+- validation result is deterministic and serializable,
+- no Figma design mutation is required to run tests.

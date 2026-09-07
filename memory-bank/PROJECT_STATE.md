@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-07
+Last updated: 2026-09-08
 
 ## Product
 
@@ -10,30 +10,34 @@ Runtime must not require generative AI or external network access.
 
 ## Current phase
 
-**P2 classifier semantics is active on `feat/p2-classifier-semantics`, draft PR #11. P1 Audit-Only is merged to `main`.**
+**P2 classifier semantics is merge-ready on `feat/p2-classifier-semantics` / PR #11. P1 Audit-Only is merged to `main`.**
 
 ## Completed
 
 - P0 foundation merged via PR #1.
 - P1 Audit-Only MVP merged via PR #10; issue #2 closed.
 - Selected-frame scanner, normalized model, section discovery, calibrated readiness scoring, explainable findings and report UI implemented.
-- Deterministic geometric classifiers implemented for two-column, grid, fragmented grid, horizontal row, vertical stack and carousel track.
-- Multi-target reporting, confidence/evidence, PASS recipe suppression and Journey false-positive protection implemented.
+- Deterministic geometric classifiers implemented for two-column, strict/fragmented grid, horizontal row, vertical stack and carousel track.
+- Multi-target reporting, confidence/evidence, PASS recipe suppression and Journey two-column false-positive protection implemented.
 - Five materially different real-template calibration set completed: Marcus, Doctor, Esthetic, Lawyer and Legacy mixed.
-- Calibration demonstrates strong/manual/mixed separation rather than a page-wide guess.
-- P2 same-target ranking implemented so specific interpretations such as carousel suppress redundant generic row output on the same target.
-- P2 semantic hints implemented conservatively: repeated-cards, split-header, facts-list, footer-columns, timeline-chapter.
+- Broad calibration demonstrates strong/manual/mixed separation rather than a page-wide guess.
+- P2 same-target ranking implemented so specific interpretations suppress redundant generic output on the same target.
+- P2 semantic hints implemented: repeated-cards, split-header, facts-list, footer-columns, timeline-chapter and carousel-viewport.
 - P2 special visual-role evidence implemented: background-layer, absolute-overlay, decorative-overlay.
 - P2 audit UI surfaces semantic hints and special roles.
-- P2 timeline semantics calibrated against Marcus, Doctor and Lawyer Journey structures, including a manual full-width chapter-stack fallback.
-- P2 first CI run after semantic/role integration passed typecheck, tests and build; latest timeline test commit must still be verified before merge.
+- Timeline semantics calibrated against Marcus, Doctor and Lawyer Journey structures, including manual full-width chapter fallback.
+- Live five-template semantic false-positive review completed.
+- Footer/card collision fixed with a shallow-row height gate; Doctor About false positive is rejected while Marcus/Doctor/Legacy contact rows remain valid.
+- Facts/divider collision fixed with repeated-container, text-content, width and height-consistency evidence; Marcus real facts remains valid and Lawyer loose-text/divider opening is rejected.
+- Four-item content-stack/timeline collision fixed by requiring at least five repeated stack items; three real Journey fixtures remain valid.
+- Dedicated regression fixtures added for the above semantic collisions.
+- Latest P2 head `5ae3550f9ed4c37ab104787894853fc0a58216b3` passed CI: typecheck, tests and build.
 
 ## In progress
 
-- Issue #3 / PR #11: semantic and role classifier hardening.
-- Cross-template review for semantic false positives/negatives.
-- Latest CI verification after timeline fallback + regression fixture.
-- Memory/docs synchronization for five-template and P2 role calibration.
+- Final PR #11 metadata/acceptance synchronization.
+- Merge PR #11 and close issue #3.
+- Start P3 validator branch immediately after P2 merge.
 
 ## Next phases
 
@@ -51,21 +55,20 @@ See:
 - `docs/GOLDEN_CALIBRATION.md`
 - `docs/CROSS_TEMPLATE_CALIBRATION.md`
 
-Five-template production calibration gate is now satisfied at the broad audit level.
+Five-template broad audit calibration and the P2 semantic hardening pass are complete.
 
 ## Safety status
 
-All runtime behavior is still read-only. No Auto-Fix design mutation is enabled.
+All current Figma runtime behavior remains read-only. No Auto-Fix design mutation is enabled.
 
 ## Production mutation gate
 
 Do not enable Safe Fix until:
 
-- P2 semantic/role classifications are explainable with no known high-confidence false positive,
 - P3 validator exists,
 - P4 transaction/rollback exists,
 - forced validation failure demonstrably leaves the working design untouched.
 
 ## Release target
 
-Current usable line: `0.1.x` Audit-Only. Next classifier milestone: P2 completion before validator work.
+Current usable line: `0.1.x` Audit-Only. Next engineering milestone after P2 merge: P3 validator foundation.

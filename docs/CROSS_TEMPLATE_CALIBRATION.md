@@ -1,8 +1,8 @@
 # Cross-Template Calibration
 
-Date: 2026-09-07
+Date: 2026-09-08
 
-Purpose: validate the read-only audit engine against materially different desktop Figma structures before any mutation feature is allowed. These node IDs are calibration references only and must never be hard-coded into production logic.
+Purpose: validate the read-only audit/classifier against materially different desktop Figma structures before any mutation feature is allowed. Calibration node IDs are references only and must never be hard-coded into production logic.
 
 ## Template set
 
@@ -14,21 +14,21 @@ Purpose: validate the read-only audit engine against materially different deskto
 | Lawyer | `D01 · Desktop 1440 · Adrian Kessler` | ~0% | 18 | 0 | 0 | 18 |
 | Legacy mixed | `29 - Desktop` | 64% | 18 | 9 | 6 | 3 |
 
-The set intentionally includes highly structured, almost entirely manual, and mixed legacy documents.
+The set intentionally includes highly structured, almost entirely manual, deeply nested and mixed legacy documents.
 
 ## P1 conclusions
 
 - Strong Auto Layout templates are not falsely degraded: Doctor returned 19/19 PASS.
 - Fully manual templates are not falsely presented as ready: Esthetic and Lawyer returned all sections NEEDS_WORK.
 - Mixed legacy pages receive section-level separation instead of a single page-wide verdict.
-- Golden Marcus remains useful for fragmented-grid, carousel overflow, timeline, decorative overlay, and partial-structure cases.
-- No customer name or node ID is required by the classifier.
+- Golden Marcus remains useful for fragmented-grid, carousel overflow, timeline, role-preservation and partial-structure cases.
+- No customer name or node ID is required by production classifier logic.
 
 ## P2 special-role calibration
 
-The role classifier was run read-only across all five templates using only geometry, opacity, overlap, layout-positioning, Auto Layout state, and descendant-count evidence.
+The role classifier was run read-only across all five templates using geometry, opacity, overlap, layout-positioning, Auto Layout state and descendant-count evidence.
 
-After hardening full-size background inference so Auto Layout content wrappers cannot be treated as backgrounds:
+After hardening full-size background inference so normal Auto Layout content wrappers cannot be treated as backgrounds:
 
 | Fixture | Background layers | Absolute overlays | Decorative overlays |
 |---|---:|---:|---:|
@@ -38,66 +38,103 @@ After hardening full-size background inference so Auto Layout content wrappers c
 | Lawyer | 13 | 0 | 0 |
 | Legacy | 1 | 5 | 0 |
 
-Observed examples are structurally plausible: hero images/shades classify as background layers; explicit floating hero elements classify as absolute overlays. Marcus `Hero Decorative Layer` is now preserved as an explicit absolute overlay rather than inferred as a background because it participates in Auto Layout metadata. Low-opacity decoration remains intentionally conservative and did not fire on these five fixtures.
+Observed examples remain structurally plausible. Full-size media/shade layers can be preserved as backgrounds; explicitly positioned floating elements remain overlays. Low-opacity decoration is intentionally conservative and did not fire on the five-template set.
 
-Important: role detection does not authorize mutation. It is preservation evidence for later P3/P4/P5 work.
+Role detection is preservation evidence only. It never authorizes mutation.
 
 ## P2 semantic calibration
 
-Representative live targets were checked with the same deterministic semantic rules:
+Representative live targets were checked with the same deterministic geometry/subtree rules used by the classifier.
 
-| Case | Result | Evidence summary |
-|---|---|---|
-| Marcus Media viewport | `carousel-viewport` | clipped 1052px viewport, ~1778px track, ~727px intentional overflow |
-| Marcus Philosophy | `repeated-cards` | 2×2, 100% width consistency, 100% occupancy |
-| Marcus Sector | `repeated-cards` | 2×2, 100% width consistency, 100% occupancy |
-| Marcus About facts | `facts-list` | 8 items, all 8 contain exactly two text descendants |
-| Marcus Journey | `timeline-chapter` | 6 full-width sequential blocks; 5 substantial text-rich chapters |
-| Doctor Journey | `timeline-chapter` | 6 full-width sequential blocks plus repeated nested two-column chapters |
-| Lawyer Journey | `timeline-chapter` | 6 full-width sequential manual text-rich exhibit blocks |
+Confirmed positive cases:
 
-### Footer/contact calibration
+| Case | Expected semantic | Post-hardening result | Evidence summary |
+|---|---|---|---|
+| Marcus About facts | `facts-list` | PASS | 8 repeated container items; 100% text-item, broad-width and height-consistency evidence |
+| Marcus Journey | `timeline-chapter` | PASS | 6 full-width sequential blocks; text-rich chapter structure |
+| Doctor Journey | `timeline-chapter` | PASS | 6 full-width sequential blocks plus repeated nested two-column chapter structure |
+| Lawyer Journey | `timeline-chapter` | PASS | 6 full-width sequential manual text-rich exhibit blocks |
+| Marcus Contact main row | `footer-columns` | PASS | 4 items, ~72% section position, ~13% section height, 100% text/coverage |
+| Doctor Contact channels | `footer-columns` | PASS | 4 items, ~91% section position, ~3% section height, 100% text/coverage |
+| Legacy Contact channels | `footer-columns` | PASS | 4 items, ~83% section position, ~4% section height, 100% text, ~68% horizontal coverage |
 
-The initial footer rule required a row to occupy at least 15% of section height. Live contact sections proved that assumption was too strict: valid contact-channel rows are often shallow.
+Other established semantic cases remain valid: clipped carousel viewport, coherent repeated-card grids and top-level split headers.
 
-Observed rows:
+## False-positive review and fixes
 
-- Marcus: 4 columns, top ~72% of section, 100% horizontal coverage, 100% text-bearing columns.
-- Doctor: 4 channels, top ~91%, 100% horizontal coverage, 100% text-bearing columns.
-- Legacy: 4 columns, top ~83%, ~68% horizontal coverage, 100% text-bearing columns.
+The five-template semantic pass exposed three important generic-rule collisions. All fixes were expressed using general geometry/subtree evidence only.
 
-The semantic rule was recalibrated to require lower-section placement, 3–6 items, >=75% text-bearing columns and >=65% horizontal coverage instead of arbitrary row height. A top-of-section adversarial fixture remains rejected.
+### 1. Tall About card row mislabeled as footer columns
 
-### Split-header false-positive hardening
+Doctor About contains a 3-card text row in the lower part of the section. It satisfied the old lower-position/text/coverage rule even though it is a content-card row.
 
-Live Doctor Journey calibration exposed an important semantic collision: the first nested two-column chapter row sits near the top of the Journey section and is shallow enough to resemble a split header by position alone.
+Post-fix footer rule additionally requires the target row to be shallow relative to its section (`height <= 18%` of section height).
 
-The split-header rule now requires top-level section context as well as position/height. Nested targets qualify only when their parent begins within the first ~2% of the section; ordinary chapter rows deeper in a section are rejected. A regression fixture covers this case.
+- Doctor About row: ~25% section height -> rejected.
+- Marcus Contact main row: ~13% -> retained.
+- Doctor Contact channels: ~3% -> retained.
+- Legacy Contact channels: ~4% -> retained.
 
-## Timeline calibration
+A regression fixture now rejects a tall lower three-card row.
 
-Three materially different Journey structures were inspected:
+### 2. Loose text/dividers mislabeled as facts list
 
-- Marcus: 6 full-width sequential blocks; 5 text-rich chapters after an opening/header block.
-- Doctor: 6 full-width sequential blocks with repeated nested two-column chapters.
-- Lawyer: 6 full-width sequential manual exhibit blocks with rich text and no dependable Auto Layout.
+Lawyer Biography Opening contains loose text siblings and divider frames. The previous compact-text heuristic could incorrectly interpret this as a facts list.
 
-P2 therefore supports two deterministic timeline signals:
+Post-fix facts-list semantics require:
 
-1. vertical stack with repeated nested two-column chapter targets;
-2. conservative full-width sequential, substantial, text-rich chapter stack fallback for manual layouts.
+- at least 5 repeated **container** items,
+- >=80% items with 1–4 text descendants,
+- >=80% items occupying at least 80% of target width,
+- >=70% item-height consistency.
 
-The fallback is evidence-only and remains subject to future cross-template false-positive review.
+Marcus About's real 8-item facts list remains detected; Lawyer's divider/text opening is rejected. A dedicated adversarial fixture covers loose text + divider frames.
 
-## Production mutation gate status
+### 3. Four-item content stacks mislabeled as timelines
+
+Legacy Numbers/Media exposed that a generic four-item vertical stack can contain nested layout evidence without being a timeline.
+
+Post-fix timeline semantics require at least 5 repeated stack items before nested-two-column or full-width chapter fallback can qualify.
+
+- Marcus Journey: 6 items -> retained.
+- Doctor Journey: 6 items -> retained.
+- Lawyer Journey: 6 items -> retained.
+- Legacy four-item content stack -> rejected.
+
+A regression fixture now rejects four-item stacks even when nested two-column evidence exists.
+
+## Split-header hardening
+
+A nested Doctor Journey chapter row sits near the top of the section and can look like a split header by position alone. Split-header semantics therefore require top-level section context in addition to top/height geometry. Nested chapter rows deeper in the hierarchy are rejected.
+
+## Same-target ranking
+
+A target may satisfy several geometric classifiers. P2 reports the most specific valid interpretation per target:
+
+`carousel-track > grid > two-column > horizontal-row > vertical-stack`
+
+This prevents a carousel track from also appearing as a competing generic horizontal row repair target.
+
+## P2 acceptance evidence
 
 - [x] at least 5 materially different real templates audited
 - [x] broad strong/manual/mixed separation demonstrated
-- [x] live semantic calibration covers carousel, repeated cards, facts list, footer/contact rows and structured/manual timelines
-- [x] known nested chapter vs split-header collision has a deterministic guard and regression fixture
-- [ ] latest P2 CI must be green before merge
-- [ ] P3 visual/content validator implemented
-- [ ] P4 candidate transaction/rollback implemented
-- [ ] forced failed candidate proven to preserve the working design
+- [x] semantic hints are geometry/subtree based, not customer-copy based
+- [x] known split-header/chapter collision has a deterministic guard
+- [x] known footer/card collision has a deterministic guard
+- [x] known facts/divider collision has a deterministic guard
+- [x] known four-stack/timeline collision has a deterministic guard
+- [x] positive facts/timeline/footer cases remain detected after hardening
+- [x] same-target redundant patterns are de-duplicated
+- [x] role evidence remains preservation-only and read-only
+- [x] latest P2 typecheck/tests/build are green
+
+## Production mutation gate status
+
+P2 can be merged, but Safe Fix remains blocked until:
+
+- [ ] P3 geometry/text/image/pixel validator exists,
+- [ ] P4 candidate transaction/rollback engine exists,
+- [ ] a forced failed candidate demonstrably leaves the working design untouched.
 
 Safe Fix remains disabled.
