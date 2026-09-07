@@ -4,17 +4,17 @@ AI-free Figma structure auditor and safe-prep engine for WordPress Elementor.
 
 ## Goal
 
-Take an approved desktop Figma design and make its internal layout Elementor-ready **without visually redesigning it**. The long-term workflow is:
+Take an approved desktop Figma design and make its internal layout Elementor-ready **without visually redesigning it**.
 
-`Figma selection -> Audit -> Confidence classification -> Safe Fix -> Visual/geometry validation -> Report -> optional Elementor export`
+`Figma selection -> Audit -> Confidence classification -> Safe Fix -> P3 validation -> P4 transaction -> Report -> optional Elementor export`
 
-The plugin is intentionally deterministic. It must not depend on Figma AI, OpenAI, Claude, or any other generative service for its core audit/refactor pipeline.
+The core runtime is deterministic and must not depend on Figma AI, OpenAI, Claude, or another generative service.
 
 ## Development status
 
-**Overall roadmap: 62% — P0 through P4 complete, P5 in progress**
+**Overall roadmap: 63% — P0 through P4 complete, P5 in progress**
 
-`████████████░░░░░░░░ 62%`
+`█████████████░░░░░░░ 63%`
 
 | Phase | Scope | Status |
 |---|---|---|
@@ -28,69 +28,73 @@ The plugin is intentionally deterministic. It must not depend on Figma AI, OpenA
 | P7 | Multi-frame/page batch queue | ⬜ Planned |
 | P8 | Optional versioned Elementor exporter adapters | ⬜ Planned |
 
-### P5 recipe progress
+### P5 progress
 
-`██████░░░░ 55%`
+**P5: 70%**
+
+`███████░░░ 70%`
 
 - ✅ deterministic recipe plan/result types
 - ✅ high-confidence eligibility gates
 - ✅ clone-stable child-index target mapping
-- ✅ REVIEW/NOOP/UNSUPPORTED safety decisions
+- ✅ REVIEW / NOOP / UNSUPPORTED safety decisions
 - ✅ special-role / absolute-child / fragmented-grid blockers
-- ✅ strict candidate-only Vertical Stack transform foundation
-- ✅ strict candidate-only Horizontal Row transform foundation
-- ✅ strict candidate-only Two Column transform foundation
-- ✅ live disposable-Figma Vertical Stack render-equivalence calibration
-- ✅ live disposable-Figma Horizontal Row render-equivalence calibration
-- ✅ live disposable-Figma Two Column render-equivalence calibration
-- ✅ root-shrink transition bug found, fixed and re-calibrated
-- ✅ synthetic recipe -> P3-equivalent rejection -> candidate discard proof
-- ✅ synthetic recipe -> P3-equivalent pass -> P4-style commit + exact restore proof
-- ✅ synthetic recipe -> P3-equivalent pass -> commit + finalize proof
-- ✅ bounded-checkpoint policy verified in the end-to-end calibration
-- 🟡 final branch CI + compiled FullFrameValidator runtime proof
-- ⬜ Facts List mutation
-- ⬜ Footer Columns mutation
-- ⬜ Simple Card Grid mutation
+- ✅ Vertical Stack candidate transform + exact live calibration
+- ✅ Horizontal Row candidate transform + exact live calibration
+- ✅ Two Column candidate transform + exact live calibration
+- ✅ Facts List semantic transform + exact live calibration
+- ✅ Footer Columns semantic transform + exact live calibration
+- ✅ Simple Card Grid strict fixed-track transform + exact live calibration
+- ✅ Figma manual -> Auto Layout root-shrink behavior discovered and guarded
+- ✅ synthetic reject/discard, pass/commit/restore and pass/commit/finalize evidence
+- ✅ reusable FullFrameValidator broker + P5/P4 runtime seam
+- ✅ read-only Safe Fix preview UI
+- 🟡 latest branch CI / compiled runtime proof
 - ⬜ Metric Grid semantics + mutation
 - ⬜ Social/Link Strip semantics + mutation
-- ⬜ multi-template production calibration
+- ⬜ multi-template image-bearing mutation calibration
 
 ### Safety pipeline
 
-`Audit -> classify -> plan -> clone candidate -> transform candidate -> P3 validate -> commit/swap OR discard -> bounded undo/finalize`
+`Audit -> classify -> plan -> clone candidate -> transform candidate -> full P3 validate -> P4 commit OR discard -> bounded undo/finalize`
 
-P4 enforces candidate isolation: the approved original is never passed to the transformer, a commit cannot occur until validation passes, and only one pending undo checkpoint may exist at a time.
+P4 guarantees candidate isolation. P5 adds conservative semantic/confidence/geometry gates. General production mutation is still disabled until the compiled full-P3 runtime and multi-template mutation calibration are green.
 
-P5 adds a second gate: low-confidence or semantically ambiguous detections stay in REVIEW and do not receive a mutation plan.
+Canonical engineering status lives in `memory-bank/PROJECT_STATE.md`, `memory-bank/ROADMAP.md`, and `memory-bank/NEXT_ACTIONS.md`.
 
-Canonical engineering status lives in `memory-bank/PROJECT_STATE.md` and `memory-bank/ROADMAP.md`.
+## Current recipe rules
 
-## Current phase
+P5 v1 mutation gates:
 
-**P5: conservative Safe Fix recipe foundation + transaction integration.**
+- Vertical Stack >= 90%
+- Horizontal Row >= 90%
+- Two Column >= 92%
+- Facts List >= 92%
+- Footer Columns >= 92%
+- non-fragmented Repeated Card Grid >= 94%
 
-P4 is merged and issue #5 is closed. The first three linear P5 transforms preserve synthetic fixture geometry and exported PNG bytes exactly. A later disposable end-to-end calibration also proved the intended reject/discard, pass/commit/restore, and pass/commit/finalize transaction semantics while leaving zero temporary nodes. General Safe Fix is still not exposed as a production action until current CI is green, the compiled full-P3 broker path is verified, and the remaining simple recipes are calibrated.
+Carousel/timeline structures remain deferred to P6. Fragmented grids remain REVIEW.
 
 ## Core principles
 
 - Original design is the visual source of truth.
 - Never guess when confidence is low.
-- Audit first; mutate only after the audit engine is proven.
-- Candidate/validate/commit transactions for fixes.
-- Elementor-native output: containers, nested containers, widgets, gap, padding, sizing, minimal absolute positioning.
+- Candidate-only mutation; original is never handed to a transformer.
+- Full P3 validation is mandatory before P4 commit.
+- Elementor-native structure: containers, nested containers, gap, padding, sizing and minimal absolute positioning.
 - No external AI/network dependency in the core plugin runtime.
-- Memory-bank is mandatory and must be updated with every meaningful development session.
+- Memory-bank updates are mandatory after material development work.
 
 ## Development
 
 ```bash
 npm install
-npm run build
+npm run typecheck
 npm test
+npm run build
 ```
 
-Then register/import the development plugin in Figma using the generated `dist/manifest.json` after setting a valid plugin ID in `.env` or `FIGMA_PLUGIN_ID`.
+Then import the generated development plugin from `dist/manifest.json` after setting a valid Figma plugin ID.
 
 ## Project docs
 
@@ -107,8 +111,9 @@ Then register/import the development plugin in Figma using the generated `dist/m
 - `docs/P5_SAFE_RECIPES.md`
 - `docs/P5_LINEAR_LIVE_CALIBRATION.md`
 - `docs/P5_END_TO_END_TRANSACTION_CALIBRATION.md`
+- `docs/P5_SEMANTIC_AND_GRID_LIVE_CALIBRATION.md`
 - `memory-bank/` — canonical project state for humans and AI agents
 
 ## Golden fixture
 
-The first reference design is the Marcus Vane desktop page that contains a broad mix of patterns: hero, two-column about, cards, metrics, timeline/journey, carousel/media, milestones, and footer. It is used as a **golden audit fixture**, not as hard-coded product logic.
+The first reference design is the Marcus Vane desktop page, which contains hero, two-column, card, metric, timeline, carousel, milestone and footer patterns. It is a calibration fixture, never hard-coded product logic.

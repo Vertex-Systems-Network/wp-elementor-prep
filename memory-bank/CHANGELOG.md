@@ -26,7 +26,20 @@
   - bounded checkpoint policy was exercised before restore,
   - passing Horizontal Row validation committed and finalized while retaining the candidate and deleting old original/backup,
   - cleanup left `0` temporary nodes.
-- Added `docs/P5_END_TO_END_TRANSACTION_CALIBRATION.md` and advanced GitHub progress to overall `62%` / P5 `55%`.
+- Added `docs/P5_END_TO_END_TRANSACTION_CALIBRATION.md`.
+- Corrected the linear out-of-bounds regression fixture so it reaches the intended bounds check without first breaking gap uniformity.
+- Corrected Safe Fix preview to consume the semantic/ranked classifier pipeline from `classification.ts` rather than raw geometry-only detections.
+- Enabled semantic linear transforms only when classifier contracts match exactly:
+  - `facts-list <- vertical-stack` -> `VERTICAL`,
+  - `footer-columns <- horizontal-row` -> `HORIZONTAL`.
+- Added regression coverage proving malformed semantic/geometric combinations are refused.
+- Live-calibrated Facts List on disposable text-bearing Frames: exact root/child geometry, exact PNG hash `4805:c1887f4a`, `0` leftovers.
+- Live-calibrated Footer Columns: exact root/child geometry, exact PNG hash `3225:3421c31e`, `0` leftovers.
+- Added strict pure `grid-layout-analysis` for complete rectangular card grids: full occupancy, row-major order, fixed-track consistency, uniform gaps, in-bounds padding, no hidden/absolute children.
+- Added Simple Card Grid Figma GRID transform using explicit row/column counts, fixed tracks, measured gaps/padding and exact root-size restoration.
+- Live-calibrated a disposable 2x2 text-bearing Simple Card Grid: exact geometry and PNG hash `4476:6ba2b3ec`, `0` leftovers.
+- CI caught an incomplete-grid fixture that was being rejected earlier by the minimum-item guard; corrected the test fixture to isolate the intended incomplete-occupancy gate.
+- Added `docs/P5_SEMANTIC_AND_GRID_LIVE_CALIBRATION.md` and advanced GitHub progress to overall `63%` / P5 `70%` while final current-head CI remains a gate.
 
 ### P4 candidate transaction + rollback
 - Merged P3 validator through PR #12 and closed issue #4.
