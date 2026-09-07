@@ -4,6 +4,8 @@ interface LocatedNode {
   node: AuditNode;
   offsetX: number;
   offsetY: number;
+  depth: number;
+  parentOffsetY: number;
 }
 
 interface SemanticResult {
@@ -12,7 +14,7 @@ interface SemanticResult {
 }
 
 function locate(root: AuditNode, targetId: string): LocatedNode | null {
-  const queue: LocatedNode[] = [{ node: root, offsetX: 0, offsetY: 0 }];
+  const queue: LocatedNode[] = [{ node: root, offsetX: 0, offsetY: 0, depth: 0, parentOffsetY: 0 }];
   while (queue.length > 0) {
     const current = queue.shift();
     if (!current) continue;
@@ -22,6 +24,8 @@ function locate(root: AuditNode, targetId: string): LocatedNode | null {
         node: child,
         offsetX: current.offsetX + child.geometry.x,
         offsetY: current.offsetY + child.geometry.y,
+        depth: current.depth + 1,
+        parentOffsetY: current.offsetY,
       });
     }
   }
@@ -118,13 +122,20 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
   if (detection.pattern === 'two-column') {
     const topRatio = located.offsetY / sectionHeight;
     const heightRatio = target.geometry.height / sectionHeight;
-    if (topRatio <= 0.28 && heightRatio <= 0.38) {
+    const parentTopRatio = located.parentOffsetY / sectionHeight;
+    const topLevelContext = located.depth <= 1 || parentTopRatio <= 0.05;
+
+    // A split header must belong to the section's top-level context. Nested chapter/content rows
+    // can also be shallow and near the top, so position alone is not sufficient.
+    if (topRatio <= 0.28 && heightRatio <= 0.38 && topLevelContext) {
       return {
         hint: 'split-header',
         evidence: {
-          semanticRule: 'shallow-top-two-column',
+          semanticRule: 'shallow-top-level-two-column',
           semanticTopPct: Math.round(topRatio * 100),
           semanticHeightPct: Math.round(heightRatio * 100),
+          semanticDepth: located.depth,
+          semanticParentTopPct: Math.round(parentTopRatio * 100),
         },
       };
     }
