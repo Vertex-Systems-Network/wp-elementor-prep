@@ -1,5 +1,5 @@
 import { runCandidateTransaction } from '../core/transaction';
-import type { TransactionResult } from '../core/transaction-types';
+import type { CommitEvidence, TransactionResult } from '../core/transaction-types';
 import type { ValidationReport } from '../core/validation-types';
 import type { SafeRecipePlan } from '../core/safe-recipe-types';
 import { FigmaCandidateTransactionAdapter } from './figma-transaction-adapter';
@@ -13,11 +13,20 @@ export interface SafeFixRuntimeResult {
   skippedReason?: string;
 }
 
+function checkpointAdapter(): FigmaCandidateTransactionAdapter {
+  return new FigmaCandidateTransactionAdapter({
+    transform: () => undefined,
+    validate: async () => {
+      throw new Error('Checkpoint-only adapter does not validate candidates.');
+    },
+  });
+}
+
 /**
  * Run one already-planned P5 recipe through the P4 transaction boundary.
  *
- * This function does not expose a production UI action yet. It is the integration seam used for
- * calibration and, later, an explicit user-triggered Safe Fix action.
+ * The approved original is never handed to the transformer. A successful full-P3 validation is
+ * mandatory before P4 can commit the staged candidate.
  */
 export async function runSafeFixTransaction(
   original: FrameNode,
@@ -44,4 +53,22 @@ export async function runSafeFixTransaction(
 
   const transaction = await runCandidateTransaction(original.id, adapter, `p5-${plan.recipe}-${Date.now().toString(36)}`);
   return { plan, transaction };
+}
+
+/** Whether a committed Safe Fix is currently retaining its previous original for bounded undo. */
+export async function hasPendingSafeFixCheckpoint(): Promise<boolean> {
+  return checkpointAdapter().hasPendingUndo();
+}
+
+/** Restore the retained approved original and remove the committed candidate. */
+export async function restoreLastSafeFix(): Promise<CommitEvidence | null> {
+  return checkpointAdapter().restoreLastCommit();
+}
+
+/**
+ * Irreversibly accept the latest committed candidate and remove the retained previous original.
+ * This keeps storage bounded to one checkpoint.
+ */
+export async function finalizeLastSafeFix(): Promise<boolean> {
+  return checkpointAdapter().finalizeLastCommit();
 }
