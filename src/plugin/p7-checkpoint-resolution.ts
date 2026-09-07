@@ -13,7 +13,7 @@ export interface P7CheckpointActions {
 
 export type P7CheckpointActionProof =
   | { resolution: 'RESTORED'; evidence: CommitEvidence }
-  | { resolution: 'FINALIZED'; finalized: true };
+  | { resolution: 'FINALIZED' | 'FINALIZED_CONTINUE'; finalized: true };
 
 export interface P7CheckpointResolutionResult {
   state: BatchQueueState;
@@ -56,9 +56,9 @@ async function resolveAfterP5Action(
     throw new Error('P5 checkpoint finalize returned false; batch state was not advanced.');
   }
   return {
-    state: resolveBatchCheckpoint(state, 'FINALIZED'),
-    proof: { resolution: 'FINALIZED', finalized: true },
-    resolution: 'FINALIZED',
+    state: resolveBatchCheckpoint(state, resolution),
+    proof: { resolution, finalized: true },
+    resolution,
   };
 }
 
@@ -74,12 +74,23 @@ export function restoreP7BatchCheckpoint(
 }
 
 /**
- * Finalizes the actual P5 checkpoint first. Only after P5 returns true does the queue mark the frame
- * as durable SUCCEEDED and eligible for successful run-key persistence.
+ * Finalizes the actual P5 checkpoint first. Use this only when re-audit already proves the frame has
+ * no additional eligible Safe Fix target; the queue then marks it durable SUCCEEDED.
  */
 export function finalizeP7BatchCheckpoint(
   state: BatchQueueState,
   actions: P7CheckpointActions = productionActions,
 ): Promise<P7CheckpointResolutionResult> {
   return resolveAfterP5Action(state, 'FINALIZED', actions);
+}
+
+/**
+ * Finalizes the actual P5 checkpoint but returns the same frame to PENDING so the canonical processor
+ * can re-audit it for another eligible Safe Fix. No successful run-key metadata is allowed yet.
+ */
+export function finalizeAndContinueP7BatchCheckpoint(
+  state: BatchQueueState,
+  actions: P7CheckpointActions = productionActions,
+): Promise<P7CheckpointResolutionResult> {
+  return resolveAfterP5Action(state, 'FINALIZED_CONTINUE', actions);
 }
