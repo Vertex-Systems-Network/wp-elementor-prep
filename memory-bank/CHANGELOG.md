@@ -56,7 +56,17 @@
   - approved originals remained unchanged in parent/index/root/direct-child geometry and render,
   - cleanup left `0` temporary nodes.
 - Added `docs/P5_REAL_TEMPLATE_IMAGE_CALIBRATION.md`.
-- Advanced status to overall `66%` / P5 `90%`; production Safe Fix remains disabled until the imported plugin's compiled runtime self-test passes.
+- Advanced status to overall `66%` / P5 `90%`; production Safe Fix remained disabled pending the imported plugin's compiled runtime self-test.
+- Added a versioned compiled-runtime proof gate with regression tests; missing, stale or failed proof keeps mutation locked and a failed self-test clears the proof.
+- Added checkpoint helpers for production Safe Fix restore/finalize while retaining the P4 single-checkpoint invariant.
+- Added an explicit gated `Apply this Safe Fix` UI path that re-audits the current selected Frame and accepts only a freshly `ELIGIBLE` target/recipe pair.
+- Production apply runs only through `runSafeFixTransaction`, full `FullFrameValidator` + UI Canvas pixel validation, and P4 commit/discard.
+- Added `Restore original` and explicit irreversible `Finalize fix` UI controls; further mutation is blocked while a checkpoint is pending.
+- Exposed the compiled runtime self-test through the regular plugin UI in addition to the developer command.
+- Rewrote `docs/P5_SAFE_RECIPES.md` to match all eight implemented recipe contracts and added explicit recipe-to-Elementor mappings to `docs/ELEMENTOR_RULES.md`.
+- CI run #97 passed install, typecheck, tests and build after the gated production Safe Fix UI implementation.
+- Advanced status to overall `67%` / P5 `95%`; remaining work is the imported-plugin runtime proof, post-proof disposable production-UI smoke tests and final PR review/merge.
+- CI run #101 passed on the synchronized README/memory-bank status head before this changelog-only update.
 
 ### P4 candidate transaction + rollback
 - Merged P3 validator through PR #12 and closed issue #4.
@@ -78,7 +88,7 @@
 - PR #13 merged to `main`; issue #5 closed.
 
 ### P3 validator foundation + pixel layer
-- Merged P2 classifier semantics through PR #11 and closed issue #3.
+- Merged P2 classifier semantics through PR #11 and closed issue #4.
 - Created `feat/p3-validator` and draft PR #12.
 - Added versioned P3 integrity snapshot/result types.
 - Added deterministic text-content fingerprints and image-fill integrity fingerprints.
