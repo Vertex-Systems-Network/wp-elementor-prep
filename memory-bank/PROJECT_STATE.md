@@ -10,7 +10,7 @@ Runtime must not require generative AI or an external AI backend.
 
 ## Current phase
 
-**P4 candidate transaction/rollback is merge-ready on `feat/p4-transaction-engine` / PR #13 with final CI green. P3 validator is merged to `main`; issue #4 is closed.**
+**P5 conservative Safe Fix recipes are active on `feat/p5-safe-recipes`. P4 transaction/rollback is merged through PR #13 and issue #5 is closed.**
 
 ## Completed
 
@@ -18,35 +18,43 @@ Runtime must not require generative AI or an external AI backend.
 - P1 Audit-Only MVP merged via PR #10; issue #2 closed.
 - P2 deterministic classifier semantics merged via PR #11; issue #3 closed.
 - P3 deterministic integrity + rendered pixel validator merged via PR #12; issue #4 closed.
+- P4 candidate-isolated transaction/rollback merged via PR #13; issue #5 closed.
 - Five materially different real-template audit/semantic calibration set completed: Marcus, Doctor, Esthetic, Lawyer and Legacy mixed.
 - P3 validates root geometry, text-content fingerprints, image-fill fingerprints, section-relative anchors and section-level rendered PNG pixel drift.
-- P3 representative no-op render calibration passed on Marcus About, Journey and Contact.
-- P4 pure transaction state machine implemented around `clone -> transform candidate -> validate -> commit/swap OR discard`.
-- Transformer receives only the candidate handle; the approved original is never passed to candidate transform code.
-- Commit is unreachable until P3 validation returns `passed: true`.
-- Transform failure, validation crash and validation rejection discard the candidate without committing.
-- Cleanup failure and commit-stage failure are surfaced explicitly with auditable transaction events.
-- Successful commit returns small serializable evidence; large PNG/node snapshots are not stored in transaction metadata.
-- Concrete `FigmaCandidateTransactionAdapter` implemented with off-layout candidate staging, stale-parent/transaction guards, root-boundary replacement, hidden bounded backup and compact clientStorage undo token.
-- Auto Layout child properties are restored after root insertion, matching Figma parent-context behavior.
-- `restoreLastCommit()` restores the retained original root and removes the committed candidate when the checkpoint is still valid.
-- `finalizeLastCommit()` explicitly accepts the latest commit and removes the retained backup checkpoint.
-- Only one pending undo checkpoint is allowed; a second commit is rejected until the prior checkpoint is restored or finalized.
-- Pure unit fixtures prove forced transform failure and rejected validation leave the approved original unchanged and candidate cleanup occurs.
-- Live isolated Figma calibration proved forced candidate failure leaves the original root/index/geometry/content unchanged and removes the candidate.
-- Live manual-parent root swap + undo restored the original exactly and left zero temporary nodes.
-- Live vertical Auto Layout parent root swap + undo preserved sibling order, `layoutAlign`, `layoutGrow`, `layoutPositioning`, resolved geometry and exact restoration; cleanup left zero temporary nodes.
-- Final P4 documentation/checkpoint head `1880f27aa5bd2efb086500f5eed59beb3b32e6a0` passed CI: typecheck, tests and build.
+- P4 enforces `clone -> transform candidate -> validate -> commit/swap OR discard` and bounded single-step undo/finalize.
+- README now exposes a GitHub-visible roadmap progress bar and per-phase status table.
+
+## P5 foundation implemented
+
+- New deterministic Safe Recipe plan/result types.
+- Planner decisions: `ELIGIBLE`, `REVIEW`, `NOOP`, `UNSUPPORTED`.
+- Conservative confidence gates:
+  - Vertical Stack >= 90,
+  - Horizontal Row >= 90,
+  - Two Column >= 92,
+  - Facts List >= 92,
+  - Footer Columns >= 92,
+  - non-fragmented repeated-card grid >= 94.
+- Candidate target mapping uses child-index paths from the audited section root instead of clone descendant IDs.
+- Missing target, special visual role, visible absolute direct child, fragmented grid and ambiguous grid all block mutation.
+- Carousel/timeline structures remain deferred to P6.
+- Candidate-only Figma transform foundation implemented for Vertical Stack, Horizontal Row and Two Column.
+- Linear transforms require stricter live geometry before changing the candidate: matching visual/layer order, cross-axis alignment <= 1 px, uniform gaps <= 1 px, no overlap and in-bounds geometry.
+- Linear transform does not reorder layers; it applies fixed-size Auto Layout using measured gap/padding only when strict prechecks pass.
+- Planner regression tests added.
+- P5 design documented in `docs/P5_SAFE_RECIPES.md`.
 
 ## In progress
 
-- Mark PR #13 ready and merge P4.
-- Close issue #5 after merge.
-- Start P5 conservative high-confidence Safe Fix recipes.
+- Open draft P5 PR and run CI.
+- Fix any compile/test issues.
+- Live disposable-Figma calibration for Vertical Stack, Horizontal Row and Two Column.
+- Full P3 pass/fail validation after candidate recipe transforms.
+- P4 commit/discard/undo proof around accepted and rejected recipe candidates.
 
 ## Next phases
 
-- P5: conservative high-confidence Safe Fix recipes.
+- P5 remaining simple recipes: Facts List, Footer Columns, Simple Card Grid, Metric Grid, Social/Link Strip.
 - P6: advanced timeline/carousel/milestone/page normalization recipes.
 - P7: batch queue for 60+ frames/pages.
 - P8: optional versioned Elementor exporter adapters.
@@ -61,22 +69,25 @@ See:
 - `docs/P3_PIXEL_CALIBRATION.md`
 - `docs/P4_TRANSACTION_DESIGN.md`
 - `docs/P4_LIVE_TRANSACTION_CALIBRATION.md`
+- `docs/P5_SAFE_RECIPES.md`
 
 ## Safety status
 
-General Safe Fix recipes remain disabled. P4 mutation infrastructure is candidate-isolated and has only been live-calibrated on disposable synthetic Frames, not on approved customer sections.
+General Safe Fix is still not exposed as a production action. P5 planning and candidate-transform foundations exist, but each recipe remains gated by confidence, candidate isolation, mandatory full P3 validation and live calibration before commit availability is considered production-ready.
 
 ## Production mutation gate
 
-Before P5 can mutate an approved section:
+Before any P5 recipe is considered production-capable:
 
-- P4 must be merged with green CI,
-- a recipe must be high-confidence and explicitly supported,
+- target classification must meet its explicit confidence threshold,
+- target path must resolve on the staged candidate,
+- recipe-specific live geometry prechecks must pass,
 - transformation must run only on the staged candidate,
-- full P3 validation must pass before root swap,
+- full P3 validation must pass before P4 root swap,
 - low-confidence/ambiguous cases must remain REVIEW,
-- the bounded undo checkpoint must remain available after commit.
+- bounded undo/finalize must remain available after commit,
+- live disposable-Figma success and forced-failure evidence must be recorded.
 
 ## Release target
 
-Current merged usable line: Audit-Only + P3 read-only validator. Next milestone after P4 merge: P5 conservative Safe Fix recipes behind the P3/P4 gates.
+Current merged usable line: Audit-Only + P3 validator + P4 transaction safety. Current development milestone: P5 conservative Safe Fix recipes behind the P3/P4 gates.
