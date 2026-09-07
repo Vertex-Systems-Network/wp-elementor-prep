@@ -76,7 +76,10 @@ export interface SectionAudit {
   status: AuditStatus;
   stats: AuditStats;
   findings: AuditFinding[];
+  /** Strongest detection retained for backwards-compatible consumers. */
   detection: PatternDetection | null;
+  /** Multiple explainable targets for complex sections such as Numbers or Journey. */
+  detections: PatternDetection[];
   recommendedRecipe: string | null;
 }
 

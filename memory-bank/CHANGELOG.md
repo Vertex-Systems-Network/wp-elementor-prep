@@ -15,21 +15,25 @@
 - Started `feat/p1-audit-engine` and draft PR #10.
 - Extended normalized node snapshots with clipping and opacity signals.
 - Added explainable deterministic detection for two-column, grid, horizontal row, vertical stack and carousel-track patterns.
-- Added shallow best-pattern search and confidence/evidence payloads.
-- Added conservative full-size background exclusion.
-- Updated audit UI to show detected pattern, confidence and evidence.
+- Added confidence/evidence payloads and conservative full-size background exclusion.
+- Updated audit UI to show detected pattern evidence.
 - Added unit tests for two-column, 2x3 grid, background exclusion and carousel overflow.
+- Fixed SceneNode opacity typing so CI typecheck/build/test is green.
 
 ### Live golden calibration
 - Ran the read-only classifier against the live `Desktop — Elementor Ready` golden frame.
 - Correctly discovered `App` and all 16 sections in order.
-- Confirmed strong sections score approximately 96–100 while weak/manual sections score approximately 51–68 in the initial model.
+- Calibrated status thresholds to PASS >=80, REVIEW 70–79, NEEDS_WORK <70.
 - Confirmed useful detection for About two-column, Philosophy/Sector 2×2 grids, Media carousel track and Milestones repeated grid.
-- Found a Journey false-positive two-column at 85% confidence caused by only 18% parent-width coverage.
-- Prepared stricter two-column coverage/width gating and a regression test.
-- Prepared status calibration: PASS >=80, REVIEW 70–79, NEEDS_WORK <70.
-- Prepared suppression of repair recipes for already-PASS sections.
-- Documented a remaining limitation: complex sections need multi-pattern reporting instead of one-best-pattern only.
+- Tightened two-column gating after a Journey false-positive.
+- Reran the live fixture and confirmed Journey now reports its outer vertical stack instead of the invalid tiny two-column candidate.
+- Suppressed repair recipes for already-PASS sections.
+
+### Multi-pattern reporting
+- Added a multi-target detection model so complex sections can expose more than one meaningful layout pattern.
+- Kept the strongest `detection` field for backwards compatibility while adding `detections[]`.
+- Expanded the Audit UI to show multiple targets and their confidence values.
+- Added regression fixtures for a Numbers-like metric-grid + lower two-column section, split-header-style pair and timeline/chapter structure.
 
 ### Safety status
 - No Auto-Fix mutation behavior enabled.

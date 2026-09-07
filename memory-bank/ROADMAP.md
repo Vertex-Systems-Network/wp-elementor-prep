@@ -5,8 +5,8 @@ Last updated: 2026-09-07
 | Phase | Scope | Status |
 |---|---|---|
 | P0 | Specification, architecture, memory-bank, repo foundation | COMPLETE — PR #1 merged |
-| P1 | Audit-Only scanner, section discovery, score, report UI | IN PROGRESS — issue #2, PR #10 |
-| P2 | Geometry/layout classifier + confidence evidence | PARTIALLY STARTED as P1 foundation; issue #3 remains broader scope |
+| P1 | Audit-Only scanner, section discovery, score, report UI | IN PROGRESS — issue #2, PR #10; golden calibration stable |
+| P2 | Geometry/layout classifier + confidence evidence | PARTIALLY STARTED as P1 foundation; multi-pattern reporting added; issue #3 remains broader scope |
 | P3 | Geometry/content/image + pixel validation | NOT STARTED — issue #4 |
 | P4 | Candidate transaction + rollback | NOT STARTED — issue #5 |
 | P5 | Safe high-confidence recipes | NOT STARTED — issue #6 |
@@ -27,15 +27,14 @@ Last updated: 2026-09-07
 - [x] live golden fixture: App + 16 sections discovered in correct order
 - [x] live calibration: strong vs weak score separation confirmed
 - [x] live calibration: About, Philosophy, Sector, Media, Milestones pattern evidence confirmed
-- [x] false-positive case identified: Journey tiny two-column candidate
-- [x] stricter two-column gating prepared
-- [x] score-status threshold calibration prepared
-- [x] PASS-section repair-recipe suppression prepared
-- [ ] rerun CI on calibrated fixes
-- [ ] rerun live golden fixture after calibrated fixes
-- [ ] multi-pattern findings per complex section
-- [ ] fixture: split header
-- [ ] fixture: timeline chapter
+- [x] stricter two-column gate removes Journey false-positive
+- [x] calibrated status thresholds active
+- [x] PASS-section repair-recipe suppression active
+- [x] CI green after SceneNode opacity type guard
+- [x] multi-pattern reporting implementation prepared
+- [x] fixture coverage prepared for split-header-style and timeline/chapter structures
+- [ ] CI on multi-pattern change
+- [ ] live Numbers multi-pattern calibration
 - [ ] test at least 4 more materially different real templates
 
 ## Production gate before any Auto-Fix

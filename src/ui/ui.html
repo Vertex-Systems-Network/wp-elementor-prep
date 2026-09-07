@@ -21,6 +21,9 @@
     .badge { font-size: 10px; font-weight: 700; opacity: .75; white-space: nowrap; }
     .recipe { font-size: 10px; opacity: .72; margin-top: 3px; }
     .finding { font-size: 10px; opacity: .72; margin-top: 4px; line-height: 1.35; }
+    .patternList { margin-top: 5px; display: grid; gap: 3px; }
+    .pattern { font-size: 9px; opacity: .72; display: flex; justify-content: space-between; gap: 8px; }
+    .patternTarget { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     details { margin-top: 5px; }
     summary { font-size: 10px; cursor: pointer; opacity: .65; }
     pre { white-space: pre-wrap; word-break: break-word; font-size: 9px; opacity: .7; margin: 5px 0 0; }
@@ -65,11 +68,19 @@
       const report = message.report;
       const sections = report.sections.map((section) => {
         const first = section.findings[0];
-        const detection = section.detection;
-        const recipe = detection
-          ? `${detection.pattern} · confidence ${detection.confidence}%`
+        const detections = Array.isArray(section.detections)
+          ? section.detections
+          : (section.detection ? [section.detection] : []);
+        const primary = detections[0] || null;
+        const recipe = primary
+          ? `${primary.pattern} · confidence ${primary.confidence}%`
           : 'pattern not classified yet';
-        const evidence = detection ? JSON.stringify(detection.evidence, null, 2) : '';
+        const patternRows = detections.slice(0, 4).map((detection) => `
+          <div class="pattern">
+            <span class="patternTarget">${escapeHtml(detection.pattern)} @ ${escapeHtml(detection.targetNodeName)}</span>
+            <span>${detection.confidence}%</span>
+          </div>`).join('');
+        const evidence = detections.length > 0 ? JSON.stringify(detections, null, 2) : '';
         return `
           <div class="row">
             <div class="rowHead">
@@ -78,7 +89,8 @@
             </div>
             <div class="recipe">${escapeHtml(recipe)} · Auto Layout ${section.stats.autoLayoutCoveragePct}%</div>
             ${first ? `<div class="finding">${escapeHtml(first.title)}</div>` : ''}
-            ${detection ? `<details><summary>Detection evidence</summary><pre>${escapeHtml(evidence)}</pre></details>` : ''}
+            ${patternRows ? `<div class="patternList">${patternRows}</div>` : ''}
+            ${detections.length ? `<details><summary>All detection evidence (${detections.length})</summary><pre>${escapeHtml(evidence)}</pre></details>` : ''}
           </div>`;
       }).join('');
 

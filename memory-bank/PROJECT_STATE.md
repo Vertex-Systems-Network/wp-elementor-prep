@@ -10,7 +10,7 @@ Core runtime must not require generative AI or external network access.
 
 ## Current phase
 
-**Phase 1 Audit-Only engine active on branch `feat/p1-audit-engine`; live golden-fixture calibration completed.**
+**Phase 1 Audit-Only engine active on branch `feat/p1-audit-engine`; golden-fixture calibration is stable and multi-pattern reporting is being added.**
 
 ## Completed
 
@@ -19,30 +19,27 @@ Core runtime must not require generative AI or external network access.
 - Mandatory AI-native memory-bank implemented.
 - TypeScript/Figma plugin scaffold implemented.
 - Read-only scanner/scoring/report UI implemented.
-- CI/test/build pipeline verified green.
+- CI/test/build pipeline verified green after fixing SceneNode opacity typing.
 - Roadmap issues #2–#9 created.
-- P1 deterministic pattern-classifier foundation implemented for two-column, grid, horizontal row, vertical stack and carousel-track detection.
-- P1 detection evidence/confidence payload added.
-- P1 unit tests added for two-column, 2x3 grid, background exclusion and carousel overflow.
-- Live Figma calibration on the Marcus Vane golden frame correctly discovered `App` and all 16 sections in order.
-- Live calibration showed strong sections at ~96–100 and weak/manual sections at ~51–68 under the initial score model.
-- Live calibration correctly recognized About two-column, Philosophy/Sector 2x2 grids, Media carousel overflow, and Milestones 2x9 grid.
-- Journey exposed a false-positive two-column detection caused by only 18% parent-width coverage; stricter coverage/column-width gating has been prepared.
-- Screening status thresholds prepared as PASS >=80, REVIEW 70–79, NEEDS_WORK <70.
-- Repair recipe suppression prepared for already-PASS sections.
+- Deterministic detection implemented for two-column, grid, horizontal row, vertical stack and carousel-track patterns.
+- Detection confidence/evidence payloads implemented.
+- Live Marcus Vane golden-frame audit correctly discovers `App` and all 16 sections in order.
+- Calibrated score thresholds classify strong sections PASS and weak/manual sections NEEDS_WORK.
+- Stricter two-column gate removed the Journey false-positive; Journey now reports outer vertical-stack evidence instead.
+- About, Philosophy, Sector, Media and Milestones pattern evidence remains useful after calibration.
+- Repair recipe suppression is active for already-PASS sections.
 
 ## In progress
 
-- Issue #2: Audit-Only MVP hardening.
-- Draft PR #10.
-- Commit calibrated classifier/scoring fixes and rerun CI.
-- Rerun live calibration after stricter two-column logic.
-- Expand from one-best-pattern to multi-pattern findings for complex sections such as Numbers.
+- Issue #2 / draft PR #10: Audit-Only MVP hardening.
+- Multi-pattern reporting so complex sections expose multiple target-level detections.
+- Tests for complex Numbers-style sections, split-header-style pairs and timeline/chapter structures.
+- Audit UI expansion to show multiple detected targets.
 
 ## Not started
 
 - Full decoration/background role classifier beyond conservative full-size background screening.
-- Timeline/chapter-specific classifier (#3 scope).
+- Dedicated timeline/chapter semantic classifier (#3 broader scope).
 - Visual/integrity validator (#4).
 - Transaction clone/rollback engine (#5).
 - Safe Auto-Fix recipes (#6).
@@ -58,7 +55,7 @@ Core runtime must not require generative AI or external network access.
 - 270 Auto Layout containers
 - 445 manual containers
 - 38% Auto Layout coverage
-- 433 text nodes, all 433 currently auto-height in the working duplicate
+- 433 text nodes
 - 17 image-like nodes
 - 16 content sections under `App`
 

@@ -97,7 +97,6 @@ function detectTwoColumn(node: AuditNode, children: AuditNode[]): PatternDetecti
   const meaningfulColumnWidths =
     left.geometry.width >= node.geometry.width * 0.18 && right.geometry.width >= node.geometry.width * 0.18;
 
-  // A pair of tiny aligned objects inside a large parent is not a primary two-column web layout.
   if (coverage < 0.55 || !meaningfulColumnWidths || !nonOverlap) return null;
 
   let confidence = 60;
@@ -230,33 +229,38 @@ function detectCarousel(node: AuditNode, children: AuditNode[]): PatternDetectio
   };
 }
 
-function bestForNode(node: AuditNode): PatternDetection | null {
+function detectionsForNode(node: AuditNode): PatternDetection[] {
   const children = meaningfulChildren(node);
-  if (children.length < 2) return null;
+  if (children.length < 2) return [];
 
-  const detections = [
+  return [
     detectCarousel(node, children),
     detectTwoColumn(node, children),
     detectGrid(node, children),
     detectHorizontalRow(node, children),
     detectVerticalStack(node, children),
-  ].filter((detection): detection is PatternDetection => detection !== null);
-
-  detections.sort((a, b) => b.confidence - a.confidence);
-  return detections[0] ?? null;
+  ]
+    .filter((detection): detection is PatternDetection => detection !== null)
+    .sort((a, b) => b.confidence - a.confidence);
 }
 
-/** Search a shallow subtree and return the strongest explainable pattern. */
-export function detectBestPattern(section: AuditNode, maxDepth = 3): PatternDetection | null {
+/**
+ * Search a shallow subtree and return multiple explainable targets.
+ * Complex sections often contain more than one meaningful web-layout pattern.
+ */
+export function detectPatterns(section: AuditNode, maxDepth = 3, maxResults = 8): PatternDetection[] {
   const queue: Array<{ node: AuditNode; depth: number }> = [{ node: section, depth: 0 }];
-  let best: PatternDetection | null = null;
+  const byKey = new Map<string, PatternDetection>();
 
   while (queue.length > 0) {
     const current = queue.shift();
     if (!current) continue;
 
-    const detection = bestForNode(current.node);
-    if (detection && (!best || detection.confidence > best.confidence)) best = detection;
+    for (const detection of detectionsForNode(current.node)) {
+      const key = `${detection.targetNodeId}:${detection.pattern}`;
+      const existing = byKey.get(key);
+      if (!existing || detection.confidence > existing.confidence) byKey.set(key, detection);
+    }
 
     if (current.depth >= maxDepth) continue;
     for (const child of current.node.children) {
@@ -264,7 +268,14 @@ export function detectBestPattern(section: AuditNode, maxDepth = 3): PatternDete
     }
   }
 
-  return best;
+  return [...byKey.values()]
+    .sort((a, b) => b.confidence - a.confidence)
+    .slice(0, Math.max(1, maxResults));
+}
+
+/** Strongest pattern retained for existing consumers. */
+export function detectBestPattern(section: AuditNode, maxDepth = 3): PatternDetection | null {
+  return detectPatterns(section, maxDepth, 1)[0] ?? null;
 }
 
 export function recipeForPattern(pattern: PatternKind): string | null {

@@ -7,7 +7,7 @@ import type {
   SectionAudit,
 } from './types';
 import { computeStats, discoverSections } from './scanner';
-import { detectBestPattern, recipeForPattern } from './classifier';
+import { detectPatterns, recipeForPattern } from './classifier';
 
 function clamp(value: number, min = 0, max = 100): number {
   return Math.max(min, Math.min(max, Math.round(value)));
@@ -107,7 +107,8 @@ export function findingsFor(stats: AuditStats): AuditFinding[] {
 
 export function auditSection(section: AuditNode): SectionAudit {
   const stats = computeStats(section);
-  const detection = detectBestPattern(section);
+  const detections = detectPatterns(section);
+  const detection = detections[0] ?? null;
   let score = scoreStats(stats);
 
   // Detection is evidence that the layout is understandable, not that it is already structurally ready.
@@ -122,6 +123,7 @@ export function auditSection(section: AuditNode): SectionAudit {
     stats,
     findings: findingsFor(stats),
     detection,
+    detections,
     // Already-compliant sections do not need a repair recipe even when a pattern is recognized.
     recommendedRecipe: status === 'PASS' || !detection ? null : recipeForPattern(detection.pattern),
   };
