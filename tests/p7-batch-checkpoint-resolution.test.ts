@@ -57,6 +57,26 @@ describe('P7 bounded checkpoint resolution semantics', () => {
     expect(metadata.entries['1']?.runKey).toBe('plugin-v4:recipes-v5');
   });
 
+  it('FINALIZED_CONTINUE returns the same frame to pending for re-audit without persisting success', () => {
+    const resolved = resolveBatchCheckpoint(committedQueue(), 'FINALIZED_CONTINUE');
+    expect(resolved.items[0]?.status).toBe('PENDING');
+    expect(resolved.items[0]?.attempts).toBe(1);
+    expect(resolved.items[1]?.status).toBe('PENDING');
+    expect(resolved.status).toBe('IDLE');
+    expect(resolved.pauseReason).toBeNull();
+
+    const metadata = recordSuccessfulBatchRun(
+      emptyBatchRunMetadata(),
+      resolved,
+      '2026-09-08T01:00:00.000Z',
+    );
+    expect(metadata.entries['1']).toBeUndefined();
+
+    const restarted = startNextBatchItem(resolved);
+    expect(restarted.items[0]?.status).toBe('RUNNING');
+    expect(restarted.items[0]?.attempts).toBe(2);
+  });
+
   it('RESTORED becomes a terminal non-success and never receives the run key', () => {
     const resolved = resolveBatchCheckpoint(committedQueue(), 'RESTORED');
     expect(resolved.items[0]?.status).toBe('SKIPPED');
