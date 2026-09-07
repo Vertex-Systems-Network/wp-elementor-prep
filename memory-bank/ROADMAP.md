@@ -9,16 +9,19 @@ Last updated: 2026-09-08
 | P2 | Deterministic classifier semantics + confidence/role evidence | COMPLETE — PR #11 merged, issue #3 closed |
 | P3 | Geometry/content/image + pixel validation | COMPLETE — PR #12 merged, issue #4 closed |
 | P4 | Candidate transaction + rollback | COMPLETE — PR #13 merged, issue #5 closed |
-| P5 | Safe high-confidence recipes | IN PROGRESS — issue #6, PR #14 |
+| P5 | Safe high-confidence recipes | IN PROGRESS — issue #6, PR #14, `feat/p5-safe-recipes` |
 | P6 | Advanced timeline/carousel/milestones/page normalization | NOT STARTED — issue #7 |
 | P7 | Multi-frame/page batch queue | NOT STARTED — issue #8 |
 | P8 | Optional Elementor schema exporters | NOT STARTED — issue #9 |
 
 ## P5 progress
 
+**Estimated P5 completion: 55%**
+
+`██████░░░░ 55%`
+
 - [x] P4 merged with final green CI
 - [x] P5 branch created from merged P4 head
-- [x] draft PR #14 opened
 - [x] safe recipe plan/result types
 - [x] explicit `ELIGIBLE` / `REVIEW` / `NOOP` / `UNSUPPORTED` decisions
 - [x] conservative per-recipe confidence gates
@@ -33,24 +36,24 @@ Last updated: 2026-09-08
 - [x] Horizontal Row candidate-transform foundation
 - [x] Two Column candidate-transform foundation
 - [x] strict live geometry prechecks for linear transforms
-- [x] planner regression tests added
-- [x] initial CI failures diagnosed and patched
-- [x] live disposable-Figma Vertical Stack calibration
-- [x] live disposable-Figma Horizontal Row calibration
-- [x] live disposable-Figma Two Column calibration
-- [x] Figma manual->Auto Layout root-shrink behavior found and fixed
-- [x] post-fix linear fixtures preserve root/child geometry exactly
-- [x] post-fix linear fixture PNG exports are byte-identical
-- [x] live calibration cleanup leaves `0` temporary nodes
-- [ ] P5 branch final CI green after latest typing fix
-- [ ] full P3 validation pass/fail calibration after recipe transforms
-- [ ] P4 discard/commit/undo orchestration proof for recipe transforms
+- [x] P5 root-shrink transition bug found and fixed
+- [x] exact geometry + PNG live calibration for all three linear recipes
+- [x] reusable full-P3 frame validation broker added
+- [x] P5 -> P4 transaction integration seam added
+- [x] read-only Safe Fix preview UI added
+- [x] forced synthetic validation rejection -> candidate discard proof
+- [x] passing synthetic validation -> commit -> exact restore proof
+- [x] passing synthetic validation -> commit -> finalize proof
+- [x] bounded single-checkpoint policy exercised in end-to-end calibration
+- [x] calibration cleanup leaves `0` temporary nodes
+- [ ] final P5 branch CI green on current head
+- [ ] compiled FullFrameValidator broker exercised through the actual P5 runtime
 - [ ] Facts List mutation
 - [ ] Footer Columns mutation
 - [ ] Simple Card Grid mutation
 - [ ] Metric Grid semantics + mutation
 - [ ] Social/Link Strip semantics + mutation
-- [ ] multi-template live calibration
+- [ ] multi-template live mutation calibration
 - [ ] PR merged / issue #6 closed
 
 ## P5 initial recipe set
@@ -74,7 +77,9 @@ Every recipe must run through P4 candidate isolation and full P3 validation. Low
 - [x] P4 transaction/rollback engine merged
 - [x] P4 forced candidate failure demonstrated to leave original unchanged on a live disposable Figma fixture
 - [x] P4 manual and Auto Layout root swap/undo mechanics live-calibrated
-- [x] first three P5 linear transforms have exact synthetic render-equivalence evidence
-- [ ] transformed recipe candidate passes the complete P3->P4 orchestration before commit exposure
+- [x] first P5 linear transforms have exact synthetic geometry/render equivalence
+- [x] synthetic reject/discard and pass/commit/restore/finalize lifecycle demonstrated
+- [ ] current P5 branch green in CI
+- [ ] individual recipe proves compiled full-P3 broker + P4 commit path
 - [ ] low-confidence/ambiguous cases demonstrably remain REVIEW with no mutation
-- [ ] each production-enabled recipe has multi-template success/failure calibration evidence
+- [ ] multi-template mutation calibration passes before production exposure

@@ -12,9 +12,9 @@ The plugin is intentionally deterministic. It must not depend on Figma AI, OpenA
 
 ## Development status
 
-**Overall roadmap: 60% — P0 through P4 complete, P5 in progress**
+**Overall roadmap: 62% — P0 through P4 complete, P5 in progress**
 
-`████████████░░░░░░░░ 60%`
+`████████████░░░░░░░░ 62%`
 
 | Phase | Scope | Status |
 |---|---|---|
@@ -30,7 +30,7 @@ The plugin is intentionally deterministic. It must not depend on Figma AI, OpenA
 
 ### P5 recipe progress
 
-`████░░░░░░ 40%`
+`██████░░░░ 55%`
 
 - ✅ deterministic recipe plan/result types
 - ✅ high-confidence eligibility gates
@@ -44,7 +44,11 @@ The plugin is intentionally deterministic. It must not depend on Figma AI, OpenA
 - ✅ live disposable-Figma Horizontal Row render-equivalence calibration
 - ✅ live disposable-Figma Two Column render-equivalence calibration
 - ✅ root-shrink transition bug found, fixed and re-calibrated
-- 🟡 full P3 -> P4 recipe orchestration proof pending
+- ✅ synthetic recipe -> P3-equivalent rejection -> candidate discard proof
+- ✅ synthetic recipe -> P3-equivalent pass -> P4-style commit + exact restore proof
+- ✅ synthetic recipe -> P3-equivalent pass -> commit + finalize proof
+- ✅ bounded-checkpoint policy verified in the end-to-end calibration
+- 🟡 final branch CI + compiled FullFrameValidator runtime proof
 - ⬜ Facts List mutation
 - ⬜ Footer Columns mutation
 - ⬜ Simple Card Grid mutation
@@ -66,7 +70,7 @@ Canonical engineering status lives in `memory-bank/PROJECT_STATE.md` and `memory
 
 **P5: conservative Safe Fix recipe foundation + transaction integration.**
 
-P4 is merged and issue #5 is closed. The first three linear P5 transforms now preserve synthetic fixture geometry and exported PNG bytes exactly after a Figma primary-axis shrink behavior was discovered and fixed. General Safe Fix is still not exposed as a production action until the complete recipe -> P3 -> P4 path and real-template calibration pass.
+P4 is merged and issue #5 is closed. The first three linear P5 transforms preserve synthetic fixture geometry and exported PNG bytes exactly. A later disposable end-to-end calibration also proved the intended reject/discard, pass/commit/restore, and pass/commit/finalize transaction semantics while leaving zero temporary nodes. General Safe Fix is still not exposed as a production action until current CI is green, the compiled full-P3 broker path is verified, and the remaining simple recipes are calibrated.
 
 ## Core principles
 
@@ -102,6 +106,7 @@ Then register/import the development plugin in Figma using the generated `dist/m
 - `docs/P4_LIVE_TRANSACTION_CALIBRATION.md`
 - `docs/P5_SAFE_RECIPES.md`
 - `docs/P5_LINEAR_LIVE_CALIBRATION.md`
+- `docs/P5_END_TO_END_TRANSACTION_CALIBRATION.md`
 - `memory-bank/` — canonical project state for humans and AI agents
 
 ## Golden fixture

@@ -15,6 +15,18 @@
 - Linear transforms refuse mutation unless visual/layer order already matches, cross-axis origins align within 1 px, primary-axis gaps are uniform within 1 px, children do not overlap and geometry stays inside target bounds.
 - Linear transforms do not reorder layers and still require full P3 validation before any P4 commit.
 - Added P5 planner regression tests and `docs/P5_SAFE_RECIPES.md`.
+- Added a reusable `FullFrameValidator` broker so manual validation and future P5/P4 transactions share the same full-P3 pixel path.
+- Added `runSafeFixTransaction` integration seam from an eligible P5 plan into the P4 candidate transaction adapter.
+- Added read-only `Preview safe fixes` UI while keeping production mutation disabled.
+- First live linear recipe run exposed a Figma manual->Auto Layout primary-axis shrink; fixed by restoring exact target width/height after configuring fixed Auto Layout sizing and measured padding/gap.
+- Re-ran Vertical Stack, Horizontal Row and Two Column on disposable Figma Frames: root/child geometry and exported PNG bytes were exact; cleanup left `0` temporary nodes.
+- Ran a second disposable end-to-end calibration with text-bearing Frames:
+  - forced validation rejection deleted the candidate while original root/index/geometry/text/render stayed exact,
+  - passing Vertical Stack validation committed only after validation and then restored the exact original,
+  - bounded checkpoint policy was exercised before restore,
+  - passing Horizontal Row validation committed and finalized while retaining the candidate and deleting old original/backup,
+  - cleanup left `0` temporary nodes.
+- Added `docs/P5_END_TO_END_TRANSACTION_CALIBRATION.md` and advanced GitHub progress to overall `62%` / P5 `55%`.
 
 ### P4 candidate transaction + rollback
 - Merged P3 validator through PR #12 and closed issue #4.

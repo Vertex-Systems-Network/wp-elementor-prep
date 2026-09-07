@@ -26,7 +26,7 @@ Runtime must not require generative AI or an external AI backend.
 
 ## P5 foundation implemented
 
-- New deterministic Safe Recipe plan/result types.
+- Deterministic Safe Recipe plan/result types.
 - Planner decisions: `ELIGIBLE`, `REVIEW`, `NOOP`, `UNSUPPORTED`.
 - Conservative confidence gates:
   - Vertical Stack >= 90,
@@ -39,10 +39,12 @@ Runtime must not require generative AI or an external AI backend.
 - Missing target, special visual role, visible absolute direct child, fragmented grid and ambiguous grid all block mutation.
 - Carousel/timeline structures remain deferred to P6.
 - Candidate-only Figma transform foundation implemented for Vertical Stack, Horizontal Row and Two Column.
-- Linear transforms require stricter live geometry before changing the candidate: matching visual/layer order, cross-axis alignment <= 1 px, uniform gaps <= 1 px, no overlap and in-bounds geometry.
-- Linear transform does not reorder layers; it applies fixed-size Auto Layout using measured gap/padding only when strict prechecks pass.
-- Planner regression tests added.
-- P5 design documented in `docs/P5_SAFE_RECIPES.md`.
+- Linear transforms require strict live geometry before changing the candidate: matching visual/layer order, cross-axis alignment <= 1 px, uniform gaps <= 1 px, no overlap and in-bounds geometry.
+- Linear transforms do not reorder layers; they apply fixed-size Auto Layout using measured gap/padding only when strict prechecks pass.
+- Reusable `FullFrameValidator` broker exists for full P3 geometry/content/image + rendered-pixel validation.
+- `runSafeFixTransaction` wires an eligible plan to the P4 candidate transaction adapter and requires the injected full-P3 validator before commit.
+- Read-only `Preview safe fixes` UI exposes P5 plan decisions while mutation remains disabled.
+- Planner and linear-layout regression tests are present.
 
 ## P5 live linear calibration
 
@@ -61,14 +63,37 @@ Runtime must not require generative AI or an external AI backend.
   - Vertical: `1991:fc5b25d0:56432610`,
   - Horizontal: `1605:91f4b947:a5b5e509`,
   - Two Column: `1872:18640bfc:5135a1c0`.
-- Calibration evidence documented in `docs/P5_LINEAR_LIVE_CALIBRATION.md`.
+
+## P5 end-to-end synthetic transaction calibration
+
+A second disposable calibration exercised the intended recipe -> validation -> transaction lifecycle using text-bearing synthetic Frames far off-canvas. No approved customer section was modified.
+
+- Forced validation rejection after a valid Vertical Stack recipe:
+  - candidate was deleted,
+  - approved original remained in the same parent/index,
+  - root/child/text geometry remained exact,
+  - original PNG remained exact.
+- Passing Vertical Stack recipe:
+  - root/child/text geometry exact,
+  - PNG bytes exact (`3618:e18db581` for both original and candidate),
+  - candidate occupied the approved root slot only after validation,
+  - original moved to a hidden backup,
+  - bounded checkpoint blocked a second commit by policy,
+  - restore returned the exact original and removed candidate/backup.
+- Passing Horizontal Row recipe:
+  - full synthetic validation passed with exact PNG bytes (`3133:36b25459`),
+  - commit succeeded,
+  - finalize removed the retained old original/backup while keeping the committed candidate.
+- Cleanup left `0` temporary nodes.
+- These fixtures had text anchors but no image-fill anchors; the repository P3 validator still retains exact image-fill fingerprint checks for real frames.
+- Evidence is documented in `docs/P5_END_TO_END_TRANSACTION_CALIBRATION.md`.
 
 ## In progress
 
-- Resolve remaining P5 CI/typecheck feedback on the latest branch head.
-- Wire the linear recipe transformer through the complete full-P3 validation and P4 transaction path.
-- Prove forced P3 rejection discards the recipe candidate with approved original untouched.
-- Prove a passing recipe candidate commits through P4 and remains restorable/finalizable through the bounded checkpoint.
+- Get final CI green on the latest P5 branch head.
+- Verify the compiled `FullFrameValidator`/plugin-UI pixel broker through the P5 transaction runtime, not only the equivalent disposable calibration script.
+- Add regression coverage around the P5 runtime orchestration seam where practical.
+- Then enable Facts List and Footer Columns mutation behind the same P3/P4 gates.
 
 ## Next phases
 
@@ -89,10 +114,11 @@ See:
 - `docs/P4_LIVE_TRANSACTION_CALIBRATION.md`
 - `docs/P5_SAFE_RECIPES.md`
 - `docs/P5_LINEAR_LIVE_CALIBRATION.md`
+- `docs/P5_END_TO_END_TRANSACTION_CALIBRATION.md`
 
 ## Safety status
 
-General Safe Fix is still not exposed as a production action. The first linear transforms have exact synthetic render-equivalence evidence, but production-capable status still requires the complete candidate transform -> P3 -> P4 orchestration and multi-template calibration.
+General Safe Fix is still not exposed as a production action. The first linear transforms have exact synthetic render-equivalence and end-to-end reject/commit/restore/finalize evidence, but production-capable status still requires green CI, compiled full-P3 broker verification and multi-template calibration.
 
 ## Production mutation gate
 
