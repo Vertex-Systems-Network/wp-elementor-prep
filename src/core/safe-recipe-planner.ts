@@ -50,6 +50,7 @@ function planned(
   minConfidence: number | null,
   extraEvidence: Record<string, string | number | boolean> = {},
 ): SafeRecipePlan {
+  const semantic = detection.semanticHint ? { semanticHint: detection.semanticHint } : {};
   return {
     schemaVersion: 1,
     decision,
@@ -59,7 +60,7 @@ function planned(
     confidence: detection.confidence,
     minConfidence,
     pattern: detection.pattern,
-    semanticHint: detection.semanticHint,
+    ...semantic,
     targetNodeId: detection.targetNodeId,
     targetNodeName: detection.targetNodeName,
     targetPath,
