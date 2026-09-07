@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest';
 import type { AuditNode } from '../src/core/types';
 import { detectBestPattern } from '../src/core/classifier';
 
+let idCounter = 0;
 function node(overrides: Partial<AuditNode> = {}): AuditNode {
+  idCounter += 1;
   return {
-    id: Math.random().toString(36),
+    id: `test:${idCounter}`,
     name: 'Container',
     type: 'FRAME',
     geometry: { x: 0, y: 0, width: 1000, height: 600 },
@@ -39,6 +41,14 @@ describe('detectBestPattern', () => {
     const detection = detectBestPattern(section);
     expect(detection?.pattern).toBe('two-column');
     expect(detection?.confidence).toBeGreaterThanOrEqual(90);
+  });
+
+  it('does not call two tiny aligned objects a primary two-column layout', () => {
+    const a = node({ geometry: { x: 0, y: 0, width: 90, height: 80 } });
+    const b = node({ geometry: { x: 110, y: 0, width: 90, height: 80 } });
+    const section = withChildren(node({ geometry: { x: 0, y: 0, width: 1000, height: 500 } }), [a, b]);
+
+    expect(detectBestPattern(section)?.pattern).not.toBe('two-column');
   });
 
   it('detects a two by three grid', () => {

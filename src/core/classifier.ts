@@ -94,12 +94,17 @@ function detectTwoColumn(node: AuditNode, children: AuditNode[]): PatternDetecti
   const coverage = combinedWidth / Math.max(1, node.geometry.width);
   const nonOverlap = horizontalGap >= -3;
   const similarOrigin = yDelta <= Math.max(6, node.geometry.height * 0.03);
+  const meaningfulColumnWidths =
+    left.geometry.width >= node.geometry.width * 0.18 && right.geometry.width >= node.geometry.width * 0.18;
 
-  let confidence = 55;
+  // A pair of tiny aligned objects inside a large parent is not a primary two-column web layout.
+  if (coverage < 0.55 || !meaningfulColumnWidths || !nonOverlap) return null;
+
+  let confidence = 60;
   if (similarOrigin) confidence += 18;
-  if (nonOverlap) confidence += 12;
-  if (coverage >= 0.72) confidence += 10;
-  if (left.geometry.width >= node.geometry.width * 0.25 && right.geometry.width >= node.geometry.width * 0.25) confidence += 5;
+  confidence += 10;
+  if (coverage >= 0.72) confidence += 8;
+  if (coverage >= 0.9) confidence += 4;
 
   return {
     pattern: 'two-column',
@@ -110,6 +115,7 @@ function detectTwoColumn(node: AuditNode, children: AuditNode[]): PatternDetecti
       yDelta: Math.round(yDelta * 100) / 100,
       horizontalGap: Math.round(horizontalGap * 100) / 100,
       parentWidthCoveragePct: Math.round(coverage * 100),
+      meaningfulColumnWidths,
       nonOverlap,
     },
   };

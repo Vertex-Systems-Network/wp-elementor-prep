@@ -15,7 +15,7 @@ function clamp(value: number, min = 0, max = 100): number {
 
 function statusFor(score: number): AuditStatus {
   if (score >= 80) return 'PASS';
-  if (score >= 55) return 'REVIEW';
+  if (score >= 70) return 'REVIEW';
   return 'NEEDS_WORK';
 }
 
@@ -113,15 +113,17 @@ export function auditSection(section: AuditNode): SectionAudit {
   // Detection is evidence that the layout is understandable, not that it is already structurally ready.
   if (detection && detection.confidence >= 85) score = clamp(score + 3);
 
+  const status = statusFor(score);
   return {
     id: section.id,
     name: section.name,
     score,
-    status: statusFor(score),
+    status,
     stats,
     findings: findingsFor(stats),
     detection,
-    recommendedRecipe: detection ? recipeForPattern(detection.pattern) : null,
+    // Already-compliant sections do not need a repair recipe even when a pattern is recognized.
+    recommendedRecipe: status === 'PASS' || !detection ? null : recipeForPattern(detection.pattern),
   };
 }
 

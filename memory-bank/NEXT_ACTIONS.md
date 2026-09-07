@@ -4,20 +4,20 @@ Last updated: 2026-09-07
 
 Execute in this order:
 
-1. Commit the P1 classifier/scanner updates on `feat/p1-audit-engine`.
-2. Run CI; fix all typecheck/test/build failures before adding more classifier logic.
-3. Run the Audit-Only engine against the live golden Figma frame and capture:
-   - discovered section count/order,
-   - score per section,
-   - detected pattern/confidence per section.
-4. Compare results to manual expectations:
-   - strong: Hero/Identity/Recognition/Expertise/Credentials/Quote/Testimonials,
-   - weak/needs work: About/Philosophy/Journey/Numbers/Sector/Beyond Work/Media/Milestones/Contact/Social Strip.
-5. Tune section discovery and scoring without hard-coding section names.
-6. Add split-header, decorative-overlap and timeline fixtures.
-7. Open/merge the P1 PR only when CI is green and golden calibration is recorded.
-8. Do not implement mutation recipes yet.
+1. Commit the golden-calibration fixes to `feat/p1-audit-engine`:
+   - stricter two-column coverage/width gate,
+   - PASS >=80 / REVIEW 70–79 / NEEDS_WORK <70,
+   - no repair recipe for PASS sections,
+   - Journey false-positive regression test,
+   - golden calibration documentation.
+2. Run CI and fix any typecheck/test/build failure immediately.
+3. Rerun the live golden Figma audit and confirm the Journey false positive is gone or reduced to an explainable lower-confidence detection.
+4. Add multi-pattern reporting so complex sections can expose more than one meaningful target; Numbers is the first calibration case.
+5. Add split-header and timeline/chapter fixtures.
+6. Update PR #10 with calibration results and mark ready only when its acceptance criteria are met.
+7. Test Audit-Only on at least four more materially different real templates before beginning mutation safety work.
+8. Do **not** implement Safe Fix before P3 validator and P4 transaction foundations exist.
 
 ## Immediate definition of success
 
-P1 checkpoint is reached when the read-only report consistently discovers the real page sections and produces explainable scores/pattern detections close enough to the manual audit that discrepancies can be reasoned about rather than guessed.
+P1 checkpoint is reached when the plugin can scan the golden frame, discover all real sections, classify strong/weak readiness correctly, and provide explainable pattern evidence without a known high-confidence false positive.
