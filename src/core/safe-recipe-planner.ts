@@ -20,6 +20,8 @@ const SEMANTIC_RULES: Partial<Record<NonNullable<PatternDetection['semanticHint'
   'facts-list': { recipe: 'facts-list', minConfidence: 92 },
   'footer-columns': { recipe: 'footer-columns', minConfidence: 92 },
   'repeated-cards': { recipe: 'simple-card-grid', minConfidence: 94 },
+  'metric-grid': { recipe: 'metric-grid', minConfidence: 95 },
+  'social-link-strip': { recipe: 'social-link-strip', minConfidence: 95 },
 };
 
 interface NodePathMatch {
@@ -80,6 +82,7 @@ function alreadyStructured(target: AuditNode, detection: PatternDetection): bool
   if (!target.isAutoLayout) return false;
   if (detection.pattern === 'vertical-stack') return target.layoutMode === 'VERTICAL';
   if (detection.pattern === 'horizontal-row' || detection.pattern === 'two-column') return target.layoutMode === 'HORIZONTAL';
+  if (detection.pattern === 'grid') return target.layoutMode === 'GRID';
   return false;
 }
 
@@ -127,14 +130,18 @@ export function planSafeRecipe(
     );
   }
 
-  if (detection.pattern === 'grid' && detection.semanticHint !== 'repeated-cards') {
+  if (
+    detection.pattern === 'grid'
+    && detection.semanticHint !== 'repeated-cards'
+    && detection.semanticHint !== 'metric-grid'
+  ) {
     return planned(
       detection,
       path,
       null,
       'REVIEW',
       'AMBIGUOUS_GRID_SEMANTICS',
-      'A geometric grid without conservative card semantics could represent metrics, media, facts or decoration; keep it in REVIEW.',
+      'A geometric grid without conservative card/metric semantics could represent media, facts or decoration; keep it in REVIEW.',
       null,
     );
   }
@@ -187,7 +194,7 @@ export function planSafeRecipe(
       rule?.recipe ?? null,
       'NOOP',
       'TARGET_ALREADY_STRUCTURED',
-      'The target already uses the matching Auto Layout direction, so no mutation is necessary.',
+      'The target already uses the matching Auto Layout/Grid mode, so no mutation is necessary.',
       rule?.minConfidence ?? null,
     );
   }

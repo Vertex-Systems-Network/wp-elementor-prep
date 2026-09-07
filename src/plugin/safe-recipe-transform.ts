@@ -78,6 +78,12 @@ export function linearDirectionForSafeRecipe(plan: SafeRecipePlan): LinearLayout
     && plan.semanticHint === 'footer-columns'
   ) return 'HORIZONTAL';
 
+  if (
+    plan.recipe === 'social-link-strip'
+    && plan.pattern === 'horizontal-row'
+    && plan.semanticHint === 'social-link-strip'
+  ) return 'HORIZONTAL';
+
   return null;
 }
 
@@ -125,8 +131,6 @@ function applyLinearAutoLayout(frame: FrameNode, direction: LinearLayoutDirectio
     frame.paddingBottom = geometry.crossEndPadding;
   }
 
-  // Figma can temporarily shrink a manual Frame while layoutMode changes. Restore the exact
-  // approved candidate bounds after fixed sizing/padding has been configured.
   frame.resize(originalWidth, originalHeight);
 
   if (!sameGeometry(beforeChildren, directGeometry(frame))) {
@@ -144,7 +148,7 @@ function applyLinearAutoLayout(frame: FrameNode, direction: LinearLayoutDirectio
   };
 }
 
-function applySimpleCardGrid(frame: FrameNode): SafeRecipeTransformResult {
+function applyFixedGrid(frame: FrameNode): SafeRecipeTransformResult {
   const beforeChildren = directGeometry(frame);
   const analysis = analyzeGridLayoutGeometry({
     width: frame.width,
@@ -207,6 +211,13 @@ function applySimpleCardGrid(frame: FrameNode): SafeRecipeTransformResult {
   };
 }
 
+function matchesGridRecipeContract(plan: SafeRecipePlan): boolean {
+  if (plan.pattern !== 'grid' || Boolean(plan.evidence.fragmentedCellCandidate)) return false;
+  if (plan.recipe === 'simple-card-grid') return plan.semanticHint === 'repeated-cards';
+  if (plan.recipe === 'metric-grid') return plan.semanticHint === 'metric-grid';
+  return false;
+}
+
 /**
  * Apply only an already-approved P5 plan to a staged P4 candidate root.
  * This function never receives the approved original root.
@@ -223,16 +234,15 @@ export function applySafeRecipeToCandidate(candidateRoot: FrameNode, plan: SafeR
   const linearDirection = linearDirectionForSafeRecipe(plan);
   if (linearDirection) return applyLinearAutoLayout(target, linearDirection);
 
-  if (
-    plan.recipe === 'simple-card-grid'
-    && plan.pattern === 'grid'
-    && plan.semanticHint === 'repeated-cards'
-    && !Boolean(plan.evidence.fragmentedCellCandidate)
-  ) {
-    return applySimpleCardGrid(target);
-  }
+  if (matchesGridRecipeContract(plan)) return applyFixedGrid(target);
 
-  if (plan.recipe === 'facts-list' || plan.recipe === 'footer-columns' || plan.recipe === 'simple-card-grid') {
+  if (
+    plan.recipe === 'facts-list'
+    || plan.recipe === 'footer-columns'
+    || plan.recipe === 'social-link-strip'
+    || plan.recipe === 'simple-card-grid'
+    || plan.recipe === 'metric-grid'
+  ) {
     return {
       applied: false,
       reason: `${plan.recipe} plan does not match its required semantic/geometric classifier contract.`,
