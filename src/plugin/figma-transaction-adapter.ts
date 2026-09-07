@@ -99,9 +99,10 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
 
   async cloneOriginal(originalNodeId: string, transactionId: string): Promise<CandidateHandle> {
     const original = await frameById(originalNodeId);
-    const parent = childrenParent(original.parent);
-    if (!parent) throw new Error('Original Frame parent does not support ordered child replacement.');
-    if (original.parent?.type === 'INSTANCE') throw new Error('Section roots inside component instances are not supported by P4 root swap.');
+    const originalParent = original.parent;
+    const parent = childrenParent(originalParent);
+    if (!originalParent || !parent) throw new Error('Original Frame parent does not support ordered child replacement.');
+    if (originalParent.type === 'INSTANCE') throw new Error('Section roots inside component instances are not supported by P4 root swap.');
 
     const siblingIndex = parent.children.findIndex((child) => child.id === original.id);
     if (siblingIndex < 0) throw new Error('Could not resolve original sibling index.');
@@ -118,7 +119,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
       transactionId,
       originalNodeId: original.id,
       candidateNodeId: candidate.id,
-      parentNodeId: original.parent.id,
+      parentNodeId: originalParent.id,
       siblingIndex,
       originalX: original.x,
       originalY: original.y,
@@ -161,7 +162,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
     const candidate = await frameById(handle.candidateNodeId);
     const parentNode = await figma.getNodeByIdAsync(metadata.parentNodeId);
     const parent = childrenParent(parentNode);
-    if (!parent) throw new Error('Original parent is unavailable or no longer supports insertion.');
+    if (!parentNode || !parent) throw new Error('Original parent is unavailable or no longer supports insertion.');
     if (original.parent?.id !== metadata.parentNodeId) throw new Error('Original moved after cloning; refusing stale commit.');
 
     const backup = createBackupFrame(transactionId);
@@ -175,7 +176,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
       parent.insertChild(metadata.siblingIndex, candidate);
       candidateInserted = true;
 
-      if (!('layoutMode' in parentNode) || String((parentNode as SceneNode & { layoutMode?: unknown }).layoutMode) === 'NONE') {
+      if (!('layoutMode' in parentNode) || String((parentNode as BaseNode & { layoutMode?: unknown }).layoutMode) === 'NONE') {
         candidate.x = metadata.originalX;
         candidate.y = metadata.originalY;
       }
@@ -241,6 +242,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
 
     const original = await frameById(undo.originalNodeId);
     const committed = await frameById(undo.committedNodeId);
+    const committedId = committed.id;
     const parentNode = await figma.getNodeByIdAsync(undo.parentNodeId);
     const backupNode = await figma.getNodeByIdAsync(undo.backupFrameId);
     const parent = childrenParent(parentNode);
@@ -258,7 +260,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
 
     return {
       transactionId: 'restore',
-      originalNodeId: committed.id,
+      originalNodeId: committedId,
       committedNodeId: original.id,
       parentNodeId: undo.parentNodeId,
       siblingIndex: undo.siblingIndex,
