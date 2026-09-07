@@ -8,12 +8,16 @@ import { finalizeLastSafeFix, restoreLastSafeFix } from './safe-fix-runtime';
 
 export interface P7CheckpointActions {
   restore(): Promise<CommitEvidence | null>;
-  finalize(): Promise<CommitEvidence | null>;
+  finalize(): Promise<boolean>;
 }
+
+export type P7CheckpointActionProof =
+  | { resolution: 'RESTORED'; evidence: CommitEvidence }
+  | { resolution: 'FINALIZED'; finalized: true };
 
 export interface P7CheckpointResolutionResult {
   state: BatchQueueState;
-  evidence: CommitEvidence;
+  proof: P7CheckpointActionProof;
   resolution: BatchCheckpointResolution;
 }
 
@@ -35,18 +39,26 @@ async function resolveAfterP5Action(
     throw new Error('P7 batch has no frame awaiting checkpoint resolution.');
   }
 
-  const evidence = resolution === 'RESTORED'
-    ? await actions.restore()
-    : await actions.finalize();
-
-  if (!evidence) {
-    throw new Error(`P5 checkpoint ${resolution.toLowerCase()} action returned no evidence; batch state was not advanced.`);
+  if (resolution === 'RESTORED') {
+    const evidence = await actions.restore();
+    if (!evidence) {
+      throw new Error('P5 checkpoint restore returned no evidence; batch state was not advanced.');
+    }
+    return {
+      state: resolveBatchCheckpoint(state, 'RESTORED'),
+      proof: { resolution: 'RESTORED', evidence },
+      resolution: 'RESTORED',
+    };
   }
 
+  const finalized = await actions.finalize();
+  if (!finalized) {
+    throw new Error('P5 checkpoint finalize returned false; batch state was not advanced.');
+  }
   return {
-    state: resolveBatchCheckpoint(state, resolution),
-    evidence,
-    resolution,
+    state: resolveBatchCheckpoint(state, 'FINALIZED'),
+    proof: { resolution: 'FINALIZED', finalized: true },
+    resolution: 'FINALIZED',
   };
 }
 
@@ -62,8 +74,8 @@ export function restoreP7BatchCheckpoint(
 }
 
 /**
- * Finalizes the actual P5 checkpoint first. Only after that succeeds does the queue mark the frame as
- * durable SUCCEEDED and eligible for successful run-key persistence.
+ * Finalizes the actual P5 checkpoint first. Only after P5 returns true does the queue mark the frame
+ * as durable SUCCEEDED and eligible for successful run-key persistence.
  */
 export function finalizeP7BatchCheckpoint(
   state: BatchQueueState,
