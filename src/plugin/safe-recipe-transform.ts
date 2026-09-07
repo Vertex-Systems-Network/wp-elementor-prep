@@ -17,8 +17,8 @@ function resolveFrameByPath(root: FrameNode, path: number[]): FrameNode | null {
   let current: SceneNode = root;
   for (const index of path) {
     if (!('children' in current)) return null;
-    const children = (current as SceneNode & ChildrenMixin).children;
-    const child: SceneNode | undefined = children[index];
+    const childNodes: readonly SceneNode[] = (current as SceneNode & ChildrenMixin).children as readonly SceneNode[];
+    const child: SceneNode | undefined = childNodes[index];
     if (!child) return null;
     current = child;
   }
