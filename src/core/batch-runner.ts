@@ -18,9 +18,9 @@ export interface BatchRunnerOptions {
   shouldCancel?: () => boolean;
   /**
    * Optional inter-frame safety gate. Return a non-empty reason to pause before another frame starts.
-   * This supports P5's bounded restore/finalize checkpoint without treating it as failure/cancel.
+   * Async gates are supported so P5's `hasPendingSafeFixCheckpoint()` can be queried directly.
    */
-  shouldPause?: (state: BatchQueueState) => string | null;
+  shouldPause?: (state: BatchQueueState) => string | null | Promise<string | null>;
   /** Receives immutable queue snapshots after meaningful state transitions. */
   onState?: (state: BatchQueueState) => void;
 }
@@ -46,8 +46,8 @@ function errorMessage(error: unknown): string {
   return 'Unknown batch frame processing failure';
 }
 
-function pauseReason(state: BatchQueueState, options: BatchRunnerOptions): string | null {
-  const reason = options.shouldPause?.(copyState(state)) ?? null;
+async function pauseReason(state: BatchQueueState, options: BatchRunnerOptions): Promise<string | null> {
+  const reason = await options.shouldPause?.(copyState(state)) ?? null;
   return reason && reason.trim() ? reason : null;
 }
 
@@ -70,7 +70,7 @@ export async function runBatchQueue(
       return state;
     }
 
-    const beforeStartPause = pauseReason(state, options);
+    const beforeStartPause = await pauseReason(state, options);
     if (beforeStartPause) {
       state = requestBatchPause(state, beforeStartPause);
       notify(state, options.onState);
@@ -103,7 +103,7 @@ export async function runBatchQueue(
     }
 
     // A checkpoint or other safety condition pauses before the next frame can enter RUNNING.
-    const afterFramePause = pauseReason(state, options);
+    const afterFramePause = await pauseReason(state, options);
     if (afterFramePause) {
       state = requestBatchPause(state, afterFramePause);
       notify(state, options.onState);
