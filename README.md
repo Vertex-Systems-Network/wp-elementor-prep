@@ -12,9 +12,9 @@ The plugin is intentionally deterministic. It must not depend on Figma AI, OpenA
 
 ## Development status
 
-**Overall roadmap: 58% — P0 through P4 complete, P5 in progress**
+**Overall roadmap: 60% — P0 through P4 complete, P5 in progress**
 
-`████████████░░░░░░░░ 58%`
+`████████████░░░░░░░░ 60%`
 
 | Phase | Scope | Status |
 |---|---|---|
@@ -30,7 +30,7 @@ The plugin is intentionally deterministic. It must not depend on Figma AI, OpenA
 
 ### P5 recipe progress
 
-`███░░░░░░░ 30% foundation`
+`████░░░░░░ 40%`
 
 - ✅ deterministic recipe plan/result types
 - ✅ high-confidence eligibility gates
@@ -40,12 +40,17 @@ The plugin is intentionally deterministic. It must not depend on Figma AI, OpenA
 - ✅ strict candidate-only Vertical Stack transform foundation
 - ✅ strict candidate-only Horizontal Row transform foundation
 - ✅ strict candidate-only Two Column transform foundation
-- 🟡 live Figma calibration pending
+- ✅ live disposable-Figma Vertical Stack render-equivalence calibration
+- ✅ live disposable-Figma Horizontal Row render-equivalence calibration
+- ✅ live disposable-Figma Two Column render-equivalence calibration
+- ✅ root-shrink transition bug found, fixed and re-calibrated
+- 🟡 full P3 -> P4 recipe orchestration proof pending
 - ⬜ Facts List mutation
 - ⬜ Footer Columns mutation
 - ⬜ Simple Card Grid mutation
 - ⬜ Metric Grid semantics + mutation
 - ⬜ Social/Link Strip semantics + mutation
+- ⬜ multi-template production calibration
 
 ### Safety pipeline
 
@@ -59,9 +64,9 @@ Canonical engineering status lives in `memory-bank/PROJECT_STATE.md` and `memory
 
 ## Current phase
 
-**P5: conservative Safe Fix recipe foundation.**
+**P5: conservative Safe Fix recipe foundation + transaction integration.**
 
-P4 is merged and issue #5 is closed. P5 currently enables planning for the initial recipe family and candidate-only transform foundations for the simplest linear layouts. General Safe Fix is not yet exposed as a production action until the new recipes pass CI and live disposable-Figma calibration through P3/P4.
+P4 is merged and issue #5 is closed. The first three linear P5 transforms now preserve synthetic fixture geometry and exported PNG bytes exactly after a Figma primary-axis shrink behavior was discovered and fixed. General Safe Fix is still not exposed as a production action until the complete recipe -> P3 -> P4 path and real-template calibration pass.
 
 ## Core principles
 
@@ -96,6 +101,7 @@ Then register/import the development plugin in Figma using the generated `dist/m
 - `docs/P4_TRANSACTION_DESIGN.md`
 - `docs/P4_LIVE_TRANSACTION_CALIBRATION.md`
 - `docs/P5_SAFE_RECIPES.md`
+- `docs/P5_LINEAR_LIVE_CALIBRATION.md`
 - `memory-bank/` — canonical project state for humans and AI agents
 
 ## Golden fixture
