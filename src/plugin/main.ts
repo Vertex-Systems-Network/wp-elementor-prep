@@ -1,4 +1,4 @@
-import { detectPatterns } from '../core/classifier';
+import { detectPatterns } from '../core/classification';
 import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
 import { scanSceneNode } from '../core/scanner';
@@ -57,6 +57,8 @@ function runSafePlanPreview(): void {
 
   try {
     const root = scanSceneNode(selected);
+    // P5 planning must consume the P2 semantic/ranked classifier pipeline, not raw geometry-only
+    // detections, otherwise facts-list/footer-columns/repeated-cards can never reach their gates.
     const detections = detectPatterns(root);
     const roles = detectSpecialRoles(root);
     const plans = planSafeRecipes(root, detections, roles);
