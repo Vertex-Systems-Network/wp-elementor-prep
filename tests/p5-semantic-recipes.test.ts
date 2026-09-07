@@ -57,13 +57,13 @@ function detection(overrides: Partial<PatternDetection>): PatternDetection {
   };
 }
 
-function metricSection(targetName = 'KPI Metrics'): AuditNode {
+function metricSection(targetName = 'KPI Metrics', sectionName = 'Numbers'): AuditNode {
   const items = Array.from({ length: 4 }, (_, index) => withChildren(
     node({ id: `metric-${index}`, geometry: { x: (index % 2) * 250, y: Math.floor(index / 2) * 110, width: 220, height: 90 } }),
     [text(`metric-${index}-value`), text(`metric-${index}-label`)],
   ));
   const target = withChildren(node({ id: 'target', name: targetName, geometry: { x: 0, y: 200, width: 500, height: 220 } }), items);
-  return withChildren(node({ id: 'section', name: 'Numbers', geometry: { x: 0, y: 0, width: 1000, height: 1000 } }), [target]);
+  return withChildren(node({ id: 'section', name: sectionName, geometry: { x: 0, y: 0, width: 1000, height: 1000 } }), [target]);
 }
 
 describe('P5 metric/social semantics', () => {
@@ -74,8 +74,8 @@ describe('P5 metric/social semantics', () => {
     expect(result[0]?.evidence.semanticMetricNameEvidence).toBe(true);
   });
 
-  it('keeps the same unnamed/simple grid as repeated cards instead of guessing metric semantics', () => {
-    const section = metricSection('Services Grid');
+  it('keeps the same generic/simple grid as repeated cards instead of guessing metric semantics', () => {
+    const section = metricSection('Services Grid', 'Services');
     const result = enrichSemanticHints(section, [detection({ targetNodeId: 'target' })]);
     expect(result[0]?.semanticHint).toBe('repeated-cards');
   });
