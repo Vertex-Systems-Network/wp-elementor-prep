@@ -28,6 +28,10 @@ function node(overrides: Partial<AuditNode> = {}): AuditNode {
   };
 }
 
+function text(id: string): AuditNode {
+  return node({ id, type: 'TEXT', name: 'Text', isContainer: false, isText: true, textLength: 12, children: [], childIds: [] });
+}
+
 function withChildren(parent: AuditNode, children: AuditNode[]): AuditNode {
   return { ...parent, children, childIds: children.map((child) => child.id) };
 }
@@ -79,5 +83,25 @@ describe('enrichSemanticHints', () => {
 
     const result = enrichSemanticHints(section, detections);
     expect(result.find((item) => item.targetNodeId === 'section')?.semanticHint).toBe('timeline-chapter');
+  });
+
+  it('labels a manual full-width text-rich chapter sequence as timeline/chapter', () => {
+    const chapters = Array.from({ length: 5 }, (_, index) => {
+      const chapter = node({
+        id: `manual-${index}`,
+        geometry: { x: 0, y: index * 800, width: 1000, height: 800 },
+      });
+      return withChildren(chapter, Array.from({ length: 6 }, (__, textIndex) => text(`manual-${index}-t${textIndex}`)));
+    });
+    const section = withChildren(node({ id: 'section', geometry: { x: 0, y: 0, width: 1000, height: 4000 } }), chapters);
+    const result = enrichSemanticHints(section, [detection({
+      pattern: 'vertical-stack',
+      targetNodeId: 'section',
+      evidence: { itemCount: 5 },
+    })]);
+
+    const semantic = result[0];
+    expect(semantic?.semanticHint).toBe('timeline-chapter');
+    expect(semantic?.evidence.semanticRule).toBe('chapter-like-full-width-stack');
   });
 });
