@@ -15,7 +15,7 @@
 - Linear transforms refuse mutation unless visual/layer order already matches, cross-axis origins align within 1 px, primary-axis gaps are uniform within 1 px, children do not overlap and geometry stays inside target bounds.
 - Linear transforms do not reorder layers and still require full P3 validation before any P4 commit.
 - Added P5 planner regression tests and `docs/P5_SAFE_RECIPES.md`.
-- Added a reusable `FullFrameValidator` broker so manual validation and future P5/P4 transactions share the same full-P3 pixel path.
+- Added a reusable `FullFrameValidator` broker so manual validation and P5/P4 transactions share the same full-P3 pixel path.
 - Added `runSafeFixTransaction` integration seam from an eligible P5 plan into the P4 candidate transaction adapter.
 - Added read-only `Preview safe fixes` UI while keeping production mutation disabled.
 - First live linear recipe run exposed a Figma manual->Auto Layout primary-axis shrink; fixed by restoring exact target width/height after configuring fixed Auto Layout sizing and measured padding/gap.
@@ -39,7 +39,24 @@
 - Added Simple Card Grid Figma GRID transform using explicit row/column counts, fixed tracks, measured gaps/padding and exact root-size restoration.
 - Live-calibrated a disposable 2x2 text-bearing Simple Card Grid: exact geometry and PNG hash `4476:6ba2b3ec`, `0` leftovers.
 - CI caught an incomplete-grid fixture that was being rejected earlier by the minimum-item guard; corrected the test fixture to isolate the intended incomplete-occupancy gate.
-- Added `docs/P5_SEMANTIC_AND_GRID_LIVE_CALIBRATION.md` and advanced GitHub progress to overall `63%` / P5 `70%` while final current-head CI remains a gate.
+- Added developer-only compiled runtime self-test harness in `src/plugin/p5-runtime-calibration.ts` and a `Developer: P5 Runtime Self-Test` plugin menu command.
+- The compiled self-test is designed to prove the actual `runSafeFixTransaction -> FullFrameValidator -> UI Canvas pixel broker -> P4` path with both forced pixel rejection and pass/commit/restore paths; execution from the imported development plugin remains pending.
+- Added deterministic Metric Grid semantics with a 95% gate requiring explicit metric/stat/KPI/number/counter/figure naming evidence plus simple text-oriented cells; generic grids remain repeated cards.
+- Added deterministic Social/Link Strip semantics with a 95% gate requiring explicit social/follow/connect naming evidence plus compact horizontal items; footer-column semantics retain priority.
+- Added Metric Grid fixed-grid mutation and Social/Link Strip horizontal mutation using the same strict candidate-only geometry guards.
+- CI caught a contradictory generic-grid test fixture whose section was still named `Numbers`; corrected the fixture rather than weakening the semantic rule.
+- Live-calibrated disposable Metric Grid and Social/Link Strip fixtures: exact root/direct-child geometry and byte-identical PNG renders; cleanup left `0` temporary nodes.
+- Added `docs/P5_COMPILED_RUNTIME_SELF_TEST.md` and `docs/P5_METRIC_SOCIAL_LIVE_CALIBRATION.md`.
+- CI run #84 passed after the Metric/Social implementation and documentation line.
+- Performed a read-only scan across 91 desktop roots to locate real image-bearing manual Frames whose current geometry already satisfied strict P5 linear/grid safety requirements.
+- Clone-calibrated six real image-bearing sections from six materially different desktop roots (`2`, `3`, `4`, `8`, `11`, `13`):
+  - every clone preserved root/direct-child geometry exactly,
+  - image-fill counts were preserved,
+  - before/after exported PNG bytes were exactly identical,
+  - approved originals remained unchanged in parent/index/root/direct-child geometry and render,
+  - cleanup left `0` temporary nodes.
+- Added `docs/P5_REAL_TEMPLATE_IMAGE_CALIBRATION.md`.
+- Advanced status to overall `66%` / P5 `90%`; production Safe Fix remains disabled until the imported plugin's compiled runtime self-test passes.
 
 ### P4 candidate transaction + rollback
 - Merged P3 validator through PR #12 and closed issue #4.
@@ -50,7 +67,6 @@
 - Added discard behavior for transform failures, validator crashes and rejected validation reports.
 - Added explicit cleanup-failure and commit-stage failure handling.
 - Added small commit evidence and opaque undo-token contract; no large node/PNG snapshots are stored in transaction metadata.
-- Added unit fixtures proving forced transform failure and rejected validation leave the approved original unchanged.
 - Added concrete Figma transaction adapter with top-level off-layout candidate staging, stale-parent/transaction guards and root-boundary commit.
 - Added hidden bounded original backup and `restoreLastCommit()` through a compact clientStorage checkpoint.
 - Added `finalizeLastCommit()` and a single-pending-checkpoint guard so backup roots cannot accumulate silently.
