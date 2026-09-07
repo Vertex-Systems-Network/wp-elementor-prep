@@ -85,6 +85,16 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
   const target = located.node;
   const sectionHeight = Math.max(1, section.geometry.height);
 
+  if (detection.pattern === 'carousel-track' && target.clipsContent) {
+    return {
+      hint: 'carousel-viewport',
+      evidence: {
+        semanticRule: 'clipped-overflow-carousel-viewport',
+        semanticClipsContent: true,
+      },
+    };
+  }
+
   if (detection.pattern === 'grid') {
     const itemCount = Number(detection.evidence.itemCount ?? 0);
     const widthConsistency = Number(detection.evidence.widthConsistencyPct ?? 0);
