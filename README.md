@@ -12,9 +12,9 @@ The core runtime is deterministic and must not depend on Figma AI, OpenAI, Claud
 
 ## Development status
 
-**Overall roadmap: 63% — P0 through P4 complete, P5 in progress**
+**Overall roadmap: 66% — P0 through P4 complete, P5 near completion**
 
-`█████████████░░░░░░░ 63%`
+`█████████████░░░░░░░ 66%`
 
 | Phase | Scope | Status |
 |---|---|---|
@@ -30,9 +30,9 @@ The core runtime is deterministic and must not depend on Figma AI, OpenAI, Claud
 
 ### P5 progress
 
-**P5: 70%**
+**P5: 90%**
 
-`███████░░░ 70%`
+`█████████░ 90%`
 
 - ✅ deterministic recipe plan/result types
 - ✅ high-confidence eligibility gates
@@ -45,20 +45,22 @@ The core runtime is deterministic and must not depend on Figma AI, OpenAI, Claud
 - ✅ Facts List semantic transform + exact live calibration
 - ✅ Footer Columns semantic transform + exact live calibration
 - ✅ Simple Card Grid strict fixed-track transform + exact live calibration
+- ✅ Metric Grid semantics, 95% gate, fixed-grid transform + exact live calibration
+- ✅ Social/Link Strip semantics, 95% gate, horizontal transform + exact live calibration
 - ✅ Figma manual -> Auto Layout root-shrink behavior discovered and guarded
 - ✅ synthetic reject/discard, pass/commit/restore and pass/commit/finalize evidence
 - ✅ reusable FullFrameValidator broker + P5/P4 runtime seam
+- ✅ compiled P5 runtime self-test harness + developer menu command
+- ✅ six-template real image-bearing clone-only mutation calibration
 - ✅ read-only Safe Fix preview UI
-- 🟡 latest branch CI / compiled runtime proof
-- ⬜ Metric Grid semantics + mutation
-- ⬜ Social/Link Strip semantics + mutation
-- ⬜ multi-template image-bearing mutation calibration
+- 🟡 imported-plugin compiled runtime self-test execution
+- ⬜ production Safe Fix UI gate after the compiled runtime proof
 
 ### Safety pipeline
 
 `Audit -> classify -> plan -> clone candidate -> transform candidate -> full P3 validate -> P4 commit OR discard -> bounded undo/finalize`
 
-P4 guarantees candidate isolation. P5 adds conservative semantic/confidence/geometry gates. General production mutation is still disabled until the compiled full-P3 runtime and multi-template mutation calibration are green.
+P4 guarantees candidate isolation. P5 adds conservative semantic/confidence/geometry gates. General production mutation is still disabled until the imported development plugin completes the compiled full-P3 runtime self-test successfully.
 
 Canonical engineering status lives in `memory-bank/PROJECT_STATE.md`, `memory-bank/ROADMAP.md`, and `memory-bank/NEXT_ACTIONS.md`.
 
@@ -72,8 +74,14 @@ P5 v1 mutation gates:
 - Facts List >= 92%
 - Footer Columns >= 92%
 - non-fragmented Repeated Card Grid >= 94%
+- Metric Grid >= 95% with explicit metric/stat/KPI/number naming evidence + simple text-oriented cells
+- Social/Link Strip >= 95% with explicit social/follow/connect naming evidence + compact horizontal items
 
 Carousel/timeline structures remain deferred to P6. Fragmented grids remain REVIEW.
+
+## Real-template calibration
+
+The current linear/grid mutation primitives were clone-calibrated on image-bearing sections from six different real desktop roots (`2`, `3`, `4`, `8`, `11`, `13`). Every clone preserved root geometry, direct-child geometry, image-fill counts and exported PNG bytes exactly; every approved source remained unchanged and cleanup left `0` temporary nodes.
 
 ## Core principles
 
@@ -96,6 +104,10 @@ npm run build
 
 Then import the generated development plugin from `dist/manifest.json` after setting a valid Figma plugin ID.
 
+Developer runtime gate:
+
+`Plugins -> Pella Elementor Prep -> Developer: P5 Runtime Self-Test`
+
 ## Project docs
 
 - `docs/AI_NATIVE_PLAN.md`
@@ -112,6 +124,9 @@ Then import the generated development plugin from `dist/manifest.json` after set
 - `docs/P5_LINEAR_LIVE_CALIBRATION.md`
 - `docs/P5_END_TO_END_TRANSACTION_CALIBRATION.md`
 - `docs/P5_SEMANTIC_AND_GRID_LIVE_CALIBRATION.md`
+- `docs/P5_COMPILED_RUNTIME_SELF_TEST.md`
+- `docs/P5_METRIC_SOCIAL_LIVE_CALIBRATION.md`
+- `docs/P5_REAL_TEMPLATE_IMAGE_CALIBRATION.md`
 - `memory-bank/` — canonical project state for humans and AI agents
 
 ## Golden fixture
