@@ -16,8 +16,8 @@ Validation is layered around rendered/content invariants instead:
 2. text-content multiset integrity,
 3. image-fill multiset integrity,
 4. absolute-to-section text/image anchor geometry,
-5. structural sanity signals,
-6. later section-level pixel diff.
+5. structural sanity metrics,
+6. section-level rendered PNG pixel diff.
 
 Wrapper/node-count changes are reportable metrics but are not failures by themselves.
 
@@ -41,19 +41,22 @@ Text fingerprints use deterministic local hashing so validation reports do not n
 
 ## Duplicate content
 
-Repeated text or repeated images can appear more than once. Matching therefore groups by content fingerprint and then pairs duplicates in stable visual order (`y`, `x`, size, debug path) rather than node ID.
+Repeated text or images are matched by content fingerprint and paired in stable visual order (`y`, `x`, size, debug path), not by Figma node ID.
 
 ## Threshold policy v1
 
-Initial `p3-v1` deterministic thresholds:
+Current `p3-v1` deterministic thresholds:
 
 - root width/height drift: <= 2 px,
 - text/image anchor position drift: <= 2 px,
 - text/image anchor size drift: <= 2 px,
 - text-content multiset: exact,
-- image-hash multiset: exact.
+- image-hash multiset: exact,
+- pixel per-channel tolerance: 8 / 255,
+- maximum changed pixels: 0.5%,
+- maximum mean channel delta: 0.5.
 
-Thresholds are versioned/configurable and will be calibrated before P5 Safe Fix.
+Thresholds are versioned/configurable and remain eligible for recalibration before P5 Safe Fix.
 
 ## Failure reasons
 
@@ -63,26 +66,31 @@ Thresholds are versioned/configurable and will be calibrated before P5 Safe Fix.
 - `IMAGE_CONTENT_DRIFT`
 - `TEXT_GEOMETRY_DRIFT`
 - `IMAGE_GEOMETRY_DRIFT`
+- `PIXEL_DIMENSION_MISMATCH`
+- `PIXEL_DIFF_EXCEEDED`
 
-Pixel-diff failure is intentionally deferred until the export/canvas layer is implemented.
+## Rendered pixel layer
 
-## Why geometry/content validation comes before pixel diff
+The pixel layer is implemented as a section-level validation stage:
 
-Pixel similarity alone can hide semantic damage, for example text replacement that renders similarly or an image asset swap with a visually close crop. Conversely, strict tree equality would reject safe wrapper refactors. P3 therefore combines deterministic content/geometry invariants with a later rendered-section pixel comparison.
-
-## Planned pixel layer
-
-Later P3 work will:
-
-1. export original and candidate sections through Figma `exportAsync()` as PNG,
-2. transfer the bytes to plugin UI,
-3. decode both images into Canvas/ImageData,
-4. compute deterministic pixel-difference metrics at section level,
-5. apply versioned thresholds,
-6. append explainable pixel metrics/failure reasons to the same `ValidationReport`.
+1. original and candidate Frames are exported through Figma `exportAsync()` as PNG,
+2. longest render edge is capped at 2048 px for bounded memory usage,
+3. PNG bytes are transferred to plugin UI,
+4. UI decodes both renders into Canvas/ImageData,
+5. deterministic RGBA metrics are calculated,
+6. metrics are merged into the same `ValidationReport`,
+7. explainable pixel findings are emitted when thresholds are exceeded.
 
 The comparison is section-level, not descendant-by-descendant.
 
+## Why content/geometry validation remains separate from pixel diff
+
+Pixel similarity alone can hide semantic damage, such as text replacement with visually similar glyphs or an image swap with a similar crop. Conversely, strict tree equality would reject safe wrapper refactors. P3 therefore requires both invariant integrity and rendered-section evidence.
+
+## Live no-op calibration
+
+Representative Marcus sections were exported twice with the production render-scale rule. About, Journey and Contact produced byte-identical repeated PNG exports, including the tall Journey section rendered at a capped scale. See `docs/P3_PIXEL_CALIBRATION.md`.
+
 ## Safety boundary
 
-P3 runtime remains read-only with respect to approved design structure. Candidate mutation/clone/swap orchestration belongs to P4. P3 only captures, compares and reports.
+P3 runtime remains read-only with respect to approved design structure. It can inspect and export selected Frames, but it does not create, transform, swap or delete design nodes. Candidate clone/swap orchestration belongs to P4.
