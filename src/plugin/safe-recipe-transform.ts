@@ -3,11 +3,20 @@ import {
   analyzeLinearLayoutGeometry,
   type LinearLayoutDirection,
 } from '../core/linear-layout-analysis';
+import { analyzeGridLayoutGeometry } from '../core/grid-layout-analysis';
 
 export interface SafeRecipeTransformResult {
   applied: boolean;
   reason: string;
   targetNodeId?: string;
+}
+
+interface DirectGeometry {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 function resolveFrameByPath(root: FrameNode, path: number[]): FrameNode | null {
@@ -22,8 +31,33 @@ function resolveFrameByPath(root: FrameNode, path: number[]): FrameNode | null {
   return current.type === 'FRAME' ? current : null;
 }
 
+function directGeometry(frame: FrameNode): DirectGeometry[] {
+  return frame.children.map((child) => ({
+    id: child.id,
+    x: child.x,
+    y: child.y,
+    width: child.width,
+    height: child.height,
+  }));
+}
+
+function sameGeometry(before: DirectGeometry[], after: DirectGeometry[], tolerance = 0.5): boolean {
+  if (before.length !== after.length) return false;
+  return before.every((item, index) => {
+    const next = after[index];
+    return Boolean(
+      next
+      && item.id === next.id
+      && Math.abs(item.x - next.x) <= tolerance
+      && Math.abs(item.y - next.y) <= tolerance
+      && Math.abs(item.width - next.width) <= tolerance
+      && Math.abs(item.height - next.height) <= tolerance
+    );
+  });
+}
+
 /**
- * Resolve only the P5 recipes that can reuse the strict linear-layout transformer.
+ * Resolve only P5 recipes that can reuse the strict linear-layout transformer.
  * Semantic recipes are accepted only when their underlying geometric pattern matches the
  * classifier contract that produced them; malformed or hand-crafted plans are refused.
  */
@@ -48,6 +82,7 @@ export function linearDirectionForSafeRecipe(plan: SafeRecipePlan): LinearLayout
 }
 
 function applyLinearAutoLayout(frame: FrameNode, direction: LinearLayoutDirection): SafeRecipeTransformResult {
+  const beforeChildren = directGeometry(frame);
   const analysis = analyzeLinearLayoutGeometry(
     {
       width: frame.width,
@@ -68,10 +103,6 @@ function applyLinearAutoLayout(frame: FrameNode, direction: LinearLayoutDirectio
   if (!analysis.ok) return { applied: false, reason: analysis.reason, targetNodeId: frame.id };
 
   const geometry = analysis.plan;
-
-  // Figma can temporarily switch a manual Frame's primary axis to content-driven sizing when
-  // layoutMode changes. Record the approved candidate bounds and restore them after configuring
-  // fixed sizing/padding so P3 sees no root shrink.
   const originalWidth = frame.width;
   const originalHeight = frame.height;
 
@@ -94,11 +125,84 @@ function applyLinearAutoLayout(frame: FrameNode, direction: LinearLayoutDirectio
     frame.paddingBottom = geometry.crossEndPadding;
   }
 
+  // Figma can temporarily shrink a manual Frame while layoutMode changes. Restore the exact
+  // approved candidate bounds after fixed sizing/padding has been configured.
   frame.resize(originalWidth, originalHeight);
+
+  if (!sameGeometry(beforeChildren, directGeometry(frame))) {
+    return {
+      applied: false,
+      reason: 'Linear Auto Layout changed direct-child geometry; candidate must be discarded before P3 commit.',
+      targetNodeId: frame.id,
+    };
+  }
 
   return {
     applied: true,
     reason: `Applied strict ${direction.toLowerCase()} Auto Layout to staged candidate.`,
+    targetNodeId: frame.id,
+  };
+}
+
+function applySimpleCardGrid(frame: FrameNode): SafeRecipeTransformResult {
+  const beforeChildren = directGeometry(frame);
+  const analysis = analyzeGridLayoutGeometry({
+    width: frame.width,
+    height: frame.height,
+    children: frame.children.map((child) => ({
+      id: child.id,
+      x: child.x,
+      y: child.y,
+      width: child.width,
+      height: child.height,
+      visible: child.visible,
+      absolutePositioned: 'layoutPositioning' in child && child.layoutPositioning === 'ABSOLUTE',
+    })),
+  });
+
+  if (!analysis.ok) return { applied: false, reason: analysis.reason, targetNodeId: frame.id };
+  const plan = analysis.plan;
+  const originalWidth = frame.width;
+  const originalHeight = frame.height;
+
+  frame.layoutMode = 'GRID';
+  frame.gridAutoTracks = 'NONE';
+  frame.gridItemsPositioning = 'ROW_AUTO_FLOW';
+  frame.gridColumnCount = plan.columns;
+  frame.gridRowCount = plan.rows;
+  frame.gridColumnGap = plan.columnGap;
+  frame.gridRowGap = plan.rowGap;
+  frame.paddingLeft = plan.paddingLeft;
+  frame.paddingRight = plan.paddingRight;
+  frame.paddingTop = plan.paddingTop;
+  frame.paddingBottom = plan.paddingBottom;
+
+  frame.gridColumnSizes.forEach((track, index) => {
+    const width = plan.columnWidths[index];
+    if (width === undefined) throw new Error('Grid column track plan is incomplete.');
+    track.type = 'FIXED';
+    track.value = width;
+  });
+  frame.gridRowSizes.forEach((track, index) => {
+    const height = plan.rowHeights[index];
+    if (height === undefined) throw new Error('Grid row track plan is incomplete.');
+    track.type = 'FIXED';
+    track.value = height;
+  });
+
+  frame.resize(originalWidth, originalHeight);
+
+  if (!sameGeometry(beforeChildren, directGeometry(frame))) {
+    return {
+      applied: false,
+      reason: 'GRID Auto Layout changed direct-child geometry; candidate must be discarded before P3 commit.',
+      targetNodeId: frame.id,
+    };
+  }
+
+  return {
+    applied: true,
+    reason: `Applied strict ${plan.columns}×${plan.rows} fixed-track GRID Auto Layout to staged candidate.`,
     targetNodeId: frame.id,
   };
 }
@@ -119,7 +223,16 @@ export function applySafeRecipeToCandidate(candidateRoot: FrameNode, plan: SafeR
   const linearDirection = linearDirectionForSafeRecipe(plan);
   if (linearDirection) return applyLinearAutoLayout(target, linearDirection);
 
-  if (plan.recipe === 'facts-list' || plan.recipe === 'footer-columns') {
+  if (
+    plan.recipe === 'simple-card-grid'
+    && plan.pattern === 'grid'
+    && plan.semanticHint === 'repeated-cards'
+    && !Boolean(plan.evidence.fragmentedCellCandidate)
+  ) {
+    return applySimpleCardGrid(target);
+  }
+
+  if (plan.recipe === 'facts-list' || plan.recipe === 'footer-columns' || plan.recipe === 'simple-card-grid') {
     return {
       applied: false,
       reason: `${plan.recipe} plan does not match its required semantic/geometric classifier contract.`,
