@@ -19,6 +19,7 @@ describe('P5 compiled runtime proof gate', () => {
   it('rejects stale, malformed and missing proofs', () => {
     expect(isValidP5RuntimeProof(null)).toBe(false);
     expect(isValidP5RuntimeProof({})).toBe(false);
+    expect(isValidP5RuntimeProof({ schemaVersion: 1, gateVersion: 'p5-runtime-proof-v1', passedAt: '2026-09-08T00:00:00.000Z' })).toBe(false);
     expect(isValidP5RuntimeProof({ schemaVersion: 1, gateVersion: 'old', passedAt: 'x' })).toBe(false);
     expect(isValidP5RuntimeProof({ schemaVersion: 1, gateVersion: P5_RUNTIME_GATE_VERSION, passedAt: '' })).toBe(false);
   });
