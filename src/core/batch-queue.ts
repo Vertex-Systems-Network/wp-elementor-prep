@@ -1,7 +1,7 @@
 export type BatchItemStatus = 'PENDING' | 'RUNNING' | 'AWAITING_CHECKPOINT' | 'SUCCEEDED' | 'FAILED' | 'SKIPPED' | 'CANCELLED';
 export type BatchQueueStatus = 'IDLE' | 'RUNNING' | 'CANCELLING' | 'PAUSED' | 'COMPLETED' | 'CANCELLED';
 export type BatchSkipReason = 'ALREADY_PROCESSED' | 'RESTORED_CHECKPOINT';
-export type BatchCheckpointResolution = 'FINALIZED' | 'RESTORED';
+export type BatchCheckpointResolution = 'FINALIZED' | 'FINALIZED_CONTINUE' | 'RESTORED';
 
 export interface BatchQueueInput {
   frameId: string;
@@ -176,8 +176,10 @@ export function finishRunningBatchItem(state: BatchQueueState, outcome: BatchIte
 
 /**
  * Resolves the one checkpoint-owning frame only after the external P5 checkpoint action succeeded.
- * FINALIZED becomes durable SUCCEEDED. RESTORED becomes a terminal skip and never receives run-key
- * success metadata, preventing restored frames from being incorrectly treated as processed.
+ *
+ * FINALIZED is used only when re-audit confirms the frame is complete and becomes durable SUCCEEDED.
+ * FINALIZED_CONTINUE returns the same frame to PENDING so it can be re-audited for additional Safe Fix
+ * targets; no run-key metadata may be persisted yet. RESTORED becomes a terminal non-success skip.
  */
 export function resolveBatchCheckpoint(
   state: BatchQueueState,
@@ -190,6 +192,9 @@ export function resolveBatchCheckpoint(
     if (index !== awaitingIndex) return item;
     if (resolution === 'FINALIZED') {
       return { ...item, status: 'SUCCEEDED', error: null, skipReason: null };
+    }
+    if (resolution === 'FINALIZED_CONTINUE') {
+      return { ...item, status: 'PENDING', error: null, skipReason: null };
     }
     return {
       ...item,
