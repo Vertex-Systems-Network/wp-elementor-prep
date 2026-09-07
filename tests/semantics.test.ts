@@ -48,6 +48,14 @@ function detection(overrides: Partial<PatternDetection>): PatternDetection {
 }
 
 describe('enrichSemanticHints', () => {
+  it('labels a clipped carousel target as a carousel viewport', () => {
+    const viewport = node({ id: 'viewport', clipsContent: true, geometry: { x: 0, y: 200, width: 1000, height: 320 } });
+    const section = withChildren(node({ id: 'section', geometry: { x: 0, y: 0, width: 1000, height: 900 } }), [viewport]);
+    const result = enrichSemanticHints(section, [detection({ pattern: 'carousel-track', targetNodeId: 'viewport' })]);
+
+    expect(result[0]?.semanticHint).toBe('carousel-viewport');
+  });
+
   it('labels a coherent small grid as repeated cards', () => {
     const grid = node({ id: 'grid', geometry: { x: 0, y: 100, width: 1000, height: 500 } });
     const section = withChildren(node({ id: 'section', geometry: { x: 0, y: 0, width: 1000, height: 900 } }), [grid]);
@@ -103,5 +111,41 @@ describe('enrichSemanticHints', () => {
     const semantic = result[0];
     expect(semantic?.semanticHint).toBe('timeline-chapter');
     expect(semantic?.evidence.semanticRule).toBe('chapter-like-full-width-stack');
+  });
+
+  it('labels a compact repeated text-item stack as a facts list', () => {
+    const facts = Array.from({ length: 5 }, (_, index) => withChildren(
+      node({ id: `fact-${index}`, geometry: { x: 0, y: index * 80, width: 500, height: 60 } }),
+      [text(`fact-${index}-label`), text(`fact-${index}-value`)],
+    ));
+    const stack = withChildren(node({ id: 'facts', geometry: { x: 0, y: 300, width: 500, height: 400 } }), facts);
+    const section = withChildren(node({ id: 'section', geometry: { x: 0, y: 0, width: 1000, height: 1000 } }), [stack]);
+    const result = enrichSemanticHints(section, [detection({
+      pattern: 'vertical-stack',
+      targetNodeId: 'facts',
+      evidence: { itemCount: 5 },
+    })]);
+
+    expect(result[0]?.semanticHint).toBe('facts-list');
+  });
+
+  it('labels lower text columns as footer columns but rejects the same row near the top', () => {
+    const columns = Array.from({ length: 4 }, (_, index) => withChildren(
+      node({ id: `col-${index}`, geometry: { x: index * 250, y: 0, width: 230, height: 260 } }),
+      [text(`col-${index}-text`)],
+    ));
+    const footer = withChildren(node({ id: 'footer', geometry: { x: 0, y: 650, width: 1000, height: 300 } }), columns);
+    const section = withChildren(node({ id: 'section', geometry: { x: 0, y: 0, width: 1000, height: 1000 } }), [footer]);
+    const footerResult = enrichSemanticHints(section, [detection({
+      pattern: 'horizontal-row', targetNodeId: 'footer', evidence: { itemCount: 4 },
+    })]);
+    expect(footerResult[0]?.semanticHint).toBe('footer-columns');
+
+    const topRow = withChildren(node({ id: 'top-row', geometry: { x: 0, y: 100, width: 1000, height: 300 } }), columns);
+    const topSection = withChildren(node({ id: 'top-section', geometry: { x: 0, y: 0, width: 1000, height: 1000 } }), [topRow]);
+    const topResult = enrichSemanticHints(topSection, [detection({
+      pattern: 'horizontal-row', targetNodeId: 'top-row', evidence: { itemCount: 4 },
+    })]);
+    expect(topResult[0]?.semanticHint).not.toBe('footer-columns');
   });
 });
