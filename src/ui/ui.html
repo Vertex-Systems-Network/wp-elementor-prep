@@ -40,10 +40,11 @@
 <body>
   <div class="app">
     <h1>Pella Elementor Prep</h1>
-    <div class="sub">Audit + P3 read-only validator · no design mutations</div>
-    <div id="root" class="empty">Select one Frame to audit, or two Frames to compare original vs candidate.</div>
+    <div class="sub">Audit + P3 validator + P5 read-only Safe Fix preview · mutation disabled</div>
+    <div id="root" class="empty">Select one Frame to audit/preview, or two Frames to compare original vs candidate.</div>
     <div class="actions">
       <button id="audit">Run audit</button>
+      <button id="plan">Preview safe fixes</button>
       <button id="validate">Compare 2 frames</button>
     </div>
   </div>
@@ -52,6 +53,11 @@
     const root = document.getElementById('root');
     document.getElementById('audit').addEventListener('click', () => {
       parent.postMessage({ pluginMessage: { type: 'audit-request' } }, '*');
+    });
+    document.getElementById('plan').addEventListener('click', () => {
+      root.className = 'empty';
+      root.textContent = 'Classifying conservative P5 Safe Fix eligibility…';
+      parent.postMessage({ pluginMessage: { type: 'safe-plan-request' } }, '*');
     });
     document.getElementById('validate').addEventListener('click', () => {
       root.className = 'empty';
@@ -190,6 +196,32 @@
         <div>${sections || '<div class="empty">No sections discovered yet.</div>'}</div>`;
     }
 
+    function renderSafePlan(message) {
+      const counts = { ELIGIBLE: 0, REVIEW: 0, NOOP: 0, UNSUPPORTED: 0 };
+      for (const plan of message.plans) counts[plan.decision] = (counts[plan.decision] || 0) + 1;
+      const rows = message.plans.map((plan) => `
+        <div class="row">
+          <div class="rowHead">
+            <div class="name">${escapeHtml(plan.recipe || plan.pattern)}</div>
+            <div class="badge">${escapeHtml(plan.decision)} · ${plan.confidence}%</div>
+          </div>
+          <div class="recipe">${escapeHtml(plan.semanticHint ? `${plan.semanticHint} ← ${plan.pattern}` : plan.pattern)} @ ${escapeHtml(plan.targetNodeName)}</div>
+          <div class="finding">${escapeHtml(plan.reason)}</div>
+          <details><summary>Plan evidence</summary><pre>${escapeHtml(JSON.stringify(plan, null, 2))}</pre></details>
+        </div>`).join('');
+
+      root.className = '';
+      root.innerHTML = `
+        <div class="hero">
+          <div class="score">${counts.ELIGIBLE}</div>
+          <div class="status">P5 SAFE FIX PREVIEW · READ ONLY</div>
+          <div class="meta">${escapeHtml(message.root.name)} · ${Math.round(message.root.width)} × ${Math.round(message.root.height)}</div>
+          <div class="meta">Eligible ${counts.ELIGIBLE} · Review ${counts.REVIEW} · No-op ${counts.NOOP} · Unsupported ${counts.UNSUPPORTED}</div>
+          <div class="meta">Mutation enabled: ${message.mutationEnabled ? 'YES' : 'NO'}</div>
+        </div>
+        ${rows || '<div class="empty">No supported layout detections were found for this selected Frame.</div>'}`;
+    }
+
     function renderValidation(message) {
       const report = message.report;
       const pixel = report.metrics.pixel;
@@ -232,6 +264,11 @@
 
       if (message.type === 'audit-result') {
         renderAudit(message.report);
+        return;
+      }
+
+      if (message.type === 'safe-plan-result') {
+        renderSafePlan(message);
         return;
       }
 
