@@ -1,11 +1,13 @@
-import type { P7RuntimeEvidenceSnapshot } from '../core/batch-runtime-evidence';
+import type {
+  P7RuntimeBuildIdentity,
+  P7RuntimeEvidenceSnapshot,
+} from '../core/batch-runtime-evidence';
 import type { P7RuntimeClosureExportBundle } from './p7-runtime-evidence-inspector';
 import { assessP7RuntimeAcceptance } from './p7-runtime-acceptance';
 import { assessP7RuntimeClosure } from './p7-runtime-evidence-inspector';
 import {
   isTraceableP7BuildIdentity,
   sameP7BuildIdentity,
-  type P7BuildIdentity,
 } from './p7-build-identity';
 import type { P7StoredRuntimeAcceptanceAssessment } from './p7-runtime-acceptance-loader';
 
@@ -61,7 +63,7 @@ function recomputeRuntime(
 /** Recomputes exported P7 closure and binds it to the exact packaged verifier artifact. */
 export function verifyP7ClosureExportBundle(
   value: unknown,
-  expectedBuild: P7BuildIdentity,
+  expectedBuild: P7RuntimeBuildIdentity,
 ): P7ClosureVerification {
   const failures: string[] = [];
   if (!looksLikeBundle(value)) {
