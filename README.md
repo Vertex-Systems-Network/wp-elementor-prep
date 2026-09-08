@@ -41,18 +41,19 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 ## Latest verified checkpoint — 2026-09-09
 
 - ✅ issue-first sweep confirmed open issues remain exactly #6, #7 and #8; no new actionable product/code defect issue was found.
-- ✅ open PR/MR count was `0` before the development batch and returned to `0` after merge.
+- ✅ open PR/MR count returned to `0` after the latest hardening merges.
 - ✅ issue #6 remains blocked only on real imported-Figma runtime evidence; #7/#8 remain dependency-blocked on P5 merge.
 - ✅ PR #42 previously upgraded the artifact registry/preflight with immutable SHA-256 file pins and merged to `main` at `92a4440`.
 - ✅ PR #43 added `runtime:closure-intake`, combining final-closure preflight, bounded evidence intake, evidence SHA-256 traceability and the exact hash-pinned same-artifact verifier; it merged at `7d9f22b`.
 - ✅ PR #44 hardened closure evidence traceability so SHA-256 is computed from the **exact raw file bytes**, not decoded text.
 - ✅ closure intake performs strict/fatal UTF-8 decoding before JSON parsing; invalid UTF-8 fails closed before verifier execution while the exact on-disk evidence SHA-256 remains reportable.
-- ✅ PR #45 hardens the operator evidence-path boundary: symbolic-link evidence paths now fail closed before evidence read/hash/verifier execution, with regression coverage.
-- ✅ PR #45 head `f2233fb` passed CI #551 with no review/thread blockers.
-- ✅ PR #45 squash-merged to `main` at `8444698`.
-- ✅ post-merge main CI #552 passed README status verification, typecheck, tests, build and local-import safety.
-- ✅ post-merge Integration Readiness #40 passed.
-- ✅ canonical P5/P6/P7 feature heads remained unchanged by the tooling batch.
+- ✅ PR #45 hardens the operator evidence-path boundary: symbolic-link evidence paths fail closed before evidence read/hash/verifier execution.
+- ✅ PR #45 head `f2233fb` passed CI #551, squash-merged at `8444698`, then post-merge CI #552 + Integration Readiness #40 passed.
+- ✅ PR #46 hardens required runtime artifact files: symbolic-link `BUILD_INFO.txt`, manifest, compiled runtime/UI, import helper or verifier paths fail closed before artifact acceptance.
+- ✅ PR #46 head `7fa579e` passed CI #557, squash-merged at `15cc973`, then post-merge CI #558 + Integration Readiness #44 passed.
+- ✅ PR #47 hardens the artifact-root boundary: a symbolic-link artifact directory now fails closed before required-file, identity, hash or manifest checks.
+- ✅ PR #47 head `6a90c11` passed CI #559, squash-merged at `8297b69`, then post-merge CI #560 + Integration Readiness #45 passed.
+- ✅ canonical P5/P6/P7 feature heads and registered runtime artifact bytes remained unchanged by the tooling batches.
 
 ## Phase status
 
@@ -84,8 +85,9 @@ npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
 
 It validates:
 
+- the supplied artifact root is a real directory and not a symbolic link;
+- required `BUILD_INFO.txt`, `code.js`, `ui.html`, manifest, packaged import helper and same-artifact verifier are real regular files and not symbolic links;
 - exact `BUILD_INFO.txt` source/workflow SHA, Actions run ID and run number;
-- required `code.js`, `ui.html`, manifest, packaged import helper and same-artifact verifier;
 - exact SHA-256 for immutable packaged runtime/helper/verifier files;
 - manifest main/UI targets and required developer menu commands;
 - offline-only network policy (`allowedDomains: ["none"]`);
@@ -124,7 +126,7 @@ npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /pa
 
 It requires, in order:
 
-1. final-closure artifact preflight PASS, including immutable SHA-256 pins;
+1. final-closure artifact preflight PASS, including a non-symlink artifact root, non-symlink required files and immutable SHA-256 pins;
 2. an operator-supplied regular, non-symlink, non-empty evidence file no larger than 5 MiB by default;
 3. SHA-256 of the **exact raw evidence file bytes** for forensic traceability;
 4. strict valid UTF-8 decoding with no replacement-character recovery;
@@ -132,7 +134,7 @@ It requires, in order:
 6. execution of the exact hash-pinned verifier shipped inside that artifact;
 7. verifier exit code exactly `0`.
 
-If artifact/evidence stages fail, no verifier process is launched. Symbolic-link evidence paths and invalid UTF-8 are rejected before evidence verification. The verifier is invoked directly with Node and receives the validated evidence text through stdin; no shell command is constructed from operator paths or evidence.
+If artifact/evidence stages fail, no verifier process is launched. Symbolic-link artifact roots/files, symbolic-link evidence paths and invalid UTF-8 are rejected before evidence verification. The verifier is invoked directly with Node and receives the validated evidence text through stdin; no shell command is constructed from operator paths or evidence.
 
 Current P6 #494 / P7 #490 reference builds cannot reach verifier execution through this command because final-closure preflight rejects them first.
 
@@ -171,7 +173,7 @@ npm run integration:readiness
 ### 1. P5 / issue #6
 
 - unpack canonical `figma-plugin-dist-488`;
-- run hash-pinned preflight and require exact identity + `5/5` immutable SHA-256 matches;
+- run preflight on the real non-symlink artifact directory and require all required files to be non-symlink regular files, exact identity + `5/5` immutable SHA-256 matches;
 - rebind manifest locally if needed using the packaged helper;
 - import the exact build into Figma Desktop;
 - run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
@@ -227,6 +229,7 @@ Exit code `0` requires canonical acceptance and exact artifact-build binding. Of
 - candidate-only mutation; Full P3 before P4 commit;
 - rendered-pixel evidence is mandatory where required by runtime acceptance;
 - runtime evidence must be traceable to the exact CI-built artifact loaded in Figma;
+- the supplied artifact root and required artifact files must be real non-symlink filesystem entries before acceptance;
 - immutable runtime/helper/verifier files must match registry SHA-256 pins exactly;
 - manifest-only plugin-ID rebinding is allowed, but compiled code/UI must remain byte-for-byte unchanged;
 - closure intake must accept only a regular non-symlink evidence path, hash exact evidence bytes, reject invalid UTF-8, require a top-level JSON object, and never execute a verifier until final-closure artifact/evidence gates pass;
