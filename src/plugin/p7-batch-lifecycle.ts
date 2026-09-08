@@ -10,6 +10,10 @@ import {
   createFigmaP7RunMetadataStorage,
   type P7RunMetadataStorage,
 } from './p7-run-metadata-storage';
+import {
+  getOrCreateFigmaP7RuntimeEvidenceRecorder,
+  persistCurrentFigmaP7RuntimeEvidenceBestEffort,
+} from './p7-runtime-evidence-session';
 import type { FullP3Validator } from './safe-fix-runtime';
 
 export const P7_SAFE_RECIPE_SCHEMA_VERSION = 1;
@@ -64,19 +68,31 @@ export async function runP7BatchLifecycle(
   return state;
 }
 
-/** Production lifecycle using the canonical P5-backed Figma single-frame processor. */
-export function runFigmaP7BatchLifecycle(
+/**
+ * Production lifecycle using the canonical P5-backed Figma single-frame processor.
+ *
+ * Real Figma runs are automatically observed by a bounded evidence recorder unless a caller injects
+ * one explicitly. The latest snapshot is stored best-effort after each segment; evidence persistence
+ * can never turn an otherwise valid batch result into a failure.
+ */
+export async function runFigmaP7BatchLifecycle(
   initialState: BatchQueueState,
   validateFullP3: FullP3Validator,
   metadata: P7BatchMetadataStore = createFigmaP7RunMetadataStorage(),
   options: P7BatchRuntimeOptions = {},
 ): Promise<BatchQueueState> {
-  return runP7BatchLifecycle(
+  const evidenceRecorder = options.evidenceRecorder
+    ?? getOrCreateFigmaP7RuntimeEvidenceRecorder(initialState);
+  const state = await runP7BatchLifecycle(
     initialState,
     createFigmaP7SingleFrameProcessor(validateFullP3),
     metadata,
-    options,
+    { ...options, evidenceRecorder },
   );
+
+  // Deliberately ignore evidence-storage failure. Runtime evidence is observational only.
+  await persistCurrentFigmaP7RuntimeEvidenceBestEffort(state);
+  return state;
 }
 
 export function createDefaultFigmaP7MetadataStore(maxEntries = 2000): P7RunMetadataStorage {
