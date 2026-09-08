@@ -1,14 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import type { P6RuntimeEvidenceBundle } from '../src/plugin/p6-runtime-evidence';
 import { buildP6RuntimeEvidenceViewerHtml } from '../src/plugin/p6-runtime-evidence-viewer';
+import { P6_TEST_BUILD, P6_TEST_PROOF_PASSED_AT } from './p6-provenance-fixture';
 
 function evidence(overrides: Partial<P6RuntimeEvidenceBundle> = {}): P6RuntimeEvidenceBundle {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     capturedAt: '2026-09-08T01:00:00.000Z',
     pluginVersion: '0.1.0-alpha.1',
+    build: { ...P6_TEST_BUILD },
     p5RuntimeGateVersion: 'p5-runtime-proof-v3',
-    p5RuntimeProofPassedAt: '2026-09-08T00:59:00.000Z',
+    p5RuntimeProofPassedAt: P6_TEST_PROOF_PASSED_AT,
+    p5RuntimeProofBuild: { ...P6_TEST_BUILD },
     frame: { id: 'frame-1', name: 'Desktop Page' },
     outcomeStatus: 'COMPLETED',
     reason: null,
