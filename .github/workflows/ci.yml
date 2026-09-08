@@ -34,18 +34,102 @@ jobs:
           node --input-type=module <<'NODE'
           import { existsSync, readFileSync, statSync } from 'node:fs';
           const manifest = JSON.parse(readFileSync('dist/manifest.json', 'utf8'));
-          const required = [manifest.main, manifest.ui];
+          const required = [manifest.main, manifest.ui, 'verify-p7-closure.mjs'];
           if (manifest.id !== process.env.FIGMA_PLUGIN_ID) throw new Error(`manifest id ${manifest.id} != configured ${process.env.FIGMA_PLUGIN_ID}`);
           for (const file of required) {
-            if (!file || !existsSync(`dist/${file}`) || statSync(`dist/${file}`).size === 0) throw new Error(`missing/empty manifest target: ${file}`);
+            if (!file || !existsSync(`dist/${file}`) || statSync(`dist/${file}`).size === 0) throw new Error(`missing/empty artifact target: ${file}`);
           }
           if (!Array.isArray(manifest.menu) || !manifest.menu.some((item) => item.command === process.env.EXPECTED_DEV_COMMAND)) throw new Error(`missing expected developer command: ${process.env.EXPECTED_DEV_COMMAND}`);
-          const code = readFileSync('dist/code.js', 'utf8');
-          for (const value of [process.env.EXPECTED_SOURCE_SHA, process.env.EXPECTED_RUN_ID, process.env.EXPECTED_RUN_NUMBER]) {
-            if (!value || !code.includes(value)) throw new Error(`compiled bundle missing build provenance value: ${value}`);
+          for (const artifactFile of ['dist/code.js', 'dist/verify-p7-closure.mjs']) {
+            const code = readFileSync(artifactFile, 'utf8');
+            for (const value of [process.env.EXPECTED_SOURCE_SHA, process.env.EXPECTED_RUN_ID, process.env.EXPECTED_RUN_NUMBER]) {
+              if (!value || !code.includes(value)) throw new Error(`${artifactFile} missing build provenance value: ${value}`);
+            }
           }
-          console.log(`Verified Figma bundle + provenance: ${manifest.main}, ${manifest.ui}, ${process.env.EXPECTED_DEV_COMMAND}`);
+          console.log(`Verified Figma bundle + exact-artifact closure verifier provenance.`);
           NODE
+      - name: Verify offline P7 closure CLI
+        env:
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EXPECTED_RUN_ID: ${{ github.run_id }}
+          EXPECTED_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          const build = {
+            sourceSha: process.env.EXPECTED_SOURCE_SHA,
+            runId: process.env.EXPECTED_RUN_ID,
+            runNumber: process.env.EXPECTED_RUN_NUMBER,
+          };
+          const snapshot = (finalStatus, total, cancellation = null) => ({
+            schemaVersion: 1,
+            build: { ...build },
+            runKey: finalStatus === 'COMPLETED' ? 'stress-run' : 'cancel-run',
+            startedAt: '2026-09-08T10:00:00.000Z',
+            elapsedMs: 1000,
+            segmentCount: 1,
+            stateTransitionCount: 2,
+            checkpointPauseCount: 0,
+            totalProcessorMs: 900,
+            maxConcurrentProcessors: 1,
+            attemptEvidenceTruncated: false,
+            attempts: [{
+              sequence: 1,
+              frameIdAtStart: 'frame-1',
+              frameName: 'One',
+              attempt: 1,
+              startedAt: '2026-09-08T10:00:00.100Z',
+              durationMs: 900,
+              outcome: 'SUCCEEDED',
+              committedFrameId: null,
+              error: null,
+              usedJsHeapBytesBefore: null,
+              usedJsHeapBytesAfter: null,
+            }],
+            checkpointEvidenceTruncated: false,
+            checkpointResolutions: [],
+            cancellation,
+            memorySamplingSupported: false,
+            memorySampleCount: 0,
+            observedPeakUsedJsHeapBytesAtSamplePoints: null,
+            finalStatus,
+            finalFinishedCount: total,
+            finalTotalCount: total,
+          });
+          const stress = snapshot('COMPLETED', 60);
+          const cancellation = snapshot('CANCELLED', 2, {
+            requestedAt: '2026-09-08T10:00:00.500Z',
+            activeFrameIdAtRequest: 'frame-1',
+            settledAt: '2026-09-08T10:00:01.000Z',
+            finalStatus: 'CANCELLED',
+          });
+          const bundle = {
+            schemaVersion: 1,
+            accepted: true,
+            failures: [],
+            currentBuild: build,
+            p5Prerequisite: { valid: true, passedAt: '2026-09-08T09:59:59.000Z' },
+            runtimeAcceptance: { accepted: true, failures: [] },
+            stress,
+            cancellation,
+          };
+          writeFileSync('/tmp/p7-pass.json', JSON.stringify(bundle));
+          writeFileSync('/tmp/p7-other-build.json', JSON.stringify({
+            ...bundle,
+            currentBuild: { ...build, runNumber: String(Number(build.runNumber) + 1) },
+          }));
+          NODE
+          node dist/verify-p7-closure.mjs < /tmp/p7-pass.json | grep '"accepted": true'
+          if node dist/verify-p7-closure.mjs < /tmp/p7-other-build.json > /tmp/p7-other.out 2>&1; then
+            echo 'offline verifier unexpectedly accepted different-build closure evidence'
+            exit 1
+          fi
+          grep 'different build than this verifier artifact' /tmp/p7-other.out
+          if printf '{}\n' | node dist/verify-p7-closure.mjs > /tmp/p7-invalid.out 2>&1; then
+            echo 'offline verifier unexpectedly accepted malformed closure evidence'
+            exit 1
+          fi
+          grep '"accepted": false' /tmp/p7-invalid.out
       - name: Verify deterministic local-import preparation
         run: |
           npm run prepare:figma-import -- 123456789012345678 dist dist-local
@@ -78,10 +162,12 @@ jobs:
           After unpacking this artifact, run:
             node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
           Then import dist-local/manifest.json in Figma. The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id.
-          Do not treat CI success or manifest preparation as imported-Figma runtime proof.
+          Exported P7 closure JSON can be independently checked with the verifier from this same artifact:
+            node verify-p7-closure.mjs < p7-closure.json
+          Do not treat CI success, manifest preparation, or offline verification as imported-Figma runtime proof.
           EOF
           else
-            printf 'This build used configured Figma plugin id %s. CI success is not imported-Figma runtime proof; run the compiled self-test in Figma.\n' "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
+            printf 'This build used configured Figma plugin id %s. Exported P7 closure can be checked with node verify-p7-closure.mjs < p7-closure.json. CI success is not imported-Figma runtime proof.\n' "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
           fi
       - name: Upload Figma development build
         uses: actions/upload-artifact@v4
