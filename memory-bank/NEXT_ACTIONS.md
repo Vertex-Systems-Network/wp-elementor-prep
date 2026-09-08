@@ -29,12 +29,16 @@ Execute in this order before starting unrelated new implementation:
 - Open issues: #6, #7, #8.
 - #6 is blocked only on real imported-Figma runtime evidence.
 - #7/#8 require P5 merge before integration/fresh runtime artifacts.
-- Open PR/MR: `0` after PR #45 merge.
-- PR #45 head `f2233fb`: CI #551 PASS with no review/thread blockers.
-- PR #45 squash-merged to `main` at `8444698`.
-- Post-merge CI #552 PASS + Integration Readiness #40 PASS.
+- Open PR/MR: `0` after PR #47 merge.
+- PR #46 head `7fa579e`: CI #557 PASS with no review/thread blockers.
+- PR #46 squash-merged to `main` at `15cc973`.
+- Post-merge CI #558 PASS + Integration Readiness #44 PASS.
+- PR #47 head `6a90c11`: CI #559 PASS with no review/thread blockers.
+- PR #47 squash-merged to `main` at `8297b69`.
+- Post-merge CI #560 PASS + Integration Readiness #45 PASS.
 - Closure evidence SHA-256 remains byte-exact; invalid UTF-8 fails before verifier execution.
-- Operator-supplied closure evidence paths must now be regular non-symlink files; symbolic links fail closed before evidence read/hash/verifier execution.
+- Operator-supplied closure evidence paths must be regular non-symlink files; symbolic links fail closed before evidence read/hash/verifier execution.
+- Runtime artifact preflight now also requires the supplied artifact root and every required artifact file to be non-symlink paths before identity/hash/manifest verification proceeds.
 - Canonical P5/P6/P7 feature heads remain unchanged.
 
 ## P5 — first release gate / issue #6
@@ -47,6 +51,8 @@ npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
 ```
 
 3. Require:
+   - artifact directory is a real non-symlink directory,
+   - required artifact files are regular non-symlink files,
    - preflight PASS,
    - exact source SHA / run ID / run number,
    - `5/5` immutable SHA-256 pins matched.
@@ -91,7 +97,7 @@ Current #494 is reference-only. Both `runtime:preflight` final-closure mode and 
 2. Run full CI.
 3. Produce a fresh exact-build P6 artifact.
 4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require exact identity + immutable pins PASS.
+5. Run preflight and require a non-symlink artifact root, non-symlink required files, exact identity + immutable pins PASS.
 6. Establish exact-build P5 prerequisite in that fresh build.
 7. Run real image-bearing positive calibration and require Full P3 PASS with unchanged image-anchor count.
 8. Run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS.
@@ -108,7 +114,7 @@ Current #490 is reference-only. Both `runtime:preflight` final-closure mode and 
 2. Run full CI.
 3. Produce a fresh exact-build P7 artifact.
 4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require exact identity + immutable pins PASS.
+5. Run preflight and require a non-symlink artifact root, non-symlink required files, exact identity + immutable pins PASS.
 6. Establish exact-build P5 prerequisite.
 7. Run realistic 60+ Frame stress and require `maxConcurrentProcessors === 1`.
 8. Request cancellation during genuinely active long Full P3.
