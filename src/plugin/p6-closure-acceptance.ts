@@ -20,6 +20,7 @@ export interface P6ClosureAcceptanceAssessment {
   refusalAvailable: boolean;
   positiveAccepted: boolean;
   refusalAccepted: boolean;
+  imageBearingPositiveEvidence: boolean;
   currentBuildTraceable: boolean;
   positiveMatchesCurrentBuild: boolean;
   refusalMatchesCurrentBuild: boolean;
@@ -27,6 +28,19 @@ export interface P6ClosureAcceptanceAssessment {
 
 function requireCondition(failures: string[], condition: boolean, message: string): void {
   if (!condition) failures.push(message);
+}
+
+export function isP6ImageBearingPositiveEvidence(evidence: P6RuntimeEvidenceBundle): boolean {
+  const validation = evidence.calibration?.validation;
+  return Boolean(
+    validation
+    && typeof validation.imageAnchorCountBefore === 'number'
+    && Number.isInteger(validation.imageAnchorCountBefore)
+    && validation.imageAnchorCountBefore > 0
+    && typeof validation.imageAnchorCountAfter === 'number'
+    && Number.isInteger(validation.imageAnchorCountAfter)
+    && validation.imageAnchorCountAfter === validation.imageAnchorCountBefore,
+  );
 }
 
 export function assessP6ClosureAcceptance(
@@ -43,6 +57,9 @@ export function assessP6ClosureAcceptance(
   const refusalAssessment = evidence.refusal
     ? assessP6PreservationRefusalAcceptance(evidence.refusal)
     : { accepted: false, failures: ['No retained accepted P6 preservation-refusal evidence is available.'] };
+  const imageBearingPositiveEvidence = Boolean(
+    evidence.positive && isP6ImageBearingPositiveEvidence(evidence.positive),
+  );
   const positiveMatchesCurrentBuild = Boolean(
     evidence.positive
     && currentBuildTraceable
@@ -61,6 +78,7 @@ export function assessP6ClosureAcceptance(
   else if (!positiveAssessment.accepted) failures.push(...positiveAssessment.failures.map((failure) => `Positive evidence: ${failure}`));
   if (!refusalAvailable) failures.push(...refusalAssessment.failures);
   else if (!refusalAssessment.accepted) failures.push(...refusalAssessment.failures.map((failure) => `Refusal evidence: ${failure}`));
+  requireCondition(failures, !positiveAvailable || imageBearingPositiveEvidence, 'Retained P6 positive calibration evidence is not image-bearing or changed the image-anchor count.');
   requireCondition(failures, !positiveAvailable || positiveMatchesCurrentBuild, 'Retained P6 positive calibration evidence was captured by a different plugin build.');
   requireCondition(failures, !refusalAvailable || refusalMatchesCurrentBuild, 'Retained P6 preservation-refusal evidence was captured by a different plugin build.');
 
@@ -71,6 +89,7 @@ export function assessP6ClosureAcceptance(
     refusalAvailable,
     positiveAccepted: positiveAssessment.accepted,
     refusalAccepted: refusalAssessment.accepted,
+    imageBearingPositiveEvidence,
     currentBuildTraceable,
     positiveMatchesCurrentBuild,
     refusalMatchesCurrentBuild,
