@@ -57,7 +57,7 @@ At most one item may be `RUNNING`.
 
 A frame failure settles that item as `FAILED`; remaining pending frames stay available. Batch completion may therefore contain a mixture of succeeded, failed and skipped results.
 
-`p7-batch-runner.ts` owns scheduling only. `p7-single-frame-processor.ts` owns the production adapter into the already-existing P5 proof/planner/transaction seams.
+`batch-runner.ts` owns scheduling only. `p7-single-frame-processor.ts` owns the production adapter into the already-existing P5 proof/planner/transaction seams.
 
 ## Canonical single-frame processor
 
@@ -160,7 +160,7 @@ The checkpoint gate is read-only; it never auto-restores or auto-finalizes.
 
 ## Persistence lifecycle
 
-`p7-batch-lifecycle.ts` now owns the production persistence boundary:
+`p7-batch-lifecycle.ts` owns the production persistence boundary:
 
 - hydrates selected Frame inputs from prior compact finalized metadata
 - creates a compatibility-sensitive run key
@@ -170,7 +170,7 @@ The checkpoint gate is read-only; it never auto-restores or auto-finalizes.
 
 ## Plugin UI/runtime controls
 
-`main.ts` and `ui.html` now expose bounded multi-Frame operation:
+`main.ts` and `ui.html` expose bounded multi-Frame operation:
 
 - start from one or more selected Frames
 - progress percentage and per-frame status
@@ -230,6 +230,12 @@ Additional suites prove:
 - Figma storage read failure does not trigger corrupt replacement writes
 - canonical run keys invalidate on plugin/schema/runtime-proof version changes
 - lifecycle persistence writes only durable successes
+
+## CI evidence
+
+- CI #169: live-node identity propagation + checkpoint regression suite green.
+- CI #180: canonical processor, automatic re-audit decision and lifecycle persistence green.
+- CI #183: actual plugin `main.ts` batch runtime + `ui.html` progress/checkpoint controls green through install, typecheck, tests and production build.
 
 ## Remaining production gates
 
