@@ -1,5 +1,9 @@
 import { detectPatterns } from '../core/classification';
-import { createP5RuntimeProof, isValidP5RuntimeProof } from '../core/p5-runtime-gate';
+import {
+  createP5RuntimeProof,
+  isValidP5RuntimeProof,
+  P5_RUNTIME_PROOF_STORAGE_KEY,
+} from '../core/p5-runtime-gate';
 import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
 import type { SafeRecipeKind } from '../core/safe-recipe-types';
@@ -18,7 +22,6 @@ import {
 declare const __html__: string;
 
 const PLUGIN_VERSION = '0.1.0-alpha.1';
-const RUNTIME_PROOF_STORAGE_KEY = 'pella-elementor-prep:p5-runtime-proof';
 
 type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize';
 let p5OperationInFlight: P5ExclusiveOperation | null = null;
@@ -61,7 +64,7 @@ function selectedFrame(): FrameNode | null {
 }
 
 async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string | null }> {
-  const stored = await figma.clientStorage.getAsync(RUNTIME_PROOF_STORAGE_KEY);
+  const stored = await figma.clientStorage.getAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
   if (!isValidP5RuntimeProof(stored)) return { valid: false, passedAt: null };
   return { valid: true, passedAt: stored.passedAt };
 }
@@ -161,9 +164,9 @@ async function runRuntimeSelfTest(): Promise<void> {
     });
 
     if (result.passed) {
-      await figma.clientStorage.setAsync(RUNTIME_PROOF_STORAGE_KEY, createP5RuntimeProof());
+      await figma.clientStorage.setAsync(P5_RUNTIME_PROOF_STORAGE_KEY, createP5RuntimeProof());
     } else {
-      await figma.clientStorage.deleteAsync(RUNTIME_PROOF_STORAGE_KEY);
+      await figma.clientStorage.deleteAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
     }
 
     const proof = await runtimeProofState();
@@ -175,7 +178,7 @@ async function runRuntimeSelfTest(): Promise<void> {
     });
     figma.notify(result.passed ? 'P5 compiled runtime self-test passed. Safe Fix gate unlocked.' : 'P5 compiled runtime self-test failed.');
   } catch (error) {
-    await figma.clientStorage.deleteAsync(RUNTIME_PROOF_STORAGE_KEY);
+    await figma.clientStorage.deleteAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
     const message = error instanceof Error ? error.message : String(error);
     postError(`P5 runtime self-test failed: ${message}`, 'validation-error');
   } finally {
