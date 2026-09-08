@@ -60,9 +60,9 @@ describe('P5 offline runtime evidence verifier', () => {
     expect(verifyP5RuntimeEvidence(passingBundle())).toEqual({ accepted: true, failures: [] });
   });
 
-  it('rejects a tampered stored acceptance verdict', () => {
+  it('rejects a structurally valid but semantically tampered stored acceptance verdict', () => {
     const bundle = passingBundle();
-    bundle.acceptance = { accepted: false, failures: ['manually edited'] };
+    bundle.acceptance = { accepted: true, failures: ['manually edited'] };
     const result = verifyP5RuntimeEvidence(bundle);
     expect(result.accepted).toBe(false);
     expect(result.failures).toContain('Stored acceptance verdict does not match the canonical recomputed assessment.');
