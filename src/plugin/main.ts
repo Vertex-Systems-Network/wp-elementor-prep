@@ -20,6 +20,9 @@ import {
   persistP5RuntimeEvidenceBestEffort,
 } from './p5-runtime-evidence-storage';
 import { buildP5RuntimeEvidenceViewerHtml } from './p5-runtime-evidence-viewer';
+import { inspectP6ClosureEvidence } from './p6-closure-inspector';
+import { persistP6ClosureEvidenceBestEffort } from './p6-closure-evidence-storage';
+import { buildP6ClosureViewerHtml } from './p6-closure-viewer';
 import { runP6DeveloperPageFlowCalibration } from './p6-developer-calibration';
 import { buildP6DeveloperEvidenceView } from './p6-developer-evidence-view';
 import {
@@ -243,6 +246,15 @@ async function runRuntimeEvidenceViewer(): Promise<void> {
   });
 }
 
+async function runP6ClosureEvidenceViewer(): Promise<void> {
+  const inspection = await inspectP6ClosureEvidence(figma.clientStorage, RUNTIME_BUILD);
+  figma.showUI(buildP6ClosureViewerHtml(inspection), {
+    width: 520,
+    height: 720,
+    themeColors: true,
+  });
+}
+
 async function runP6PageFlowDeveloperCalibration(): Promise<void> {
   const selected = selectedFrame();
   if (!selected) {
@@ -279,12 +291,14 @@ async function runP6PageFlowDeveloperCalibration(): Promise<void> {
       frame: selected,
       outcome,
     });
+    const closureEvidencePersisted = await persistP6ClosureEvidenceBestEffort(figma.clientStorage, evidenceView);
 
     figma.ui.postMessage({
       type: 'p6-page-flow-calibration-result',
       outcome,
       evidenceKind: evidenceView.kind,
       evidence: evidenceView.evidence,
+      closureEvidencePersisted,
       runtimeBuild: { ...RUNTIME_BUILD },
     });
 
@@ -299,7 +313,9 @@ async function runP6PageFlowDeveloperCalibration(): Promise<void> {
       return;
     }
     if (outcome.status === 'NO_CANDIDATE') {
-      figma.notify('P6 clone calibration did not run; preservation/refusal evidence is open for review.');
+      figma.notify(closureEvidencePersisted
+        ? 'P6 preservation/refusal acceptance passed and was retained for closure review.'
+        : 'P6 clone calibration did not run; preservation/refusal evidence is open for review.');
       return;
     }
 
@@ -314,7 +330,9 @@ async function runP6PageFlowDeveloperCalibration(): Promise<void> {
     }
 
     if (result.status === 'PASSED') {
-      figma.notify('P6 page-flow clone calibration passed Full P3; candidate was discarded.');
+      figma.notify(closureEvidencePersisted
+        ? 'P6 page-flow clone calibration passed Full P3; accepted evidence retained for closure review.'
+        : 'P6 page-flow clone calibration passed Full P3; candidate was discarded.');
     } else if (result.status === 'REJECTED') {
       figma.notify('P6 page-flow clone calibration was rejected by Full P3; candidate was discarded.');
     } else {
@@ -482,6 +500,11 @@ figma.ui.onmessage = async (message: unknown) => {
     return;
   }
 
+  if (type === 'p6-runtime-evidence-request') {
+    await runP6ClosureEvidenceViewer();
+    return;
+  }
+
   if (type === 'validation-pixel-result') {
     const payload = message as {
       validationId?: unknown;
@@ -519,6 +542,8 @@ if (figma.command === 'p5-runtime-self-test') {
   void runRuntimeEvidenceViewer();
 } else if (figma.command === 'p6-page-flow-calibration') {
   void runP6PageFlowDeveloperCalibration();
+} else if (figma.command === 'p6-runtime-evidence') {
+  void runP6ClosureEvidenceViewer();
 } else if (figma.currentPage.selection.length === 1) {
   runAudit();
 }
