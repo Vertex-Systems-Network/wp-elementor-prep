@@ -1,3 +1,4 @@
+import type { P5RuntimeBuildIdentity } from '../core/p5-runtime-gate';
 import type { P6DeveloperCalibrationOutcome } from './p6-developer-calibration';
 import {
   buildP6PreservationRefusalEvidenceBundle,
@@ -22,14 +23,11 @@ export type P6DeveloperEvidenceView =
     html: string;
   };
 
-/**
- * Produces the correct read-only evidence surface for a real P6 developer run.
- * NO_CANDIDATE keeps the full bounded decision set so preservation refusal can be reviewed;
- * COMPLETED/BLOCKED use the existing calibration evidence surface.
- */
 export function buildP6DeveloperEvidenceView(input: {
   pluginVersion: string;
+  build: P5RuntimeBuildIdentity;
   p5RuntimeProofPassedAt: string | null;
+  p5RuntimeProofBuild: P5RuntimeBuildIdentity | null;
   frame: Pick<FrameNode, 'id' | 'name'>;
   outcome: P6DeveloperCalibrationOutcome;
   capturedAt?: string;
