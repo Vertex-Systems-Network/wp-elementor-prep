@@ -31,6 +31,7 @@ export interface P6PreservationRefusalEvidenceBundle {
   build: P5RuntimeBuildIdentity;
   p5RuntimeGateVersion: string;
   p5RuntimeProofPassedAt: string | null;
+  p5RuntimeProofBuild: P5RuntimeBuildIdentity | null;
   frame: { id: string; name: string };
   outcomeStatus: P6DeveloperCalibrationOutcome['status'];
   reason: string | null;
@@ -57,15 +58,11 @@ function summarizePlan(plan: AdvancedRecipePlan): P6RefusalPlanSummary {
   };
 }
 
-/**
- * Captures a bounded, serializable NO_CANDIDATE plan set from the real imported P6 developer flow.
- * The bundle deliberately excludes AuditNode trees, PNG bytes and candidate objects. It is intended
- * to prove that preservation-sensitive pages were refused rather than silently normalized.
- */
 export function buildP6PreservationRefusalEvidenceBundle(input: {
   pluginVersion: string;
   build: P5RuntimeBuildIdentity;
   p5RuntimeProofPassedAt: string | null;
+  p5RuntimeProofBuild: P5RuntimeBuildIdentity | null;
   frame: Pick<FrameNode, 'id' | 'name'>;
   outcome: P6DeveloperCalibrationOutcome;
   capturedAt?: string;
@@ -82,6 +79,7 @@ export function buildP6PreservationRefusalEvidenceBundle(input: {
     build: { ...input.build },
     p5RuntimeGateVersion: P5_RUNTIME_GATE_VERSION,
     p5RuntimeProofPassedAt: input.p5RuntimeProofPassedAt,
+    p5RuntimeProofBuild: input.p5RuntimeProofBuild ? { ...input.p5RuntimeProofBuild } : null,
     frame: { id: input.frame.id, name: input.frame.name },
     outcomeStatus: input.outcome.status,
     reason: input.outcome.status === 'COMPLETED' ? null : input.outcome.reason,
