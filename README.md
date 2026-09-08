@@ -19,46 +19,46 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 | P2 | Deterministic classification + semantic roles | ✅ Complete |
 | P3 | Geometry/content/image/rendered-pixel validator | ✅ Complete |
 | P4 | Candidate transaction + rollback/checkpoint | ✅ Complete |
-| P5 | Conservative high-confidence Safe Fix recipes | 🟡 Engineering + closure-evidence tooling complete; imported-Figma runtime acceptance pending (#6) |
-| P6 | Advanced structures + clone-only calibration | 🟡 Engineering + prerequisite/closure evidence tooling complete; real-Figma acceptance pending (#7) |
-| P7 | Sequential 60+ frame batch queue | 🟡 Engineering + exact-build single-verdict closure tooling complete; real-Figma stress/cancellation acceptance pending (#8) |
+| P5 | Conservative high-confidence Safe Fix recipes | 🟡 Engineering + exact-build closure evidence complete; imported-Figma runtime acceptance pending (#6) |
+| P6 | Advanced structures + clone-only calibration | 🟡 Engineering + exact-build single-verdict closure tooling complete; real-Figma acceptance pending (#7) |
+| P7 | Sequential 60+ frame batch queue | 🟡 Engineering + exact-build fail-fast/single-verdict closure tooling complete; real-Figma stress/cancellation acceptance pending (#8) |
 | P8 | Optional Elementor exporter adapters | ⏸ Deferred / issue #9 closed as not planned for current phase |
 
 ## Canonical development branches
 
 | Track | Branch | Last verified functional head | CI |
 |---|---|---|---|
-| P5 | `feat/p5-safe-recipes` | `a59485e` | ✅ #320 |
-| P6 | `feat/p6-advanced-structures` | `35a8b01` | ✅ #330 |
-| P7 | `feat/p7-batch-queue-core` | `d005356` | ✅ #398 |
+| P5 | `feat/p5-safe-recipes` | `85c4783` | ✅ #353 |
+| P6 | `feat/p6-advanced-structures` | `fcba813` | ✅ #421 |
+| P7 | `feat/p7-batch-queue-core` | `e8f9200` | ✅ #424 |
 
-README/docs-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity pipeline was explicitly verified.
+README/docs-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity/provenance pipeline was explicitly verified.
 
 ## Latest development batch — 2026-09-08
 
 - ✅ 0 open PR/MRs; canonical branches remain the direct development source of truth
 - ✅ direct-push CI verifies canonical branch development without PR churn
-- ✅ canonical P5 proof minting is deterministic and closure evidence is bounded, persisted, reopenable and copyable
-- ✅ P6 embeds the same P5 prerequisite/closure-evidence contract, allowing P5 proof + P6 clone calibration in one imported build
+- ✅ P5 runtime proof/evidence is bound to the exact compiled CI artifact; stale/local/untraceable proof fails closed
+- ✅ P5 latest verified artifact: `figma-plugin-dist-353`
+- ✅ P6 embeds the same exact-build P5 prerequisite proof/evidence contract in one imported P6 artifact
+- ✅ P6 positive clone-calibration + preservation-refusal closure requires current-build evidence, zero cleanup risk and a real image-bearing Full P3 path
+- ✅ P6 latest verified artifact: `figma-plugin-dist-421`
 - ✅ P7 retains qualifying 60+ completed stress and active-frame cancellation evidence in separate bounded slots
-- ✅ P7 stress and cancellation scenarios must originate from the same traceable CI-built plugin bundle
-- ✅ compiled P7 evidence is stamped with Git source SHA, GitHub Actions run ID and run number; local/legacy/untraceable evidence cannot satisfy runtime acceptance
-- ✅ embedded P7 P5 self-test mints/revokes core proof only through the deterministic P5 acceptance assessor
-- ✅ exact-build P5 receipt binds the deterministic P5 proof timestamp + gate version to the current compiled P7 source SHA / Actions run ID / run number
-- ✅ every production P7 frame processor independently validates the exact-build P5 receipt before planning or mutation
-- ✅ P7 durable-success run keys include the compiled source SHA; newer source builds automatically re-audit older finalized results
+- ✅ P7 stress/cancellation acceptance requires the same traceable CI-built plugin bundle
+- ✅ compiled P7 evidence is stamped with source SHA, GitHub Actions run ID and run number
+- ✅ deterministic P5 proof is paired with an exact-build P7 receipt bound to source SHA/run identity
+- ✅ **all P5/P7 mutation entrypoints now fail fast on the exact-build receipt**: Safe Fix preview/apply and P7 batch start refuse before mutation when the receipt is missing, stale, from another artifact or untraceable
+- ✅ every P7 frame processor still re-checks the exact-build prerequisite independently before planning/mutation, preserving defense-in-depth
+- ✅ P7 production queue preparation defaults to the compiled `P7_BUILD_IDENTITY`; durable run keys include source SHA and newer builds automatically re-audit older finalized results
 - ✅ local/untraceable production builds cannot unlock P7 mutation and do not trust durable skip metadata
-- ✅ **`Developer: P7 Runtime Evidence` now computes one final `Closure acceptance: PASS/FAIL` verdict**
-- ✅ closure PASS requires all of: current plugin build traceable, deterministic P5 proof bound to that exact build, runtime stress acceptance PASS, runtime cancellation acceptance PASS, and both retained scenarios captured by the current build
-- ✅ retained stress/cancellation evidence from an older artifact can remain inspectable but cannot satisfy the current artifact's closure verdict
-- ✅ viewer surfaces P5 exact-build prerequisite status, current-build traceability, runtime-evidence/current-build match, exact closure failures and a copyable closure bundle
-- ✅ previous runtime-acceptance bundle and latest raw bounded JSON remain available for backward-compatible inspection
-- ✅ closure inspector is read-only and cannot create, mutate or clear runtime/proof state
-- ✅ tests cover true closure PASS, missing P5 prerequisite FAIL, old-build retained-evidence FAIL and HTML-safe closure rendering
-- ✅ P7 CI #398 passed install, typecheck, all tests, build, compiled-bundle integrity/provenance verification and artifact upload
-- ✅ verified P7 artifact: `figma-plugin-dist-398`
-- ✅ artifact digest: `sha256:74758a8265a1fef877da8dcdc2895fa7399ee6f27940ba8e48131e56fdb058b4`
-- ✅ latest verified functional CI green: P5 #320, P6 #330, P7 #398
+- ✅ `Developer: P7 Runtime Evidence` computes one final **`Closure acceptance: PASS/FAIL`** verdict
+- ✅ closure PASS requires current build traceability + exact-build P5 prerequisite + qualifying stress/cancellation evidence from the current exact build
+- ✅ old-build retained evidence remains inspectable but cannot satisfy current-build closure
+- ✅ viewer exports one closure bundle while retaining backward-compatible runtime/raw JSON inspection
+- ✅ P7 CI #424 passed install, typecheck, all tests, build, compiled-bundle integrity/provenance verification and artifact upload
+- ✅ verified P7 artifact: `figma-plugin-dist-424`
+- ✅ P7 artifact digest: `sha256:65d4d794e6a002e7f87cba9bf2f1f4c5270d460b0f21b435ef56e62db18ae9c5`
+- ✅ latest verified functional CI green: P5 #353, P6 #421, P7 #424
 
 ## Remaining real-runtime acceptance
 
@@ -66,40 +66,42 @@ The remaining open issues are intentionally limited to evidence that GitHub CI c
 
 ### P5 — issue #6
 
-- [ ] import the canonical development artifact in Figma desktop
+- [ ] import `figma-plugin-dist-353` (or newer verified P5 artifact) in Figma desktop
+- [ ] confirm viewer build SHA/run identity matches the imported artifact
 - [ ] run `Developer: P5 Runtime Self-Test`
 - [ ] require `P5 Compiled Runtime Acceptance: PASS`
-- [ ] verify rendered-pixel forced reject, commit -> restore and commit -> finalize paths
+- [ ] verify real rendered-pixel forced reject, commit -> restore and commit -> finalize paths
 - [ ] require checkpoint cleanup and `0` leftovers
-- [ ] copy/reopen the persisted bounded P5 acceptance JSON
+- [ ] confirm stale proof from another artifact cannot unlock this build
+- [ ] copy/reopen the persisted provenance-bound P5 acceptance JSON
 
-Production Safe Fix mutation stays locked until this proof passes.
+Production Safe Fix mutation stays locked until this exact-build proof passes.
 
 ### P6 — issue #7
 
-- [ ] in the same imported P6 build, run P5 runtime self-test and require persisted P5 Acceptance PASS
-- [ ] optionally reopen prerequisite evidence with `Developer: P5 Runtime Evidence`
-- [ ] run disposable page-flow clone calibration and require positive Acceptance PASS
-- [ ] collect image-bearing real-template calibration evidence
+- [ ] import `figma-plugin-dist-421` (or newer verified P6 artifact)
+- [ ] in that same build run P5 runtime self-test and require exact-build P5 Acceptance PASS
+- [ ] run P6 page-flow calibration on a real image-bearing page and require positive Acceptance PASS
+- [ ] require retained positive evidence to show `imageAnchorCountBefore > 0` and unchanged image-anchor count after Full P3
 - [ ] verify pass/reject/failure cleanup with `0` leftovers
 - [ ] run the same developer command on a preservation-sensitive real page that yields `NO_CANDIDATE`
-- [ ] require `Preservation refusal acceptance: PASS`
-- [ ] export refusal evidence containing the explicit `PRESERVE` plan and preserve-node IDs
+- [ ] require preservation-refusal Acceptance PASS
+- [ ] open `Developer: P6 Runtime Evidence` and require **`P6 Closure acceptance: PASS`**
+- [ ] copy/export the combined P6 closure bundle for review/issue closure
 
 P6 production advanced mutation remains intentionally disabled.
 
 ### P7 — issue #8
 
-- [ ] import `figma-plugin-dist-398` (or a newer verified canonical P7 artifact) and keep that exact build loaded for all P7 acceptance observations
-- [ ] in that build run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`
-- [ ] require the P5 proof receipt to be bound to that exact compiled P7 build identity
+- [ ] import `figma-plugin-dist-424` (or newer verified canonical P7 artifact) and keep that exact build loaded for all P7 acceptance observations
+- [ ] in that build run `Developer: P5 Runtime Self-Test` and require exact-build P5 prerequisite PASS
+- [ ] verify Safe Fix preview/apply and batch start show the exact-build prerequisite as valid before any mutation starts
 - [ ] execute realistic 60+ frame imported-Figma batch run
 - [ ] retain completed stress evidence with `finalTotalCount >= 60`, all frames terminal and max processor concurrency `1`
-- [ ] record actual elapsed/runtime data and truthful memory availability/sample points
 - [ ] request cancellation during a genuinely long active Full P3 operation
-- [ ] retain settled active-frame cancellation evidence with a matching recorded processor attempt
+- [ ] retain settled active-frame cancellation evidence with a matching processor attempt
 - [ ] open `Developer: P7 Runtime Evidence` and require **`Closure acceptance: PASS`**
-- [ ] copy/export the closure bundle, which includes current build identity, P5 prerequisite state, runtime acceptance and both retained scenarios
+- [ ] copy/export the closure bundle for review/closure evidence
 
 ## Safety invariants
 
@@ -109,12 +111,14 @@ P6 production advanced mutation remains intentionally disabled.
 - Full P3 validation is mandatory before P4 commit.
 - Rendered-pixel evidence is part of production validation.
 - Only one unresolved restore/finalize checkpoint may exist.
+- Runtime proof/evidence must be traceable to the exact CI-built plugin currently loaded.
+- P6 advanced calibration is clone-only and has no production commit seam.
+- Final P6 closure requires exact-build positive + preservation-refusal evidence, with the positive scenario proving a stable image-bearing validation path.
+- P7 mutation entrypoints and each individual frame processor independently require the exact-build P5/P7 prerequisite receipt.
 - Batch processing is strictly sequential: max one processor at a time.
 - Cancellation is cooperative and cannot silently bypass an in-flight transaction/checkpoint.
-- Runtime acceptance evidence must be traceable to the exact CI-built plugin used to collect it.
-- P7 mutation requires a deterministic P5 proof receipt bound to the exact compiled CI build.
 - Durable batch skip metadata is build-source-sensitive and never trusted by an untraceable production build.
-- Final P7 closure acceptance requires P5 prerequisite + stress + cancellation evidence from the current exact build.
+- Final P7 closure requires current-build P5 prerequisite + stress + cancellation evidence.
 - Unsupported or ambiguous constructs are reported/refused, never guessed.
 - No external AI/network dependency in the deterministic core runtime.
 
