@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, feat/p7-batch-queue-core]
 
 jobs:
   verify:
