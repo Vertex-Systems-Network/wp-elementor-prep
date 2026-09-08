@@ -45,6 +45,24 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 - ✅ a single operator checklist now lives at `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md` for P5 → P6 → P7 imported-runtime closure without synthetic substitutions.
 - ✅ 0 open feature PR/MRs; real imported-Figma observations remain the only blockers for #6/#7/#8.
 
+## Repository audit checkpoint — 2026-09-08
+
+- ✅ `main` head `2ed66a9` passed CI #497 before this status-only update.
+- ✅ canonical feature heads still match the verified heads above; their latest CI runs are green.
+- ✅ open PR/MR count was audited at `0`; there is no pending merge candidate to merge.
+- ✅ open issues are limited to #6, #7 and #8; their remaining acceptance gates require real imported-Figma runtime observations rather than more synthetic CI evidence.
+- ✅ no failed canonical workflow or additional code-side blocker was identified in this repository audit.
+- ⚠️ feature branches intentionally remain unmerged because P5/P6/P7 production safety depends on exact-build runtime proof. Do not merge them merely because CI is green.
+- ⚠️ branch-local README / `memory-bank/NEXT_ACTIONS.md` snapshots may lag the canonical artifact numbers. Avoid docs-only commits to those exact-build branches unless necessary, because any commit changes the source SHA and therefore creates a new runtime-proof build identity.
+
+### Planned merge order after runtime acceptance
+
+1. P5: collect imported-Figma P5 proof, require same-artifact verifier exit `0`, then create/review/merge the P5 branch and close #6.
+2. P6: rebase/retarget after P5, collect positive + preservation-refusal real-Figma closure, verify with the same artifact, then merge and close #7.
+3. P7: rebase/retarget after P5, collect 60+ Frame stress + active Full P3 cancellation closure, verify with the same artifact, then merge and close #8.
+
+Until those observations exist, keeping the exact verified feature heads unchanged is safer than generating fresh artifacts for documentation-only churn.
+
 ## Self-contained Figma artifact import
 
 If an artifact uses placeholder plugin ID `000000000000000000`, unpack it and run:
