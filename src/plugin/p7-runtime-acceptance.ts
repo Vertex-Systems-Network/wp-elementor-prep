@@ -66,15 +66,15 @@ export function assessP7RuntimeAcceptance(
 ): P7RuntimeAcceptanceAssessment {
   const failures: string[] = [];
   const { stress, cancellation } = evidence;
-  const stressBuildValid = isTraceableBuild(stress.build);
-  const cancellationBuildValid = isTraceableBuild(cancellation.build);
+  const stressBuild = stress.build;
+  const cancellationBuild = cancellation.build;
 
-  requireCondition(failures, stressBuildValid, 'P7 stress evidence is not bound to a traceable CI build.');
-  requireCondition(failures, cancellationBuildValid, 'P7 cancellation evidence is not bound to a traceable CI build.');
-  if (stressBuildValid && cancellationBuildValid) {
+  requireCondition(failures, isTraceableBuild(stressBuild), 'P7 stress evidence is not bound to a traceable CI build.');
+  requireCondition(failures, isTraceableBuild(cancellationBuild), 'P7 cancellation evidence is not bound to a traceable CI build.');
+  if (isTraceableBuild(stressBuild) && isTraceableBuild(cancellationBuild)) {
     requireCondition(
       failures,
-      sameBuild(stress.build, cancellation.build),
+      sameBuild(stressBuild, cancellationBuild),
       'P7 stress and cancellation evidence were captured by different plugin builds.',
     );
   }
