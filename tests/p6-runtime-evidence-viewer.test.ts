@@ -40,20 +40,21 @@ function evidence(overrides: Partial<P6RuntimeEvidenceBundle> = {}): P6RuntimeEv
         maxTextPositionDriftPx: 0.1,
         maxImagePositionDriftPx: 0.1,
       },
-      events: [{ stage: 'DONE' }],
+      events: [{ stage: 'DISCARD' }, { stage: 'DONE' }],
     },
     ...overrides,
   };
 }
 
 describe('P6 runtime evidence viewer', () => {
-  it('renders bounded calibration facts and copyable JSON', () => {
+  it('renders bounded calibration facts, deterministic acceptance, and copyable JSON', () => {
     const html = buildP6RuntimeEvidenceViewerHtml(evidence());
     expect(html).toContain('P6 Clone Calibration Evidence');
+    expect(html).toContain('Acceptance PASS');
     expect(html).toContain('page-vertical-flow');
     expect(html).toContain('Copy bounded JSON');
     expect(html).toContain('p5-runtime-proof-v3');
-    expect(html).toContain('PASS');
+    expect(html).toContain('positive page-flow calibration only');
   });
 
   it('escapes evidence-controlled HTML before rendering', () => {
@@ -66,7 +67,7 @@ describe('P6 runtime evidence viewer', () => {
     expect(html).toContain('&lt;unsafe&gt;');
   });
 
-  it('surfaces cleanup risk without changing commit-impossible evidence', () => {
+  it('surfaces cleanup risk and acceptance failure without changing commit-impossible evidence', () => {
     const html = buildP6RuntimeEvidenceViewerHtml(evidence({
       calibration: {
         ...evidence().calibration!,
@@ -77,7 +78,9 @@ describe('P6 runtime evidence viewer', () => {
         productionCommitAttempted: false,
       },
     }));
+    expect(html).toContain('Acceptance FAIL');
     expect(html).toContain('Candidate cleanup risk is present');
+    expect(html).toContain('Acceptance: P6 calibration status is FAILED, not PASSED.');
     expect(html).toContain('false');
   });
 });
