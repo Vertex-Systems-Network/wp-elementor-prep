@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "tracks": {
+    "p5": {
+      "branch": "feat/p5-safe-recipes",
+      "issue": 6,
+      "sourceSha": "810d98d6e09cb4cf3fe4758fcb07e87734254a8e",
+      "runId": "34242984963",
+      "runNumber": "488",
+      "artifactName": "figma-plugin-dist-488",
+      "digest": "sha256:9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09",
+      "verifier": "verify-p5-evidence.mjs",
+      "requiredMenuCommands": ["p5-runtime-self-test", "p5-runtime-evidence"],
+      "finalClosureEligible": true,
+      "closureNote": "Canonical exact build for issue #6 real imported-Figma acceptance."
+    },
+    "p6": {
+      "branch": "feat/p6-advanced-structures",
+      "issue": 7,
+      "sourceSha": "9a6ae3b29e2f70ebbd987a686856c2957f590b75",
+      "runId": "34244113623",
+      "runNumber": "494",
+      "artifactName": "figma-plugin-dist-494",
+      "digest": "sha256:82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3",
+      "verifier": "verify-p6-closure.mjs",
+      "requiredMenuCommands": ["p5-runtime-self-test", "p6-page-flow-calibration", "p6-runtime-evidence"],
+      "finalClosureEligible": false,
+      "closureNote": "Reference engineering build only. Final P6 closure requires P5 merge, conflict resolution and a fresh exact-build artifact."
+    },
+    "p7": {
+      "branch": "feat/p7-batch-queue-core",
+      "issue": 8,
+      "sourceSha": "cbfdb66db531da8613582c84523265e42dad63a2",
+      "runId": "34243303097",
+      "runNumber": "490",
+      "artifactName": "figma-plugin-dist-490",
+      "digest": "sha256:c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43",
+      "verifier": "verify-p7-closure.mjs",
+      "requiredMenuCommands": ["p5-runtime-self-test", "p7-runtime-evidence"],
+      "finalClosureEligible": false,
+      "closureNote": "Reference engineering build only. Final P7 closure requires P5 merge, conflict resolution and a fresh exact-build artifact."
+    }
+  }
+}
