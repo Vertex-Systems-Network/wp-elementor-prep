@@ -269,10 +269,9 @@ export class P7RuntimeEvidenceRecorder {
     after: BatchQueueState,
   ): void {
     this.checkpointSequence += 1;
-    const beforeItem = before.items.find((item) => item.status === 'AWAITING_CHECKPOINT') ?? null;
-    const afterItem = beforeItem
-      ? after.items.find((item) => item.frameName === beforeItem.frameName) ?? null
-      : null;
+    const beforeIndex = before.items.findIndex((item) => item.status === 'AWAITING_CHECKPOINT');
+    const beforeItem = beforeIndex >= 0 ? before.items[beforeIndex] ?? null : null;
+    const afterItem = beforeIndex >= 0 ? after.items[beforeIndex] ?? null : null;
     const record: P7RuntimeCheckpointEvidence = {
       sequence: this.checkpointSequence,
       at: this.clock.nowIso(),
