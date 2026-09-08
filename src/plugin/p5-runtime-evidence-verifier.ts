@@ -1,5 +1,6 @@
 import {
   isTraceableP5RuntimeBuildIdentity,
+  isValidP5RuntimeProof,
   P5_RUNTIME_GATE_VERSION,
   sameP5RuntimeBuildIdentity,
   type P5RuntimeBuildIdentity,
@@ -48,7 +49,8 @@ export function verifyP5RuntimeEvidence(
       failures.push('Evidence was captured by a different build than this offline verifier artifact.');
     }
   }
-  if (!validIsoTimestamp(value.capturedAt)) failures.push('Evidence capturedAt is not a valid timestamp.');
+  const capturedAtValid = validIsoTimestamp(value.capturedAt);
+  if (!capturedAtValid) failures.push('Evidence capturedAt is not a valid timestamp.');
   if (!value.pluginVersion) failures.push('Evidence pluginVersion is empty.');
 
   const recomputed = assessP5RuntimeAcceptance(value.calibration);
@@ -64,6 +66,20 @@ export function verifyP5RuntimeEvidence(
   if (recomputed.accepted) {
     if (value.runtimeProofPassedAt === null || !validIsoTimestamp(value.runtimeProofPassedAt)) {
       failures.push('Accepted evidence has no valid runtime proof timestamp.');
+    } else {
+      const reconstructedProof = {
+        schemaVersion: 1 as const,
+        gateVersion: value.runtimeGateVersion,
+        passedAt: value.runtimeProofPassedAt,
+        build: { ...value.build },
+      };
+      const proofExpectedBuild = expectedBuild ?? value.build;
+      if (!isValidP5RuntimeProof(reconstructedProof, proofExpectedBuild)) {
+        failures.push('Accepted evidence does not reconstruct a valid exact-build P5 runtime proof.');
+      }
+      if (capturedAtValid && Date.parse(value.runtimeProofPassedAt) > Date.parse(value.capturedAt)) {
+        failures.push('Runtime proof timestamp is later than evidence capture timestamp.');
+      }
     }
   } else if (value.runtimeProofPassedAt !== null) {
     failures.push('Rejected evidence must not retain a runtime proof timestamp.');
