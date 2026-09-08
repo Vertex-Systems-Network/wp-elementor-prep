@@ -28,7 +28,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 | P6 | `feat/p6-advanced-structures` | `9a6ae3b` | ✅ #494 · `figma-plugin-dist-494` | `sha256:82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3` |
 | P7 | `feat/p7-batch-queue-core` | `cbfdb66` | ✅ #490 · `figma-plugin-dist-490` | `sha256:c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43` |
 
-> P6 #494 and P7 #490 remain verified engineering/reference artifacts. The final P6/P7 closure artifacts must be rebuilt after P5 lands because integration probes proved those branches require post-P5 conflict resolution.
+> P6 #494 and P7 #490 remain verified engineering/reference artifacts. The final P6/P7 closure artifacts must be rebuilt after P5 lands because integration checks prove those branches require post-P5 conflict resolution.
 
 ## Latest verified development batch — 2026-09-08
 
@@ -44,28 +44,29 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 - ✅ all three canonical tracks provide same-artifact offline verification plus deterministic `prepare-figma-import.mjs` manifest rebinding.
 - ✅ `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md` is the operator checklist for runtime closure and follows the verified dependency order.
 - ✅ non-mutating integration readiness automation classifies P5→main, P6→P5 and P7→P5 merge state without changing exact-build feature refs.
-- ✅ `main` now ships a self-contained local Figma import helper and package command; CI verifies compiled `code.js` / `ui.html` stay byte-for-byte unchanged after manifest ID rebinding.
-- ✅ local-import preparation now fails closed when source/output paths are equal or nested, preventing destructive source deletion or recursive copy behavior.
-- ✅ GitHub Actions were upgraded to current Node-24-based `checkout`, `setup-node` and `upload-artifact` v7 majors; workflow token permissions remain explicitly read-only.
+- ✅ `main` ships a self-contained local Figma import helper and package command; CI verifies compiled `code.js` / `ui.html` stay byte-for-byte unchanged after manifest ID rebinding.
+- ✅ local-import preparation fails closed when source/output paths are equal or nested, preventing destructive source deletion or recursive copy behavior.
+- ✅ GitHub Actions use current Node-24-based `checkout`, `setup-node` and `upload-artifact` v7 majors; workflow token permissions are explicitly read-only.
 - ✅ duplicate stale CI/integration runs are cancelled through workflow concurrency controls.
-- ✅ PR #39 pre-final-doc head `6721892` passed **CI #511** and **Integration Readiness #9**, including safe-path rejection regression checks and machine-readable integration evidence upload.
+- ✅ PR #39 merged into `main` at `fef549f`; final PR head passed CI #512 + Integration Readiness #10 before merge.
+- ✅ post-merge `main` Integration Readiness #11 passed; CI #513 completed typecheck, tests, build and self-contained local-import safety verification successfully.
 
 ## Repository audit checkpoint — 2026-09-08
 
-- ✅ `main` baseline `6f01fd5` passed CI #502 after integration-readiness status PR #38 merged.
+- ✅ `main` integration/tooling checkpoint `fef549f` passed the post-merge verification batch above before this README-only status commit.
 - ✅ canonical P5/P6/P7 heads still match the verified heads above; their latest canonical CI runs remain green.
 - ✅ open issues are limited to #6, #7 and #8; no additional product/code defect issue was found.
-- ✅ no failed canonical workflow was identified.
+- ✅ open PR/MR count is `0` after PR #39 merged.
 - ✅ repository search found no outstanding `TODO`, `FIXME`, `XXX` or `HACK` markers on `main`.
 - ⚠️ canonical feature branches intentionally remain frozen while their exact-build runtime evidence is relevant; docs-only churn on those branches would change source SHA and proof identity.
 
 ## Integration readiness checkpoint — 2026-09-08
 
-- ✅ direct canonical P5 → current `main` probe #34 exposed a conflict limited to `README.md` plus the main-only `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md` addition.
-- ✅ isolated `integration/p5-main-20260908` resolved those documentation differences without modifying canonical P5 runtime code; proof PR #37 became mergeable and **CI #500 passed**.
+- ✅ canonical P5 → current `main` remains a documentation-only integration conflict; runtime source does not require conflict resolution at this gate.
+- ✅ isolated `integration/p5-main-20260908` previously resolved the documentation differences without modifying canonical P5 runtime code; proof PR #37 became mergeable and CI #500 passed.
 - ✅ canonical P5 head remains `810d98d`, so artifact #488 remains the exact build for issue #6 runtime acceptance.
-- ⚠️ P6 → latest P5 is a real code conflict. Automated run #9 reports overlap in CI/provenance/runtime files including `manifest.template.json`, `scripts/build.mjs`, `src/plugin/main.ts` and P5 evidence/proof storage.
-- ⚠️ P7 → latest P5 is also a real code conflict. Automated run #9 reports overlap across build/runtime/P5 proof files plus P7's branch-local import helper and P5 acceptance test.
+- ⚠️ P6 → latest P5 is a real code conflict. Automated integration readiness reports overlap in CI/provenance/runtime files including `manifest.template.json`, `scripts/build.mjs`, `src/plugin/main.ts` and P5 evidence/proof storage.
+- ⚠️ P7 → latest P5 is also a real code conflict, with overlap across build/runtime/P5 proof files plus branch-local import/acceptance surfaces.
 - ✅ issue #6/#7/#8 trackers record this dependency/integration state.
 - ✅ `scripts/check-integration-readiness.mjs` reproduces merge checks through read-only `git merge-tree --write-tree` simulation.
 - ✅ `.github/workflows/integration-readiness.yml` reports all three dependency edges on `main`, relevant PRs and manual dispatch, and uploads machine-readable JSON evidence.
