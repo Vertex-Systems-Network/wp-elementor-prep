@@ -113,6 +113,7 @@ describe('P6 offline closure verifier', () => {
     const result = verifyP6ClosureExportBundle(passingBundle(), otherBuild);
     expect(result.accepted).toBe(false);
     expect(result.failures).toContain('P6 closure bundle belongs to a different build than this verifier artifact.');
+    expect(result.failures).toContain('Embedded P5 prerequisite does not reconstruct a valid exact-build runtime proof.');
   });
 
   it('rejects a tampered stored closure verdict', () => {
@@ -145,6 +146,16 @@ describe('P6 offline closure verifier', () => {
     const result = verifyP6ClosureExportBundle(bundle, P6_TEST_BUILD);
     expect(result.accepted).toBe(false);
     expect(result.failures).toContain('Finalize path left a checkpoint pending.');
+  });
+
+  it('rejects embedded P5 proof timestamp later than its evidence capture', () => {
+    const bundle = passingBundle();
+    bundle.p5Evidence!.runtimeProofPassedAt = '2026-09-08T10:00:01.000Z';
+    bundle.evidence.positive!.p5RuntimeProofPassedAt = '2026-09-08T10:00:01.000Z';
+    bundle.evidence.refusal!.p5RuntimeProofPassedAt = '2026-09-08T10:00:01.000Z';
+    const result = verifyP6ClosureExportBundle(bundle, P6_TEST_BUILD);
+    expect(result.accepted).toBe(false);
+    expect(result.failures).toContain('Embedded P5 runtime proof timestamp is later than its evidence capture timestamp.');
   });
 
   it('rejects missing P5 prerequisite evidence', () => {
