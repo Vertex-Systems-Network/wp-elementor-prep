@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "prepare:figma-import": "node scripts/prepare-figma-import.mjs",
     "integration:readiness": "node scripts/check-integration-readiness.mjs"
   },
   "devDependencies": {
