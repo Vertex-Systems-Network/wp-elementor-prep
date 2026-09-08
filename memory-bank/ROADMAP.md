@@ -2,68 +2,73 @@
 
 Last updated: 2026-09-08
 
-| Phase | Scope | Status |
-|---|---|---|
-| P0 | Specification, architecture, memory-bank, repo foundation | COMPLETE — PR #1 merged |
-| P1 | Audit-Only scanner, discovery, scoring, multi-target report UI | COMPLETE — PR #10 merged, issue #2 closed |
-| P2 | Deterministic classifier semantics + confidence/role evidence | COMPLETE — PR #11 merged, issue #3 closed |
-| P3 | Geometry/content/image + pixel validation | COMPLETE — PR #12 merged, issue #4 closed |
-| P4 | Candidate transaction + rollback | IN PROGRESS — issue #5, PR #13 |
-| P5 | Safe high-confidence recipes | NOT STARTED — issue #6 |
-| P6 | Advanced timeline/carousel/milestones/page normalization | NOT STARTED — issue #7 |
-| P7 | Multi-frame/page batch queue | NOT STARTED — issue #8 |
-| P8 | Optional Elementor schema exporters | NOT STARTED — issue #9 |
+| Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
+|---|---|---|---:|---|---|
+| AI-native governance/tooling | Memory-bank, issue/PR-first lifecycle, CI/integration tooling | COMPLETE | 100% | `██████████` | Keep status synchronized after every batch |
+| P0 | Specification, architecture, repository foundation | COMPLETE | 100% | `██████████` | None |
+| P1 | Audit-Only scanner, discovery, scoring, report UI | COMPLETE | 100% | `██████████` | None |
+| P2 | Deterministic classifier semantics + evidence | COMPLETE | 100% | `██████████` | None |
+| P3 | Geometry/content/image + rendered-pixel validation | COMPLETE | 100% | `██████████` | None |
+| P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
+| P5 | Conservative Safe Fix recipes + exact-build proof | RUNTIME ACCEPTANCE | 90% | `█████████░` | Real imported-Figma proof for #6, then merge |
+| P6 | Advanced timeline/carousel/milestone/page normalization | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh artifact → #7 closure |
+| P7 | Sequential multi-frame/page batch queue | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh artifact → #8 closure |
+| P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate after normalization line stabilizes |
 
-## P4 progress
+## Overall active roadmap progress
 
-- [x] explicit transaction state model
-- [x] candidate handle / adapter boundary
-- [x] transformer receives candidate only
-- [x] commit blocked until P3 passes
-- [x] transform failure -> discard
-- [x] validation crash/rejection -> discard
-- [x] cleanup failure surfaced explicitly
-- [x] commit-stage failure separated from pre-commit cleanup
-- [x] successful commit evidence is serializable/small
-- [x] no large design snapshots in transaction metadata
-- [x] forced-transform failure unit fixture
-- [x] rejected-validation isolation fixture
-- [x] concrete Figma candidate staging adapter
-- [x] stale original-parent guard
-- [x] stale transaction guard
-- [x] root-boundary commit/swap
-- [x] hidden bounded original backup
-- [x] compact clientStorage undo token
-- [x] restore-last-commit implementation
-- [x] Auto Layout child properties applied after parent insertion
-- [x] live forced-failure calibration on disposable Figma Frames
-- [x] live manual-parent swap + undo calibration
-- [x] live Auto Layout parent swap + undo calibration
-- [x] all live calibration temporary nodes cleaned (`0` leftovers)
-- [ ] final P4 docs/memory head green in CI
-- [ ] PR #13 merged / issue #5 closed
+`█████████░ 93%`
 
-## P5 initial recipe set
+The overall percentage tracks the currently active P0–P7 delivery line plus governance/tooling. Deferred P8 is not treated as an active incomplete blocker.
 
-P5 starts only after P4 merge and remains confidence-gated:
+## P0–P4
 
-1. Vertical Stack
-2. Horizontal Row
-3. Two Column
-4. Facts List
-5. Footer Columns
-6. Simple Card Grid
-7. Metric Grid
-8. Social/Link Strip
+Complete and merged. The core line now provides:
 
-Every recipe must run through P4 candidate isolation and full P3 validation. Low confidence remains REVIEW.
+- deterministic scanning/classification,
+- semantic/preservation evidence,
+- geometry/content/image integrity checks,
+- rendered-pixel validation,
+- candidate-only transaction isolation,
+- Full P3 before P4 commit,
+- bounded restore/finalize checkpoint behavior.
 
-## Production gate before Safe Fix
+## P5 — issue #6
 
-- [x] audit classifications explainable across at least 5 materially different real templates
-- [x] P2 known high-confidence semantic false positives addressed with regression fixtures
-- [x] P3 validation engine merged
-- [x] P4 forced candidate failure demonstrated to leave original unchanged on a live disposable Figma fixture
-- [x] P4 manual and Auto Layout root swap/undo mechanics live-calibrated
-- [ ] P4 merged with final green CI
-- [ ] individual P5 recipe has high-confidence classifier + transformation + regression/live calibration evidence
+Engineering and exact-artifact offline verification are complete on:
+
+- branch `feat/p5-safe-recipes`,
+- head `810d98d`,
+- CI #488 PASS,
+- artifact `figma-plugin-dist-488`.
+
+Remaining gate is real imported-Figma acceptance and same-artifact verifier exit `0`. Production Safe Fix mutation remains locked until that gate passes.
+
+## P6 — issue #7
+
+Engineering is complete on reference head `9a6ae3b` / CI #494 PASS, but automated integration readiness proves real shared-code conflicts against latest P5.
+
+Final closure must wait until P5 merges, then P6 must be integrated, rebuilt as a fresh exact artifact, and validated with real positive + preservation-refusal Figma scenarios.
+
+## P7 — issue #8
+
+Engineering is complete on reference head `cbfdb66` / CI #490 PASS, but automated integration readiness proves real shared-code conflicts against latest P5.
+
+Final closure must wait until P5 merges, then P7 must be integrated, rebuilt as a fresh exact artifact, and validated with a realistic 60+ Frame stress run plus active Full-P3 cooperative cancellation.
+
+## P8
+
+Optional exporter adapters remain intentionally deferred; issue #9 is closed as not planned for the active delivery line.
+
+## Mandatory roadmap execution policy
+
+For every future development cycle:
+
+1. inspect/process open Issues,
+2. inspect/fix/merge open PR/MR,
+3. continue the highest-priority unblocked roadmap item,
+4. run verification,
+5. update this roadmap when phase/module state changes,
+6. update root README module-wise and overall progress bars before declaring the batch complete.
+
+Runtime/manual acceptance evidence must never be synthesized merely to advance a progress percentage.

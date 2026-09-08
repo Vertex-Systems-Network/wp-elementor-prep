@@ -71,3 +71,19 @@ Status: ACCEPTED
 When one target satisfies multiple geometric classifiers, report the most specific valid interpretation rather than redundant generic ones. Current specificity order is carousel track > grid > two-column > horizontal row > vertical stack.
 
 Reason: a carousel track is also a row geometrically, but exposing both as competing repair targets creates noise and increases mutation risk.
+
+## D-012 — Issues-first, PR/MR-second development lifecycle
+Date: 2026-09-08  
+Status: ACCEPTED
+
+Every meaningful AI/developer work cycle must process repository work in this order:
+
+1. inspect and process open Issues,
+2. inspect/fix/merge eligible Pull Requests or Merge Requests,
+3. only then start new roadmap development.
+
+At the end of every meaningful work batch, the root README must be updated with evidence-based module-wise progress percentages, visual progress bars, blockers/next work, and an overall progress bar. The memory-bank must also be synchronized.
+
+Reason: existing defects and integration work should not be bypassed by new feature development, and repository state must remain immediately understandable to future agents without relying on chat history.
+
+Runtime/manual evidence gates remain authoritative; the workflow must never fabricate evidence simply to close an issue or merge a branch.

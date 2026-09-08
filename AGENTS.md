@@ -14,14 +14,53 @@ Before making changes, read in this order:
 
 Do not assume chat history is available or current.
 
+### Mandatory work-order gate
+
+After reading repository context and **before starting new implementation**, execute this order:
+
+1. **Issues first**
+   - list every open issue,
+   - classify actionable vs dependency-blocked vs external/runtime-blocked vs deferred,
+   - fix actionable issues before unrelated new work,
+   - run required verification,
+   - update/close only when the real acceptance criteria are satisfied.
+2. **PR/MR second**
+   - list every open Pull Request / Merge Request,
+   - inspect CI/checks, conflicts, mergeability and unresolved review feedback,
+   - fix safely actionable failures/conflicts,
+   - merge only when documented gates pass,
+   - do not duplicate work already owned by an issue or PR/MR.
+3. **New development third**
+   - only after the issue and PR/MR queues are processed,
+   - follow roadmap/dependency order,
+   - use independent parallel workstreams where safe.
+
+Never fabricate runtime/manual evidence or bypass an acceptance gate simply to close an issue or merge a branch.
+
 ## Mandatory session end
 
 After meaningful work, update:
 
 - `memory-bank/PROJECT_STATE.md` — what is done, in progress, blocked, and remaining.
 - `memory-bank/NEXT_ACTIONS.md` — exact next executable tasks.
+- `memory-bank/ROADMAP.md` — when module/phase completion state or sequencing changes.
 - `memory-bank/CHANGELOG.md` — concise dated record of changes.
-- `memory-bank/DECISIONS.md` — only when a durable architectural/product decision changes or is added.
+- `memory-bank/DECISIONS.md` — only when a durable architectural/product/process decision changes or is added.
+- root `README.md` — current issue/PR status plus module-wise and overall progress.
+
+### README progress contract
+
+Every meaningful completed work batch MUST leave the root README with a current module-wise progress table containing at least:
+
+- module/phase,
+- status,
+- numeric progress percentage,
+- 10-cell visual progress bar where practical,
+- blocker or exact next work.
+
+Also update an overall project progress percentage/bar.
+
+Progress must be evidence-based. Do not mark externally blocked runtime acceptance as complete. Mark intentionally deferred work as `DEFERRED` rather than lowering active progress misleadingly.
 
 ## Engineering rules
 
@@ -50,8 +89,10 @@ Use focused branches and PRs. Recommended prefixes:
 
 A task is not complete because code exists. It is complete when:
 
-- tests pass,
+- the Issues-first and PR/MR-second queues were checked,
+- tests/verification pass,
 - relevant memory-bank state is updated,
+- README module and overall progress are updated,
 - docs are updated when behavior/contracts changed,
 - no known visual safety regression is introduced,
 - next work is unambiguous.

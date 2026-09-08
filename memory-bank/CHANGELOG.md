@@ -2,6 +2,16 @@
 
 ## 2026-09-08
 
+### AI-native lifecycle + canonical state synchronization
+- Added mandatory engineering order: Issues first, PR/MR second, new development third.
+- Added explicit rule that actionable issues are fixed before unrelated work while real external/runtime gates may not be fabricated or prematurely closed.
+- Added PR/MR gate covering CI, mergeability, conflicts and unresolved review feedback before new development begins.
+- Added mandatory end-of-work README synchronization with module-wise percentage, 10-cell progress bar, blocker/next work and overall progress.
+- Added decision D-012 documenting the durable lifecycle policy.
+- Replaced stale P4-era `PROJECT_STATE.md`, `NEXT_ACTIONS.md` and `ROADMAP.md` with current P5/P6/P7 engineering/runtime/integration state.
+- Recorded current canonical P5/P6/P7 heads, artifacts, open issues #6/#7/#8, integration dependencies and the real-Figma closure order.
+- Deferred P8 remains outside the active delivery percentage rather than being represented as unfinished active work.
+
 ### P4 candidate transaction + rollback
 - Merged P3 validator through PR #12 and closed issue #4.
 - Created `feat/p4-transaction-engine` and draft PR #13.
