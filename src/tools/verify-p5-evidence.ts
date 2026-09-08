@@ -1,3 +1,4 @@
+import { currentP5RuntimeBuildIdentity } from '../plugin/p5-runtime-build-identity';
 import { verifyP5RuntimeEvidence } from '../plugin/p5-runtime-evidence-verifier';
 
 declare const process: {
@@ -19,7 +20,7 @@ process.stdin.on('data', (chunk) => {
 process.stdin.on('end', () => {
   try {
     const parsed: unknown = JSON.parse(input);
-    const verification = verifyP5RuntimeEvidence(parsed);
+    const verification = verifyP5RuntimeEvidence(parsed, currentP5RuntimeBuildIdentity());
     process.stdout.write(`${JSON.stringify(verification, null, 2)}\n`);
     process.exitCode = verification.accepted ? 0 : 1;
   } catch (error) {
