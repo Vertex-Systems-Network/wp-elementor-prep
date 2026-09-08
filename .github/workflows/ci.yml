@@ -19,6 +19,23 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - name: Verify Figma development bundle
+        env:
+          EXPECTED_DEV_COMMAND: p6-page-flow-calibration
+        run: |
+          node --input-type=module <<'NODE'
+          import { existsSync, readFileSync, statSync } from 'node:fs';
+          const manifest = JSON.parse(readFileSync('dist/manifest.json', 'utf8'));
+          const required = [manifest.main, manifest.ui];
+          if (manifest.id !== process.env.FIGMA_PLUGIN_ID) throw new Error(`manifest id ${manifest.id} != configured ${process.env.FIGMA_PLUGIN_ID}`);
+          for (const file of required) {
+            if (!file || !existsSync(`dist/${file}`) || statSync(`dist/${file}`).size === 0) throw new Error(`missing/empty manifest target: ${file}`);
+          }
+          if (!Array.isArray(manifest.menu) || !manifest.menu.some((item) => item.command === process.env.EXPECTED_DEV_COMMAND)) {
+            throw new Error(`missing expected developer command: ${process.env.EXPECTED_DEV_COMMAND}`);
+          }
+          console.log(`Verified Figma bundle: ${manifest.main}, ${manifest.ui}, ${process.env.EXPECTED_DEV_COMMAND}`);
+          NODE
       - name: Write Figma build provenance
         env:
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
