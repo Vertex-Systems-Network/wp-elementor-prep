@@ -105,7 +105,7 @@ function finishedCount(state: BatchQueueState): number {
  */
 export class P7RuntimeEvidenceRecorder {
   private readonly clock: P7RuntimeEvidenceClock;
-  private readonly memorySampler?: P7RuntimeMemorySampler;
+  private readonly memorySampler: P7RuntimeMemorySampler | undefined;
   private readonly maxAttemptRecords: number;
   private readonly maxCheckpointRecords: number;
   private readonly startedAtMs: number;
