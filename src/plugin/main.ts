@@ -5,16 +5,14 @@ import {
   type BatchQueueState,
 } from '../core/batch-queue';
 import { detectPatterns } from '../core/classification';
-import {
-  isValidP5RuntimeProof,
-  P5_RUNTIME_PROOF_STORAGE_KEY,
-} from '../core/p5-runtime-gate';
+import { P5_RUNTIME_PROOF_STORAGE_KEY } from '../core/p5-runtime-gate';
 import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
 import type { SafeRecipeKind } from '../core/safe-recipe-types';
 import { scanSceneNode } from '../core/scanner';
 import { buildAuditReport } from '../core/scoring';
 import type { PixelDiffMetrics } from '../core/validation-types';
+import { P7_BUILD_IDENTITY } from './build-info';
 import { FullFrameValidator } from './full-frame-validator';
 import {
   createDefaultFigmaP7MetadataStore,
@@ -26,6 +24,10 @@ import {
   finalizeP7BatchCheckpointAfterReaudit,
   restoreP7BatchCheckpoint,
 } from './p7-checkpoint-resolution';
+import {
+  clearP7P5BuildProofReceipt,
+  readP7P5BuildProofState,
+} from './p7-p5-build-proof';
 import { inspectLatestP7RuntimeEvidence } from './p7-runtime-evidence-inspector';
 import { buildP7RuntimeEvidenceViewerHtml } from './p7-runtime-evidence-viewer';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
@@ -102,10 +104,12 @@ function selectedBatchFrames(): FrameNode[] | null {
   return selection as readonly FrameNode[] as FrameNode[];
 }
 
+/**
+ * Single entrypoint gate for every P5/P7 mutation surface in this build. Both the deterministic core
+ * P5 proof and the second P7 receipt must match the exact compiled P7 CI identity.
+ */
 async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string | null }> {
-  const stored = await figma.clientStorage.getAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
-  if (!isValidP5RuntimeProof(stored)) return { valid: false, passedAt: null };
-  return { valid: true, passedAt: stored.passedAt };
+  return readP7P5BuildProofState(figma.clientStorage, P7_BUILD_IDENTITY);
 }
 
 async function runP5RuntimeEvidenceViewer(): Promise<void> {
@@ -202,6 +206,7 @@ async function runSafePlanPreview(): Promise<void> {
       mutationEnabled: proof.valid && !pendingUndo && !operationInFlight,
       runtimeProofValid: proof.valid,
       runtimeProofPassedAt: proof.passedAt,
+      runtimeBuild: { ...P7_BUILD_IDENTITY },
       pendingUndo,
       operationInFlight,
     });
@@ -243,7 +248,7 @@ async function runRuntimeSelfTest(): Promise<void> {
   const operation: ExclusiveOperation = 'runtime-self-test';
   if (!beginExclusiveOperation(operation, 'validation-error')) return;
 
-  figma.ui.postMessage({ type: 'runtime-calibration-started' });
+  figma.ui.postMessage({ type: 'runtime-calibration-started', runtimeBuild: { ...P7_BUILD_IDENTITY } });
   try {
     const result = await runP5RuntimeCalibration(validateFullP3);
     const acceptance = await updateP5RuntimeProofFromCalibration(figma.clientStorage, result);
@@ -261,6 +266,7 @@ async function runRuntimeSelfTest(): Promise<void> {
       acceptance,
       evidence,
       evidencePersisted,
+      runtimeBuild: { ...P7_BUILD_IDENTITY },
       mutationGateUnlocked: proof.valid,
       runtimeProofPassedAt: proof.passedAt,
     });
@@ -273,14 +279,17 @@ async function runRuntimeSelfTest(): Promise<void> {
 
     if (acceptance.accepted && proof.valid) {
       figma.notify(evidencePersisted
-        ? 'P5 compiled runtime acceptance passed. Evidence saved; P7 prerequisite gate unlocked.'
-        : 'P5 compiled runtime acceptance passed. Evidence storage failed, but P7 prerequisite gate is unlocked.');
+        ? 'P5 compiled runtime acceptance passed. Exact-build P7 prerequisite receipt is ready.'
+        : 'P5 compiled runtime acceptance passed. Evidence storage failed, but exact-build P7 prerequisite receipt is ready.');
     } else {
       const detail = acceptance.failures[0] ? ` ${acceptance.failures[0]}` : '';
-      figma.notify(`P5 compiled runtime acceptance failed; P7 remains locked.${detail}`);
+      figma.notify(`P5 compiled runtime acceptance failed or exact-build P7 receipt is unavailable; P7 remains locked.${detail}`);
     }
   } catch (error) {
-    await figma.clientStorage.deleteAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
+    await Promise.all([
+      figma.clientStorage.deleteAsync(P5_RUNTIME_PROOF_STORAGE_KEY),
+      clearP7P5BuildProofReceipt(figma.clientStorage),
+    ]);
     const message = error instanceof Error ? error.message : String(error);
     postError(`P5 runtime self-test failed: ${message}`, 'validation-error');
   } finally {
@@ -304,7 +313,7 @@ async function runSafeFixApply(message: { targetNodeId: string; recipe: SafeReci
       hasPendingSafeFixCheckpoint(),
     ]);
     if (!proof.valid) {
-      postError('Safe Fix mutation is locked until Developer: P5 Runtime Self-Test passes in this plugin build.', 'safe-fix-error');
+      postError('Safe Fix mutation is locked until the P5 proof and P7 exact-build receipt both match this CI-built plugin artifact.', 'safe-fix-error');
       return;
     }
     if (pendingUndo) {
@@ -440,7 +449,7 @@ async function runP7BatchStart(): Promise<void> {
     hasPendingSafeFixCheckpoint(),
   ]);
   if (!proof.valid) {
-    postError('P7 batch mutation is locked until deterministic P5 runtime acceptance passes for this plugin build.', 'batch-error');
+    postError('P7 batch mutation is locked until the deterministic P5 proof and exact-build P7 receipt match this CI artifact.', 'batch-error');
     return;
   }
   if (pendingCheckpoint) {
