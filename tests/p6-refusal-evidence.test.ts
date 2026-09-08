@@ -6,6 +6,7 @@ import {
   buildP6PreservationRefusalEvidenceBundle,
   P6_REFUSAL_EVIDENCE_SCHEMA_VERSION,
 } from '../src/plugin/p6-refusal-evidence';
+import { P6_TEST_BUILD, P6_TEST_PROOF_PASSED_AT } from './p6-provenance-fixture';
 
 function preservePlan(id = 'overlay'): AdvancedRecipePlan {
   return {
@@ -73,7 +74,9 @@ function calibratePageFlowPlan(): AdvancedRecipePlan {
 function build(plans: AdvancedRecipePlan[], maxPlans?: number) {
   return buildP6PreservationRefusalEvidenceBundle({
     pluginVersion: '0.1.0-alpha.1',
-    p5RuntimeProofPassedAt: '2026-09-08T10:00:00.000Z',
+    build: P6_TEST_BUILD,
+    p5RuntimeProofPassedAt: P6_TEST_PROOF_PASSED_AT,
+    p5RuntimeProofBuild: P6_TEST_BUILD,
     frame: { id: 'frame', name: 'Preservation Page' } as FrameNode,
     outcome: {
       status: 'NO_CANDIDATE',
@@ -118,6 +121,7 @@ describe('P6 preservation refusal evidence', () => {
   it('fails closed without imported P5 proof or an explicit preservation-sensitive PRESERVE plan', () => {
     const evidence = build([reviewPlan()]);
     evidence.p5RuntimeProofPassedAt = null;
+    evidence.p5RuntimeProofBuild = null;
     const assessment = assessP6PreservationRefusalAcceptance(evidence);
 
     expect(assessment.accepted).toBe(false);
