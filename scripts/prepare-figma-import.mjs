@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { basename, join, resolve } from 'node:path';
+import { basename, isAbsolute, join, relative, resolve, sep } from 'node:path';
 
 const PLACEHOLDER_PLUGIN_ID = '000000000000000000';
 
@@ -13,12 +13,21 @@ function usage() {
   process.exit(2);
 }
 
+function containsPath(parent, child) {
+  const path = relative(parent, child);
+  return path === '' || (path !== '..' && !path.startsWith(`..${sep}`) && !isAbsolute(path));
+}
+
 const [, , rawPluginId, rawSource = 'dist', rawOutput = 'dist-local'] = process.argv;
 const pluginId = rawPluginId?.trim();
 if (!pluginId || pluginId === PLACEHOLDER_PLUGIN_ID || /\s/.test(pluginId)) usage();
 
 const sourceDir = resolve(rawSource);
 const outputDir = resolve(rawOutput);
+if (containsPath(sourceDir, outputDir) || containsPath(outputDir, sourceDir)) {
+  throw new Error(`Unsafe path overlap: source (${sourceDir}) and output (${outputDir}) must be separate, non-nested directories.`);
+}
+
 const sourceManifestPath = join(sourceDir, 'manifest.json');
 if (!existsSync(sourceManifestPath)) {
   throw new Error(`Missing source manifest: ${sourceManifestPath}. Run npm run build or unpack a CI artifact first.`);
