@@ -2,6 +2,7 @@ import { runCandidateTransaction } from '../core/transaction';
 import type { SafeRecipePlan } from '../core/safe-recipe-types';
 import type { ValidationReport } from '../core/validation-types';
 import { FigmaCandidateTransactionAdapter } from './figma-transaction-adapter';
+import { assessP5RuntimeAcceptance } from './p5-runtime-acceptance';
 import { applySafeRecipeToCandidate } from './safe-recipe-transform';
 import { runSafeFixTransaction } from './safe-fix-runtime';
 
@@ -41,10 +42,6 @@ export interface P5RuntimeCalibrationResult {
     checkpointCleared: boolean;
   };
   leftovers: number;
-}
-
-function hasValidChangedPixelPct(value: number | null): boolean {
-  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
 }
 
 function solid(r: number, g: number, b: number): SolidPaint[] {
@@ -298,34 +295,35 @@ export async function runP5RuntimeCalibration(validateFullP3: RuntimeFullP3Valid
   }
 
   const leftovers = await calibrationLeftovers();
-  const passed =
-    forcedResult.validationRejected &&
-    forcedResult.pixelEvidenceReturned &&
-    hasValidChangedPixelPct(forcedResult.changedPixelPct) &&
-    forcedResult.candidateDeleted &&
-    forcedResult.originalUntouched &&
-    passRestore.validationPassed &&
-    passRestore.pixelEvidenceReturned &&
-    hasValidChangedPixelPct(passRestore.changedPixelPct) &&
-    passRestore.committed &&
-    passRestore.restored &&
-    passRestore.checkpointCleared &&
-    passFinalize.validationPassed &&
-    passFinalize.pixelEvidenceReturned &&
-    hasValidChangedPixelPct(passFinalize.changedPixelPct) &&
-    passFinalize.committed &&
-    passFinalize.finalized &&
-    passFinalize.candidateRetained &&
-    passFinalize.originalDiscarded &&
-    passFinalize.checkpointCleared &&
-    leftovers === 0;
-
-  return {
+  const preliminary: P5RuntimeCalibrationResult = {
     schemaVersion: 1,
-    passed,
+    passed:
+      forcedResult.validationRejected &&
+      forcedResult.pixelEvidenceReturned &&
+      forcedResult.candidateDeleted &&
+      forcedResult.originalUntouched &&
+      passRestore.validationPassed &&
+      passRestore.pixelEvidenceReturned &&
+      passRestore.committed &&
+      passRestore.restored &&
+      passRestore.checkpointCleared &&
+      passFinalize.validationPassed &&
+      passFinalize.pixelEvidenceReturned &&
+      passFinalize.committed &&
+      passFinalize.finalized &&
+      passFinalize.candidateRetained &&
+      passFinalize.originalDiscarded &&
+      passFinalize.checkpointCleared &&
+      leftovers === 0,
     forcedReject: forcedResult,
     passRestore,
     passFinalize,
     leftovers,
+  };
+  const acceptance = assessP5RuntimeAcceptance(preliminary);
+
+  return {
+    ...preliminary,
+    passed: acceptance.accepted,
   };
 }
