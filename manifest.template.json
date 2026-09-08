@@ -9,6 +9,7 @@
   "menu": [
     { "name": "Open", "command": "open" },
     { "name": "Developer: P5 Runtime Self-Test", "command": "p5-runtime-self-test" },
+    { "name": "Developer: P5 Runtime Evidence", "command": "p5-runtime-evidence" },
     { "name": "Developer: P6 Page-Flow Clone Calibration", "command": "p6-page-flow-calibration" }
   ],
   "networkAccess": {
