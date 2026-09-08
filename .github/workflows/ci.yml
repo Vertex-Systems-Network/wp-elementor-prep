@@ -57,6 +57,10 @@ jobs:
           if (!readFileSync('dist-local/LOCAL_IMPORT_INFO.txt', 'utf8').includes('compiled_targets_unchanged=true')) throw new Error('local import proof note is missing unchanged-target assertion');
           console.log('Verified manifest-only local Figma import preparation.');
           NODE
+      - name: Package standalone local-import helper
+        run: |
+          cp scripts/prepare-figma-import.mjs dist/prepare-figma-import.mjs
+          test -s dist/prepare-figma-import.mjs
       - name: Write Figma build provenance
         env:
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -67,8 +71,10 @@ jobs:
           if [ "$FIGMA_PLUGIN_ID" = "000000000000000000" ]; then
             cat > dist/IMPORT_NOTES.txt <<'EOF'
           This build used the repository's placeholder Figma plugin id (000000000000000000).
-          If Figma rejects this manifest during development import, run `npm run prepare:figma-import -- <your-figma-plugin-id>` against the unpacked artifact.
-          The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id. Do not treat CI success alone as imported-Figma runtime proof.
+          After unpacking this artifact, run:
+            node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
+          Then import dist-local/manifest.json in Figma. The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id.
+          Do not treat CI success or manifest preparation as imported-Figma runtime proof.
           EOF
           else
             printf 'This build used configured Figma plugin id %s. CI success is not imported-Figma runtime proof; run the compiled self-test in Figma.\n' "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
