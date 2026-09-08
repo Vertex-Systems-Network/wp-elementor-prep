@@ -17,3 +17,17 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - name: Write Figma build provenance
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          printf 'source_sha=%s\nworkflow_sha=%s\nhead_ref=%s\nbase_ref=%s\nrun_id=%s\n' \
+            "$SOURCE_SHA" "$GITHUB_SHA" "$GITHUB_HEAD_REF" "$GITHUB_BASE_REF" "$GITHUB_RUN_ID" \
+            > dist/BUILD_INFO.txt
+      - name: Upload importable Figma development plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: figma-plugin-dist-${{ github.run_number }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
