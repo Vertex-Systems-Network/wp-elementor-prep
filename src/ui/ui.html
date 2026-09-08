@@ -35,23 +35,27 @@
     button { width: 100%; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; }
     button:disabled { opacity: .45; cursor: default; }
     .smallButton { font-size: 10px; padding: 7px 8px; }
+    #batch { grid-column: 1 / -1; }
     .empty { border: 1px dashed var(--figma-color-border); border-radius: 8px; padding: 18px; font-size: 12px; line-height: 1.5; opacity: .75; }
     .metricGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin-top: 10px; }
     .metric { font-size: 10px; opacity: .72; }
     .metric strong { display: block; font-size: 12px; opacity: 1; }
     .checkpoint { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 10px; margin: 10px 0; }
+    .progressTrack { height: 6px; border-radius: 999px; overflow: hidden; background: var(--figma-color-bg-secondary); margin-top: 10px; }
+    .progressFill { height: 100%; background: var(--figma-color-text); opacity: .72; }
   </style>
 </head>
 <body>
   <div class="app">
     <h1>Pella Elementor Prep</h1>
-    <div class="sub">Audit + P3 validator + compiled-runtime-gated P5 Safe Fix</div>
-    <div id="root" class="empty">Select one Frame to audit/preview, or two Frames to compare original vs candidate.</div>
+    <div class="sub">Audit + P3 validator + compiled-runtime-gated P5 Safe Fix + P7 batch queue</div>
+    <div id="root" class="empty">Select one Frame to audit/preview, two Frames to compare, or multiple Frames for P7 batch processing.</div>
     <div class="actions">
       <button id="audit">Run audit</button>
       <button id="plan">Preview safe fixes</button>
       <button id="validate">Compare 2 frames</button>
       <button id="selftest">Runtime self-test</button>
+      <button id="batch">Run selected batch</button>
     </div>
   </div>
 
@@ -77,6 +81,11 @@
       root.className = 'empty';
       root.textContent = 'Running disposable compiled P5 → P3 pixel broker → P4 self-test…';
       post('runtime-calibration-request');
+    });
+    document.getElementById('batch').addEventListener('click', () => {
+      root.className = 'empty';
+      root.textContent = 'Preparing selected Frames for bounded sequential P7 processing…';
+      post('batch-start-request');
     });
 
     function escapeHtml(value) {
@@ -357,11 +366,90 @@
         <details><summary>Self-test evidence</summary><pre>${escapeHtml(JSON.stringify(result, null, 2))}</pre></details>`;
     }
 
+    function bindBatchActions() {
+      const cancel = document.getElementById('batchCancel');
+      if (cancel) cancel.addEventListener('click', () => post('batch-cancel-request'));
+
+      const resume = document.getElementById('batchResume');
+      if (resume) resume.addEventListener('click', () => {
+        root.className = 'empty';
+        root.textContent = 'Resuming bounded P7 queue…';
+        post('batch-resume-request');
+      });
+
+      const restore = document.getElementById('batchRestore');
+      if (restore) restore.addEventListener('click', () => {
+        root.className = 'empty';
+        root.textContent = 'Restoring the current batch checkpoint before continuing…';
+        post('batch-checkpoint-restore-request');
+      });
+
+      const finalize = document.getElementById('batchFinalize');
+      if (finalize) finalize.addEventListener('click', () => {
+        if (!window.confirm('Finalize this batch Safe Fix checkpoint? P7 will re-audit the committed Frame and continue only after the real P5 checkpoint is finalized.')) return;
+        root.className = 'empty';
+        root.textContent = 'Re-auditing the committed Frame and finalizing the P7 checkpoint…';
+        post('batch-checkpoint-finalize-request');
+      });
+    }
+
+    function renderBatch(message) {
+      const state = message.state;
+      const summary = message.summary;
+      const awaitingCheckpoint = state.items.some((item) => item.status === 'AWAITING_CHECKPOINT');
+      const retryable = summary.failed > 0 || summary.cancelled > 0 || state.status === 'PAUSED';
+      const active = state.status === 'RUNNING' || state.status === 'CANCELLING';
+
+      const rows = state.items.map((item) => `
+        <div class="row">
+          <div class="rowHead">
+            <div class="name">${escapeHtml(item.frameName)}</div>
+            <div class="badge">${escapeHtml(item.status)}</div>
+          </div>
+          <div class="recipe">attempts ${item.attempts} · live id ${escapeHtml(item.frameId)}</div>
+          ${item.error ? `<div class="finding error">${escapeHtml(item.error)}</div>` : ''}
+          ${item.skipReason ? `<div class="finding">${escapeHtml(item.skipReason)}</div>` : ''}
+        </div>`).join('');
+
+      let controls = '';
+      if (awaitingCheckpoint) {
+        controls = `
+          <div class="checkpoint">
+            <div class="status">P7 CHECKPOINT PAUSE</div>
+            <div class="finding">One committed frame is reversible. Resolve it before another frame can mutate.</div>
+            <div class="inlineActions">
+              <button class="smallButton" id="batchRestore">Restore this frame</button>
+              <button class="smallButton" id="batchFinalize">Finalize & continue</button>
+            </div>
+            ${!message.cancelRequested ? '<div class="inlineActions one"><button class="smallButton" id="batchCancel">Cancel remaining frames</button></div>' : ''}
+          </div>`;
+      } else if (active) {
+        controls = '<div class="inlineActions one"><button class="smallButton" id="batchCancel">Cancel after active frame settles</button></div>';
+      } else if (retryable) {
+        controls = '<div class="inlineActions one"><button class="smallButton" id="batchResume">Retry / resume batch</button></div>';
+      }
+
+      root.className = '';
+      root.innerHTML = `
+        <div class="hero">
+          <div class="score">${summary.progressPct}%</div>
+          <div class="status">P7 BATCH · ${escapeHtml(state.status)}</div>
+          <div class="meta">Total ${summary.total} · done ${summary.finished} · success ${summary.succeeded} · failed ${summary.failed} · skipped ${summary.skipped} · cancelled ${summary.cancelled}</div>
+          ${summary.awaitingCheckpoint ? `<div class="meta">Awaiting checkpoint: ${summary.awaitingCheckpoint}</div>` : ''}
+          ${state.pauseReason ? `<div class="meta">${escapeHtml(state.pauseReason)}</div>` : ''}
+          ${message.note ? `<div class="meta">${escapeHtml(message.note)}</div>` : ''}
+          <div class="progressTrack"><div class="progressFill" style="width:${Math.max(0, Math.min(100, summary.progressPct))}%"></div></div>
+        </div>
+        ${controls}
+        <div>${rows || '<div class="empty">The batch contains no Frames.</div>'}</div>`;
+      bindBatchActions();
+    }
+
     window.onmessage = async (event) => {
       const message = event.data.pluginMessage;
       if (!message) return;
 
-      if (message.type === 'audit-error' || message.type === 'validation-error' || message.type === 'safe-fix-error') {
+      if (message.type === 'audit-error' || message.type === 'validation-error' || message.type === 'safe-fix-error' || message.type === 'batch-error') {
         root.className = 'empty';
         root.textContent = message.message;
         return;
@@ -401,6 +489,11 @@
         root.textContent = message.finalized
           ? 'Safe Fix finalized. The committed candidate remains and the retained previous original backup was removed.'
           : 'No Safe Fix checkpoint was pending.';
+        return;
+      }
+
+      if (message.type === 'batch-state') {
+        renderBatch(message);
         return;
       }
 
