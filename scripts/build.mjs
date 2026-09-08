@@ -6,6 +6,11 @@ await mkdir('dist', { recursive: true });
 const buildSourceSha = process.env.WPEP_BUILD_SOURCE_SHA ?? 'local';
 const buildRunId = process.env.WPEP_BUILD_RUN_ID ?? 'local';
 const buildRunNumber = process.env.WPEP_BUILD_RUN_NUMBER ?? 'local';
+const buildDefines = {
+  __WPEP_BUILD_SOURCE_SHA__: JSON.stringify(buildSourceSha),
+  __WPEP_BUILD_RUN_ID__: JSON.stringify(buildRunId),
+  __WPEP_BUILD_RUN_NUMBER__: JSON.stringify(buildRunNumber),
+};
 
 await build({
   entryPoints: ['src/plugin/main.ts'],
@@ -15,11 +20,18 @@ await build({
   target: 'es2022',
   format: 'iife',
   sourcemap: true,
-  define: {
-    __WPEP_BUILD_SOURCE_SHA__: JSON.stringify(buildSourceSha),
-    __WPEP_BUILD_RUN_ID__: JSON.stringify(buildRunId),
-    __WPEP_BUILD_RUN_NUMBER__: JSON.stringify(buildRunNumber),
-  },
+  define: buildDefines,
+});
+
+await build({
+  entryPoints: ['src/tools/verify-p7-closure.ts'],
+  bundle: true,
+  outfile: 'dist/verify-p7-closure.mjs',
+  platform: 'node',
+  target: 'node20',
+  format: 'esm',
+  minify: false,
+  define: buildDefines,
 });
 
 await cp('src/ui/ui.html', 'dist/ui.html');
