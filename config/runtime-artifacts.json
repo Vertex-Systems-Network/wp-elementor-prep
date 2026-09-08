@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "tracks": {
     "p5": {
       "branch": "feat/p5-safe-recipes",
@@ -10,6 +10,13 @@
       "artifactName": "figma-plugin-dist-488",
       "digest": "sha256:9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09",
       "verifier": "verify-p5-evidence.mjs",
+      "immutableFileSha256": {
+        "BUILD_INFO.txt": "d1fda143957eaa3be097cf830e5727fcc10ea7072c7986662aca4030caa34519",
+        "code.js": "f6d772772268da119c5e5e4485a96539bb27db6102c63420bea78c31aa23692a",
+        "ui.html": "81d6f35562254a72e84ee3a815e24d6f6e68f325a62e2de34ad5e2e9efc1f8c0",
+        "prepare-figma-import.mjs": "08247981208e0b00595ca1f74f1664bc4cc24347cc21e3c4f89236b4177cd0b0",
+        "verify-p5-evidence.mjs": "62568fdc30682830b0f6ab6b804385bcf8651cac62014aa370655f25ca75ca41"
+      },
       "requiredMenuCommands": ["p5-runtime-self-test", "p5-runtime-evidence"],
       "finalClosureEligible": true,
       "closureNote": "Canonical exact build for issue #6 real imported-Figma acceptance."
@@ -23,6 +30,13 @@
       "artifactName": "figma-plugin-dist-494",
       "digest": "sha256:82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3",
       "verifier": "verify-p6-closure.mjs",
+      "immutableFileSha256": {
+        "BUILD_INFO.txt": "5d805c07db77f88cde3046c6fbdd6527e60ecfd2e367c6ed0f8b3f7759bfd609",
+        "code.js": "0f3fa332a70f06c418b280f33fbcc0a67b6da642b4cf2b7ec4cdf0998e4a2c1e",
+        "ui.html": "81d6f35562254a72e84ee3a815e24d6f6e68f325a62e2de34ad5e2e9efc1f8c0",
+        "prepare-figma-import.mjs": "08247981208e0b00595ca1f74f1664bc4cc24347cc21e3c4f89236b4177cd0b0",
+        "verify-p6-closure.mjs": "10c971249927e6ab26c46ad95063c9a07ca265726a35a8ab878fd50e07ccf460"
+      },
       "requiredMenuCommands": ["p5-runtime-self-test", "p6-page-flow-calibration", "p6-runtime-evidence"],
       "finalClosureEligible": false,
       "closureNote": "Reference engineering build only. Final P6 closure requires P5 merge, conflict resolution and a fresh exact-build artifact."
@@ -36,6 +50,13 @@
       "artifactName": "figma-plugin-dist-490",
       "digest": "sha256:c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43",
       "verifier": "verify-p7-closure.mjs",
+      "immutableFileSha256": {
+        "BUILD_INFO.txt": "477782f946509a9b354f829a157c27f7eb2173a7ea1ee59c06e83d55a644dfe9",
+        "code.js": "6a58d9052f5c9aa8ec748709645ca6eda95fb17b070a14308809b016397792e9",
+        "ui.html": "357375daaa1dbc09322aaab79b73fd3f2db71aa6a70a3c32150af509a31cb569",
+        "prepare-figma-import.mjs": "d754f7ebfee3df53f39e41da06548ffdc551b31ae24c0ad35869d60215f7cb1b",
+        "verify-p7-closure.mjs": "2da43a2e3e8431a3d3ec04a9302cfaf21eea5c4a241a660bd5664260607bb3ad"
+      },
       "requiredMenuCommands": ["p5-runtime-self-test", "p7-runtime-evidence"],
       "finalClosureEligible": false,
       "closureNote": "Reference engineering build only. Final P7 closure requires P5 merge, conflict resolution and a fresh exact-build artifact."
