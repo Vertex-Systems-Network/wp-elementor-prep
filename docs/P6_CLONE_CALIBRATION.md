@@ -2,11 +2,13 @@
 
 P6 advanced recipes must earn mutation eligibility through clone-only evidence before any transformer can be connected to the production P4 commit path.
 
-## Dependency state
+## Dependency gate
 
-P6 is intentionally stacked on P5 / PR #14. The current P5 base uses `p5-runtime-proof-v3`, whose compiled runtime self-test now covers forced Full-P3 rejection, commit->restore and commit->finalize. P6 must inherit that proven substrate before any advanced recipe can reach production mutation wiring.
+P6 is stacked on P5 / PR #14 and must inherit the current P5 runtime safety contract before any advanced production mutation is considered.
 
-This branch keeps P6 changes isolated to advanced-recipe files. The dependency update is therefore expected to merge cleanly rather than duplicating P5 runtime code inside P6.
+The current dependency is `p5-runtime-proof-v3`, whose imported-plugin self-test proves rendered-pixel rejection, commit -> restore, commit -> finalize and bounded checkpoint cleanup.
+
+P6 does not weaken, duplicate or bypass that gate.
 
 ## Allowed lifecycle
 
@@ -62,6 +64,44 @@ The transformer converts only the staged clone to fixed vertical Auto Layout, re
 
 `runP6PageFlowCloneCalibration` composes this transformer with the commitless Figma adapter and mandatory Full P3 validator. It is not wired to production Safe Fix UI.
 
+## Disposable imported-runtime harness
+
+`src/plugin/p6-runtime-calibration.ts` now provides `runP6RuntimeCalibration()` as an isolated developer/runtime seam. It is deliberately **not** connected to production mutation UI and has no commit callback.
+
+The harness creates disposable off-canvas page-flow fixtures and runs the real:
+
+`P6 plan -> P4 clone staging -> P6 transform -> FullFrameValidator -> UI Canvas pixel broker -> candidate discard`
+
+It requires two cases:
+
+### Exact PASS case
+
+- real page-flow transform applies to the clone,
+- Full P3 returns PASS with rendered-pixel evidence,
+- candidate is discarded even after PASS,
+- original root/direct-child geometry remains exact,
+- original PNG export remains byte-identical,
+- `productionCommitAttempted === false`,
+- no leftover-candidate risk.
+
+### Forced rendered-pixel rejection case
+
+- the real P6 transform applies first,
+- a controlled spacing drift is added to the disposable clone only,
+- Full P3 must reject it with rendered-pixel evidence,
+- rejected candidate is discarded,
+- approved original geometry and PNG remain exact,
+- `productionCommitAttempted === false`,
+- no leftover-candidate risk.
+
+The overall harness PASS additionally requires:
+
+- no P4 checkpoint before or after calibration,
+- no calibration/candidate leftovers,
+- both original fixtures removed during cleanup.
+
+CI #197 proves this harness compiles, typechecks and builds against the current stacked P5 v3 substrate. **CI cannot execute Figma APIs**, so an imported-plugin run is still required for runtime evidence.
+
 ## Current synthetic evidence
 
 CI golden fixtures cover:
@@ -74,22 +114,21 @@ CI golden fixtures cover:
 - refusal with absolute direct children,
 - refusal of non-uniform section gaps,
 - refusal of non-CALIBRATE plans,
-- clone calibration PASS/REJECT/FAIL cleanup lifecycle,
-- explicit leftover risk when candidate discard fails,
-- public Figma calibration interface with no commit method.
+- clone calibration pass/reject/failure cleanup lifecycle,
+- discard failure -> explicit leftover risk,
+- no public commit method in the calibration adapter.
 
-This is deterministic synthetic evidence only. It does **not** substitute for imported-plugin Figma runtime calibration or real image-bearing template evidence.
+This deterministic evidence plus the new runtime harness reduces the remaining manual work, but it does **not** substitute for imported-plugin Figma execution or image-bearing real-template evidence.
 
 ## Remaining page-flow evidence
 
 Before this transformer can be considered for P4 production wiring it still needs:
 
-1. P5 v3 imported-plugin runtime proof to pass and PR #14 to merge,
-2. imported-plugin P6 clone calibration inside real Figma,
-3. full P3 Canvas pixel broker PASS,
-4. image-bearing real-template clones,
-5. zero leftover candidate nodes across pass/reject/failure runtime cases,
-6. confirmation that any page with header/hero or other preservation relationships stays refused by this first recipe,
-7. explicit production transaction integration review.
+1. P5 v3 imported-plugin runtime proof PASS and PR #14 merge,
+2. run the P6 disposable runtime harness inside imported Figma and require overall PASS,
+3. image-bearing real-template clone calibration using the same mandatory Full P3 Canvas pixel broker,
+4. zero leftover candidate nodes across real pass/reject/failure cases,
+5. confirmation that pages with header/hero or other preservation relationships stay refused by this first recipe,
+6. explicit production transaction integration review.
 
 Other advanced recipes remain read-only/review-only until they independently earn the same evidence. Fragmented-card synthesis and carousel/timeline relationships remain deferred because their wrapper/overflow/preservation semantics are materially more invasive.
