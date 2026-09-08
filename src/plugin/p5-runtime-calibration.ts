@@ -43,6 +43,10 @@ export interface P5RuntimeCalibrationResult {
   leftovers: number;
 }
 
+function hasValidChangedPixelPct(value: number | null): boolean {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
+}
+
 function solid(r: number, g: number, b: number): SolidPaint[] {
   return [{ type: 'SOLID', color: { r, g, b } }];
 }
@@ -297,15 +301,18 @@ export async function runP5RuntimeCalibration(validateFullP3: RuntimeFullP3Valid
   const passed =
     forcedResult.validationRejected &&
     forcedResult.pixelEvidenceReturned &&
+    hasValidChangedPixelPct(forcedResult.changedPixelPct) &&
     forcedResult.candidateDeleted &&
     forcedResult.originalUntouched &&
     passRestore.validationPassed &&
     passRestore.pixelEvidenceReturned &&
+    hasValidChangedPixelPct(passRestore.changedPixelPct) &&
     passRestore.committed &&
     passRestore.restored &&
     passRestore.checkpointCleared &&
     passFinalize.validationPassed &&
     passFinalize.pixelEvidenceReturned &&
+    hasValidChangedPixelPct(passFinalize.changedPixelPct) &&
     passFinalize.committed &&
     passFinalize.finalized &&
     passFinalize.candidateRetained &&
