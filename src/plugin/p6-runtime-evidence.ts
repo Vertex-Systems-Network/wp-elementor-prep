@@ -1,9 +1,12 @@
-import { P5_RUNTIME_GATE_VERSION } from '../core/p5-runtime-gate';
+import {
+  P5_RUNTIME_GATE_VERSION,
+  type P5RuntimeBuildIdentity,
+} from '../core/p5-runtime-gate';
 import type { AdvancedCalibrationResult } from '../core/advanced-calibration';
 import type { AdvancedRecipePlan } from '../core/advanced-recipe-types';
 import type { P6DeveloperCalibrationOutcome } from './p6-developer-calibration';
 
-export const P6_RUNTIME_EVIDENCE_SCHEMA_VERSION = 1 as const;
+export const P6_RUNTIME_EVIDENCE_SCHEMA_VERSION = 2 as const;
 
 export interface P6RuntimeEvidencePlanSummary {
   decision: AdvancedRecipePlan['decision'];
@@ -43,6 +46,7 @@ export interface P6RuntimeEvidenceBundle {
   schemaVersion: typeof P6_RUNTIME_EVIDENCE_SCHEMA_VERSION;
   capturedAt: string;
   pluginVersion: string;
+  build: P5RuntimeBuildIdentity;
   p5RuntimeGateVersion: string;
   /** Null when the imported build has no valid P5 runtime proof; never fabricate a timestamp. */
   p5RuntimeProofPassedAt: string | null;
@@ -97,6 +101,7 @@ function summarizeCalibration(result: AdvancedCalibrationResult): P6RuntimeEvide
  */
 export function buildP6RuntimeEvidenceBundle(input: {
   pluginVersion: string;
+  build: P5RuntimeBuildIdentity;
   p5RuntimeProofPassedAt: string | null;
   frame: Pick<FrameNode, 'id' | 'name'>;
   outcome: P6DeveloperCalibrationOutcome;
@@ -110,6 +115,7 @@ export function buildP6RuntimeEvidenceBundle(input: {
     schemaVersion: P6_RUNTIME_EVIDENCE_SCHEMA_VERSION,
     capturedAt: input.capturedAt ?? new Date().toISOString(),
     pluginVersion: input.pluginVersion,
+    build: { ...input.build },
     p5RuntimeGateVersion: P5_RUNTIME_GATE_VERSION,
     p5RuntimeProofPassedAt: input.p5RuntimeProofPassedAt,
     frame: { id: input.frame.id, name: input.frame.name },
