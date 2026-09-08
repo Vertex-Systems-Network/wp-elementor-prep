@@ -13,6 +13,27 @@ function metric(label: string, value: unknown): string {
   return `<div class="metric"><strong>${escapeHtml(value ?? '—')}</strong><span>${escapeHtml(label)}</span></div>`;
 }
 
+function closureBlock(inspection: P7RuntimeEvidenceInspection): string {
+  const closure = inspection.closure;
+  const failures = closure.failures.length
+    ? `<div class="warnings">${closure.failures.map((failure) => `<div>${escapeHtml(failure)}</div>`).join('')}</div>`
+    : '';
+
+  return `
+    <div class="closure">
+      <div class="title">Closure acceptance: ${closure.accepted ? 'PASS' : 'FAIL'}</div>
+      <div class="grid acceptance-grid">
+        ${metric('P5 exact-build prerequisite', closure.p5PrerequisiteValid ? 'PASS' : 'FAIL')}
+        ${metric('P5 proof passed at', closure.p5ProofPassedAt ?? 'missing')}
+        ${metric('current build traceable', closure.currentBuildTraceable ? 'yes' : 'no')}
+        ${metric('runtime evidence = current build', closure.runtimeEvidenceMatchesCurrentBuild ? 'yes' : 'no')}
+      </div>
+      ${failures}
+      <button id="copy-closure">Copy closure bundle</button>
+      <pre id="closure-json">${escapeHtml(inspection.closureJson)}</pre>
+    </div>`;
+}
+
 function acceptanceBlock(inspection: P7RuntimeEvidenceInspection): string {
   const acceptance = inspection.acceptance;
   const failures = acceptance.failures.length
@@ -27,16 +48,18 @@ function acceptanceBlock(inspection: P7RuntimeEvidenceInspection): string {
         ${metric('active-frame cancellation evidence', acceptance.cancellationEvidenceAvailable ? 'available' : 'missing')}
       </div>
       ${failures}
-      <button id="copy-acceptance">Copy acceptance bundle</button>
+      <button id="copy-acceptance">Copy runtime acceptance bundle</button>
       <pre id="acceptance-json">${escapeHtml(inspection.acceptanceJson)}</pre>
     </div>`;
 }
 
 export function buildP7RuntimeEvidenceViewerHtml(inspection: P7RuntimeEvidenceInspection): string {
+  const closure = closureBlock(inspection);
   const acceptance = acceptanceBlock(inspection);
   const content = inspection.status === 'EMPTY'
-    ? `${acceptance}<div class="empty">${escapeHtml(inspection.message)}</div>`
+    ? `${closure}${acceptance}<div class="empty">${escapeHtml(inspection.message)}</div>`
     : `
+      ${closure}
       ${acceptance}
       <div class="hero">
         <div class="title">Persisted P7 Runtime Evidence</div>
@@ -72,7 +95,7 @@ export function buildP7RuntimeEvidenceViewerHtml(inspection: P7RuntimeEvidenceIn
 <style>
 :root { font-family: Inter, system-ui, sans-serif; color-scheme: light dark; }
 body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(--figma-color-text); }
-.hero, .empty, .acceptance { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+.hero, .empty, .acceptance, .closure { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
 .title { font-size: 14px; font-weight: 700; }
 .meta { font-size: 10px; opacity: .75; margin-top: 5px; word-break: break-word; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
@@ -83,7 +106,7 @@ body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(-
 .warnings { border: 1px solid var(--figma-color-border-danger, var(--figma-color-border)); border-radius: 6px; padding: 8px; margin: 12px 0; font-size: 10px; line-height: 1.4; }
 button { width: 100%; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; margin: 12px 0 8px; }
 pre { margin: 0; padding: 10px; border: 1px solid var(--figma-color-border); border-radius: 6px; white-space: pre-wrap; word-break: break-word; font-size: 9px; max-height: 360px; overflow: auto; }
-#acceptance-json { max-height: 240px; }
+#closure-json, #acceptance-json { max-height: 240px; }
 </style>
 </head>
 <body>
@@ -110,6 +133,8 @@ async function copyText(buttonId, textId) {
     button.textContent = 'Copy failed — select JSON below';
   }
 }
+const closureCopy = document.getElementById('copy-closure');
+if (closureCopy) closureCopy.addEventListener('click', () => copyText('copy-closure', 'closure-json'));
 const acceptanceCopy = document.getElementById('copy-acceptance');
 if (acceptanceCopy) acceptanceCopy.addEventListener('click', () => copyText('copy-acceptance', 'acceptance-json'));
 const latestCopy = document.getElementById('copy-latest');
