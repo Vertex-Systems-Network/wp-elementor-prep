@@ -7,6 +7,12 @@ import {
   type P7EvidenceKeyValueStorage,
 } from '../src/plugin/p7-runtime-evidence-session';
 
+const BUILD = {
+  sourceSha: '0123456789abcdef0123456789abcdef01234567',
+  runId: '34217708751',
+  runNumber: '292',
+};
+
 class MemoryStorage implements P7EvidenceKeyValueStorage {
   values = new Map<string, unknown>();
   async getAsync(key: string): Promise<unknown> { return this.values.get(key); }
@@ -16,6 +22,7 @@ class MemoryStorage implements P7EvidenceKeyValueStorage {
 function baseSnapshot(): P7RuntimeEvidenceSnapshot {
   return {
     schemaVersion: 1,
+    build: { ...BUILD },
     runKey: 'run-key',
     startedAt: '2026-09-08T10:00:00.000Z',
     elapsedMs: 1000,
@@ -83,7 +90,7 @@ describe('P7 stored runtime acceptance loader', () => {
     expect(result.failures).toEqual(['No retained active-frame cancellation evidence is available.']);
   });
 
-  it('accepts when both retained scenarios satisfy the deterministic runtime contract', async () => {
+  it('accepts when both retained scenarios satisfy the deterministic runtime contract from the same build', async () => {
     const storage = new MemoryStorage();
     storage.values.set(P7_RUNTIME_STRESS_EVIDENCE_STORAGE_KEY, baseSnapshot());
     storage.values.set(P7_RUNTIME_CANCELLATION_EVIDENCE_STORAGE_KEY, cancellationSnapshot());
