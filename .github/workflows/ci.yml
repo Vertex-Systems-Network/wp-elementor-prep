@@ -46,7 +46,7 @@ jobs:
               if (!value || !code.includes(value)) throw new Error(`${artifactFile} missing build provenance value: ${value}`);
             }
           }
-          console.log(`Verified Figma bundle + exact-artifact closure verifier provenance.`);
+          console.log('Verified Figma bundle + exact-artifact closure verifier provenance.');
           NODE
       - name: Verify offline P7 closure CLI
         env:
@@ -60,6 +60,17 @@ jobs:
             sourceSha: process.env.EXPECTED_SOURCE_SHA,
             runId: process.env.EXPECTED_RUN_ID,
             runNumber: process.env.EXPECTED_RUN_NUMBER,
+          };
+          const coreProof = {
+            schemaVersion: 1,
+            gateVersion: 'p5-runtime-proof-v3',
+            passedAt: '2026-09-08T09:59:59.000Z',
+          };
+          const receipt = {
+            schemaVersion: 1,
+            gateVersion: coreProof.gateVersion,
+            proofPassedAt: coreProof.passedAt,
+            build: { ...build },
           };
           const snapshot = (finalStatus, total, cancellation = null) => ({
             schemaVersion: 1,
@@ -104,11 +115,16 @@ jobs:
             finalStatus: 'CANCELLED',
           });
           const bundle = {
-            schemaVersion: 1,
+            schemaVersion: 2,
             accepted: true,
             failures: [],
             currentBuild: build,
-            p5Prerequisite: { valid: true, passedAt: '2026-09-08T09:59:59.000Z' },
+            p5Prerequisite: {
+              valid: true,
+              passedAt: coreProof.passedAt,
+              coreProof,
+              receipt,
+            },
             runtimeAcceptance: { accepted: true, failures: [] },
             stress,
             cancellation,
@@ -118,6 +134,16 @@ jobs:
             ...bundle,
             currentBuild: { ...build, runNumber: String(Number(build.runNumber) + 1) },
           }));
+          writeFileSync('/tmp/p7-forged-prerequisite.json', JSON.stringify({
+            ...bundle,
+            p5Prerequisite: {
+              ...bundle.p5Prerequisite,
+              receipt: {
+                ...receipt,
+                proofPassedAt: '2026-09-08T09:00:00.000Z',
+              },
+            },
+          }));
           NODE
           node dist/verify-p7-closure.mjs < /tmp/p7-pass.json | grep '"accepted": true'
           if node dist/verify-p7-closure.mjs < /tmp/p7-other-build.json > /tmp/p7-other.out 2>&1; then
@@ -125,6 +151,12 @@ jobs:
             exit 1
           fi
           grep 'different build than this verifier artifact' /tmp/p7-other.out
+          if node dist/verify-p7-closure.mjs < /tmp/p7-forged-prerequisite.json > /tmp/p7-forged.out 2>&1; then
+            echo 'offline verifier unexpectedly accepted forged P5 prerequisite evidence'
+            exit 1
+          fi
+          grep 'P5-prerequisite verdict does not match canonical proof/receipt recomputation' /tmp/p7-forged.out
+          grep 'P5 deterministic runtime proof is not bound to this exact P7 plugin build' /tmp/p7-forged.out
           if printf '{}\n' | node dist/verify-p7-closure.mjs > /tmp/p7-invalid.out 2>&1; then
             echo 'offline verifier unexpectedly accepted malformed closure evidence'
             exit 1
@@ -164,6 +196,7 @@ jobs:
           Then import dist-local/manifest.json in Figma. The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id.
           Exported P7 closure JSON can be independently checked with the verifier from this same artifact:
             node verify-p7-closure.mjs < p7-closure.json
+          The v2 closure export includes the raw P5 core proof + exact-build P7 receipt so the verifier recomputes that prerequisite independently.
           Do not treat CI success, manifest preparation, or offline verification as imported-Figma runtime proof.
           EOF
           else
