@@ -2,6 +2,18 @@
 
 ## 2026-09-09
 
+### Closure evidence symlink hardening
+- Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and there were no open PRs before the new hardening batch.
+- Identified a provenance-boundary gap in `runtime:closure-intake`: `statSync()` followed operator-supplied evidence symlinks.
+- Switched evidence-path metadata inspection to `lstatSync()` and fail closed when the supplied closure evidence path is a symbolic link.
+- Added regression coverage proving symbolic-link evidence is rejected before evidence read/hash/verifier execution.
+- Kept the change main-side only; canonical P5/P6/P7 exact-build feature heads and registered runtime artifact bytes were not modified.
+- PR #45 head `f2233fb` passed CI #551 with no review/thread blockers.
+- PR #45 squash-merged to `main` at `8444698`.
+- Post-merge main CI #552 passed status verification, typecheck, tests, build and local-import safety.
+- Post-merge Integration Readiness #40 passed.
+- Open PR/MR count returned to `0` after merge.
+
 ### Runtime closure intake
 - Performed the mandatory issue-first sweep: open issues remain #6/#7/#8; no new actionable issue was found.
 - Confirmed open PR/MR count was `0` before development began.
@@ -69,7 +81,6 @@
 - Added discard behavior for transform failures, validator crashes and rejected validation reports.
 - Added explicit cleanup-failure and commit-stage failure handling.
 - Added small commit evidence and opaque undo-token contract; no large node/PNG snapshots are stored in transaction metadata.
-- Added unit fixtures proving forced transform failure and rejected validation leave the approved original unchanged.
 - Added concrete Figma transaction adapter with top-level off-layout candidate staging, stale-parent/transaction guards and root-boundary commit.
 - Added hidden bounded original backup and `restoreLastCommit()` through a compact clientStorage checkpoint.
 - Fixed adapter null-safety after CI caught nullable parent accesses.
