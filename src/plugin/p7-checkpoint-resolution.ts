@@ -4,6 +4,7 @@ import {
   type BatchQueueState,
 } from '../core/batch-queue';
 import type { CommitEvidence } from '../core/transaction-types';
+import { p7FrameHasMoreEligibleWork } from './p7-single-frame-processor';
 import { finalizeLastSafeFix, restoreLastSafeFix } from './safe-fix-runtime';
 
 export interface P7CheckpointActions {
@@ -21,13 +22,15 @@ export interface P7CheckpointResolutionResult {
   resolution: BatchCheckpointResolution;
 }
 
+export type P7CheckpointReaudit = (frameId: string) => Promise<boolean>;
+
 const productionActions: P7CheckpointActions = {
   restore: restoreLastSafeFix,
   finalize: finalizeLastSafeFix,
 };
 
-function hasAwaitingCheckpoint(state: BatchQueueState): boolean {
-  return state.items.some((item) => item.status === 'AWAITING_CHECKPOINT');
+function awaitingCheckpointItem(state: BatchQueueState) {
+  return state.items.find((item) => item.status === 'AWAITING_CHECKPOINT') ?? null;
 }
 
 async function resolveAfterP5Action(
@@ -35,7 +38,7 @@ async function resolveAfterP5Action(
   resolution: BatchCheckpointResolution,
   actions: P7CheckpointActions,
 ): Promise<P7CheckpointResolutionResult> {
-  if (!hasAwaitingCheckpoint(state)) {
+  if (!awaitingCheckpointItem(state)) {
     throw new Error('P7 batch has no frame awaiting checkpoint resolution.');
   }
 
@@ -74,8 +77,8 @@ export function restoreP7BatchCheckpoint(
 }
 
 /**
- * Finalizes the actual P5 checkpoint first. Use this only when re-audit already proves the current
- * committed Frame has no additional eligible Safe Fix target; the queue then marks it durable SUCCEEDED.
+ * Finalizes the actual P5 checkpoint first. Use this only when a caller has already proved the current
+ * committed Frame has no additional eligible Safe Fix target; the queue becomes durable SUCCEEDED.
  */
 export function finalizeP7BatchCheckpoint(
   state: BatchQueueState,
@@ -93,4 +96,27 @@ export function finalizeAndContinueP7BatchCheckpoint(
   actions: P7CheckpointActions = productionActions,
 ): Promise<P7CheckpointResolutionResult> {
   return resolveAfterP5Action(state, 'FINALIZED_CONTINUE', actions);
+}
+
+/**
+ * Production-safe checkpoint acceptance path. The committed Frame is re-audited read-only while the
+ * bounded P5 checkpoint still exists. Only after that decision succeeds do we irreversibly finalize:
+ * more eligible work -> FINALIZED_CONTINUE/PENDING; no more work -> FINALIZED/SUCCEEDED.
+ *
+ * Re-audit failure leaves the real P5 checkpoint untouched, so the user can still restore or retry.
+ */
+export async function finalizeP7BatchCheckpointAfterReaudit(
+  state: BatchQueueState,
+  reaudit: P7CheckpointReaudit = p7FrameHasMoreEligibleWork,
+  actions: P7CheckpointActions = productionActions,
+): Promise<P7CheckpointResolutionResult> {
+  const awaiting = awaitingCheckpointItem(state);
+  if (!awaiting) throw new Error('P7 batch has no frame awaiting checkpoint resolution.');
+
+  const hasMoreEligibleWork = await reaudit(awaiting.frameId);
+  return resolveAfterP5Action(
+    state,
+    hasMoreEligibleWork ? 'FINALIZED_CONTINUE' : 'FINALIZED',
+    actions,
+  );
 }
