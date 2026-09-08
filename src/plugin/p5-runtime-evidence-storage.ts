@@ -1,6 +1,6 @@
 import type { P5RuntimeEvidenceBundle } from './p5-runtime-evidence';
 
-export const P5_RUNTIME_EVIDENCE_STORAGE_KEY = 'pella-elementor-prep:p5-runtime-evidence-v1';
+export const P5_RUNTIME_EVIDENCE_STORAGE_KEY = 'pella-elementor-prep:p5-runtime-evidence-v2';
 
 export interface P5EvidenceKeyValueStorage {
   getAsync(key: string): Promise<unknown>;
@@ -19,6 +19,16 @@ function booleanFields(value: Record<string, unknown>, names: string[]): boolean
   return names.every((name) => typeof value[name] === 'boolean');
 }
 
+function isBuildIdentity(value: unknown): boolean {
+  const build = objectValue(value);
+  return Boolean(
+    build
+    && typeof build.sourceSha === 'string'
+    && typeof build.runId === 'string'
+    && typeof build.runNumber === 'string',
+  );
+}
+
 function isCalibrationResult(value: unknown): boolean {
   const calibration = objectValue(value);
   if (!calibration) return false;
@@ -33,32 +43,13 @@ function isCalibrationResult(value: unknown): boolean {
     && Number.isInteger(calibration.leftovers)
     && calibration.leftovers >= 0
     && typeof forcedReject.state === 'string'
-    && booleanFields(forcedReject, [
-      'validationRejected',
-      'pixelEvidenceReturned',
-      'candidateDeleted',
-      'originalUntouched',
-    ])
+    && booleanFields(forcedReject, ['validationRejected', 'pixelEvidenceReturned', 'candidateDeleted', 'originalUntouched'])
     && pixelValue(forcedReject.changedPixelPct)
     && typeof passRestore.state === 'string'
-    && booleanFields(passRestore, [
-      'validationPassed',
-      'pixelEvidenceReturned',
-      'committed',
-      'restored',
-      'checkpointCleared',
-    ])
+    && booleanFields(passRestore, ['validationPassed', 'pixelEvidenceReturned', 'committed', 'restored', 'checkpointCleared'])
     && pixelValue(passRestore.changedPixelPct)
     && typeof passFinalize.state === 'string'
-    && booleanFields(passFinalize, [
-      'validationPassed',
-      'pixelEvidenceReturned',
-      'committed',
-      'finalized',
-      'candidateRetained',
-      'originalDiscarded',
-      'checkpointCleared',
-    ])
+    && booleanFields(passFinalize, ['validationPassed', 'pixelEvidenceReturned', 'committed', 'finalized', 'candidateRetained', 'originalDiscarded', 'checkpointCleared'])
     && pixelValue(passFinalize.changedPixelPct);
 }
 
@@ -73,10 +64,11 @@ function isEvidenceBundle(value: unknown): value is P5RuntimeEvidenceBundle {
     ? typeof candidate.runtimeProofPassedAt === 'string'
     : candidate.runtimeProofPassedAt === null;
 
-  return candidate.schemaVersion === 1
+  return candidate.schemaVersion === 2
     && typeof candidate.capturedAt === 'string'
     && typeof candidate.pluginVersion === 'string'
     && typeof candidate.runtimeGateVersion === 'string'
+    && isBuildIdentity(candidate.build)
     && proofTimestampValid
     && isCalibrationResult(candidate.calibration);
 }
