@@ -40,6 +40,7 @@ function positive(build = P6_TEST_BUILD): P6RuntimeEvidenceBundle {
       validation: {
         passed: true, thresholdVersion: 'p3-v1', changedPixelPct: 0, meanChannelDelta: 0,
         maxChannelDelta: 0, maxTextPositionDriftPx: 0, maxImagePositionDriftPx: 0,
+        imageAnchorCountBefore: 2, imageAnchorCountAfter: 2,
       },
       events: [{ stage: 'DISCARD' }, { stage: 'DONE' }],
     },
@@ -70,7 +71,7 @@ function refusal(build = P6_TEST_BUILD): P6PreservationRefusalEvidenceBundle {
 }
 
 describe('P6 exact-build closure evidence', () => {
-  it('retains accepted positive and refusal evidence in independent slots', async () => {
+  it('retains accepted image-bearing positive and refusal evidence in independent slots', async () => {
     const storage = new MemoryStorage();
     expect(await persistP6ClosureEvidenceBestEffort(storage, { kind: 'CALIBRATION', evidence: positive(), html: '' })).toBe(true);
     expect(await persistP6ClosureEvidenceBestEffort(storage, { kind: 'PRESERVATION_REFUSAL', evidence: refusal(), html: '' })).toBe(true);
@@ -79,21 +80,29 @@ describe('P6 exact-build closure evidence', () => {
     expect(stored.refusal?.frame.id).toBe('preserve');
   });
 
-  it('does not overwrite accepted evidence with a later rejected scenario', async () => {
+  it('does not overwrite accepted image-bearing evidence with later rejected or non-image-bearing runs', async () => {
     const storage = new MemoryStorage();
     const good = positive();
     await persistP6ClosureEvidenceBestEffort(storage, { kind: 'CALIBRATION', evidence: good, html: '' });
-    const bad = positive();
-    bad.calibration!.leftoverCandidateRisk = true;
-    expect(await persistP6ClosureEvidenceBestEffort(storage, { kind: 'CALIBRATION', evidence: bad, html: '' })).toBe(false);
+
+    const rejected = positive();
+    rejected.calibration!.leftoverCandidateRisk = true;
+    expect(await persistP6ClosureEvidenceBestEffort(storage, { kind: 'CALIBRATION', evidence: rejected, html: '' })).toBe(false);
+
+    const noImages = positive();
+    noImages.calibration!.validation!.imageAnchorCountBefore = 0;
+    noImages.calibration!.validation!.imageAnchorCountAfter = 0;
+    expect(await persistP6ClosureEvidenceBestEffort(storage, { kind: 'CALIBRATION', evidence: noImages, html: '' })).toBe(false);
+
     expect(storage.values.get(P6_POSITIVE_CLOSURE_EVIDENCE_STORAGE_KEY)).toEqual(good);
     expect(storage.values.has(P6_REFUSAL_CLOSURE_EVIDENCE_STORAGE_KEY)).toBe(false);
   });
 
-  it('passes closure only when both accepted scenarios match the current exact build', () => {
+  it('passes closure only when both accepted scenarios match the current exact build and positive evidence is image-bearing', () => {
     expect(assessP6ClosureAcceptance(P6_TEST_BUILD, { positive: positive(), refusal: refusal() })).toEqual(expect.objectContaining({
       accepted: true,
       failures: [],
+      imageBearingPositiveEvidence: true,
       positiveMatchesCurrentBuild: true,
       refusalMatchesCurrentBuild: true,
     }));
@@ -102,6 +111,13 @@ describe('P6 exact-build closure evidence', () => {
     const assessment = assessP6ClosureAcceptance(P6_TEST_BUILD, { positive: positive(otherBuild), refusal: refusal() });
     expect(assessment.accepted).toBe(false);
     expect(assessment.failures).toContain('Retained P6 positive calibration evidence was captured by a different plugin build.');
+
+    const noImages = positive();
+    noImages.calibration!.validation!.imageAnchorCountBefore = 0;
+    noImages.calibration!.validation!.imageAnchorCountAfter = 0;
+    const noImagesAssessment = assessP6ClosureAcceptance(P6_TEST_BUILD, { positive: noImages, refusal: refusal() });
+    expect(noImagesAssessment.accepted).toBe(false);
+    expect(noImagesAssessment.failures).toContain('Retained P6 positive calibration evidence is not image-bearing or changed the image-anchor count.');
   });
 
   it('fails closed when either scenario is absent or storage is malformed', async () => {
@@ -125,6 +141,7 @@ describe('P6 exact-build closure evidence', () => {
     expect(inspection.acceptance.accepted).toBe(true);
     const html = buildP6ClosureViewerHtml(inspection);
     expect(html).toContain('P6 Closure acceptance: PASS');
+    expect(html).toContain('image-bearing positive evidence');
     expect(html).toContain('Copy P6 closure bundle');
     expect(html).not.toContain('</pre><script>bad()</script>');
     expect(html).toContain('&lt;/pre&gt;&lt;script&gt;bad()&lt;/script&gt;');
