@@ -1,4 +1,7 @@
-import type { BatchQueueState } from '../core/batch-queue';
+import type {
+  BatchCheckpointResolution,
+  BatchQueueState,
+} from '../core/batch-queue';
 import type {
   P7RuntimeEvidenceRecorder,
   P7RuntimeEvidenceSnapshot,
@@ -88,5 +91,24 @@ export function persistCurrentFigmaP7RuntimeEvidenceBestEffort(
 ): Promise<boolean> {
   const snapshot = currentFigmaP7RuntimeEvidence(state);
   if (!snapshot) return Promise.resolve(false);
-  return persistP7RuntimeEvidenceBestEffort(figma.clientStorage, snapshot);
+  try {
+    return persistP7RuntimeEvidenceBestEffort(figma.clientStorage, snapshot);
+  } catch {
+    // Keeps Node/unit contexts and unusual runtime failures observational rather than fatal.
+    return Promise.resolve(false);
+  }
+}
+
+/**
+ * Records real restore/finalize decisions made outside the sequential runner. If no Figma evidence
+ * session is active this is a no-op, which keeps generic/unit checkpoint composition side-effect free.
+ */
+export async function recordCurrentFigmaP7CheckpointResolutionBestEffort(
+  resolution: BatchCheckpointResolution,
+  before: BatchQueueState,
+  after: BatchQueueState,
+): Promise<void> {
+  if (!activeFigmaRecorder) return;
+  activeFigmaRecorder.markCheckpointResolution(resolution, before, after);
+  await persistCurrentFigmaP7RuntimeEvidenceBestEffort(after);
 }
