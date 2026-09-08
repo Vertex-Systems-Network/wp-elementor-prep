@@ -98,13 +98,16 @@ describe('runtime closure intake', () => {
   it('passes only after artifact preflight and the same-artifact verifier both pass', () => {
     withFixture({}, ({ artifactDir, evidencePath, registry }) => {
       writeFileSync(evidencePath, JSON.stringify({ accepted: true }));
+      const expectedEvidenceHash = sha256File(evidencePath);
       const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, { registry });
       expect(result.ok).toBe(true);
       expect(result.stage).toBe('complete');
       expect(result.preflight.ok).toBe(true);
       expect(result.preflight.immutableFileIntegrity.matched).toBe(5);
       expect(result.evidence.jsonObject).toBe(true);
-      expect(result.evidence.sha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(result.evidence.utf8Valid).toBe(true);
+      expect(result.evidence.hashScope).toBe('raw-file-bytes');
+      expect(result.evidence.sha256).toBe(expectedEvidenceHash);
       expect(result.verifier.executed).toBe(true);
       expect(result.verifier.exitCode).toBe(0);
       expect(result.verifier.stdout).toContain('fixture verifier PASS');
@@ -149,6 +152,26 @@ describe('runtime closure intake', () => {
       expect(result.stage).toBe('evidence');
       expect(result.verifier.executed).toBe(false);
       expect(result.errors.join('\n')).toContain('Evidence is not valid JSON');
+    });
+  });
+
+  it('rejects invalid UTF-8 while preserving the exact raw-byte evidence hash', () => {
+    withFixture({}, ({ artifactDir, evidencePath, registry }) => {
+      const invalidUtf8Json = Buffer.from([0x7b, 0x22, 0x78, 0x22, 0x3a, 0x22, 0xff, 0x22, 0x7d]);
+      writeFileSync(evidencePath, invalidUtf8Json);
+      const expectedEvidenceHash = sha256File(evidencePath);
+      const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, {
+        registry,
+        spawnSyncImpl: () => { throw new Error('verifier must not run'); }
+      });
+      expect(result.ok).toBe(false);
+      expect(result.stage).toBe('evidence');
+      expect(result.verifier.executed).toBe(false);
+      expect(result.evidence.sha256).toBe(expectedEvidenceHash);
+      expect(result.evidence.hashScope).toBe('raw-file-bytes');
+      expect(result.evidence.utf8Valid).toBe(false);
+      expect(result.evidence.jsonObject).toBe(false);
+      expect(result.errors.join('\n')).toContain('Evidence is not valid UTF-8');
     });
   });
 

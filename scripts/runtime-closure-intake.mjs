@@ -9,8 +9,12 @@ export const DEFAULT_MAX_EVIDENCE_BYTES = 5 * 1024 * 1024;
 export const DEFAULT_VERIFIER_TIMEOUT_MS = 30_000;
 export const DEFAULT_VERIFIER_OUTPUT_BYTES = 1024 * 1024;
 
-function sha256Text(text) {
-  return createHash('sha256').update(text).digest('hex');
+function sha256Bytes(bytes) {
+  return createHash('sha256').update(bytes).digest('hex');
+}
+
+function decodeUtf8Strict(bytes) {
+  return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
 }
 
 function evidenceFailure(track, artifactDir, evidencePath, preflight, errors, warnings, evidence = {}) {
@@ -88,23 +92,36 @@ export function inspectRuntimeClosureIntake(
     });
   }
 
-  const evidenceText = readFileSync(resolvedEvidencePath, 'utf8');
-  let parsedEvidence;
+  const evidenceBytes = readFileSync(resolvedEvidencePath);
+  const evidence = {
+    bytes: evidenceBytes.length,
+    sha256: sha256Bytes(evidenceBytes),
+    hashScope: 'raw-file-bytes',
+    utf8Valid: false,
+    jsonObject: false
+  };
+
+  let evidenceText = '';
   try {
-    parsedEvidence = JSON.parse(evidenceText);
+    evidenceText = decodeUtf8Strict(evidenceBytes);
+    evidence.utf8Valid = true;
   } catch (error) {
-    evidenceErrors.push(`Evidence is not valid JSON: ${error.message}`);
+    evidenceErrors.push(`Evidence is not valid UTF-8: ${error.message}`);
+  }
+
+  let parsedEvidence;
+  if (evidenceErrors.length === 0) {
+    try {
+      parsedEvidence = JSON.parse(evidenceText);
+    } catch (error) {
+      evidenceErrors.push(`Evidence is not valid JSON: ${error.message}`);
+    }
   }
 
   if (!evidenceErrors.length && (!parsedEvidence || typeof parsedEvidence !== 'object' || Array.isArray(parsedEvidence))) {
     evidenceErrors.push('Evidence JSON must be a top-level object.');
   }
-
-  const evidence = {
-    bytes: evidenceStat.size,
-    sha256: sha256Text(evidenceText),
-    jsonObject: evidenceErrors.length === 0
-  };
+  evidence.jsonObject = evidenceErrors.length === 0;
 
   if (evidenceErrors.length > 0) {
     return evidenceFailure(normalizedTrack, resolvedArtifactDir, resolvedEvidencePath, preflight, evidenceErrors, warnings, evidence);
@@ -168,7 +185,7 @@ function printHuman(result) {
     console.log(`Immutable files: ${result.preflight.immutableFileIntegrity.matched}/${result.preflight.immutableFileIntegrity.checked} SHA-256 pins matched`);
   }
   if (result.evidence?.sha256) {
-    console.log(`Evidence SHA-256: ${result.evidence.sha256}`);
+    console.log(`Evidence SHA-256 (raw bytes): ${result.evidence.sha256}`);
     console.log(`Evidence bytes: ${result.evidence.bytes}`);
   }
   if (result.verifier?.executed) {
