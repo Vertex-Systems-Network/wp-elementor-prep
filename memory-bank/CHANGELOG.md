@@ -2,6 +2,23 @@
 
 ## 2026-09-09
 
+### Runtime artifact symlink hardening
+- Continued the mandatory issue-first/PR-first cycle with open issues still #6/#7/#8 and no actionable product issue unblocked by real runtime evidence.
+- Identified that runtime artifact preflight followed symbolic links for required packaged files.
+- PR #46 switched required artifact-file inspection to `lstatSync()` and now fails closed when `BUILD_INFO.txt`, `manifest.json`, `code.js`, `ui.html`, `prepare-figma-import.mjs`, or the same-artifact verifier is a symbolic link.
+- Added regression coverage proving a symlinked compiled runtime file is rejected before immutable-hash acceptance.
+- Removed duplicate required-file diagnostics while preserving fail-closed behavior.
+- PR #46 head `7fa579e` passed CI #557 with no review/thread blockers.
+- PR #46 squash-merged to `main` at `15cc973`.
+- Post-merge main CI #558 and Integration Readiness #44 passed.
+- Identified the remaining matching provenance gap: the supplied artifact root directory itself could still be a symbolic link.
+- PR #47 switched artifact-root inspection to `lstatSync()` and now rejects a symbolic-link artifact directory before required-file/identity/hash/manifest checks.
+- Added regression coverage proving a symlinked artifact root fails closed.
+- PR #47 head `6a90c11` passed CI #559 with no review/thread blockers.
+- PR #47 squash-merged to `main` at `8297b69`.
+- Post-merge main CI #560 and Integration Readiness #45 passed.
+- Open PR/MR count returned to `0`; canonical P5/P6/P7 exact-build feature heads and registered runtime artifact bytes were not modified.
+
 ### Closure evidence symlink hardening
 - Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and there were no open PRs before the new hardening batch.
 - Identified a provenance-boundary gap in `runtime:closure-intake`: `statSync()` followed operator-supplied evidence symlinks.
