@@ -25,13 +25,18 @@ It must not retain `AuditNode` trees, exported PNG bytes, candidate Figma nodes,
 
 ## Versioned skip key
 
-A caller supplies a versioned `runKey`, for example:
+`createBatchRunKey()` is the canonical key builder. It combines:
 
-`plugin-v7:recipes-v3`
+- plugin version
+- Safe Recipe schema version
+- batch schema version
+- P5 runtime-proof gate version when relevant
 
-A frame with the same previously recorded key is initialized as `SKIPPED / ALREADY_PROCESSED`. A changed plugin/recipe key makes that frame pending again.
+Any compatibility-sensitive version change produces a different key and forces re-audit instead of trusting stale success metadata.
 
-Only **durably finalized `SUCCEEDED`** frames may receive the current run key.
+A frame with the same previously recorded key is initialized as `SKIPPED / ALREADY_PROCESSED`.
+
+Only **durably complete `SUCCEEDED`** frames may receive the current run key.
 
 `batch-run-metadata.ts` and `p7-run-metadata-storage.ts` enforce compact, bounded, fail-closed persistence through Figma `clientStorage`.
 
@@ -61,7 +66,8 @@ The queue distinguishes:
 
 - `RUNNING` — active single-frame transaction
 - `AWAITING_CHECKPOINT` — mutation committed, but restore/finalize decision is still pending
-- `SUCCEEDED` — checkpoint was explicitly finalized; durable success
+- `PENDING` — may include a previously finalized frame that must be re-audited for another Safe Fix
+- `SUCCEEDED` — frame is fully processed and eligible for durable run-key persistence
 - `SKIPPED / RESTORED_CHECKPOINT` — committed change was explicitly restored; not a success and receives no run key
 
 A canonical P7 single-frame processor should feed its `SafeFixRuntimeResult` through `p5SafeFixResultToBatchOutcome()`.
@@ -71,8 +77,15 @@ A canonical P7 single-frame processor should feed its `SafeFixRuntimeResult` thr
 `resolveBatchCheckpoint(state, 'FINALIZED')`
 
 - `AWAITING_CHECKPOINT -> SUCCEEDED`
+- use only when completion logic/re-audit proves no additional eligible Safe Fix remains
 - allows successful run-key persistence
-- queue may continue when other safety gates are clear
+
+`resolveBatchCheckpoint(state, 'FINALIZED_CONTINUE')`
+
+- `AWAITING_CHECKPOINT -> PENDING`
+- the same frame is scheduled again and re-audited from its newly finalized state
+- no run-key persistence yet
+- prevents multi-fix frames from being marked complete after only their first safe mutation
 
 `resolveBatchCheckpoint(state, 'RESTORED')`
 
@@ -87,7 +100,8 @@ A canonical P7 single-frame processor should feed its `SafeFixRuntimeResult` thr
 `p7-checkpoint-resolution.ts` composes queue bookkeeping with the existing P5 actions:
 
 - `restoreP7BatchCheckpoint()` calls `restoreLastSafeFix()` first and advances the queue only when restore returns commit evidence
-- `finalizeP7BatchCheckpoint()` calls `finalizeLastSafeFix()` first and advances the queue only when finalize returns `true`
+- `finalizeP7BatchCheckpoint()` calls `finalizeLastSafeFix()` first and uses durable `FINALIZED`
+- `finalizeAndContinueP7BatchCheckpoint()` calls the same real P5 finalize action first, then uses `FINALIZED_CONTINUE` so the frame is re-audited
 - null restore evidence / false finalize results fail closed and leave `AWAITING_CHECKPOINT` unchanged
 - no P5 action is called if no batch item owns a checkpoint
 
@@ -101,7 +115,7 @@ This means queue bookkeeping can never claim that a checkpoint was resolved befo
 
 The intended lifecycle is:
 
-`P5 result -> CHECKPOINT_PENDING -> AWAITING_CHECKPOINT/PAUSED -> real FINALIZE or RESTORE succeeds -> queue resolution -> next frame`
+`P5 result -> CHECKPOINT_PENDING -> AWAITING_CHECKPOINT/PAUSED -> real FINALIZE or RESTORE succeeds -> re-audit same frame or continue queue`
 
 The checkpoint gate is read-only; it never auto-restores or auto-finalizes.
 
@@ -138,6 +152,7 @@ Additional suites prove:
 - P7 runtime composition stops on the P5 checkpoint gate
 - committed-but-unresolved frames are not counted as succeeded/finished
 - unresolved checkpoints cannot receive persisted run keys
+- finalized-but-incomplete frames return to PENDING for re-audit
 - FINALIZED checkpoints become durable success only after P5 finalize succeeds
 - RESTORED checkpoints become terminal non-success skips only after P5 restore succeeds
 - false/null P5 checkpoint actions leave queue state unchanged
@@ -147,14 +162,16 @@ Additional suites prove:
 - malformed committed results without commit evidence fail closed
 - persisted run metadata remains bounded and fail-closed
 - Figma storage read failure does not trigger corrupt replacement writes
+- canonical run keys invalidate on plugin/schema/runtime-proof version changes
 
 This is core/runtime-seam evidence only. Real Figma batch memory/cancellation calibration remains required before P7 is production-ready.
 
 ## Remaining production gates
 
 1. Implement/inject the canonical single-frame Figma processor using the existing P5 planning/runtime seams; do not duplicate P5 mutation logic.
-2. Add UI progress/cancel/pause/resume plus explicit restore/finalize controls backed by the checkpoint-resolution adapter.
-3. Invoke run metadata persistence only after durable `SUCCEEDED` transitions.
-4. Run realistic 60+ frame calibration in Figma and record peak memory/runtime evidence.
-5. Prove cancellation during a long real validation cycle settles safely after the active transaction/checkpoint lifecycle.
-6. Keep P7 stacked behind P5 until P5 runtime proof and merge are complete.
+2. Re-audit after every finalized checkpoint and choose `FINALIZED_CONTINUE` while another eligible Safe Fix remains; use `FINALIZED` only at true frame completion.
+3. Add UI progress/cancel/pause/resume plus explicit restore/finalize controls backed by the checkpoint-resolution adapter.
+4. Invoke run metadata persistence only after durable `SUCCEEDED` transitions.
+5. Run realistic 60+ frame calibration in Figma and record peak memory/runtime evidence.
+6. Prove cancellation during a long real validation cycle settles safely after the active transaction/checkpoint lifecycle.
+7. Keep P7 stacked behind P5 until P5 runtime proof and merge are complete.
