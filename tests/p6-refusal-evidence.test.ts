@@ -81,7 +81,7 @@ function build(plans: AdvancedRecipePlan[], maxPlans?: number) {
       plans,
     },
     capturedAt: '2026-09-08T10:01:00.000Z',
-    maxPlans,
+    ...(maxPlans === undefined ? {} : { maxPlans }),
   });
 }
 
