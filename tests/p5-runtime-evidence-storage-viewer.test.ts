@@ -66,6 +66,29 @@ describe('P5 runtime evidence storage/viewer', () => {
     await expect(loadLatestP5RuntimeEvidence(storage)).resolves.toBeNull();
   });
 
+  it('refuses superficially versioned but malformed nested evidence', async () => {
+    const storage = new MemoryStorage();
+    const malformed = evidence() as unknown as Record<string, unknown>;
+    malformed.calibration = {
+      schemaVersion: 1,
+      passed: true,
+      leftovers: 0,
+      forcedReject: { state: 'REJECTED' },
+      passRestore: {},
+      passFinalize: {},
+    };
+    storage.values.set(P5_RUNTIME_EVIDENCE_STORAGE_KEY, malformed);
+    await expect(loadLatestP5RuntimeEvidence(storage)).resolves.toBeNull();
+  });
+
+  it('refuses contradictory accepted evidence without a minted proof timestamp', async () => {
+    const storage = new MemoryStorage();
+    const contradictory = evidence();
+    contradictory.runtimeProofPassedAt = null;
+    storage.values.set(P5_RUNTIME_EVIDENCE_STORAGE_KEY, contradictory);
+    await expect(loadLatestP5RuntimeEvidence(storage)).resolves.toBeNull();
+  });
+
   it('renders acceptance status and escaped copyable bounded JSON', () => {
     const bundle = evidence();
     const html = buildP5RuntimeEvidenceViewerHtml(bundle);
