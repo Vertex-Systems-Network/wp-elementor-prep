@@ -7,19 +7,78 @@ export interface P5EvidenceKeyValueStorage {
   setAsync(key: string, value: unknown): Promise<void>;
 }
 
+function objectValue(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' ? value as Record<string, unknown> : null;
+}
+
+function pixelValue(value: unknown): boolean {
+  return value === null || (typeof value === 'number' && Number.isFinite(value) && value >= 0);
+}
+
+function booleanFields(value: Record<string, unknown>, names: string[]): boolean {
+  return names.every((name) => typeof value[name] === 'boolean');
+}
+
+function isCalibrationResult(value: unknown): boolean {
+  const calibration = objectValue(value);
+  if (!calibration) return false;
+  const forcedReject = objectValue(calibration.forcedReject);
+  const passRestore = objectValue(calibration.passRestore);
+  const passFinalize = objectValue(calibration.passFinalize);
+  if (!forcedReject || !passRestore || !passFinalize) return false;
+
+  return calibration.schemaVersion === 1
+    && typeof calibration.passed === 'boolean'
+    && typeof calibration.leftovers === 'number'
+    && Number.isInteger(calibration.leftovers)
+    && calibration.leftovers >= 0
+    && typeof forcedReject.state === 'string'
+    && booleanFields(forcedReject, [
+      'validationRejected',
+      'pixelEvidenceReturned',
+      'candidateDeleted',
+      'originalUntouched',
+    ])
+    && pixelValue(forcedReject.changedPixelPct)
+    && typeof passRestore.state === 'string'
+    && booleanFields(passRestore, [
+      'validationPassed',
+      'pixelEvidenceReturned',
+      'committed',
+      'restored',
+      'checkpointCleared',
+    ])
+    && pixelValue(passRestore.changedPixelPct)
+    && typeof passFinalize.state === 'string'
+    && booleanFields(passFinalize, [
+      'validationPassed',
+      'pixelEvidenceReturned',
+      'committed',
+      'finalized',
+      'candidateRetained',
+      'originalDiscarded',
+      'checkpointCleared',
+    ])
+    && pixelValue(passFinalize.changedPixelPct);
+}
+
 function isEvidenceBundle(value: unknown): value is P5RuntimeEvidenceBundle {
-  if (!value || typeof value !== 'object') return false;
-  const candidate = value as Partial<P5RuntimeEvidenceBundle>;
+  const candidate = objectValue(value);
+  if (!candidate) return false;
+  const acceptance = objectValue(candidate.acceptance);
+  if (!acceptance || typeof acceptance.accepted !== 'boolean' || !Array.isArray(acceptance.failures)) return false;
+  if (!acceptance.failures.every((failure) => typeof failure === 'string')) return false;
+
+  const proofTimestampValid = acceptance.accepted
+    ? typeof candidate.runtimeProofPassedAt === 'string'
+    : candidate.runtimeProofPassedAt === null;
+
   return candidate.schemaVersion === 1
     && typeof candidate.capturedAt === 'string'
     && typeof candidate.pluginVersion === 'string'
     && typeof candidate.runtimeGateVersion === 'string'
-    && (candidate.runtimeProofPassedAt === null || typeof candidate.runtimeProofPassedAt === 'string')
-    && Boolean(candidate.acceptance)
-    && typeof candidate.acceptance?.accepted === 'boolean'
-    && Array.isArray(candidate.acceptance?.failures)
-    && Boolean(candidate.calibration)
-    && candidate.calibration?.schemaVersion === 1;
+    && proofTimestampValid
+    && isCalibrationResult(candidate.calibration);
 }
 
 /** Unknown/corrupt stored evidence is ignored rather than guessed. */
