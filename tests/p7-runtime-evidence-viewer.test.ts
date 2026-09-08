@@ -35,6 +35,15 @@ function available(): P7RuntimeEvidenceInspection {
       attemptEvidenceTruncated: false,
       checkpointEvidenceTruncated: false,
     },
+    closure: {
+      accepted: false,
+      failures: ['P5 prerequisite <unsafe> is not valid for this build.'],
+      p5PrerequisiteValid: false,
+      p5ProofPassedAt: null,
+      currentBuildTraceable: true,
+      runtimeEvidenceMatchesCurrentBuild: true,
+    },
+    closureJson: '{"schemaVersion":1,"accepted":false,"currentBuild":{"sourceSha":"<unsafe>"}}',
     acceptance: {
       accepted: false,
       failures: ['Cancellation evidence <unsafe> needs a longer active processor.'],
@@ -49,13 +58,18 @@ function available(): P7RuntimeEvidenceInspection {
 }
 
 describe('P7 runtime evidence viewer', () => {
-  it('renders retained acceptance, visible build provenance and both copy surfaces without trusting evidence HTML', () => {
+  it('renders closure + runtime acceptance, visible build provenance and copy surfaces without trusting evidence HTML', () => {
     const html = buildP7RuntimeEvidenceViewerHtml(available());
+    expect(html).toContain('Closure acceptance: FAIL');
+    expect(html).toContain('P5 exact-build prerequisite');
+    expect(html).toContain('runtime evidence = current build');
+    expect(html).toContain('P5 prerequisite &lt;unsafe&gt; is not valid for this build.');
+    expect(html).toContain('Copy closure bundle');
     expect(html).toContain('Runtime acceptance: FAIL');
     expect(html).toContain('60+ completed stress evidence');
     expect(html).toContain('active-frame cancellation evidence');
     expect(html).toContain('Cancellation evidence &lt;unsafe&gt; needs a longer active processor.');
-    expect(html).toContain('Copy acceptance bundle');
+    expect(html).toContain('Copy runtime acceptance bundle');
     expect(html).toContain('Copy latest bounded JSON');
     expect(html).toContain('&lt;unsafe&gt;');
     expect(html).toContain('Persisted P7 Runtime Evidence');
@@ -72,11 +86,20 @@ describe('P7 runtime evidence viewer', () => {
     expect(html).toContain('&lt;/pre&gt;&lt;script&gt;bad()&lt;/script&gt;');
   });
 
-  it('renders PASS when both retained runtime scenarios satisfy acceptance', () => {
+  it('renders final closure PASS only when both runtime and exact-build P5 prerequisite pass', () => {
     const inspection = available();
     if (inspection.status !== 'AVAILABLE') throw new Error('expected available inspection');
     const html = buildP7RuntimeEvidenceViewerHtml({
       ...inspection,
+      closure: {
+        accepted: true,
+        failures: [],
+        p5PrerequisiteValid: true,
+        p5ProofPassedAt: '2026-09-08T00:59:00.000Z',
+        currentBuildTraceable: true,
+        runtimeEvidenceMatchesCurrentBuild: true,
+      },
+      closureJson: '{"schemaVersion":1,"accepted":true,"failures":[]}',
       acceptance: {
         accepted: true,
         failures: [],
@@ -85,14 +108,24 @@ describe('P7 runtime evidence viewer', () => {
       },
       acceptanceJson: '{"schemaVersion":1,"accepted":true,"failures":[]}',
     });
+    expect(html).toContain('Closure acceptance: PASS');
     expect(html).toContain('Runtime acceptance: PASS');
-    expect(html).toContain('Copy acceptance bundle');
+    expect(html).toContain('Copy closure bundle');
   });
 
-  it('renders exportable acceptance failures even when no valid latest evidence exists', () => {
+  it('renders exportable closure/runtime failures even when no valid latest evidence exists', () => {
     const html = buildP7RuntimeEvidenceViewerHtml({
       status: 'EMPTY',
       message: 'No evidence <yet>',
+      closure: {
+        accepted: false,
+        failures: ['P5 exact-build prerequisite is missing.'],
+        p5PrerequisiteValid: false,
+        p5ProofPassedAt: null,
+        currentBuildTraceable: true,
+        runtimeEvidenceMatchesCurrentBuild: false,
+      },
+      closureJson: '{"schemaVersion":1,"accepted":false}',
       acceptance: {
         accepted: false,
         failures: ['60+ completed stress evidence is missing.'],
@@ -101,10 +134,13 @@ describe('P7 runtime evidence viewer', () => {
       },
       acceptanceJson: '{"schemaVersion":1,"accepted":false,"stress":null,"cancellation":null}',
     });
+    expect(html).toContain('Closure acceptance: FAIL');
+    expect(html).toContain('P5 exact-build prerequisite is missing.');
     expect(html).toContain('Runtime acceptance: FAIL');
     expect(html).toContain('60+ completed stress evidence is missing.');
     expect(html).toContain('No evidence &lt;yet&gt;');
-    expect(html).toContain('Copy acceptance bundle');
+    expect(html).toContain('Copy closure bundle');
+    expect(html).toContain('Copy runtime acceptance bundle');
     expect(html).not.toContain('Copy latest bounded JSON');
   });
 });
