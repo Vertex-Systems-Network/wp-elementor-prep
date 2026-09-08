@@ -1,7 +1,8 @@
 # AI-Native Planning
 
 Status: approved foundation plan  
-Date: 2026-09-07
+Date: 2026-09-07  
+Operational workflow updated: 2026-09-08
 
 ## 1. Product intent
 
@@ -124,3 +125,79 @@ The project is successful when a non-developer can select a desktop frame and re
 - clear manual-review flags for ambiguous layouts,
 - repeatable behavior across many templates,
 - no AI credits required for core usage.
+
+## 9. Mandatory AI-native engineering cycle
+
+Every AI/developer work cycle MUST follow this order before starting new implementation work.
+
+### A. Issues first
+
+1. Read the canonical memory-bank and current README status.
+2. List all open issues for the repository.
+3. For each open issue, classify it as:
+   - actionable code/docs/test work,
+   - blocked by another phase/merge,
+   - blocked by external/manual runtime evidence,
+   - intentionally deferred/not planned.
+4. Solve actionable issues before creating unrelated new development.
+5. Run the relevant tests/CI for each fix and close/update the issue only when its acceptance gate is actually satisfied.
+6. Never fake, synthesize, or prematurely close an issue that requires real external/runtime evidence.
+
+### B. PR/MR second
+
+After the issue sweep, list all open Pull Requests / Merge Requests.
+
+For every open PR/MR:
+
+1. inspect CI/checks,
+2. inspect mergeability and conflicts,
+3. inspect unresolved review feedback,
+4. fix failures/conflicts when safely actionable,
+5. merge only when the documented acceptance gates are satisfied,
+6. close superseded/invalid work only with a clear reason.
+
+Do not start duplicate implementation when an existing issue or PR/MR already owns that work.
+
+### C. New development third
+
+Only after issues and PR/MRs are processed should the agent begin the next planned development task.
+
+New development should:
+
+- follow the current roadmap/dependency order,
+- use parallel independent workstreams when safe,
+- avoid mutating exact-build/provenance-sensitive branches without a real need,
+- preserve green CI and safety invariants,
+- create focused branches/PRs for meaningful changes.
+
+### D. Mandatory end-of-work status sync
+
+After every meaningful work batch, before declaring the task complete:
+
+1. run the relevant typecheck/tests/build/verification gates,
+2. update `memory-bank/PROJECT_STATE.md`, `NEXT_ACTIONS.md`, `ROADMAP.md` when phase state changed, and `CHANGELOG.md`,
+3. update `DECISIONS.md` when a durable policy/architecture decision changed,
+4. update the root `README.md` with current issue/PR status,
+5. maintain a module-wise progress table in README,
+6. update each module's numeric percentage and visual progress bar,
+7. update the overall project progress bar,
+8. record blockers and exact next work.
+
+The README module progress table is the human-facing live status surface; the memory-bank remains the detailed operational source of truth.
+
+### Required README module table format
+
+The table should contain at least:
+
+| Module | Status | Progress | Progress Bar | Blocker / Next |
+|---|---|---:|---|---|
+| Example module | IN PROGRESS | 70% | `███████░░░` | Exact remaining gate |
+
+Progress bars use 10 cells where practical:
+
+- `██████████` = 100%
+- `█████████░` = 90%
+- `████████░░` = 80%
+- and so on.
+
+Percentages must reflect verified completed scope, not optimistic estimates. Deferred modules must be labeled `DEFERRED` rather than presented as active incomplete work.
