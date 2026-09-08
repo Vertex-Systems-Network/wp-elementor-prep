@@ -1,5 +1,8 @@
 import type { P7RuntimeEvidenceSnapshot } from '../core/batch-runtime-evidence';
-import { loadAndAssessP7RuntimeAcceptance } from './p7-runtime-acceptance-loader';
+import {
+  loadAndAssessP7RuntimeAcceptance,
+  type P7StoredRuntimeAcceptanceAssessment,
+} from './p7-runtime-acceptance-loader';
 import {
   loadLatestP7RuntimeEvidence,
   type P7EvidenceKeyValueStorage,
@@ -34,20 +37,31 @@ export interface P7RuntimeAcceptanceInspectionSummary {
   cancellationEvidenceAvailable: boolean;
 }
 
+export interface P7RuntimeAcceptanceExportBundle {
+  schemaVersion: 1;
+  accepted: boolean;
+  failures: string[];
+  stress: P7RuntimeEvidenceSnapshot | null;
+  cancellation: P7RuntimeEvidenceSnapshot | null;
+}
+
+interface P7RuntimeEvidenceInspectionBase {
+  acceptance: P7RuntimeAcceptanceInspectionSummary;
+  acceptanceJson: string;
+}
+
 export type P7RuntimeEvidenceInspection =
-  | {
+  | (P7RuntimeEvidenceInspectionBase & {
     status: 'EMPTY';
     message: string;
-    acceptance: P7RuntimeAcceptanceInspectionSummary;
-  }
-  | {
+  })
+  | (P7RuntimeEvidenceInspectionBase & {
     status: 'AVAILABLE';
     summary: P7RuntimeEvidenceInspectionSummary;
-    acceptance: P7RuntimeAcceptanceInspectionSummary;
     warnings: string[];
     snapshot: P7RuntimeEvidenceSnapshot;
     json: string;
-  };
+  });
 
 function buildWarnings(snapshot: P7RuntimeEvidenceSnapshot): string[] {
   const warnings: string[] = [];
@@ -100,12 +114,30 @@ export function formatP7RuntimeEvidenceJson(snapshot: P7RuntimeEvidenceSnapshot)
   return JSON.stringify(snapshot, null, 2);
 }
 
+export function buildP7RuntimeAcceptanceExportBundle(
+  assessment: P7StoredRuntimeAcceptanceAssessment,
+): P7RuntimeAcceptanceExportBundle {
+  return {
+    schemaVersion: 1,
+    accepted: assessment.accepted,
+    failures: [...assessment.failures],
+    stress: assessment.evidence.stress,
+    cancellation: assessment.evidence.cancellation,
+  };
+}
+
+export function formatP7RuntimeAcceptanceJson(
+  assessment: P7StoredRuntimeAcceptanceAssessment,
+): string {
+  return JSON.stringify(buildP7RuntimeAcceptanceExportBundle(assessment), null, 2);
+}
+
 /**
  * Read-only inspector for the latest bounded P7 runtime-evidence snapshot plus the two retained
  * acceptance scenarios. It never creates, mutates or clears runtime state.
  *
  * Unknown/corrupt persisted evidence is represented as missing rather than guessed. The latest JSON
- * export remains backward-compatible and continues to contain only the latest snapshot.
+ * export remains backward-compatible, while acceptanceJson contains both retained closure scenarios.
  */
 export async function inspectLatestP7RuntimeEvidence(
   storage: P7EvidenceKeyValueStorage,
@@ -117,16 +149,18 @@ export async function inspectLatestP7RuntimeEvidence(
 
   const acceptance: P7RuntimeAcceptanceInspectionSummary = {
     accepted: storedAcceptance.accepted,
-    failures: storedAcceptance.failures,
+    failures: [...storedAcceptance.failures],
     stressEvidenceAvailable: storedAcceptance.evidence.stress !== null,
     cancellationEvidenceAvailable: storedAcceptance.evidence.cancellation !== null,
   };
+  const acceptanceJson = formatP7RuntimeAcceptanceJson(storedAcceptance);
 
   if (!snapshot) {
     return {
       status: 'EMPTY',
       message: 'No valid persisted P7 runtime evidence is available for inspection.',
       acceptance,
+      acceptanceJson,
     };
   }
 
@@ -134,6 +168,7 @@ export async function inspectLatestP7RuntimeEvidence(
     status: 'AVAILABLE',
     summary: summarizeP7RuntimeEvidence(snapshot),
     acceptance,
+    acceptanceJson,
     warnings: buildWarnings(snapshot),
     snapshot,
     json: formatP7RuntimeEvidenceJson(snapshot),
