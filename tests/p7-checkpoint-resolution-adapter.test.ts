@@ -7,6 +7,7 @@ import {
 import {
   finalizeAndContinueP7BatchCheckpoint,
   finalizeP7BatchCheckpoint,
+  finalizeP7BatchCheckpointAfterReaudit,
   restoreP7BatchCheckpoint,
   type P7CheckpointActions,
 } from '../src/plugin/p7-checkpoint-resolution';
@@ -64,6 +65,61 @@ describe('P7 checkpoint action adapter', () => {
     expect(result.state.items[0]?.frameId).toBe('frame-1');
     expect(result.state.items[0]?.status).toBe('SKIPPED');
     expect(result.state.items[0]?.skipReason).toBe('RESTORED_CHECKPOINT');
+  });
+
+  it('automatically finalizes-and-continues when read-only re-audit finds more eligible work', async () => {
+    let finalizeCalls = 0;
+    const actions: P7CheckpointActions = {
+      restore: async () => null,
+      finalize: async () => { finalizeCalls += 1; return true; },
+    };
+    const seenIds: string[] = [];
+    const result = await finalizeP7BatchCheckpointAfterReaudit(
+      awaitingState(),
+      async (frameId) => { seenIds.push(frameId); return true; },
+      actions,
+    );
+
+    expect(seenIds).toEqual(['candidate-1']);
+    expect(finalizeCalls).toBe(1);
+    expect(result.resolution).toBe('FINALIZED_CONTINUE');
+    expect(result.state.items[0]?.frameId).toBe('candidate-1');
+    expect(result.state.items[0]?.status).toBe('PENDING');
+  });
+
+  it('automatically marks durable success only when re-audit finds no more eligible work', async () => {
+    const actions: P7CheckpointActions = {
+      restore: async () => null,
+      finalize: async () => true,
+    };
+    const result = await finalizeP7BatchCheckpointAfterReaudit(
+      awaitingState(),
+      async () => false,
+      actions,
+    );
+
+    expect(result.resolution).toBe('FINALIZED');
+    expect(result.state.items[0]?.frameId).toBe('candidate-1');
+    expect(result.state.items[0]?.status).toBe('SUCCEEDED');
+  });
+
+  it('leaves the real checkpoint untouched when read-only re-audit fails', async () => {
+    const state = awaitingState();
+    let finalizeCalls = 0;
+    const actions: P7CheckpointActions = {
+      restore: async () => null,
+      finalize: async () => { finalizeCalls += 1; return true; },
+    };
+
+    await expect(finalizeP7BatchCheckpointAfterReaudit(
+      state,
+      async () => { throw new Error('re-audit failed'); },
+      actions,
+    )).rejects.toThrow('re-audit failed');
+
+    expect(finalizeCalls).toBe(0);
+    expect(state.items[0]?.frameId).toBe('candidate-1');
+    expect(state.items[0]?.status).toBe('AWAITING_CHECKPOINT');
   });
 
   it('does not advance bookkeeping when finalize fails', async () => {
