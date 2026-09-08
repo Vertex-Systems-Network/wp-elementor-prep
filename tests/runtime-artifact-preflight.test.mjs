@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inspectRuntimeArtifact } from '../scripts/runtime-artifact-preflight.mjs';
@@ -172,6 +172,22 @@ describe('runtime artifact preflight', () => {
       const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
       expect(result.ok).toBe(false);
       expect(result.errors.join('\n')).toContain(`SHA-256 mismatch for ${P5.verifier}`);
+      expect(result.immutableFileIntegrity.matched).toBe(4);
+    });
+  });
+
+  it.skipIf(process.platform === 'win32')('fails closed when a required artifact file is a symbolic link', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const codePath = join(dir, 'code.js');
+      const targetPath = join(dir, 'code-target.js');
+      writeFileSync(targetPath, readFileSync(codePath));
+      rmSync(codePath);
+      symlinkSync(targetPath, codePath);
+
+      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
+      expect(result.ok).toBe(false);
+      expect(result.errors.join('\n')).toContain('Required artifact file must not be a symbolic link: code.js');
+      expect(result.immutableFileIntegrity.checked).toBe(4);
       expect(result.immutableFileIntegrity.matched).toBe(4);
     });
   });
