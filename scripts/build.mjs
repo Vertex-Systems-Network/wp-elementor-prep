@@ -22,6 +22,16 @@ await build({
   },
 });
 
+await build({
+  entryPoints: ['src/tools/verify-p5-evidence.ts'],
+  bundle: true,
+  outfile: 'dist/verify-p5-evidence.mjs',
+  platform: 'node',
+  target: 'node20',
+  format: 'esm',
+  minify: false,
+});
+
 await cp('src/ui/ui.html', 'dist/ui.html');
 
 const template = await readFile('manifest.template.json', 'utf8');
