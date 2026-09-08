@@ -1,9 +1,57 @@
 import { describe, expect, it } from 'vitest';
+import type { P5RuntimeCalibrationResult } from '../src/plugin/p5-runtime-calibration';
+import { buildP5RuntimeEvidenceBundle } from '../src/plugin/p5-runtime-evidence';
 import type { P6PreservationRefusalEvidenceBundle } from '../src/plugin/p6-refusal-evidence';
 import type { P6RuntimeEvidenceBundle } from '../src/plugin/p6-runtime-evidence';
 import { buildP6ClosureExportBundle } from '../src/plugin/p6-closure-inspector';
 import { verifyP6ClosureExportBundle } from '../src/plugin/p6-closure-verifier';
 import { P6_TEST_BUILD, P6_TEST_PROOF_PASSED_AT } from './p6-provenance-fixture';
+
+function passingP5Result(): P5RuntimeCalibrationResult {
+  return {
+    schemaVersion: 1,
+    passed: true,
+    forcedReject: {
+      state: 'REJECTED',
+      validationRejected: true,
+      pixelEvidenceReturned: true,
+      changedPixelPct: 1,
+      candidateDeleted: true,
+      originalUntouched: true,
+    },
+    passRestore: {
+      state: 'COMMITTED',
+      validationPassed: true,
+      pixelEvidenceReturned: true,
+      changedPixelPct: 0,
+      committed: true,
+      restored: true,
+      checkpointCleared: true,
+    },
+    passFinalize: {
+      state: 'COMMITTED',
+      validationPassed: true,
+      pixelEvidenceReturned: true,
+      changedPixelPct: 0,
+      committed: true,
+      finalized: true,
+      candidateRetained: true,
+      originalDiscarded: true,
+      checkpointCleared: true,
+    },
+    leftovers: 0,
+  };
+}
+
+function p5Evidence() {
+  return buildP5RuntimeEvidenceBundle({
+    pluginVersion: '0.1.0-alpha.1',
+    build: P6_TEST_BUILD,
+    result: passingP5Result(),
+    runtimeProofPassedAt: P6_TEST_PROOF_PASSED_AT,
+    capturedAt: '2026-09-08T10:00:00.000Z',
+  });
+}
 
 function positive(build = P6_TEST_BUILD): P6RuntimeEvidenceBundle {
   return {
@@ -46,12 +94,18 @@ function refusal(build = P6_TEST_BUILD): P6PreservationRefusalEvidenceBundle {
 }
 
 function passingBundle() {
-  return buildP6ClosureExportBundle(P6_TEST_BUILD, { positive: positive(), refusal: refusal() });
+  return buildP6ClosureExportBundle(
+    P6_TEST_BUILD,
+    { positive: positive(), refusal: refusal() },
+    p5Evidence(),
+  );
 }
 
 describe('P6 offline closure verifier', () => {
   it('accepts untampered closure from the exact verifier build', () => {
-    expect(verifyP6ClosureExportBundle(passingBundle(), P6_TEST_BUILD)).toEqual({ accepted: true, failures: [] });
+    const bundle = passingBundle();
+    expect(bundle.schemaVersion).toBe(2);
+    expect(verifyP6ClosureExportBundle(bundle, P6_TEST_BUILD)).toEqual({ accepted: true, failures: [] });
   });
 
   it('rejects otherwise-valid closure from another artifact build', () => {
@@ -77,7 +131,31 @@ describe('P6 offline closure verifier', () => {
     expect(result.failures.some((failure) => failure.includes('Positive evidence:'))).toBe(true);
   });
 
-  it('rejects malformed closure without throwing', () => {
+  it('rejects scenario proof timestamp forgery against the embedded P5 evidence', () => {
+    const bundle = passingBundle();
+    bundle.evidence.positive!.p5RuntimeProofPassedAt = '2026-09-08T09:00:00.000Z';
+    const result = verifyP6ClosureExportBundle(bundle, P6_TEST_BUILD);
+    expect(result.accepted).toBe(false);
+    expect(result.failures).toContain('Positive evidence P5 proof timestamp does not match exported P5 prerequisite evidence.');
+  });
+
+  it('rejects tampered embedded P5 calibration even if P6 scenarios still claim a valid proof', () => {
+    const bundle = passingBundle();
+    bundle.p5Evidence!.calibration.passFinalize.checkpointCleared = false;
+    const result = verifyP6ClosureExportBundle(bundle, P6_TEST_BUILD);
+    expect(result.accepted).toBe(false);
+    expect(result.failures).toContain('Finalize path left a checkpoint pending.');
+  });
+
+  it('rejects missing P5 prerequisite evidence', () => {
+    const bundle = passingBundle();
+    bundle.p5Evidence = null;
+    const result = verifyP6ClosureExportBundle(bundle, P6_TEST_BUILD);
+    expect(result.accepted).toBe(false);
+    expect(result.failures).toContain('P6 closure export contains no P5 runtime evidence prerequisite.');
+  });
+
+  it('rejects legacy v1 or malformed closure without throwing', () => {
     expect(verifyP6ClosureExportBundle({ schemaVersion: 1 }, P6_TEST_BUILD)).toEqual({
       accepted: false,
       failures: ['Malformed or unsupported P6 closure export bundle.'],
