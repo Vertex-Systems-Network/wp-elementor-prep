@@ -1,3 +1,4 @@
+// @ts-expect-error Vitest executes in Node; this repository intentionally omits @types/node from plugin typecheck.
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
