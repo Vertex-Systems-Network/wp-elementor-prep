@@ -1,5 +1,6 @@
 import {
   isTraceableP5RuntimeBuildIdentity,
+  isValidP5RuntimeProof,
   P5_RUNTIME_GATE_VERSION,
   sameP5RuntimeBuildIdentity,
   type P5RuntimeBuildIdentity,
@@ -120,13 +121,34 @@ function assessP5Prerequisite(
 
   const calibration = assessP5RuntimeAcceptance(evidence.calibration);
   failures.push(...calibration.failures);
-  const recomputed: P5RuntimeAcceptanceAssessment = { accepted: failures.length === 0, failures };
+  const recomputed: P5RuntimeAcceptanceAssessment = { accepted: failures.length === 0, failures: [...failures] };
 
   if (!sameAcceptance(evidence.acceptance, recomputed)) {
     failures.push('Stored P5 prerequisite acceptance does not match canonical recomputation.');
   }
-  if (recomputed.accepted && !validIso(evidence.runtimeProofPassedAt)) {
-    failures.push('Accepted P5 prerequisite evidence has no valid runtime proof timestamp.');
+
+  const capturedAtValid = validIso(evidence.capturedAt);
+  if (!capturedAtValid) {
+    failures.push('P5 prerequisite evidence has no valid capture timestamp.');
+  }
+
+  if (recomputed.accepted) {
+    if (!validIso(evidence.runtimeProofPassedAt)) {
+      failures.push('Accepted P5 prerequisite evidence has no valid runtime proof timestamp.');
+    } else {
+      const reconstructedProof = {
+        schemaVersion: 1 as const,
+        gateVersion: evidence.runtimeGateVersion,
+        passedAt: evidence.runtimeProofPassedAt,
+        build: { ...evidence.build },
+      };
+      if (!isValidP5RuntimeProof(reconstructedProof, expectedBuild)) {
+        failures.push('Embedded P5 prerequisite does not reconstruct a valid exact-build runtime proof.');
+      }
+      if (capturedAtValid && Date.parse(evidence.runtimeProofPassedAt) > Date.parse(evidence.capturedAt)) {
+        failures.push('Embedded P5 runtime proof timestamp is later than its evidence capture timestamp.');
+      }
+    }
   }
 
   return { accepted: failures.length === 0, failures };
