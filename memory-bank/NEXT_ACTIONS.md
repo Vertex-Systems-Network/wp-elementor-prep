@@ -26,63 +26,83 @@ Execute in this order before starting unrelated new implementation:
 
 ## Current repository queue
 
-At the latest sweep:
-
 - Open issues: #6, #7, #8.
-- Open PR/MR: 0 before the AI-native policy-sync branch was created.
-- No additional actionable code-defect issue was found.
+- #7/#8 tracker bodies now explicitly require fresh post-P5 builds for final closure.
+- Open PR/MR at cycle start: 0.
+- Current development PR: #41 — runtime artifact preflight.
+- First PR #41 implementation CI #517: PASS.
 
 ## P5 — first release gate / issue #6
 
-1. Use canonical `figma-plugin-dist-488` from P5 head `810d98d`.
-2. If needed, prepare the local manifest without changing compiled code/UI.
-3. Import the exact build in Figma Desktop.
-4. Run `Developer: P5 Runtime Self-Test`.
-5. Require `P5 Compiled Runtime Acceptance: PASS`.
-6. Verify real rendered-pixel forced reject, restore and finalize flows.
-7. Require checkpoint cleanup with `0` leftovers.
-8. Export `p5-evidence.json`.
-9. From the same unpacked artifact run:
+1. Unpack canonical `figma-plugin-dist-488` from P5 head `810d98d` / CI #488.
+2. From current `main`, run the fail-closed registry check:
+
+```bash
+npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
+```
+
+3. Require preflight PASS and exact source/run identity.
+4. If the artifact still has placeholder plugin ID, use the **packaged artifact helper**:
+
+```bash
+cd /path/to/unpacked/figma-plugin-dist-488
+node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
+```
+
+5. Import `dist-local/manifest.json` (or the original manifest if already rebound) in Figma Desktop.
+6. Run `Developer: P5 Runtime Self-Test`.
+7. Require `P5 Compiled Runtime Acceptance: PASS`.
+8. Verify real rendered-pixel forced reject, restore and finalize flows.
+9. Require checkpoint cleanup with `0` leftovers.
+10. Export `p5-evidence.json`.
+11. From the **same unpacked artifact** run:
 
 ```bash
 node verify-p5-evidence.mjs < p5-evidence.json
 ```
 
-10. Require exit code `0`.
-11. Apply the already proven documentation integration resolution, merge P5, and close #6.
+12. Require exit code `0`.
+13. Apply the already proven documentation integration resolution, merge P5, and close #6.
 
-Do not replace real Figma observations with CI/synthetic evidence.
+Preflight, CI and synthetic evidence do not replace real Figma observations.
 
 ## P6 — after P5 merge / issue #7
+
+Current #494 is reference-only. `runtime:preflight` must reject it for `final-closure` intent.
 
 1. Resolve/rebase P6 against merged P5.
 2. Run full CI.
 3. Produce a fresh exact-build P6 artifact.
-4. Establish exact-build P5 prerequisite in that fresh build.
-5. Run a real image-bearing positive calibration and require Full P3 PASS with unchanged image-anchor count.
-6. Run a preservation-sensitive refusal case and require `NO_CANDIDATE` / refusal PASS.
-7. Require final P6 closure PASS.
-8. Export schema-v2 closure and pass `verify-p6-closure.mjs` from the same artifact.
-9. Merge and close #7.
+4. Update `config/runtime-artifacts.json` with the fresh exact build and mark only that resulting build final-closure eligible when dependency conditions are satisfied.
+5. Establish exact-build P5 prerequisite in that fresh build.
+6. Run a real image-bearing positive calibration and require Full P3 PASS with unchanged image-anchor count.
+7. Run a preservation-sensitive refusal case and require `NO_CANDIDATE` / refusal PASS.
+8. Require final P6 closure PASS.
+9. Export schema-v2 closure and pass `verify-p6-closure.mjs` from the same artifact.
+10. Merge and close #7.
 
 ## P7 — after P5 merge / issue #8
+
+Current #490 is reference-only. `runtime:preflight` must reject it for `final-closure` intent.
 
 1. Resolve/rebase P7 against merged P5.
 2. Run full CI.
 3. Produce a fresh exact-build P7 artifact.
-4. Establish exact-build P5 prerequisite.
-5. Run a realistic 60+ Frame stress batch and require `maxConcurrentProcessors === 1`.
-6. Request cancellation during a genuinely active long Full P3 operation.
-7. Require cooperative settlement, final batch `CANCELLED`, and matching processor evidence.
-8. Require final P7 closure PASS.
-9. Export schema-v2 closure and pass `verify-p7-closure.mjs` from the same artifact.
-10. Merge and close #8.
+4. Update `config/runtime-artifacts.json` with the fresh exact build and mark only that resulting build final-closure eligible when dependency conditions are satisfied.
+5. Establish exact-build P5 prerequisite.
+6. Run a realistic 60+ Frame stress batch and require `maxConcurrentProcessors === 1`.
+7. Request cancellation during a genuinely active long Full P3 operation.
+8. Require cooperative settlement, final batch `CANCELLED`, and matching processor evidence.
+9. Require final P7 closure PASS.
+10. Export schema-v2 closure and pass `verify-p7-closure.mjs` from the same artifact.
+11. Merge and close #8.
 
 ## Development that may proceed while runtime is externally blocked
 
 Only perform work that does **not** invalidate exact-build acceptance artifacts or violate dependency order, such as:
 
 - repository/process hardening on `main`,
+- fail-closed operator tooling around immutable artifacts,
 - non-mutating integration analysis,
 - documentation/runbook consistency fixes,
 - CI/tooling improvements,

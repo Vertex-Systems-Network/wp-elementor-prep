@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare:figma-import": "node scripts/prepare-figma-import.mjs",
+    "runtime:preflight": "node scripts/runtime-artifact-preflight.mjs",
     "integration:readiness": "node scripts/check-integration-readiness.mjs",
     "status:verify": "node scripts/verify-readme-progress.mjs"
   },

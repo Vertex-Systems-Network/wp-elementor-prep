@@ -4,15 +4,15 @@ Last updated: 2026-09-08
 
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
-| AI-native governance/tooling | Memory-bank, issue/PR-first lifecycle, CI/integration tooling | COMPLETE | 100% | `██████████` | Keep status synchronized after every batch |
+| AI-native governance/tooling | Memory-bank, issue/PR-first lifecycle, CI/integration/artifact tooling | COMPLETE | 100% | `██████████` | Keep status + artifact registry synchronized after every batch |
 | P0 | Specification, architecture, repository foundation | COMPLETE | 100% | `██████████` | None |
 | P1 | Audit-Only scanner, discovery, scoring, report UI | COMPLETE | 100% | `██████████` | None |
 | P2 | Deterministic classifier semantics + evidence | COMPLETE | 100% | `██████████` | None |
 | P3 | Geometry/content/image + rendered-pixel validation | COMPLETE | 100% | `██████████` | None |
 | P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
-| P5 | Conservative Safe Fix recipes + exact-build proof | RUNTIME ACCEPTANCE | 90% | `█████████░` | Real imported-Figma proof for #6, then merge |
-| P6 | Advanced timeline/carousel/milestone/page normalization | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh artifact → #7 closure |
-| P7 | Sequential multi-frame/page batch queue | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh artifact → #8 closure |
+| P5 | Conservative Safe Fix recipes + exact-build proof | RUNTIME ACCEPTANCE | 92% | `█████████░` | Preflight #488 → real imported-Figma proof → same-artifact verifier → merge #6 |
+| P6 | Advanced timeline/carousel/milestone/page normalization | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh registered artifact → #7 closure |
+| P7 | Sequential multi-frame/page batch queue | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh registered artifact → #8 closure |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate after normalization line stabilizes |
 
 ## Overall active roadmap progress
@@ -23,15 +23,7 @@ The overall percentage tracks the currently active P0–P7 delivery line plus go
 
 ## P0–P4
 
-Complete and merged. The core line now provides:
-
-- deterministic scanning/classification,
-- semantic/preservation evidence,
-- geometry/content/image integrity checks,
-- rendered-pixel validation,
-- candidate-only transaction isolation,
-- Full P3 before P4 commit,
-- bounded restore/finalize checkpoint behavior.
+Complete and merged. The core line provides deterministic scanning/classification, semantic/preservation evidence, geometry/content/image integrity, rendered-pixel validation, candidate-only transaction isolation, Full P3-before-P4 commit, and bounded restore/finalize checkpoint behavior.
 
 ## P5 — issue #6
 
@@ -39,22 +31,25 @@ Engineering and exact-artifact offline verification are complete on:
 
 - branch `feat/p5-safe-recipes`,
 - head `810d98d`,
-- CI #488 PASS,
-- artifact `figma-plugin-dist-488`.
+- CI #488 PASS / run ID `34242984963`,
+- artifact `figma-plugin-dist-488`,
+- digest `sha256:9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`.
 
-Remaining gate is real imported-Figma acceptance and same-artifact verifier exit `0`. Production Safe Fix mutation remains locked until that gate passes.
+The artifact is registered in `config/runtime-artifacts.json` as the current final-closure-eligible P5 build. Main-side `runtime:preflight` validates its exact identity and packaged runtime surfaces before import.
+
+Remaining gate is real imported-Figma acceptance plus same-artifact `verify-p5-evidence.mjs` exit `0`. Production Safe Fix mutation remains locked until that gate passes.
 
 ## P6 — issue #7
 
-Engineering is complete on reference head `9a6ae3b` / CI #494 PASS, but automated integration readiness proves real shared-code conflicts against latest P5.
+Engineering is complete on reference head `9a6ae3b` / CI #494 PASS. Automated integration readiness proves real shared-code conflicts against latest P5.
 
-Final closure must wait until P5 merges, then P6 must be integrated, rebuilt as a fresh exact artifact, and validated with real positive + preservation-refusal Figma scenarios.
+Artifact #494 is explicitly reference-only in the runtime registry and fails closed when requested for final closure. After P5 merges, P6 must be integrated, rebuilt as a fresh exact artifact, registered, then validated with real positive + preservation-refusal Figma scenarios.
 
 ## P7 — issue #8
 
-Engineering is complete on reference head `cbfdb66` / CI #490 PASS, but automated integration readiness proves real shared-code conflicts against latest P5.
+Engineering is complete on reference head `cbfdb66` / CI #490 PASS. Automated integration readiness proves real shared-code conflicts against latest P5.
 
-Final closure must wait until P5 merges, then P7 must be integrated, rebuilt as a fresh exact artifact, and validated with a realistic 60+ Frame stress run plus active Full-P3 cooperative cancellation.
+Artifact #490 is explicitly reference-only in the runtime registry and fails closed when requested for final closure. After P5 merges, P7 must be integrated, rebuilt as a fresh exact artifact, registered, then validated with a realistic 60+ Frame stress run plus active Full-P3 cooperative cancellation.
 
 ## P8
 
@@ -68,7 +63,7 @@ For every future development cycle:
 2. inspect/fix/merge open PR/MR,
 3. continue the highest-priority unblocked roadmap item,
 4. run verification,
-5. update this roadmap when phase/module state changes,
+5. update memory-bank + runtime registry when canonical artifact state changes,
 6. update root README module-wise and overall progress bars before declaring the batch complete.
 
 Runtime/manual acceptance evidence must never be synthesized merely to advance a progress percentage.

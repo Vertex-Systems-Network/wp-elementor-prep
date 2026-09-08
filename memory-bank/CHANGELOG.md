@@ -2,6 +2,19 @@
 
 ## 2026-09-08
 
+### Runtime artifact preflight + issue tracker correction
+- Performed the mandated issue-first sweep: open issues remain #6/#7/#8; no new actionable defect issue appeared.
+- Corrected #7 and #8 tracker bodies so current P6 #494 / P7 #490 artifacts are explicitly reference-only and final closure requires fresh post-P5 integration builds.
+- Confirmed open PR/MR count was `0` before starting new implementation.
+- Inspected the actual canonical artifact packages for P5 #488, P6 #494 and P7 #490, including `BUILD_INFO.txt`, manifest commands, packaged import helper and verifier names.
+- Added `config/runtime-artifacts.json` as repository-side operational registry for exact source SHA, run ID/number, artifact name/digest, verifier and final-closure eligibility.
+- Added `scripts/runtime-artifact-preflight.mjs` and `npm run runtime:preflight`.
+- Preflight validates build identity, required files, manifest targets, required developer commands, offline-only network policy and plugin-ID rebinding state.
+- P5 #488 passes final-closure preflight; current P6 #494 and P7 #490 fail closed for final-closure intent and pass only as reference inspections with warnings.
+- Added regression tests for P5 PASS, P6 final-closure rejection, P6 reference-mode PASS, build-identity mismatch rejection and missing-menu-command rejection.
+- Added `docs/RUNTIME_ARTIFACT_PREFLIGHT.md` operator guide.
+- PR #41 first implementation head passed CI #517 including README status contract, typecheck, tests, build and local-import safety.
+
 ### AI-native lifecycle + canonical state synchronization
 - Added mandatory engineering order: Issues first, PR/MR second, new development third.
 - Added explicit rule that actionable issues are fixed before unrelated work while real external/runtime gates may not be fabricated or prematurely closed.
