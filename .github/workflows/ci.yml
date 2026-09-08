@@ -30,10 +30,10 @@ jobs:
           node --input-type=module <<'NODE'
           import { existsSync, readFileSync, statSync } from 'node:fs';
           const manifest = JSON.parse(readFileSync('dist/manifest.json', 'utf8'));
-          const required = [manifest.main, manifest.ui];
+          const required = [manifest.main, manifest.ui, 'verify-p6-closure.mjs'];
           if (manifest.id !== process.env.FIGMA_PLUGIN_ID) throw new Error(`manifest id ${manifest.id} != configured ${process.env.FIGMA_PLUGIN_ID}`);
           for (const file of required) {
-            if (!file || !existsSync(`dist/${file}`) || statSync(`dist/${file}`).size === 0) throw new Error(`missing/empty manifest target: ${file}`);
+            if (!file || !existsSync(`dist/${file}`) || statSync(`dist/${file}`).size === 0) throw new Error(`missing/empty artifact target: ${file}`);
           }
           if (!Array.isArray(manifest.menu) || !manifest.menu.some((item) => item.command === process.env.EXPECTED_DEV_COMMAND)) throw new Error(`missing expected developer command: ${process.env.EXPECTED_DEV_COMMAND}`);
           const code = readFileSync('dist/code.js', 'utf8');
@@ -42,6 +42,47 @@ jobs:
           }
           console.log(`Verified Figma bundle + compiled provenance: ${manifest.main}, ${manifest.ui}, ${process.env.EXPECTED_DEV_COMMAND}`);
           NODE
+      - name: Verify offline P6 closure CLI
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node --input-type=module <<'NODE' > /tmp/p6-pass.json
+          const build = { sourceSha: process.env.SOURCE_SHA, runId: process.env.GITHUB_RUN_ID, runNumber: process.env.GITHUB_RUN_NUMBER };
+          const positive = {
+            schemaVersion: 2, capturedAt: '2026-09-08T10:01:00.000Z', pluginVersion: '0.1.0-alpha.1', build,
+            p5RuntimeGateVersion: 'p5-runtime-proof-v3', p5RuntimeProofPassedAt: '2026-09-08T10:00:00.000Z', p5RuntimeProofBuild: build,
+            frame: { id: 'page', name: 'Image Page' }, outcomeStatus: 'COMPLETED', reason: null,
+            plan: { decision: 'CALIBRATE', recipe: 'page-vertical-flow', pattern: 'page-vertical-flow', confidence: 99, targetNodeId: 'page', targetNodeName: 'Image Page', targetPath: [], preserveNodeIds: [] },
+            calibration: { calibrationId: 'cal-1', status: 'PASSED', originalNodeId: 'page', candidateNodeId: 'candidate', failureStage: null, error: null, leftoverCandidateRisk: false, productionCommitAttempted: false,
+              validation: { passed: true, thresholdVersion: 'p3-v1', changedPixelPct: 0, meanChannelDelta: 0, maxChannelDelta: 0, maxTextPositionDriftPx: 0, maxImagePositionDriftPx: 0, imageAnchorCountBefore: 2, imageAnchorCountAfter: 2 },
+              events: [{ stage: 'DISCARD' }, { stage: 'DONE' }] }
+          };
+          const refusal = {
+            schemaVersion: 2, capturedAt: '2026-09-08T10:02:00.000Z', pluginVersion: '0.1.0-alpha.1', build,
+            p5RuntimeGateVersion: 'p5-runtime-proof-v3', p5RuntimeProofPassedAt: '2026-09-08T10:00:00.000Z', p5RuntimeProofBuild: build,
+            frame: { id: 'preserve', name: 'Preserve Page' }, outcomeStatus: 'NO_CANDIDATE', reason: 'Preservation relationship required.', totalPlanCount: 1, plansTruncated: false,
+            plans: [{ decision: 'PRESERVE', recipe: null, reasonCode: 'PRESERVATION_RELATIONSHIP_REQUIRED', reason: 'Keep overlay relationship.', pattern: 'header-hero-overlay', confidence: 99, targetNodeId: 'overlay', targetNodeName: 'Overlay', targetPath: [0], preserveNodeIds: ['hero'], mutationEnabled: false, futureMutationRequiresFullP3: true, futureMutationRequiresP4Rollback: true }]
+          };
+          const acceptance = { accepted: true, failures: [], positiveAvailable: true, refusalAvailable: true, positiveAccepted: true, refusalAccepted: true, imageBearingPositiveEvidence: true, currentBuildTraceable: true, positiveMatchesCurrentBuild: true, refusalMatchesCurrentBuild: true };
+          console.log(JSON.stringify({ schemaVersion: 1, currentBuild: build, acceptance, evidence: { positive, refusal } }));
+          NODE
+          node dist/verify-p6-closure.mjs < /tmp/p6-pass.json | grep '"accepted": true'
+          if printf '{}\n' | node dist/verify-p6-closure.mjs > /tmp/p6-invalid.out 2>&1; then
+            echo 'offline P6 verifier unexpectedly accepted malformed evidence'
+            exit 1
+          fi
+          grep '"accepted": false' /tmp/p6-invalid.out
+          node --input-type=module <<'NODE' > /tmp/p6-old-build.json
+          import { readFile } from 'node:fs/promises';
+          const bundle = JSON.parse(await readFile('/tmp/p6-pass.json', 'utf8'));
+          bundle.currentBuild.sourceSha = '0123456789abcdef0123456789abcdef01234567';
+          console.log(JSON.stringify(bundle));
+          NODE
+          if node dist/verify-p6-closure.mjs < /tmp/p6-old-build.json > /tmp/p6-old-build.out 2>&1; then
+            echo 'offline P6 verifier unexpectedly accepted different-build evidence'
+            exit 1
+          fi
+          grep 'different build than this verifier artifact' /tmp/p6-old-build.out
       - name: Verify deterministic local-import preparation
         run: |
           npm run prepare:figma-import -- 123456789012345678 dist dist-local
@@ -74,10 +115,12 @@ jobs:
           After unpacking this artifact, run:
             node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
           Then import dist-local/manifest.json in Figma. The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id.
-          Do not treat CI success or manifest preparation as imported-Figma runtime proof.
+          Exported P6 closure JSON from this exact artifact can be independently checked with:
+            node verify-p6-closure.mjs < p6-closure.json
+          The verifier rejects evidence from another artifact build. CI success/offline verification do not replace real imported-Figma runtime acceptance.
           EOF
           else
-            printf 'This build used configured Figma plugin id %s. CI success is not imported-Figma runtime proof; run the compiled self-test in Figma.\n' "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
+            printf 'This build used configured Figma plugin id %s. Exported P6 closure can be checked with node verify-p6-closure.mjs < p6-closure.json. CI success is not imported-Figma runtime proof.\n' "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
           fi
       - name: Upload Figma development build
         uses: actions/upload-artifact@v4
