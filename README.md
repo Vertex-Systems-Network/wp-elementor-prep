@@ -30,7 +30,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 |---|---|---|---|
 | P5 | `feat/p5-safe-recipes` | `a3e1f1b` | ✅ #273 |
 | P6 | `feat/p6-advanced-structures` | `a9a94f2` | ✅ #284 |
-| P7 | `feat/p7-batch-queue-core` | `ecee92f` | ✅ #270 |
+| P7 | `feat/p7-batch-queue-core` | `b65f05e` | ✅ #292 |
 
 README-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity pipeline was explicitly verified.
 
@@ -49,8 +49,9 @@ README-only synchronization commits may be newer than the functional heads above
 - ✅ P6 embedded P5 self-test uses the same deterministic proof-mint/revoke semantics as canonical P5
 - ✅ P7 retains qualifying 60+ completed stress and active-frame cancellation evidence in separate bounded slots
 - ✅ P7 runtime inspector/viewer reports combined retained runtime Acceptance PASS/FAIL with exact failures
-- ✅ P7 now exports one copyable acceptance bundle containing the assessment + retained stress snapshot + retained cancellation snapshot
-- ✅ latest functional CI green: P5 #273, P6 #284, P7 #270
+- ✅ P7 exports one copyable acceptance bundle containing the assessment + retained stress snapshot + retained cancellation snapshot
+- ✅ P7 embedded P5 self-test now derives its final PASS from the deterministic acceptance assessor; invalid `changedPixelPct` values (`NaN`, negative, null) fail closed before the P7 prerequisite proof can unlock
+- ✅ latest functional CI green: P5 #273, P6 #284, P7 #292
 
 ## Remaining real-runtime acceptance
 
