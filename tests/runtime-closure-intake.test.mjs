@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inspectRuntimeClosureIntake } from '../scripts/runtime-closure-intake.mjs';
@@ -152,6 +152,23 @@ describe('runtime closure intake', () => {
       expect(result.stage).toBe('evidence');
       expect(result.verifier.executed).toBe(false);
       expect(result.errors.join('\n')).toContain('Evidence is not valid JSON');
+    });
+  });
+
+  it('rejects symbolic-link evidence paths before reading or executing the verifier', () => {
+    withFixture({}, ({ root, artifactDir, evidencePath, registry }) => {
+      const targetPath = join(root, 'real-evidence.json');
+      writeFileSync(targetPath, JSON.stringify({ accepted: true }));
+      symlinkSync(targetPath, evidencePath);
+      const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, {
+        registry,
+        spawnSyncImpl: () => { throw new Error('verifier must not run'); }
+      });
+      expect(result.ok).toBe(false);
+      expect(result.stage).toBe('evidence');
+      expect(result.verifier.executed).toBe(false);
+      expect(result.evidence).toEqual({});
+      expect(result.errors.join('\n')).toContain('must not be a symbolic link');
     });
   });
 
