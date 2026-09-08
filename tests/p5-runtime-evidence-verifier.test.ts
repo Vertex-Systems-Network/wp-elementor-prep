@@ -56,14 +56,21 @@ function passingBundle() {
 }
 
 describe('P5 offline runtime evidence verifier', () => {
-  it('accepts an untampered provenance-bound PASS bundle', () => {
-    expect(verifyP5RuntimeEvidence(passingBundle())).toEqual({ accepted: true, failures: [] });
+  it('accepts an untampered provenance-bound PASS bundle from the expected build', () => {
+    expect(verifyP5RuntimeEvidence(passingBundle(), BUILD)).toEqual({ accepted: true, failures: [] });
+  });
+
+  it('rejects otherwise valid evidence captured by a different build', () => {
+    const expectedBuild = { ...BUILD, sourceSha: 'fedcba9876543210fedcba9876543210fedcba98' };
+    const result = verifyP5RuntimeEvidence(passingBundle(), expectedBuild);
+    expect(result.accepted).toBe(false);
+    expect(result.failures).toContain('Evidence was captured by a different build than this offline verifier artifact.');
   });
 
   it('rejects a structurally valid but semantically tampered stored acceptance verdict', () => {
     const bundle = passingBundle();
     bundle.acceptance = { accepted: true, failures: ['manually edited'] };
-    const result = verifyP5RuntimeEvidence(bundle);
+    const result = verifyP5RuntimeEvidence(bundle, BUILD);
     expect(result.accepted).toBe(false);
     expect(result.failures).toContain('Stored acceptance verdict does not match the canonical recomputed assessment.');
   });
@@ -71,7 +78,7 @@ describe('P5 offline runtime evidence verifier', () => {
   it('rejects calibration tampering even if the stored verdict still says PASS', () => {
     const bundle = passingBundle();
     bundle.calibration.passFinalize.checkpointCleared = false;
-    const result = verifyP5RuntimeEvidence(bundle);
+    const result = verifyP5RuntimeEvidence(bundle, BUILD);
     expect(result.accepted).toBe(false);
     expect(result.failures).toContain('Finalize path left a checkpoint pending.');
   });
@@ -79,13 +86,13 @@ describe('P5 offline runtime evidence verifier', () => {
   it('rejects a runtime gate mismatch', () => {
     const bundle = passingBundle();
     bundle.runtimeGateVersion = 'stale-gate';
-    const result = verifyP5RuntimeEvidence(bundle);
+    const result = verifyP5RuntimeEvidence(bundle, BUILD);
     expect(result.accepted).toBe(false);
     expect(result.failures.some((failure) => failure.startsWith('Runtime gate mismatch:'))).toBe(true);
   });
 
   it('rejects malformed evidence without throwing', () => {
-    expect(verifyP5RuntimeEvidence({ schemaVersion: 2 })).toEqual({
+    expect(verifyP5RuntimeEvidence({ schemaVersion: 2 }, BUILD)).toEqual({
       accepted: false,
       failures: ['Malformed or unsupported P5 runtime evidence bundle.'],
     });
