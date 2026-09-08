@@ -11,6 +11,7 @@ export interface BatchQueueInput {
 }
 
 export interface BatchQueueItem {
+  /** Current live Figma Frame id. P4 root swaps may replace this id after a commit/restore. */
   frameId: string;
   frameName: string;
   status: BatchItemStatus;
@@ -44,9 +45,14 @@ export interface BatchQueueSummary {
 
 export type BatchItemOutcome =
   | { status: 'SUCCEEDED' }
-  | { status: 'CHECKPOINT_PENDING'; reason?: string }
+  | { status: 'CHECKPOINT_PENDING'; committedFrameId: string; reason?: string }
   | { status: 'FAILED'; error: string }
   | { status: 'SKIPPED'; reason?: BatchSkipReason };
+
+export interface BatchCheckpointResolutionOptions {
+  /** Required by restore callers when P4 swaps the committed candidate back to the retained original. */
+  resolvedFrameId?: string;
+}
 
 const DEFAULT_CHECKPOINT_PAUSE_REASON = 'Resolve the pending Safe Fix checkpoint by finalizing or restoring it before the batch continues.';
 
@@ -97,7 +103,7 @@ function settleQueueStatus(state: BatchQueueState): BatchQueueState {
 }
 
 /**
- * Creates a compact queue containing only stable frame identity and execution state. Audit trees,
+ * Creates a compact queue containing only current frame identity and execution state. Audit trees,
  * rendered images and mutation candidates deliberately stay outside the queue to keep memory bounded.
  */
 export function createBatchQueue(inputs: BatchQueueInput[], runKey: string): BatchQueueState {
@@ -143,7 +149,7 @@ export function startNextBatchItem(state: BatchQueueState): BatchQueueState {
 
 /**
  * Settles the one running item. A committed P5 mutation is not a durable success yet: callers must
- * return CHECKPOINT_PENDING until the bounded restore/finalize checkpoint is explicitly resolved.
+ * return CHECKPOINT_PENDING with P4's committed Frame id until restore/finalize is explicitly resolved.
  */
 export function finishRunningBatchItem(state: BatchQueueState, outcome: BatchItemOutcome): BatchQueueState {
   const runningIndex = state.items.findIndex((item) => item.status === 'RUNNING');
@@ -163,7 +169,13 @@ export function finishRunningBatchItem(state: BatchQueueState, outcome: BatchIte
       };
     }
     if (outcome.status === 'CHECKPOINT_PENDING') {
-      return { ...item, status: 'AWAITING_CHECKPOINT', error: null, skipReason: null };
+      return {
+        ...item,
+        frameId: outcome.committedFrameId,
+        status: 'AWAITING_CHECKPOINT',
+        error: null,
+        skipReason: null,
+      };
     }
     return { ...item, status: 'SUCCEEDED', error: null, skipReason: null };
   });
@@ -177,13 +189,15 @@ export function finishRunningBatchItem(state: BatchQueueState, outcome: BatchIte
 /**
  * Resolves the one checkpoint-owning frame only after the external P5 checkpoint action succeeded.
  *
- * FINALIZED is used only when re-audit confirms the frame is complete and becomes durable SUCCEEDED.
- * FINALIZED_CONTINUE returns the same frame to PENDING so it can be re-audited for additional Safe Fix
- * targets; no run-key metadata may be persisted yet. RESTORED becomes a terminal non-success skip.
+ * FINALIZED is used only when re-audit confirms the current committed Frame is complete and becomes
+ * durable SUCCEEDED. FINALIZED_CONTINUE keeps the committed Frame id and returns it to PENDING for a
+ * fresh re-audit. RESTORED must supply the restored original Frame id because P4 removes the committed
+ * candidate and swaps the retained original back into the document.
  */
 export function resolveBatchCheckpoint(
   state: BatchQueueState,
   resolution: BatchCheckpointResolution,
+  options: BatchCheckpointResolutionOptions = {},
 ): BatchQueueState {
   const awaitingIndex = state.items.findIndex((item) => item.status === 'AWAITING_CHECKPOINT');
   if (awaitingIndex < 0) return settleQueueStatus(state);
@@ -198,6 +212,7 @@ export function resolveBatchCheckpoint(
     }
     return {
       ...item,
+      frameId: options.resolvedFrameId?.trim() || item.frameId,
       status: 'SKIPPED',
       error: null,
       skipReason: 'RESTORED_CHECKPOINT',
