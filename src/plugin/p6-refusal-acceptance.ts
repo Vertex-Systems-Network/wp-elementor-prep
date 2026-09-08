@@ -1,4 +1,8 @@
-import { P5_RUNTIME_GATE_VERSION } from '../core/p5-runtime-gate';
+import {
+  isTraceableP5RuntimeBuildIdentity,
+  P5_RUNTIME_GATE_VERSION,
+  sameP5RuntimeBuildIdentity,
+} from '../core/p5-runtime-gate';
 import type { P6PreservationRefusalEvidenceBundle } from './p6-refusal-evidence';
 
 export interface P6PreservationRefusalAcceptanceAssessment {
@@ -14,20 +18,21 @@ function validIsoTimestamp(value: string | null): boolean {
   return typeof value === 'string' && value.length > 0 && Number.isFinite(Date.parse(value));
 }
 
-/**
- * Deterministically verifies that a real imported-plugin P6 run refused a preservation-sensitive
- * page without entering clone calibration or exposing any production mutation authorization.
- */
 export function assessP6PreservationRefusalAcceptance(
   evidence: P6PreservationRefusalEvidenceBundle,
 ): P6PreservationRefusalAcceptanceAssessment {
   const failures: string[] = [];
 
-  requireCondition(failures, evidence.schemaVersion === 1, 'Unsupported P6 refusal evidence schema.');
+  requireCondition(failures, evidence.schemaVersion === 2, 'Unsupported P6 refusal evidence schema.');
   requireCondition(failures, validIsoTimestamp(evidence.capturedAt), 'P6 refusal evidence has no valid capture timestamp.');
   requireCondition(failures, evidence.pluginVersion.length > 0, 'P6 refusal evidence has no plugin version.');
+  requireCondition(failures, isTraceableP5RuntimeBuildIdentity(evidence.build), 'P6 refusal evidence is not bound to a traceable CI artifact.');
   requireCondition(failures, evidence.p5RuntimeGateVersion === P5_RUNTIME_GATE_VERSION, 'P6 refusal evidence was captured against a different P5 runtime-gate version.');
   requireCondition(failures, validIsoTimestamp(evidence.p5RuntimeProofPassedAt), 'P6 refusal evidence was captured without a valid imported P5 runtime proof.');
+  requireCondition(failures, isTraceableP5RuntimeBuildIdentity(evidence.p5RuntimeProofBuild), 'P6 refusal evidence has no traceable P5 prerequisite proof build.');
+  if (isTraceableP5RuntimeBuildIdentity(evidence.build) && isTraceableP5RuntimeBuildIdentity(evidence.p5RuntimeProofBuild)) {
+    requireCondition(failures, sameP5RuntimeBuildIdentity(evidence.build, evidence.p5RuntimeProofBuild), 'P6 refusal evidence and P5 prerequisite proof were captured by different CI artifacts.');
+  }
   requireCondition(failures, evidence.outcomeStatus === 'NO_CANDIDATE', `P6 refusal outcome is ${evidence.outcomeStatus}, not NO_CANDIDATE.`);
   requireCondition(failures, typeof evidence.reason === 'string' && evidence.reason.length > 0, 'P6 refusal evidence has no refusal reason.');
   requireCondition(failures, evidence.totalPlanCount > 0, 'P6 refusal evidence contains no analyzed plans.');
