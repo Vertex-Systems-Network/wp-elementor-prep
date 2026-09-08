@@ -32,11 +32,12 @@ describe('P7 runtime evidence plugin session', () => {
   });
 
   it('records cancellation request and final cancelled settlement without changing queue state itself', () => {
-    const state = runningQueue();
+    const running = runningQueue();
     const session = new P7RuntimeEvidenceSession('run-key', { memorySampler: () => null });
 
-    session.markCancellationRequested(state);
-    const cancelled = requestBatchCancel(state);
+    session.markCancellationRequested(running);
+    const settled = finishRunningBatchItem(running, { status: 'SUCCEEDED' });
+    const cancelled = requestBatchCancel(settled);
     session.recorder.observeState(cancelled);
     const snapshot = session.snapshot(cancelled);
 
