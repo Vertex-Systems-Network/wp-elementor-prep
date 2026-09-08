@@ -1,4 +1,8 @@
-import { P5_RUNTIME_GATE_VERSION } from '../core/p5-runtime-gate';
+import {
+  isTraceableP5RuntimeBuildIdentity,
+  P5_RUNTIME_GATE_VERSION,
+  sameP5RuntimeBuildIdentity,
+} from '../core/p5-runtime-gate';
 import type { P6RuntimeEvidenceBundle } from './p6-runtime-evidence';
 
 export interface P6RuntimeAcceptanceAssessment {
@@ -18,10 +22,6 @@ function validIsoTimestamp(value: string | null): boolean {
   return typeof value === 'string' && value.length > 0 && Number.isFinite(Date.parse(value));
 }
 
-/**
- * Reviews one captured positive P6 page-flow calibration from the real imported plugin.
- * It does not replace the separate real-template/refusal scenarios required by the P6 tracker.
- */
 export function assessP6PositiveCalibrationAcceptance(
   evidence: P6RuntimeEvidenceBundle,
 ): P6RuntimeAcceptanceAssessment {
@@ -30,11 +30,16 @@ export function assessP6PositiveCalibrationAcceptance(
   const calibration = evidence.calibration;
   const validation = calibration?.validation ?? null;
 
-  requireCondition(failures, evidence.schemaVersion === 1, 'Unsupported P6 runtime evidence schema.');
+  requireCondition(failures, evidence.schemaVersion === 2, 'Unsupported P6 runtime evidence schema.');
   requireCondition(failures, validIsoTimestamp(evidence.capturedAt), 'P6 evidence has no valid capture timestamp.');
   requireCondition(failures, evidence.pluginVersion.length > 0, 'P6 evidence has no plugin version.');
+  requireCondition(failures, isTraceableP5RuntimeBuildIdentity(evidence.build), 'P6 evidence is not bound to a traceable CI artifact.');
   requireCondition(failures, evidence.p5RuntimeGateVersion === P5_RUNTIME_GATE_VERSION, 'P6 evidence was captured against a different P5 runtime-gate version.');
   requireCondition(failures, validIsoTimestamp(evidence.p5RuntimeProofPassedAt), 'P6 evidence was captured without a valid imported P5 runtime proof.');
+  requireCondition(failures, isTraceableP5RuntimeBuildIdentity(evidence.p5RuntimeProofBuild), 'P6 evidence has no traceable P5 prerequisite proof build.');
+  if (isTraceableP5RuntimeBuildIdentity(evidence.build) && isTraceableP5RuntimeBuildIdentity(evidence.p5RuntimeProofBuild)) {
+    requireCondition(failures, sameP5RuntimeBuildIdentity(evidence.build, evidence.p5RuntimeProofBuild), 'P6 evidence and P5 prerequisite proof were captured by different CI artifacts.');
+  }
   requireCondition(failures, evidence.outcomeStatus === 'COMPLETED', `P6 developer calibration outcome is ${evidence.outcomeStatus}, not COMPLETED.`);
   requireCondition(failures, evidence.reason === null, 'Completed P6 evidence unexpectedly contains a blocking reason.');
 
