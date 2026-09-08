@@ -5,6 +5,8 @@ import {
   type BatchRunnerOptions,
 } from '../core/batch-runner';
 import { p7CheckpointPauseReason } from './p7-checkpoint-gate';
+import { createFigmaP7SingleFrameProcessor } from './p7-single-frame-processor';
+import type { FullP3Validator } from './safe-fix-runtime';
 
 export interface P7BatchRuntimeOptions extends Omit<BatchRunnerOptions, 'shouldPause'> {
   /** Test/integration seam. Production defaults to the real P5 pending-checkpoint query. */
@@ -14,11 +16,8 @@ export interface P7BatchRuntimeOptions extends Omit<BatchRunnerOptions, 'shouldP
 }
 
 /**
- * P7 runtime composition layer.
- *
- * This still requires an injected canonical single-frame processor; it does not duplicate P5 audit,
- * planning or mutation logic. The only production policy added here is that the real P5 bounded
- * checkpoint gate is evaluated between frames before any next item can start.
+ * P7 runtime composition layer. The caller supplies one canonical single-frame processor; P7 owns
+ * scheduling and inter-frame checkpoint policy only.
  */
 export async function runP7BatchRuntime(
   initialState: BatchQueueState,
@@ -36,4 +35,21 @@ export async function runP7BatchRuntime(
       return await additionalPauseReason?.(state) ?? null;
     },
   });
+}
+
+/**
+ * Production Figma entrypoint. It injects the processor that reuses P5's proof gate, fresh planner,
+ * candidate transaction, Full P3 validation and checkpoint semantics. No P5 mutation logic is copied
+ * into the batch scheduler.
+ */
+export function runFigmaP7BatchRuntime(
+  initialState: BatchQueueState,
+  validateFullP3: FullP3Validator,
+  options: P7BatchRuntimeOptions = {},
+): Promise<BatchQueueState> {
+  return runP7BatchRuntime(
+    initialState,
+    createFigmaP7SingleFrameProcessor(validateFullP3),
+    options,
+  );
 }
