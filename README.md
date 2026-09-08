@@ -14,137 +14,80 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 
 | Phase | Scope | Current status |
 |---|---|---|
-| P0 | Specification + architecture | ✅ Complete |
-| P1 | Scanner, discovery, scoring | ✅ Complete |
-| P2 | Deterministic classification + semantic roles | ✅ Complete |
-| P3 | Geometry/content/image/rendered-pixel validator | ✅ Complete |
-| P4 | Candidate transaction + rollback/checkpoint | ✅ Complete |
-| P5 | Conservative high-confidence Safe Fix recipes | 🟡 Engineering + provenance-bound closure-evidence tooling complete; imported-Figma runtime acceptance pending (#6) |
-| P6 | Advanced structures + clone-only calibration | 🟡 Engineering/evidence tooling complete; real-Figma acceptance pending (#7) |
-| P7 | Sequential 60+ frame batch queue | 🟡 Engineering/evidence tooling complete; real-Figma stress/cancellation acceptance pending (#8) |
-| P8 | Optional Elementor exporter adapters | ⏸ Deferred / issue #9 closed as not planned for current phase |
+| P0–P4 | Core audit, validation, transaction/rollback | ✅ Complete |
+| P5 | Conservative Safe Fix recipes | 🟡 Engineering + exact-build closure evidence complete; imported-Figma acceptance pending (#6) |
+| P6 | Advanced clone-only calibration | 🟡 Engineering + exact-build closure tooling complete; real-Figma acceptance pending (#7) |
+| P7 | Sequential 60+ Frame batch queue | 🟡 Engineering + exact-build closure tooling complete; real-Figma acceptance pending (#8) |
+| P8 | Optional exporter adapters | ⏸ Deferred |
 
-## Canonical development branches
+## Latest verified artifacts
 
-| Track | Branch | Last verified functional head | CI |
-|---|---|---|---|
-| P5 | `feat/p5-safe-recipes` | `85c4783` | ✅ #353 |
-| P6 | `feat/p6-advanced-structures` | `a9a94f2` | ✅ #284 |
-| P7 | `feat/p7-batch-queue-core` | `3915774` | ✅ #309 |
-
-README/docs-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity/provenance pipeline was explicitly verified.
+| Track | Head | CI | Artifact | Digest |
+|---|---|---|---|---|
+| P5 | `fe2ebb0` | ✅ #437 | `figma-plugin-dist-437` | `sha256:1a2e966a6c85a4c90ec11cefeaaf27b537685ac48a94facbef61437c41870fe0` |
+| P6 | `2e25e56` | ✅ #438 | `figma-plugin-dist-438` | `sha256:7d2dde12f9673f66036855136b19e7091df6df5c79cdf581eec4bee403ad199e` |
+| P7 | `99394da` | ✅ #436 | `figma-plugin-dist-436` | `sha256:c5b0c7af271e61946318f1d7728afe10b06f564d79964dcdca7389ff5a4fe5f2` |
 
 ## Latest development batch — 2026-09-08
 
-- ✅ 0 open PR/MRs; canonical branches remain the direct development source of truth
-- ✅ direct-push CI verifies canonical branch development without PR churn
-- ✅ P5 deterministic `p5-runtime-proof-v3` acceptance assessor verifies reject/restore/finalize/pixel/cleanup evidence independently
-- ✅ P5 proof minting is gated by that deterministic assessor; top-level `result.passed` alone cannot unlock mutation
-- ✅ P5 runtime proof is now bound to the exact compiled CI build using source SHA, GitHub Actions run ID and run number
-- ✅ a proof minted by another SHA/run is invalid even when the gate version matches; local/untraceable builds cannot mint a production-unlocking proof
-- ✅ P5 runtime evidence migrated to provenance schema v2 and contains the same exact source SHA/run identity
-- ✅ P5 evidence acceptance fails closed on local/untraceable build provenance and never retains a proof timestamp for rejected evidence
-- ✅ P5 evidence viewer visibly shows build source SHA, Actions run number and Actions run ID alongside PASS/FAIL and copyable bounded JSON
-- ✅ P5 CI injects provenance directly into compiled `dist/code.js` and verifies all three exact values before artifact upload
-- ✅ latest valid P5 closure evidence is persisted observationally in client storage; storage failure cannot change proof or transaction outcomes
-- ✅ `Developer: P5 Runtime Evidence` reopens the latest persisted provenance-bound evidence without rerunning the self-test
-- ✅ P6 positive clone-calibration acceptance viewer reports PASS/FAIL + exact reasons
-- ✅ P6 bounded preservation-refusal evidence captures complete `NO_CANDIDATE` decisions without AuditNode trees/PNG/candidate objects
-- ✅ P6 refusal acceptance requires explicit preservation-sensitive `PRESERVE` evidence and rejects hidden page-flow `CALIBRATE` candidates
-- ✅ P6 dedicated refusal viewer/export reports `Preservation refusal acceptance: PASS/FAIL`
-- ✅ P6 developer runtime automatically routes `NO_CANDIDATE` to refusal evidence and `COMPLETED/BLOCKED` to calibration evidence
-- ✅ P6 embedded P5 self-test uses deterministic proof-mint/revoke semantics
-- ✅ P7 retains qualifying 60+ completed stress and active-frame cancellation evidence in separate bounded slots
-- ✅ P7 runtime inspector/viewer reports combined retained runtime Acceptance PASS/FAIL with exact failures
-- ✅ P7 exports one copyable acceptance bundle containing the assessment + retained stress snapshot + retained cancellation snapshot
-- ✅ latest verified functional CI green: P5 #353, P6 #284, P7 #309
+- ✅ all three canonical artifacts now ship standalone `prepare-figma-import.mjs`
+- ✅ placeholder-ID artifacts can be prepared without manually editing `manifest.json`
+- ✅ helper writes to a separate `dist-local/` directory and changes only the manifest plugin ID
+- ✅ compiled `code.js` / `ui.html` are SHA-256 checked byte-for-byte unchanged
+- ✅ CI on P5/P6/P7 runs the import helper, validates the rebound ID and compiled-target hashes, then packages the helper inside the artifact
+- ✅ `IMPORT_NOTES.txt` contains the direct unpacked-artifact command
+- ✅ exact-build P5 proof/evidence, P6 closure and P7 fail-fast/closure gates remain unchanged and protected
+- ✅ 0 open PR/MRs
 
-### Latest P5 development artifact
+## Self-contained Figma import
 
-- Artifact: `figma-plugin-dist-353`
-- Functional head: `85c47835367e81878680825255843995d40d7843`
-- Digest: `sha256:aa901b6833cae3d65e3fbb1ecc08e18284112582e351ac0a3ae13728437c8f1d`
+If the artifact uses placeholder plugin ID `000000000000000000`, unpack it and run inside the artifact directory:
 
-## Remaining real-runtime acceptance
+```bash
+node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
+```
 
-The remaining open issues are intentionally limited to evidence that GitHub CI cannot manufacture because it must run through the **actual imported compiled Figma development plugin and its UI iframe Canvas pixel broker**.
+Then import `dist-local/manifest.json` in Figma.
 
-### P5 — issue #6
+`LOCAL_IMPORT_INFO.txt` records the original/prepared IDs, source build provenance and SHA-256 hashes proving compiled plugin code/UI were unchanged. This step is import preparation only; it is **not** runtime acceptance.
 
-- [ ] import the canonical CI-built P5 development artifact in Figma desktop
-- [ ] confirm the P5 viewer reports the same source SHA / Actions run identity as the imported artifact
-- [ ] run `Developer: P5 Runtime Self-Test`
-- [ ] require `P5 Compiled Runtime Acceptance: PASS`
-- [ ] verify rendered-pixel forced reject, commit -> restore and commit -> finalize paths
-- [ ] require checkpoint cleanup and `0` leftovers
-- [ ] confirm mutation unlocks only after deterministic acceptance passes in that exact artifact
-- [ ] verify a stale proof from another artifact cannot unlock the current build
-- [ ] copy the bounded acceptance JSON and retain it as closure evidence
-- [ ] reopen it via `Developer: P5 Runtime Evidence` and confirm the persisted provenance-bound record remains valid
+For a repository-local build, use:
 
-Production Safe Fix mutation stays locked until this exact-build proof passes.
+```bash
+npm run prepare:figma-import -- <your-figma-plugin-id>
+```
 
-### P6 — issue #7
+## Remaining real-runtime gates
 
-- [ ] P5 deterministic runtime proof valid in the imported build
-- [ ] run disposable page-flow clone calibration in real Figma and require positive Acceptance PASS
-- [ ] collect image-bearing real-template calibration evidence
-- [ ] verify pass/reject/failure cleanup with `0` leftovers
-- [ ] run the same developer command on a preservation-sensitive real page that yields `NO_CANDIDATE`
-- [ ] require `Preservation refusal acceptance: PASS`
-- [ ] export refusal evidence containing the explicit `PRESERVE` plan and preserve-node IDs
+### P5 — #6
+- import `figma-plugin-dist-437`
+- run `Developer: P5 Runtime Self-Test`
+- require exact-build `P5 Compiled Runtime Acceptance: PASS`
+- verify forced rendered-pixel reject, restore, finalize and zero leftovers
+- retain/reopen provenance-bound P5 evidence
 
-P6 production advanced mutation remains intentionally disabled.
+### P6 — #7
+- import `figma-plugin-dist-438`
+- establish exact-build P5 prerequisite
+- positive image-bearing page-flow clone calibration PASS
+- preservation-sensitive `NO_CANDIDATE` refusal PASS
+- require `P6 Closure acceptance: PASS`
 
-### P7 — issue #8
-
-- [ ] P5 deterministic runtime proof valid in the imported build
-- [ ] execute realistic 60+ frame imported-Figma batch run
-- [ ] retain completed stress evidence with max processor concurrency `1`
-- [ ] request cancellation during a genuinely long active Full P3 operation
-- [ ] retain settled active-frame cancellation evidence
-- [ ] open the P7 runtime evidence viewer and require overall Acceptance PASS
-- [ ] copy/export the combined acceptance bundle for closure evidence
+### P7 — #8
+- import `figma-plugin-dist-436`
+- establish exact-build P5 prerequisite
+- realistic 60+ Frame stress run
+- genuinely long active Full P3 cancellation run
+- require `Closure acceptance: PASS`
 
 ## Safety invariants
 
-- Approved original design is the visual source of truth.
-- Never mutate on low confidence or ambiguous structure.
-- Candidate-only mutation; transformer never receives the approved original.
-- Full P3 validation is mandatory before P4 commit.
-- Rendered-pixel evidence is part of production validation.
-- Only one unresolved restore/finalize checkpoint may exist.
-- Batch processing is strictly sequential: max one processor at a time.
-- Cancellation is cooperative and cannot silently bypass an in-flight transaction/checkpoint.
-- Unsupported or ambiguous constructs are reported/refused, never guessed.
-- No external AI/network dependency in the deterministic core runtime.
-
-## Current P5 recipe gates
-
-- Vertical Stack >= 90%
-- Horizontal Row >= 90%
-- Two Column >= 92%
-- Facts List >= 92%
-- Footer Columns >= 92%
-- non-fragmented Repeated Card Grid >= 94%
-- Metric Grid >= 95%
-- Social/Link Strip >= 95%
-
-Advanced timeline/carousel/fragmented synthesis remains P6-preservation/calibration territory and is not silently enabled as a P5 mutation.
-
-## Development
-
-```bash
-npm install
-npm run typecheck
-npm test
-npm run build
-```
-
-Import the generated development plugin from `dist/manifest.json` after configuring a valid Figma plugin ID.
-
-Canonical engineering detail also lives in `memory-bank/PROJECT_STATE.md`, `memory-bank/ROADMAP.md`, `memory-bank/NEXT_ACTIONS.md`, and the phase-specific files under `docs/`.
-
-## Golden fixture
-
-The Marcus Vane desktop page is the first broad calibration fixture and includes hero, two-column, cards, metrics, timeline/journey, carousel/media, milestones and footer patterns. It is a fixture only; production logic must remain generic and deterministic.
+- approved original is the visual source of truth
+- candidate-only mutation
+- Full P3 before P4 commit
+- rendered-pixel evidence required
+- exact-build runtime proof/evidence only
+- P6 is clone-only with no production commit seam
+- P7 max one processor at a time with cooperative cancellation
+- local manifest rebinding must never alter compiled code/UI
+- unsupported/ambiguous structures are refused, never guessed
