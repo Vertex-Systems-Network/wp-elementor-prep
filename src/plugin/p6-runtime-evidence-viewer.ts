@@ -41,7 +41,7 @@ body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(-
 .acceptance { font-size: 18px; font-weight: 800; margin-top: 8px; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
 .metric { border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 8px; }
-.metric strong { display: block; font-size: 12px; }
+.metric strong { display: block; font-size: 12px; word-break: break-word; }
 .metric span { display: block; font-size: 9px; opacity: .7; margin-top: 3px; }
 .warnings { border: 1px solid var(--figma-color-border-danger, var(--figma-color-border)); border-radius: 6px; padding: 8px; margin: 12px 0; font-size: 10px; line-height: 1.4; }
 button { width: 100%; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; margin: 12px 0 8px; }
@@ -54,11 +54,16 @@ pre { margin: 0; padding: 10px; border: 1px solid var(--figma-color-border); bor
   <div class="acceptance">Acceptance ${assessment.accepted ? 'PASS' : 'FAIL'}</div>
   <div class="meta">Frame: ${escapeHtml(evidence.frame.name)} · ${escapeHtml(evidence.frame.id)}</div>
   <div class="meta">Captured: ${escapeHtml(evidence.capturedAt)}</div>
+  <div class="meta">Build: ${escapeHtml(evidence.build.sourceSha)} · Actions #${escapeHtml(evidence.build.runNumber)} · run ${escapeHtml(evidence.build.runId)}</div>
   <div class="meta">P5 gate: ${escapeHtml(evidence.p5RuntimeGateVersion)} · proof ${escapeHtml(evidence.p5RuntimeProofPassedAt ?? 'not available')}</div>
+  <div class="meta">P5 proof build: ${escapeHtml(evidence.p5RuntimeProofBuild?.sourceSha ?? 'not available')}</div>
   <div class="meta">This acceptance covers the positive page-flow calibration only; separate real image-bearing/refusal scenarios are still required by the P6 tracker.</div>
 </div>
 <div class="grid">
   ${metric('acceptance', assessment.accepted ? 'PASS' : 'FAIL')}
+  ${metric('build source SHA', evidence.build.sourceSha)}
+  ${metric('Actions run #', evidence.build.runNumber)}
+  ${metric('Actions run ID', evidence.build.runId)}
   ${metric('outcome', evidence.outcomeStatus)}
   ${metric('plan', plan?.recipe ?? '—')}
   ${metric('plan confidence', plan?.confidence ?? '—')}
