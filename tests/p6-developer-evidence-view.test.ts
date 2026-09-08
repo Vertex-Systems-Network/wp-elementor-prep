@@ -3,6 +3,7 @@ import type { AdvancedCalibrationResult } from '../src/core/advanced-calibration
 import type { AdvancedRecipePlan } from '../src/core/advanced-recipe-types';
 import type { ValidationReport } from '../src/core/validation-types';
 import { buildP6DeveloperEvidenceView } from '../src/plugin/p6-developer-evidence-view';
+import { P6_TEST_BUILD, P6_TEST_PROOF_PASSED_AT } from './p6-provenance-fixture';
 
 function preservePlan(): AdvancedRecipePlan {
   return {
@@ -107,7 +108,9 @@ function completedResult(plan: AdvancedRecipePlan): AdvancedCalibrationResult {
 
 const base = {
   pluginVersion: '0.1.0-alpha.1',
-  p5RuntimeProofPassedAt: '2026-09-08T10:00:00.000Z',
+  build: P6_TEST_BUILD,
+  p5RuntimeProofPassedAt: P6_TEST_PROOF_PASSED_AT,
+  p5RuntimeProofBuild: P6_TEST_BUILD,
   frame: { id: 'frame', name: 'Desktop Page' } as FrameNode,
   capturedAt: '2026-09-08T10:01:00.000Z',
 };
@@ -150,6 +153,7 @@ describe('P6 developer evidence view', () => {
     const view = buildP6DeveloperEvidenceView({
       ...base,
       p5RuntimeProofPassedAt: null,
+      p5RuntimeProofBuild: null,
       outcome: {
         status: 'BLOCKED',
         reason: 'P5 imported-plugin runtime proof is not valid for this build.',
