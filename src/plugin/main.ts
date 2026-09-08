@@ -12,6 +12,9 @@ import type { PixelDiffMetrics } from '../core/validation-types';
 import { FullFrameValidator } from './full-frame-validator';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
+import { buildP5RuntimeEvidenceBundle } from './p5-runtime-evidence';
+import { persistP5RuntimeEvidenceBestEffort } from './p5-runtime-evidence-storage';
+import { buildP5RuntimeEvidenceViewerHtml } from './p5-runtime-evidence-viewer';
 import {
   finalizeLastSafeFix,
   hasPendingSafeFixCheckpoint,
@@ -165,16 +168,33 @@ async function runRuntimeSelfTest(): Promise<void> {
 
     const acceptance = await updateP5RuntimeProofFromCalibration(figma.clientStorage, result);
     const proof = await runtimeProofState();
+    const evidence = buildP5RuntimeEvidenceBundle({
+      pluginVersion: PLUGIN_VERSION,
+      result,
+      runtimeProofPassedAt: proof.passedAt,
+    });
+    const evidencePersisted = await persistP5RuntimeEvidenceBestEffort(figma.clientStorage, evidence);
+
     figma.ui.postMessage({
       type: 'runtime-calibration-result',
       result,
       acceptance,
+      evidence,
+      evidencePersisted,
       mutationGateUnlocked: proof.valid,
       runtimeProofPassedAt: proof.passedAt,
     });
 
+    figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+      width: 520,
+      height: 700,
+      themeColors: true,
+    });
+
     if (acceptance.accepted && proof.valid) {
-      figma.notify('P5 compiled runtime acceptance passed. Safe Fix gate unlocked.');
+      figma.notify(evidencePersisted
+        ? 'P5 compiled runtime acceptance passed. Evidence saved; Safe Fix gate unlocked.'
+        : 'P5 compiled runtime acceptance passed. Evidence storage failed, but Safe Fix gate is unlocked.');
     } else {
       const detail = acceptance.failures[0] ? ` ${acceptance.failures[0]}` : '';
       figma.notify(`P5 compiled runtime acceptance failed; Safe Fix remains locked.${detail}`);
