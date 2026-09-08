@@ -1,3 +1,4 @@
+import type { P5RuntimeProof } from '../core/p5-runtime-gate';
 import type {
   P7RuntimeBuildIdentity,
   P7RuntimeEvidenceSnapshot,
@@ -7,7 +8,11 @@ import {
   isTraceableP7BuildIdentity,
   sameP7BuildIdentity,
 } from './p7-build-identity';
-import { readP7P5BuildProofState } from './p7-p5-build-proof';
+import {
+  readP7P5BuildProofEvidence,
+  type P7P5BuildProofEvidence,
+  type P7P5BuildProofReceipt,
+} from './p7-p5-build-proof';
 import {
   loadAndAssessP7RuntimeAcceptance,
   type P7StoredRuntimeAcceptanceAssessment,
@@ -67,13 +72,15 @@ export interface P7RuntimeAcceptanceExportBundle {
 }
 
 export interface P7RuntimeClosureExportBundle {
-  schemaVersion: 1;
+  schemaVersion: 2;
   accepted: boolean;
   failures: string[];
   currentBuild: P7RuntimeBuildIdentity;
   p5Prerequisite: {
     valid: boolean;
     passedAt: string | null;
+    coreProof: P5RuntimeProof | null;
+    receipt: P7P5BuildProofReceipt | null;
   };
   runtimeAcceptance: {
     accepted: boolean;
@@ -230,15 +237,18 @@ export function buildP7RuntimeClosureExportBundle(
   closure: P7RuntimeClosureInspectionSummary,
   runtimeAssessment: P7StoredRuntimeAcceptanceAssessment,
   expectedBuild: P7RuntimeBuildIdentity,
+  p5Evidence: P7P5BuildProofEvidence,
 ): P7RuntimeClosureExportBundle {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     accepted: closure.accepted,
     failures: [...closure.failures],
     currentBuild: { ...expectedBuild },
     p5Prerequisite: {
-      valid: closure.p5PrerequisiteValid,
-      passedAt: closure.p5ProofPassedAt,
+      valid: p5Evidence.state.valid,
+      passedAt: p5Evidence.state.passedAt,
+      coreProof: p5Evidence.coreProof,
+      receipt: p5Evidence.receipt,
     },
     runtimeAcceptance: {
       accepted: runtimeAssessment.accepted,
@@ -253,9 +263,10 @@ export function formatP7RuntimeClosureJson(
   closure: P7RuntimeClosureInspectionSummary,
   runtimeAssessment: P7StoredRuntimeAcceptanceAssessment,
   expectedBuild: P7RuntimeBuildIdentity,
+  p5Evidence: P7P5BuildProofEvidence,
 ): string {
   return JSON.stringify(
-    buildP7RuntimeClosureExportBundle(closure, runtimeAssessment, expectedBuild),
+    buildP7RuntimeClosureExportBundle(closure, runtimeAssessment, expectedBuild, p5Evidence),
     null,
     2,
   );
@@ -269,10 +280,10 @@ export async function inspectLatestP7RuntimeEvidence(
   storage: P7EvidenceKeyValueStorage,
   expectedBuild: P7RuntimeBuildIdentity = P7_BUILD_IDENTITY,
 ): Promise<P7RuntimeEvidenceInspection> {
-  const [snapshot, storedAcceptance, p5Prerequisite] = await Promise.all([
+  const [snapshot, storedAcceptance, p5Evidence] = await Promise.all([
     loadLatestP7RuntimeEvidence(storage),
     loadAndAssessP7RuntimeAcceptance(storage),
-    readP7P5BuildProofState(storage, expectedBuild),
+    readP7P5BuildProofEvidence(storage, expectedBuild),
   ]);
 
   const acceptance: P7RuntimeAcceptanceInspectionSummary = {
@@ -282,8 +293,8 @@ export async function inspectLatestP7RuntimeEvidence(
     cancellationEvidenceAvailable: storedAcceptance.evidence.cancellation !== null,
   };
   const acceptanceJson = formatP7RuntimeAcceptanceJson(storedAcceptance);
-  const closure = assessP7RuntimeClosure(storedAcceptance, p5Prerequisite, expectedBuild);
-  const closureJson = formatP7RuntimeClosureJson(closure, storedAcceptance, expectedBuild);
+  const closure = assessP7RuntimeClosure(storedAcceptance, p5Evidence.state, expectedBuild);
+  const closureJson = formatP7RuntimeClosureJson(closure, storedAcceptance, expectedBuild, p5Evidence);
 
   if (!snapshot) {
     return {
