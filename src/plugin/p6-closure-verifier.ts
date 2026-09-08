@@ -1,8 +1,14 @@
 import {
   isTraceableP5RuntimeBuildIdentity,
+  P5_RUNTIME_GATE_VERSION,
   sameP5RuntimeBuildIdentity,
   type P5RuntimeBuildIdentity,
 } from '../core/p5-runtime-gate';
+import {
+  assessP5RuntimeAcceptance,
+  type P5RuntimeAcceptanceAssessment,
+} from './p5-runtime-acceptance';
+import type { P5RuntimeEvidenceBundle } from './p5-runtime-evidence';
 import {
   assessP6ClosureAcceptance,
   type P6ClosureAcceptanceAssessment,
@@ -68,7 +74,86 @@ function sameAssessment(
     && left.refusalMatchesCurrentBuild === right.refusalMatchesCurrentBuild;
 }
 
-/** Recomputes P6 closure from exported evidence and binds it to the exact packaged artifact. */
+function sameAcceptance(left: P5RuntimeAcceptanceAssessment, right: P5RuntimeAcceptanceAssessment): boolean {
+  return left.accepted === right.accepted
+    && left.failures.length === right.failures.length
+    && left.failures.every((value, index) => value === right.failures[index]);
+}
+
+function validIso(value: string | null): boolean {
+  return typeof value === 'string' && value.length > 0 && Number.isFinite(Date.parse(value));
+}
+
+function looksLikeP5Evidence(value: unknown): value is P5RuntimeEvidenceBundle {
+  const evidence = objectValue(value);
+  if (!evidence) return false;
+  const acceptance = objectValue(evidence.acceptance);
+  return Boolean(
+    evidence.schemaVersion === 2
+    && typeof evidence.capturedAt === 'string'
+    && typeof evidence.pluginVersion === 'string'
+    && typeof evidence.runtimeGateVersion === 'string'
+    && objectValue(evidence.build)
+    && (evidence.runtimeProofPassedAt === null || typeof evidence.runtimeProofPassedAt === 'string')
+    && acceptance
+    && typeof acceptance.accepted === 'boolean'
+    && stringArray(acceptance.failures)
+    && objectValue(evidence.calibration),
+  );
+}
+
+function assessP5Prerequisite(
+  evidence: P5RuntimeEvidenceBundle | null,
+  expectedBuild: P5RuntimeBuildIdentity,
+): P5RuntimeAcceptanceAssessment {
+  const failures: string[] = [];
+  if (!evidence) {
+    return { accepted: false, failures: ['P6 closure export contains no P5 runtime evidence prerequisite.'] };
+  }
+
+  if (evidence.runtimeGateVersion !== P5_RUNTIME_GATE_VERSION) {
+    failures.push('P6 closure P5 evidence uses a different runtime-gate version.');
+  }
+  if (!isTraceableP5RuntimeBuildIdentity(evidence.build) || !sameP5RuntimeBuildIdentity(evidence.build, expectedBuild)) {
+    failures.push('P6 closure P5 evidence belongs to a different build than this verifier artifact.');
+  }
+
+  const calibration = assessP5RuntimeAcceptance(evidence.calibration);
+  failures.push(...calibration.failures);
+  const recomputed: P5RuntimeAcceptanceAssessment = { accepted: failures.length === 0, failures };
+
+  if (!sameAcceptance(evidence.acceptance, recomputed)) {
+    failures.push('Stored P5 prerequisite acceptance does not match canonical recomputation.');
+  }
+  if (recomputed.accepted && !validIso(evidence.runtimeProofPassedAt)) {
+    failures.push('Accepted P5 prerequisite evidence has no valid runtime proof timestamp.');
+  }
+
+  return { accepted: failures.length === 0, failures };
+}
+
+function checkScenarioP5Binding(
+  failures: string[],
+  scenario: P6ClosureEvidencePair['positive'] | P6ClosureEvidencePair['refusal'],
+  p5Evidence: P5RuntimeEvidenceBundle | null,
+  label: string,
+): void {
+  if (!scenario || !p5Evidence) return;
+  if (scenario.p5RuntimeGateVersion !== p5Evidence.runtimeGateVersion) {
+    failures.push(`${label} P5 gate does not match exported P5 prerequisite evidence.`);
+  }
+  if (scenario.p5RuntimeProofPassedAt !== p5Evidence.runtimeProofPassedAt) {
+    failures.push(`${label} P5 proof timestamp does not match exported P5 prerequisite evidence.`);
+  }
+  if (
+    !scenario.p5RuntimeProofBuild
+    || !sameP5RuntimeBuildIdentity(scenario.p5RuntimeProofBuild, p5Evidence.build)
+  ) {
+    failures.push(`${label} P5 proof build does not match exported P5 prerequisite evidence.`);
+  }
+}
+
+/** Recomputes P6 closure and its P5 prerequisite from exported evidence, bound to this artifact. */
 export function verifyP6ClosureExportBundle(
   value: unknown,
   expectedBuild: P5RuntimeBuildIdentity,
@@ -77,8 +162,9 @@ export function verifyP6ClosureExportBundle(
   const bundle = objectValue(value);
   if (
     !bundle
-    || bundle.schemaVersion !== 1
+    || bundle.schemaVersion !== 2
     || !isBuildIdentity(bundle.currentBuild)
+    || (bundle.p5Evidence !== null && !looksLikeP5Evidence(bundle.p5Evidence))
     || !looksLikeAssessment(bundle.acceptance)
     || !looksLikeEvidencePair(bundle.evidence)
   ) {
@@ -91,9 +177,16 @@ export function verifyP6ClosureExportBundle(
     failures.push('P6 closure bundle belongs to a different build than this verifier artifact.');
   }
 
+  const p5Evidence = bundle.p5Evidence as P5RuntimeEvidenceBundle | null;
+  const p5Assessment = assessP5Prerequisite(p5Evidence, expectedBuild);
+  if (!p5Assessment.accepted) failures.push(...p5Assessment.failures);
+
+  checkScenarioP5Binding(failures, bundle.evidence.positive, p5Evidence, 'Positive evidence');
+  checkScenarioP5Binding(failures, bundle.evidence.refusal, p5Evidence, 'Refusal evidence');
+
   let recomputed: P6ClosureAcceptanceAssessment;
   try {
-    recomputed = assessP6ClosureAcceptance(bundle.currentBuild, bundle.evidence);
+    recomputed = assessP6ClosureAcceptance(expectedBuild, bundle.evidence);
   } catch {
     return { accepted: false, failures: [...failures, 'P6 closure evidence could not be evaluated by the canonical assessor.'] };
   }
@@ -109,8 +202,9 @@ export function verifyP6ClosureExportBundle(
 export function asP6ClosureExportBundle(value: unknown): P6ClosureExportBundle | null {
   const bundle = objectValue(value);
   return bundle
-    && bundle.schemaVersion === 1
+    && bundle.schemaVersion === 2
     && isBuildIdentity(bundle.currentBuild)
+    && (bundle.p5Evidence === null || looksLikeP5Evidence(bundle.p5Evidence))
     && looksLikeAssessment(bundle.acceptance)
     && looksLikeEvidencePair(bundle.evidence)
     ? bundle as unknown as P6ClosureExportBundle
