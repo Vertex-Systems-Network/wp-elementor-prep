@@ -13,7 +13,10 @@ import { FullFrameValidator } from './full-frame-validator';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
 import { buildP5RuntimeEvidenceBundle } from './p5-runtime-evidence';
-import { persistP5RuntimeEvidenceBestEffort } from './p5-runtime-evidence-storage';
+import {
+  loadLatestP5RuntimeEvidence,
+  persistP5RuntimeEvidenceBestEffort,
+} from './p5-runtime-evidence-storage';
 import { buildP5RuntimeEvidenceViewerHtml } from './p5-runtime-evidence-viewer';
 import {
   finalizeLastSafeFix,
@@ -208,6 +211,19 @@ async function runRuntimeSelfTest(): Promise<void> {
   }
 }
 
+async function runRuntimeEvidenceViewer(): Promise<void> {
+  const evidence = await loadLatestP5RuntimeEvidence(figma.clientStorage);
+  if (!evidence) {
+    figma.notify('No valid persisted P5 runtime acceptance evidence is available.');
+    return;
+  }
+  figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+    width: 520,
+    height: 700,
+    themeColors: true,
+  });
+}
+
 async function runSafeFixApply(message: { targetNodeId: string; recipe: SafeRecipeKind }): Promise<void> {
   const selected = selectedFrame();
   if (!selected) {
@@ -390,6 +406,8 @@ figma.on('selectionchange', () => {
 
 if (figma.command === 'p5-runtime-self-test') {
   void runRuntimeSelfTest();
+} else if (figma.command === 'p5-runtime-evidence') {
+  void runRuntimeEvidenceViewer();
 } else if (figma.currentPage.selection.length === 1) {
   runAudit();
 }
