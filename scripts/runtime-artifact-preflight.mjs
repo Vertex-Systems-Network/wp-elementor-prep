@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync, statSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -37,7 +37,17 @@ function readJson(path, errors, label) {
 
 function requireFile(dir, name, errors) {
   const path = join(dir, name);
-  if (!existsSync(path) || !statSync(path).isFile()) {
+  if (!existsSync(path)) {
+    errors.push(`Missing required artifact file: ${name}`);
+    return null;
+  }
+
+  const metadata = lstatSync(path);
+  if (metadata.isSymbolicLink()) {
+    errors.push(`Required artifact file must not be a symbolic link: ${name}`);
+    return null;
+  }
+  if (!metadata.isFile()) {
     errors.push(`Missing required artifact file: ${name}`);
     return null;
   }
@@ -104,7 +114,9 @@ export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final
         continue;
       }
 
-      const path = paths[name] || requireFile(dir, name, errors);
+      const path = Object.prototype.hasOwnProperty.call(paths, name)
+        ? paths[name]
+        : requireFile(dir, name, errors);
       if (!path) continue;
 
       immutableFilesChecked += 1;
