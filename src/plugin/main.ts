@@ -13,6 +13,8 @@ import type { PixelDiffMetrics } from '../core/validation-types';
 import { FullFrameValidator } from './full-frame-validator';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { runP6DeveloperPageFlowCalibration } from './p6-developer-calibration';
+import { buildP6RuntimeEvidenceBundle } from './p6-runtime-evidence';
+import { buildP6RuntimeEvidenceViewerHtml } from './p6-runtime-evidence-viewer';
 import {
   finalizeLastSafeFix,
   hasPendingSafeFixCheckpoint,
@@ -209,8 +211,9 @@ async function runP6PageFlowDeveloperCalibration(): Promise<void> {
   });
 
   try {
+    const proof = await runtimeProofState();
     const outcome = await runP6DeveloperPageFlowCalibration(selected, {
-      runtimeProofValid: async () => (await runtimeProofState()).valid,
+      runtimeProofValid: async () => proof.valid,
       hasPendingCheckpoint: hasPendingSafeFixCheckpoint,
       validateFullP3: async (before, after) => {
         const validation = await fullFrameValidator.validate(before, after);
@@ -218,9 +221,23 @@ async function runP6PageFlowDeveloperCalibration(): Promise<void> {
       },
     });
 
+    const evidence = buildP6RuntimeEvidenceBundle({
+      pluginVersion: PLUGIN_VERSION,
+      p5RuntimeProofPassedAt: proof.passedAt,
+      frame: selected,
+      outcome,
+    });
+
     figma.ui.postMessage({
       type: 'p6-page-flow-calibration-result',
       outcome,
+      evidence,
+    });
+
+    figma.showUI(buildP6RuntimeEvidenceViewerHtml(evidence), {
+      width: 520,
+      height: 700,
+      themeColors: true,
     });
 
     if (outcome.status === 'BLOCKED') {
