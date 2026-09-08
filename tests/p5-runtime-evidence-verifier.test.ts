@@ -65,6 +65,7 @@ describe('P5 offline runtime evidence verifier', () => {
     const result = verifyP5RuntimeEvidence(passingBundle(), expectedBuild);
     expect(result.accepted).toBe(false);
     expect(result.failures).toContain('Evidence was captured by a different build than this offline verifier artifact.');
+    expect(result.failures).toContain('Accepted evidence does not reconstruct a valid exact-build P5 runtime proof.');
   });
 
   it('rejects a structurally valid but semantically tampered stored acceptance verdict', () => {
@@ -89,6 +90,15 @@ describe('P5 offline runtime evidence verifier', () => {
     const result = verifyP5RuntimeEvidence(bundle, BUILD);
     expect(result.accepted).toBe(false);
     expect(result.failures.some((failure) => failure.startsWith('Runtime gate mismatch:'))).toBe(true);
+    expect(result.failures).toContain('Accepted evidence does not reconstruct a valid exact-build P5 runtime proof.');
+  });
+
+  it('rejects an accepted proof timestamp that occurs after evidence capture', () => {
+    const bundle = passingBundle();
+    bundle.runtimeProofPassedAt = '2026-09-08T12:00:02.000Z';
+    const result = verifyP5RuntimeEvidence(bundle, BUILD);
+    expect(result.accepted).toBe(false);
+    expect(result.failures).toContain('Runtime proof timestamp is later than evidence capture timestamp.');
   });
 
   it('rejects malformed evidence without throwing', () => {
