@@ -72,7 +72,7 @@ function isCalibrationResult(value: unknown): boolean {
     && pixelValue(passFinalize.changedPixelPct);
 }
 
-function isEvidenceBundle(value: unknown): value is P5RuntimeEvidenceBundle {
+export function isP5RuntimeEvidenceBundle(value: unknown): value is P5RuntimeEvidenceBundle {
   const candidate = objectValue(value);
   if (!candidate) return false;
   const acceptance = objectValue(candidate.acceptance);
@@ -99,7 +99,7 @@ export async function loadLatestP5RuntimeEvidence(
 ): Promise<P5RuntimeEvidenceBundle | null> {
   try {
     const stored = await storage.getAsync(key);
-    return isEvidenceBundle(stored) ? stored : null;
+    return isP5RuntimeEvidenceBundle(stored) ? stored : null;
   } catch {
     return null;
   }
