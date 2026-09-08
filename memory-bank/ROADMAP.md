@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-09-08
+Last updated: 2026-09-09
 
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
@@ -10,9 +10,9 @@ Last updated: 2026-09-08
 | P2 | Deterministic classifier semantics + evidence | COMPLETE | 100% | `██████████` | None |
 | P3 | Geometry/content/image + rendered-pixel validation | COMPLETE | 100% | `██████████` | None |
 | P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
-| P5 | Conservative Safe Fix recipes + exact-build proof | RUNTIME ACCEPTANCE | 92% | `█████████░` | Preflight #488 → real imported-Figma proof → same-artifact verifier → merge #6 |
-| P6 | Advanced timeline/carousel/milestone/page normalization | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh registered artifact → #7 closure |
-| P7 | Sequential multi-frame/page batch queue | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh registered artifact → #8 closure |
+| P5 | Conservative Safe Fix recipes + exact-build proof | RUNTIME ACCEPTANCE | 93% | `█████████░` | Hash-pinned preflight #488 → real imported-Figma proof → same-artifact verifier → merge #6 |
+| P6 | Advanced timeline/carousel/milestone/page normalization | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh registered artifact + file pins → #7 closure |
+| P7 | Sequential multi-frame/page batch queue | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh registered artifact + file pins → #8 closure |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate after normalization line stabilizes |
 
 ## Overall active roadmap progress
@@ -35,7 +35,7 @@ Engineering and exact-artifact offline verification are complete on:
 - artifact `figma-plugin-dist-488`,
 - digest `sha256:9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`.
 
-The artifact is registered in `config/runtime-artifacts.json` as the current final-closure-eligible P5 build. Main-side `runtime:preflight` validates its exact identity and packaged runtime surfaces before import.
+The artifact is registered in `config/runtime-artifacts.json` schema v2 as the current final-closure-eligible P5 build. Main-side `runtime:preflight` now validates exact build identity plus SHA-256 pins for `BUILD_INFO.txt`, compiled `code.js`, `ui.html`, packaged import helper and same-artifact verifier. `manifest.json` remains an allowed plugin-ID-only rebind surface while its semantics are still checked.
 
 Remaining gate is real imported-Figma acceptance plus same-artifact `verify-p5-evidence.mjs` exit `0`. Production Safe Fix mutation remains locked until that gate passes.
 
@@ -43,13 +43,13 @@ Remaining gate is real imported-Figma acceptance plus same-artifact `verify-p5-e
 
 Engineering is complete on reference head `9a6ae3b` / CI #494 PASS. Automated integration readiness proves real shared-code conflicts against latest P5.
 
-Artifact #494 is explicitly reference-only in the runtime registry and fails closed when requested for final closure. After P5 merges, P6 must be integrated, rebuilt as a fresh exact artifact, registered, then validated with real positive + preservation-refusal Figma scenarios.
+Artifact #494 is explicitly reference-only in the runtime registry and fails closed when requested for final closure. Its immutable reference files are SHA-256 pinned for safe inspection. After P5 merges, P6 must be integrated, rebuilt as a fresh exact artifact, registered with new identity/digest/file hashes, then validated with real positive + preservation-refusal Figma scenarios.
 
 ## P7 — issue #8
 
 Engineering is complete on reference head `cbfdb66` / CI #490 PASS. Automated integration readiness proves real shared-code conflicts against latest P5.
 
-Artifact #490 is explicitly reference-only in the runtime registry and fails closed when requested for final closure. After P5 merges, P7 must be integrated, rebuilt as a fresh exact artifact, registered, then validated with a realistic 60+ Frame stress run plus active Full-P3 cooperative cancellation.
+Artifact #490 is explicitly reference-only in the runtime registry and fails closed when requested for final closure. Its immutable reference files are SHA-256 pinned for safe inspection. After P5 merges, P7 must be integrated, rebuilt as a fresh exact artifact, registered with new identity/digest/file hashes, then validated with a realistic 60+ Frame stress run plus active Full-P3 cooperative cancellation.
 
 ## P8
 
