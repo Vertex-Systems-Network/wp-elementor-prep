@@ -1,14 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import type { P6PreservationRefusalEvidenceBundle } from '../src/plugin/p6-refusal-evidence';
 import { buildP6PreservationRefusalEvidenceViewerHtml } from '../src/plugin/p6-refusal-evidence-viewer';
+import { P6_TEST_BUILD, P6_TEST_PROOF_PASSED_AT } from './p6-provenance-fixture';
 
 function evidence(): P6PreservationRefusalEvidenceBundle {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     capturedAt: '2026-09-08T10:01:00.000Z',
     pluginVersion: '0.1.0-alpha.1',
+    build: { ...P6_TEST_BUILD },
     p5RuntimeGateVersion: 'p5-runtime-proof-v3',
-    p5RuntimeProofPassedAt: '2026-09-08T10:00:00.000Z',
+    p5RuntimeProofPassedAt: P6_TEST_PROOF_PASSED_AT,
+    p5RuntimeProofBuild: { ...P6_TEST_BUILD },
     frame: { id: 'frame', name: 'Preservation <Page>' },
     outcomeStatus: 'NO_CANDIDATE',
     reason: 'Overlay <must> remain preserved.',
@@ -47,6 +50,7 @@ describe('P6 preservation refusal evidence viewer', () => {
   it('shows exact fail-closed reasons for incomplete or unsafe refusal evidence', () => {
     const unsafe = evidence();
     unsafe.p5RuntimeProofPassedAt = null;
+    unsafe.p5RuntimeProofBuild = null;
     unsafe.plansTruncated = true;
     const html = buildP6PreservationRefusalEvidenceViewerHtml(unsafe);
 
