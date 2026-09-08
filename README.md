@@ -1,81 +1,128 @@
 # WP Elementor Prep
 
-AI-free Figma structure auditor and safe-prep engine for WordPress Elementor.
+Deterministic Figma structure auditor and safe-prep engine for WordPress Elementor.
 
-## Goal
+The project prepares approved desktop Figma designs for Elementor **without visually redesigning them** and without depending on external generative AI in the core runtime.
 
-Take an approved desktop Figma design and make its internal layout Elementor-ready **without visually redesigning it**. The long-term workflow is:
+`Figma selection -> Audit -> classify -> plan -> candidate clone -> safe transform -> Full P3 validation -> P4 commit/discard -> restore/finalize -> report`
 
-`Figma selection -> Audit -> Confidence classification -> Safe Fix -> Visual/geometry validation -> Report -> optional Elementor export`
+## Live development status
 
-The plugin is intentionally deterministic. It must not depend on Figma AI, OpenAI, Claude, or any other generative service for its core audit/refactor pipeline.
+> **Progress policy:** this README must be updated at the end of every meaningful development batch with the latest verified CI, canonical branch state, blockers and next actions.
 
-## Development status
+**Open PR/MR:** `0`
 
-**Overall roadmap: 56% — P0 through P4 engineered**
-
-`███████████░░░░░░░░░ 56%`
-
-| Phase | Scope | Status |
+| Phase | Scope | Current status |
 |---|---|---|
-| P0 | Specification, architecture, repository foundation | ✅ Complete |
-| P1 | Audit-only scanner, discovery and scoring | ✅ Complete |
-| P2 | Deterministic classifier semantics + role evidence | ✅ Complete |
-| P3 | Geometry/content/image + rendered pixel validator | ✅ Complete |
-| P4 | Candidate transaction engine + rollback/undo | 🟢 Merge-ready |
-| P5 | Conservative high-confidence Safe Fix recipes | ⏭️ Next |
-| P6 | Advanced timeline/carousel/milestone normalization | ⬜ Planned |
-| P7 | Multi-frame/page batch queue | ⬜ Planned |
-| P8 | Optional versioned Elementor exporter adapters | ⬜ Planned |
+| P0 | Specification + architecture | ✅ Complete |
+| P1 | Scanner, discovery, scoring | ✅ Complete |
+| P2 | Deterministic classification + semantic roles | ✅ Complete |
+| P3 | Geometry/content/image/rendered-pixel validator | ✅ Complete |
+| P4 | Candidate transaction + rollback/checkpoint | ✅ Complete |
+| P5 | Conservative high-confidence Safe Fix recipes | 🟡 Engineering complete; imported-Figma runtime acceptance pending (#6) |
+| P6 | Advanced structures + clone-only calibration | 🟡 Engineering/calibration tooling ready; real-Figma acceptance pending (#7) |
+| P7 | Sequential 60+ frame batch queue | 🟡 Engineering complete; real-Figma stress/cancellation acceptance pending (#8) |
+| P8 | Optional Elementor exporter adapters | ⏸ Deferred / issue #9 closed as not planned for current phase |
 
-### Safety pipeline
+## Canonical development branches
 
-`Audit -> classify -> clone candidate -> transform candidate -> P3 validate -> commit/swap OR discard -> bounded undo/finalize`
+| Track | Branch | Last verified functional head | CI |
+|---|---|---|---|
+| P5 | `feat/p5-safe-recipes` | `4ff63a9` | ✅ #248 |
+| P6 | `feat/p6-advanced-structures` | `0f89f69` | ✅ #258 |
+| P7 | `feat/p7-batch-queue-core` | `ecc9080` | ✅ #262 |
 
-P4 enforces candidate isolation: the approved original is never passed to the transformer, a commit cannot occur until validation passes, and only one pending undo checkpoint may exist at a time.
+README-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity pipeline was explicitly verified.
 
-Canonical engineering status lives in `memory-bank/PROJECT_STATE.md` and `memory-bank/ROADMAP.md`.
+## Latest development batch — 2026-09-08
 
-## Current phase
+- ✅ closed all open PR/MRs while preserving branches and code history
+- ✅ consolidated P5/P6/P7 work onto one canonical branch per phase
+- ✅ enabled direct-push CI for canonical branches so development can continue without PR churn
+- ✅ P5 deterministic `p5-runtime-proof-v3` acceptance assessor + regression coverage
+- ✅ P6 deterministic clone-calibration acceptance assessor
+- ✅ P6 evidence viewer now shows runtime Acceptance PASS/FAIL + exact failure reasons
+- ✅ P7 deterministic real-runtime acceptance assessor
+- ✅ P7 retains qualifying 60+ completed stress evidence and active-frame cancellation evidence in separate bounded storage slots
+- ✅ small/inter-frame runs cannot erase the two P7 acceptance scenarios
+- ✅ P7 retained evidence loader evaluates both scenarios together
+- ✅ P7 runtime inspector/viewer shows overall `Runtime acceptance: PASS/FAIL`, scenario availability and exact failures
+- ✅ stronger external in-flight cancellation regression consolidated into the canonical P7 branch
+- ✅ latest functional CI green: P5 #248, P6 #258, P7 #262
 
-**P4: candidate-isolated transaction + rollback is merge-ready. P5 Safe Fix recipes are next.**
+## Remaining real-runtime acceptance
 
-General Safe Fix remains disabled until P4 is merged and each P5 recipe proves its own confidence gate, candidate-only mutation path, full P3 validation and live calibration.
+The remaining open issues are intentionally limited to evidence that GitHub CI cannot manufacture because it must run through the **actual imported compiled Figma development plugin and its UI iframe Canvas pixel broker**.
 
-## Core principles
+### P5 — issue #6
 
-- Original design is the visual source of truth.
-- Never guess when confidence is low.
-- Audit first; mutate only after the audit engine is proven.
-- Candidate/validate/commit transactions for fixes.
-- Elementor-native output: containers, nested containers, widgets, gap, padding, sizing, minimal absolute positioning.
-- No external AI/network dependency in the core plugin runtime.
-- Memory-bank is mandatory and must be updated with every meaningful development session.
+- [ ] import the canonical development artifact in Figma desktop
+- [ ] run `Developer: P5 Runtime Self-Test`
+- [ ] require `p5-runtime-proof-v3` PASS
+- [ ] verify rendered-pixel reject, commit -> restore and commit -> finalize paths
+- [ ] require checkpoint cleanup and `0` leftovers
+
+Production Safe Fix mutation stays locked until this proof passes.
+
+### P6 — issue #7
+
+- [ ] P5 runtime proof valid in the imported build
+- [ ] run disposable page-flow clone calibration in real Figma
+- [ ] require deterministic acceptance PASS in the evidence viewer
+- [ ] collect image-bearing real-template evidence
+- [ ] verify pass/reject/failure cleanup with `0` leftovers
+- [ ] verify preservation-sensitive pages remain refused
+
+P6 production advanced mutation remains intentionally disabled.
+
+### P7 — issue #8
+
+- [ ] P5 runtime proof valid in the imported build
+- [ ] execute realistic 60+ frame imported-Figma batch run
+- [ ] retain completed stress evidence with max processor concurrency `1`
+- [ ] request cancellation during a genuinely long active Full P3 operation
+- [ ] retain settled active-frame cancellation evidence
+- [ ] open the P7 runtime evidence viewer and require overall Acceptance PASS
+
+## Safety invariants
+
+- Approved original design is the visual source of truth.
+- Never mutate on low confidence or ambiguous structure.
+- Candidate-only mutation; transformer never receives the approved original.
+- Full P3 validation is mandatory before P4 commit.
+- Rendered-pixel evidence is part of production validation.
+- Only one unresolved restore/finalize checkpoint may exist.
+- Batch processing is strictly sequential: max one processor at a time.
+- Cancellation is cooperative and cannot silently bypass an in-flight transaction/checkpoint.
+- Unsupported or ambiguous constructs are reported/refused, never guessed.
+- No external AI/network dependency in the deterministic core runtime.
+
+## Current P5 recipe gates
+
+- Vertical Stack >= 90%
+- Horizontal Row >= 90%
+- Two Column >= 92%
+- Facts List >= 92%
+- Footer Columns >= 92%
+- non-fragmented Repeated Card Grid >= 94%
+- Metric Grid >= 95%
+- Social/Link Strip >= 95%
+
+Advanced timeline/carousel/fragmented synthesis remains P6-preservation/calibration territory and is not silently enabled as a P5 mutation.
 
 ## Development
 
 ```bash
 npm install
-npm run build
+npm run typecheck
 npm test
+npm run build
 ```
 
-Then register/import the development plugin in Figma using the generated `dist/manifest.json` after setting a valid plugin ID in `.env` or `FIGMA_PLUGIN_ID`.
+Import the generated development plugin from `dist/manifest.json` after configuring a valid Figma plugin ID.
 
-## Project docs
-
-- `docs/AI_NATIVE_PLAN.md`
-- `docs/DEEP_AUDIT.md`
-- `docs/FEATURE_PLAN.md`
-- `docs/PRE_DEVELOPMENT_PLAN.md`
-- `docs/ARCHITECTURE.md`
-- `docs/ELEMENTOR_RULES.md`
-- `docs/P3_VALIDATOR_DESIGN.md`
-- `docs/P3_PIXEL_CALIBRATION.md`
-- `docs/P4_TRANSACTION_DESIGN.md`
-- `docs/P4_LIVE_TRANSACTION_CALIBRATION.md`
-- `memory-bank/` — canonical project state for humans and AI agents
+Canonical engineering detail also lives in `memory-bank/PROJECT_STATE.md`, `memory-bank/ROADMAP.md`, `memory-bank/NEXT_ACTIONS.md`, and the phase-specific files under `docs/`.
 
 ## Golden fixture
 
-The first reference design is the Marcus Vane desktop page that contains a broad mix of patterns: hero, two-column about, cards, metrics, timeline/journey, carousel/media, milestones, and footer. It is used as a **golden audit fixture**, not as hard-coded product logic.
+The Marcus Vane desktop page is the first broad calibration fixture and includes hero, two-column, cards, metrics, timeline/journey, carousel/media, milestones and footer patterns. It is a fixture only; production logic must remain generic and deterministic.
