@@ -18,7 +18,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 |---|---|---:|---|---|
 | AI-native governance + repo tooling | ✅ COMPLETE | 100% | `██████████` | Keep Issues → PR/MR → development lifecycle, status verification and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
-| P5 Conservative Safe Fix | 🟡 RUNTIME ACCEPTANCE | 92% | `█████████░` | Preflight #488 → manifest rebind if needed → real imported-Figma proof → same-artifact verifier → merge #6 |
+| P5 Conservative Safe Fix | 🟡 RUNTIME ACCEPTANCE | 93% | `█████████░` | Hash-pinned preflight #488 → manifest rebind if needed → real imported-Figma proof → same-artifact verifier → merge #6 |
 | P6 Advanced structures | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh registered artifact → real closure #7 |
 | P7 60+ Frame batch queue | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh registered artifact → stress/cancel closure #8 |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
@@ -38,15 +38,19 @@ Every work cycle must execute in this order:
 
 Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISIONS.md` D-012.
 
-## Latest verified checkpoint — 2026-09-08
+## Latest verified checkpoint — 2026-09-09
 
-- ✅ issue-first sweep confirmed open issues are exactly #6, #7 and #8; no new actionable product/code defect issue was found.
-- ✅ issue #7 and #8 tracker bodies explicitly mark current P6 #494 / P7 #490 artifacts as **reference-only** for final closure.
-- ✅ PR #41 added fail-closed runtime artifact preflight without modifying canonical P5/P6/P7 exact-build branches.
-- ✅ final PR #41 head `69fd91b` passed CI #522 and Integration Readiness #16 with no review/thread blockers.
-- ✅ PR #41 squash-merged to `main` at `4b4a3be`.
-- ✅ post-merge main CI #523 passed README status verification, typecheck, tests, build and local-import safety.
-- ✅ post-merge Integration Readiness #17 passed.
+- ✅ issue-first sweep confirmed open issues remain exactly #6, #7 and #8; no new actionable product/code defect issue was found.
+- ✅ issue #6 tracker now includes the mandatory main-side runtime preflight before real Figma acceptance.
+- ✅ issue #7/#8 trackers continue to mark current P6 #494 / P7 #490 artifacts as **reference-only** for final closure.
+- ✅ PR #42 upgraded the runtime artifact registry to schema v2 with SHA-256 pins for immutable packaged files without modifying canonical P5/P6/P7 feature heads.
+- ✅ immutable pinning covers `BUILD_INFO.txt`, `code.js`, `ui.html`, packaged `prepare-figma-import.mjs`, and the track's same-artifact verifier.
+- ✅ `manifest.json` remains intentionally outside byte-hash pinning so approved plugin-ID-only rebinding can occur while its structure, commands, targets and offline network policy are still validated.
+- ✅ tampered compiled runtime or verifier bytes now fail closed even if copied metadata claims the expected source/run identity.
+- ✅ PR #42 first implementation head passed CI #528; final head `e9c718c` passed CI #529 with no review/thread blockers.
+- ✅ PR #42 squash-merged to `main` at `92a4440`.
+- ✅ post-merge main CI #530 passed README status verification, typecheck, tests, build and local-import safety.
+- ✅ post-merge Integration Readiness #22 passed.
 - ✅ open PR/MR count returned to `0`.
 
 ## Phase status
@@ -54,7 +58,7 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 | Phase | Scope | Current status |
 |---|---|---|
 | P0–P4 | Core audit, validation, transaction/rollback | ✅ Complete |
-| P5 | Conservative Safe Fix recipes | 🟡 Engineering/exact-build/offline verification complete; imported-Figma acceptance pending (#6) |
+| P5 | Conservative Safe Fix recipes | 🟡 Engineering/exact-build/offline verification + hash-pinned artifact preflight complete; imported-Figma acceptance pending (#6) |
 | P6 | Advanced clone-only calibration | 🟠 Engineering complete on reference head; post-P5 integration + fresh exact-build real-Figma closure pending (#7) |
 | P7 | Sequential 60+ Frame batch queue | 🟠 Engineering complete on reference head; post-P5 integration + fresh exact-build stress/cancellation closure pending (#8) |
 | P8 | Optional exporter adapters | ⏸ Deferred / #9 closed as not planned |
@@ -67,7 +71,7 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 | P6 | `feat/p6-advanced-structures` · `9a6ae3b` | ✅ #494 · `figma-plugin-dist-494` | `sha256:82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3` | ⚠️ Reference only; rebuild after P5 merge |
 | P7 | `feat/p7-batch-queue-core` · `cbfdb66` | ✅ #490 · `figma-plugin-dist-490` | `sha256:c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43` | ⚠️ Reference only; rebuild after P5 merge |
 
-Machine-readable operational registry: `config/runtime-artifacts.json`.
+Machine-readable operational registry: `config/runtime-artifacts.json` schema v2. It records exact build identity, ZIP digest, closure eligibility and immutable per-file SHA-256 pins.
 
 ## Runtime artifact preflight
 
@@ -81,18 +85,21 @@ It validates:
 
 - exact `BUILD_INFO.txt` source/workflow SHA, Actions run ID and run number;
 - required `code.js`, `ui.html`, manifest, packaged import helper and same-artifact verifier;
+- exact SHA-256 for immutable packaged runtime/helper/verifier files;
 - manifest main/UI targets and required developer menu commands;
 - offline-only network policy (`allowedDomains: ["none"]`);
 - placeholder vs locally rebound Figma plugin ID;
 - whether the registered build is eligible for the requested final-closure intent.
 
+`manifest.json` is intentionally not hash-pinned because the supported local import flow changes only its plugin ID. Its semantics are still validated, while compiled/runtime/helper/verifier bytes remain cryptographically pinned.
+
 Expected current behavior:
 
 ```text
-P5 #488 + final-closure  -> PASS
+P5 #488 + final-closure  -> PASS with 5/5 immutable SHA-256 pins matched
 P6 #494 + final-closure  -> FAIL CLOSED
 P7 #490 + final-closure  -> FAIL CLOSED
-P6/P7 + reference intent -> PASS with warning
+P6/P7 + reference intent -> PASS with warning and immutable hash verification
 ```
 
 Reference inspection:
@@ -136,7 +143,8 @@ npm run integration:readiness
 
 ### 1. P5 / issue #6
 
-- preflight `figma-plugin-dist-488` and require PASS;
+- unpack canonical `figma-plugin-dist-488`;
+- run hash-pinned preflight and require exact identity + `5/5` immutable SHA-256 matches;
 - rebind manifest locally if needed using the packaged helper;
 - import the exact build into Figma Desktop;
 - run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
@@ -149,7 +157,7 @@ npm run integration:readiness
 
 - resolve/rebase P6 against merged P5/main;
 - run full CI and create a fresh exact-build artifact;
-- update `config/runtime-artifacts.json` to the fresh build;
+- update `config/runtime-artifacts.json` with new identity, digest and immutable file hashes;
 - establish its exact-build P5 prerequisite;
 - run image-bearing positive page-flow clone calibration with Full P3 PASS and unchanged image-anchor count;
 - run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS;
@@ -160,7 +168,7 @@ npm run integration:readiness
 
 - resolve/rebase P7 against merged P5/main;
 - run full CI and create a fresh exact-build artifact;
-- update `config/runtime-artifacts.json` to the fresh build;
+- update `config/runtime-artifacts.json` with new identity, digest and immutable file hashes;
 - establish its exact-build P5 prerequisite;
 - execute a realistic 60+ Frame batch with every item terminal and `maxConcurrentProcessors === 1`;
 - request cancellation during a genuinely long active Full P3 operation and retain matching cooperative settlement evidence;
@@ -188,11 +196,12 @@ Exit code `0` requires canonical acceptance and exact artifact-build binding. Of
 - candidate-only mutation; Full P3 before P4 commit;
 - rendered-pixel evidence is mandatory where required by runtime acceptance;
 - runtime evidence must be traceable to the exact CI-built artifact loaded in Figma;
+- immutable runtime/helper/verifier files must match registry SHA-256 pins exactly;
+- manifest-only plugin-ID rebinding is allowed, but compiled code/UI must remain byte-for-byte unchanged;
 - offline verifiers must recompute canonical acceptance and match that artifact build;
 - proof chronology must be valid and cannot occur after evidence capture;
 - P6 advanced calibration remains clone-only with no production commit seam;
 - P7 processing remains strictly sequential with cooperative cancellation;
-- local manifest rebinding must never alter compiled plugin code/UI;
 - final P6/P7 evidence must come from their post-P5 fresh integration builds.
 
 ## Development
