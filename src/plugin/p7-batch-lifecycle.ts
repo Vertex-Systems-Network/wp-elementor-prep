@@ -1,7 +1,9 @@
 import { createBatchQueue, type BatchQueueInput, type BatchQueueState } from '../core/batch-queue';
 import { createBatchRunKey } from '../core/batch-run-key';
+import type { P7RuntimeBuildIdentity } from '../core/batch-runtime-evidence';
 import type { BatchFrameProcessor } from '../core/batch-runner';
 import { P5_RUNTIME_GATE_VERSION } from '../core/p5-runtime-gate';
+import { isTraceableP7BuildIdentity } from './p7-build-identity';
 import { runP7BatchRuntime, type P7BatchRuntimeOptions } from './p7-batch-runtime';
 import {
   createFigmaP7SingleFrameProcessor,
@@ -24,23 +26,43 @@ export interface P7BatchMetadataStore {
   recordSuccessfulState(state: BatchQueueState, completedAt?: string): Promise<unknown>;
 }
 
-export function createP7RunKey(pluginVersion: string): string {
+export interface P7BatchPreparationOptions {
+  /** Production supplies its compiled identity. Generic tests/integrations may omit it. */
+  buildIdentity?: P7RuntimeBuildIdentity;
+}
+
+export function createP7RunKey(pluginVersion: string, buildSourceSha?: string | null): string {
   return createBatchRunKey({
     pluginVersion,
     safeRecipeSchemaVersion: P7_SAFE_RECIPE_SCHEMA_VERSION,
     batchSchemaVersion: P7_BATCH_SCHEMA_VERSION,
     runtimeProofVersion: P5_RUNTIME_GATE_VERSION,
+    ...(buildSourceSha ? { buildSourceSha } : {}),
   });
 }
 
-/** Hydrates finalized-frame run keys before queue construction so matching frames can be skipped. */
+/**
+ * Hydrates finalized-frame run keys before queue construction. Production traceable builds include
+ * source SHA in the run key so a new artifact always re-audits prior successes. Local/untraceable
+ * production builds deliberately ignore durable skip metadata rather than trusting a stale result.
+ */
 export async function prepareP7BatchQueue(
   inputs: BatchQueueInput[],
   pluginVersion: string,
   metadata: P7BatchMetadataStore,
+  options: P7BatchPreparationOptions = {},
 ): Promise<BatchQueueState> {
+  const build = options.buildIdentity;
+  const traceableBuild = isTraceableP7BuildIdentity(build);
+  const runKey = createP7RunKey(pluginVersion, traceableBuild ? build.sourceSha : null);
+
+  if (build && !traceableBuild) {
+    const freshInputs = inputs.map(({ frameId, frameName }) => ({ frameId, frameName }));
+    return createBatchQueue(freshInputs, runKey);
+  }
+
   const hydrated = await metadata.hydrateInputs(inputs);
-  return createBatchQueue(hydrated, createP7RunKey(pluginVersion));
+  return createBatchQueue(hydrated, runKey);
 }
 
 /** Writes only when at least one frame is durably SUCCEEDED; unresolved checkpoints never persist. */
