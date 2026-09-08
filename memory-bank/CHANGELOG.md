@@ -13,7 +13,10 @@
 - P5 #488 passes final-closure preflight; current P6 #494 and P7 #490 fail closed for final-closure intent and pass only as reference inspections with warnings.
 - Added regression tests for P5 PASS, P6 final-closure rejection, P6 reference-mode PASS, build-identity mismatch rejection and missing-menu-command rejection.
 - Added `docs/RUNTIME_ARTIFACT_PREFLIGHT.md` operator guide.
-- PR #41 first implementation head passed CI #517 including README status contract, typecheck, tests, build and local-import safety.
+- PR #41 first implementation head passed CI #517.
+- Final PR #41 head `69fd91b` passed CI #522 and Integration Readiness #16 with no review/thread blockers.
+- PR #41 squash-merged to `main` at `4b4a3be`.
+- Post-merge main CI #523 and Integration Readiness #17 both passed; open PR/MR count returned to `0`.
 
 ### AI-native lifecycle + canonical state synchronization
 - Added mandatory engineering order: Issues first, PR/MR second, new development third.
