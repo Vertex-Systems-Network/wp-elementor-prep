@@ -114,7 +114,9 @@ export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final
         continue;
       }
 
-      const path = paths[name] || requireFile(dir, name, errors);
+      const path = Object.prototype.hasOwnProperty.call(paths, name)
+        ? paths[name]
+        : requireFile(dir, name, errors);
       if (!path) continue;
 
       immutableFilesChecked += 1;
