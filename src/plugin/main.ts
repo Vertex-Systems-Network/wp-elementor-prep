@@ -12,6 +12,12 @@ import type { PixelDiffMetrics } from '../core/validation-types';
 import { FullFrameValidator } from './full-frame-validator';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
+import { buildP5RuntimeEvidenceBundle } from './p5-runtime-evidence';
+import {
+  loadLatestP5RuntimeEvidence,
+  persistP5RuntimeEvidenceBestEffort,
+} from './p5-runtime-evidence-storage';
+import { buildP5RuntimeEvidenceViewerHtml } from './p5-runtime-evidence-viewer';
 import { runP6DeveloperPageFlowCalibration } from './p6-developer-calibration';
 import { buildP6DeveloperEvidenceView } from './p6-developer-evidence-view';
 import {
@@ -172,19 +178,36 @@ async function runRuntimeSelfTest(): Promise<void> {
 
     const acceptance = await updateP5RuntimeProofFromCalibration(figma.clientStorage, result);
     const proof = await runtimeProofState();
+    const evidence = buildP5RuntimeEvidenceBundle({
+      pluginVersion: PLUGIN_VERSION,
+      result,
+      runtimeProofPassedAt: proof.passedAt,
+    });
+    const evidencePersisted = await persistP5RuntimeEvidenceBestEffort(figma.clientStorage, evidence);
+
     figma.ui.postMessage({
       type: 'runtime-calibration-result',
       result,
       acceptance,
+      evidence,
+      evidencePersisted,
       mutationGateUnlocked: proof.valid,
       runtimeProofPassedAt: proof.passedAt,
     });
 
+    figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+      width: 520,
+      height: 700,
+      themeColors: true,
+    });
+
     if (acceptance.accepted && proof.valid) {
-      figma.notify('P5 compiled runtime acceptance passed. Safe Fix gate unlocked.');
+      figma.notify(evidencePersisted
+        ? 'P5 compiled runtime acceptance passed. Evidence saved; P6 prerequisite proof is ready.'
+        : 'P5 compiled runtime acceptance passed. Evidence storage failed, but P6 prerequisite proof is ready.');
     } else {
       const detail = acceptance.failures[0] ? ` ${acceptance.failures[0]}` : '';
-      figma.notify(`P5 compiled runtime acceptance failed; Safe Fix remains locked.${detail}`);
+      figma.notify(`P5 compiled runtime acceptance failed; P6 remains blocked.${detail}`);
     }
   } catch (error) {
     await figma.clientStorage.deleteAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
@@ -193,6 +216,19 @@ async function runRuntimeSelfTest(): Promise<void> {
   } finally {
     endExclusiveOperation(operation);
   }
+}
+
+async function runRuntimeEvidenceViewer(): Promise<void> {
+  const evidence = await loadLatestP5RuntimeEvidence(figma.clientStorage);
+  if (!evidence) {
+    figma.notify('No valid persisted P5 runtime acceptance evidence is available in this P6 build.');
+    return;
+  }
+  figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+    width: 520,
+    height: 700,
+    themeColors: true,
+  });
 }
 
 async function runP6PageFlowDeveloperCalibration(): Promise<void> {
@@ -463,6 +499,8 @@ figma.on('selectionchange', () => {
 
 if (figma.command === 'p5-runtime-self-test') {
   void runRuntimeSelfTest();
+} else if (figma.command === 'p5-runtime-evidence') {
+  void runRuntimeEvidenceViewer();
 } else if (figma.command === 'p6-page-flow-calibration') {
   void runP6PageFlowDeveloperCalibration();
 } else if (figma.currentPage.selection.length === 1) {
