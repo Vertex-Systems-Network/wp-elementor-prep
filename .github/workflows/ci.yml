@@ -39,9 +39,7 @@ jobs:
           for (const file of required) {
             if (!file || !existsSync(`dist/${file}`) || statSync(`dist/${file}`).size === 0) throw new Error(`missing/empty manifest target: ${file}`);
           }
-          if (!Array.isArray(manifest.menu) || !manifest.menu.some((item) => item.command === process.env.EXPECTED_DEV_COMMAND)) {
-            throw new Error(`missing expected developer command: ${process.env.EXPECTED_DEV_COMMAND}`);
-          }
+          if (!Array.isArray(manifest.menu) || !manifest.menu.some((item) => item.command === process.env.EXPECTED_DEV_COMMAND)) throw new Error(`missing expected developer command: ${process.env.EXPECTED_DEV_COMMAND}`);
           const code = readFileSync('dist/code.js', 'utf8');
           for (const value of [process.env.EXPECTED_SOURCE_SHA, process.env.EXPECTED_RUN_ID, process.env.EXPECTED_RUN_NUMBER]) {
             if (!value || !code.includes(value)) throw new Error(`compiled bundle missing build provenance value: ${value}`);
@@ -58,14 +56,15 @@ jobs:
           const manifest = JSON.parse(readFileSync('dist-local/manifest.json', 'utf8'));
           if (manifest.id !== '123456789012345678') throw new Error('prepared manifest did not bind requested local plugin id');
           for (const file of [manifest.main, manifest.ui]) {
-            const original = hash(`dist/${file}`);
-            const prepared = hash(`dist-local/${file}`);
-            if (original !== prepared) throw new Error(`local import preparation changed compiled target ${file}`);
+            if (hash(`dist/${file}`) !== hash(`dist-local/${file}`)) throw new Error(`local import preparation changed compiled target ${file}`);
           }
-          const info = readFileSync('dist-local/LOCAL_IMPORT_INFO.txt', 'utf8');
-          if (!info.includes('compiled_targets_unchanged=true')) throw new Error('local import proof note is missing unchanged-target assertion');
+          if (!readFileSync('dist-local/LOCAL_IMPORT_INFO.txt', 'utf8').includes('compiled_targets_unchanged=true')) throw new Error('local import proof note is missing unchanged-target assertion');
           console.log('Verified manifest-only local Figma import preparation.');
           NODE
+      - name: Package standalone local-import helper
+        run: |
+          cp scripts/prepare-figma-import.mjs dist/prepare-figma-import.mjs
+          test -s dist/prepare-figma-import.mjs
       - name: Write Figma build provenance
         env:
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -76,13 +75,13 @@ jobs:
           if [ "$FIGMA_PLUGIN_ID" = "000000000000000000" ]; then
             cat > dist/IMPORT_NOTES.txt <<'EOF'
           This build used the repository's placeholder Figma plugin id (000000000000000000).
-          Figma assigns plugin ids for registered development/published plugins. If Figma rejects this manifest during development import,
-          run `npm run prepare:figma-import -- <your-figma-plugin-id>` against the unpacked artifact to create `dist-local/`.
-          The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id. Do not treat CI success alone as imported-Figma runtime proof.
+          After unpacking this artifact, run:
+            node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
+          Then import dist-local/manifest.json in Figma. The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id.
+          Do not treat CI success or manifest preparation as imported-Figma runtime proof.
           EOF
           else
-            printf 'This build used configured Figma plugin id %s. CI success is not imported-Figma runtime proof; run the compiled self-test in Figma.\n' \
-              "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
+            printf 'This build used configured Figma plugin id %s. CI success is not imported-Figma runtime proof; run the compiled self-test in Figma.\n' "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
           fi
       - name: Upload Figma development build
         uses: actions/upload-artifact@v4
