@@ -36,21 +36,43 @@ jobs:
             if (!file || !existsSync(`dist/${file}`) || statSync(`dist/${file}`).size === 0) throw new Error(`missing/empty artifact target: ${file}`);
           }
           if (!Array.isArray(manifest.menu) || !manifest.menu.some((item) => item.command === process.env.EXPECTED_DEV_COMMAND)) throw new Error(`missing expected developer command: ${process.env.EXPECTED_DEV_COMMAND}`);
-          const code = readFileSync('dist/code.js', 'utf8');
-          for (const [label, value] of [['source sha', process.env.SOURCE_SHA], ['Actions run id', process.env.GITHUB_RUN_ID], ['Actions run number', process.env.GITHUB_RUN_NUMBER]]) {
-            if (!value || !code.includes(value)) throw new Error(`compiled plugin missing ${label}: ${value ?? '<missing>'}`);
+          for (const artifactFile of ['dist/code.js', 'dist/verify-p6-closure.mjs']) {
+            const code = readFileSync(artifactFile, 'utf8');
+            for (const [label, value] of [['source sha', process.env.SOURCE_SHA], ['Actions run id', process.env.GITHUB_RUN_ID], ['Actions run number', process.env.GITHUB_RUN_NUMBER]]) {
+              if (!value || !code.includes(value)) throw new Error(`${artifactFile} missing ${label}: ${value ?? '<missing>'}`);
+            }
           }
-          console.log(`Verified Figma bundle + compiled provenance: ${manifest.main}, ${manifest.ui}, ${process.env.EXPECTED_DEV_COMMAND}`);
+          console.log(`Verified Figma bundle + exact-artifact closure verifier provenance.`);
           NODE
       - name: Verify offline P6 closure CLI
         env:
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          node --input-type=module <<'NODE' > /tmp/p6-pass.json
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
           const build = { sourceSha: process.env.SOURCE_SHA, runId: process.env.GITHUB_RUN_ID, runNumber: process.env.GITHUB_RUN_NUMBER };
+          const proofPassedAt = '2026-09-08T10:00:00.000Z';
+          const calibration = {
+            schemaVersion: 1,
+            passed: true,
+            forcedReject: { state: 'REJECTED', validationRejected: true, pixelEvidenceReturned: true, changedPixelPct: 1, candidateDeleted: true, originalUntouched: true },
+            passRestore: { state: 'COMMITTED', validationPassed: true, pixelEvidenceReturned: true, changedPixelPct: 0, committed: true, restored: true, checkpointCleared: true },
+            passFinalize: { state: 'COMMITTED', validationPassed: true, pixelEvidenceReturned: true, changedPixelPct: 0, committed: true, finalized: true, candidateRetained: true, originalDiscarded: true, checkpointCleared: true },
+            leftovers: 0,
+          };
+          const p5Evidence = {
+            schemaVersion: 2,
+            capturedAt: '2026-09-08T10:00:01.000Z',
+            pluginVersion: '0.1.0-alpha.1',
+            runtimeGateVersion: 'p5-runtime-proof-v3',
+            build: { ...build },
+            runtimeProofPassedAt: proofPassedAt,
+            acceptance: { accepted: true, failures: [] },
+            calibration,
+          };
           const positive = {
-            schemaVersion: 2, capturedAt: '2026-09-08T10:01:00.000Z', pluginVersion: '0.1.0-alpha.1', build,
-            p5RuntimeGateVersion: 'p5-runtime-proof-v3', p5RuntimeProofPassedAt: '2026-09-08T10:00:00.000Z', p5RuntimeProofBuild: build,
+            schemaVersion: 2, capturedAt: '2026-09-08T10:01:00.000Z', pluginVersion: '0.1.0-alpha.1', build: { ...build },
+            p5RuntimeGateVersion: 'p5-runtime-proof-v3', p5RuntimeProofPassedAt: proofPassedAt, p5RuntimeProofBuild: { ...build },
             frame: { id: 'page', name: 'Image Page' }, outcomeStatus: 'COMPLETED', reason: null,
             plan: { decision: 'CALIBRATE', recipe: 'page-vertical-flow', pattern: 'page-vertical-flow', confidence: 99, targetNodeId: 'page', targetNodeName: 'Image Page', targetPath: [], preserveNodeIds: [] },
             calibration: { calibrationId: 'cal-1', status: 'PASSED', originalNodeId: 'page', candidateNodeId: 'candidate', failureStage: null, error: null, leftoverCandidateRisk: false, productionCommitAttempted: false,
@@ -58,31 +80,39 @@ jobs:
               events: [{ stage: 'DISCARD' }, { stage: 'DONE' }] }
           };
           const refusal = {
-            schemaVersion: 2, capturedAt: '2026-09-08T10:02:00.000Z', pluginVersion: '0.1.0-alpha.1', build,
-            p5RuntimeGateVersion: 'p5-runtime-proof-v3', p5RuntimeProofPassedAt: '2026-09-08T10:00:00.000Z', p5RuntimeProofBuild: build,
+            schemaVersion: 2, capturedAt: '2026-09-08T10:02:00.000Z', pluginVersion: '0.1.0-alpha.1', build: { ...build },
+            p5RuntimeGateVersion: 'p5-runtime-proof-v3', p5RuntimeProofPassedAt: proofPassedAt, p5RuntimeProofBuild: { ...build },
             frame: { id: 'preserve', name: 'Preserve Page' }, outcomeStatus: 'NO_CANDIDATE', reason: 'Preservation relationship required.', totalPlanCount: 1, plansTruncated: false,
             plans: [{ decision: 'PRESERVE', recipe: null, reasonCode: 'PRESERVATION_RELATIONSHIP_REQUIRED', reason: 'Keep overlay relationship.', pattern: 'header-hero-overlay', confidence: 99, targetNodeId: 'overlay', targetNodeName: 'Overlay', targetPath: [0], preserveNodeIds: ['hero'], mutationEnabled: false, futureMutationRequiresFullP3: true, futureMutationRequiresP4Rollback: true }]
           };
           const acceptance = { accepted: true, failures: [], positiveAvailable: true, refusalAvailable: true, positiveAccepted: true, refusalAccepted: true, imageBearingPositiveEvidence: true, currentBuildTraceable: true, positiveMatchesCurrentBuild: true, refusalMatchesCurrentBuild: true };
-          console.log(JSON.stringify({ schemaVersion: 1, currentBuild: build, acceptance, evidence: { positive, refusal } }));
+          const bundle = { schemaVersion: 2, currentBuild: { ...build }, p5Evidence, acceptance, evidence: { positive, refusal } };
+          writeFileSync('/tmp/p6-pass.json', JSON.stringify(bundle));
+          writeFileSync('/tmp/p6-old-build.json', JSON.stringify({ ...bundle, currentBuild: { ...build, sourceSha: '0123456789abcdef0123456789abcdef01234567' } }));
+          writeFileSync('/tmp/p6-forged-proof.json', JSON.stringify({
+            ...bundle,
+            evidence: {
+              ...bundle.evidence,
+              positive: { ...positive, p5RuntimeProofPassedAt: '2026-09-08T09:00:00.000Z' },
+            },
+          }));
           NODE
           node dist/verify-p6-closure.mjs < /tmp/p6-pass.json | grep '"accepted": true'
-          if printf '{}\n' | node dist/verify-p6-closure.mjs > /tmp/p6-invalid.out 2>&1; then
-            echo 'offline P6 verifier unexpectedly accepted malformed evidence'
-            exit 1
-          fi
-          grep '"accepted": false' /tmp/p6-invalid.out
-          node --input-type=module <<'NODE' > /tmp/p6-old-build.json
-          import { readFile } from 'node:fs/promises';
-          const bundle = JSON.parse(await readFile('/tmp/p6-pass.json', 'utf8'));
-          bundle.currentBuild.sourceSha = '0123456789abcdef0123456789abcdef01234567';
-          console.log(JSON.stringify(bundle));
-          NODE
           if node dist/verify-p6-closure.mjs < /tmp/p6-old-build.json > /tmp/p6-old-build.out 2>&1; then
             echo 'offline P6 verifier unexpectedly accepted different-build evidence'
             exit 1
           fi
           grep 'different build than this verifier artifact' /tmp/p6-old-build.out
+          if node dist/verify-p6-closure.mjs < /tmp/p6-forged-proof.json > /tmp/p6-forged.out 2>&1; then
+            echo 'offline P6 verifier unexpectedly accepted forged P5 proof binding'
+            exit 1
+          fi
+          grep 'Positive evidence P5 proof timestamp does not match exported P5 prerequisite evidence' /tmp/p6-forged.out
+          if printf '{}\n' | node dist/verify-p6-closure.mjs > /tmp/p6-invalid.out 2>&1; then
+            echo 'offline P6 verifier unexpectedly accepted malformed evidence'
+            exit 1
+          fi
+          grep '"accepted": false' /tmp/p6-invalid.out
       - name: Verify deterministic local-import preparation
         run: |
           npm run prepare:figma-import -- 123456789012345678 dist dist-local
@@ -117,7 +147,8 @@ jobs:
           Then import dist-local/manifest.json in Figma. The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id.
           Exported P6 closure JSON from this exact artifact can be independently checked with:
             node verify-p6-closure.mjs < p6-closure.json
-          The verifier rejects evidence from another artifact build. CI success/offline verification do not replace real imported-Figma runtime acceptance.
+          Closure schema v2 includes the persisted P5 runtime evidence so the verifier independently cross-checks the P6 prerequisite proof timestamp/build.
+          CI success/offline verification do not replace real imported-Figma runtime acceptance.
           EOF
           else
             printf 'This build used configured Figma plugin id %s. Exported P6 closure can be checked with node verify-p6-closure.mjs < p6-closure.json. CI success is not imported-Figma runtime proof.\n' "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
