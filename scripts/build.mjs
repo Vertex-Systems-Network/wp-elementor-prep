@@ -6,6 +6,11 @@ await mkdir('dist', { recursive: true });
 const sourceSha = process.env.SOURCE_SHA ?? process.env.GITHUB_SHA ?? 'local';
 const githubRunId = process.env.GITHUB_RUN_ID ?? 'local';
 const githubRunNumber = process.env.GITHUB_RUN_NUMBER ?? 'local';
+const provenanceDefines = {
+  __P5_SOURCE_SHA__: JSON.stringify(sourceSha),
+  __P5_GITHUB_RUN_ID__: JSON.stringify(githubRunId),
+  __P5_GITHUB_RUN_NUMBER__: JSON.stringify(githubRunNumber),
+};
 
 await build({
   entryPoints: ['src/plugin/main.ts'],
@@ -15,11 +20,18 @@ await build({
   target: 'es2022',
   format: 'iife',
   sourcemap: true,
-  define: {
-    __P5_SOURCE_SHA__: JSON.stringify(sourceSha),
-    __P5_GITHUB_RUN_ID__: JSON.stringify(githubRunId),
-    __P5_GITHUB_RUN_NUMBER__: JSON.stringify(githubRunNumber),
-  },
+  define: provenanceDefines,
+});
+
+await build({
+  entryPoints: ['src/tools/verify-p6-closure.ts'],
+  bundle: true,
+  outfile: 'dist/verify-p6-closure.mjs',
+  platform: 'node',
+  target: 'node20',
+  format: 'esm',
+  minify: false,
+  define: provenanceDefines,
 });
 
 await cp('src/ui/ui.html', 'dist/ui.html');
