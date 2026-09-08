@@ -133,9 +133,9 @@ describe('P7 runtime evidence recorder', () => {
     ], 'run-key');
     let cancelRequested = false;
     let latestState = queue;
-    let release = () => undefined;
+    let release: () => void = () => undefined;
     const gate = new Promise<void>((resolve) => { release = resolve; });
-    let markStarted = () => undefined;
+    let markStarted: () => void = () => undefined;
     const started = new Promise<void>((resolve) => { markStarted = resolve; });
 
     const running = runP7BatchRuntime(queue, async () => {
