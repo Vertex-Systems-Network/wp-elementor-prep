@@ -92,7 +92,10 @@ export async function readP7P5BuildProofState(
       storage.getAsync(P5_RUNTIME_PROOF_STORAGE_KEY),
       storage.getAsync(P7_P5_BUILD_PROOF_STORAGE_KEY),
     ]);
-    if (!isValidP7P5BuildProofReceipt(coreProof, receipt, expectedBuild)) {
+    if (
+      !isValidP5RuntimeProof(coreProof)
+      || !isValidP7P5BuildProofReceipt(coreProof, receipt, expectedBuild)
+    ) {
       return { valid: false, passedAt: null };
     }
     return { valid: true, passedAt: coreProof.passedAt };
