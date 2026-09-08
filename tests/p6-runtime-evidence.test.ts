@@ -7,6 +7,7 @@ import {
   buildP6RuntimeEvidenceBundle,
   P6_RUNTIME_EVIDENCE_SCHEMA_VERSION,
 } from '../src/plugin/p6-runtime-evidence';
+import { P6_TEST_BUILD, P6_TEST_PROOF_PASSED_AT } from './p6-provenance-fixture';
 
 function plan(): AdvancedRecipePlan {
   return {
@@ -99,7 +100,9 @@ describe('P6 runtime evidence bundle', () => {
     const selectedPlan = plan();
     const evidence = buildP6RuntimeEvidenceBundle({
       pluginVersion: '0.1.0-alpha.1',
-      p5RuntimeProofPassedAt: '2026-09-08T00:00:00.000Z',
+      build: P6_TEST_BUILD,
+      p5RuntimeProofPassedAt: P6_TEST_PROOF_PASSED_AT,
+      p5RuntimeProofBuild: P6_TEST_BUILD,
       frame: { id: 'frame', name: 'Desktop Page' } as FrameNode,
       outcome: {
         status: 'COMPLETED',
@@ -111,6 +114,8 @@ describe('P6 runtime evidence bundle', () => {
 
     expect(evidence.schemaVersion).toBe(P6_RUNTIME_EVIDENCE_SCHEMA_VERSION);
     expect(evidence.p5RuntimeGateVersion).toBe(P5_RUNTIME_GATE_VERSION);
+    expect(evidence.build).toEqual(P6_TEST_BUILD);
+    expect(evidence.p5RuntimeProofBuild).toEqual(P6_TEST_BUILD);
     expect(evidence.outcomeStatus).toBe('COMPLETED');
     expect(evidence.plan?.recipe).toBe('page-vertical-flow');
     expect(evidence.calibration?.status).toBe('PASSED');
@@ -132,7 +137,9 @@ describe('P6 runtime evidence bundle', () => {
   it('records a blocked run without inventing plan, calibration, or proof timestamp evidence', () => {
     const evidence = buildP6RuntimeEvidenceBundle({
       pluginVersion: '0.1.0-alpha.1',
+      build: P6_TEST_BUILD,
       p5RuntimeProofPassedAt: null,
+      p5RuntimeProofBuild: null,
       frame: { id: 'frame', name: 'Desktop Page' } as FrameNode,
       outcome: {
         status: 'BLOCKED',
@@ -144,6 +151,7 @@ describe('P6 runtime evidence bundle', () => {
     expect(evidence.outcomeStatus).toBe('BLOCKED');
     expect(evidence.reason).toContain('runtime proof');
     expect(evidence.p5RuntimeProofPassedAt).toBeNull();
+    expect(evidence.p5RuntimeProofBuild).toBeNull();
     expect(evidence.plan).toBeNull();
     expect(evidence.calibration).toBeNull();
   });
@@ -166,7 +174,9 @@ describe('P6 runtime evidence bundle', () => {
 
     const evidence = buildP6RuntimeEvidenceBundle({
       pluginVersion: '0.1.0-alpha.1',
-      p5RuntimeProofPassedAt: '2026-09-08T00:00:00.000Z',
+      build: P6_TEST_BUILD,
+      p5RuntimeProofPassedAt: P6_TEST_PROOF_PASSED_AT,
+      p5RuntimeProofBuild: P6_TEST_BUILD,
       frame: { id: 'frame', name: 'Desktop Page' } as FrameNode,
       outcome: { status: 'COMPLETED', plan: selectedPlan, result },
     });
