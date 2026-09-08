@@ -42,14 +42,21 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 - ✅ P7 checkpoint evidence resolves post-checkpoint live Frames by stable queue index rather than potentially duplicated Frame names.
 - ✅ P7 CI #490 passed the full schema-v2 exact-artifact verification pipeline.
 - ✅ all three canonical tracks provide same-artifact offline verification plus deterministic `prepare-figma-import.mjs` manifest rebinding.
-- ✅ `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md` is the operator checklist for runtime closure and now follows the verified dependency order.
+- ✅ `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md` is the operator checklist for runtime closure and follows the verified dependency order.
+- ✅ non-mutating integration readiness automation classifies P5→main, P6→P5 and P7→P5 merge state without changing exact-build feature refs.
+- ✅ `main` now ships a self-contained local Figma import helper and package command; CI verifies compiled `code.js` / `ui.html` stay byte-for-byte unchanged after manifest ID rebinding.
+- ✅ local-import preparation now fails closed when source/output paths are equal or nested, preventing destructive source deletion or recursive copy behavior.
+- ✅ GitHub Actions were upgraded to current Node-24-based `checkout`, `setup-node` and `upload-artifact` v7 majors; workflow token permissions remain explicitly read-only.
+- ✅ duplicate stale CI/integration runs are cancelled through workflow concurrency controls.
+- ✅ PR #39 pre-final-doc head `6721892` passed **CI #511** and **Integration Readiness #9**, including safe-path rejection regression checks and machine-readable integration evidence upload.
 
 ## Repository audit checkpoint — 2026-09-08
 
-- ✅ `main` head `88d8c19` passed CI #499 after the prior canonical status update.
+- ✅ `main` baseline `6f01fd5` passed CI #502 after integration-readiness status PR #38 merged.
 - ✅ canonical P5/P6/P7 heads still match the verified heads above; their latest canonical CI runs remain green.
 - ✅ open issues are limited to #6, #7 and #8; no additional product/code defect issue was found.
 - ✅ no failed canonical workflow was identified.
+- ✅ repository search found no outstanding `TODO`, `FIXME`, `XXX` or `HACK` markers on `main`.
 - ⚠️ canonical feature branches intentionally remain frozen while their exact-build runtime evidence is relevant; docs-only churn on those branches would change source SHA and proof identity.
 
 ## Integration readiness checkpoint — 2026-09-08
@@ -57,10 +64,11 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 - ✅ direct canonical P5 → current `main` probe #34 exposed a conflict limited to `README.md` plus the main-only `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md` addition.
 - ✅ isolated `integration/p5-main-20260908` resolved those documentation differences without modifying canonical P5 runtime code; proof PR #37 became mergeable and **CI #500 passed**.
 - ✅ canonical P5 head remains `810d98d`, so artifact #488 remains the exact build for issue #6 runtime acceptance.
-- ⚠️ P6 → latest P5 probe #35 is dirty: the branches overlap shared P5 runtime/provenance files changed after their common merge base.
-- ⚠️ P7 → latest P5 probe #36 is dirty for the same dependency reason and also requires a real post-P5 integration resolution.
-- ✅ probes #34–#37 were closed without merge after evidence collection; canonical P5/P6/P7 heads were not changed.
-- ✅ issue #6/#7/#8 trackers now record this dependency/integration state.
+- ⚠️ P6 → latest P5 is a real code conflict. Automated run #9 reports overlap in CI/provenance/runtime files including `manifest.template.json`, `scripts/build.mjs`, `src/plugin/main.ts` and P5 evidence/proof storage.
+- ⚠️ P7 → latest P5 is also a real code conflict. Automated run #9 reports overlap across build/runtime/P5 proof files plus P7's branch-local import helper and P5 acceptance test.
+- ✅ issue #6/#7/#8 trackers record this dependency/integration state.
+- ✅ `scripts/check-integration-readiness.mjs` reproduces merge checks through read-only `git merge-tree --write-tree` simulation.
+- ✅ `.github/workflows/integration-readiness.yml` reports all three dependency edges on `main`, relevant PRs and manual dispatch, and uploads machine-readable JSON evidence.
 - ⚠️ do **not** collect final P6/P7 closure evidence on a build that must later be rebased. Merge P5 first, then resolve P6/P7 against merged P5, produce fresh exact-build artifacts, and collect final runtime evidence from those builds.
 
 ### Planned merge order after runtime acceptance
@@ -68,6 +76,16 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 1. **P5:** collect imported-Figma proof from `figma-plugin-dist-488`, require same-artifact `verify-p5-evidence.mjs` exit `0`, then apply the already CI-proven main-documentation resolution, review/merge P5 and close #6.
 2. **P6:** after P5 lands, rebase/resolve P6 against merged P5, run full CI and produce a **fresh exact-build artifact**; only then collect positive + preservation-refusal real-Figma closure, verify it with that same artifact, merge and close #7.
 3. **P7:** after P5 lands, rebase/resolve P7 against merged P5, run full CI and produce a **fresh exact-build artifact**; only then collect 60+ Frame stress + active Full P3 cancellation closure, verify it with that same artifact, merge and close #8.
+
+## Automated integration readiness
+
+Run the non-mutating checker after fetching the canonical refs:
+
+```bash
+npm run integration:readiness
+```
+
+Use `--json` for machine-readable output or run the underlying script with `--strict` when an integration edge is expected to be code-conflict-free. See `docs/INTEGRATION_READINESS.md` for the full workflow. This checker is merge-preparation evidence only; it does not replace imported-Figma runtime acceptance.
 
 ## Self-contained Figma artifact import
 
@@ -148,6 +166,7 @@ Current #490 remains a verified engineering/reference artifact. Final closure mu
 - P6 advanced calibration remains clone-only with no production commit seam
 - P7 processing is strictly sequential with cooperative cancellation
 - local manifest rebinding must never alter compiled plugin code/UI
+- local-import source and output paths must be separate, non-nested directories
 - final P6/P7 runtime evidence must be collected only after their post-P5 integration builds are fixed and verified
 
 ## Development
@@ -157,6 +176,7 @@ npm install
 npm run typecheck
 npm test
 npm run build
+npm run integration:readiness
 ```
 
 For a repository-local artifact:

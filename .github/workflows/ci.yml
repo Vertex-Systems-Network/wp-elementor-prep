@@ -5,15 +5,43 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
       - run: npm install
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - name: Verify self-contained local Figma import preparation
+        run: |
+          npm run prepare:figma-import -- 123456789012345678 dist dist-local
+          cmp dist/code.js dist-local/code.js
+          cmp dist/ui.html dist-local/ui.html
+          node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('dist-local/manifest.json','utf8')); if(m.id!=='123456789012345678') process.exit(1)"
+          grep -q '^compiled_targets_unchanged=true$' dist-local/LOCAL_IMPORT_INFO.txt
+
+          if npm run prepare:figma-import -- 123456789012345678 dist dist; then
+            echo 'Expected same source/output path to be rejected' >&2
+            exit 1
+          fi
+          test -f dist/code.js
+          test -f dist/ui.html
+
+          if npm run prepare:figma-import -- 123456789012345678 dist dist/nested; then
+            echo 'Expected nested output path to be rejected' >&2
+            exit 1
+          fi
+          test -f dist/code.js
+          test -f dist/ui.html
