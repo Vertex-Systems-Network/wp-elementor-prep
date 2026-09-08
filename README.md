@@ -8,9 +8,35 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 
 ## Live development status
 
-> **Progress policy:** this README is updated after meaningful verified development batches with canonical CI/artifact state, blockers and next actions.
+> **Progress policy:** this README is updated after every meaningful verified development batch with canonical issue/PR state, module-wise progress, blockers and next actions.
 
-**Open PR/MR:** `0`
+**Open PR/MR:** `0` at the latest completed `main` checkpoint.
+
+### Module-wise progress
+
+| Module | Status | Progress | Progress Bar | Blocker / Next |
+|---|---|---:|---|---|
+| AI-native governance + repo tooling | ✅ COMPLETE | 100% | `██████████` | Keep Issues → PR/MR → development lifecycle and status sync enforced |
+| P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
+| P5 Conservative Safe Fix | 🟡 RUNTIME ACCEPTANCE | 90% | `█████████░` | Real imported-Figma proof for #6, same-artifact verifier, then merge |
+| P6 Advanced structures | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh artifact → real closure #7 |
+| P7 60+ Frame batch queue | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh artifact → stress/cancel closure #8 |
+| P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
+
+**Overall active project progress:** `█████████░ 93%`
+
+> Overall progress covers the active P0–P7 delivery line plus governance/tooling. Deferred P8 is not counted as an active unfinished blocker. Percentages represent verified scope, not optimistic estimates.
+
+### Mandatory AI-native work order
+
+Every future work cycle must execute in this order:
+
+1. **Issues first** — list all open issues, fix actionable ones, and identify dependency/manual-runtime blockers. Do not fabricate evidence to close a blocked issue.
+2. **PR/MR second** — inspect all open Pull Requests / Merge Requests for CI, conflicts, mergeability and review feedback; fix and merge eligible work.
+3. **Development third** — only then begin the highest-priority unblocked roadmap work, using safe parallel workstreams where useful.
+4. **End-of-work sync** — run verification, update memory-bank files, and update this module-wise + overall progress before declaring the batch complete.
+
+Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISIONS.md` D-012.
 
 | Phase | Scope | Current status |
 |---|---|---|
@@ -50,13 +76,15 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 - ✅ duplicate stale CI/integration runs are cancelled through workflow concurrency controls.
 - ✅ PR #39 merged into `main` at `fef549f`; final PR head passed CI #512 + Integration Readiness #10 before merge.
 - ✅ post-merge `main` Integration Readiness #11 passed; CI #513 completed typecheck, tests, build and self-contained local-import safety verification successfully.
+- ✅ final README checkpoint `b8a5869` passed CI #514 and Integration Readiness #12.
+- ✅ AI-native operational policy now requires Issues first, PR/MR second, development third, followed by memory-bank + README module progress synchronization.
+- ✅ stale P4-era memory-bank state has been synchronized to current P5/P6/P7 engineering and runtime/integration blockers.
 
 ## Repository audit checkpoint — 2026-09-08
 
-- ✅ `main` integration/tooling checkpoint `fef549f` passed the post-merge verification batch above before this README-only status commit.
 - ✅ canonical P5/P6/P7 heads still match the verified heads above; their latest canonical CI runs remain green.
-- ✅ open issues are limited to #6, #7 and #8; no additional product/code defect issue was found.
-- ✅ open PR/MR count is `0` after PR #39 merged.
+- ✅ open issues are limited to #6, #7 and #8; no additional product/code defect issue was found during the latest issue-first sweep.
+- ✅ open PR/MR count was `0` before this policy-sync work batch began.
 - ✅ repository search found no outstanding `TODO`, `FIXME`, `XXX` or `HACK` markers on `main`.
 - ⚠️ canonical feature branches intentionally remain frozen while their exact-build runtime evidence is relevant; docs-only churn on those branches would change source SHA and proof identity.
 
