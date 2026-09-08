@@ -109,13 +109,16 @@ describe('P7 runtime evidence inspector', () => {
     }
   });
 
-  it('summarizes the latest bounded snapshot without changing the combined acceptance bundle', async () => {
+  it('summarizes the latest bounded snapshot with build provenance without changing the combined acceptance bundle', async () => {
     const persisted = snapshot();
     const result = await inspectLatestP7RuntimeEvidence(storageWithLatest(persisted));
     expect(result.status).toBe('AVAILABLE');
     if (result.status !== 'AVAILABLE') throw new Error('expected available evidence');
 
     expect(result.summary).toEqual({
+      buildSourceSha: BUILD.sourceSha,
+      buildRunId: BUILD.runId,
+      buildRunNumber: BUILD.runNumber,
       runKey: persisted.runKey,
       startedAt: persisted.startedAt,
       elapsedMs: 12_000,
@@ -197,6 +200,14 @@ describe('P7 runtime evidence inspector', () => {
     });
 
     expect(summarizeP7RuntimeEvidence(persisted).maxConcurrentProcessors).toBe(2);
+  });
+
+  it('warns when legacy evidence has no CI build provenance', async () => {
+    const result = await inspectLatestP7RuntimeEvidence(storageWithLatest(snapshot({ build: null })));
+    expect(result.status).toBe('AVAILABLE');
+    if (result.status !== 'AVAILABLE') throw new Error('expected available evidence');
+    expect(result.summary.buildSourceSha).toBeNull();
+    expect(result.warnings).toContain('Runtime evidence has no CI build provenance and cannot satisfy acceptance.');
   });
 
   it('reports truthful unsupported-memory state rather than inventing a value', async () => {
