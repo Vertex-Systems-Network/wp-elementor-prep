@@ -2,10 +2,19 @@ import { describe, expect, it } from 'vitest';
 import type { P7RuntimeEvidenceInspection } from '../src/plugin/p7-runtime-evidence-inspector';
 import { buildP7RuntimeEvidenceViewerHtml } from '../src/plugin/p7-runtime-evidence-viewer';
 
+const BUILD = {
+  sourceSha: '0123456789abcdef0123456789abcdef01234567',
+  runId: '34217708751',
+  runNumber: '292',
+};
+
 function available(): P7RuntimeEvidenceInspection {
   return {
     status: 'AVAILABLE',
     summary: {
+      buildSourceSha: BUILD.sourceSha,
+      buildRunId: BUILD.runId,
+      buildRunNumber: BUILD.runNumber,
       runKey: 'run-key',
       startedAt: '2026-09-08T01:00:00.000Z',
       elapsedMs: 12000,
@@ -40,7 +49,7 @@ function available(): P7RuntimeEvidenceInspection {
 }
 
 describe('P7 runtime evidence viewer', () => {
-  it('renders retained acceptance and both copy surfaces without trusting evidence HTML', () => {
+  it('renders retained acceptance, visible build provenance and both copy surfaces without trusting evidence HTML', () => {
     const html = buildP7RuntimeEvidenceViewerHtml(available());
     expect(html).toContain('Runtime acceptance: FAIL');
     expect(html).toContain('60+ completed stress evidence');
@@ -50,6 +59,12 @@ describe('P7 runtime evidence viewer', () => {
     expect(html).toContain('Copy latest bounded JSON');
     expect(html).toContain('&lt;unsafe&gt;');
     expect(html).toContain('Persisted P7 Runtime Evidence');
+    expect(html).toContain('build source SHA');
+    expect(html).toContain(BUILD.sourceSha);
+    expect(html).toContain('Actions run #');
+    expect(html).toContain(BUILD.runNumber);
+    expect(html).toContain('Actions run id');
+    expect(html).toContain(BUILD.runId);
     expect(html).toContain('60');
     expect(html).toContain('unsupported in this runtime');
     expect(html).toContain('Example &lt;unsafe&gt; warning');
