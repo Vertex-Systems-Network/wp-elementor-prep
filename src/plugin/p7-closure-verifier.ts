@@ -1,3 +1,4 @@
+import { isValidP5RuntimeProof } from '../core/p5-runtime-gate';
 import type {
   P7RuntimeBuildIdentity,
   P7RuntimeEvidenceSnapshot,
@@ -9,6 +10,7 @@ import {
   isTraceableP7BuildIdentity,
   sameP7BuildIdentity,
 } from './p7-build-identity';
+import { isValidP7P5BuildProofReceipt } from './p7-p5-build-proof';
 import type { P7StoredRuntimeAcceptanceAssessment } from './p7-runtime-acceptance-loader';
 
 export interface P7ClosureVerification {
@@ -30,13 +32,15 @@ function sameFailures(left: string[], right: string[]): boolean {
 
 function looksLikeBundle(value: unknown): value is P7RuntimeClosureExportBundle {
   const bundle = objectValue(value);
-  if (!bundle || bundle.schemaVersion !== 1 || !objectValue(bundle.currentBuild)) return false;
+  if (!bundle || bundle.schemaVersion !== 2 || !objectValue(bundle.currentBuild)) return false;
   const prerequisite = objectValue(bundle.p5Prerequisite);
   const runtimeAcceptance = objectValue(bundle.runtimeAcceptance);
   return Boolean(
     prerequisite
     && typeof prerequisite.valid === 'boolean'
     && (prerequisite.passedAt === null || typeof prerequisite.passedAt === 'string')
+    && (prerequisite.coreProof === null || objectValue(prerequisite.coreProof))
+    && (prerequisite.receipt === null || objectValue(prerequisite.receipt))
     && runtimeAcceptance
     && typeof runtimeAcceptance.accepted === 'boolean'
     && stringArray(runtimeAcceptance.failures)
@@ -60,7 +64,7 @@ function recomputeRuntime(
   return { ...assessment, evidence };
 }
 
-/** Recomputes exported P7 closure and binds it to the exact packaged verifier artifact. */
+/** Recomputes exported P7 closure and binds every prerequisite to the exact packaged verifier artifact. */
 export function verifyP7ClosureExportBundle(
   value: unknown,
   expectedBuild: P7RuntimeBuildIdentity,
@@ -74,6 +78,24 @@ export function verifyP7ClosureExportBundle(
     failures.push('Offline verifier artifact is not bound to a traceable CI build.');
   } else if (!isTraceableP7BuildIdentity(value.currentBuild) || !sameP7BuildIdentity(value.currentBuild, expectedBuild)) {
     failures.push('P7 closure bundle belongs to a different build than this verifier artifact.');
+  }
+
+  const coreProof = value.p5Prerequisite.coreProof;
+  const receipt = value.p5Prerequisite.receipt;
+  const p5Valid = Boolean(
+    isValidP5RuntimeProof(coreProof)
+    && isValidP7P5BuildProofReceipt(coreProof, receipt, expectedBuild),
+  );
+  const recomputedP5State = {
+    valid: p5Valid,
+    passedAt: p5Valid && coreProof ? coreProof.passedAt : null,
+  };
+
+  if (
+    value.p5Prerequisite.valid !== recomputedP5State.valid
+    || value.p5Prerequisite.passedAt !== recomputedP5State.passedAt
+  ) {
+    failures.push('Stored P7 P5-prerequisite verdict does not match canonical proof/receipt recomputation.');
   }
 
   let runtimeAssessment: P7StoredRuntimeAcceptanceAssessment;
@@ -92,7 +114,7 @@ export function verifyP7ClosureExportBundle(
 
   let closure;
   try {
-    closure = assessP7RuntimeClosure(runtimeAssessment, value.p5Prerequisite, value.currentBuild);
+    closure = assessP7RuntimeClosure(runtimeAssessment, recomputedP5State, expectedBuild);
   } catch {
     return { accepted: false, failures: [...failures, 'P7 closure could not be evaluated by the canonical assessor.'] };
   }
