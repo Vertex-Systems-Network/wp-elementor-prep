@@ -48,6 +48,24 @@ jobs:
           }
           console.log(`Verified Figma bundle + provenance: ${manifest.main}, ${manifest.ui}, ${process.env.EXPECTED_DEV_COMMAND}`);
           NODE
+      - name: Verify deterministic local-import preparation
+        run: |
+          npm run prepare:figma-import -- 123456789012345678 dist dist-local
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFileSync } from 'node:fs';
+          const hash = (path) => createHash('sha256').update(readFileSync(path)).digest('hex');
+          const manifest = JSON.parse(readFileSync('dist-local/manifest.json', 'utf8'));
+          if (manifest.id !== '123456789012345678') throw new Error('prepared manifest did not bind requested local plugin id');
+          for (const file of [manifest.main, manifest.ui]) {
+            const original = hash(`dist/${file}`);
+            const prepared = hash(`dist-local/${file}`);
+            if (original !== prepared) throw new Error(`local import preparation changed compiled target ${file}`);
+          }
+          const info = readFileSync('dist-local/LOCAL_IMPORT_INFO.txt', 'utf8');
+          if (!info.includes('compiled_targets_unchanged=true')) throw new Error('local import proof note is missing unchanged-target assertion');
+          console.log('Verified manifest-only local Figma import preparation.');
+          NODE
       - name: Write Figma build provenance
         env:
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -59,8 +77,8 @@ jobs:
             cat > dist/IMPORT_NOTES.txt <<'EOF'
           This build used the repository's placeholder Figma plugin id (000000000000000000).
           Figma assigns plugin ids for registered development/published plugins. If Figma rejects this manifest during development import,
-          configure the repository variable FIGMA_PLUGIN_ID with a Figma-assigned development plugin id and rerun CI, or replace only the
-          manifest.json id locally before import. Do not treat CI success alone as imported-Figma runtime proof.
+          run `npm run prepare:figma-import -- <your-figma-plugin-id>` against the unpacked artifact to create `dist-local/`.
+          The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id. Do not treat CI success alone as imported-Figma runtime proof.
           EOF
           else
             printf 'This build used configured Figma plugin id %s. CI success is not imported-Figma runtime proof; run the compiled self-test in Figma.\n' \
