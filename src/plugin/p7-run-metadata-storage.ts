@@ -26,6 +26,27 @@ function sameMetadata(left: BatchRunMetadata, right: BatchRunMetadata): boolean 
   });
 }
 
+function parseWritableMetadata(value: unknown): BatchRunMetadata {
+  // figma.clientStorage returns undefined for an absent key. That is the only implicit empty state
+  // that the write path may create from. Any present unknown/malformed envelope is preserved.
+  if (value === undefined) return emptyBatchRunMetadata();
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('P7 run metadata is malformed; refusing to overwrite an unknown stored payload.');
+  }
+
+  const candidate = value as { schemaVersion?: unknown; entries?: unknown };
+  if (
+    candidate.schemaVersion !== 1
+    || !candidate.entries
+    || typeof candidate.entries !== 'object'
+    || Array.isArray(candidate.entries)
+  ) {
+    throw new Error('P7 run metadata schema is unsupported or malformed; refusing to overwrite it.');
+  }
+
+  return parseBatchRunMetadata(value);
+}
+
 /**
  * Storage adapter kept separate from the queue core. It persists only compact successful-run
  * metadata and never stores AuditNode trees, candidate nodes, PNG bytes or validation reports.
@@ -38,7 +59,7 @@ export class P7RunMetadataStorage {
   ) {}
 
   private async loadStrict(): Promise<BatchRunMetadata> {
-    return parseBatchRunMetadata(await this.storage.getAsync(this.key));
+    return parseWritableMetadata(await this.storage.getAsync(this.key));
   }
 
   /**
@@ -59,9 +80,9 @@ export class P7RunMetadataStorage {
   }
 
   /**
-   * Write-side persistence is stricter than hydration. A storage read failure is propagated and no
-   * write is attempted, because replacing unknown existing metadata with a snapshot derived from an
-   * empty fallback could erase prior success records.
+   * Write-side persistence is stricter than hydration. Storage I/O failure, unknown schema or a
+   * malformed stored envelope is propagated and no write is attempted. Replacing unknown existing
+   * metadata with an empty-derived snapshot could erase prior or forward-version success records.
    */
   async recordSuccessfulState(
     state: BatchQueueState,
