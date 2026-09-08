@@ -29,9 +29,10 @@ Execute in this order before starting unrelated new implementation:
 - Open issues: #6, #7, #8.
 - #6 is blocked only on real imported-Figma runtime evidence.
 - #7/#8 require P5 merge before integration/fresh runtime artifacts.
-- Open PR/MR at cycle start: `0`.
-- Current PR: #43 — one-command runtime closure intake.
-- PR #43 first implementation head `07bc91e`: CI #535 PASS.
+- Open PR/MR: `0` after PR #43 merge.
+- PR #43 final head `2ea96d2`: CI #540 PASS + Integration Readiness #30 PASS.
+- PR #43 merged to `main` at `7d9f22b`.
+- Post-merge CI #541 PASS + Integration Readiness #31 PASS.
 - Canonical P5/P6/P7 feature heads remain unchanged.
 
 ## P5 — first release gate / issue #6
