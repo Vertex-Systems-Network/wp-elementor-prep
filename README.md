@@ -21,7 +21,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 | P4 | Candidate transaction + rollback/checkpoint | ✅ Complete |
 | P5 | Conservative high-confidence Safe Fix recipes | 🟡 Engineering + closure-evidence tooling complete; imported-Figma runtime acceptance pending (#6) |
 | P6 | Advanced structures + clone-only calibration | 🟡 Engineering + prerequisite/closure evidence tooling complete; real-Figma acceptance pending (#7) |
-| P7 | Sequential 60+ frame batch queue | 🟡 Engineering/evidence tooling complete; embedded P5 proof path hardening in progress before real-Figma acceptance (#8) |
+| P7 | Sequential 60+ frame batch queue | 🟡 Engineering + evidence/provenance/proof hardening complete; real-Figma stress/cancellation acceptance pending (#8) |
 | P8 | Optional Elementor exporter adapters | ⏸ Deferred / issue #9 closed as not planned for current phase |
 
 ## Canonical development branches
@@ -30,7 +30,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 |---|---|---|---|
 | P5 | `feat/p5-safe-recipes` | `a59485e` | ✅ #320 |
 | P6 | `feat/p6-advanced-structures` | `35a8b01` | ✅ #330 |
-| P7 | `feat/p7-batch-queue-core` | `3915774` | ✅ #309 |
+| P7 | `feat/p7-batch-queue-core` | `0c4a3dd` | ✅ #371 |
 
 README/docs-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity pipeline was explicitly verified.
 
@@ -39,19 +39,21 @@ README/docs-only synchronization commits may be newer than the functional heads 
 - ✅ 0 open PR/MRs; canonical branches remain the direct development source of truth
 - ✅ direct-push CI verifies canonical branch development without PR churn
 - ✅ canonical P5 proof minting is deterministic and closure evidence is bounded, persisted, reopenable and copyable
-- ✅ P6 now embeds the same P5 closure-evidence bundle/storage/viewer contract as canonical P5
-- ✅ a single imported P6 build can run `Developer: P5 Runtime Self-Test`, persist/reopen the prerequisite evidence, then continue directly to P6 clone calibration
-- ✅ P6 embedded evidence storage is observational; storage failure cannot change proof or transaction outcomes
-- ✅ P6 embedded evidence loader rejects malformed nested data, invalid pixel values and accepted-without-proof contradictions
-- ✅ P6 positive clone-calibration acceptance viewer reports PASS/FAIL + exact reasons
-- ✅ P6 bounded preservation-refusal evidence captures complete `NO_CANDIDATE` decisions without AuditNode trees/PNG/candidate objects
-- ✅ P6 refusal acceptance requires explicit preservation-sensitive `PRESERVE` evidence and rejects hidden page-flow `CALIBRATE` candidates
-- ✅ P6 dedicated refusal viewer/export reports `Preservation refusal acceptance: PASS/FAIL`
-- ✅ P6 developer runtime routes `NO_CANDIDATE` to refusal evidence and `COMPLETED/BLOCKED` to calibration evidence
+- ✅ P6 embeds the same P5 prerequisite/closure-evidence contract, allowing P5 proof + P6 clone calibration in one imported build
 - ✅ P7 retains qualifying 60+ completed stress and active-frame cancellation evidence in separate bounded slots
 - ✅ P7 runtime inspector/viewer reports combined retained runtime Acceptance PASS/FAIL with exact failures
-- ⚠️ P7 latest `main.ts` audit found legacy direct `result.passed` P5 proof minting despite earlier tracker wording; deterministic proof-path hardening is now the active priority before P7 runtime acceptance
-- ✅ latest verified functional CI green: P5 #320, P6 #330, P7 #309
+- ✅ P7 stress and cancellation scenarios must originate from the same traceable CI-built plugin bundle
+- ✅ compiled P7 evidence is stamped with Git source SHA, GitHub Actions run ID and run number; local/legacy/untraceable evidence cannot satisfy runtime acceptance
+- ✅ audited P7 `main.ts` stale direct `result.passed -> createP5RuntimeProof()` path was removed
+- ✅ embedded P7 P5 self-test now mints/revokes proof only through `updateP5RuntimeProofFromCalibration()` and the deterministic P5 acceptance assessor
+- ✅ P7 now embeds bounded P5 prerequisite closure evidence storage/viewer tooling; the same imported P7 build can run P5 self-test, copy/reopen the P5 evidence, then run the batch scenarios
+- ✅ P5 evidence persistence remains observational and cannot change proof, transaction or batch outcomes
+- ✅ P7 source-contract regression prevents reintroducing direct `createP5RuntimeProof` or top-level `if (result.passed)` proof gating in the plugin entrypoint
+- ✅ active-frame cancellation evidence path re-audited: external cancellation is attributed at the post-processor poll and production lifecycle automatically injects/persists the bounded recorder
+- ✅ P7 CI #371 passed install, typecheck, all tests, build, compiled-bundle integrity/provenance verification and artifact upload
+- ✅ verified P7 artifact: `figma-plugin-dist-371`
+- ✅ artifact digest: `sha256:6d245bd01433265c1a0efb123d3181e722edc630d098948efb83d4b5f426f945`
+- ✅ latest verified functional CI green: P5 #320, P6 #330, P7 #371
 
 ## Remaining real-runtime acceptance
 
@@ -83,13 +85,16 @@ P6 production advanced mutation remains intentionally disabled.
 
 ### P7 — issue #8
 
-- [ ] first finish/verify the embedded P5 deterministic proof-path hardening now in progress
-- [ ] P5 deterministic runtime proof valid in the imported P7 build
+- [ ] import `figma-plugin-dist-371` (or a newer verified canonical P7 artifact) and keep that exact build loaded for both scenarios
+- [ ] in that same build run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`
+- [ ] copy/reopen the P5 prerequisite evidence with `Developer: P5 Runtime Evidence`
 - [ ] execute realistic 60+ frame imported-Figma batch run
-- [ ] retain completed stress evidence with max processor concurrency `1`
+- [ ] retain completed stress evidence with `finalTotalCount >= 60`, all frames terminal and max processor concurrency `1`
+- [ ] record actual elapsed/runtime data and truthful memory availability/sample points
 - [ ] request cancellation during a genuinely long active Full P3 operation
-- [ ] retain settled active-frame cancellation evidence
-- [ ] open the P7 runtime evidence viewer and require overall Acceptance PASS
+- [ ] retain settled active-frame cancellation evidence with a matching recorded processor attempt
+- [ ] require both retained scenarios to contain the same traceable source SHA, Actions run ID and run number
+- [ ] open `Developer: P7 Runtime Evidence` and require overall Runtime Acceptance PASS
 - [ ] copy/export the combined acceptance bundle for closure evidence
 
 ## Safety invariants
@@ -102,6 +107,7 @@ P6 production advanced mutation remains intentionally disabled.
 - Only one unresolved restore/finalize checkpoint may exist.
 - Batch processing is strictly sequential: max one processor at a time.
 - Cancellation is cooperative and cannot silently bypass an in-flight transaction/checkpoint.
+- Runtime acceptance evidence must be traceable to the exact CI-built plugin used to collect it.
 - Unsupported or ambiguous constructs are reported/refused, never guessed.
 - No external AI/network dependency in the deterministic core runtime.
 
