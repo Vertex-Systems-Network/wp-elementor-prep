@@ -32,6 +32,7 @@ function available(): P7RuntimeEvidenceInspection {
       stressEvidenceAvailable: true,
       cancellationEvidenceAvailable: true,
     },
+    acceptanceJson: '{"schemaVersion":1,"accepted":false,"stress":{"frame":"<unsafe>"},"cancellation":{}}',
     warnings: ['Example <unsafe> warning'],
     snapshot: {} as never,
     json: '{"frameName":"</pre><script>bad()</script>"}',
@@ -39,14 +40,16 @@ function available(): P7RuntimeEvidenceInspection {
 }
 
 describe('P7 runtime evidence viewer', () => {
-  it('renders retained acceptance plus copyable bounded evidence without trusting evidence HTML', () => {
+  it('renders retained acceptance and both copy surfaces without trusting evidence HTML', () => {
     const html = buildP7RuntimeEvidenceViewerHtml(available());
     expect(html).toContain('Runtime acceptance: FAIL');
     expect(html).toContain('60+ completed stress evidence');
     expect(html).toContain('active-frame cancellation evidence');
     expect(html).toContain('Cancellation evidence &lt;unsafe&gt; needs a longer active processor.');
+    expect(html).toContain('Copy acceptance bundle');
+    expect(html).toContain('Copy latest bounded JSON');
+    expect(html).toContain('&lt;unsafe&gt;');
     expect(html).toContain('Persisted P7 Runtime Evidence');
-    expect(html).toContain('Copy bounded JSON');
     expect(html).toContain('60');
     expect(html).toContain('unsupported in this runtime');
     expect(html).toContain('Example &lt;unsafe&gt; warning');
@@ -65,11 +68,13 @@ describe('P7 runtime evidence viewer', () => {
         stressEvidenceAvailable: true,
         cancellationEvidenceAvailable: true,
       },
+      acceptanceJson: '{"schemaVersion":1,"accepted":true,"failures":[]}',
     });
     expect(html).toContain('Runtime acceptance: PASS');
+    expect(html).toContain('Copy acceptance bundle');
   });
 
-  it('renders acceptance failures even when no valid latest evidence exists', () => {
+  it('renders exportable acceptance failures even when no valid latest evidence exists', () => {
     const html = buildP7RuntimeEvidenceViewerHtml({
       status: 'EMPTY',
       message: 'No evidence <yet>',
@@ -79,10 +84,12 @@ describe('P7 runtime evidence viewer', () => {
         stressEvidenceAvailable: false,
         cancellationEvidenceAvailable: false,
       },
+      acceptanceJson: '{"schemaVersion":1,"accepted":false,"stress":null,"cancellation":null}',
     });
     expect(html).toContain('Runtime acceptance: FAIL');
     expect(html).toContain('60+ completed stress evidence is missing.');
     expect(html).toContain('No evidence &lt;yet&gt;');
-    expect(html).not.toContain('Copy bounded JSON');
+    expect(html).toContain('Copy acceptance bundle');
+    expect(html).not.toContain('Copy latest bounded JSON');
   });
 });
