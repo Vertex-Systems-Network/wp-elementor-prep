@@ -1,8 +1,11 @@
-import { P5_RUNTIME_GATE_VERSION } from '../core/p5-runtime-gate';
+import {
+  P5_RUNTIME_GATE_VERSION,
+  type P5RuntimeBuildIdentity,
+} from '../core/p5-runtime-gate';
 import type { AdvancedRecipePlan } from '../core/advanced-recipe-types';
 import type { P6DeveloperCalibrationOutcome } from './p6-developer-calibration';
 
-export const P6_REFUSAL_EVIDENCE_SCHEMA_VERSION = 1 as const;
+export const P6_REFUSAL_EVIDENCE_SCHEMA_VERSION = 2 as const;
 export const P6_REFUSAL_EVIDENCE_MAX_PLANS = 25 as const;
 
 export interface P6RefusalPlanSummary {
@@ -25,6 +28,7 @@ export interface P6PreservationRefusalEvidenceBundle {
   schemaVersion: typeof P6_REFUSAL_EVIDENCE_SCHEMA_VERSION;
   capturedAt: string;
   pluginVersion: string;
+  build: P5RuntimeBuildIdentity;
   p5RuntimeGateVersion: string;
   p5RuntimeProofPassedAt: string | null;
   frame: { id: string; name: string };
@@ -60,6 +64,7 @@ function summarizePlan(plan: AdvancedRecipePlan): P6RefusalPlanSummary {
  */
 export function buildP6PreservationRefusalEvidenceBundle(input: {
   pluginVersion: string;
+  build: P5RuntimeBuildIdentity;
   p5RuntimeProofPassedAt: string | null;
   frame: Pick<FrameNode, 'id' | 'name'>;
   outcome: P6DeveloperCalibrationOutcome;
@@ -74,6 +79,7 @@ export function buildP6PreservationRefusalEvidenceBundle(input: {
     schemaVersion: P6_REFUSAL_EVIDENCE_SCHEMA_VERSION,
     capturedAt: input.capturedAt ?? new Date().toISOString(),
     pluginVersion: input.pluginVersion,
+    build: { ...input.build },
     p5RuntimeGateVersion: P5_RUNTIME_GATE_VERSION,
     p5RuntimeProofPassedAt: input.p5RuntimeProofPassedAt,
     frame: { id: input.frame.id, name: input.frame.name },
