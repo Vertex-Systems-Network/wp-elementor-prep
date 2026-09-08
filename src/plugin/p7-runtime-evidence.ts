@@ -3,6 +3,7 @@ import {
   type P7RuntimeEvidenceOptions,
   type P7RuntimeMemorySampler,
 } from '../core/batch-runtime-evidence';
+import { P7_BUILD_IDENTITY } from './build-info';
 
 interface PerformanceMemoryLike {
   usedJSHeapSize?: unknown;
@@ -28,6 +29,7 @@ export function createFigmaP7RuntimeEvidenceRecorder(
 ): P7RuntimeEvidenceRecorder {
   return new P7RuntimeEvidenceRecorder(runKey, {
     ...options,
+    buildIdentity: options.buildIdentity ?? P7_BUILD_IDENTITY,
     memorySampler: options.memorySampler ?? sampleFigmaUsedJsHeapBytes,
   });
 }
