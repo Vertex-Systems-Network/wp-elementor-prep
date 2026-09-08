@@ -1,7 +1,8 @@
-import type {
-  P7RuntimeBuildIdentity,
-  P7RuntimeEvidenceSnapshot,
-} from '../core/batch-runtime-evidence';
+import type { P7RuntimeEvidenceSnapshot } from '../core/batch-runtime-evidence';
+import {
+  isTraceableP7BuildIdentity,
+  sameP7BuildIdentity,
+} from './p7-build-identity';
 
 export interface P7RuntimeAcceptanceAssessment {
   accepted: boolean;
@@ -19,21 +20,6 @@ function requireCondition(failures: string[], condition: boolean, message: strin
 
 function validIso(value: string | null): boolean {
   return typeof value === 'string' && value.length > 0 && Number.isFinite(Date.parse(value));
-}
-
-function isTraceableBuild(build: P7RuntimeBuildIdentity | null | undefined): build is P7RuntimeBuildIdentity {
-  return Boolean(
-    build
-    && /^[0-9a-f]{40}$/i.test(build.sourceSha)
-    && /^\d+$/.test(build.runId)
-    && /^\d+$/.test(build.runNumber),
-  );
-}
-
-function sameBuild(a: P7RuntimeBuildIdentity, b: P7RuntimeBuildIdentity): boolean {
-  return a.sourceSha === b.sourceSha
-    && a.runId === b.runId
-    && a.runNumber === b.runNumber;
 }
 
 function assessMemoryTruthfulness(
@@ -69,12 +55,12 @@ export function assessP7RuntimeAcceptance(
   const stressBuild = stress.build;
   const cancellationBuild = cancellation.build;
 
-  requireCondition(failures, isTraceableBuild(stressBuild), 'P7 stress evidence is not bound to a traceable CI build.');
-  requireCondition(failures, isTraceableBuild(cancellationBuild), 'P7 cancellation evidence is not bound to a traceable CI build.');
-  if (isTraceableBuild(stressBuild) && isTraceableBuild(cancellationBuild)) {
+  requireCondition(failures, isTraceableP7BuildIdentity(stressBuild), 'P7 stress evidence is not bound to a traceable CI build.');
+  requireCondition(failures, isTraceableP7BuildIdentity(cancellationBuild), 'P7 cancellation evidence is not bound to a traceable CI build.');
+  if (isTraceableP7BuildIdentity(stressBuild) && isTraceableP7BuildIdentity(cancellationBuild)) {
     requireCondition(
       failures,
-      sameBuild(stressBuild, cancellationBuild),
+      sameP7BuildIdentity(stressBuild, cancellationBuild),
       'P7 stress and cancellation evidence were captured by different plugin builds.',
     );
   }
