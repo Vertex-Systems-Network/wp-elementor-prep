@@ -9,6 +9,12 @@ import {
 } from '../src/plugin/p5-runtime-evidence-storage';
 import { buildP5RuntimeEvidenceViewerHtml } from '../src/plugin/p5-runtime-evidence-viewer';
 
+const BUILD = {
+  sourceSha: '0123456789abcdef0123456789abcdef01234567',
+  runId: '34219111842',
+  runNumber: '309',
+};
+
 class MemoryStorage implements P5EvidenceKeyValueStorage {
   values = new Map<string, unknown>();
   failReads = false;
@@ -39,6 +45,7 @@ function result(): P5RuntimeCalibrationResult {
 function evidence() {
   return buildP5RuntimeEvidenceBundle({
     pluginVersion: '0.1.0-alpha.1',
+    build: BUILD,
     result: result(),
     runtimeProofPassedAt: '2026-09-08T12:00:00.000Z',
     capturedAt: '2026-09-08T12:00:01.000Z',
@@ -46,20 +53,23 @@ function evidence() {
 }
 
 describe('P5 runtime evidence storage/viewer', () => {
-  it('persists and reloads valid bounded evidence', async () => {
+  it('persists and reloads valid provenance-bound bounded evidence', async () => {
     const storage = new MemoryStorage();
     const bundle = evidence();
     expect(await persistP5RuntimeEvidenceBestEffort(storage, bundle)).toBe(true);
     expect(await loadLatestP5RuntimeEvidence(storage)).toEqual(bundle);
   });
 
-  it('fails observationally on storage errors and ignores corrupt payloads', async () => {
+  it('fails observationally on storage errors and ignores corrupt or legacy payloads', async () => {
     const storage = new MemoryStorage();
     storage.failWrites = true;
     await expect(persistP5RuntimeEvidenceBestEffort(storage, evidence())).resolves.toBe(false);
 
     storage.failWrites = false;
     storage.values.set(P5_RUNTIME_EVIDENCE_STORAGE_KEY, { schemaVersion: 99 });
+    await expect(loadLatestP5RuntimeEvidence(storage)).resolves.toBeNull();
+
+    storage.values.set(P5_RUNTIME_EVIDENCE_STORAGE_KEY, { ...evidence(), schemaVersion: 1 });
     await expect(loadLatestP5RuntimeEvidence(storage)).resolves.toBeNull();
 
     storage.failReads = true;
@@ -89,13 +99,18 @@ describe('P5 runtime evidence storage/viewer', () => {
     await expect(loadLatestP5RuntimeEvidence(storage)).resolves.toBeNull();
   });
 
-  it('renders acceptance status and escaped copyable bounded JSON', () => {
+  it('renders acceptance status, exact CI provenance and escaped copyable bounded JSON', () => {
     const bundle = evidence();
     const html = buildP5RuntimeEvidenceViewerHtml(bundle);
     expect(html).toContain('P5 Compiled Runtime Acceptance');
     expect(html).toContain('Acceptance: PASS');
     expect(html).toContain('Copy bounded acceptance JSON');
     expect(html).toContain('p5-runtime-proof-v3');
+    expect(html).toContain(BUILD.sourceSha);
+    expect(html).toContain('Actions run #');
+    expect(html).toContain(BUILD.runNumber);
+    expect(html).toContain('Actions run ID');
+    expect(html).toContain(BUILD.runId);
   });
 
   it('escapes failure text before rendering', () => {
