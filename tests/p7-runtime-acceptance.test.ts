@@ -2,9 +2,16 @@ import { describe, expect, it } from 'vitest';
 import type { P7RuntimeEvidenceSnapshot } from '../src/core/batch-runtime-evidence';
 import { assessP7RuntimeAcceptance } from '../src/plugin/p7-runtime-acceptance';
 
+const BUILD = {
+  sourceSha: '0123456789abcdef0123456789abcdef01234567',
+  runId: '34217708751',
+  runNumber: '292',
+};
+
 function baseSnapshot(): P7RuntimeEvidenceSnapshot {
   return {
     schemaVersion: 1,
+    build: { ...BUILD },
     runKey: 'run-key',
     startedAt: '2026-09-08T10:00:00.000Z',
     elapsedMs: 1000,
@@ -54,12 +61,28 @@ function passingCancellation(): P7RuntimeEvidenceSnapshot {
 }
 
 describe('P7 runtime acceptance assessor', () => {
-  it('accepts a completed 60+ Frame run plus active-frame cancellation settlement evidence', () => {
+  it('accepts a completed 60+ Frame run plus active-frame cancellation from the same traceable build', () => {
     const assessment = assessP7RuntimeAcceptance({
       stress: baseSnapshot(),
       cancellation: passingCancellation(),
     });
     expect(assessment).toEqual({ accepted: true, failures: [] });
+  });
+
+  it('fails closed on missing or mismatched build provenance', () => {
+    const stress = baseSnapshot();
+    stress.build = null;
+    const cancellation = passingCancellation();
+    cancellation.build = { ...BUILD, runNumber: '293' };
+
+    let assessment = assessP7RuntimeAcceptance({ stress, cancellation });
+    expect(assessment.accepted).toBe(false);
+    expect(assessment.failures).toContain('P7 stress evidence is not bound to a traceable CI build.');
+
+    stress.build = { ...BUILD };
+    assessment = assessP7RuntimeAcceptance({ stress, cancellation });
+    expect(assessment.accepted).toBe(false);
+    expect(assessment.failures).toContain('P7 stress and cancellation evidence were captured by different plugin builds.');
   });
 
   it('fails closed on concurrency, undersized stress, truncated evidence, or inter-frame cancellation', () => {
