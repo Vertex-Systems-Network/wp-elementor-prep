@@ -81,7 +81,7 @@ function sameAcceptance(left: P5RuntimeAcceptanceAssessment, right: P5RuntimeAcc
     && left.failures.every((value, index) => value === right.failures[index]);
 }
 
-function validIso(value: string | null): boolean {
+function validIso(value: string | null): value is string {
   return typeof value === 'string' && value.length > 0 && Number.isFinite(Date.parse(value));
 }
 
