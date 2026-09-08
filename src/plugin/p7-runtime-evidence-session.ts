@@ -5,12 +5,13 @@ import type {
 import type {
   P7RuntimeEvidenceOptions,
   P7RuntimeEvidenceSnapshot,
+  P7RuntimeMemorySampler,
 } from '../core/batch-runtime-evidence';
 import type { P7BatchRuntimeOptions } from './p7-batch-runtime';
 import { createFigmaP7RuntimeEvidenceRecorder } from './p7-runtime-evidence';
 
 export interface P7RuntimeEvidenceSessionOptions extends Omit<P7RuntimeEvidenceOptions, 'memorySampler'> {
-  memorySampler?: P7RuntimeEvidenceOptions['memorySampler'];
+  memorySampler?: P7RuntimeMemorySampler;
 }
 
 /**
