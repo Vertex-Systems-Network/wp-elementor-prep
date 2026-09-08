@@ -1,4 +1,5 @@
 import type { P7RuntimeEvidenceSnapshot } from '../core/batch-runtime-evidence';
+import { loadAndAssessP7RuntimeAcceptance } from './p7-runtime-acceptance-loader';
 import {
   loadLatestP7RuntimeEvidence,
   type P7EvidenceKeyValueStorage,
@@ -26,14 +27,23 @@ export interface P7RuntimeEvidenceInspectionSummary {
   checkpointEvidenceTruncated: boolean;
 }
 
+export interface P7RuntimeAcceptanceInspectionSummary {
+  accepted: boolean;
+  failures: string[];
+  stressEvidenceAvailable: boolean;
+  cancellationEvidenceAvailable: boolean;
+}
+
 export type P7RuntimeEvidenceInspection =
   | {
     status: 'EMPTY';
     message: string;
+    acceptance: P7RuntimeAcceptanceInspectionSummary;
   }
   | {
     status: 'AVAILABLE';
     summary: P7RuntimeEvidenceInspectionSummary;
+    acceptance: P7RuntimeAcceptanceInspectionSummary;
     warnings: string[];
     snapshot: P7RuntimeEvidenceSnapshot;
     json: string;
@@ -91,25 +101,39 @@ export function formatP7RuntimeEvidenceJson(snapshot: P7RuntimeEvidenceSnapshot)
 }
 
 /**
- * Read-only inspector for the latest bounded P7 runtime-evidence snapshot.
+ * Read-only inspector for the latest bounded P7 runtime-evidence snapshot plus the two retained
+ * acceptance scenarios. It never creates, mutates or clears runtime state.
  *
- * It never creates, mutates or clears runtime state. Unknown/corrupt persisted evidence is already
- * rejected by the canonical loader and is therefore represented as EMPTY rather than guessed.
+ * Unknown/corrupt persisted evidence is represented as missing rather than guessed. The latest JSON
+ * export remains backward-compatible and continues to contain only the latest snapshot.
  */
 export async function inspectLatestP7RuntimeEvidence(
   storage: P7EvidenceKeyValueStorage,
 ): Promise<P7RuntimeEvidenceInspection> {
-  const snapshot = await loadLatestP7RuntimeEvidence(storage);
+  const [snapshot, storedAcceptance] = await Promise.all([
+    loadLatestP7RuntimeEvidence(storage),
+    loadAndAssessP7RuntimeAcceptance(storage),
+  ]);
+
+  const acceptance: P7RuntimeAcceptanceInspectionSummary = {
+    accepted: storedAcceptance.accepted,
+    failures: storedAcceptance.failures,
+    stressEvidenceAvailable: storedAcceptance.evidence.stress !== null,
+    cancellationEvidenceAvailable: storedAcceptance.evidence.cancellation !== null,
+  };
+
   if (!snapshot) {
     return {
       status: 'EMPTY',
       message: 'No valid persisted P7 runtime evidence is available for inspection.',
+      acceptance,
     };
   }
 
   return {
     status: 'AVAILABLE',
     summary: summarizeP7RuntimeEvidence(snapshot),
+    acceptance,
     warnings: buildWarnings(snapshot),
     snapshot,
     json: formatP7RuntimeEvidenceJson(snapshot),
