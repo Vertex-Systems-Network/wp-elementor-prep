@@ -1,0 +1,106 @@
+name: Pella Finalize Exact Figma Assets
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-exact-figma-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout head branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Gate repeated run
+        id: gate
+        shell: bash
+        run: |
+          if [ -f pella-artifacts/.done ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download exact Figma node renders
+        if: steps.gate.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p pella-assets pella-artifacts
+          cat > /tmp/assets.tsv <<'EOF'
+          hero-portrait.png	320082	https://www.figma.com/api/mcp/asset/0cf45d9d-28a0-418e-944a-a38d26ca22ce.png
+          journey-01.png	403567	https://www.figma.com/api/mcp/asset/1bb5e91c-38bd-4a29-b18b-9475f0e60ce1.png
+          journey-02.png	391077	https://www.figma.com/api/mcp/asset/bb4d0fda-3edc-4f3f-95f5-e3d3a94472b3.png
+          journey-03.png	417294	https://www.figma.com/api/mcp/asset/8c95e774-a5b6-4006-a1de-352147bf98d2.png
+          journey-04.png	347540	https://www.figma.com/api/mcp/asset/854ea2af-a9ea-459b-9032-504dc7d4c8d0.png
+          journey-05.png	354353	https://www.figma.com/api/mcp/asset/87ea15fc-0b20-4dac-94ee-9a4d16fb5694.png
+          investment-01.png	217324	https://www.figma.com/api/mcp/asset/92fec846-cd32-4dc3-b0ed-b77d34e6cb6a.png
+          investment-02.png	374741	https://www.figma.com/api/mcp/asset/876862d1-e9cf-4e6a-9b25-61371df5740c.png
+          investment-03.png	287584	https://www.figma.com/api/mcp/asset/6ff7891c-aa37-43c9-bccf-3ddacd5451a9.png
+          media-01.png	126743	https://www.figma.com/api/mcp/asset/dda5307a-1473-4c20-aeea-c9422d72be06.png
+          media-02.png	108138	https://www.figma.com/api/mcp/asset/0ebf9a98-bc5f-40f3-a811-4190b54c823c.png
+          media-03.png	109935	https://www.figma.com/api/mcp/asset/d82911b0-5979-4ec1-9636-51eae2226338.png
+          EOF
+
+          while IFS=$'\t' read -r name expected url; do
+            echo "Downloading $name"
+            curl --fail --location --retry 4 --retry-delay 2 --connect-timeout 20 --max-time 120 -o "pella-assets/$name" "$url"
+            actual=$(stat -c%s "pella-assets/$name")
+            if [ "$actual" != "$expected" ]; then
+              echo "Byte-size mismatch for $name: got $actual expected $expected" >&2
+              exit 10
+            fi
+          done < /tmp/assets.tsv
+
+          python - <<'PY'
+          from pathlib import Path
+          sig=b'\x89PNG\r\n\x1a\n'
+          files=sorted(Path('pella-assets').glob('*.png'))
+          assert len(files)==12, len(files)
+          for p in files:
+              assert p.read_bytes()[:8]==sig, f'PNG signature failed: {p}'
+          print('PNG validation PASS:', len(files))
+          PY
+
+      - name: Package and split assets for retrieval
+        if: steps.gate.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          zip -j -9 Pella-Nova-Exact-Figma-Renders.zip pella-assets/*.png
+          sha=$(sha256sum Pella-Nova-Exact-Figma-Renders.zip | awk '{print $1}')
+          bytes=$(stat -c%s Pella-Nova-Exact-Figma-Renders.zip)
+          base64 -w0 Pella-Nova-Exact-Figma-Renders.zip > /tmp/assets.b64
+          rm -f pella-artifacts/part-*
+          split -b 180000 -d -a 3 /tmp/assets.b64 pella-artifacts/part-
+          parts=$(find pella-artifacts -maxdepth 1 -name 'part-*' | wc -l)
+          printf '{"zip":"Pella-Nova-Exact-Figma-Renders.zip","sha256":"%s","bytes":%s,"parts":%s}\n' "$sha" "$bytes" "$parts" > pella-artifacts/manifest.json
+          touch pella-artifacts/.done
+          cat pella-artifacts/manifest.json
+
+      - name: Upload exact asset artifact
+        if: steps.gate.outputs.skip != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pella-Nova-Exact-Figma-Renders
+          path: Pella-Nova-Exact-Figma-Renders.zip
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Commit retrieval chunks to head branch
+        if: steps.gate.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pella-artifacts
+          git commit -m "chore: materialize exact Figma assets [pella-assets]"
+          git push origin HEAD:${{ github.event.pull_request.head.ref || github.ref_name }}
