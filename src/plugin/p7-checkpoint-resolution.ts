@@ -4,6 +4,9 @@ import {
   type BatchQueueState,
 } from '../core/batch-queue';
 import type { CommitEvidence } from '../core/transaction-types';
+import {
+  recordCurrentFigmaP7CheckpointResolutionBestEffort,
+} from './p7-runtime-evidence-session';
 import { p7FrameHasMoreEligibleWork } from './p7-single-frame-processor';
 import { finalizeLastSafeFix, restoreLastSafeFix } from './safe-fix-runtime';
 
@@ -33,6 +36,18 @@ function awaitingCheckpointItem(state: BatchQueueState) {
   return state.items.find((item) => item.status === 'AWAITING_CHECKPOINT') ?? null;
 }
 
+async function finishResolution(
+  before: BatchQueueState,
+  state: BatchQueueState,
+  proof: P7CheckpointActionProof,
+  resolution: BatchCheckpointResolution,
+): Promise<P7CheckpointResolutionResult> {
+  // Runtime evidence must never influence checkpoint correctness. The helper is a no-op when no
+  // Figma evidence session exists and persists best-effort when one does.
+  await recordCurrentFigmaP7CheckpointResolutionBestEffort(resolution, before, state);
+  return { state, proof, resolution };
+}
+
 async function resolveAfterP5Action(
   state: BatchQueueState,
   resolution: BatchCheckpointResolution,
@@ -47,22 +62,24 @@ async function resolveAfterP5Action(
     if (!evidence?.committedNodeId) {
       throw new Error('P5 checkpoint restore returned no usable evidence; batch state was not advanced.');
     }
-    return {
-      state: resolveBatchCheckpoint(state, 'RESTORED', { resolvedFrameId: evidence.committedNodeId }),
-      proof: { resolution: 'RESTORED', evidence },
-      resolution: 'RESTORED',
-    };
+    return finishResolution(
+      state,
+      resolveBatchCheckpoint(state, 'RESTORED', { resolvedFrameId: evidence.committedNodeId }),
+      { resolution: 'RESTORED', evidence },
+      'RESTORED',
+    );
   }
 
   const finalized = await actions.finalize();
   if (!finalized) {
     throw new Error('P5 checkpoint finalize returned false; batch state was not advanced.');
   }
-  return {
-    state: resolveBatchCheckpoint(state, resolution),
-    proof: { resolution, finalized: true },
+  return finishResolution(
+    state,
+    resolveBatchCheckpoint(state, resolution),
+    { resolution, finalized: true },
     resolution,
-  };
+  );
 }
 
 /**
