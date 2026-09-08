@@ -64,7 +64,7 @@ function result(transaction: TransactionResult | null, skippedReason?: string): 
 }
 
 describe('P7 canonical P5 result adapter', () => {
-  it('maps a committed transaction with evidence to CHECKPOINT_PENDING, not success', () => {
+  it('maps a committed transaction with evidence to CHECKPOINT_PENDING and carries the new live Frame id', () => {
     const outcome = p5SafeFixResultToBatchOutcome(result({
       schemaVersion: 1,
       transactionId: 'tx-1',
@@ -81,7 +81,11 @@ describe('P7 canonical P5 result adapter', () => {
       events: [],
     }));
 
-    expect(outcome.status).toBe('CHECKPOINT_PENDING');
+    expect(outcome).toEqual({
+      status: 'CHECKPOINT_PENDING',
+      committedFrameId: 'candidate',
+      reason: 'P5 Safe Fix committed and is awaiting explicit restore/finalize checkpoint resolution.',
+    });
   });
 
   it('fails closed if COMMITTED is missing commit evidence', () => {
