@@ -19,28 +19,32 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 | P2 | Deterministic classification + semantic roles | ✅ Complete |
 | P3 | Geometry/content/image/rendered-pixel validator | ✅ Complete |
 | P4 | Candidate transaction + rollback/checkpoint | ✅ Complete |
-| P5 | Conservative high-confidence Safe Fix recipes | 🟡 Engineering complete; imported-Figma runtime acceptance pending (#6) |
+| P5 | Conservative high-confidence Safe Fix recipes | 🟡 Engineering + closure-evidence tooling complete; imported-Figma runtime acceptance pending (#6) |
 | P6 | Advanced structures + clone-only calibration | 🟡 Engineering/evidence tooling complete; real-Figma acceptance pending (#7) |
-| P7 | Sequential 60+ frame batch queue | 🟡 Engineering complete; real-Figma stress/cancellation acceptance pending (#8) |
+| P7 | Sequential 60+ frame batch queue | 🟡 Engineering/evidence tooling complete; real-Figma stress/cancellation acceptance pending (#8) |
 | P8 | Optional Elementor exporter adapters | ⏸ Deferred / issue #9 closed as not planned for current phase |
 
 ## Canonical development branches
 
 | Track | Branch | Last verified functional head | CI |
 |---|---|---|---|
-| P5 | `feat/p5-safe-recipes` | `a3e1f1b` | ✅ #273 |
+| P5 | `feat/p5-safe-recipes` | `a59485e` | ✅ #320 |
 | P6 | `feat/p6-advanced-structures` | `a9a94f2` | ✅ #284 |
-| P7 | `feat/p7-batch-queue-core` | `ecee92f` | ✅ #270 |
+| P7 | `feat/p7-batch-queue-core` | `3915774` | ✅ #309 |
 
-README-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity pipeline was explicitly verified.
+README/docs-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity pipeline was explicitly verified.
 
 ## Latest development batch — 2026-09-08
 
 - ✅ 0 open PR/MRs; canonical branches remain the direct development source of truth
 - ✅ direct-push CI verifies canonical branch development without PR churn
 - ✅ P5 deterministic `p5-runtime-proof-v3` acceptance assessor verifies reject/restore/finalize/pixel/cleanup evidence independently
-- ✅ P5 proof minting is now gated by that deterministic assessor; top-level `result.passed` alone cannot unlock mutation
-- ✅ inconsistent or incomplete P5 evidence revokes local proof and fails closed
+- ✅ P5 proof minting is gated by that deterministic assessor; top-level `result.passed` alone cannot unlock mutation
+- ✅ P5 now builds a bounded runtime closure-evidence bundle containing the exact calibration result, recomputed acceptance, gate version and minted proof timestamp
+- ✅ latest valid P5 closure evidence is persisted observationally in client storage; storage failure cannot change proof or transaction outcomes
+- ✅ P5 runtime self-test automatically opens a dedicated `P5 Compiled Runtime Acceptance` viewer with PASS/FAIL, exact reasons and copyable bounded JSON
+- ✅ `Developer: P5 Runtime Evidence` reopens the latest persisted evidence without rerunning the self-test
+- ✅ P5 persisted evidence loader strictly rejects malformed nested calibration data, invalid pixel values and contradictory accepted-without-proof payloads
 - ✅ P6 positive clone-calibration acceptance viewer reports PASS/FAIL + exact reasons
 - ✅ P6 bounded preservation-refusal evidence captures complete `NO_CANDIDATE` decisions without AuditNode trees/PNG/candidate objects
 - ✅ P6 refusal acceptance requires explicit preservation-sensitive `PRESERVE` evidence and rejects hidden page-flow `CALIBRATE` candidates
@@ -49,8 +53,8 @@ README-only synchronization commits may be newer than the functional heads above
 - ✅ P6 embedded P5 self-test uses the same deterministic proof-mint/revoke semantics as canonical P5
 - ✅ P7 retains qualifying 60+ completed stress and active-frame cancellation evidence in separate bounded slots
 - ✅ P7 runtime inspector/viewer reports combined retained runtime Acceptance PASS/FAIL with exact failures
-- ✅ P7 now exports one copyable acceptance bundle containing the assessment + retained stress snapshot + retained cancellation snapshot
-- ✅ latest functional CI green: P5 #273, P6 #284, P7 #270
+- ✅ P7 exports one copyable acceptance bundle containing the assessment + retained stress snapshot + retained cancellation snapshot
+- ✅ latest verified functional CI green: P5 #320, P6 #284, P7 #309
 
 ## Remaining real-runtime acceptance
 
@@ -60,10 +64,12 @@ The remaining open issues are intentionally limited to evidence that GitHub CI c
 
 - [ ] import the canonical development artifact in Figma desktop
 - [ ] run `Developer: P5 Runtime Self-Test`
-- [ ] require deterministic `p5-runtime-proof-v3` acceptance PASS
+- [ ] require `P5 Compiled Runtime Acceptance: PASS`
 - [ ] verify rendered-pixel forced reject, commit -> restore and commit -> finalize paths
 - [ ] require checkpoint cleanup and `0` leftovers
 - [ ] confirm mutation unlocks only after deterministic acceptance passes
+- [ ] copy the bounded acceptance JSON and retain it as closure evidence
+- [ ] reopen it via `Developer: P5 Runtime Evidence` and confirm the persisted record remains valid
 
 Production Safe Fix mutation stays locked until this proof passes.
 
