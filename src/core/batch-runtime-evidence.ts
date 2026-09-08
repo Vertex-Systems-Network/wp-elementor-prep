@@ -53,8 +53,8 @@ export interface P7RuntimeCancellationEvidence {
 
 export interface P7RuntimeEvidenceSnapshot {
   schemaVersion: 1;
-  /** Null is accepted by storage readers for legacy evidence, but cannot pass runtime acceptance. */
-  build: P7RuntimeBuildIdentity | null;
+  /** Legacy snapshots may omit this; runtime acceptance requires a traceable non-null build identity. */
+  build?: P7RuntimeBuildIdentity | null;
   runKey: string;
   startedAt: string;
   elapsedMs: number;
