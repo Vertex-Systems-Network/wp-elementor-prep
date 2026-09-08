@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { inspectRuntimeArtifact } from './runtime-artifact-preflight.mjs';
@@ -73,7 +73,11 @@ export function inspectRuntimeClosureIntake(
     return evidenceFailure(normalizedTrack, resolvedArtifactDir, resolvedEvidencePath, preflight, evidenceErrors, warnings);
   }
 
-  const evidenceStat = statSync(resolvedEvidencePath);
+  const evidenceStat = lstatSync(resolvedEvidencePath);
+  if (evidenceStat.isSymbolicLink()) {
+    evidenceErrors.push(`Evidence path must not be a symbolic link: ${resolvedEvidencePath}`);
+    return evidenceFailure(normalizedTrack, resolvedArtifactDir, resolvedEvidencePath, preflight, evidenceErrors, warnings);
+  }
   if (!evidenceStat.isFile()) {
     evidenceErrors.push(`Evidence path is not a regular file: ${resolvedEvidencePath}`);
     return evidenceFailure(normalizedTrack, resolvedArtifactDir, resolvedEvidencePath, preflight, evidenceErrors, warnings);
