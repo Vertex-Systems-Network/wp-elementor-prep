@@ -14,6 +14,12 @@ export interface P7RuntimeEvidenceClock {
   nowIso(): string;
 }
 
+export interface P7RuntimeBuildIdentity {
+  sourceSha: string;
+  runId: string;
+  runNumber: string;
+}
+
 export type P7RuntimeAttemptOutcome = BatchItemOutcome['status'] | 'THREW';
 
 export interface P7RuntimeAttemptEvidence {
@@ -47,6 +53,8 @@ export interface P7RuntimeCancellationEvidence {
 
 export interface P7RuntimeEvidenceSnapshot {
   schemaVersion: 1;
+  /** Null is accepted by storage readers for legacy evidence, but cannot pass runtime acceptance. */
+  build: P7RuntimeBuildIdentity | null;
   runKey: string;
   startedAt: string;
   elapsedMs: number;
@@ -71,6 +79,7 @@ export interface P7RuntimeEvidenceSnapshot {
 export interface P7RuntimeEvidenceOptions {
   clock?: P7RuntimeEvidenceClock;
   memorySampler?: P7RuntimeMemorySampler;
+  buildIdentity?: P7RuntimeBuildIdentity | null;
   maxAttemptRecords?: number;
   maxCheckpointRecords?: number;
 }
@@ -106,6 +115,7 @@ function finishedCount(state: BatchQueueState): number {
 export class P7RuntimeEvidenceRecorder {
   private readonly clock: P7RuntimeEvidenceClock;
   private readonly memorySampler: P7RuntimeMemorySampler | undefined;
+  private readonly buildIdentity: P7RuntimeBuildIdentity | null;
   private readonly maxAttemptRecords: number;
   private readonly maxCheckpointRecords: number;
   private readonly startedAtMs: number;
@@ -135,6 +145,7 @@ export class P7RuntimeEvidenceRecorder {
   ) {
     this.clock = options.clock ?? defaultClock();
     this.memorySampler = options.memorySampler;
+    this.buildIdentity = options.buildIdentity ? { ...options.buildIdentity } : null;
     this.maxAttemptRecords = Math.max(1, Math.floor(options.maxAttemptRecords ?? 500));
     this.maxCheckpointRecords = Math.max(1, Math.floor(options.maxCheckpointRecords ?? 500));
     this.startedAtMs = this.clock.nowMs();
@@ -282,6 +293,7 @@ export class P7RuntimeEvidenceRecorder {
   snapshot(state: BatchQueueState | null = this.lastState): P7RuntimeEvidenceSnapshot {
     return {
       schemaVersion: 1,
+      build: this.buildIdentity ? { ...this.buildIdentity } : null,
       runKey: this.runKey,
       startedAt: this.startedAtIso,
       elapsedMs: Math.max(0, this.clock.nowMs() - this.startedAtMs),
