@@ -25,16 +25,14 @@ See `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and decision D-012.
 
 ## Repository status
 
-- Current merged feature/tooling checkpoint: `92a4440` from PR #42.
-- PR #42 final head `e9c718c` passed CI #529 with no review/thread blockers.
-- Post-merge main CI #530: PASS.
-- Post-merge Integration Readiness #22: PASS.
-- README status verification, typecheck, tests, build and local-import safety all passed post-merge.
-- Open PR/MR: `0` before the final status-doc sync commits.
-- Open issues: #6, #7, #8 only.
-- Issue #6 now documents the hash-pinned preflight gate before real Figma acceptance.
-- Issue #7 and #8 remain synchronized to the proven post-P5 fresh-build closure order.
-- No new actionable product/code defect issue was found during the latest issue-first sweep.
+- Pre-batch main checkpoint: `659efc6`.
+- Main CI #534: PASS.
+- Main Integration Readiness #26: PASS.
+- Latest issue-first sweep: only #6, #7, #8 remain open.
+- Open PR/MR count was `0` before development.
+- Current development PR: #43 (`feat/runtime-closure-intake-20260909`).
+- PR #43 first implementation head `07bc91e`: CI #535 PASS.
+- Canonical P5/P6/P7 feature heads were not modified.
 
 ## Module state
 
@@ -42,7 +40,7 @@ See `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and decision D-012.
 |---|---|---:|---|
 | AI-native governance/tooling | COMPLETE | 100% | Keep Issues → PR/MR → development lifecycle, status and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | COMPLETE | 100% | None |
-| P5 Safe Fix | RUNTIME ACCEPTANCE | 93% | Hash-pinned #488 preflight → real imported-Figma proof → same-artifact verifier → merge #6 |
+| P5 Safe Fix | RUNTIME ACCEPTANCE | 94% | Hash-pinned #488 → real imported-Figma proof → closure intake PASS → merge #6 |
 | P6 advanced structures | INTEGRATION BLOCKED | 80% | P5 merge → resolve conflicts → fresh exact-build artifact + fresh file pins → runtime closure #7 |
 | P7 batch queue | INTEGRATION BLOCKED | 80% | P5 merge → resolve conflicts → fresh exact-build artifact + fresh file pins → stress/cancel closure #8 |
 | P8 exporter adapters | DEFERRED | N/A | Re-evaluate only after normalization line is stable |
@@ -58,7 +56,7 @@ See `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and decision D-012.
 - Digest: `sha256:9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`
 - Registry status: final-closure eligible for issue #6.
 - Registry schema v2 pins immutable SHA-256 for `BUILD_INFO.txt`, `code.js`, `ui.html`, packaged import helper and `verify-p5-evidence.mjs`.
-- Remaining: real imported-Figma runtime acceptance + same-artifact verifier.
+- Remaining: real imported-Figma runtime acceptance followed by one-command closure intake PASS.
 
 ### P6
 
@@ -103,7 +101,23 @@ Expected safety behavior:
 - P6 #494 / P7 #490 + `reference`: PASS with warning only when their immutable pins match,
 - any changed pinned byte: FAIL CLOSED.
 
-This preflight cannot mint runtime proof or replace real Figma Desktop observation.
+## Runtime closure intake
+
+PR #43 adds a generic main-side closure intake command:
+
+```bash
+npm run runtime:closure-intake -- <p5|p6|p7> <artifact-dir> <evidence-json>
+```
+
+The intake runs final-closure preflight first, then accepts only a regular non-empty bounded JSON object, records evidence SHA-256, and only then executes the exact hash-pinned verifier inside that artifact. A verifier non-zero exit, execution error or signal fails the intake.
+
+Important fail-closed properties:
+
+- preflight failure means verifier `NOT RUN`;
+- reference-only P6/P7 builds cannot reach verifier execution;
+- malformed or oversized evidence means verifier `NOT RUN`;
+- verifier is invoked directly through Node without a shell;
+- this tooling validates evidence only and cannot create or substitute real Figma observations.
 
 ## Integration readiness
 
@@ -119,16 +133,16 @@ Do not mutate canonical P5/P6/P7 exact-build branches merely for documentation c
 
 ### Issue #6 — P5
 
-Requires actual Figma Desktop imported-plugin runtime evidence. CI, hash-pinned preflight or synthetic evidence cannot replace it.
+Requires actual Figma Desktop imported-plugin runtime evidence. CI, hash-pinned preflight, closure intake or synthetic evidence cannot replace it.
 
 ### Issue #7 — P6
 
-Depends on P5 merge first. Then resolve integration conflicts, produce a fresh exact-build P6 artifact, register its new identity/digest/file hashes, collect positive + preservation-refusal real-Figma evidence, and pass same-artifact offline verification.
+Depends on P5 merge first. Then resolve integration conflicts, produce a fresh exact-build P6 artifact, register its new identity/digest/file hashes, collect positive + preservation-refusal real-Figma evidence, and pass closure intake using that fresh artifact.
 
 ### Issue #8 — P7
 
-Depends on P5 merge first. Then resolve integration conflicts, produce a fresh exact-build P7 artifact, register its new identity/digest/file hashes, collect realistic 60+ Frame stress + active Full-P3 cancellation evidence, and pass same-artifact offline verification.
+Depends on P5 merge first. Then resolve integration conflicts, produce a fresh exact-build P7 artifact, register its new identity/digest/file hashes, collect realistic 60+ Frame stress + active Full-P3 cancellation evidence, and pass closure intake using that fresh artifact.
 
 ## Immediate release target
 
-Run `npm run runtime:preflight -- p5 <unpacked-artifact-488>` and require exact identity plus `5/5` immutable SHA-256 matches, rebind the packaged placeholder manifest if required, complete P5 real-Figma acceptance, verify the exported closure with the same artifact, merge P5, close #6, then re-integrate P6/P7 in dependency order.
+Run hash-pinned preflight on canonical P5 #488, rebind only the manifest plugin ID if required, complete real Figma runtime acceptance, export `p5-evidence.json`, run `npm run runtime:closure-intake -- p5 <artifact-488> p5-evidence.json` and require PASS, then merge P5 and close #6 before re-integrating P6/P7.

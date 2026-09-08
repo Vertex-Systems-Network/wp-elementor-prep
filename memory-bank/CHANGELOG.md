@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-09-09
+
+### Runtime closure intake
+- Performed the mandatory issue-first sweep: open issues remain #6/#7/#8; no new actionable issue was found.
+- Confirmed open PR/MR count was `0` before development began.
+- Added `scripts/runtime-closure-intake.mjs` and `npm run runtime:closure-intake`.
+- Closure intake requires final-closure artifact preflight PASS before verifier execution.
+- Evidence intake requires a regular non-empty JSON file with a top-level object and a default 5 MiB size bound.
+- Evidence SHA-256 is recorded for operator traceability.
+- The verifier is the exact hash-pinned verifier inside the registered artifact and is launched directly through Node without shell interpolation.
+- Preflight failure, reference-only closure eligibility, malformed/oversized evidence, verifier execution error, signal or non-zero exit all fail closed.
+- Added regression tests proving verifier suppression on preflight/evidence failure and PASS/non-zero verifier behavior.
+- Added `docs/RUNTIME_CLOSURE_INTAKE.md`.
+- PR #43 first implementation head `07bc91e` passed CI #535.
+- Canonical P5/P6/P7 feature heads were not modified.
+
+### Immutable runtime artifact hash pinning
+- Recorded previously missing PR #42 state in the canonical changelog.
+- Upgraded `config/runtime-artifacts.json` to schema v2 with immutable per-file SHA-256 pins.
+- Pinned `BUILD_INFO.txt`, `code.js`, `ui.html`, packaged `prepare-figma-import.mjs` and each track's same-artifact verifier.
+- Intentionally left `manifest.json` outside byte-hash pinning so the supported plugin-ID-only local rebind remains possible while manifest semantics are still validated.
+- Added fail-closed tests for compiled runtime and verifier tampering plus allowed manifest plugin-ID rebinding.
+- PR #42 final head `e9c718c` passed CI #529 with no review/thread blockers.
+- PR #42 squash-merged to `main` at `92a4440`.
+- Post-merge CI #530 and Integration Readiness #22 passed.
+- Final synchronized pre-batch main checkpoint `659efc6` passed CI #534 and Integration Readiness #26.
+
 ## 2026-09-08
 
 ### Runtime artifact preflight + issue tracker correction
