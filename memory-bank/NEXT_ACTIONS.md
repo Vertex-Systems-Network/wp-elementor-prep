@@ -27,10 +27,11 @@ Execute in this order before starting unrelated new implementation:
 ## Current repository queue
 
 - Open issues: #6, #7, #8.
-- #7/#8 tracker bodies now explicitly require fresh post-P5 builds for final closure.
-- Open PR/MR at cycle start: 0.
-- Current development PR: #41 — runtime artifact preflight.
-- First PR #41 implementation CI #517: PASS.
+- #7/#8 tracker bodies explicitly require fresh post-P5 builds for final closure.
+- Open PR/MR: `0`.
+- PR #41 runtime artifact preflight is merged at `4b4a3be`.
+- Post-merge CI #523: PASS.
+- Post-merge Integration Readiness #17: PASS.
 
 ## P5 — first release gate / issue #6
 
