@@ -60,6 +60,10 @@ export function applyBatchRunMetadata(
 /**
  * Records only successfully processed frames. Failed/cancelled/pending frames must be retried and
  * therefore never receive the current run key. Storage is bounded by pruning the oldest records.
+ *
+ * Re-recording the same frame for the same run key is intentionally idempotent: the original
+ * completion timestamp is preserved so repeated persistence does not make an old success look new
+ * and unfairly protect it from bounded-metadata pruning.
  */
 export function recordSuccessfulBatchRun(
   metadata: BatchRunMetadata,
@@ -77,6 +81,8 @@ export function recordSuccessfulBatchRun(
   const entries: Record<string, BatchRunMetadataEntry> = { ...metadata.entries };
   for (const item of state.items) {
     if (item.status !== 'SUCCEEDED') continue;
+    const existing = entries[item.frameId];
+    if (existing?.runKey === state.runKey) continue;
     entries[item.frameId] = { runKey: state.runKey, completedAt };
   }
 
