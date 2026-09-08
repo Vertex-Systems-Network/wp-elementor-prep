@@ -1,4 +1,7 @@
-import type { P7RuntimeEvidenceSnapshot } from '../core/batch-runtime-evidence';
+import type {
+  P7RuntimeBuildIdentity,
+  P7RuntimeEvidenceSnapshot,
+} from '../core/batch-runtime-evidence';
 
 export interface P7RuntimeAcceptanceAssessment {
   accepted: boolean;
@@ -16,6 +19,21 @@ function requireCondition(failures: string[], condition: boolean, message: strin
 
 function validIso(value: string | null): boolean {
   return typeof value === 'string' && value.length > 0 && Number.isFinite(Date.parse(value));
+}
+
+function isTraceableBuild(build: P7RuntimeBuildIdentity | null | undefined): build is P7RuntimeBuildIdentity {
+  return Boolean(
+    build
+    && /^[0-9a-f]{40}$/i.test(build.sourceSha)
+    && /^\d+$/.test(build.runId)
+    && /^\d+$/.test(build.runNumber),
+  );
+}
+
+function sameBuild(a: P7RuntimeBuildIdentity, b: P7RuntimeBuildIdentity): boolean {
+  return a.sourceSha === b.sourceSha
+    && a.runId === b.runId
+    && a.runNumber === b.runNumber;
 }
 
 function assessMemoryTruthfulness(
@@ -41,13 +59,25 @@ function assessMemoryTruthfulness(
 /**
  * Reviews two snapshots captured by the real imported P7 development plugin:
  * a completed realistic 60+ Frame stress run and a separate cancellation-during-active-work run.
- * It does not manufacture either observation.
+ * Both scenarios must be traceable to the same CI-built plugin bundle.
  */
 export function assessP7RuntimeAcceptance(
   evidence: P7RuntimeAcceptanceEvidence,
 ): P7RuntimeAcceptanceAssessment {
   const failures: string[] = [];
   const { stress, cancellation } = evidence;
+  const stressBuildValid = isTraceableBuild(stress.build);
+  const cancellationBuildValid = isTraceableBuild(cancellation.build);
+
+  requireCondition(failures, stressBuildValid, 'P7 stress evidence is not bound to a traceable CI build.');
+  requireCondition(failures, cancellationBuildValid, 'P7 cancellation evidence is not bound to a traceable CI build.');
+  if (stressBuildValid && cancellationBuildValid) {
+    requireCondition(
+      failures,
+      sameBuild(stress.build, cancellation.build),
+      'P7 stress and cancellation evidence were captured by different plugin builds.',
+    );
+  }
 
   requireCondition(failures, stress.schemaVersion === 1, 'Unsupported P7 stress evidence schema.');
   requireCondition(failures, validIso(stress.startedAt), 'P7 stress evidence has no valid start timestamp.');
