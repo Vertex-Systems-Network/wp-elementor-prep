@@ -41,11 +41,11 @@ async function resolveAfterP5Action(
 
   if (resolution === 'RESTORED') {
     const evidence = await actions.restore();
-    if (!evidence) {
-      throw new Error('P5 checkpoint restore returned no evidence; batch state was not advanced.');
+    if (!evidence?.committedNodeId) {
+      throw new Error('P5 checkpoint restore returned no usable evidence; batch state was not advanced.');
     }
     return {
-      state: resolveBatchCheckpoint(state, 'RESTORED'),
+      state: resolveBatchCheckpoint(state, 'RESTORED', { resolvedFrameId: evidence.committedNodeId }),
       proof: { resolution: 'RESTORED', evidence },
       resolution: 'RESTORED',
     };
@@ -64,7 +64,7 @@ async function resolveAfterP5Action(
 
 /**
  * Restores the actual P5 checkpoint first. Only after that succeeds does the queue mark the frame as
- * SKIPPED/RESTORED_CHECKPOINT, ensuring a failed restore cannot corrupt batch bookkeeping.
+ * SKIPPED/RESTORED_CHECKPOINT and switch identity back to the restored original Frame id.
  */
 export function restoreP7BatchCheckpoint(
   state: BatchQueueState,
@@ -74,8 +74,8 @@ export function restoreP7BatchCheckpoint(
 }
 
 /**
- * Finalizes the actual P5 checkpoint first. Use this only when re-audit already proves the frame has
- * no additional eligible Safe Fix target; the queue then marks it durable SUCCEEDED.
+ * Finalizes the actual P5 checkpoint first. Use this only when re-audit already proves the current
+ * committed Frame has no additional eligible Safe Fix target; the queue then marks it durable SUCCEEDED.
  */
 export function finalizeP7BatchCheckpoint(
   state: BatchQueueState,
@@ -85,8 +85,8 @@ export function finalizeP7BatchCheckpoint(
 }
 
 /**
- * Finalizes the actual P5 checkpoint but returns the same frame to PENDING so the canonical processor
- * can re-audit it for another eligible Safe Fix. No successful run-key metadata is allowed yet.
+ * Finalizes the actual P5 checkpoint but returns the current committed Frame to PENDING so the
+ * canonical processor can re-audit it for another eligible Safe Fix. No run-key metadata is allowed yet.
  */
 export function finalizeAndContinueP7BatchCheckpoint(
   state: BatchQueueState,
