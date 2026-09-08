@@ -198,4 +198,35 @@ describe('P7 runtime evidence recorder', () => {
       frameIdAfter: 'candidate',
     });
   });
+
+  it('tracks checkpoint live-id handoff by stable queue index when frame names duplicate', () => {
+    const recorder = new P7RuntimeEvidenceRecorder('run-key');
+    let before = createBatchQueue([
+      { frameId: 'first', frameName: 'Duplicate' },
+      { frameId: 'second', frameName: 'Duplicate' },
+    ], 'run-key');
+    before = startNextBatchItem(before);
+    before = finishRunningBatchItem(before, { status: 'SUCCEEDED' });
+    before = startNextBatchItem(before);
+    before = finishRunningBatchItem(before, {
+      status: 'CHECKPOINT_PENDING',
+      committedFrameId: 'second-candidate',
+    });
+
+    const after: BatchQueueState = {
+      ...before,
+      status: 'IDLE',
+      pauseReason: null,
+      items: before.items.map((item, index) => index === 1
+        ? { ...item, frameId: 'second-candidate', status: 'PENDING' as const }
+        : { ...item }),
+    };
+
+    recorder.markCheckpointResolution('FINALIZED_CONTINUE', before, after);
+    expect(recorder.snapshot(after).checkpointResolutions[0]).toMatchObject({
+      resolution: 'FINALIZED_CONTINUE',
+      frameIdBefore: 'second-candidate',
+      frameIdAfter: 'second-candidate',
+    });
+  });
 });
