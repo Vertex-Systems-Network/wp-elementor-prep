@@ -2,14 +2,17 @@ import { describe, expect, it } from 'vitest';
 import { P5_RUNTIME_GATE_VERSION } from '../src/core/p5-runtime-gate';
 import type { P6RuntimeEvidenceBundle } from '../src/plugin/p6-runtime-evidence';
 import { assessP6PositiveCalibrationAcceptance } from '../src/plugin/p6-runtime-acceptance';
+import { P6_TEST_BUILD, P6_TEST_PROOF_PASSED_AT } from './p6-provenance-fixture';
 
 function passingEvidence(): P6RuntimeEvidenceBundle {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     capturedAt: '2026-09-08T10:00:00.000Z',
     pluginVersion: '0.1.0-alpha.1',
+    build: { ...P6_TEST_BUILD },
     p5RuntimeGateVersion: P5_RUNTIME_GATE_VERSION,
-    p5RuntimeProofPassedAt: '2026-09-08T09:59:00.000Z',
+    p5RuntimeProofPassedAt: P6_TEST_PROOF_PASSED_AT,
+    p5RuntimeProofBuild: { ...P6_TEST_BUILD },
     frame: { id: 'frame-1', name: 'Real page flow' },
     outcomeStatus: 'COMPLETED',
     reason: null,
@@ -60,6 +63,7 @@ describe('P6 runtime acceptance assessor', () => {
   it('fails closed without P5 proof, pixel evidence, cleanup, or discard evidence', () => {
     const evidence = passingEvidence();
     evidence.p5RuntimeProofPassedAt = null;
+    evidence.p5RuntimeProofBuild = null;
     if (!evidence.calibration) throw new Error('fixture');
     evidence.calibration.leftoverCandidateRisk = true;
     evidence.calibration.validation!.changedPixelPct = null;
