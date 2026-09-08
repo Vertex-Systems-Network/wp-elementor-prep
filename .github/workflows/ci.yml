@@ -31,3 +31,17 @@ jobs:
           cmp dist/ui.html dist-local/ui.html
           node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('dist-local/manifest.json','utf8')); if(m.id!=='123456789012345678') process.exit(1)"
           grep -q '^compiled_targets_unchanged=true$' dist-local/LOCAL_IMPORT_INFO.txt
+
+          if npm run prepare:figma-import -- 123456789012345678 dist dist; then
+            echo 'Expected same source/output path to be rejected' >&2
+            exit 1
+          fi
+          test -f dist/code.js
+          test -f dist/ui.html
+
+          if npm run prepare:figma-import -- 123456789012345678 dist dist/nested; then
+            echo 'Expected nested output path to be rejected' >&2
+            exit 1
+          fi
+          test -f dist/code.js
+          test -f dist/ui.html
