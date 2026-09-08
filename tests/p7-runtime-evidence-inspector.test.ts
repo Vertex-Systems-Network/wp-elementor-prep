@@ -10,9 +10,16 @@ import {
   P7_RUNTIME_STRESS_EVIDENCE_STORAGE_KEY,
 } from '../src/plugin/p7-runtime-evidence-session';
 
+const BUILD = {
+  sourceSha: '0123456789abcdef0123456789abcdef01234567',
+  runId: '34217708751',
+  runNumber: '292',
+};
+
 function snapshot(overrides: Partial<P7RuntimeEvidenceSnapshot> = {}): P7RuntimeEvidenceSnapshot {
   return {
     schemaVersion: 1,
+    build: { ...BUILD },
     runKey: 'plugin=0.1.0-alpha.1|safe=1|batch=1|proof=p5-runtime-proof-v3',
     startedAt: '2026-09-08T01:00:00.000Z',
     elapsedMs: 12_000,
