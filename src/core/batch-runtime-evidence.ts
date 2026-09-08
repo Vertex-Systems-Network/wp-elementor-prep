@@ -235,11 +235,17 @@ export class P7RuntimeEvidenceRecorder {
     };
   }
 
-  markCancellationRequested(state: BatchQueueState): void {
+  markCancellationRequested(
+    state: BatchQueueState,
+    activeFrameIdOverride?: string | null,
+  ): void {
     if (this.cancellation) return;
+    const activeFrameId = activeFrameIdOverride !== undefined
+      ? activeFrameIdOverride
+      : state.items.find((item) => item.status === 'RUNNING')?.frameId ?? null;
     this.cancellation = {
       requestedAt: this.clock.nowIso(),
-      activeFrameIdAtRequest: state.items.find((item) => item.status === 'RUNNING')?.frameId ?? null,
+      activeFrameIdAtRequest: activeFrameId,
       settledAt: null,
       finalStatus: null,
     };
