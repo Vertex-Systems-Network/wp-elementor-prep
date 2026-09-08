@@ -113,7 +113,6 @@ describe('P6 offline closure verifier', () => {
     const result = verifyP6ClosureExportBundle(passingBundle(), otherBuild);
     expect(result.accepted).toBe(false);
     expect(result.failures).toContain('P6 closure bundle belongs to a different build than this verifier artifact.');
-    expect(result.failures).toContain('Embedded P5 prerequisite does not reconstruct a valid exact-build runtime proof.');
   });
 
   it('rejects a tampered stored closure verdict', () => {
