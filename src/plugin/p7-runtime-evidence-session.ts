@@ -9,10 +9,17 @@ import type {
 import { createFigmaP7RuntimeEvidenceRecorder } from './p7-runtime-evidence';
 
 export const P7_RUNTIME_EVIDENCE_STORAGE_KEY = 'pella-elementor-prep:p7-runtime-evidence-v1';
+export const P7_RUNTIME_STRESS_EVIDENCE_STORAGE_KEY = 'pella-elementor-prep:p7-runtime-evidence-stress-v1';
+export const P7_RUNTIME_CANCELLATION_EVIDENCE_STORAGE_KEY = 'pella-elementor-prep:p7-runtime-evidence-cancellation-v1';
 
 export interface P7EvidenceKeyValueStorage {
   getAsync(key: string): Promise<unknown>;
   setAsync(key: string, value: unknown): Promise<void>;
+}
+
+export interface P7StoredRuntimeAcceptanceEvidence {
+  stress: P7RuntimeEvidenceSnapshot | null;
+  cancellation: P7RuntimeEvidenceSnapshot | null;
 }
 
 let activeFigmaRecorder: P7RuntimeEvidenceRecorder | null = null;
@@ -56,6 +63,19 @@ function isEvidenceSnapshot(value: unknown): value is P7RuntimeEvidenceSnapshot 
     && Array.isArray(candidate.checkpointResolutions);
 }
 
+function isStressAcceptanceScenario(snapshot: P7RuntimeEvidenceSnapshot): boolean {
+  return snapshot.finalStatus === 'COMPLETED'
+    && typeof snapshot.finalTotalCount === 'number'
+    && snapshot.finalTotalCount >= 60
+    && snapshot.finalFinishedCount === snapshot.finalTotalCount;
+}
+
+function isActiveFrameCancellationScenario(snapshot: P7RuntimeEvidenceSnapshot): boolean {
+  return snapshot.finalStatus === 'CANCELLED'
+    && snapshot.cancellation?.activeFrameIdAtRequest !== null
+    && snapshot.cancellation?.activeFrameIdAtRequest !== undefined;
+}
+
 /** Read helper for a later UI/export surface. Unknown/corrupt evidence is ignored, never trusted. */
 export async function loadLatestP7RuntimeEvidence(
   storage: P7EvidenceKeyValueStorage,
@@ -70,8 +90,26 @@ export async function loadLatestP7RuntimeEvidence(
 }
 
 /**
- * Evidence persistence is observational only. Storage errors must never alter a completed/paused/
- * cancelled batch result, so this helper reports false instead of throwing.
+ * Loads the latest captured scenario for each real-runtime P7 acceptance gate. Slots are independent
+ * so a cancellation smoke cannot erase a prior 60+ Frame stress run (and vice versa).
+ */
+export async function loadP7RuntimeAcceptanceEvidence(
+  storage: P7EvidenceKeyValueStorage,
+): Promise<P7StoredRuntimeAcceptanceEvidence> {
+  const [stress, cancellation] = await Promise.all([
+    loadLatestP7RuntimeEvidence(storage, P7_RUNTIME_STRESS_EVIDENCE_STORAGE_KEY),
+    loadLatestP7RuntimeEvidence(storage, P7_RUNTIME_CANCELLATION_EVIDENCE_STORAGE_KEY),
+  ]);
+  return { stress, cancellation };
+}
+
+/**
+ * Evidence persistence is observational only. The legacy/latest slot is always written first.
+ * When using the canonical key, qualifying acceptance scenarios are also retained in independent
+ * bounded slots. Custom-key callers preserve the original single-write behavior.
+ *
+ * Storage errors must never alter a completed/paused/cancelled batch result, so this helper reports
+ * false instead of throwing. A false result may occur after the latest slot was already updated.
  */
 export async function persistP7RuntimeEvidenceBestEffort(
   storage: P7EvidenceKeyValueStorage,
@@ -80,6 +118,16 @@ export async function persistP7RuntimeEvidenceBestEffort(
 ): Promise<boolean> {
   try {
     await storage.setAsync(key, snapshot);
+
+    if (key === P7_RUNTIME_EVIDENCE_STORAGE_KEY) {
+      if (isStressAcceptanceScenario(snapshot)) {
+        await storage.setAsync(P7_RUNTIME_STRESS_EVIDENCE_STORAGE_KEY, snapshot);
+      }
+      if (isActiveFrameCancellationScenario(snapshot)) {
+        await storage.setAsync(P7_RUNTIME_CANCELLATION_EVIDENCE_STORAGE_KEY, snapshot);
+      }
+    }
+
     return true;
   } catch {
     return false;
