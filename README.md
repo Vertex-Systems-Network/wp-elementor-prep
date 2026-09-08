@@ -42,7 +42,8 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 - ✅ duplicate Figma Frame names therefore cannot redirect checkpoint `frameIdAfter` evidence to a different same-name queue item; dedicated regression coverage is green.
 - ✅ P7 CI #490 passed the full schema-v2 exact-artifact verification pipeline.
 - ✅ all three canonical tracks provide same-artifact offline verification plus deterministic `prepare-figma-import.mjs` manifest rebinding.
-- ✅ 0 open PR/MRs; real imported-Figma observations remain the only blockers for #6/#7/#8.
+- ✅ a single operator checklist now lives at `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md` for P5 → P6 → P7 imported-runtime closure without synthetic substitutions.
+- ✅ 0 open feature PR/MRs; real imported-Figma observations remain the only blockers for #6/#7/#8.
 
 ## Self-contained Figma artifact import
 
@@ -67,6 +68,8 @@ node verify-p7-closure.mjs < p7-closure.json
 Exit code `0` requires canonical acceptance and an exact artifact-build match. P5 and P6 additionally reject invalid/impossible prerequisite proof semantics; P7 independently validates its raw P5 proof + exact-build receipt. Offline verification is read-only and cannot replace the required imported-Figma runtime observation.
 
 ## Remaining real-runtime acceptance
+
+Use `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md` as the operator sequence for the three runtime gates below.
 
 ### P5 — issue #6
 
@@ -131,3 +134,7 @@ For a repository-local artifact:
 ```bash
 npm run prepare:figma-import -- <your-figma-plugin-id>
 ```
+
+## Runtime acceptance operator guide
+
+For real Figma Desktop acceptance collection and issue-closure evidence, follow `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md` in order. The runbook deliberately preserves the exact-artifact and no-synthetic-evidence rules used by issues #6, #7 and #8.
