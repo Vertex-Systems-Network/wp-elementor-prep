@@ -1,6 +1,6 @@
 # Next Actions
 
-Last updated: 2026-09-08
+Last updated: 2026-09-09
 
 ## Mandatory order for every work cycle
 
@@ -27,11 +27,12 @@ Execute in this order before starting unrelated new implementation:
 ## Current repository queue
 
 - Open issues: #6, #7, #8.
+- #6 tracker includes the mandatory main-side hash-pinned preflight before real Figma acceptance.
 - #7/#8 tracker bodies explicitly require fresh post-P5 builds for final closure.
-- Open PR/MR: `0`.
-- PR #41 runtime artifact preflight is merged at `4b4a3be`.
-- Post-merge CI #523: PASS.
-- Post-merge Integration Readiness #17: PASS.
+- Open PR/MR: `0` before final status-doc sync commits.
+- PR #42 immutable artifact hash hardening merged at `92a4440`.
+- Post-merge CI #530: PASS.
+- Post-merge Integration Readiness #22: PASS.
 
 ## P5 — first release gate / issue #6
 
@@ -42,7 +43,10 @@ Execute in this order before starting unrelated new implementation:
 npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
 ```
 
-3. Require preflight PASS and exact source/run identity.
+3. Require:
+   - preflight PASS,
+   - exact source SHA / run ID / run number,
+   - `5/5` immutable SHA-256 pins matched for `BUILD_INFO.txt`, `code.js`, `ui.html`, packaged import helper and `verify-p5-evidence.mjs`.
 4. If the artifact still has placeholder plugin ID, use the **packaged artifact helper**:
 
 ```bash
@@ -65,7 +69,7 @@ node verify-p5-evidence.mjs < p5-evidence.json
 12. Require exit code `0`.
 13. Apply the already proven documentation integration resolution, merge P5, and close #6.
 
-Preflight, CI and synthetic evidence do not replace real Figma observations.
+Hash-pinned preflight, CI and synthetic evidence do not replace real Figma observations.
 
 ## P6 — after P5 merge / issue #7
 
@@ -74,13 +78,14 @@ Current #494 is reference-only. `runtime:preflight` must reject it for `final-cl
 1. Resolve/rebase P6 against merged P5.
 2. Run full CI.
 3. Produce a fresh exact-build P6 artifact.
-4. Update `config/runtime-artifacts.json` with the fresh exact build and mark only that resulting build final-closure eligible when dependency conditions are satisfied.
-5. Establish exact-build P5 prerequisite in that fresh build.
-6. Run a real image-bearing positive calibration and require Full P3 PASS with unchanged image-anchor count.
-7. Run a preservation-sensitive refusal case and require `NO_CANDIDATE` / refusal PASS.
-8. Require final P6 closure PASS.
-9. Export schema-v2 closure and pass `verify-p6-closure.mjs` from the same artifact.
-10. Merge and close #7.
+4. Update `config/runtime-artifacts.json` with the fresh exact build, ZIP digest and immutable SHA-256 file pins; mark only that resulting build final-closure eligible when dependency conditions are satisfied.
+5. Run preflight on the fresh artifact and require exact identity + immutable pins PASS.
+6. Establish exact-build P5 prerequisite in that fresh build.
+7. Run a real image-bearing positive calibration and require Full P3 PASS with unchanged image-anchor count.
+8. Run a preservation-sensitive refusal case and require `NO_CANDIDATE` / refusal PASS.
+9. Require final P6 closure PASS.
+10. Export schema-v2 closure and pass `verify-p6-closure.mjs` from the same artifact.
+11. Merge and close #7.
 
 ## P7 — after P5 merge / issue #8
 
@@ -89,14 +94,15 @@ Current #490 is reference-only. `runtime:preflight` must reject it for `final-cl
 1. Resolve/rebase P7 against merged P5.
 2. Run full CI.
 3. Produce a fresh exact-build P7 artifact.
-4. Update `config/runtime-artifacts.json` with the fresh exact build and mark only that resulting build final-closure eligible when dependency conditions are satisfied.
-5. Establish exact-build P5 prerequisite.
-6. Run a realistic 60+ Frame stress batch and require `maxConcurrentProcessors === 1`.
-7. Request cancellation during a genuinely active long Full P3 operation.
-8. Require cooperative settlement, final batch `CANCELLED`, and matching processor evidence.
-9. Require final P7 closure PASS.
-10. Export schema-v2 closure and pass `verify-p7-closure.mjs` from the same artifact.
-11. Merge and close #8.
+4. Update `config/runtime-artifacts.json` with the fresh exact build, ZIP digest and immutable SHA-256 file pins; mark only that resulting build final-closure eligible when dependency conditions are satisfied.
+5. Run preflight on the fresh artifact and require exact identity + immutable pins PASS.
+6. Establish exact-build P5 prerequisite.
+7. Run a realistic 60+ Frame stress batch and require `maxConcurrentProcessors === 1`.
+8. Request cancellation during a genuinely active long Full P3 operation.
+9. Require cooperative settlement, final batch `CANCELLED`, and matching processor evidence.
+10. Require final P7 closure PASS.
+11. Export schema-v2 closure and pass `verify-p7-closure.mjs` from the same artifact.
+12. Merge and close #8.
 
 ## Development that may proceed while runtime is externally blocked
 
