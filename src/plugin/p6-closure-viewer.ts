@@ -42,11 +42,12 @@ pre { margin: 0; padding: 10px; border: 1px solid var(--figma-color-border); bor
 <body>
 <div class="card">
   <div class="title">P6 Closure acceptance: ${acceptance.accepted ? 'PASS' : 'FAIL'}</div>
-  <div class="meta">Both positive clone-calibration and preservation-refusal evidence must come from this exact CI-built artifact.</div>
+  <div class="meta">Closure requires an image-bearing positive clone calibration plus preservation-refusal evidence from this exact CI-built artifact.</div>
   <div class="grid">
     ${metric('current build traceable', acceptance.currentBuildTraceable ? 'yes' : 'no')}
     ${metric('positive evidence', acceptance.positiveAvailable ? 'available' : 'missing')}
     ${metric('positive acceptance', acceptance.positiveAccepted ? 'PASS' : 'FAIL')}
+    ${metric('image-bearing positive evidence', acceptance.imageBearingPositiveEvidence ? 'yes' : 'no')}
     ${metric('positive current-build match', acceptance.positiveMatchesCurrentBuild ? 'yes' : 'no')}
     ${metric('refusal evidence', acceptance.refusalAvailable ? 'available' : 'missing')}
     ${metric('refusal acceptance', acceptance.refusalAccepted ? 'PASS' : 'FAIL')}
