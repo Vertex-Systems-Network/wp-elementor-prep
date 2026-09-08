@@ -37,12 +37,30 @@ export async function runP7BatchRuntime(
     ...runnerOptions
   } = options;
   let lastState = initialState;
+  let lastProcessorFrameId: string | null = null;
   evidenceRecorder?.beginSegment(initialState);
+
+  const observedProcessor: BatchFrameProcessor = async (item) => {
+    lastProcessorFrameId = item.frameId;
+    return processFrame(item);
+  };
+  const instrumentedProcessor = evidenceRecorder
+    ? evidenceRecorder.wrapProcessor(observedProcessor)
+    : observedProcessor;
 
   const observedShouldCancel = shouldCancel
     ? () => {
       const requested = shouldCancel();
-      if (requested) evidenceRecorder?.markCancellationRequested(lastState);
+      if (requested) {
+        const runningFrameId = lastState.items.find((item) => item.status === 'RUNNING')?.frameId;
+        // Cancellation is intentionally polled by the scheduler only after the async processor has
+        // settled. If the pre-frame poll was false and this post-frame poll is true, the request
+        // arrived while the just-settled processor was active; retain that identity as evidence.
+        evidenceRecorder?.markCancellationRequested(
+          lastState,
+          runningFrameId ?? lastProcessorFrameId,
+        );
+      }
       return requested;
     }
     : undefined;
@@ -50,7 +68,7 @@ export async function runP7BatchRuntime(
   try {
     const state = await runBatchQueue(
       initialState,
-      evidenceRecorder ? evidenceRecorder.wrapProcessor(processFrame) : processFrame,
+      instrumentedProcessor,
       {
         ...runnerOptions,
         ...(observedShouldCancel ? { shouldCancel: observedShouldCancel } : {}),
