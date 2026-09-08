@@ -46,12 +46,12 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 - ✅ PR #42 previously upgraded the artifact registry/preflight with immutable SHA-256 file pins and merged to `main` at `92a4440`.
 - ✅ PR #43 added `runtime:closure-intake`, combining final-closure preflight, bounded evidence intake, evidence SHA-256 traceability and the exact hash-pinned same-artifact verifier; it merged at `7d9f22b`.
 - ✅ PR #44 hardened closure evidence traceability so SHA-256 is computed from the **exact raw file bytes**, not decoded text.
-- ✅ closure intake now performs strict/fatal UTF-8 decoding before JSON parsing; invalid UTF-8 fails closed before verifier execution while the exact on-disk evidence SHA-256 remains reportable.
-- ✅ intake results explicitly record `hashScope: raw-file-bytes`, `utf8Valid`, byte count and JSON-object acceptance state.
-- ✅ PR #44 head `0c4ab88` passed CI #546 with no review/thread blockers.
-- ✅ PR #44 squash-merged to `main` at `51c4bd4`.
-- ✅ post-merge main CI #547 passed README status verification, typecheck, tests, build and local-import safety.
-- ✅ post-merge Integration Readiness #36 passed.
+- ✅ closure intake performs strict/fatal UTF-8 decoding before JSON parsing; invalid UTF-8 fails closed before verifier execution while the exact on-disk evidence SHA-256 remains reportable.
+- ✅ PR #45 hardens the operator evidence-path boundary: symbolic-link evidence paths now fail closed before evidence read/hash/verifier execution, with regression coverage.
+- ✅ PR #45 head `f2233fb` passed CI #551 with no review/thread blockers.
+- ✅ PR #45 squash-merged to `main` at `8444698`.
+- ✅ post-merge main CI #552 passed README status verification, typecheck, tests, build and local-import safety.
+- ✅ post-merge Integration Readiness #40 passed.
 - ✅ canonical P5/P6/P7 feature heads remained unchanged by the tooling batch.
 
 ## Phase status
@@ -125,14 +125,14 @@ npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /pa
 It requires, in order:
 
 1. final-closure artifact preflight PASS, including immutable SHA-256 pins;
-2. a regular, non-empty evidence file no larger than 5 MiB by default;
+2. an operator-supplied regular, non-symlink, non-empty evidence file no larger than 5 MiB by default;
 3. SHA-256 of the **exact raw evidence file bytes** for forensic traceability;
 4. strict valid UTF-8 decoding with no replacement-character recovery;
 5. valid JSON with a top-level object;
 6. execution of the exact hash-pinned verifier shipped inside that artifact;
 7. verifier exit code exactly `0`.
 
-If artifact/evidence stages fail, no verifier process is launched. Invalid UTF-8 is rejected before JSON parsing and before verifier execution. The verifier is invoked directly with Node and receives the validated evidence text through stdin; no shell command is constructed from operator paths or evidence.
+If artifact/evidence stages fail, no verifier process is launched. Symbolic-link evidence paths and invalid UTF-8 are rejected before evidence verification. The verifier is invoked directly with Node and receives the validated evidence text through stdin; no shell command is constructed from operator paths or evidence.
 
 Current P6 #494 / P7 #490 reference builds cannot reach verifier execution through this command because final-closure preflight rejects them first.
 
@@ -176,7 +176,7 @@ npm run integration:readiness
 - import the exact build into Figma Desktop;
 - run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
 - prove rendered-pixel forced rejection, restore, finalize and `0` leftovers;
-- export `p5-evidence.json`;
+- export `p5-evidence.json` to a regular non-symlink path;
 - run `npm run runtime:closure-intake -- p5 <artifact-dir> p5-evidence.json` and require raw-byte evidence SHA-256 + strict UTF-8/JSON acceptance + verifier exit `0` + final PASS;
 - apply the CI-proven documentation integration resolution, merge P5 and close #6.
 
@@ -189,7 +189,7 @@ npm run integration:readiness
 - run image-bearing positive page-flow clone calibration with Full P3 PASS and unchanged image-anchor count;
 - run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS;
 - require combined P6 closure PASS;
-- export `p6-closure.json` and run `runtime:closure-intake` against the fresh final-closure-eligible P6 artifact;
+- export `p6-closure.json` to a regular non-symlink path and run `runtime:closure-intake` against the fresh final-closure-eligible P6 artifact;
 - merge and close #7.
 
 ### 3. P7 / issue #8 — only after P5 lands
@@ -201,7 +201,7 @@ npm run integration:readiness
 - execute a realistic 60+ Frame batch with every item terminal and `maxConcurrentProcessors === 1`;
 - request cancellation during a genuinely long active Full P3 operation and retain matching cooperative settlement evidence;
 - require final closure PASS;
-- export `p7-closure.json` and run `runtime:closure-intake` against the fresh final-closure-eligible P7 artifact;
+- export `p7-closure.json` to a regular non-symlink path and run `runtime:closure-intake` against the fresh final-closure-eligible P7 artifact;
 - merge and close #8.
 
 Full real-runtime operator checklist: `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md`.
@@ -229,7 +229,7 @@ Exit code `0` requires canonical acceptance and exact artifact-build binding. Of
 - runtime evidence must be traceable to the exact CI-built artifact loaded in Figma;
 - immutable runtime/helper/verifier files must match registry SHA-256 pins exactly;
 - manifest-only plugin-ID rebinding is allowed, but compiled code/UI must remain byte-for-byte unchanged;
-- closure intake must hash exact evidence bytes, reject invalid UTF-8, require a top-level JSON object, and never execute a verifier until final-closure artifact/evidence gates pass;
+- closure intake must accept only a regular non-symlink evidence path, hash exact evidence bytes, reject invalid UTF-8, require a top-level JSON object, and never execute a verifier until final-closure artifact/evidence gates pass;
 - offline verifiers must recompute canonical acceptance and match that artifact build;
 - proof chronology must be valid and cannot occur after evidence capture;
 - P6 advanced calibration remains clone-only with no production commit seam;
