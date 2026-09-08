@@ -27,6 +27,10 @@ export interface P6RuntimeEvidenceValidationSummary {
   maxChannelDelta: number | null;
   maxTextPositionDriftPx: number;
   maxImagePositionDriftPx: number;
+  /** Additive schema-v2 field: missing in older evidence, required by final P6 closure acceptance. */
+  imageAnchorCountBefore?: number;
+  /** Additive schema-v2 field: missing in older evidence, required by final P6 closure acceptance. */
+  imageAnchorCountAfter?: number;
 }
 
 export interface P6RuntimeEvidenceCalibrationSummary {
@@ -90,6 +94,8 @@ function summarizeCalibration(result: AdvancedCalibrationResult): P6RuntimeEvide
       maxChannelDelta: pixel?.maxChannelDelta ?? null,
       maxTextPositionDriftPx: validation.metrics.maxTextPositionDriftPx,
       maxImagePositionDriftPx: validation.metrics.maxImagePositionDriftPx,
+      imageAnchorCountBefore: validation.metrics.imageAnchorCountBefore,
+      imageAnchorCountAfter: validation.metrics.imageAnchorCountAfter,
     } : null,
     events: result.events.map((event) => ({ ...event })),
   };
