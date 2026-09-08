@@ -84,21 +84,25 @@ const missingAcceptance = {
 };
 
 describe('P7 runtime evidence inspector', () => {
-  it('returns EMPTY for absent or corrupt persisted evidence without writing', async () => {
-    await expect(inspectLatestP7RuntimeEvidence(storageWithLatest(undefined))).resolves.toEqual({
-      status: 'EMPTY',
-      message: 'No valid persisted P7 runtime evidence is available for inspection.',
-      acceptance: missingAcceptance,
-    });
-
-    await expect(inspectLatestP7RuntimeEvidence(storageWithLatest({ schemaVersion: 999 }))).resolves.toEqual({
-      status: 'EMPTY',
-      message: 'No valid persisted P7 runtime evidence is available for inspection.',
-      acceptance: missingAcceptance,
-    });
+  it('returns EMPTY plus an exportable fail-closed acceptance bundle for absent/corrupt latest evidence', async () => {
+    for (const latest of [undefined, { schemaVersion: 999 }]) {
+      const result = await inspectLatestP7RuntimeEvidence(storageWithLatest(latest));
+      expect(result).toEqual(expect.objectContaining({
+        status: 'EMPTY',
+        message: 'No valid persisted P7 runtime evidence is available for inspection.',
+        acceptance: missingAcceptance,
+      }));
+      const bundle = JSON.parse(result.acceptanceJson) as Record<string, unknown>;
+      expect(bundle).toEqual(expect.objectContaining({
+        schemaVersion: 1,
+        accepted: false,
+        stress: null,
+        cancellation: null,
+      }));
+    }
   });
 
-  it('summarizes the bounded snapshot and emits reviewable pretty JSON', async () => {
+  it('summarizes the latest bounded snapshot without changing the combined acceptance bundle', async () => {
     const persisted = snapshot();
     const result = await inspectLatestP7RuntimeEvidence(storageWithLatest(persisted));
     expect(result.status).toBe('AVAILABLE');
@@ -128,14 +132,19 @@ describe('P7 runtime evidence inspector', () => {
     expect(result.acceptance).toEqual(missingAcceptance);
     expect(result.warnings).toEqual([]);
     expect(JSON.parse(result.json)).toEqual(persisted);
-    expect(result.json).toContain('\n  "runKey"');
+    expect(JSON.parse(result.acceptanceJson)).toEqual(expect.objectContaining({
+      schemaVersion: 1,
+      accepted: false,
+      stress: null,
+      cancellation: null,
+    }));
   });
 
-  it('reports retained acceptance PASS when both real-runtime scenario slots satisfy the contract', async () => {
+  it('exports both retained scenario snapshots when runtime acceptance passes', async () => {
     const stress = snapshot({ finalFinishedCount: 60, finalTotalCount: 60 });
     const cancellation = snapshot({
       finalStatus: 'CANCELLED',
-      finalFinishedCount: 2,
+      finalFinishedCount: 1,
       finalTotalCount: 2,
       cancellation: {
         requestedAt: '2026-09-08T01:00:05.000Z',
@@ -156,6 +165,13 @@ describe('P7 runtime evidence inspector', () => {
       failures: [],
       stressEvidenceAvailable: true,
       cancellationEvidenceAvailable: true,
+    });
+    expect(JSON.parse(result.acceptanceJson)).toEqual({
+      schemaVersion: 1,
+      accepted: true,
+      failures: [],
+      stress,
+      cancellation,
     });
   });
 
