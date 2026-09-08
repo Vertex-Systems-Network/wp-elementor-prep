@@ -8,9 +8,9 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 
 ## Live development status
 
-> **Progress policy:** this README is updated after every meaningful verified development batch with canonical issue/PR state, module-wise progress, blockers and next actions.
+> **Progress policy:** after every meaningful verified work batch, this README must be synchronized with issue/PR state, module-wise progress, blockers and next actions.
 
-**Open PR/MR:** `1` — PR #41 runtime artifact preflight is the current work batch; it will return to `0` after merge/final status sync.
+**Open PR/MR:** `0`
 
 ### Module-wise progress
 
@@ -29,24 +29,25 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 
 ### Mandatory AI-native work order
 
-Every future work cycle must execute in this order:
+Every work cycle must execute in this order:
 
-1. **Issues first** — list all open issues, solve actionable ones, identify dependency/manual-runtime blockers, and never fabricate evidence to close a blocked issue.
+1. **Issues first** — list all open issues, solve actionable code/docs/test issues, identify dependency/manual-runtime blockers, and never fabricate evidence to close a blocked issue.
 2. **PR/MR second** — inspect all open Pull Requests / Merge Requests for CI, conflicts, mergeability and review feedback; fix and merge eligible work.
 3. **Development third** — only then begin the highest-priority unblocked roadmap work, using safe parallel workstreams where useful.
 4. **End-of-work sync** — run verification, update memory-bank files, and update this module-wise + overall progress before declaring the batch complete.
 
 Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISIONS.md` D-012.
 
-## Current issue / PR checkpoint — 2026-09-08
+## Latest verified checkpoint — 2026-09-08
 
-- ✅ issue-first sweep completed before this development batch.
-- ✅ open issues remain exactly #6, #7 and #8; no new actionable product/code defect issue was found.
-- ✅ issue #7 and #8 bodies were corrected so current P6 #494 / P7 #490 builds are explicitly **reference-only** for final closure.
-- ✅ open PR/MR count was `0` before development began.
-- 🟡 PR #41 is the current isolated main-side tooling branch and does not modify canonical P5/P6/P7 feature heads.
-- ✅ PR #41 first implementation head passed CI #517: README contract, typecheck, tests, build and local-import safety.
-- ✅ previous `main` checkpoint `f5463d2` passed CI #516 and Integration Readiness #14.
+- ✅ issue-first sweep confirmed open issues are exactly #6, #7 and #8; no new actionable product/code defect issue was found.
+- ✅ issue #7 and #8 tracker bodies explicitly mark current P6 #494 / P7 #490 artifacts as **reference-only** for final closure.
+- ✅ PR #41 added fail-closed runtime artifact preflight without modifying canonical P5/P6/P7 exact-build branches.
+- ✅ final PR #41 head `69fd91b` passed CI #522 and Integration Readiness #16 with no review/thread blockers.
+- ✅ PR #41 squash-merged to `main` at `4b4a3be`.
+- ✅ post-merge main CI #523 passed README status verification, typecheck, tests, build and local-import safety.
+- ✅ post-merge Integration Readiness #17 passed.
+- ✅ open PR/MR count returned to `0`.
 
 ## Phase status
 
@@ -76,7 +77,7 @@ Before importing an artifact into Figma or collecting closure evidence, run the 
 npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
 ```
 
-The preflight checks:
+It validates:
 
 - exact `BUILD_INFO.txt` source/workflow SHA, Actions run ID and run number;
 - required `code.js`, `ui.html`, manifest, packaged import helper and same-artifact verifier;
@@ -94,14 +95,14 @@ P7 #490 + final-closure  -> FAIL CLOSED
 P6/P7 + reference intent -> PASS with warning
 ```
 
-For reference-only inspection:
+Reference inspection:
 
 ```bash
 npm run runtime:preflight -- p6 /path/to/unpacked/figma-plugin-dist-494 --intent=reference
 npm run runtime:preflight -- p7 /path/to/unpacked/figma-plugin-dist-490 --intent=reference
 ```
 
-Use `--json` for machine-readable output. See `docs/RUNTIME_ARTIFACT_PREFLIGHT.md`.
+Use `--json` for machine-readable output. Full guide: `docs/RUNTIME_ARTIFACT_PREFLIGHT.md`.
 
 Preflight is operational safety tooling only. It cannot mint runtime proof and never replaces real imported-Figma observation or the verifier shipped inside the exact artifact.
 
@@ -118,12 +119,12 @@ Then import `dist-local/manifest.json`. `LOCAL_IMPORT_INFO.txt` proves compiled 
 
 ## Integration readiness
 
-Non-mutating `scripts/check-integration-readiness.mjs` + `.github/workflows/integration-readiness.yml` simulate the dependency edges without changing exact-build feature refs.
+Non-mutating `scripts/check-integration-readiness.mjs` + `.github/workflows/integration-readiness.yml` simulate dependency edges without changing exact-build feature refs.
 
-- ✅ P5 → current `main`: runtime source is compatible; known conflict is documentation-only. Isolated integration proof PR #37 became mergeable and CI #500 passed.
+- ✅ P5 → current `main`: runtime source is compatible; known integration difference is documentation-side. Isolated integration proof PR #37 became mergeable and CI #500 passed.
 - ⚠️ P6 → latest P5: real shared-code conflicts across build/provenance/runtime/P5 proof surfaces.
 - ⚠️ P7 → latest P5: real shared-code conflicts across build/runtime/P5 proof/acceptance surfaces.
-- ⚠️ do **not** collect final P6/P7 closure evidence on a build that must later be rebased.
+- ⚠️ final P6/P7 closure evidence must not be collected on builds that require later rebasing.
 
 Run locally after fetching canonical refs:
 
@@ -133,37 +134,40 @@ npm run integration:readiness
 
 ## Planned closure / merge order
 
-1. **P5 / #6**
-   - preflight `figma-plugin-dist-488` and require PASS;
-   - rebind manifest locally if needed using the packaged helper;
-   - import the exact build into Figma Desktop;
-   - run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
-   - prove rendered-pixel forced rejection, restore, finalize and `0` leftovers;
-   - export `p5-evidence.json`;
-   - run the same artifact's `verify-p5-evidence.mjs` and require exit `0`;
-   - apply the CI-proven docs integration resolution, merge P5 and close #6.
+### 1. P5 / issue #6
 
-2. **P6 / #7 — only after P5 lands**
-   - resolve/rebase P6 against merged P5/main;
-   - run full CI and create a fresh exact-build artifact;
-   - update the runtime artifact registry to that fresh build;
-   - establish its exact-build P5 prerequisite;
-   - run image-bearing positive page-flow clone calibration with Full P3 PASS and unchanged image-anchor count;
-   - run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS;
-   - require combined P6 closure PASS and same-artifact verifier exit `0`;
-   - merge and close #7.
+- preflight `figma-plugin-dist-488` and require PASS;
+- rebind manifest locally if needed using the packaged helper;
+- import the exact build into Figma Desktop;
+- run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
+- prove rendered-pixel forced rejection, restore, finalize and `0` leftovers;
+- export `p5-evidence.json`;
+- run the same artifact's `verify-p5-evidence.mjs` and require exit `0`;
+- apply the CI-proven documentation integration resolution, merge P5 and close #6.
 
-3. **P7 / #8 — only after P5 lands**
-   - resolve/rebase P7 against merged P5/main;
-   - run full CI and create a fresh exact-build artifact;
-   - update the runtime artifact registry to that fresh build;
-   - establish its exact-build P5 prerequisite;
-   - execute a realistic 60+ Frame batch with every item terminal and `maxConcurrentProcessors === 1`;
-   - request cancellation during a genuinely long active Full P3 operation and retain matching cooperative settlement evidence;
-   - require final closure PASS and same-artifact verifier exit `0`;
-   - merge and close #8.
+### 2. P6 / issue #7 — only after P5 lands
 
-Full operator checklist: `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md`.
+- resolve/rebase P6 against merged P5/main;
+- run full CI and create a fresh exact-build artifact;
+- update `config/runtime-artifacts.json` to the fresh build;
+- establish its exact-build P5 prerequisite;
+- run image-bearing positive page-flow clone calibration with Full P3 PASS and unchanged image-anchor count;
+- run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS;
+- require combined P6 closure PASS and same-artifact verifier exit `0`;
+- merge and close #7.
+
+### 3. P7 / issue #8 — only after P5 lands
+
+- resolve/rebase P7 against merged P5/main;
+- run full CI and create a fresh exact-build artifact;
+- update `config/runtime-artifacts.json` to the fresh build;
+- establish its exact-build P5 prerequisite;
+- execute a realistic 60+ Frame batch with every item terminal and `maxConcurrentProcessors === 1`;
+- request cancellation during a genuinely long active Full P3 operation and retain matching cooperative settlement evidence;
+- require final closure PASS and same-artifact verifier exit `0`;
+- merge and close #8.
+
+Full real-runtime operator checklist: `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md`.
 
 ## Independent closure verification
 
