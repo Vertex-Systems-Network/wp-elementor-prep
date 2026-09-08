@@ -8,6 +8,7 @@ import {
   createP7P5BuildProofReceipt,
   isValidP7P5BuildProofReceipt,
   P7_P5_BUILD_PROOF_STORAGE_KEY,
+  readP7P5BuildProofEvidence,
   readP7P5BuildProofState,
   syncP7P5BuildProofReceipt,
 } from '../src/plugin/p7-p5-build-proof';
@@ -45,6 +46,7 @@ describe('P7 build-bound P5 runtime proof', () => {
   it('accepts only the exact core proof timestamp and exact traceable build', async () => {
     const storage = new MemoryStorage();
     const proof = createP5RuntimeProof('2026-09-08T12:00:00.000Z');
+    const receipt = createP7P5BuildProofReceipt(proof, BUILD_A);
     storage.values.set(P5_RUNTIME_PROOF_STORAGE_KEY, proof);
     expect(await syncP7P5BuildProofReceipt(storage, proof, BUILD_A)).toBe(true);
 
@@ -52,9 +54,20 @@ describe('P7 build-bound P5 runtime proof', () => {
       valid: true,
       passedAt: proof.passedAt,
     });
+    await expect(readP7P5BuildProofEvidence(storage, BUILD_A)).resolves.toEqual({
+      state: { valid: true, passedAt: proof.passedAt },
+      coreProof: proof,
+      receipt,
+    });
+
     await expect(readP7P5BuildProofState(storage, BUILD_B)).resolves.toEqual({
       valid: false,
       passedAt: null,
+    });
+    await expect(readP7P5BuildProofEvidence(storage, BUILD_B)).resolves.toEqual({
+      state: { valid: false, passedAt: null },
+      coreProof: proof,
+      receipt,
     });
   });
 
@@ -85,8 +98,18 @@ describe('P7 build-bound P5 runtime proof', () => {
     storage.values.set(P5_RUNTIME_PROOF_STORAGE_KEY, proof);
     storage.values.set(P7_P5_BUILD_PROOF_STORAGE_KEY, { schemaVersion: 1, gateVersion: proof.gateVersion });
     await expect(readP7P5BuildProofState(storage, BUILD_A)).resolves.toEqual({ valid: false, passedAt: null });
+    await expect(readP7P5BuildProofEvidence(storage, BUILD_A)).resolves.toEqual({
+      state: { valid: false, passedAt: null },
+      coreProof: proof,
+      receipt: null,
+    });
 
     storage.failReads = true;
     await expect(readP7P5BuildProofState(storage, BUILD_A)).resolves.toEqual({ valid: false, passedAt: null });
+    await expect(readP7P5BuildProofEvidence(storage, BUILD_A)).resolves.toEqual({
+      state: { valid: false, passedAt: null },
+      coreProof: null,
+      receipt: null,
+    });
   });
 });
