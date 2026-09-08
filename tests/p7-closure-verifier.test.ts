@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { createP5RuntimeProof } from '../src/core/p5-runtime-gate';
 import type { P7RuntimeEvidenceSnapshot } from '../src/core/batch-runtime-evidence';
 import { verifyP7ClosureExportBundle } from '../src/plugin/p7-closure-verifier';
+import { createP7P5BuildProofReceipt } from '../src/plugin/p7-p5-build-proof';
 import { assessP7RuntimeAcceptance } from '../src/plugin/p7-runtime-acceptance';
 import type { P7StoredRuntimeAcceptanceAssessment } from '../src/plugin/p7-runtime-acceptance-loader';
 import {
@@ -73,14 +75,21 @@ function passingBundle() {
     ...assessP7RuntimeAcceptance(evidence),
     evidence,
   };
-  const p5Prerequisite = { valid: true, passedAt: '2026-09-08T09:59:59.000Z' };
-  const closure = assessP7RuntimeClosure(runtimeAssessment, p5Prerequisite, BUILD);
-  return buildP7RuntimeClosureExportBundle(closure, runtimeAssessment, BUILD);
+  const coreProof = createP5RuntimeProof('2026-09-08T09:59:59.000Z');
+  const p5Evidence = {
+    state: { valid: true, passedAt: coreProof.passedAt },
+    coreProof,
+    receipt: createP7P5BuildProofReceipt(coreProof, BUILD),
+  };
+  const closure = assessP7RuntimeClosure(runtimeAssessment, p5Evidence.state, BUILD);
+  return buildP7RuntimeClosureExportBundle(closure, runtimeAssessment, BUILD, p5Evidence);
 }
 
 describe('P7 offline closure verifier', () => {
   it('accepts canonical closure evidence from the exact verifier build', () => {
-    expect(verifyP7ClosureExportBundle(passingBundle(), BUILD)).toEqual({
+    const bundle = passingBundle();
+    expect(bundle.schemaVersion).toBe(2);
+    expect(verifyP7ClosureExportBundle(bundle, BUILD)).toEqual({
       accepted: true,
       failures: [],
     });
@@ -109,7 +118,19 @@ describe('P7 offline closure verifier', () => {
     expect(result.failures).toContain('P7 stress max processor concurrency is 2, expected exactly 1.');
   });
 
-  it('fails closed for malformed input', () => {
+  it('rejects a forged P5 prerequisite boolean when proof/receipt do not support it', () => {
+    const bundle = passingBundle();
+    bundle.p5Prerequisite.receipt = {
+      ...bundle.p5Prerequisite.receipt!,
+      proofPassedAt: '2026-09-08T09:00:00.000Z',
+    };
+    const result = verifyP7ClosureExportBundle(bundle, BUILD);
+    expect(result.accepted).toBe(false);
+    expect(result.failures).toContain('Stored P7 P5-prerequisite verdict does not match canonical proof/receipt recomputation.');
+    expect(result.failures).toContain('P5 deterministic runtime proof is not bound to this exact P7 plugin build.');
+  });
+
+  it('fails closed for legacy v1 or malformed input', () => {
     expect(verifyP7ClosureExportBundle({ schemaVersion: 1 }, BUILD)).toEqual({
       accepted: false,
       failures: ['Malformed or unsupported P7 closure export bundle.'],
