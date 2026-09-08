@@ -1,0 +1,90 @@
+import type { P7RuntimeEvidenceInspection } from './p7-runtime-evidence-inspector';
+
+function escapeHtml(value: unknown): string {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function metric(label: string, value: unknown): string {
+  return `<div class="metric"><strong>${escapeHtml(value ?? '—')}</strong><span>${escapeHtml(label)}</span></div>`;
+}
+
+export function buildP7RuntimeEvidenceViewerHtml(inspection: P7RuntimeEvidenceInspection): string {
+  const content = inspection.status === 'EMPTY'
+    ? `<div class="empty">${escapeHtml(inspection.message)}</div>`
+    : `
+      <div class="hero">
+        <div class="title">Persisted P7 Runtime Evidence</div>
+        <div class="meta">Run key: ${escapeHtml(inspection.summary.runKey)}</div>
+        <div class="meta">Started: ${escapeHtml(inspection.summary.startedAt)}</div>
+      </div>
+      <div class="grid">
+        ${metric('final status', inspection.summary.finalStatus)}
+        ${metric('finished / total', `${inspection.summary.finalFinishedCount ?? '—'} / ${inspection.summary.finalTotalCount ?? '—'}`)}
+        ${metric('elapsed ms', inspection.summary.elapsedMs)}
+        ${metric('processor ms', inspection.summary.totalProcessorMs)}
+        ${metric('recorded attempts', inspection.summary.recordedAttemptCount)}
+        ${metric('max concurrency', inspection.summary.maxConcurrentProcessors)}
+        ${metric('checkpoint pauses', inspection.summary.checkpointPauseCount)}
+        ${metric('checkpoint resolutions', inspection.summary.checkpointResolutionCount)}
+        ${metric('memory samples', inspection.summary.memorySampleCount)}
+        ${metric('sample-point heap peak', inspection.summary.observedPeakUsedJsHeapBytesAtSamplePoints)}
+      </div>
+      <div class="meta">Memory sampling: ${inspection.summary.memorySamplingSupported ? 'supported' : 'unsupported in this runtime'}</div>
+      <div class="meta">Cancellation: ${inspection.summary.cancellationRequested ? (inspection.summary.cancellationSettled ? 'requested + settled' : 'requested, not yet settled') : 'not requested'}</div>
+      ${inspection.warnings.length ? `<div class="warnings">${inspection.warnings.map((warning) => `<div>${escapeHtml(warning)}</div>`).join('')}</div>` : ''}
+      <button id="copy">Copy bounded JSON</button>
+      <pre id="json">${escapeHtml(inspection.json)}</pre>`;
+
+  return `<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+:root { font-family: Inter, system-ui, sans-serif; color-scheme: light dark; }
+body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(--figma-color-text); }
+.hero, .empty { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+.title { font-size: 14px; font-weight: 700; }
+.meta { font-size: 10px; opacity: .75; margin-top: 5px; word-break: break-word; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.metric { border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 8px; }
+.metric strong { display: block; font-size: 12px; }
+.metric span { display: block; font-size: 9px; opacity: .7; margin-top: 3px; }
+.warnings { border: 1px solid var(--figma-color-border-danger, var(--figma-color-border)); border-radius: 6px; padding: 8px; margin: 12px 0; font-size: 10px; line-height: 1.4; }
+button { width: 100%; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; margin: 12px 0 8px; }
+pre { margin: 0; padding: 10px; border: 1px solid var(--figma-color-border); border-radius: 6px; white-space: pre-wrap; word-break: break-word; font-size: 9px; max-height: 360px; overflow: auto; }
+</style>
+</head>
+<body>
+${content}
+<script>
+const copy = document.getElementById('copy');
+if (copy) copy.addEventListener('click', async () => {
+  const json = document.getElementById('json');
+  if (!json) return;
+  const text = json.textContent || '';
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const area = document.createElement('textarea');
+      area.value = text;
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand('copy');
+      area.remove();
+    }
+    copy.textContent = 'Copied';
+  } catch {
+    copy.textContent = 'Copy failed — select JSON below';
+  }
+});
+</script>
+</body>
+</html>`;
+}
