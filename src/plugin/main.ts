@@ -27,6 +27,8 @@ import {
   finalizeP7BatchCheckpointAfterReaudit,
   restoreP7BatchCheckpoint,
 } from './p7-checkpoint-resolution';
+import { inspectLatestP7RuntimeEvidence } from './p7-runtime-evidence-inspector';
+import { buildP7RuntimeEvidenceViewerHtml } from './p7-runtime-evidence-viewer';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import {
   finalizeLastSafeFix,
@@ -98,6 +100,26 @@ async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string |
   const stored = await figma.clientStorage.getAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
   if (!isValidP5RuntimeProof(stored)) return { valid: false, passedAt: null };
   return { valid: true, passedAt: stored.passedAt };
+}
+
+async function runP7RuntimeEvidenceInspector(): Promise<void> {
+  const inspection = await inspectLatestP7RuntimeEvidence(figma.clientStorage);
+  figma.showUI(buildP7RuntimeEvidenceViewerHtml(inspection), {
+    width: 520,
+    height: 700,
+    themeColors: true,
+  });
+
+  if (inspection.status === 'EMPTY') {
+    figma.notify('No valid persisted P7 runtime evidence is available yet.');
+    return;
+  }
+
+  const finished = inspection.summary.finalFinishedCount ?? '—';
+  const total = inspection.summary.finalTotalCount ?? '—';
+  figma.notify(
+    `P7 runtime evidence loaded: ${finished}/${total} finished · max concurrency ${inspection.summary.maxConcurrentProcessors}.`,
+  );
 }
 
 function postBatchState(state: BatchQueueState, note: string | null = null): void {
@@ -600,6 +622,8 @@ figma.on('selectionchange', () => {
 
 if (figma.command === 'p5-runtime-self-test') {
   void runRuntimeSelfTest();
+} else if (figma.command === 'p7-runtime-evidence') {
+  void runP7RuntimeEvidenceInspector();
 } else if (figma.currentPage.selection.length === 1) {
   runAudit();
 }
