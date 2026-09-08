@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { existsSync, lstatSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, lstatSync, readFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -75,7 +75,15 @@ export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final
   }
 
   const dir = resolve(artifactDir);
-  if (!existsSync(dir) || !statSync(dir).isDirectory()) {
+  if (!existsSync(dir)) {
+    return { ok: false, track: normalizedTrack, intent, artifactDir: dir, errors: [`Artifact directory does not exist: ${dir}`], warnings };
+  }
+
+  const artifactDirMetadata = lstatSync(dir);
+  if (artifactDirMetadata.isSymbolicLink()) {
+    return { ok: false, track: normalizedTrack, intent, artifactDir: dir, errors: [`Artifact directory must not be a symbolic link: ${dir}`], warnings };
+  }
+  if (!artifactDirMetadata.isDirectory()) {
     return { ok: false, track: normalizedTrack, intent, artifactDir: dir, errors: [`Artifact directory does not exist: ${dir}`], warnings };
   }
 

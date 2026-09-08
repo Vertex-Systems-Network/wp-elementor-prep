@@ -191,4 +191,18 @@ describe('runtime artifact preflight', () => {
       expect(result.immutableFileIntegrity.matched).toBe(4);
     });
   });
+
+  it.skipIf(process.platform === 'win32')('fails closed when the supplied artifact directory is a symbolic link', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const linkPath = `${dir}-link`;
+      try {
+        symlinkSync(dir, linkPath, 'dir');
+        const result = inspectRuntimeArtifact('p5', linkPath, { intent: 'final-closure', registry });
+        expect(result.ok).toBe(false);
+        expect(result.errors.join('\n')).toContain('Artifact directory must not be a symbolic link');
+      } finally {
+        rmSync(linkPath, { force: true });
+      }
+    });
+  });
 });
