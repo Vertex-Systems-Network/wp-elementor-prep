@@ -18,7 +18,7 @@ export function p5SafeFixResultToBatchOutcome(result: SafeFixRuntimeResult): Bat
   }
 
   if (result.transaction.state === 'COMMITTED') {
-    if (!result.transaction.commit) {
+    if (!result.transaction.commit?.committedNodeId) {
       return {
         status: 'FAILED',
         error: 'P5 reported COMMITTED without commit evidence; refusing to create a batch checkpoint state.',
@@ -26,6 +26,7 @@ export function p5SafeFixResultToBatchOutcome(result: SafeFixRuntimeResult): Bat
     }
     return {
       status: 'CHECKPOINT_PENDING',
+      committedFrameId: result.transaction.commit.committedNodeId,
       reason: 'P5 Safe Fix committed and is awaiting explicit restore/finalize checkpoint resolution.',
     };
   }
