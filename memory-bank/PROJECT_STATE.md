@@ -25,20 +25,20 @@ See `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and decision D-012.
 
 ## Repository status
 
-- `main` checkpoint before the current preflight PR: `f5463d2`.
-- Main CI #516: PASS.
-- Main Integration Readiness #14: PASS.
-- Latest issue-first sweep: only #6, #7, #8 remain open.
+- Current merged `main` feature/tooling checkpoint: `4b4a3be` from PR #41.
+- Main CI #523: PASS.
+- Main Integration Readiness #17: PASS.
+- README status verification, typecheck, tests, build and local-import safety all passed post-merge.
+- Open PR/MR: `0`.
+- Open issues: #6, #7, #8 only.
 - Issue #7 and #8 bodies are synchronized to the proven post-P5 fresh-build closure order.
-- Open PR/MR at the start of this cycle: `0`.
-- Current development PR: #41 (`feat/runtime-artifact-preflight-20260908`).
-- PR #41 CI #517: PASS on the first implementation head before final status-doc synchronization.
+- No new actionable product/code defect issue was found during the latest issue-first sweep.
 
 ## Module state
 
 | Module | Status | Progress | Blocker / Next |
 |---|---|---:|---|
-| AI-native governance/tooling | COMPLETE | 100% | Keep Issues → PR/MR → development lifecycle and status sync enforced |
+| AI-native governance/tooling | COMPLETE | 100% | Keep Issues → PR/MR → development lifecycle, status and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | COMPLETE | 100% | None |
 | P5 Safe Fix | RUNTIME ACCEPTANCE | 92% | Run registered #488 preflight, real imported-Figma proof, same-artifact verifier, then merge #6 |
 | P6 advanced structures | INTEGRATION BLOCKED | 80% | P5 merge → resolve conflicts → fresh exact-build artifact → runtime closure #7 |
@@ -77,7 +77,7 @@ See `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and decision D-012.
 
 ## Runtime artifact preflight
 
-The main-side preflight introduced by PR #41 validates an unpacked runtime artifact before Figma acceptance:
+PR #41 merged the main-side preflight that validates an unpacked runtime artifact before Figma acceptance:
 
 - exact `BUILD_INFO.txt` source/workflow SHA, run ID and run number,
 - required compiled files, manifest, packaged import helper and same-artifact verifier,
