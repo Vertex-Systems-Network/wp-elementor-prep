@@ -3,6 +3,7 @@ import { createBatchRunKey } from '../core/batch-run-key';
 import type { P7RuntimeBuildIdentity } from '../core/batch-runtime-evidence';
 import type { BatchFrameProcessor } from '../core/batch-runner';
 import { P5_RUNTIME_GATE_VERSION } from '../core/p5-runtime-gate';
+import { P7_BUILD_IDENTITY } from './build-info';
 import { isTraceableP7BuildIdentity } from './p7-build-identity';
 import { runP7BatchRuntime, type P7BatchRuntimeOptions } from './p7-batch-runtime';
 import {
@@ -27,8 +28,11 @@ export interface P7BatchMetadataStore {
 }
 
 export interface P7BatchPreparationOptions {
-  /** Production supplies its compiled identity. Generic tests/integrations may omit it. */
-  buildIdentity?: P7RuntimeBuildIdentity;
+  /**
+   * Production defaults to the compiled identity. `null` is an explicit generic/test mode that
+   * preserves legacy metadata hydration without claiming build traceability.
+   */
+  buildIdentity?: P7RuntimeBuildIdentity | null;
 }
 
 export function createP7RunKey(pluginVersion: string, buildSourceSha?: string | null): string {
@@ -52,7 +56,7 @@ export async function prepareP7BatchQueue(
   metadata: P7BatchMetadataStore,
   options: P7BatchPreparationOptions = {},
 ): Promise<BatchQueueState> {
-  const build = options.buildIdentity;
+  const build = options.buildIdentity === undefined ? P7_BUILD_IDENTITY : options.buildIdentity;
   const traceableBuild = isTraceableP7BuildIdentity(build);
   const runKey = createP7RunKey(pluginVersion, traceableBuild ? build.sourceSha : null);
 
