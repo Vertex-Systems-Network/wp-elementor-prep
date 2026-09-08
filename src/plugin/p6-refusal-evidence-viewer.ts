@@ -21,7 +21,7 @@ export function buildP6PreservationRefusalEvidenceViewerHtml(
   const preserveCount = evidence.plans.filter((plan) => plan.decision === 'PRESERVE').length;
   const reviewCount = evidence.plans.filter((plan) => plan.decision === 'REVIEW').length;
   const json = JSON.stringify({
-    schemaVersion: 1,
+    schemaVersion: 2,
     acceptance,
     evidence,
   }, null, 2);
@@ -46,7 +46,7 @@ body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(-
 .meta { font-size: 10px; opacity: .75; margin-top: 5px; word-break: break-word; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
 .metric, .plan { border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 8px; }
-.metric strong, .plan strong { display: block; font-size: 12px; }
+.metric strong, .plan strong { display: block; font-size: 12px; word-break: break-word; }
 .metric span, .plan div { display: block; font-size: 9px; opacity: .75; margin-top: 3px; }
 .plans { display: grid; gap: 6px; margin: 12px 0; }
 .warnings { border: 1px solid var(--figma-color-border-danger, var(--figma-color-border)); border-radius: 6px; padding: 8px; margin: 12px 0; font-size: 10px; line-height: 1.4; }
@@ -63,10 +63,15 @@ pre { margin: 0; padding: 10px; border: 1px solid var(--figma-color-border); bor
   <div class="title">P6 Preservation Refusal Evidence</div>
   <div class="meta">Frame: ${escapeHtml(evidence.frame.name)} · ${escapeHtml(evidence.frame.id)}</div>
   <div class="meta">Captured: ${escapeHtml(evidence.capturedAt)}</div>
+  <div class="meta">Build: ${escapeHtml(evidence.build.sourceSha)} · Actions #${escapeHtml(evidence.build.runNumber)} · run ${escapeHtml(evidence.build.runId)}</div>
+  <div class="meta">P5 proof build: ${escapeHtml(evidence.p5RuntimeProofBuild?.sourceSha ?? 'not available')}</div>
   <div class="meta">Reason: ${escapeHtml(evidence.reason ?? '—')}</div>
 </div>
 <div class="grid">
   ${metric('outcome', evidence.outcomeStatus)}
+  ${metric('build source SHA', evidence.build.sourceSha)}
+  ${metric('Actions run #', evidence.build.runNumber)}
+  ${metric('Actions run ID', evidence.build.runId)}
   ${metric('total plans', evidence.totalPlanCount)}
   ${metric('PRESERVE plans', preserveCount)}
   ${metric('REVIEW plans', reviewCount)}
