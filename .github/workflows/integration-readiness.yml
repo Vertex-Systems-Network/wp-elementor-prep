@@ -1,0 +1,47 @@
+name: Integration Readiness
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - '.github/workflows/integration-readiness.yml'
+      - 'scripts/check-integration-readiness.mjs'
+      - 'docs/INTEGRATION_READINESS.md'
+      - 'README.md'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integration-readiness-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch canonical integration refs
+        run: |
+          git fetch --no-tags origin \
+            '+refs/heads/main:refs/remotes/origin/main' \
+            '+refs/heads/feat/p5-safe-recipes:refs/remotes/origin/feat/p5-safe-recipes' \
+            '+refs/heads/feat/p6-advanced-structures:refs/remotes/origin/feat/p6-advanced-structures' \
+            '+refs/heads/feat/p7-batch-queue-core:refs/remotes/origin/feat/p7-batch-queue-core'
+
+      - name: Report integration readiness
+        run: node scripts/check-integration-readiness.mjs --github-summary
+
+      - name: Emit machine-readable report
+        run: node scripts/check-integration-readiness.mjs --json > integration-readiness.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: integration-readiness-${{ github.run_number }}
+          path: integration-readiness.json
+          if-no-files-found: error
