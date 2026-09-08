@@ -9,6 +9,9 @@ import {
 } from './p7-runtime-evidence-session';
 
 export interface P7RuntimeEvidenceInspectionSummary {
+  buildSourceSha: string | null;
+  buildRunId: string | null;
+  buildRunNumber: string | null;
   runKey: string;
   startedAt: string;
   elapsedMs: number;
@@ -65,6 +68,9 @@ export type P7RuntimeEvidenceInspection =
 
 function buildWarnings(snapshot: P7RuntimeEvidenceSnapshot): string[] {
   const warnings: string[] = [];
+  if (!snapshot.build) {
+    warnings.push('Runtime evidence has no CI build provenance and cannot satisfy acceptance.');
+  }
   if (snapshot.maxConcurrentProcessors > 1) {
     warnings.push(`Unexpected processor concurrency observed: ${snapshot.maxConcurrentProcessors}.`);
   }
@@ -88,6 +94,9 @@ export function summarizeP7RuntimeEvidence(
   snapshot: P7RuntimeEvidenceSnapshot,
 ): P7RuntimeEvidenceInspectionSummary {
   return {
+    buildSourceSha: snapshot.build?.sourceSha ?? null,
+    buildRunId: snapshot.build?.runId ?? null,
+    buildRunNumber: snapshot.build?.runNumber ?? null,
     runKey: snapshot.runKey,
     startedAt: snapshot.startedAt,
     elapsedMs: snapshot.elapsedMs,
@@ -135,9 +144,6 @@ export function formatP7RuntimeAcceptanceJson(
 /**
  * Read-only inspector for the latest bounded P7 runtime-evidence snapshot plus the two retained
  * acceptance scenarios. It never creates, mutates or clears runtime state.
- *
- * Unknown/corrupt persisted evidence is represented as missing rather than guessed. The latest JSON
- * export remains backward-compatible, while acceptanceJson contains both retained closure scenarios.
  */
 export async function inspectLatestP7RuntimeEvidence(
   storage: P7EvidenceKeyValueStorage,
