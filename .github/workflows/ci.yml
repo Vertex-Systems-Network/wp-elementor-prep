@@ -43,16 +43,45 @@ jobs:
           console.log(`Verified Figma bundle + compiled provenance: ${manifest.main}, ${manifest.ui}, ${process.env.EXPECTED_DEV_COMMAND}`);
           NODE
       - name: Verify offline P5 evidence CLI
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          cat > /tmp/p5-pass.json <<'EOF'
-          {"schemaVersion":2,"capturedAt":"2026-09-08T12:00:01.000Z","pluginVersion":"0.1.0-alpha.1","runtimeGateVersion":"p5-runtime-proof-v3","build":{"sourceSha":"0123456789abcdef0123456789abcdef01234567","runId":"34219111842","runNumber":"309"},"runtimeProofPassedAt":"2026-09-08T12:00:00.000Z","acceptance":{"accepted":true,"failures":[]},"calibration":{"schemaVersion":1,"passed":true,"forcedReject":{"state":"REJECTED","validationRejected":true,"pixelEvidenceReturned":true,"changedPixelPct":1.5,"candidateDeleted":true,"originalUntouched":true},"passRestore":{"state":"COMMITTED","validationPassed":true,"pixelEvidenceReturned":true,"changedPixelPct":0,"committed":true,"restored":true,"checkpointCleared":true},"passFinalize":{"state":"COMMITTED","validationPassed":true,"pixelEvidenceReturned":true,"changedPixelPct":0,"committed":true,"finalized":true,"candidateRetained":true,"originalDiscarded":true,"checkpointCleared":true},"leftovers":0}}
-          EOF
+          node --input-type=module <<'NODE' > /tmp/p5-pass.json
+          const bundle = {
+            schemaVersion: 2,
+            capturedAt: '2026-09-08T12:00:01.000Z',
+            pluginVersion: '0.1.0-alpha.1',
+            runtimeGateVersion: 'p5-runtime-proof-v3',
+            build: { sourceSha: process.env.SOURCE_SHA, runId: process.env.GITHUB_RUN_ID, runNumber: process.env.GITHUB_RUN_NUMBER },
+            runtimeProofPassedAt: '2026-09-08T12:00:00.000Z',
+            acceptance: { accepted: true, failures: [] },
+            calibration: {
+              schemaVersion: 1,
+              passed: true,
+              forcedReject: { state: 'REJECTED', validationRejected: true, pixelEvidenceReturned: true, changedPixelPct: 1.5, candidateDeleted: true, originalUntouched: true },
+              passRestore: { state: 'COMMITTED', validationPassed: true, pixelEvidenceReturned: true, changedPixelPct: 0, committed: true, restored: true, checkpointCleared: true },
+              passFinalize: { state: 'COMMITTED', validationPassed: true, pixelEvidenceReturned: true, changedPixelPct: 0, committed: true, finalized: true, candidateRetained: true, originalDiscarded: true, checkpointCleared: true },
+              leftovers: 0,
+            },
+          };
+          console.log(JSON.stringify(bundle));
+          NODE
           node dist/verify-p5-evidence.mjs < /tmp/p5-pass.json | grep '"accepted": true'
           if printf '{}\n' | node dist/verify-p5-evidence.mjs > /tmp/p5-invalid.out 2>&1; then
             echo 'offline verifier unexpectedly accepted malformed evidence'
             exit 1
           fi
           grep '"accepted": false' /tmp/p5-invalid.out
+          node --input-type=module <<'NODE' > /tmp/p5-old-build.json
+          const bundle = JSON.parse(await (await import('node:fs/promises')).readFile('/tmp/p5-pass.json', 'utf8'));
+          bundle.build.sourceSha = '0123456789abcdef0123456789abcdef01234567';
+          console.log(JSON.stringify(bundle));
+          NODE
+          if node dist/verify-p5-evidence.mjs < /tmp/p5-old-build.json > /tmp/p5-old-build.out 2>&1; then
+            echo 'offline verifier unexpectedly accepted different-build evidence'
+            exit 1
+          fi
+          grep 'different build than this offline verifier artifact' /tmp/p5-old-build.out
       - name: Verify deterministic local-import preparation
         run: |
           npm run prepare:figma-import -- 123456789012345678 dist dist-local
@@ -85,12 +114,12 @@ jobs:
           After unpacking this artifact, run:
             node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
           Then import dist-local/manifest.json in Figma. The helper preserves compiled code/UI byte-for-byte and changes only manifest.json id.
-          Exported P5 closure JSON can be independently checked with:
+          Exported P5 closure JSON from this exact artifact can be independently checked with:
             node verify-p5-evidence.mjs < p5-evidence.json
-          Do not treat CI success, manifest preparation, or offline verification as imported-Figma runtime proof.
+          The verifier rejects evidence captured by another artifact build. Do not treat CI success, manifest preparation, or offline verification as imported-Figma runtime proof.
           EOF
           else
-            printf 'This build used configured Figma plugin id %s. Exported P5 evidence can be checked with node verify-p5-evidence.mjs < p5-evidence.json. CI success is not imported-Figma runtime proof.\n' "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
+            printf 'This build used configured Figma plugin id %s. Exported P5 evidence from this exact artifact can be checked with node verify-p5-evidence.mjs < p5-evidence.json. CI success is not imported-Figma runtime proof.\n' "$FIGMA_PLUGIN_ID" > dist/IMPORT_NOTES.txt
           fi
       - name: Upload Figma development build
         uses: actions/upload-artifact@v4
