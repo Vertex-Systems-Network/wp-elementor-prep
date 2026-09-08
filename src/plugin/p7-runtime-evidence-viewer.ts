@@ -27,6 +27,8 @@ function acceptanceBlock(inspection: P7RuntimeEvidenceInspection): string {
         ${metric('active-frame cancellation evidence', acceptance.cancellationEvidenceAvailable ? 'available' : 'missing')}
       </div>
       ${failures}
+      <button id="copy-acceptance">Copy acceptance bundle</button>
+      <pre id="acceptance-json">${escapeHtml(inspection.acceptanceJson)}</pre>
     </div>`;
 }
 
@@ -56,8 +58,8 @@ export function buildP7RuntimeEvidenceViewerHtml(inspection: P7RuntimeEvidenceIn
       <div class="meta">Memory sampling: ${inspection.summary.memorySamplingSupported ? 'supported' : 'unsupported in this runtime'}</div>
       <div class="meta">Cancellation: ${inspection.summary.cancellationRequested ? (inspection.summary.cancellationSettled ? 'requested + settled' : 'requested, not yet settled') : 'not requested'}</div>
       ${inspection.warnings.length ? `<div class="warnings">${inspection.warnings.map((warning) => `<div>${escapeHtml(warning)}</div>`).join('')}</div>` : ''}
-      <button id="copy">Copy bounded JSON</button>
-      <pre id="json">${escapeHtml(inspection.json)}</pre>`;
+      <button id="copy-latest">Copy latest bounded JSON</button>
+      <pre id="latest-json">${escapeHtml(inspection.json)}</pre>`;
 
   return `<!doctype html>
 <html>
@@ -78,16 +80,17 @@ body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(-
 .warnings { border: 1px solid var(--figma-color-border-danger, var(--figma-color-border)); border-radius: 6px; padding: 8px; margin: 12px 0; font-size: 10px; line-height: 1.4; }
 button { width: 100%; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; margin: 12px 0 8px; }
 pre { margin: 0; padding: 10px; border: 1px solid var(--figma-color-border); border-radius: 6px; white-space: pre-wrap; word-break: break-word; font-size: 9px; max-height: 360px; overflow: auto; }
+#acceptance-json { max-height: 240px; }
 </style>
 </head>
 <body>
 ${content}
 <script>
-const copy = document.getElementById('copy');
-if (copy) copy.addEventListener('click', async () => {
-  const json = document.getElementById('json');
-  if (!json) return;
-  const text = json.textContent || '';
+async function copyText(buttonId, textId) {
+  const button = document.getElementById(buttonId);
+  const node = document.getElementById(textId);
+  if (!button || !node) return;
+  const text = node.textContent || '';
   try {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(text);
@@ -99,11 +102,15 @@ if (copy) copy.addEventListener('click', async () => {
       document.execCommand('copy');
       area.remove();
     }
-    copy.textContent = 'Copied';
+    button.textContent = 'Copied';
   } catch {
-    copy.textContent = 'Copy failed — select JSON below';
+    button.textContent = 'Copy failed — select JSON below';
   }
-});
+}
+const acceptanceCopy = document.getElementById('copy-acceptance');
+if (acceptanceCopy) acceptanceCopy.addEventListener('click', () => copyText('copy-acceptance', 'acceptance-json'));
+const latestCopy = document.getElementById('copy-latest');
+if (latestCopy) latestCopy.addEventListener('click', () => copyText('copy-latest', 'latest-json'));
 </script>
 </body>
 </html>`;
