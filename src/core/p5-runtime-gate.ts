@@ -1,6 +1,6 @@
 // Bump this whenever a material P5 mutation/validation/runtime-safety change requires the
 // imported development plugin to prove the compiled path again before mutation can unlock.
-export const P5_RUNTIME_GATE_VERSION = 'p5-runtime-proof-v2';
+export const P5_RUNTIME_GATE_VERSION = 'p5-runtime-proof-v3';
 export const P5_RUNTIME_PROOF_STORAGE_KEY = 'pella-elementor-prep:p5-runtime-proof';
 
 export interface P5RuntimeProof {
