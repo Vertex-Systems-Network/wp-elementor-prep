@@ -6,7 +6,6 @@ import {
 } from '../core/batch-queue';
 import { detectPatterns } from '../core/classification';
 import {
-  createP5RuntimeProof,
   isValidP5RuntimeProof,
   P5_RUNTIME_PROOF_STORAGE_KEY,
 } from '../core/p5-runtime-gate';
@@ -30,6 +29,13 @@ import {
 import { inspectLatestP7RuntimeEvidence } from './p7-runtime-evidence-inspector';
 import { buildP7RuntimeEvidenceViewerHtml } from './p7-runtime-evidence-viewer';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
+import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
+import { buildP5RuntimeEvidenceBundle } from './p5-runtime-evidence';
+import {
+  loadLatestP5RuntimeEvidence,
+  persistP5RuntimeEvidenceBestEffort,
+} from './p5-runtime-evidence-storage';
+import { buildP5RuntimeEvidenceViewerHtml } from './p5-runtime-evidence-viewer';
 import {
   finalizeLastSafeFix,
   hasPendingSafeFixCheckpoint,
@@ -100,6 +106,19 @@ async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string |
   const stored = await figma.clientStorage.getAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
   if (!isValidP5RuntimeProof(stored)) return { valid: false, passedAt: null };
   return { valid: true, passedAt: stored.passedAt };
+}
+
+async function runP5RuntimeEvidenceViewer(): Promise<void> {
+  const evidence = await loadLatestP5RuntimeEvidence(figma.clientStorage);
+  if (!evidence) {
+    figma.notify('No valid persisted P5 runtime acceptance evidence is available in this P7 build.');
+    return;
+  }
+  figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+    width: 520,
+    height: 700,
+    themeColors: true,
+  });
 }
 
 async function runP7RuntimeEvidenceInspector(): Promise<void> {
@@ -227,21 +246,39 @@ async function runRuntimeSelfTest(): Promise<void> {
   figma.ui.postMessage({ type: 'runtime-calibration-started' });
   try {
     const result = await runP5RuntimeCalibration(validateFullP3);
-
-    if (result.passed) {
-      await figma.clientStorage.setAsync(P5_RUNTIME_PROOF_STORAGE_KEY, createP5RuntimeProof());
-    } else {
-      await figma.clientStorage.deleteAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
-    }
-
+    const acceptance = await updateP5RuntimeProofFromCalibration(figma.clientStorage, result);
     const proof = await runtimeProofState();
+    const evidence = buildP5RuntimeEvidenceBundle({
+      pluginVersion: PLUGIN_VERSION,
+      result,
+      runtimeProofPassedAt: proof.passedAt,
+    });
+    const evidencePersisted = await persistP5RuntimeEvidenceBestEffort(figma.clientStorage, evidence);
+
     figma.ui.postMessage({
       type: 'runtime-calibration-result',
       result,
+      acceptance,
+      evidence,
+      evidencePersisted,
       mutationGateUnlocked: proof.valid,
       runtimeProofPassedAt: proof.passedAt,
     });
-    figma.notify(result.passed ? 'P5 compiled runtime self-test passed. Safe Fix gate unlocked.' : 'P5 compiled runtime self-test failed.');
+
+    figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+      width: 520,
+      height: 700,
+      themeColors: true,
+    });
+
+    if (acceptance.accepted && proof.valid) {
+      figma.notify(evidencePersisted
+        ? 'P5 compiled runtime acceptance passed. Evidence saved; P7 prerequisite gate unlocked.'
+        : 'P5 compiled runtime acceptance passed. Evidence storage failed, but P7 prerequisite gate is unlocked.');
+    } else {
+      const detail = acceptance.failures[0] ? ` ${acceptance.failures[0]}` : '';
+      figma.notify(`P5 compiled runtime acceptance failed; P7 remains locked.${detail}`);
+    }
   } catch (error) {
     await figma.clientStorage.deleteAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
     const message = error instanceof Error ? error.message : String(error);
@@ -403,7 +440,7 @@ async function runP7BatchStart(): Promise<void> {
     hasPendingSafeFixCheckpoint(),
   ]);
   if (!proof.valid) {
-    postError('P7 batch mutation is locked until Runtime self-test passes for this plugin build.', 'batch-error');
+    postError('P7 batch mutation is locked until deterministic P5 runtime acceptance passes for this plugin build.', 'batch-error');
     return;
   }
   if (pendingCheckpoint) {
@@ -622,6 +659,8 @@ figma.on('selectionchange', () => {
 
 if (figma.command === 'p5-runtime-self-test') {
   void runRuntimeSelfTest();
+} else if (figma.command === 'p5-runtime-evidence') {
+  void runP5RuntimeEvidenceViewer();
 } else if (figma.command === 'p7-runtime-evidence') {
   void runP7RuntimeEvidenceInspector();
 } else if (figma.currentPage.selection.length === 1) {
