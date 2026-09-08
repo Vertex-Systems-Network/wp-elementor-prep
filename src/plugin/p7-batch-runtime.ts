@@ -21,7 +21,7 @@ export interface P7BatchRuntimeOptions extends Omit<BatchRunnerOptions, 'shouldP
 /**
  * P7 runtime composition layer. The caller supplies one canonical single-frame processor; P7 owns
  * scheduling and inter-frame checkpoint policy only. Optional evidence recording is observational:
- * it wraps the processor and state callback but never authorizes, rejects or changes a mutation.
+ * it wraps processor/state/cancellation observation but never authorizes, rejects or changes a mutation.
  */
 export async function runP7BatchRuntime(
   initialState: BatchQueueState,
@@ -33,10 +33,19 @@ export async function runP7BatchRuntime(
     additionalPauseReason,
     evidenceRecorder,
     onState,
+    shouldCancel,
     ...runnerOptions
   } = options;
   let lastState = initialState;
   evidenceRecorder?.beginSegment(initialState);
+
+  const observedShouldCancel = shouldCancel
+    ? () => {
+      const requested = shouldCancel();
+      if (requested) evidenceRecorder?.markCancellationRequested(lastState);
+      return requested;
+    }
+    : undefined;
 
   try {
     const state = await runBatchQueue(
@@ -44,6 +53,7 @@ export async function runP7BatchRuntime(
       evidenceRecorder ? evidenceRecorder.wrapProcessor(processFrame) : processFrame,
       {
         ...runnerOptions,
+        ...(observedShouldCancel ? { shouldCancel: observedShouldCancel } : {}),
         onState: (nextState) => {
           lastState = nextState;
           evidenceRecorder?.observeState(nextState);
