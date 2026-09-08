@@ -38,11 +38,20 @@ export async function runP7BatchRuntime(
   } = options;
   let lastState = initialState;
   let lastProcessorFrameId: string | null = null;
+  let justSettledProcessor = false;
   evidenceRecorder?.beginSegment(initialState);
 
   const observedProcessor: BatchFrameProcessor = async (item) => {
     lastProcessorFrameId = item.frameId;
-    return processFrame(item);
+    justSettledProcessor = false;
+    try {
+      return await processFrame(item);
+    } finally {
+      // The batch runner's next cancellation poll happens synchronously after it settles this
+      // processor outcome. That single poll is the only place where the just-finished Frame can be
+      // truthfully attributed as active when the external cancel flag changed during the await.
+      justSettledProcessor = true;
+    }
   };
   const instrumentedProcessor = evidenceRecorder
     ? evidenceRecorder.wrapProcessor(observedProcessor)
@@ -53,14 +62,14 @@ export async function runP7BatchRuntime(
       const requested = shouldCancel();
       if (requested) {
         const runningFrameId = lastState.items.find((item) => item.status === 'RUNNING')?.frameId;
-        // Cancellation is intentionally polled by the scheduler only after the async processor has
-        // settled. If the pre-frame poll was false and this post-frame poll is true, the request
-        // arrived while the just-settled processor was active; retain that identity as evidence.
         evidenceRecorder?.markCancellationRequested(
           lastState,
-          runningFrameId ?? lastProcessorFrameId,
+          runningFrameId ?? (justSettledProcessor ? lastProcessorFrameId : null),
         );
       }
+      // Whether true or false, after the immediate post-processor poll the next poll belongs to an
+      // inter-frame phase and must not inherit the previous Frame as "active" evidence.
+      if (justSettledProcessor) justSettledProcessor = false;
       return requested;
     }
     : undefined;
