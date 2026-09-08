@@ -31,7 +31,7 @@ body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(-
 .meta { font-size: 10px; opacity: .75; margin-top: 5px; word-break: break-word; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
 .metric { border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 8px; }
-.metric strong { display: block; font-size: 12px; }
+.metric strong { display: block; font-size: 12px; word-break: break-word; }
 .metric span { display: block; font-size: 9px; opacity: .7; margin-top: 3px; }
 .failures { border: 1px solid var(--figma-color-border-danger, var(--figma-color-border)); border-radius: 6px; padding: 8px; margin: 12px 0; font-size: 10px; line-height: 1.4; }
 button { width: 100%; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; margin: 12px 0 8px; }
@@ -47,6 +47,9 @@ pre { margin: 0; padding: 10px; border: 1px solid var(--figma-color-border); bor
   <div class="meta">Proof minted: ${escapeHtml(evidence.runtimeProofPassedAt ?? 'no')}</div>
 </div>
 <div class="grid">
+  ${metric('build source SHA', evidence.build.sourceSha)}
+  ${metric('Actions run #', evidence.build.runNumber)}
+  ${metric('Actions run ID', evidence.build.runId)}
   ${metric('overall self-test', result.passed ? 'PASS' : 'FAIL')}
   ${metric('leftovers', result.leftovers)}
   ${metric('forced reject', result.forcedReject.validationRejected ? 'REJECTED' : 'NOT REJECTED')}
