@@ -18,10 +18,14 @@ jobs:
       - run: npm install
       - run: npm run typecheck
       - run: npm test
-      - run: npm run build
+      - name: Build Figma development plugin
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run build
       - name: Verify Figma development bundle
         env:
           EXPECTED_DEV_COMMAND: p6-page-flow-calibration
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           node --input-type=module <<'NODE'
           import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -34,14 +38,22 @@ jobs:
           if (!Array.isArray(manifest.menu) || !manifest.menu.some((item) => item.command === process.env.EXPECTED_DEV_COMMAND)) {
             throw new Error(`missing expected developer command: ${process.env.EXPECTED_DEV_COMMAND}`);
           }
-          console.log(`Verified Figma bundle: ${manifest.main}, ${manifest.ui}, ${process.env.EXPECTED_DEV_COMMAND}`);
+          const code = readFileSync('dist/code.js', 'utf8');
+          for (const [label, value] of [
+            ['source sha', process.env.SOURCE_SHA],
+            ['Actions run id', process.env.GITHUB_RUN_ID],
+            ['Actions run number', process.env.GITHUB_RUN_NUMBER],
+          ]) {
+            if (!value || !code.includes(value)) throw new Error(`compiled plugin missing ${label}: ${value ?? '<missing>'}`);
+          }
+          console.log(`Verified Figma bundle + compiled provenance: ${manifest.main}, ${manifest.ui}, ${process.env.EXPECTED_DEV_COMMAND}`);
           NODE
       - name: Write Figma build provenance
         env:
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          printf 'source_sha=%s\nworkflow_sha=%s\nhead_ref=%s\nbase_ref=%s\nrun_id=%s\nfigma_plugin_id=%s\n' \
-            "$SOURCE_SHA" "$GITHUB_SHA" "$GITHUB_HEAD_REF" "$GITHUB_BASE_REF" "$GITHUB_RUN_ID" "$FIGMA_PLUGIN_ID" \
+          printf 'source_sha=%s\nworkflow_sha=%s\nhead_ref=%s\nbase_ref=%s\nrun_id=%s\nrun_number=%s\nfigma_plugin_id=%s\n' \
+            "$SOURCE_SHA" "$GITHUB_SHA" "$GITHUB_HEAD_REF" "$GITHUB_BASE_REF" "$GITHUB_RUN_ID" "$GITHUB_RUN_NUMBER" "$FIGMA_PLUGIN_ID" \
             > dist/BUILD_INFO.txt
           if [ "$FIGMA_PLUGIN_ID" = "000000000000000000" ]; then
             cat > dist/IMPORT_NOTES.txt <<'EOF'
