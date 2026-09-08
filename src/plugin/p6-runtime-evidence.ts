@@ -48,8 +48,8 @@ export interface P6RuntimeEvidenceBundle {
   pluginVersion: string;
   build: P5RuntimeBuildIdentity;
   p5RuntimeGateVersion: string;
-  /** Null when the imported build has no valid P5 runtime proof; never fabricate a timestamp. */
   p5RuntimeProofPassedAt: string | null;
+  p5RuntimeProofBuild: P5RuntimeBuildIdentity | null;
   frame: { id: string; name: string };
   outcomeStatus: P6DeveloperCalibrationOutcome['status'];
   reason: string | null;
@@ -95,14 +95,11 @@ function summarizeCalibration(result: AdvancedCalibrationResult): P6RuntimeEvide
   };
 }
 
-/**
- * Produces a compact, serializable evidence record for a real imported-plugin P6 calibration run.
- * It intentionally excludes AuditNode trees, PNG bytes and candidate node objects.
- */
 export function buildP6RuntimeEvidenceBundle(input: {
   pluginVersion: string;
   build: P5RuntimeBuildIdentity;
   p5RuntimeProofPassedAt: string | null;
+  p5RuntimeProofBuild: P5RuntimeBuildIdentity | null;
   frame: Pick<FrameNode, 'id' | 'name'>;
   outcome: P6DeveloperCalibrationOutcome;
   capturedAt?: string;
@@ -118,6 +115,7 @@ export function buildP6RuntimeEvidenceBundle(input: {
     build: { ...input.build },
     p5RuntimeGateVersion: P5_RUNTIME_GATE_VERSION,
     p5RuntimeProofPassedAt: input.p5RuntimeProofPassedAt,
+    p5RuntimeProofBuild: input.p5RuntimeProofBuild ? { ...input.p5RuntimeProofBuild } : null,
     frame: { id: input.frame.id, name: input.frame.name },
     outcomeStatus: outcome.status,
     reason,
