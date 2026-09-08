@@ -1,6 +1,8 @@
 import {
   isTraceableP5RuntimeBuildIdentity,
   P5_RUNTIME_GATE_VERSION,
+  sameP5RuntimeBuildIdentity,
+  type P5RuntimeBuildIdentity,
 } from '../core/p5-runtime-gate';
 import { assessP5RuntimeAcceptance } from './p5-runtime-acceptance';
 import { isP5RuntimeEvidenceBundle } from './p5-runtime-evidence-storage';
@@ -20,9 +22,13 @@ function validIsoTimestamp(value: string): boolean {
 
 /**
  * Re-verifies exported P5 closure evidence without trusting the stored acceptance verdict.
+ * When expectedBuild is supplied, evidence must also match the exact packaged CI artifact.
  * This is pure/read-only and cannot mint proof or mutate Figma state.
  */
-export function verifyP5RuntimeEvidence(value: unknown): P5RuntimeEvidenceVerification {
+export function verifyP5RuntimeEvidence(
+  value: unknown,
+  expectedBuild?: P5RuntimeBuildIdentity,
+): P5RuntimeEvidenceVerification {
   const failures: string[] = [];
 
   if (!isP5RuntimeEvidenceBundle(value)) {
@@ -34,6 +40,13 @@ export function verifyP5RuntimeEvidence(value: unknown): P5RuntimeEvidenceVerifi
   }
   if (!isTraceableP5RuntimeBuildIdentity(value.build)) {
     failures.push('Evidence build provenance is not a traceable CI artifact.');
+  }
+  if (expectedBuild !== undefined) {
+    if (!isTraceableP5RuntimeBuildIdentity(expectedBuild)) {
+      failures.push('Offline verifier artifact is not bound to a traceable CI build.');
+    } else if (!sameP5RuntimeBuildIdentity(value.build, expectedBuild)) {
+      failures.push('Evidence was captured by a different build than this offline verifier artifact.');
+    }
   }
   if (!validIsoTimestamp(value.capturedAt)) failures.push('Evidence capturedAt is not a valid timestamp.');
   if (!value.pluginVersion) failures.push('Evidence pluginVersion is empty.');
