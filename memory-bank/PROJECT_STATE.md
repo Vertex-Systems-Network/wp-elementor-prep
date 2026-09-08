@@ -25,14 +25,17 @@ See `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and decision D-012.
 
 ## Repository status
 
-- Pre-batch main checkpoint: `659efc6`.
-- Main CI #534: PASS.
-- Main Integration Readiness #26: PASS.
-- Latest issue-first sweep: only #6, #7, #8 remain open.
-- Open PR/MR count was `0` before development.
-- Current development PR: #43 (`feat/runtime-closure-intake-20260909`).
-- PR #43 first implementation head `07bc91e`: CI #535 PASS.
-- Canonical P5/P6/P7 feature heads were not modified.
+- Current merged feature/tooling checkpoint: `7d9f22b` from PR #43.
+- PR #43 final head `2ea96d2` passed CI #540 and Integration Readiness #30 with no review/thread blockers.
+- PR #43 squash-merged to `main` at `7d9f22b`.
+- Post-merge main CI #541: PASS.
+- Post-merge Integration Readiness #31: PASS.
+- README status verification, typecheck, tests, build and local-import safety all passed post-merge.
+- Open PR/MR: `0` after PR #43 merge.
+- Open issues: #6, #7, #8 only.
+- Issue #6 now routes final evidence through hash-pinned `runtime:closure-intake` after real Figma observation.
+- Issue #7 and #8 remain synchronized to the proven post-P5 fresh-build closure order.
+- Canonical P5/P6/P7 feature heads were not modified by the tooling batch.
 
 ## Module state
 
@@ -103,7 +106,7 @@ Expected safety behavior:
 
 ## Runtime closure intake
 
-PR #43 adds a generic main-side closure intake command:
+PR #43 merged the generic main-side closure intake command:
 
 ```bash
 npm run runtime:closure-intake -- <p5|p6|p7> <artifact-dir> <evidence-json>
