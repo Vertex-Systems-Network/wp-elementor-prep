@@ -44,6 +44,9 @@ export function buildP7RuntimeEvidenceViewerHtml(inspection: P7RuntimeEvidenceIn
         <div class="meta">Started: ${escapeHtml(inspection.summary.startedAt)}</div>
       </div>
       <div class="grid">
+        ${metric('build source SHA', inspection.summary.buildSourceSha)}
+        ${metric('Actions run #', inspection.summary.buildRunNumber)}
+        ${metric('Actions run id', inspection.summary.buildRunId)}
         ${metric('final status', inspection.summary.finalStatus)}
         ${metric('finished / total', `${inspection.summary.finalFinishedCount ?? '—'} / ${inspection.summary.finalTotalCount ?? '—'}`)}
         ${metric('elapsed ms', inspection.summary.elapsedMs)}
@@ -75,7 +78,7 @@ body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(-
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
 .acceptance-grid { margin-top: 10px; margin-bottom: 0; }
 .metric { border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 8px; }
-.metric strong { display: block; font-size: 12px; }
+.metric strong { display: block; font-size: 12px; word-break: break-all; }
 .metric span { display: block; font-size: 9px; opacity: .7; margin-top: 3px; }
 .warnings { border: 1px solid var(--figma-color-border-danger, var(--figma-color-border)); border-radius: 6px; padding: 8px; margin: 12px 0; font-size: 10px; line-height: 1.4; }
 button { width: 100%; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; margin: 12px 0 8px; }
