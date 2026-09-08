@@ -10,8 +10,8 @@ import {
 function evidence(): CommitEvidence {
   return {
     transactionId: 'tx-1',
-    originalNodeId: 'original',
-    committedNodeId: 'committed',
+    originalNodeId: 'committed',
+    committedNodeId: 'original',
     parentNodeId: 'parent',
     siblingIndex: 0,
     undoToken: 'undo',
@@ -20,11 +20,14 @@ function evidence(): CommitEvidence {
 
 function committedQueue() {
   let queue = createBatchQueue([
-    { frameId: '1', frameName: 'Home' },
+    { frameId: 'original', frameName: 'Home' },
     { frameId: '2', frameName: 'About' },
   ], 'run-1');
   queue = startNextBatchItem(queue);
-  return finishRunningBatchItem(queue, { status: 'CHECKPOINT_PENDING' });
+  return finishRunningBatchItem(queue, {
+    status: 'CHECKPOINT_PENDING',
+    committedFrameId: 'committed',
+  });
 }
 
 function actions(options: { restore?: CommitEvidence | null; finalize?: boolean } = {}) {
@@ -43,24 +46,26 @@ function actions(options: { restore?: CommitEvidence | null; finalize?: boolean 
 }
 
 describe('P7 real checkpoint action composition', () => {
-  it('marks durable success only after P5 finalize returns true', async () => {
+  it('marks durable success only after P5 finalize returns true and retains committed id', async () => {
     const fixture = actions();
     const result = await finalizeP7BatchCheckpoint(committedQueue(), fixture.adapter);
 
     expect(fixture.calls).toEqual(['finalize']);
     expect(result.resolution).toBe('FINALIZED');
     expect(result.proof).toEqual({ resolution: 'FINALIZED', finalized: true });
+    expect(result.state.items[0]?.frameId).toBe('committed');
     expect(result.state.items[0]?.status).toBe('SUCCEEDED');
     expect(result.state.status).toBe('IDLE');
   });
 
-  it('marks restored skip only after P5 restore returns evidence', async () => {
+  it('marks restored skip only after P5 restore returns evidence and restores original id', async () => {
     const fixture = actions();
     const result = await restoreP7BatchCheckpoint(committedQueue(), fixture.adapter);
 
     expect(fixture.calls).toEqual(['restore']);
     expect(result.resolution).toBe('RESTORED');
     expect(result.proof.resolution).toBe('RESTORED');
+    expect(result.state.items[0]?.frameId).toBe('original');
     expect(result.state.items[0]?.status).toBe('SKIPPED');
     expect(result.state.items[0]?.skipReason).toBe('RESTORED_CHECKPOINT');
   });
@@ -70,6 +75,7 @@ describe('P7 real checkpoint action composition', () => {
     const queue = committedQueue();
 
     await expect(finalizeP7BatchCheckpoint(queue, fixture.adapter)).rejects.toThrow('returned false');
+    expect(queue.items[0]?.frameId).toBe('committed');
     expect(queue.items[0]?.status).toBe('AWAITING_CHECKPOINT');
     expect(queue.status).toBe('PAUSED');
   });
@@ -78,7 +84,8 @@ describe('P7 real checkpoint action composition', () => {
     const fixture = actions({ restore: null });
     const queue = committedQueue();
 
-    await expect(restoreP7BatchCheckpoint(queue, fixture.adapter)).rejects.toThrow('returned no evidence');
+    await expect(restoreP7BatchCheckpoint(queue, fixture.adapter)).rejects.toThrow('returned no usable evidence');
+    expect(queue.items[0]?.frameId).toBe('committed');
     expect(queue.items[0]?.status).toBe('AWAITING_CHECKPOINT');
     expect(queue.status).toBe('PAUSED');
   });
