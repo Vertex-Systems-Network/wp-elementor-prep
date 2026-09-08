@@ -4,7 +4,11 @@ import {
   inspectLatestP7RuntimeEvidence,
   summarizeP7RuntimeEvidence,
 } from '../src/plugin/p7-runtime-evidence-inspector';
-import { P7_RUNTIME_EVIDENCE_STORAGE_KEY } from '../src/plugin/p7-runtime-evidence-session';
+import {
+  P7_RUNTIME_CANCELLATION_EVIDENCE_STORAGE_KEY,
+  P7_RUNTIME_EVIDENCE_STORAGE_KEY,
+  P7_RUNTIME_STRESS_EVIDENCE_STORAGE_KEY,
+} from '../src/plugin/p7-runtime-evidence-session';
 
 function snapshot(overrides: Partial<P7RuntimeEvidenceSnapshot> = {}): P7RuntimeEvidenceSnapshot {
   return {
@@ -54,11 +58,14 @@ function snapshot(overrides: Partial<P7RuntimeEvidenceSnapshot> = {}): P7Runtime
   };
 }
 
-function storageWith(value: unknown) {
+function storageWithLatest(value: unknown, extra: Record<string, unknown> = {}) {
+  const values = new Map<string, unknown>([
+    [P7_RUNTIME_EVIDENCE_STORAGE_KEY, value],
+    ...Object.entries(extra),
+  ]);
   return {
     async getAsync(key: string): Promise<unknown> {
-      expect(key).toBe(P7_RUNTIME_EVIDENCE_STORAGE_KEY);
-      return value;
+      return values.get(key);
     },
     async setAsync(): Promise<void> {
       throw new Error('inspector must never write');
@@ -66,22 +73,34 @@ function storageWith(value: unknown) {
   };
 }
 
+const missingAcceptance = {
+  accepted: false,
+  failures: [
+    'No retained 60+ Frame completed stress-run evidence is available.',
+    'No retained active-frame cancellation evidence is available.',
+  ],
+  stressEvidenceAvailable: false,
+  cancellationEvidenceAvailable: false,
+};
+
 describe('P7 runtime evidence inspector', () => {
   it('returns EMPTY for absent or corrupt persisted evidence without writing', async () => {
-    await expect(inspectLatestP7RuntimeEvidence(storageWith(undefined))).resolves.toEqual({
+    await expect(inspectLatestP7RuntimeEvidence(storageWithLatest(undefined))).resolves.toEqual({
       status: 'EMPTY',
       message: 'No valid persisted P7 runtime evidence is available for inspection.',
+      acceptance: missingAcceptance,
     });
 
-    await expect(inspectLatestP7RuntimeEvidence(storageWith({ schemaVersion: 999 }))).resolves.toEqual({
+    await expect(inspectLatestP7RuntimeEvidence(storageWithLatest({ schemaVersion: 999 }))).resolves.toEqual({
       status: 'EMPTY',
       message: 'No valid persisted P7 runtime evidence is available for inspection.',
+      acceptance: missingAcceptance,
     });
   });
 
   it('summarizes the bounded snapshot and emits reviewable pretty JSON', async () => {
     const persisted = snapshot();
-    const result = await inspectLatestP7RuntimeEvidence(storageWith(persisted));
+    const result = await inspectLatestP7RuntimeEvidence(storageWithLatest(persisted));
     expect(result.status).toBe('AVAILABLE');
     if (result.status !== 'AVAILABLE') throw new Error('expected available evidence');
 
@@ -106,9 +125,38 @@ describe('P7 runtime evidence inspector', () => {
       attemptEvidenceTruncated: false,
       checkpointEvidenceTruncated: false,
     });
+    expect(result.acceptance).toEqual(missingAcceptance);
     expect(result.warnings).toEqual([]);
     expect(JSON.parse(result.json)).toEqual(persisted);
     expect(result.json).toContain('\n  "runKey"');
+  });
+
+  it('reports retained acceptance PASS when both real-runtime scenario slots satisfy the contract', async () => {
+    const stress = snapshot({ finalFinishedCount: 60, finalTotalCount: 60 });
+    const cancellation = snapshot({
+      finalStatus: 'CANCELLED',
+      finalFinishedCount: 2,
+      finalTotalCount: 2,
+      cancellation: {
+        requestedAt: '2026-09-08T01:00:05.000Z',
+        activeFrameIdAtRequest: 'frame-1',
+        settledAt: '2026-09-08T01:00:12.000Z',
+        finalStatus: 'CANCELLED',
+      },
+    });
+
+    const result = await inspectLatestP7RuntimeEvidence(storageWithLatest(cancellation, {
+      [P7_RUNTIME_STRESS_EVIDENCE_STORAGE_KEY]: stress,
+      [P7_RUNTIME_CANCELLATION_EVIDENCE_STORAGE_KEY]: cancellation,
+    }));
+    expect(result.status).toBe('AVAILABLE');
+    if (result.status !== 'AVAILABLE') throw new Error('expected available evidence');
+    expect(result.acceptance).toEqual({
+      accepted: true,
+      failures: [],
+      stressEvidenceAvailable: true,
+      cancellationEvidenceAvailable: true,
+    });
   });
 
   it('surfaces concurrency, truncation and unsettled-cancellation anomalies without changing evidence', () => {
@@ -129,7 +177,7 @@ describe('P7 runtime evidence inspector', () => {
   });
 
   it('reports truthful unsupported-memory state rather than inventing a value', async () => {
-    const result = await inspectLatestP7RuntimeEvidence(storageWith(snapshot({
+    const result = await inspectLatestP7RuntimeEvidence(storageWithLatest(snapshot({
       memorySamplingSupported: false,
       memorySampleCount: 0,
       observedPeakUsedJsHeapBytesAtSamplePoints: null,
