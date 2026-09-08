@@ -1,4 +1,5 @@
 import type { BatchQueueState } from '../core/batch-queue';
+import type { P7RuntimeEvidenceRecorder } from '../core/batch-runtime-evidence';
 import {
   runBatchQueue,
   type BatchFrameProcessor,
@@ -13,11 +14,14 @@ export interface P7BatchRuntimeOptions extends Omit<BatchRunnerOptions, 'shouldP
   checkpointPauseReason?: () => string | null | Promise<string | null>;
   /** Optional additional safety gate composed after the P5 checkpoint gate. */
   additionalPauseReason?: BatchRunnerOptions['shouldPause'];
+  /** Optional observer only. It must not influence processor outcomes or scheduling decisions. */
+  evidenceRecorder?: P7RuntimeEvidenceRecorder;
 }
 
 /**
  * P7 runtime composition layer. The caller supplies one canonical single-frame processor; P7 owns
- * scheduling and inter-frame checkpoint policy only.
+ * scheduling and inter-frame checkpoint policy only. Optional evidence recording is observational:
+ * it wraps the processor and state callback but never authorizes, rejects or changes a mutation.
  */
 export async function runP7BatchRuntime(
   initialState: BatchQueueState,
@@ -25,16 +29,38 @@ export async function runP7BatchRuntime(
   options: P7BatchRuntimeOptions = {},
 ): Promise<BatchQueueState> {
   const checkpointPauseReason = options.checkpointPauseReason ?? p7CheckpointPauseReason;
-  const { additionalPauseReason, ...runnerOptions } = options;
+  const {
+    additionalPauseReason,
+    evidenceRecorder,
+    onState,
+    ...runnerOptions
+  } = options;
+  let lastState = initialState;
+  evidenceRecorder?.beginSegment(initialState);
 
-  return runBatchQueue(initialState, processFrame, {
-    ...runnerOptions,
-    shouldPause: async (state) => {
-      const checkpointReason = await checkpointPauseReason();
-      if (checkpointReason) return checkpointReason;
-      return await additionalPauseReason?.(state) ?? null;
-    },
-  });
+  try {
+    const state = await runBatchQueue(
+      initialState,
+      evidenceRecorder ? evidenceRecorder.wrapProcessor(processFrame) : processFrame,
+      {
+        ...runnerOptions,
+        onState: (nextState) => {
+          lastState = nextState;
+          evidenceRecorder?.observeState(nextState);
+          onState?.(nextState);
+        },
+        shouldPause: async (queueState) => {
+          const checkpointReason = await checkpointPauseReason();
+          if (checkpointReason) return checkpointReason;
+          return await additionalPauseReason?.(queueState) ?? null;
+        },
+      },
+    );
+    lastState = state;
+    return state;
+  } finally {
+    evidenceRecorder?.endSegment(lastState);
+  }
 }
 
 /**
