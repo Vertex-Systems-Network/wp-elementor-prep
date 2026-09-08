@@ -10,7 +10,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 
 > **Progress policy:** after every meaningful verified work batch, this README must be synchronized with issue/PR state, module-wise progress, blockers and next actions.
 
-**Open PR/MR:** `1` — PR #43 runtime closure intake is the current work batch.
+**Open PR/MR:** `0`
 
 ### Module-wise progress
 
@@ -41,15 +41,20 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 ## Latest verified checkpoint — 2026-09-09
 
 - ✅ issue-first sweep confirmed open issues remain exactly #6, #7 and #8; no new actionable product/code defect issue was found.
-- ✅ open PR/MR count was `0` before this development batch.
-- ✅ issue #6 remains real-Figma-runtime blocked; #7/#8 remain dependency-blocked on P5 merge.
+- ✅ open PR/MR count was `0` before the development batch and returned to `0` after merge.
+- ✅ issue #6 remains blocked only on real imported-Figma runtime evidence; #7/#8 remain dependency-blocked on P5 merge.
 - ✅ PR #42 previously upgraded the artifact registry/preflight with immutable SHA-256 file pins and merged to `main` at `92a4440`.
-- ✅ final pre-batch main checkpoint `659efc6` passed CI #534 and Integration Readiness #26.
-- ✅ PR #43 adds `runtime:closure-intake`, combining final-closure preflight, bounded valid-JSON evidence intake, evidence SHA-256 traceability and the exact hash-pinned same-artifact verifier.
+- ✅ pre-batch main checkpoint `659efc6` passed CI #534 and Integration Readiness #26.
+- ✅ PR #43 added `runtime:closure-intake`, combining final-closure preflight, bounded valid-JSON evidence intake, evidence SHA-256 traceability and the exact hash-pinned same-artifact verifier.
 - ✅ verifier execution is suppressed when artifact preflight, final-closure eligibility or evidence intake fails.
-- ✅ malformed/empty/non-file/oversized evidence fails before verifier execution.
-- ✅ verifier non-zero exit, execution error or signal fails closure intake.
-- ✅ PR #43 first implementation head `07bc91e` passed CI #535 including the new intake regression tests, existing tests, typecheck, build and local-import safety.
+- ✅ malformed/empty/non-file/oversized evidence fails before verifier execution; verifier non-zero exit, execution error or signal fails closure intake.
+- ✅ PR #43 first implementation head `07bc91e` passed CI #535.
+- ✅ final PR #43 head `2ea96d2` passed CI #540 and Integration Readiness #30 with no review/thread blockers.
+- ✅ PR #43 squash-merged to `main` at `7d9f22b`.
+- ✅ post-merge main CI #541 passed README status verification, typecheck, tests, build and local-import safety.
+- ✅ post-merge Integration Readiness #31 passed.
+- ✅ issue #6 tracker now requires `runtime:closure-intake` after the real Figma evidence export.
+- ✅ canonical P5/P6/P7 feature heads remained unchanged by the tooling batch.
 
 ## Phase status
 
