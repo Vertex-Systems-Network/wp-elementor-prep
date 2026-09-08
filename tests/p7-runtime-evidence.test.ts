@@ -125,6 +125,46 @@ describe('P7 runtime evidence recorder', () => {
     });
   });
 
+  it('proves cancel requested during an in-flight processor waits for that processor to settle', async () => {
+    const recorder = new P7RuntimeEvidenceRecorder('run-key');
+    const queue = createBatchQueue([
+      { frameId: '1', frameName: 'One' },
+      { frameId: '2', frameName: 'Two' },
+    ], 'run-key');
+    let cancelRequested = false;
+    let latestState = queue;
+    let release = () => undefined;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    let markStarted = () => undefined;
+    const started = new Promise<void>((resolve) => { markStarted = resolve; });
+
+    const running = runP7BatchRuntime(queue, async () => {
+      markStarted();
+      await gate;
+      return { status: 'SUCCEEDED' };
+    }, {
+      checkpointPauseReason: async () => null,
+      shouldCancel: () => cancelRequested,
+      evidenceRecorder: recorder,
+      onState: (state) => { latestState = state; },
+    });
+
+    await started;
+    expect(latestState.items.find((item) => item.frameId === '1')?.status).toBe('RUNNING');
+    cancelRequested = true;
+    recorder.markCancellationRequested(latestState);
+    release();
+
+    const result = await running;
+    const evidence = recorder.snapshot(result);
+    expect(result.status).toBe('CANCELLED');
+    expect(result.items[0]?.status).toBe('SUCCEEDED');
+    expect(result.items[1]?.status).toBe('CANCELLED');
+    expect(evidence.attempts).toHaveLength(1);
+    expect(evidence.cancellation?.activeFrameIdAtRequest).toBe('1');
+    expect(evidence.cancellation?.finalStatus).toBe('CANCELLED');
+  });
+
   it('bounds per-attempt evidence while retaining aggregate processor time', async () => {
     const clock = manualClock();
     const recorder = new P7RuntimeEvidenceRecorder('run-key', {
