@@ -13,10 +13,29 @@ function metric(label: string, value: unknown): string {
   return `<div class="metric"><strong>${escapeHtml(value ?? '—')}</strong><span>${escapeHtml(label)}</span></div>`;
 }
 
+function acceptanceBlock(inspection: P7RuntimeEvidenceInspection): string {
+  const acceptance = inspection.acceptance;
+  const failures = acceptance.failures.length
+    ? `<div class="warnings">${acceptance.failures.map((failure) => `<div>${escapeHtml(failure)}</div>`).join('')}</div>`
+    : '';
+
+  return `
+    <div class="acceptance">
+      <div class="title">Runtime acceptance: ${acceptance.accepted ? 'PASS' : 'FAIL'}</div>
+      <div class="grid acceptance-grid">
+        ${metric('60+ completed stress evidence', acceptance.stressEvidenceAvailable ? 'available' : 'missing')}
+        ${metric('active-frame cancellation evidence', acceptance.cancellationEvidenceAvailable ? 'available' : 'missing')}
+      </div>
+      ${failures}
+    </div>`;
+}
+
 export function buildP7RuntimeEvidenceViewerHtml(inspection: P7RuntimeEvidenceInspection): string {
+  const acceptance = acceptanceBlock(inspection);
   const content = inspection.status === 'EMPTY'
-    ? `<div class="empty">${escapeHtml(inspection.message)}</div>`
+    ? `${acceptance}<div class="empty">${escapeHtml(inspection.message)}</div>`
     : `
+      ${acceptance}
       <div class="hero">
         <div class="title">Persisted P7 Runtime Evidence</div>
         <div class="meta">Run key: ${escapeHtml(inspection.summary.runKey)}</div>
@@ -48,10 +67,11 @@ export function buildP7RuntimeEvidenceViewerHtml(inspection: P7RuntimeEvidenceIn
 <style>
 :root { font-family: Inter, system-ui, sans-serif; color-scheme: light dark; }
 body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(--figma-color-text); }
-.hero, .empty { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+.hero, .empty, .acceptance { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
 .title { font-size: 14px; font-weight: 700; }
 .meta { font-size: 10px; opacity: .75; margin-top: 5px; word-break: break-word; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.acceptance-grid { margin-top: 10px; margin-bottom: 0; }
 .metric { border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 8px; }
 .metric strong { display: block; font-size: 12px; }
 .metric span { display: block; font-size: 9px; opacity: .7; margin-top: 3px; }
