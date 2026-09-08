@@ -1,8 +1,4 @@
 import { detectPatterns } from '../core/classification';
-import {
-  isValidP5RuntimeProof,
-  P5_RUNTIME_PROOF_STORAGE_KEY,
-} from '../core/p5-runtime-gate';
 import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
 import type { SafeRecipePlan } from '../core/safe-recipe-types';
@@ -10,7 +6,9 @@ import { scanSceneNode } from '../core/scanner';
 import type { ValidationReport } from '../core/validation-types';
 import type { BatchFrameProcessor } from '../core/batch-runner';
 import type { BatchQueueItem } from '../core/batch-queue';
+import { P7_BUILD_IDENTITY } from './build-info';
 import { p5SafeFixResultToBatchOutcome } from './p7-p5-outcome';
+import { readP7P5BuildProofState } from './p7-p5-build-proof';
 import {
   hasPendingSafeFixCheckpoint,
   runSafeFixTransaction,
@@ -104,7 +102,7 @@ export function createP7SingleFrameProcessor(deps: P7SingleFrameProcessorDeps): 
     if (!await deps.runtimeProofValid()) {
       return {
         status: 'FAILED',
-        error: 'P7 mutation is locked until the current P5 compiled runtime self-test proof is valid.',
+        error: 'P7 mutation is locked until the deterministic P5 proof is bound to this exact compiled CI build.',
       };
     }
 
@@ -131,12 +129,12 @@ export function createP7SingleFrameProcessor(deps: P7SingleFrameProcessorDeps): 
   };
 }
 
-/** Production factory: same P5 proof, planner, transaction and Full P3 validator used by single-frame UI. */
+/** Production factory: same P5 planner/transaction/Full P3 path, plus exact-build proof binding. */
 export function createFigmaP7SingleFrameProcessor(validateFullP3: FullP3Validator): BatchFrameProcessor {
   return createP7SingleFrameProcessor({
-    runtimeProofValid: async () => isValidP5RuntimeProof(
-      await figma.clientStorage.getAsync(P5_RUNTIME_PROOF_STORAGE_KEY),
-    ),
+    runtimeProofValid: async () => (
+      await readP7P5BuildProofState(figma.clientStorage, P7_BUILD_IDENTITY)
+    ).valid,
     hasPendingCheckpoint: hasPendingSafeFixCheckpoint,
     resolveFrame: async (frameId) => {
       const node = await figma.getNodeByIdAsync(frameId);
