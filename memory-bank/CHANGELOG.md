@@ -14,6 +14,11 @@
 - Added regression tests proving verifier suppression on preflight/evidence failure and PASS/non-zero verifier behavior.
 - Added `docs/RUNTIME_CLOSURE_INTAKE.md`.
 - PR #43 first implementation head `07bc91e` passed CI #535.
+- Final PR #43 head `2ea96d2` passed CI #540 and Integration Readiness #30 with no review/thread blockers.
+- PR #43 squash-merged to `main` at `7d9f22b`.
+- Post-merge main CI #541 and Integration Readiness #31 both passed.
+- Open PR/MR count returned to `0` after merge.
+- Issue #6 tracker was synchronized to require `runtime:closure-intake` after real Figma evidence export.
 - Canonical P5/P6/P7 feature heads were not modified.
 
 ### Immutable runtime artifact hash pinning
