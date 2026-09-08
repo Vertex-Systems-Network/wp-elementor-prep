@@ -1,6 +1,5 @@
 import { detectPatterns } from '../core/classification';
 import {
-  createP5RuntimeProof,
   isValidP5RuntimeProof,
   P5_RUNTIME_PROOF_STORAGE_KEY,
 } from '../core/p5-runtime-gate';
@@ -12,6 +11,7 @@ import { buildAuditReport } from '../core/scoring';
 import type { PixelDiffMetrics } from '../core/validation-types';
 import { FullFrameValidator } from './full-frame-validator';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
+import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
 import {
   finalizeLastSafeFix,
   hasPendingSafeFixCheckpoint,
@@ -163,20 +163,22 @@ async function runRuntimeSelfTest(): Promise<void> {
       return validation.report;
     });
 
-    if (result.passed) {
-      await figma.clientStorage.setAsync(P5_RUNTIME_PROOF_STORAGE_KEY, createP5RuntimeProof());
-    } else {
-      await figma.clientStorage.deleteAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
-    }
-
+    const acceptance = await updateP5RuntimeProofFromCalibration(figma.clientStorage, result);
     const proof = await runtimeProofState();
     figma.ui.postMessage({
       type: 'runtime-calibration-result',
       result,
+      acceptance,
       mutationGateUnlocked: proof.valid,
       runtimeProofPassedAt: proof.passedAt,
     });
-    figma.notify(result.passed ? 'P5 compiled runtime self-test passed. Safe Fix gate unlocked.' : 'P5 compiled runtime self-test failed.');
+
+    if (acceptance.accepted && proof.valid) {
+      figma.notify('P5 compiled runtime acceptance passed. Safe Fix gate unlocked.');
+    } else {
+      const detail = acceptance.failures[0] ? ` ${acceptance.failures[0]}` : '';
+      figma.notify(`P5 compiled runtime acceptance failed; Safe Fix remains locked.${detail}`);
+    }
   } catch (error) {
     await figma.clientStorage.deleteAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
     const message = error instanceof Error ? error.message : String(error);
