@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inspectRuntimeClosureIntake } from '../scripts/runtime-closure-intake.mjs';
@@ -21,7 +21,6 @@ function makeFixture({ finalClosureEligible = true } = {}) {
   const root = mkdtempSync(join(tmpdir(), 'runtime-closure-intake-'));
   const artifactDir = join(root, 'artifact');
   const evidencePath = join(root, 'p5-evidence.json');
-  const { mkdirSync } = requireFs();
   mkdirSync(artifactDir);
 
   writeFileSync(join(artifactDir, 'BUILD_INFO.txt'), [
@@ -84,13 +83,6 @@ function makeFixture({ finalClosureEligible = true } = {}) {
   };
 
   return { root, artifactDir, evidencePath, registry };
-}
-
-function requireFs() {
-  return { mkdirSync: (path) => {
-    const { mkdirSync } = require('node:fs');
-    return mkdirSync(path);
-  } };
 }
 
 function withFixture(options, callback) {
