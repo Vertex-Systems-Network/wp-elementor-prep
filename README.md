@@ -19,7 +19,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 | P2 | Deterministic classification + semantic roles | ✅ Complete |
 | P3 | Geometry/content/image/rendered-pixel validator | ✅ Complete |
 | P4 | Candidate transaction + rollback/checkpoint | ✅ Complete |
-| P5 | Conservative high-confidence Safe Fix recipes | 🟡 Engineering + closure-evidence tooling complete; imported-Figma runtime acceptance pending (#6) |
+| P5 | Conservative high-confidence Safe Fix recipes | 🟡 Engineering + provenance-bound closure-evidence tooling complete; imported-Figma runtime acceptance pending (#6) |
 | P6 | Advanced structures + clone-only calibration | 🟡 Engineering/evidence tooling complete; real-Figma acceptance pending (#7) |
 | P7 | Sequential 60+ frame batch queue | 🟡 Engineering/evidence tooling complete; real-Figma stress/cancellation acceptance pending (#8) |
 | P8 | Optional Elementor exporter adapters | ⏸ Deferred / issue #9 closed as not planned for current phase |
@@ -28,11 +28,11 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 
 | Track | Branch | Last verified functional head | CI |
 |---|---|---|---|
-| P5 | `feat/p5-safe-recipes` | `a59485e` | ✅ #320 |
+| P5 | `feat/p5-safe-recipes` | `85c4783` | ✅ #353 |
 | P6 | `feat/p6-advanced-structures` | `a9a94f2` | ✅ #284 |
 | P7 | `feat/p7-batch-queue-core` | `3915774` | ✅ #309 |
 
-README/docs-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity pipeline was explicitly verified.
+README/docs-only synchronization commits may be newer than the functional heads above. The listed head is the latest code/test head whose full install -> typecheck -> test -> build -> Figma bundle-integrity/provenance pipeline was explicitly verified.
 
 ## Latest development batch — 2026-09-08
 
@@ -40,21 +40,30 @@ README/docs-only synchronization commits may be newer than the functional heads 
 - ✅ direct-push CI verifies canonical branch development without PR churn
 - ✅ P5 deterministic `p5-runtime-proof-v3` acceptance assessor verifies reject/restore/finalize/pixel/cleanup evidence independently
 - ✅ P5 proof minting is gated by that deterministic assessor; top-level `result.passed` alone cannot unlock mutation
-- ✅ P5 now builds a bounded runtime closure-evidence bundle containing the exact calibration result, recomputed acceptance, gate version and minted proof timestamp
+- ✅ P5 runtime proof is now bound to the exact compiled CI build using source SHA, GitHub Actions run ID and run number
+- ✅ a proof minted by another SHA/run is invalid even when the gate version matches; local/untraceable builds cannot mint a production-unlocking proof
+- ✅ P5 runtime evidence migrated to provenance schema v2 and contains the same exact source SHA/run identity
+- ✅ P5 evidence acceptance fails closed on local/untraceable build provenance and never retains a proof timestamp for rejected evidence
+- ✅ P5 evidence viewer visibly shows build source SHA, Actions run number and Actions run ID alongside PASS/FAIL and copyable bounded JSON
+- ✅ P5 CI injects provenance directly into compiled `dist/code.js` and verifies all three exact values before artifact upload
 - ✅ latest valid P5 closure evidence is persisted observationally in client storage; storage failure cannot change proof or transaction outcomes
-- ✅ P5 runtime self-test automatically opens a dedicated `P5 Compiled Runtime Acceptance` viewer with PASS/FAIL, exact reasons and copyable bounded JSON
-- ✅ `Developer: P5 Runtime Evidence` reopens the latest persisted evidence without rerunning the self-test
-- ✅ P5 persisted evidence loader strictly rejects malformed nested calibration data, invalid pixel values and contradictory accepted-without-proof payloads
+- ✅ `Developer: P5 Runtime Evidence` reopens the latest persisted provenance-bound evidence without rerunning the self-test
 - ✅ P6 positive clone-calibration acceptance viewer reports PASS/FAIL + exact reasons
 - ✅ P6 bounded preservation-refusal evidence captures complete `NO_CANDIDATE` decisions without AuditNode trees/PNG/candidate objects
 - ✅ P6 refusal acceptance requires explicit preservation-sensitive `PRESERVE` evidence and rejects hidden page-flow `CALIBRATE` candidates
 - ✅ P6 dedicated refusal viewer/export reports `Preservation refusal acceptance: PASS/FAIL`
 - ✅ P6 developer runtime automatically routes `NO_CANDIDATE` to refusal evidence and `COMPLETED/BLOCKED` to calibration evidence
-- ✅ P6 embedded P5 self-test uses the same deterministic proof-mint/revoke semantics as canonical P5
+- ✅ P6 embedded P5 self-test uses deterministic proof-mint/revoke semantics
 - ✅ P7 retains qualifying 60+ completed stress and active-frame cancellation evidence in separate bounded slots
 - ✅ P7 runtime inspector/viewer reports combined retained runtime Acceptance PASS/FAIL with exact failures
 - ✅ P7 exports one copyable acceptance bundle containing the assessment + retained stress snapshot + retained cancellation snapshot
-- ✅ latest verified functional CI green: P5 #320, P6 #284, P7 #309
+- ✅ latest verified functional CI green: P5 #353, P6 #284, P7 #309
+
+### Latest P5 development artifact
+
+- Artifact: `figma-plugin-dist-353`
+- Functional head: `85c47835367e81878680825255843995d40d7843`
+- Digest: `sha256:aa901b6833cae3d65e3fbb1ecc08e18284112582e351ac0a3ae13728437c8f1d`
 
 ## Remaining real-runtime acceptance
 
@@ -62,16 +71,18 @@ The remaining open issues are intentionally limited to evidence that GitHub CI c
 
 ### P5 — issue #6
 
-- [ ] import the canonical development artifact in Figma desktop
+- [ ] import the canonical CI-built P5 development artifact in Figma desktop
+- [ ] confirm the P5 viewer reports the same source SHA / Actions run identity as the imported artifact
 - [ ] run `Developer: P5 Runtime Self-Test`
 - [ ] require `P5 Compiled Runtime Acceptance: PASS`
 - [ ] verify rendered-pixel forced reject, commit -> restore and commit -> finalize paths
 - [ ] require checkpoint cleanup and `0` leftovers
-- [ ] confirm mutation unlocks only after deterministic acceptance passes
+- [ ] confirm mutation unlocks only after deterministic acceptance passes in that exact artifact
+- [ ] verify a stale proof from another artifact cannot unlock the current build
 - [ ] copy the bounded acceptance JSON and retain it as closure evidence
-- [ ] reopen it via `Developer: P5 Runtime Evidence` and confirm the persisted record remains valid
+- [ ] reopen it via `Developer: P5 Runtime Evidence` and confirm the persisted provenance-bound record remains valid
 
-Production Safe Fix mutation stays locked until this proof passes.
+Production Safe Fix mutation stays locked until this exact-build proof passes.
 
 ### P6 — issue #7
 
