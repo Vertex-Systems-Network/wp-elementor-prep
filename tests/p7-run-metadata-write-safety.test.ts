@@ -61,6 +61,36 @@ describe('P7 run metadata write safety', () => {
     expect(memory.writes).toBe(0);
   });
 
+  it('refuses to overwrite a present metadata payload from a newer schema', async () => {
+    const memory = new MemoryStorage();
+    const futurePayload = {
+      schemaVersion: 2,
+      entries: {
+        future: { runKey: 'future-run', completedAt: '2026-09-08T02:00:00.000Z' },
+      },
+      futureField: true,
+    };
+    memory.values.set(P7_BATCH_RUN_METADATA_STORAGE_KEY, futurePayload);
+    const storage = new P7RunMetadataStorage(memory);
+
+    const hydrated = await storage.hydrateInputs([{ frameId: 'frame-1', frameName: 'Frame' }]);
+    expect(hydrated[0]?.previousRunKey).toBeNull();
+
+    await expect(storage.recordSuccessfulState(successfulQueue())).rejects.toThrow('unsupported or malformed');
+    expect(memory.writes).toBe(0);
+    expect(memory.values.get(P7_BATCH_RUN_METADATA_STORAGE_KEY)).toEqual(futurePayload);
+  });
+
+  it('refuses to overwrite a malformed present metadata envelope', async () => {
+    const memory = new MemoryStorage();
+    memory.values.set(P7_BATCH_RUN_METADATA_STORAGE_KEY, 'legacy-or-corrupt-payload');
+    const storage = new P7RunMetadataStorage(memory);
+
+    await expect(storage.recordSuccessfulState(successfulQueue())).rejects.toThrow('malformed');
+    expect(memory.writes).toBe(0);
+    expect(memory.values.get(P7_BATCH_RUN_METADATA_STORAGE_KEY)).toBe('legacy-or-corrupt-payload');
+  });
+
   it('preserves the first completion timestamp for an already-recorded identical run key', async () => {
     const memory = new MemoryStorage();
     memory.values.set(P7_BATCH_RUN_METADATA_STORAGE_KEY, {
