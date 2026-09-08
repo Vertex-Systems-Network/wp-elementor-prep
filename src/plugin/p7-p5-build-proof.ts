@@ -19,8 +19,11 @@ export interface P7P5BuildProofReceipt {
   build: P7RuntimeBuildIdentity;
 }
 
-export interface P7P5BuildProofStorage {
+export interface P7P5BuildProofReadStorage {
   getAsync(key: string): Promise<unknown>;
+}
+
+export interface P7P5BuildProofStorage extends P7P5BuildProofReadStorage {
   setAsync(key: string, value: unknown): Promise<void>;
   deleteAsync(key: string): Promise<void>;
 }
@@ -84,7 +87,7 @@ export async function syncP7P5BuildProofReceipt(
 
 /** Read-side failures and stale/mismatched receipts fail closed. */
 export async function readP7P5BuildProofState(
-  storage: P7P5BuildProofStorage,
+  storage: P7P5BuildProofReadStorage,
   expectedBuild: P7RuntimeBuildIdentity,
 ): Promise<P7P5BuildProofState> {
   try {
