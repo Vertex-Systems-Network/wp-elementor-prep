@@ -15,8 +15,8 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 | Phase | Scope | Current status |
 |---|---|---|
 | P0–P4 | Core audit, validation, transaction/rollback | ✅ Complete |
-| P5 | Conservative Safe Fix recipes | 🟡 Engineering + exact-build closure evidence complete; imported-Figma acceptance pending (#6) |
-| P6 | Advanced clone-only calibration | 🟡 Engineering + exact-build closure tooling complete; real-Figma acceptance pending (#7) |
+| P5 | Conservative Safe Fix recipes | 🟡 Engineering + exact-build closure evidence + offline verifier complete; imported-Figma acceptance pending (#6) |
+| P6 | Advanced clone-only calibration | 🟡 Engineering + exact-build closure tooling + offline verifier complete; real-Figma acceptance pending (#7) |
 | P7 | Sequential 60+ Frame batch queue | 🟡 Engineering + exact-build closure tooling complete; real-Figma acceptance pending (#8) |
 | P8 | Optional exporter adapters | ⏸ Deferred |
 
@@ -24,19 +24,20 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 
 | Track | Head | CI | Artifact | Digest |
 |---|---|---|---|---|
-| P5 | `fe2ebb0` | ✅ #437 | `figma-plugin-dist-437` | `sha256:1a2e966a6c85a4c90ec11cefeaaf27b537685ac48a94facbef61437c41870fe0` |
-| P6 | `2e25e56` | ✅ #438 | `figma-plugin-dist-438` | `sha256:7d2dde12f9673f66036855136b19e7091df6df5c79cdf581eec4bee403ad199e` |
+| P5 | `a100df8` | ✅ #455 | `figma-plugin-dist-455` | `sha256:e246e854017e65cb938972f438d623a282e29965cbc3b0d4cb3e2a3c4ad474e7` |
+| P6 | `0c54c21` | ✅ #462 | `figma-plugin-dist-462` | `sha256:34e24a5be85b0fb12bd81f0a4272fc0e4b70fb1f17bb7b5be7fafacb0c04928a` |
 | P7 | `99394da` | ✅ #436 | `figma-plugin-dist-436` | `sha256:c5b0c7af271e61946318f1d7728afe10b06f564d79964dcdca7389ff5a4fe5f2` |
 
 ## Latest development batch — 2026-09-08
 
-- ✅ all three canonical artifacts now ship standalone `prepare-figma-import.mjs`
-- ✅ placeholder-ID artifacts can be prepared without manually editing `manifest.json`
-- ✅ helper writes to a separate `dist-local/` directory and changes only the manifest plugin ID
-- ✅ compiled `code.js` / `ui.html` are SHA-256 checked byte-for-byte unchanged
-- ✅ CI on P5/P6/P7 runs the import helper, validates the rebound ID and compiled-target hashes, then packages the helper inside the artifact
-- ✅ `IMPORT_NOTES.txt` contains the direct unpacked-artifact command
-- ✅ exact-build P5 proof/evidence, P6 closure and P7 fail-fast/closure gates remain unchanged and protected
+- ✅ P6 artifact now ships `verify-p6-closure.mjs`
+- ✅ exported P6 closure JSON is independently re-evaluated with the canonical positive + preservation-refusal closure assessor
+- ✅ verifier is bound to the exact packaged CI source SHA / run ID / run number
+- ✅ otherwise-valid closure evidence from another build is rejected
+- ✅ malformed or stored-verdict-tampered bundles fail closed
+- ✅ verifier is read-only and cannot mutate Figma or create acceptance evidence
+- ✅ CI #462 passed typecheck, tests, build, exact-artifact closure CLI smoke, local-import integrity and artifact upload
+- ✅ standalone `prepare-figma-import.mjs` remains packaged
 - ✅ 0 open PR/MRs
 
 ## Self-contained Figma import
@@ -47,34 +48,37 @@ If the artifact uses placeholder plugin ID `000000000000000000`, unpack it and r
 node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
 ```
 
-Then import `dist-local/manifest.json` in Figma.
+Then import `dist-local/manifest.json` in Figma. This is import preparation only; it is **not** runtime acceptance.
 
-`LOCAL_IMPORT_INFO.txt` records the original/prepared IDs, source build provenance and SHA-256 hashes proving compiled plugin code/UI were unchanged. This step is import preparation only; it is **not** runtime acceptance.
+## Offline P6 closure verification
 
-For a repository-local build, use:
+After collecting both real P6 scenarios and copying the `P6 Closure` viewer JSON, save it as `p6-closure.json` and run from the **same unpacked artifact**:
 
 ```bash
-npm run prepare:figma-import -- <your-figma-plugin-id>
+node verify-p6-closure.mjs < p6-closure.json
 ```
+
+Exit code `0` requires canonical P6 closure PASS and exact artifact-build identity. Offline verification reviews evidence only; it does not replace real imported-Figma execution.
 
 ## Remaining real-runtime gates
 
 ### P5 — #6
-- import `figma-plugin-dist-437`
+- import `figma-plugin-dist-455` or newer verified artifact
 - run `Developer: P5 Runtime Self-Test`
 - require exact-build `P5 Compiled Runtime Acceptance: PASS`
 - verify forced rendered-pixel reject, restore, finalize and zero leftovers
-- retain/reopen provenance-bound P5 evidence
+- independently verify exported P5 JSON with the same artifact
 
 ### P6 — #7
-- import `figma-plugin-dist-438`
+- import `figma-plugin-dist-462` or newer verified artifact
 - establish exact-build P5 prerequisite
 - positive image-bearing page-flow clone calibration PASS
 - preservation-sensitive `NO_CANDIDATE` refusal PASS
 - require `P6 Closure acceptance: PASS`
+- export closure JSON and require `node verify-p6-closure.mjs < p6-closure.json` exit code `0`
 
 ### P7 — #8
-- import `figma-plugin-dist-436`
+- import `figma-plugin-dist-436` or newer verified artifact
 - establish exact-build P5 prerequisite
 - realistic 60+ Frame stress run
 - genuinely long active Full P3 cancellation run
@@ -87,6 +91,7 @@ npm run prepare:figma-import -- <your-figma-plugin-id>
 - Full P3 before P4 commit
 - rendered-pixel evidence required
 - exact-build runtime proof/evidence only
+- exported P5/P6 evidence must independently recompute to the canonical verdict using the same artifact build
 - P6 is clone-only with no production commit seam
 - P7 max one processor at a time with cooperative cancellation
 - local manifest rebinding must never alter compiled code/UI
