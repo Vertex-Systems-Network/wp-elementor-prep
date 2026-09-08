@@ -1,3 +1,4 @@
+import { assessP6PositiveCalibrationAcceptance } from './p6-runtime-acceptance';
 import type { P6RuntimeEvidenceBundle } from './p6-runtime-evidence';
 
 function escapeHtml(value: unknown): string {
@@ -17,12 +18,14 @@ export function buildP6RuntimeEvidenceViewerHtml(evidence: P6RuntimeEvidenceBund
   const calibration = evidence.calibration;
   const validation = calibration?.validation ?? null;
   const plan = evidence.plan;
+  const assessment = assessP6PositiveCalibrationAcceptance(evidence);
   const json = JSON.stringify(evidence, null, 2);
 
   const warnings: string[] = [];
   if (calibration?.leftoverCandidateRisk) warnings.push('Candidate cleanup risk is present; inspect the Figma document before continuing.');
   if (calibration?.productionCommitAttempted !== false) warnings.push('Unexpected production-commit evidence value.');
   if (evidence.outcomeStatus === 'COMPLETED' && calibration === null) warnings.push('Completed outcome has no calibration summary.');
+  warnings.push(...assessment.failures.map((failure) => `Acceptance: ${failure}`));
 
   return `<!doctype html>
 <html>
@@ -35,6 +38,7 @@ body { margin: 0; padding: 16px; background: var(--figma-color-bg); color: var(-
 .hero { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
 .title { font-size: 14px; font-weight: 700; }
 .meta { font-size: 10px; opacity: .75; margin-top: 5px; word-break: break-word; }
+.acceptance { font-size: 18px; font-weight: 800; margin-top: 8px; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
 .metric { border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 8px; }
 .metric strong { display: block; font-size: 12px; }
@@ -47,11 +51,14 @@ pre { margin: 0; padding: 10px; border: 1px solid var(--figma-color-border); bor
 <body>
 <div class="hero">
   <div class="title">P6 Clone Calibration Evidence</div>
+  <div class="acceptance">Acceptance ${assessment.accepted ? 'PASS' : 'FAIL'}</div>
   <div class="meta">Frame: ${escapeHtml(evidence.frame.name)} · ${escapeHtml(evidence.frame.id)}</div>
   <div class="meta">Captured: ${escapeHtml(evidence.capturedAt)}</div>
   <div class="meta">P5 gate: ${escapeHtml(evidence.p5RuntimeGateVersion)} · proof ${escapeHtml(evidence.p5RuntimeProofPassedAt ?? 'not available')}</div>
+  <div class="meta">This acceptance covers the positive page-flow calibration only; separate real image-bearing/refusal scenarios are still required by the P6 tracker.</div>
 </div>
 <div class="grid">
+  ${metric('acceptance', assessment.accepted ? 'PASS' : 'FAIL')}
   ${metric('outcome', evidence.outcomeStatus)}
   ${metric('plan', plan?.recipe ?? '—')}
   ${metric('plan confidence', plan?.confidence ?? '—')}
