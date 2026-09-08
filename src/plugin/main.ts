@@ -10,6 +10,7 @@ import { scanSceneNode } from '../core/scanner';
 import { buildAuditReport } from '../core/scoring';
 import type { PixelDiffMetrics } from '../core/validation-types';
 import { FullFrameValidator } from './full-frame-validator';
+import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
 import { buildP5RuntimeEvidenceBundle } from './p5-runtime-evidence';
@@ -28,6 +29,7 @@ import {
 declare const __html__: string;
 
 const PLUGIN_VERSION = '0.1.0-alpha.1';
+const RUNTIME_BUILD = currentP5RuntimeBuildIdentity();
 
 type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize';
 let p5OperationInFlight: P5ExclusiveOperation | null = null;
@@ -71,7 +73,7 @@ function selectedFrame(): FrameNode | null {
 
 async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string | null }> {
   const stored = await figma.clientStorage.getAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
-  if (!isValidP5RuntimeProof(stored)) return { valid: false, passedAt: null };
+  if (!isValidP5RuntimeProof(stored, RUNTIME_BUILD)) return { valid: false, passedAt: null };
   return { valid: true, passedAt: stored.passedAt };
 }
 
@@ -121,6 +123,7 @@ async function runSafePlanPreview(): Promise<void> {
       mutationEnabled: proof.valid && !pendingUndo && !p5OperationInFlight,
       runtimeProofValid: proof.valid,
       runtimeProofPassedAt: proof.passedAt,
+      runtimeBuild: { ...RUNTIME_BUILD },
       pendingUndo,
       operationInFlight: p5OperationInFlight,
     });
@@ -162,17 +165,18 @@ async function runRuntimeSelfTest(): Promise<void> {
   const operation: P5ExclusiveOperation = 'runtime-self-test';
   if (!beginExclusiveP5Operation(operation, 'validation-error')) return;
 
-  figma.ui.postMessage({ type: 'runtime-calibration-started' });
+  figma.ui.postMessage({ type: 'runtime-calibration-started', runtimeBuild: { ...RUNTIME_BUILD } });
   try {
     const result = await runP5RuntimeCalibration(async (before, after) => {
       const validation = await fullFrameValidator.validate(before, after);
       return validation.report;
     });
 
-    const acceptance = await updateP5RuntimeProofFromCalibration(figma.clientStorage, result);
+    const acceptance = await updateP5RuntimeProofFromCalibration(figma.clientStorage, result, RUNTIME_BUILD);
     const proof = await runtimeProofState();
     const evidence = buildP5RuntimeEvidenceBundle({
       pluginVersion: PLUGIN_VERSION,
+      build: RUNTIME_BUILD,
       result,
       runtimeProofPassedAt: proof.passedAt,
     });
@@ -184,6 +188,7 @@ async function runRuntimeSelfTest(): Promise<void> {
       acceptance,
       evidence,
       evidencePersisted,
+      runtimeBuild: { ...RUNTIME_BUILD },
       mutationGateUnlocked: proof.valid,
       runtimeProofPassedAt: proof.passedAt,
     });
@@ -240,7 +245,7 @@ async function runSafeFixApply(message: { targetNodeId: string; recipe: SafeReci
       hasPendingSafeFixCheckpoint(),
     ]);
     if (!proof.valid) {
-      postError('Safe Fix mutation is locked until Developer: P5 Runtime Self-Test passes in this plugin build.', 'safe-fix-error');
+      postError('Safe Fix mutation is locked until Developer: P5 Runtime Self-Test passes in this exact CI-built plugin artifact.', 'safe-fix-error');
       return;
     }
     if (pendingUndo) {
