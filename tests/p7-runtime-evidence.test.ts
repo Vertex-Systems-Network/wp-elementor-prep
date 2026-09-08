@@ -27,6 +27,16 @@ function runningQueue(frameId = 'frame-1'): BatchQueueState {
 }
 
 describe('P7 runtime evidence recorder', () => {
+  it('constructs safely without a memory sampler and keeps memory evidence explicitly unsupported', () => {
+    const recorder = new P7RuntimeEvidenceRecorder('run-key');
+    recorder.beginSegment(createBatchQueue([], 'run-key'));
+    const evidence = recorder.snapshot();
+
+    expect(evidence.memorySamplingSupported).toBe(false);
+    expect(evidence.memorySampleCount).toBe(0);
+    expect(evidence.observedPeakUsedJsHeapBytesAtSamplePoints).toBeNull();
+  });
+
   it('observes one processor attempt without changing its checkpoint outcome', async () => {
     const clock = manualClock();
     const memorySamples = [100, 120, 180, 160];
