@@ -6,6 +6,12 @@ import {
   type P5RuntimeProofStorage,
 } from '../src/plugin/p5-runtime-proof-storage';
 
+const BUILD = {
+  sourceSha: '0123456789abcdef0123456789abcdef01234567',
+  runId: '34219111842',
+  runNumber: '309',
+};
+
 function passingEvidence(): P5RuntimeCalibrationResult {
   return {
     schemaVersion: 1,
@@ -59,14 +65,18 @@ class MemoryStorage implements P5RuntimeProofStorage {
 }
 
 describe('P5 runtime proof storage', () => {
-  it('mints proof only when every deterministic runtime acceptance invariant passes', async () => {
+  it('mints proof only when deterministic acceptance passes in a traceable CI build', async () => {
     const storage = new MemoryStorage();
-    const assessment = await updateP5RuntimeProofFromCalibration(storage, passingEvidence());
+    const assessment = await updateP5RuntimeProofFromCalibration(storage, passingEvidence(), BUILD);
 
     expect(assessment).toEqual({ accepted: true, failures: [] });
     expect(storage.setCalls).toBe(1);
     expect(storage.deleteCalls).toBe(0);
-    expect(storage.values.has(P5_RUNTIME_PROOF_STORAGE_KEY)).toBe(true);
+    expect(storage.values.get(P5_RUNTIME_PROOF_STORAGE_KEY)).toEqual(expect.objectContaining({
+      schemaVersion: 1,
+      gateVersion: 'p5-runtime-proof-v3',
+      build: BUILD,
+    }));
   });
 
   it('revokes proof when the top-level PASS conflicts with missing sub-evidence', async () => {
@@ -76,11 +86,26 @@ describe('P5 runtime proof storage', () => {
     evidence.passFinalize.checkpointCleared = false;
     evidence.leftovers = 1;
 
-    const assessment = await updateP5RuntimeProofFromCalibration(storage, evidence);
+    const assessment = await updateP5RuntimeProofFromCalibration(storage, evidence, BUILD);
 
     expect(assessment.accepted).toBe(false);
     expect(assessment.failures).toContain('Finalize path left a checkpoint pending.');
     expect(assessment.failures).toContain('Runtime calibration left 1 temporary node(s).');
+    expect(storage.setCalls).toBe(0);
+    expect(storage.deleteCalls).toBe(1);
+    expect(storage.values.has(P5_RUNTIME_PROOF_STORAGE_KEY)).toBe(false);
+  });
+
+  it('refuses proof minting for a local or otherwise untraceable build', async () => {
+    const storage = new MemoryStorage();
+    const assessment = await updateP5RuntimeProofFromCalibration(storage, passingEvidence(), {
+      sourceSha: 'local',
+      runId: 'local',
+      runNumber: 'local',
+    });
+
+    expect(assessment.accepted).toBe(false);
+    expect(assessment.failures).toContain('P5 runtime self-test build is not bound to a traceable CI artifact.');
     expect(storage.setCalls).toBe(0);
     expect(storage.deleteCalls).toBe(1);
     expect(storage.values.has(P5_RUNTIME_PROOF_STORAGE_KEY)).toBe(false);
