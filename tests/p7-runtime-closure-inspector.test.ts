@@ -118,11 +118,23 @@ describe('P7 runtime closure inspector', () => {
       currentBuildTraceable: true,
       runtimeEvidenceMatchesCurrentBuild: true,
     });
-    const closureBundle = JSON.parse(result.closureJson) as Record<string, unknown>;
+    const closureBundle = JSON.parse(result.closureJson) as any;
     expect(closureBundle).toEqual(expect.objectContaining({
-      schemaVersion: 1,
+      schemaVersion: 2,
       accepted: true,
       currentBuild: BUILD_A,
+    }));
+    expect(closureBundle.p5Prerequisite.valid).toBe(true);
+    expect(closureBundle.p5Prerequisite.coreProof).toEqual(expect.objectContaining({
+      schemaVersion: 1,
+      gateVersion: 'p5-runtime-proof-v3',
+      passedAt: '2026-09-08T11:59:00.000Z',
+    }));
+    expect(closureBundle.p5Prerequisite.receipt).toEqual(expect.objectContaining({
+      schemaVersion: 1,
+      gateVersion: 'p5-runtime-proof-v3',
+      proofPassedAt: '2026-09-08T11:59:00.000Z',
+      build: BUILD_A,
     }));
     expect(store.writes()).toBe(0);
   });
@@ -149,5 +161,14 @@ describe('P7 runtime closure inspector', () => {
     expect(result.closure.p5PrerequisiteValid).toBe(false);
     expect(result.closure.runtimeEvidenceMatchesCurrentBuild).toBe(true);
     expect(result.closure.failures).toContain('P5 deterministic runtime proof is not bound to this exact P7 plugin build.');
+
+    const closureBundle = JSON.parse(result.closureJson) as any;
+    expect(closureBundle.schemaVersion).toBe(2);
+    expect(closureBundle.p5Prerequisite).toEqual({
+      valid: false,
+      passedAt: null,
+      coreProof: null,
+      receipt: null,
+    });
   });
 });
