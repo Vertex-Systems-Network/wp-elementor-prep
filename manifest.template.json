@@ -8,7 +8,8 @@
   "documentAccess": "dynamic-page",
   "menu": [
     { "name": "Open", "command": "open" },
-    { "name": "Developer: P5 Runtime Self-Test", "command": "p5-runtime-self-test" }
+    { "name": "Developer: P5 Runtime Self-Test", "command": "p5-runtime-self-test" },
+    { "name": "Developer: P7 Runtime Evidence", "command": "p7-runtime-evidence" }
   ],
   "networkAccess": {
     "allowedDomains": ["none"]
