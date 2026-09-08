@@ -29,6 +29,17 @@ export interface P5RuntimeCalibrationResult {
     restored: boolean;
     checkpointCleared: boolean;
   };
+  passFinalize: {
+    state: string;
+    validationPassed: boolean;
+    pixelEvidenceReturned: boolean;
+    changedPixelPct: number | null;
+    committed: boolean;
+    finalized: boolean;
+    candidateRetained: boolean;
+    originalDiscarded: boolean;
+    checkpointCleared: boolean;
+  };
   leftovers: number;
 }
 
@@ -108,7 +119,8 @@ async function calibrationLeftovers(): Promise<number> {
 
 /**
  * Developer-only disposable self-test for the exact compiled P5 -> FullFrameValidator/UI pixel broker -> P4 path.
- * It never operates on the user's selected design. All fixtures are created off-canvas and removed before return.
+ * It covers validator rejection, commit->restore and commit->finalize. It never operates on the user's
+ * selected design; all fixtures are created off-canvas and removed before return.
  */
 export async function runP5RuntimeCalibration(validateFullP3: RuntimeFullP3Validator): Promise<P5RuntimeCalibrationResult> {
   const guard = recoveryAdapter();
@@ -178,9 +190,9 @@ export async function runP5RuntimeCalibration(validateFullP3: RuntimeFullP3Valid
     }
   }
 
-  const passFixture = createVerticalFixture('pass-restore');
-  let passCandidateId: string | undefined;
-  let passResult: P5RuntimeCalibrationResult['passRestore'] = {
+  const restoreFixture = createVerticalFixture('pass-restore');
+  let restoreCandidateId: string | undefined;
+  let passRestore: P5RuntimeCalibrationResult['passRestore'] = {
     state: 'FAILED',
     validationPassed: false,
     pixelEvidenceReturned: false,
@@ -191,20 +203,20 @@ export async function runP5RuntimeCalibration(validateFullP3: RuntimeFullP3Valid
   };
 
   try {
-    const plan = verticalPlan(passFixture.original);
-    const result = await runSafeFixTransaction(passFixture.original, plan, validateFullP3);
+    const plan = verticalPlan(restoreFixture.original);
+    const result = await runSafeFixTransaction(restoreFixture.original, plan, validateFullP3);
     const transaction = result.transaction;
-    passCandidateId = transaction?.candidateNodeId;
+    restoreCandidateId = transaction?.candidateNodeId;
 
     let restored = false;
     if (transaction?.state === 'COMMITTED') {
       const recovery = recoveryAdapter();
       const restoreEvidence = await recovery.restoreLastCommit(transaction.commit?.undoToken);
-      restored = Boolean(restoreEvidence) && passFixture.original.parent?.id === passFixture.parent.id;
+      restored = Boolean(restoreEvidence) && restoreFixture.original.parent?.id === restoreFixture.parent.id;
     }
 
     const pixel = transaction?.validation?.metrics.pixel;
-    passResult = {
+    passRestore = {
       state: transaction?.state ?? 'SKIPPED',
       validationPassed: transaction?.validation?.passed === true,
       pixelEvidenceReturned: Boolean(pixel),
@@ -221,9 +233,64 @@ export async function runP5RuntimeCalibration(validateFullP3: RuntimeFullP3Valid
         await guard.finalizeLastCommit();
       }
     }
-    await removeIfPresent(passFixture.parent);
-    if (passCandidateId) {
-      const candidate = await figma.getNodeByIdAsync(passCandidateId);
+    await removeIfPresent(restoreFixture.parent);
+    if (restoreCandidateId) {
+      const candidate = await figma.getNodeByIdAsync(restoreCandidateId);
+      await removeIfPresent(candidate);
+    }
+  }
+
+  const finalizeFixture = createVerticalFixture('pass-finalize');
+  const finalizeOriginalId = finalizeFixture.original.id;
+  let finalizeCandidateId: string | undefined;
+  let passFinalize: P5RuntimeCalibrationResult['passFinalize'] = {
+    state: 'FAILED',
+    validationPassed: false,
+    pixelEvidenceReturned: false,
+    changedPixelPct: null,
+    committed: false,
+    finalized: false,
+    candidateRetained: false,
+    originalDiscarded: false,
+    checkpointCleared: false,
+  };
+
+  try {
+    const plan = verticalPlan(finalizeFixture.original);
+    const result = await runSafeFixTransaction(finalizeFixture.original, plan, validateFullP3);
+    const transaction = result.transaction;
+    finalizeCandidateId = transaction?.commit?.committedNodeId ?? transaction?.candidateNodeId;
+
+    let finalized = false;
+    if (transaction?.state === 'COMMITTED') {
+      finalized = await recoveryAdapter().finalizeLastCommit();
+    }
+
+    const committedNode = finalizeCandidateId ? await figma.getNodeByIdAsync(finalizeCandidateId) : null;
+    const previousOriginal = await figma.getNodeByIdAsync(finalizeOriginalId);
+    const pixel = transaction?.validation?.metrics.pixel;
+    passFinalize = {
+      state: transaction?.state ?? 'SKIPPED',
+      validationPassed: transaction?.validation?.passed === true,
+      pixelEvidenceReturned: Boolean(pixel),
+      changedPixelPct: pixel?.changedPixelPct ?? null,
+      committed: transaction?.state === 'COMMITTED',
+      finalized,
+      candidateRetained: committedNode?.type === 'FRAME' && committedNode.parent?.id === finalizeFixture.parent.id,
+      originalDiscarded: previousOriginal === null,
+      checkpointCleared: !(await recoveryAdapter().hasPendingUndo()),
+    };
+  } finally {
+    if (await guard.hasPendingUndo()) {
+      try {
+        await guard.restoreLastCommit();
+      } catch {
+        await guard.finalizeLastCommit();
+      }
+    }
+    await removeIfPresent(finalizeFixture.parent);
+    if (finalizeCandidateId) {
+      const candidate = await figma.getNodeByIdAsync(finalizeCandidateId);
       await removeIfPresent(candidate);
     }
   }
@@ -234,18 +301,26 @@ export async function runP5RuntimeCalibration(validateFullP3: RuntimeFullP3Valid
     forcedResult.pixelEvidenceReturned &&
     forcedResult.candidateDeleted &&
     forcedResult.originalUntouched &&
-    passResult.validationPassed &&
-    passResult.pixelEvidenceReturned &&
-    passResult.committed &&
-    passResult.restored &&
-    passResult.checkpointCleared &&
+    passRestore.validationPassed &&
+    passRestore.pixelEvidenceReturned &&
+    passRestore.committed &&
+    passRestore.restored &&
+    passRestore.checkpointCleared &&
+    passFinalize.validationPassed &&
+    passFinalize.pixelEvidenceReturned &&
+    passFinalize.committed &&
+    passFinalize.finalized &&
+    passFinalize.candidateRetained &&
+    passFinalize.originalDiscarded &&
+    passFinalize.checkpointCleared &&
     leftovers === 0;
 
   return {
     schemaVersion: 1,
     passed,
     forcedReject: forcedResult,
-    passRestore: passResult,
+    passRestore,
+    passFinalize,
     leftovers,
   };
 }
