@@ -1,5 +1,6 @@
+import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inspectRuntimeArtifact } from '../scripts/runtime-artifact-preflight.mjs';
@@ -19,6 +20,10 @@ const P6 = {
   verifier: 'verify-p6-closure.mjs',
   commands: ['open', 'p5-runtime-self-test', 'p5-runtime-evidence', 'p6-page-flow-calibration', 'p6-runtime-evidence']
 };
+
+function fileSha256(path) {
+  return createHash('sha256').update(readFileSync(path)).digest('hex');
+}
 
 function makeArtifact(track, overrides = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'runtime-artifact-preflight-'));
@@ -57,54 +62,117 @@ function makeArtifact(track, overrides = {}) {
   return dir;
 }
 
-function withArtifact(track, overrides, callback) {
+function fixtureRegistry(trackName, track, dir, { finalClosureEligible = true } = {}) {
+  const immutableFiles = ['BUILD_INFO.txt', 'code.js', 'ui.html', 'prepare-figma-import.mjs', track.verifier];
+  const immutableFileSha256 = Object.fromEntries(
+    immutableFiles.map((name) => [name, fileSha256(join(dir, name))])
+  );
+
+  return {
+    schemaVersion: 2,
+    tracks: {
+      [trackName]: {
+        branch: `fixture/${trackName}`,
+        issue: trackName === 'p5' ? 6 : 7,
+        sourceSha: track.sourceSha,
+        runId: track.runId,
+        runNumber: track.runNumber,
+        artifactName: `fixture-${trackName}`,
+        digest: `sha256:${'0'.repeat(64)}`,
+        verifier: track.verifier,
+        immutableFileSha256,
+        requiredMenuCommands: track.commands.filter((command) => command !== 'open' && command !== 'p5-runtime-evidence'),
+        finalClosureEligible,
+        closureNote: finalClosureEligible
+          ? 'Fixture final closure build.'
+          : 'Reference engineering build only. Final build required.'
+      }
+    }
+  };
+}
+
+function withArtifact(trackName, track, overrides, options, callback) {
   const dir = makeArtifact(track, overrides);
   try {
-    return callback(dir);
+    const registry = fixtureRegistry(trackName, track, dir, options);
+    return callback(dir, registry);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
 }
 
 describe('runtime artifact preflight', () => {
-  it('accepts canonical P5 for final closure and requires manifest rebinding', () => {
-    withArtifact(P5, {}, (dir) => {
-      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure' });
+  it('accepts canonical-shape P5 for final closure and verifies immutable hashes', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
       expect(result.ok).toBe(true);
       expect(result.needsManifestRebind).toBe(true);
       expect(result.registeredArtifact.finalClosureEligible).toBe(true);
+      expect(result.immutableFileIntegrity.checked).toBe(5);
+      expect(result.immutableFileIntegrity.matched).toBe(5);
+      expect(result.immutableFileIntegrity.manifestIntentionallyExcluded).toBe(true);
+    });
+  });
+
+  it('allows a numeric manifest plugin-id rebind because manifest is intentionally not hash pinned', () => {
+    withArtifact('p5', P5, { pluginId: '12345678901234567890' }, { finalClosureEligible: true }, (dir, registry) => {
+      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
+      expect(result.ok).toBe(true);
+      expect(result.needsManifestRebind).toBe(false);
+      expect(result.immutableFileIntegrity.matched).toBe(5);
     });
   });
 
   it('rejects P6 reference artifact for final closure', () => {
-    withArtifact(P6, {}, (dir) => {
-      const result = inspectRuntimeArtifact('p6', dir, { intent: 'final-closure' });
+    withArtifact('p6', P6, {}, { finalClosureEligible: false }, (dir, registry) => {
+      const result = inspectRuntimeArtifact('p6', dir, { intent: 'final-closure', registry });
       expect(result.ok).toBe(false);
       expect(result.errors.join('\n')).toContain('not eligible for final closure');
     });
   });
 
   it('allows P6 reference inspection with a warning', () => {
-    withArtifact(P6, {}, (dir) => {
-      const result = inspectRuntimeArtifact('p6', dir, { intent: 'reference' });
+    withArtifact('p6', P6, {}, { finalClosureEligible: false }, (dir, registry) => {
+      const result = inspectRuntimeArtifact('p6', dir, { intent: 'reference', registry });
       expect(result.ok).toBe(true);
       expect(result.warnings.join('\n')).toContain('Reference engineering build only');
+      expect(result.immutableFileIntegrity.matched).toBe(5);
     });
   });
 
-  it('fails closed on build identity mismatch', () => {
-    withArtifact(P5, { build: { runNumber: '999' } }, (dir) => {
-      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure' });
+  it('fails closed on build identity mismatch even when that file is hash pinned as observed', () => {
+    withArtifact('p5', P5, { build: { runNumber: '999' } }, { finalClosureEligible: true }, (dir, registry) => {
+      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
       expect(result.ok).toBe(false);
       expect(result.errors.join('\n')).toContain('BUILD_INFO mismatch for run_number');
     });
   });
 
   it('fails closed when a required runtime menu command is missing', () => {
-    withArtifact(P5, { commands: ['open', 'p5-runtime-evidence'] }, (dir) => {
-      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure' });
+    withArtifact('p5', P5, { commands: ['open', 'p5-runtime-evidence'] }, { finalClosureEligible: true }, (dir, registry) => {
+      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
       expect(result.ok).toBe(false);
       expect(result.errors.join('\n')).toContain('p5-runtime-self-test');
+    });
+  });
+
+  it('fails closed when compiled code is changed after registry pinning', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      writeFileSync(join(dir, 'code.js'), 'tampered compiled runtime');
+      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
+      expect(result.ok).toBe(false);
+      expect(result.errors.join('\n')).toContain('SHA-256 mismatch for code.js');
+      expect(result.immutableFileIntegrity.matched).toBe(4);
+    });
+  });
+
+  it('fails closed when the packaged same-artifact verifier is changed', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      writeFileSync(join(dir, P5.verifier), 'tampered verifier');
+      const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
+      expect(result.ok).toBe(false);
+      expect(result.errors.join('\n')).toContain(`SHA-256 mismatch for ${P5.verifier}`);
+      expect(result.immutableFileIntegrity.matched).toBe(4);
     });
   });
 });

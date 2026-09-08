@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,6 +22,10 @@ export function parseBuildInfo(text) {
   return values;
 }
 
+export function sha256File(path) {
+  return createHash('sha256').update(readFileSync(path)).digest('hex');
+}
+
 function readJson(path, errors, label) {
   try {
     return JSON.parse(readFileSync(path, 'utf8'));
@@ -39,8 +44,11 @@ function requireFile(dir, name, errors) {
   return path;
 }
 
-export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final-closure' } = {}) {
-  const registry = loadRegistry();
+function normalizeExpectedSha256(value) {
+  return String(value || '').toLowerCase().replace(/^sha256:/, '');
+}
+
+export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final-closure', registry = loadRegistry() } = {}) {
   const normalizedTrack = String(trackName).toLowerCase();
   const track = registry.tracks?.[normalizedTrack];
   const errors = [];
@@ -77,6 +85,35 @@ export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final
     for (const [key, expected] of Object.entries(expectedIdentity)) {
       if (buildInfo[key] !== expected) {
         errors.push(`BUILD_INFO mismatch for ${key}: expected ${expected}, got ${buildInfo[key] ?? '<missing>'}`);
+      }
+    }
+  }
+
+  const immutableHashes = track.immutableFileSha256;
+  const observedImmutableFileSha256 = {};
+  let immutableFilesChecked = 0;
+  let immutableFilesMatched = 0;
+
+  if (!immutableHashes || typeof immutableHashes !== 'object' || Object.keys(immutableHashes).length === 0) {
+    errors.push(`Registry track ${normalizedTrack} is missing immutable SHA-256 file pins.`);
+  } else {
+    for (const [name, configuredHash] of Object.entries(immutableHashes)) {
+      const expectedHash = normalizeExpectedSha256(configuredHash);
+      if (!/^[a-f0-9]{64}$/.test(expectedHash)) {
+        errors.push(`Registry SHA-256 for ${name} is invalid: ${configuredHash}`);
+        continue;
+      }
+
+      const path = paths[name] || requireFile(dir, name, errors);
+      if (!path) continue;
+
+      immutableFilesChecked += 1;
+      const actualHash = sha256File(path);
+      observedImmutableFileSha256[name] = actualHash;
+      if (actualHash !== expectedHash) {
+        errors.push(`SHA-256 mismatch for ${name}: expected ${expectedHash}, got ${actualHash}`);
+      } else {
+        immutableFilesMatched += 1;
       }
     }
   }
@@ -135,6 +172,12 @@ export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final
       runId: buildInfo.run_id ?? null,
       runNumber: buildInfo.run_number ?? null
     },
+    immutableFileIntegrity: {
+      checked: immutableFilesChecked,
+      matched: immutableFilesMatched,
+      observedSha256: observedImmutableFileSha256,
+      manifestIntentionallyExcluded: true
+    },
     verifier: track.verifier,
     needsManifestRebind,
     errors,
@@ -156,6 +199,10 @@ function printHuman(result) {
     console.log(`Source SHA: ${result.registeredArtifact.sourceSha}`);
     console.log(`CI run: #${result.registeredArtifact.runNumber} (${result.registeredArtifact.runId})`);
     console.log(`Final closure eligible: ${result.registeredArtifact.finalClosureEligible ? 'yes' : 'no'}`);
+  }
+  if (result.immutableFileIntegrity) {
+    console.log(`Immutable files: ${result.immutableFileIntegrity.matched}/${result.immutableFileIntegrity.checked} SHA-256 pins matched`);
+    console.log('Manifest hash: intentionally not pinned because plugin-id rebinding is an allowed manifest-only change');
   }
   if (result.needsManifestRebind === true) console.log('Manifest: placeholder id; local rebinding required before Figma import');
   if (result.needsManifestRebind === false) console.log('Manifest: plugin id already rebound');
