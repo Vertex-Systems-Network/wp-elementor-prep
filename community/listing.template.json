@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "name": "Pella Elementor Prep",
+  "tagline": "Audit Figma structure for safer Elementor preparation",
+  "description": "Deterministically audit a selected Figma frame, review Elementor-readiness findings, generate an actionable backlog, compare original and candidate frames with P3 integrity checks, and export audit/backlog reports. The release plugin is offline and does not use generative AI.",
+  "category": "__SELECT_IN_FIGMA_PUBLISH_MODAL__",
+  "tags": ["developer tools", "workflow", "quality", "audit"],
+  "supportContact": "__REQUIRED_BEFORE_PUBLISH__",
+  "privacyPolicy": "docs/PRIVACY.md",
+  "commentsEnabled": true,
+  "publishTarget": "__COMMUNITY_OR_ORGANIZATION__",
+  "assets": {
+    "icon": {
+      "path": "__ADD_FINAL_ICON_BEFORE_PUBLISH__",
+      "recommendedWidth": 128,
+      "recommendedHeight": 128
+    },
+    "thumbnail": {
+      "path": "__ADD_FINAL_THUMBNAIL_BEFORE_PUBLISH__",
+      "recommendedWidth": 1920,
+      "recommendedHeight": 1080
+    },
+    "carousel": {
+      "paths": [],
+      "maxItems": 9
+    }
+  },
+  "reviewRequiredForCommunity": true,
+  "twoFactorAuthenticationRequiredBeforePublishing": true
+}
