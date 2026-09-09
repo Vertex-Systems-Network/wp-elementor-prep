@@ -16,7 +16,7 @@ Final planned user surfaces:
 
 > **Progress policy:** implementation progress and final validation progress are tracked separately. Manual/runtime/end-to-end product testing remains deferred until P12 final integrated validation.
 
-**Open PR/MR:** `0` — P11 implementation is active on `feat/p11-release-packaging`; PR opens after repository integrity checks are ready.
+**Open PR/MR:** `1` — PR #94 `P11: add normal Figma release packaging and distribution`.
 
 ### Module-wise progress
 
@@ -30,7 +30,7 @@ Final planned user surfaces:
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
 | P9 Actionable backlog generator | ✅ IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged via PR #89; validate real plugin/export/parity behavior in #84 |
 | P10 npm/Node CLI | ✅ IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged via PR #93; validate real Figma URL/snapshot parity + OS path behavior in #84 |
-| P11 Normal Figma plugin distribution | 🔵 IMPLEMENTATION IN PROGRESS | 85% | `█████████░` | Finish package/community contracts → PR/CI → merge #83 → P12 runtime/release acceptance |
+| P11 Normal Figma plugin distribution | 🔵 IMPLEMENTATION IN PROGRESS | 85% | `█████████░` | PR #94 CI/review → merge #83 → P12 normal-install/runtime/release acceptance |
 | P12 Final integrated validation | 🧪 FINAL GATE | 0% | `░░░░░░░░░░` | Run all deferred manual/runtime/end-to-end acceptance after P11 implementation (#84) |
 
 **Overall active project progress:** `█████████░ 93%`
@@ -72,7 +72,7 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, `memory-bank/DECISIONS.
 - ✅ latest merged main baseline is `7e6aa85958060cc927d8fe09dc5cb88a3feba53e` from P10 PR #93.
 - ✅ P9 backlog implementation merged through PR #89 at `67d6b3df05c8e4550b3df80f95cb5fabeb77de42`; issue #81 is implementation-complete with P12 validation pending.
 - ✅ P10 CLI/source-adapter implementation merged through PR #93; issue #82 and implementation subtask #90 are closed as implementation-complete with P12 validation pending.
-- 🔵 P11 #83 implementation is active on `feat/p11-release-packaging`.
+- 🔵 P11 #83 implementation is under review in PR #94 from `feat/p11-release-packaging`.
 - ✅ PR #85 remains authoritative for the final P5 integration contract: P5 → current main is `CODE_CONFLICT`, not docs-only.
 - ✅ canonical P5 #488 artifact provenance/preflight/archive plumbing remains hardened and calibrated.
 - ✅ P6 #494 and P7 #490 remain engineering/reference artifacts; final production integration requires fresh exact builds after final P5 merge.
@@ -144,14 +144,15 @@ P12 owns real credentialed Figma execution, snapshot parity, Windows/macOS path 
 
 ### P11 — Normal Figma plugin distribution / issue #83
 
-P11 implementation is active on `feat/p11-release-packaging`.
+P11 implementation is active in PR #94 from `feat/p11-release-packaging`.
 
-Implemented on the branch so far:
+Implemented on the branch:
 
 - separate `manifest.release.template.json` for the normal release surface;
 - explicit release capability/menu registry in `config/plugin-release.json`;
 - deterministic release package builder requiring a real Figma plugin ID and source SHA;
 - fail-closed release verifier for placeholder IDs, network/menu drift, unexpected files and SHA/provenance mismatches;
+- fail-closed release-output overlap guard preventing destructive cleanup of repository/source/dependency paths;
 - normal-user release menu commands for open/audit/validate/export-report on the currently integrated main capability set;
 - audit report JSON/Markdown export plus backlog JSON/Markdown export;
 - developer-only evidence/self-test commands excluded from the normal release menu;
@@ -159,12 +160,12 @@ Implemented on the branch so far:
 - Community listing metadata template and readiness verifier;
 - privacy/offline-network declaration;
 - local/private/team/Community distribution guidance;
+- root `CHANGELOG.md` plus package-version/release-contract consistency verification;
 - generated release directories excluded from source control.
 
-Still required before marking P11 implementation complete:
+Remaining before marking P11 implementation complete:
 
-- finish static release/community contract coverage and version/changelog workflow;
-- run PR CI over release builder/verifier + existing core checks;
+- require PR #94 CI PASS;
 - fix any CI/review defects;
 - merge #83 implementation;
 - keep actual Community submission/approval and normal-install runtime acceptance in P12.
@@ -207,7 +208,7 @@ Only after P12 passes should the expanded release be called production-accepted 
 | P8 | Optional exporter adapters | ⏸ DEFERRED / #9 closed as not planned |
 | P9 | Actionable backlog | ✅ Implementation complete / P12 validation pending; PR #89 / #81 closed |
 | P10 | npm/Node CLI + source adapters | ✅ Implementation complete / P12 validation pending; PR #93 / #82 closed |
-| P11 | Normal Figma plugin distribution | 🔵 Implementation in progress on `feat/p11-release-packaging` / #83 |
+| P11 | Normal Figma plugin distribution | 🔵 PR #94 open / implementation review + CI / #83 |
 | P12 | Final integrated validation | 🧪 Planned final gate / #84 |
 
 ## Canonical runtime artifact registry
@@ -318,7 +319,7 @@ Latest verified Integration Readiness #90 reports:
 
 1. ✅ **P9 / #81** — implementation complete.
 2. ✅ **P10 / #82** — implementation complete.
-3. 🔵 **P11 / #83** — finish release package/distribution implementation, PR/CI, merge.
+3. 🔵 **P11 / #83 / PR #94** — CI/review/merge.
 4. 🧪 **P12 / #84** — final integrated validation of P5–P7 + P9–P11.
 
 P8 remains optional/deferred.
@@ -332,6 +333,9 @@ npm run typecheck
 npm test
 npm run build
 npm run build:cli
+npm run verify:release-contract
+npm run test:release-package
+npm run community:verify
 npm run integration:readiness
 ```
 
