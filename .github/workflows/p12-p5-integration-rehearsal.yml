@@ -1,0 +1,51 @@
+name: P12 P5 Integration Rehearsal
+
+on:
+  push:
+    branches: [integration/p12-p5-rehearsal]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Fetch canonical P5
+        run: git fetch --no-tags origin '+refs/heads/feat/p5-safe-recipes:refs/remotes/origin/feat/p5-safe-recipes'
+      - name: Capture exact three-way merge conflict tree
+        shell: bash
+        run: |
+          set -u
+          rm -rf p5-merge-rehearsal
+          mkdir -p p5-merge-rehearsal/conflicts
+
+          set +e
+          git merge --no-commit --no-ff origin/feat/p5-safe-recipes
+          merge_exit=$?
+          set -e
+
+          printf '%s\n' "$merge_exit" > p5-merge-rehearsal/merge-exit-code.txt
+          git status --porcelain=v1 > p5-merge-rehearsal/status.txt
+          git diff --name-only --diff-filter=U > p5-merge-rehearsal/conflicts.txt
+          git diff --cc > p5-merge-rehearsal/combined.diff
+
+          while IFS= read -r file; do
+            [ -n "$file" ] || continue
+            mkdir -p "p5-merge-rehearsal/conflicts/$(dirname "$file")"
+            cp -- "$file" "p5-merge-rehearsal/conflicts/$file"
+          done < p5-merge-rehearsal/conflicts.txt
+
+          git rev-parse HEAD > p5-merge-rehearsal/main-head.txt
+          git rev-parse origin/feat/p5-safe-recipes > p5-merge-rehearsal/p5-head.txt
+          git merge-base HEAD origin/feat/p5-safe-recipes > p5-merge-rehearsal/merge-base.txt
+
+          git merge --abort || true
+      - uses: actions/upload-artifact@v7
+        with:
+          name: p12-p5-integration-rehearsal
+          path: p5-merge-rehearsal
+          if-no-files-found: error
