@@ -40,7 +40,11 @@ function readJsonBytes(bytes, errors, label) {
 }
 
 function sameFileIdentity(before, opened) {
-  return before.dev === opened.dev && before.ino === opened.ino;
+  return before.dev === opened.dev
+    && before.ino === opened.ino
+    && before.size === opened.size
+    && before.mtimeMs === opened.mtimeMs
+    && before.ctimeMs === opened.ctimeMs;
 }
 
 function readRequiredFile(
