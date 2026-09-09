@@ -18,7 +18,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 |---|---|---:|---|---|
 | AI-native governance + repo tooling | ✅ COMPLETE | 100% | `██████████` | Keep Issues → PR/MR → development lifecycle, status verification and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
-| P5 Conservative Safe Fix | 🟡 RUNTIME ACCEPTANCE | 94% | `█████████░` | Canonical #488 exact-main preflight + retained-ZIP digest are verified → prepare sibling copy with the real Figma development-plugin ID → import in Figma Desktop → runtime/rendered-pixel proof → closure intake PASS → merge #6 |
+| P5 Conservative Safe Fix | 🟡 RUNTIME ACCEPTANCE | 94% | `█████████░` | Canonical #488 exact-main preflight + retained-ZIP digest verified → real Figma runtime/rendered-pixel proof → closure intake PASS → fresh current-main integration resolution + full CI → merge #6 |
 | P6 Advanced structures | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh registered artifact → real image-bearing + refusal closure #7 |
 | P7 60+ Frame batch queue | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh registered artifact → 60+ stress + active cancellation closure #8 |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
@@ -40,13 +40,15 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 
 ## Latest verified checkpoint — 2026-09-10
 
-- ✅ current verified base before this documentation sync is `main` `c3c1c7475395785e3db5ed753513a645e7dd42c7`; PR #74 synchronized the status surfaces through the PR #61 → #63 → #72 tooling chain and passed post-merge CI #614 + Integration Readiness #87.
+- ✅ latest verified base before issue #80 work is `main` `698940369635b6f40972e6404e7e7ff71b57ea14`; PR #79 hardened the real-Figma closure runbook and passed post-merge CI #618 + Integration Readiness #90.
 - ✅ the actual canonical P5 GitHub Actions artifact #488 (`figma-plugin-dist-488`, artifact id `10062772456`) was downloaded again and its retained ZIP SHA-256 matched the registered digest `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`.
 - ✅ exact current-main `scripts/runtime-artifact-preflight.mjs` and `config/runtime-artifacts.json` source bytes were reconstructed from GitHub and verified against their Git blob SHAs (`8d2d459b310ed2426f353ea91687d2a6d1dd6e09` and `de517b340cf951896fa3e312b40d9ddb4e86f944`) before execution.
 - ✅ current-main final-closure preflight on canonical #488 + retained ZIP passed with exact BUILD_INFO identity, raw ZIP digest MATCH, `5/5` immutable file SHA-256 matches and schema-v3 id-excluded manifest semantic SHA-256 MATCH.
 - ✅ the packaged #488 helper produced a separate sibling prepared copy using a calibration numeric plugin ID; `code.js` / `ui.html` remained byte-identical and the prepared copy passed the same current-main preflight with the same manifest semantic hash. This calibration does **not** replace preparation with the actual Figma development-plugin ID or the real import.
 - ✅ exact current-main `runtime-closure-intake.mjs` bytes were separately Git-blob verified (`52bb19fead394579e1e89f09141bfbc6900f5cc3`) and exercised against canonical #488 and the prepared sibling copy with intentionally invalid `{}` evidence. In both cases artifact preflight passed, the exact same-artifact verifier ran through `verified-bytes-memory-bootstrap`, and the invalid evidence correctly failed closed at verifier exit `1`.
-- ✅ issue #6 now marks the canonical current-main preflight and retained-ZIP digest checks complete. Every imported-Figma/runtime/rendered-pixel/real-evidence closure item remains open.
+- ✅ issue #6 marks canonical current-main preflight and retained-ZIP digest checks complete. Every imported-Figma/runtime/rendered-pixel/real-evidence closure item remains open.
+- ⚠️ latest Integration Readiness #90 reports P5 → current `main` as **`CODE_CONFLICT`**, not docs-only. Conflicts include `.github/workflows/ci.yml` and `scripts/prepare-figma-import.mjs` plus README/memory-bank files. The historical integration proof #37 / CI #500 is therefore superseded for merge authorization.
+- ✅ after real P5 runtime acceptance + closure-intake PASS, a fresh P5→then-current-main integration resolution must preserve current-main helper overlap safety, CI/status/tooling hardening and current closure/runbook contracts while integrating P5 runtime code deliberately, then pass full PR CI before #6 can close.
 - ✅ the connected Figma canvas API can execute Plugin API operations in known design files, but it does not establish the required condition of importing and running this exact downloaded development-plugin artifact with its own manifest/menu/UI iframe. It therefore cannot substitute for P5 acceptance.
 - ✅ open product/runtime dependency chain remains #6 → #7/#8. Canonical feature heads and registered artifact bytes are unchanged, so P5 remains 94% and overall active progress remains 93%.
 
@@ -57,7 +59,7 @@ Detailed engineering history is retained in `memory-bank/CHANGELOG.md`.
 | Phase | Scope | Current status |
 |---|---|---|
 | P0–P4 | Core audit, validation, transaction/rollback | ✅ Complete |
-| P5 | Conservative Safe Fix recipes | 🟡 Engineering/exact-build/offline verification + exact-main artifact/archive preflight calibration complete; real imported-Figma acceptance + real-evidence closure pending (#6) |
+| P5 | Conservative Safe Fix recipes | 🟡 Engineering/exact-build/offline verification + exact-main artifact/archive preflight calibration complete; real imported-Figma acceptance + closure intake + fresh current-main integration proof pending (#6) |
 | P6 | Advanced clone-only calibration | 🟠 Engineering complete on reference head; post-P5 integration + fresh exact-build real-Figma closure pending (#7) |
 | P7 | Sequential 60+ Frame batch queue | 🟠 Engineering complete on reference head; post-P5 integration + fresh exact-build stress/cancellation closure pending (#8) |
 | P8 | Optional exporter adapters | ⏸ DEFERRED / #9 closed as not planned |
@@ -95,7 +97,7 @@ When the original downloaded Actions ZIP is retained, bind those raw bytes too:
 npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488 --archive=/path/to/figma-plugin-dist-488.zip
 ```
 
-For canonical P5 #488, both commands have now been exercised against the actual downloaded artifact using the exact current-main preflight source and registry bytes. The retained-ZIP form passed with archive digest MATCH, exact BUILD_INFO identity, `5/5` immutable file pins and manifest semantic MATCH.
+For canonical P5 #488, both commands have been exercised against the actual downloaded artifact using exact current-main preflight source and registry bytes. The retained-ZIP form passed with archive digest MATCH, exact BUILD_INFO identity, `5/5` immutable file pins and manifest semantic MATCH.
 
 Preflight validates:
 
@@ -134,11 +136,11 @@ Requirements:
 - schema-v3 manifest semantic SHA remains the registered MATCH;
 - preparation itself is **not** runtime acceptance.
 
-The calibration sibling copy already proved this operator path preserves code/UI and registered manifest semantics, but a calibration numeric ID is not the real Figma development-plugin ID.
+The calibration sibling copy proved this operator path preserves code/UI and registered manifest semantics, but a calibration numeric ID is not the real Figma development-plugin ID.
 
 ## P5 real Figma acceptance — next critical path
 
-The remaining #6 gate requires the actual downloaded artifact-derived development plugin running in Figma Desktop with its own UI iframe/pixel broker:
+The remaining #6 runtime gate requires the actual downloaded artifact-derived development plugin running in Figma Desktop with its own UI iframe/pixel broker:
 
 1. prepare the sibling copy using the actual Figma development-plugin ID;
 2. import that exact prepared `manifest.json` into Figma Desktop;
@@ -174,11 +176,11 @@ The current-main rejection calibration used intentionally invalid `{}` evidence 
 
 ## Integration readiness
 
-Non-mutating integration readiness currently reports:
+Latest non-mutating Integration Readiness #90 on `main` `698940369635b6f40972e6404e7e7ff71b57ea14` reports:
 
-- ✅ P5 → current `main`: known integration resolution is documentation-side; final merge waits on real P5 runtime acceptance.
-- ⚠️ P6 → latest P5: shared-code conflicts exist and must be resolved after P5 lands.
-- ⚠️ P7 → latest P5: shared-code conflicts exist and must be resolved after P5 lands.
+- ⚠️ **P5 → current `main`: `CODE_CONFLICT`**. Conflicts include `.github/workflows/ci.yml`, `scripts/prepare-figma-import.mjs`, README and memory-bank files. Historical docs-only proof #37 / CI #500 is superseded for merge authorization. After real P5 closure PASS, resolve against the then-current main, preserve current-main import-helper overlap safety + CI/status/tooling/closure hardening, run full PR CI and review the exact resolved diff before merge.
+- ⚠️ P6 → latest P5: `CODE_CONFLICT`; resolve after P5 lands and produce a fresh exact build.
+- ⚠️ P7 → latest P5: `CODE_CONFLICT`; resolve after P5 lands and produce a fresh exact build.
 - ⚠️ final P6/P7 runtime evidence must come from fresh post-P5 integration builds.
 
 Run locally after fetching canonical refs:
@@ -191,7 +193,7 @@ npm run integration:readiness
 
 ### 1. P5 / issue #6
 
-`actual Figma ID sibling prep → exact artifact import → runtime self-test → rendered-pixel reject/restore/finalize → zero leftovers → real p5-evidence.json → closure-intake PASS → merge P5 → close #6`
+`actual Figma ID sibling prep → exact artifact import → runtime self-test → rendered-pixel reject/restore/finalize → zero leftovers → real p5-evidence.json → closure-intake PASS → fresh P5→current-main integration resolution preserving main safety/tooling → full CI PASS → merge P5 → close #6`
 
 ### 2. P6 / issue #7 — only after P5 lands
 
@@ -212,6 +214,7 @@ Full operator checklist: `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md`.
 - runtime proof must be traceable to the exact CI-built artifact loaded in Figma;
 - artifact/archive/evidence/verifier filesystem reads are fail-closed at the documented trust boundaries;
 - manifest-only plugin-ID rebinding may change only top-level `id`; compiled code/UI stay byte-identical;
+- current-main source/output overlap protection and hardened CI/status/closure tooling must not be lost when P5 is integrated;
 - P6 advanced calibration remains clone-only with no production commit seam;
 - P7 processing remains strictly sequential with cooperative cancellation;
 - final P6/P7 closure evidence must come from their post-P5 fresh exact builds.
