@@ -10,7 +10,7 @@
     .app { padding: 16px; }
     h1 { font-size: 16px; margin: 0 0 4px; }
     .sub { font-size: 11px; opacity: .65; margin-bottom: 16px; }
-    .hero { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+    .hero, .backlogHero { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
     .score { font-size: 34px; font-weight: 700; line-height: 1; }
     .status { font-size: 11px; font-weight: 700; margin-top: 5px; }
     .meta { font-size: 11px; opacity: .7; margin-top: 8px; }
@@ -35,28 +35,66 @@
     .metricGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin-top: 10px; }
     .metric { font-size: 10px; opacity: .72; }
     .metric strong { display: block; font-size: 12px; opacity: 1; }
+    .sectionTitle { font-size: 12px; font-weight: 700; margin: 16px 0 6px; }
+    .backlogGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
+    .backlogStat { border: 1px solid var(--figma-color-border); border-radius: 6px; padding: 6px; font-size: 9px; opacity: .75; }
+    .backlogStat strong { display: block; font-size: 14px; opacity: 1; }
+    .backlogItem { border-top: 1px solid var(--figma-color-border); padding: 9px 0; }
+    .backlogItem:first-child { border-top: 0; }
+    .backlogMeta { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-top: 4px; font-size: 9px; opacity: .68; }
+    .backlogAction { font-size: 10px; line-height: 1.35; margin-top: 5px; opacity: .8; }
+    .backlogExports[hidden] { display: none; }
   </style>
 </head>
 <body>
   <div class="app">
     <h1>Pella Elementor Prep</h1>
-    <div class="sub">Audit + P3 read-only validator · no design mutations</div>
+    <div class="sub">Audit + actionable backlog + P3 read-only validator · no design mutations</div>
     <div id="root" class="empty">Select one Frame to audit, or two Frames to compare original vs candidate.</div>
     <div class="actions">
       <button id="audit">Run audit</button>
       <button id="validate">Compare 2 frames</button>
     </div>
+    <div id="backlog-exports" class="actions backlogExports" hidden>
+      <button id="export-backlog-json">Export backlog.json</button>
+      <button id="export-backlog-md">Export backlog.md</button>
+    </div>
   </div>
 
   <script>
     const root = document.getElementById('root');
+    const backlogExports = document.getElementById('backlog-exports');
+    let latestBacklogJson = '';
+    let latestBacklogMarkdown = '';
+
     document.getElementById('audit').addEventListener('click', () => {
       parent.postMessage({ pluginMessage: { type: 'audit-request' } }, '*');
     });
     document.getElementById('validate').addEventListener('click', () => {
       root.className = 'empty';
       root.textContent = 'Exporting and comparing selected section frames…';
+      backlogExports.hidden = true;
       parent.postMessage({ pluginMessage: { type: 'validation-request' } }, '*');
+    });
+
+    function downloadText(filename, content, type) {
+      if (!content) return;
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
+
+    document.getElementById('export-backlog-json').addEventListener('click', () => {
+      downloadText('backlog.json', latestBacklogJson, 'application/json;charset=utf-8');
+    });
+    document.getElementById('export-backlog-md').addEventListener('click', () => {
+      downloadText('backlog.md', latestBacklogMarkdown, 'text/markdown;charset=utf-8');
     });
 
     function escapeHtml(value) {
@@ -137,7 +175,50 @@
       };
     }
 
-    function renderAudit(report) {
+    function renderBacklog(backlog) {
+      if (!backlog || !Array.isArray(backlog.items)) return '';
+      const summary = backlog.summary;
+      const items = backlog.items.filter((item) => item.status !== 'RESOLVED').slice(0, 12).map((item) => {
+        const context = item.contexts && item.contexts[0] ? item.contexts[0] : {};
+        const location = [context.pageName, context.frameName, context.sectionName, context.nodeName].filter(Boolean).join(' / ');
+        return `
+          <div class="backlogItem">
+            <div class="rowHead">
+              <div class="name">${escapeHtml(item.title)}</div>
+              <div class="badge">${escapeHtml(item.category)} · ${escapeHtml(item.priority)}</div>
+            </div>
+            <div class="backlogMeta">
+              <span>${escapeHtml(item.id)}</span>
+              <span>${escapeHtml(item.status)}</span>
+              <span>${escapeHtml(item.delta)}</span>
+              <span>${escapeHtml(item.code)}</span>
+              <span>${item.occurrences} occurrence${item.occurrences === 1 ? '' : 's'}</span>
+            </div>
+            ${location ? `<div class="finding">${escapeHtml(location)}</div>` : ''}
+            <div class="backlogAction">${escapeHtml(item.proposedAction)}</div>
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="sectionTitle">Actionable backlog</div>
+        <div class="backlogHero">
+          <div class="rowHead">
+            <div class="name">${summary.active} active items</div>
+            <div class="badge">schema v${backlog.schemaVersion}</div>
+          </div>
+          <div class="backlogGrid">
+            <div class="backlogStat"><strong>${summary.byCategory.ERROR}</strong>ERROR</div>
+            <div class="backlogStat"><strong>${summary.byCategory.WARNING}</strong>WARNING</div>
+            <div class="backlogStat"><strong>${summary.byCategory.IMPROVEMENT}</strong>IMPROVE</div>
+            <div class="backlogStat"><strong>${summary.byCategory.INFO}</strong>INFO</div>
+          </div>
+          <div class="meta">Δ ${summary.byDelta.NEW} new · ${summary.byDelta.RESOLVED} resolved · ${summary.byDelta.REGRESSED} regressed · ${summary.byDelta.UNCHANGED} unchanged</div>
+        </div>
+        <div>${items || '<div class="empty">No active backlog items.</div>'}</div>
+        ${summary.active > 12 ? `<div class="meta">Showing first 12 active items. Export JSON/Markdown for the full backlog.</div>` : ''}`;
+    }
+
+    function renderAudit(report, backlog) {
       const sections = report.sections.map((section) => {
         const first = section.findings[0];
         const detections = Array.isArray(section.detections)
@@ -187,7 +268,8 @@
           <div class="meta">${escapeHtml(report.root.name)} · ${Math.round(report.root.width)} × ${Math.round(report.root.height)} · ${report.stats.nodes} nodes</div>
           <div class="meta">Auto Layout coverage ${report.stats.autoLayoutCoveragePct}% · ${report.sections.length} sections discovered</div>
         </div>
-        <div>${sections || '<div class="empty">No sections discovered yet.</div>'}</div>`;
+        <div>${sections || '<div class="empty">No sections discovered yet.</div>'}</div>
+        ${renderBacklog(backlog)}`;
     }
 
     function renderValidation(message) {
@@ -227,11 +309,15 @@
       if (message.type === 'audit-error' || message.type === 'validation-error') {
         root.className = 'empty';
         root.textContent = message.message;
+        if (message.type === 'audit-error') backlogExports.hidden = true;
         return;
       }
 
       if (message.type === 'audit-result') {
-        renderAudit(message.report);
+        latestBacklogJson = typeof message.backlogJson === 'string' ? message.backlogJson : '';
+        latestBacklogMarkdown = typeof message.backlogMarkdown === 'string' ? message.backlogMarkdown : '';
+        backlogExports.hidden = !(latestBacklogJson && latestBacklogMarkdown);
+        renderAudit(message.report, message.backlog);
         return;
       }
 
@@ -257,6 +343,7 @@
       }
 
       if (message.type === 'validation-result') {
+        backlogExports.hidden = true;
         renderValidation(message);
       }
     };
