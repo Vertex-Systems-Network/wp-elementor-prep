@@ -31,4 +31,14 @@ describe('real Figma acceptance runbook closure contract', () => {
     expect(runbook).toContain('source artifact directory and prepared output directory must not overlap');
     expect(runbook).toContain('previously documented `. dist-local` nested-output form is invalid');
   });
+
+  it('requires a fresh P5 to current-main integration proof when main has moved', () => {
+    expect(runbook).toContain('Latest Integration Readiness #90 reports P5 → current `main` as `CODE_CONFLICT`');
+    expect(runbook).toContain('fresh integration resolution');
+    expect(runbook).toContain('scripts/prepare-figma-import.mjs');
+    expect(runbook).toContain('.github/workflows/ci.yml');
+    expect(runbook).toContain('Historical integration proof #37 / CI #500 is superseded for merge authorization');
+    expect(runbook).not.toContain('already validated documentation-only integration resolution');
+    expect(runbook).not.toContain('known docs-only P5/main conflict');
+  });
 });

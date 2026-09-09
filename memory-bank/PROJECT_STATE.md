@@ -21,25 +21,26 @@ See `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and decision D-012.
 
 ## Current release state
 
-**P0–P4 are complete. P5/P6/P7 engineering is implemented and verified on canonical feature heads. The active release gate is the real imported-Figma P5 runtime acceptance for issue #6. Current-main preflight and retained-ZIP verification against the actual canonical #488 artifact are now complete; the next real step is preparing/importing the artifact-derived sibling copy with the actual Figma development-plugin ID. P6/P7 final closure can start only after P5 merges.**
+**P0–P4 are complete. P5/P6/P7 engineering is implemented and verified on canonical feature heads. The active release gate is still the real imported-Figma P5 runtime acceptance for issue #6. Current-main preflight and retained-ZIP verification against canonical #488 are complete. After real P5 evidence + closure-intake PASS, P5 also requires a fresh resolution against the then-current `main` because latest Integration Readiness #90 reports P5 → current main as `CODE_CONFLICT`, not docs-only. P6/P7 final closure can start only after that P5 integration lands.**
 
 Overall active project progress remains `93%`. Tooling, documentation and offline calibration do not advance that percentage unless a real product/runtime gate advances.
 
 ## Repository status
 
-- Verified base before the current issue #75 documentation sync: `main` `c3c1c7475395785e3db5ed753513a645e7dd42c7` from PR #74.
-- PR #74 post-merge CI #614 and Integration Readiness #87 passed.
-- Previous schema/status tooling chain PR #61 → #63 → #72 is complete; issues #60/#62/#64 are closed.
-- Open product/runtime dependency chain is #6, #7 and #8.
+- Latest verified base before issue #80 work: `main` `698940369635b6f40972e6404e7e7ff71b57ea14` from PR #79.
+- PR #79 post-merge CI #618 and Integration Readiness #90 passed.
+- Open product/runtime dependency chain is #6, #7 and #8; issue #80 is a temporary repo-side integration-contract correction.
 - Canonical P5/P6/P7 feature heads and registered artifact bytes remain unchanged by main-side tooling/documentation work.
-- Current P5 canonical artifact #488 has now passed an actual-artifact current-main final-closure preflight with its retained ZIP.
-- Exact current-main preflight source Git blob: `8d2d459b310ed2426f353ea91687d2a6d1dd6e09`.
-- Exact current-main registry Git blob: `de517b340cf951896fa3e312b40d9ddb4e86f944`.
-- Exact current-main closure-intake Git blob: `52bb19fead394579e1e89f09141bfbc6900f5cc3`.
+- Current P5 canonical artifact #488 has passed actual-artifact current-main final-closure preflight with its retained ZIP.
+- Exact preflight source Git blob used for the canonical calibration: `8d2d459b310ed2426f353ea91687d2a6d1dd6e09`.
+- Exact registry Git blob used for that calibration: `de517b340cf951896fa3e312b40d9ddb4e86f944`.
+- Exact closure-intake Git blob used for that calibration: `52bb19fead394579e1e89f09141bfbc6900f5cc3`.
 - Canonical #488 preflight result: exact BUILD_INFO identity MATCH, raw ZIP digest MATCH, `5/5` immutable file hashes MATCH, schema-v3 manifest semantic hash MATCH.
 - A sibling prepared calibration copy kept compiled code/UI byte-identical and passed the same preflight. It used a calibration numeric ID, not the actual Figma development-plugin ID.
-- Exact closure intake was also exercised with intentionally invalid `{}` evidence on the canonical and prepared copies. It reached the exact P5 verifier through `verified-bytes-memory-bootstrap` and correctly failed closed at verifier exit `1` because no real runtime proof was present.
+- Exact closure intake was exercised with intentionally invalid `{}` evidence on canonical and prepared copies. It reached the exact P5 verifier through `verified-bytes-memory-bootstrap` and correctly failed closed at verifier exit `1` because no real runtime proof was present.
 - The connected Figma canvas API does not substitute for importing/running this exact downloaded development-plugin artifact with its own manifest/menu/UI iframe, so no real Figma acceptance was claimed.
+- Latest Integration Readiness #90 on current main reports P5 → main `CODE_CONFLICT` across `.github/workflows/ci.yml`, `scripts/prepare-figma-import.mjs`, README and memory-bank files.
+- The helper conflict is materially safety-relevant: current main contains the source/output overlap guard while canonical P5 predates it. Therefore historical integration proof #37 / CI #500 is superseded for merge authorization.
 
 ## Module state
 
@@ -47,7 +48,7 @@ Overall active project progress remains `93%`. Tooling, documentation and offlin
 |---|---|---:|---|
 | AI-native governance/tooling | COMPLETE | 100% | Keep Issues → PR/MR → development lifecycle, status docs and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | COMPLETE | 100% | None |
-| P5 Safe Fix | RUNTIME ACCEPTANCE | 94% | Actual Figma-ID sibling prep → exact prepared artifact import → runtime/rendered-pixel evidence → real closure intake PASS → merge #6 |
+| P5 Safe Fix | RUNTIME ACCEPTANCE | 94% | Actual Figma-ID sibling prep → exact prepared artifact import → runtime/rendered-pixel evidence → real closure intake PASS → fresh current-main integration resolution + full CI → merge #6 |
 | P6 advanced structures | INTEGRATION BLOCKED | 80% | P5 merge → resolve conflicts → fresh exact-build artifact/provenance → runtime closure #7 |
 | P7 batch queue | INTEGRATION BLOCKED | 80% | P5 merge → resolve conflicts → fresh exact-build artifact/provenance → 60+ stress/cancel closure #8 |
 | P8 exporter adapters | DEFERRED | N/A | Re-evaluate only after normalization line is stable |
@@ -70,7 +71,7 @@ Manifest semantic hashing removes only top-level `manifest.id`, recursively sort
 - Manifest semantic SHA-256: `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`
 - Immutable pins: `5/5` verified against the actual downloaded package.
 - Current main-side preflight/archive gate: COMPLETE.
-- Remaining: actual Figma development-plugin ID prep/import, real runtime acceptance, rendered-pixel evidence, real closure-intake PASS.
+- Remaining: actual Figma development-plugin ID prep/import, real runtime acceptance, rendered-pixel evidence, real closure-intake PASS, then fresh P5→current-main integration resolution + CI.
 
 ### P6 — reference only
 
@@ -105,15 +106,17 @@ Current main-side tooling provides:
 - post-preflight verifier revalidation,
 - verified-byte in-memory verifier execution.
 
-The exact canonical P5 operator path has now been exercised through preflight and fail-closed invalid-evidence verification. These gates validate provenance and supplied evidence; they cannot create real Figma observations.
+The exact canonical P5 operator path has been exercised through preflight and fail-closed invalid-evidence verification. These gates validate provenance and supplied evidence; they cannot create real Figma observations.
 
 ## Integration readiness
 
-- P5 → current `main`: integration resolution already proven; merge waits only on real P5 runtime acceptance.
-- P6 → latest P5: real shared-code conflicts; resolve after P5 merge.
-- P7 → latest P5: real shared-code conflicts; resolve after P5 merge.
+Latest verified snapshot: Integration Readiness #90 on `main` `698940369635b6f40972e6404e7e7ff71b57ea14`.
 
-Do not mutate canonical P5/P6/P7 exact-build branches for docs/tooling churn.
+- P5 → current `main`: `CODE_CONFLICT`. Conflicts include `.github/workflows/ci.yml`, `scripts/prepare-figma-import.mjs`, README and memory-bank files. A fresh integration resolution is mandatory after real P5 acceptance; preserve current-main helper overlap safety and CI/status/tooling hardening while integrating P5 runtime code deliberately.
+- P6 → latest P5: `CODE_CONFLICT`; resolve only after P5 merge and then rebuild a fresh exact artifact.
+- P7 → latest P5: `CODE_CONFLICT`; resolve only after P5 merge and then rebuild a fresh exact artifact.
+
+Do not mutate canonical P5/P6/P7 exact-build branches for docs/tooling churn, and do not use historical integration proof #37 / CI #500 as authorization to merge P5 into a newer main.
 
 ## Current blockers and remaining development
 
@@ -126,7 +129,7 @@ Completed main-side steps:
 - sibling-copy byte-preservation calibration,
 - exact closure-intake fail-closed rejection calibration.
 
-Still required from the actual Figma Desktop development-plugin runtime:
+Still required from the actual Figma Desktop development-plugin runtime and final integration:
 1. prepare sibling copy using the actual Figma development-plugin ID;
 2. import the exact artifact-derived prepared manifest;
 3. run `Developer: P5 Runtime Self-Test`;
@@ -136,7 +139,10 @@ Still required from the actual Figma Desktop development-plugin runtime:
 7. prove stale proof cannot unlock the current build;
 8. export real `p5-evidence.json`;
 9. run current-main closure intake and require exact verifier exit `0` / final PASS;
-10. merge P5 and close #6.
+10. re-run Integration Readiness against the then-current main;
+11. create a fresh P5→main conflict resolution preserving current-main import-helper overlap safety, current CI/status/tooling and closure/runbook contracts while integrating P5 runtime code deliberately;
+12. run full PR CI and require PASS;
+13. merge P5 and close #6 only after both runtime closure and fresh integration proof are retained.
 
 ### Issue #7 — P6
 
@@ -152,4 +158,4 @@ Optional Elementor schema exporter adapters are not part of the active blocker s
 
 ## Immediate release target
 
-**Prepare/import canonical P5 #488 with the actual Figma development-plugin ID and complete the real Desktop runtime/rendered-pixel acceptance.** Until that happens, P5 remains 94%, overall active progress remains 93%, and P6/P7 final integration/closure remain blocked.
+**Prepare/import canonical P5 #488 with the actual Figma development-plugin ID and complete the real Desktop runtime/rendered-pixel acceptance. Then pass current-main closure intake and perform a fresh current-main integration resolution with full CI.** Until those steps happen, P5 remains 94%, overall active progress remains 93%, and P6/P7 final integration/closure remain blocked.

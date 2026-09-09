@@ -13,18 +13,20 @@ Never fabricate real Figma observations or closure evidence.
 
 ## Current repository queue
 
-- Latest verified `main` before issue #77 work: `32a8710411ed62d960c5eb4d0170fea1a7300466` from PR #76.
-- PR #76 post-merge CI #616 and Integration Readiness #89 passed.
-- Open product/runtime dependency chain remains #6 → #7/#8.
-- Issue #77 is a repo-side operator-contract fix only: canonical real-Figma runbook was stale because it still allowed a direct packaged verifier to appear as the final closure boundary.
+- Latest verified `main` before issue #80 work: `698940369635b6f40972e6404e7e7ff71b57ea14` from PR #79.
+- PR #79 post-merge CI #618 and Integration Readiness #90 passed.
+- Open product/runtime dependency chain remains #6 → #7/#8; issue #80 is a repo-side integration-contract correction only.
 - P5 #6 engineering is complete and its current-main artifact/archive preflight has been exercised against the actual canonical #488 package.
+- Latest Integration Readiness #90 reports **P5 → current main = CODE_CONFLICT**, not docs-only. Conflicts include `.github/workflows/ci.yml` and `scripts/prepare-figma-import.mjs` plus README/memory-bank files.
+- Therefore the historical integration proof #37 / CI #500 is superseded for merge authorization. After real P5 acceptance + closure intake PASS, a fresh P5→then-current-main integration resolution and full CI are mandatory before #6 can close.
+- That fresh resolution must preserve current-main source/output overlap safety in `scripts/prepare-figma-import.mjs`, current CI/status verification/tooling hardening, and current closure/runbook contracts while integrating P5 runtime code deliberately.
 - P6 #7 and P7 #8 remain blocked on P5 merge and require fresh post-P5 integration artifacts before final runtime evidence.
 - Canonical P5/P6/P7 feature heads and registered artifact bytes remain unchanged.
 - Overall active product progress remains `93%`.
 
-## Runbook closure contract — issue #77
+## Hardened final closure contract
 
-The canonical operator rule is now explicit:
+The canonical operator rule is explicit:
 
 - real Figma runtime observations are collected first from the exact imported artifact;
 - exported evidence must be retained as a stable regular non-symlink file;
@@ -33,7 +35,7 @@ The canonical operator rule is now explicit:
 - fresh post-P5 P6/P7 artifacts must be registered in current `main` as final-closure eligible with exact source/run/digest, immutable file hashes, schema-v3 manifest semantic SHA and verifier identity before their final runtime observations are accepted;
 - current-main closure intake must then PASS for P5, P6 or P7 before the corresponding issue can close.
 
-A dedicated regression test (`tests/real-figma-runbook-contract.test.mjs`) pins this contract and the sibling/non-nested import rule.
+A dedicated regression test (`tests/real-figma-runbook-contract.test.mjs`) pins the closure boundary, sibling/non-nested import rule, and fresh P5 integration requirement.
 
 ## Completed P5 operator verification
 
@@ -92,7 +94,7 @@ Do not use the calibration numeric ID as runtime evidence.
 8. confirm stale proof from another artifact cannot unlock the current build;
 9. export provenance-bound `p5-evidence.json` to a stable regular non-symlink path.
 
-### Final P5 closure sequence
+### Final P5 closure + integration sequence
 
 After real evidence exists, from current `main` run:
 
@@ -111,7 +113,16 @@ Require:
 - same-artifact verifier exit `0`;
 - final `Runtime closure intake: PASS`.
 
-Only then apply the already proven P5 documentation-side integration resolution, merge P5 and close #6.
+Then, before merging P5:
+
+1. re-run `npm run integration:readiness` against the then-current `main` and canonical P5;
+2. create a fresh resolution for the exact reported conflict set;
+3. preserve current-main `.github/workflows/ci.yml`, status verification/tooling, non-nested import safety in `scripts/prepare-figma-import.mjs`, and hardened closure/runbook contracts while integrating P5 runtime code deliberately;
+4. run full PR CI and require PASS;
+5. review the resolved diff/integration result;
+6. only then merge P5 and close #6.
+
+Do not reuse historical integration proof #37 / CI #500 as current merge authorization.
 
 ## Why the connected Figma API is not a substitute
 
