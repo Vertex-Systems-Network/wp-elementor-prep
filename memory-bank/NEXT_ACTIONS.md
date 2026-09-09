@@ -11,7 +11,7 @@ For every implementation cycle:
 2. inspect open PR/MR;
 3. continue the highest-priority unblocked implementation item;
 4. run repository integrity checks;
-5. synchronize README + memory-bank state;
+5. synchronize README + memory-bank state during the same cycle;
 6. never fabricate runtime evidence or describe validation-pending work as production-accepted.
 
 ## Current queue
@@ -22,18 +22,18 @@ Core/runtime validation-pending:
 - #8 — P7 Batch queue.
 
 Release expansion:
-- #81 — P9 backlog generator: implementation completed by PR #89; P12 validation pending;
-- #82 — P10 npm/CLI runner + supported source adapters: active implementation via PR #93 / subtask #90;
-- #83 — P11 normal Figma plugin packaging/distribution: next implementation target;
+- #81 — P9 backlog generator: implementation complete via PR #89; P12 validation pending;
+- #82 — P10 npm/CLI runner + supported source adapters: implementation complete via PR #93; P12 validation pending;
+- #83 — P11 normal Figma plugin packaging/distribution: current implementation target on `feat/p11-release-packaging`;
 - #84 — P12 final integrated validation/release acceptance.
 
 P8 Elementor exporter remains deferred.
 
-## Runtime/provenance boundary retained through P10/P11
+## Runtime/provenance boundary retained through P11
 
 Canonical P5 #488 provenance/preflight/archive plumbing remains hardened and unchanged by release-expansion work.
 
-Latest authoritative P5 integration state is still `CODE_CONFLICT`. Historical integration proof #37 / CI #500 is superseded. During P12, final P5 closure must be followed by a fresh then-current-main integration resolution preserving helper overlap safety, CI/status tooling, artifact provenance and closure/runbook hardening.
+Latest authoritative P5 integration state remains `CODE_CONFLICT`. Historical integration proof #37 / CI #500 is superseded. During P12, final P5 closure must be followed by a fresh then-current-main integration resolution preserving helper overlap safety, CI/status tooling, artifact provenance and closure/runbook hardening.
 
 Runtime artifact preflight requires a non-symlink artifact root, stable descriptor identity, immutable file hashes, exact build identity and schema-v3 manifest semantics.
 
@@ -59,9 +59,11 @@ Implemented:
 
 Do not call P9 production-accepted until P12 validates real plugin/export/parity behavior.
 
-## P10 — immediate work / #82
+## P10 — implementation complete
 
-PR #93 implements:
+Merged in PR #93 at `7e6aa85958060cc927d8fe09dc5cb88a3feba53e`.
+
+Implemented:
 - `npm run audit:figma -- --url ...`;
 - `npm run audit:figma -- --file-key ... --node-id ...`;
 - `npm run audit:snapshot -- --input ...`;
@@ -82,32 +84,43 @@ PR #93 implements:
 - source-bound timestamps for cloud/snapshot reproducibility;
 - implementation-side adapter and CLI contracts.
 
-### Current P10 sequence
-
-1. make `status:verify` PASS with all required schema anchors;
-2. run typecheck through PR CI and fix all Node/strict-typing issues;
-3. run tests/build/import-integrity through PR CI;
-4. review exact diff + mergeability;
-5. merge PR #93;
-6. close #90 and mark #82 implementation-complete / P12-validation-pending;
-7. sync README/ROADMAP/PROJECT_STATE/NEXT_ACTIONS;
-8. continue to P11 #83.
-
 Real credentialed Figma REST execution, real snapshot parity, Windows/macOS path behavior and production acceptance remain P12 tasks.
 
-## P11 — after P10
+## P11 — immediate work / #83
 
-Implement production plugin packaging/distribution around the existing classic-plugin runtime:
-- production/dev manifest separation;
-- stable normal-user command surface;
-- developer-only command hiding in release package;
-- reproducible release artifact + provenance metadata;
-- local/private/team distribution docs;
-- Community submission checklist/assets/metadata;
-- version/changelog/update process;
-- privacy/network declaration matching actual runtime.
+Active branch: `feat/p11-release-packaging`.
 
-Community publication remains subject to Figma review.
+Already implemented on the branch:
+- separate release manifest template;
+- release capability/menu registry;
+- deterministic release package builder requiring real `FIGMA_PLUGIN_ID` and exact source SHA;
+- release verifier rejecting placeholder IDs, unexpected files, menu/network drift and provenance/hash mismatches;
+- normal-user commands for the capability set currently integrated on main;
+- audit report JSON/Markdown exports;
+- backlog JSON/Markdown exports;
+- developer-only self-test/evidence commands excluded from normal release menu;
+- release fixture verification wired into CI;
+- Community listing metadata template;
+- Community readiness verifier with template vs publishable modes;
+- privacy/offline network declaration;
+- local/private/team/Community distribution guide;
+- generated release output ignored by source control.
+
+### Current P11 sequence
+
+1. finish version/changelog/static release contracts;
+2. verify README + PROJECT_STATE + ROADMAP + NEXT_ACTIONS remain synchronized;
+3. open P11 PR;
+4. run CI: status verification, typecheck, tests, plugin build, CLI build, release fixture verification, Community template verification and import integrity;
+5. fix any implementation defects;
+6. inspect mergeability/reviews/review threads;
+7. merge #83 implementation;
+8. close #83 as implementation-complete / P12-validation-pending;
+9. update README/memory-bank to P11 100% implementation and P12 sole final gate.
+
+Safe Fix/Prep and Batch must not be exposed in the current normal release menu until their final integrated P12 runtime code exists.
+
+Community publication itself, actual normal-plugin installation, production plugin ID use and final release acceptance remain P12 tasks.
 
 ## P12 — final integrated validation
 
@@ -134,6 +147,6 @@ Only after this matrix passes should the expanded release be treated as producti
 
 - historical P0–P7 core progress remains `93%`;
 - P9 implementation: `100%`, P12 validation pending;
-- P10 implementation: active until PR #93 integrity/merge completes;
-- P11: not started;
-- P12: not started.
+- P10 implementation: `100%`, P12 validation pending;
+- P11 implementation: `85%`, branch active;
+- P12 final validation: `0%`.
