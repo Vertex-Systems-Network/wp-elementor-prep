@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { build } from 'esbuild';
+import { assertSafeReleaseOutput } from './release-path-safety.mjs';
 
 function parseArgs(argv) {
   const result = new Map();
@@ -61,7 +62,7 @@ if (manifest.networkAccess?.allowedDomains?.length !== 1 || manifest.networkAcce
   throw new Error('Release manifest must remain offline with networkAccess.allowedDomains=["none"].');
 }
 
-const outRoot = resolve(args.values.get('out') ?? 'dist-release');
+const outRoot = assertSafeReleaseOutput(args.values.get('out') ?? 'dist-release');
 const pluginDir = resolve(outRoot, 'plugin');
 await rm(outRoot, { recursive: true, force: true });
 await mkdir(pluginDir, { recursive: true });
