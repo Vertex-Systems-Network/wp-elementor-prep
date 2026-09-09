@@ -87,3 +87,57 @@ At the end of every meaningful work batch, the root README must be updated with 
 Reason: existing defects and integration work should not be bypassed by new feature development, and repository state must remain immediately understandable to future agents without relying on chat history.
 
 Runtime/manual evidence gates remain authoritative; the workflow must never fabricate evidence simply to close an issue or merge a branch.
+
+## D-013 — Backlog is a first-class product output
+Date: 2026-09-10  
+Status: ACCEPTED
+
+Audit/prep findings must be convertible into a deterministic structured backlog with `ERROR`, `WARNING`, `INFO`, and `IMPROVEMENT` categories.
+
+Each backlog item should be traceable, deduplicatable, lifecycle-aware, and actionable. Unsafe/ambiguous findings should become backlog work rather than guessed mutations.
+
+Reason: the product must support continuous improvement across many Figma files, not only one-off audit reports.
+
+## D-014 — Plugin and CLI share one deterministic core
+Date: 2026-09-10  
+Status: ACCEPTED
+
+The normal Figma plugin and npm/Node CLI must share scanner/classifier/scoring/backlog logic. Input acquisition is isolated behind source adapters.
+
+Initial CLI source adapters:
+- official Figma REST API for cloud URL/file key;
+- canonical versioned snapshot/package files for path-based/offline use.
+
+A proprietary raw `.fig` file must not be reverse-engineered through an undocumented parser. Until a supported bridge exists, raw `.fig` path input fails clearly rather than guessing.
+
+Reason: one core prevents plugin/CLI drift and preserves deterministic behavior while allowing different input surfaces.
+
+## D-015 — Product ships as a normal Figma plugin
+Date: 2026-09-10  
+Status: ACCEPTED
+
+The release plan must include production plugin packaging/distribution, not only development-plugin import.
+
+The same core should support:
+- local development import;
+- private/team/organization distribution where applicable;
+- a Community-ready release package and submission checklist.
+
+Community publication itself remains subject to Figma review and is not assumed to be automatic.
+
+## D-016 — Final manual/runtime acceptance is batched in P12
+Date: 2026-09-10  
+Status: ACCEPTED
+
+Current project direction is to finish planned implementation before performing manual/runtime/end-to-end product testing.
+
+Until P12:
+- implementation may continue;
+- production safety locks and provenance rules remain in place;
+- no real Figma evidence may be fabricated;
+- implementation-complete must not be confused with production-accepted;
+- automated repository checks, if they run, are implementation safeguards only and do not count as final product acceptance.
+
+P12 is the final integrated validation phase covering P5/P6/P7 plus backlog, CLI/source adapters, plugin distribution and release-package behavior.
+
+Reason: manual Figma/runtime testing is currently unavailable and should be batched once implementation scope is complete instead of repeatedly blocking development.
