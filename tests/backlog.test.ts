@@ -76,7 +76,7 @@ function report(sections = [section('section-a', 'Cards A'), section('section-b'
 }
 
 describe('P9 actionable backlog', () => {
-  it('maps audit findings and recipe opportunities into required categories', () => {
+  it('maps audit findings and recipe opportunities into required categories and severities', () => {
     const backlog = generateBacklog(report(), {
       context: { fileKey: 'file-key', pageId: 'page-1', pageName: 'Home' },
     });
@@ -86,6 +86,10 @@ describe('P9 actionable backlog', () => {
     expect(backlog.summary.byCategory.WARNING).toBe(1);
     expect(backlog.summary.byCategory.IMPROVEMENT).toBe(1);
     expect(backlog.summary.byCategory.INFO).toBe(0);
+    expect(backlog.summary.bySeverity.HIGH).toBe(1);
+    expect(backlog.summary.bySeverity.MEDIUM).toBe(2);
+    expect(backlog.summary.bySeverity.LOW).toBe(0);
+    expect(backlog.summary.bySeverity.CRITICAL).toBe(0);
 
     const error = backlog.items.find((item) => item.category === 'ERROR');
     expect(error).toMatchObject({ priority: 'P1', severity: 'HIGH', autoFixEligible: false });
@@ -98,6 +102,17 @@ describe('P9 actionable backlog', () => {
       confidence: 91,
       autoFixEligible: false,
     });
+  });
+
+  it('does not emit an improvement for an already-PASS section even if a stale recipe string exists', () => {
+    const passSection: SectionAudit = {
+      ...section('section-pass', 'Already good'),
+      status: 'PASS',
+      score: 100,
+      findings: [],
+    };
+    const backlog = generateBacklog(report([passSection]));
+    expect(backlog.items.some((item) => item.code === 'ELEMENTOR_RECIPE_CANDIDATE')).toBe(false);
   });
 
   it('deduplicates repeated semantic findings across section ids and retains occurrence contexts', () => {
@@ -137,6 +152,9 @@ describe('P9 actionable backlog', () => {
     const resolved = withoutSection.items.find((item) => item.code === 'TEXT_REFLOW_RISK');
     expect(resolved).toMatchObject({ status: 'RESOLVED', delta: 'RESOLVED', occurrences: 0 });
     expect(withoutSection.summary.byDelta.RESOLVED).toBeGreaterThan(0);
+    expect(withoutSection.summary.byCategory.WARNING).toBe(0);
+    expect(withoutSection.summary.byCategory.IMPROVEMENT).toBe(0);
+    expect(withoutSection.summary.bySeverity.MEDIUM).toBe(0);
 
     const reappeared = generateBacklog(report([section('section-c', 'Cards')]), { previous: withoutSection });
     const regressed = reappeared.items.find((item) => item.code === 'TEXT_REFLOW_RISK');
@@ -208,6 +226,7 @@ describe('P9 actionable backlog', () => {
     expect(json).toBe(serializeBacklogJson(backlog));
     expect(JSON.parse(json)).toEqual(backlog);
     expect(markdown).toContain('# Elementor Prep Backlog');
+    expect(markdown).toContain('Active severity CRITICAL / HIGH / MEDIUM / LOW');
     expect(markdown).toContain('| ID | Category | Priority | Status | Delta | Code | Occurrences | Title | Proposed action |');
     expect(markdown).toContain('ELEMENTOR_RECIPE_CANDIDATE');
     expect(markdown).toBe(serializeBacklogMarkdown(backlog));
