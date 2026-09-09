@@ -4,131 +4,122 @@ Last updated: 2026-09-10
 
 ## Current policy
 
-P9–P11 implementation is complete. P12 #84 is now the sole release-expansion final validation gate.
+P9–P11 implementation is complete. P12 #84 is active at `20%` after the cross-platform offline acceptance slice.
 
 For every P12 cycle:
 1. inspect open Issues;
 2. inspect open PR/MR;
-3. continue the highest-priority unblocked validation/integration obligation;
-4. run repository integrity/provenance checks where applicable;
+3. continue the highest-priority genuine validation/integration obligation;
+4. retain machine/runtime evidence only for properties actually observed;
 5. synchronize README + memory-bank state during the same cycle;
-6. never fabricate runtime evidence or describe validation-pending work as production-accepted.
+6. never fabricate Figma evidence or describe pending gates as accepted.
 
 ## Current queue
 
-Final validation/integration:
-- #6 — P5 Safe Fix: implementation complete; genuine Figma closure + current-main integration pending;
-- #7 — P6 Advanced structures: implementation complete on reference head; fresh final integration/artifact/runtime closure pending after P5;
-- #8 — P7 Batch queue: implementation complete on reference head; fresh final integration/artifact/stress/cancel closure pending after P5;
-- #84 — P12 final integrated validation/release acceptance.
+- #6 — P5 Safe Fix: **next critical path**; exact artifact ready, genuine Desktop/rendered-pixel closure + final main integration pending;
+- #7 — P6 Advanced structures: waits for P5 final merge, then fresh artifact + real positive/refusal closure;
+- #8 — P7 Batch queue: waits for P5 final merge, then fresh artifact + real 60+ stress/cancel closure;
+- #84 — P12 final integrated validation, 20% complete.
 
-Completed release-expansion implementation:
-- #81 / P9 → PR #89;
-- #82 / P10 → PR #93;
-- #83 / P11 → PR #94.
+P8 exporter remains deferred. P9/P10/P11 implementation issues are closed.
 
-P8 Elementor exporter remains deferred.
+## Completed P12 offline slice
 
-## Runtime/provenance boundary
+PR #95 merged at `cee0d79678e55abac4c3e288d7239eec129603c5`.
 
-Canonical P5 #488 provenance/preflight/archive plumbing remains hardened.
+Validated on Linux/macOS/Windows:
+- built Node >=20 CLI;
+- canonical snapshot audit with paths containing spaces;
+- audit JSON/Markdown repeatability;
+- backlog JSON/Markdown repeatability;
+- summary-only repeatability and no-write behavior;
+- raw `.fig` exit `2` / `UNSUPPORTED_FIG_LOCAL_FILE` refusal;
+- repeated release package byte reproducibility for identical fixture identity;
+- release package verifier PASS.
 
-Latest authoritative P5 integration truth is `CODE_CONFLICT`. Historical integration proof #37 / CI #500 is superseded. Final P5 closure must be followed by a fresh then-current-main integration resolution preserving helper overlap safety, CI/status tooling, artifact provenance and closure/runbook hardening.
+Evidence:
+- standard CI #647 PASS;
+- Integration Readiness #105 PASS;
+- P12 Offline Acceptance run #2 PASS on all three operating systems;
+- Linux artifact `10127554503`, digest `eca07e7ca5559b9a74c88e61e23e4d6870a81eabd1aeb091f5c04a4f6c106276`;
+- macOS artifact `10127561512`, digest `9ff90da24595c89dc57f67daa0fa12e01a122fd21551745b69cf52c2988ba9cd`;
+- Windows artifact `10127564618`, digest `e2a95df86973adacc70f4cd2aa403f72c7ae9c4396ad2eb205aa10165070e9b8`.
 
 Runtime artifact preflight requires a non-symlink artifact root, stable descriptor identity, immutable file hashes, exact build identity and schema-v3 manifest semantics.
 
-P6 #494 and P7 #490 remain engineering/reference artifacts; fresh final artifacts and real runtime closure are required after P5 final integration.
+## Immediate P5 sequence
 
-## P9 — implementation complete
+Canonical P5:
+- branch `feat/p5-safe-recipes`;
+- head `810d98d6e09cb4cf3fe4758fcb07e87734254a8e`;
+- artifact `figma-plugin-dist-488`;
+- ZIP SHA-256 `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`;
+- manifest semantic SHA-256 `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`.
 
-Merged PR #89. Real plugin backlog/export/parity behavior remains part of P12.
+Next steps:
+1. obtain/use the genuine Figma development-plugin ID for the exact P5 artifact-derived import;
+2. prepare only to a sibling/non-nested directory;
+3. import the exact derived `manifest.json` in real Figma Desktop;
+4. run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
+5. collect genuine rendered-pixel forced-reject / restore / finalize evidence;
+6. require checkpoint cleanup and zero leftovers;
+7. export stable unedited `p5-evidence.json`;
+8. run current-main `runtime:closure-intake -- p5 ...`, binding retained ZIP when available;
+9. refresh P5 → then-current-main integration readiness;
+10. resolve the exact current conflict set preserving current-main P9/P10/P11, overlap safety, CI/status/provenance/closure tooling;
+11. require final integration CI PASS;
+12. merge P5 and close #6 only then.
 
-## P10 — implementation complete
+## Current integration fact
 
-Merged PR #93. Real credentialed Figma REST execution, canonical snapshot parity, Windows/macOS path behavior and plugin/CLI parity remain P12 tasks.
+Integration Readiness #104 against main `f689fd0b703f` reported P5 → main `CODE_CONFLICT` in 11 paths:
+- `.github/workflows/ci.yml`;
+- `README.md`;
+- `memory-bank/CHANGELOG.md`;
+- `memory-bank/NEXT_ACTIONS.md`;
+- `memory-bank/PROJECT_STATE.md`;
+- `memory-bank/ROADMAP.md`;
+- `package.json`;
+- `scripts/build.mjs`;
+- `scripts/prepare-figma-import.mjs`;
+- `src/plugin/main.ts`;
+- `src/ui/ui.html`.
 
-## P11 — implementation complete
+This list is a pre-closure planning fact only; refresh again before final P5 integration.
 
-Merged PR #94 at `7f83a1f82459cd9354882235dd04153bb20e5760`.
+## After P5
 
-Implemented:
-- release manifest/capability registry;
-- deterministic real-plugin-ID/source-SHA package builder;
-- fail-closed package/provenance verifier;
-- release-output source-overlap safety;
-- normal-user current-capability menu commands;
-- audit/backlog JSON + Markdown exports;
-- developer-command exclusion;
-- CHANGELOG/version/release contract;
-- Community metadata/readiness verifier;
-- privacy/offline-network declaration;
-- local/private/team/Community distribution guide;
-- release checks in CI.
+P6:
+- resolve onto merged final line;
+- build/register fresh exact artifact;
+- real image-bearing positive calibration + preservation refusal;
+- closure intake PASS;
+- merge/close #7.
 
-Pre-merge P11 evidence:
-- CI #640 PASS;
-- Integration Readiness #99 PASS;
-- 129 tests PASS;
-- reviews 0;
-- review threads 0.
+P7:
+- resolve onto merged final line;
+- build/register fresh exact artifact;
+- realistic 60+ sequential queue, all terminal, max concurrency 1;
+- cancellation during genuinely active long Full P3;
+- closure intake PASS;
+- merge/close #8.
 
-Actual normal-plugin install/use, final integrated P5/P6/P7 menu capabilities, filled Community metadata/assets/support contact and Community submission readiness remain P12 tasks.
+## Remaining P9/P10/P11 acceptance
 
-## P12 — immediate execution sequence
-
-### A. Refresh exact current state
-1. verify post-P11 `main` CI + Integration Readiness;
-2. refresh P5 → current-main integration readiness; do not rely on stale historical conflict file lists;
-3. retain canonical P5 #488 exact artifact provenance and registry pins.
-
-### B. P5 final closure/integration
-1. prepare/import the exact P5 artifact-derived plugin with a genuine Figma development-plugin ID using sibling/non-nested output;
-2. run `Developer: P5 Runtime Self-Test` in real Figma Desktop;
-3. require compiled runtime acceptance PASS;
-4. collect genuine rendered-pixel forced-reject / restore / finalize evidence and zero leftovers;
-5. export stable `p5-evidence.json` without manual edits;
-6. pass current-main `runtime:closure-intake` with original ZIP binding where retained;
-7. re-run integration readiness against then-current main;
-8. deliberately resolve P5 code conflicts while preserving current-main safety/tooling/release-expansion work;
-9. run full CI, merge P5, close #6 only after all evidence/integration gates pass.
-
-### C. P6 final line
-After P5 merge:
-1. resolve P6 against merged line;
-2. create/register fresh exact artifact;
-3. collect real image-bearing positive calibration + preservation-refusal evidence;
-4. pass closure intake;
-5. merge/close #7.
-
-### D. P7 final line
-After P5/P6-required line:
-1. resolve P7 against merged line;
-2. create/register fresh exact artifact;
-3. run realistic 60+ sequential batch and require every item terminal + max concurrency 1;
-4. request cancellation during genuinely active long Full P3 processing;
-5. collect cooperative cancellation evidence;
-6. pass closure intake;
-7. merge/close #8.
-
-### E. P9/P10/P11 release acceptance
-Validate on equivalent real inputs/builds:
-- P9 backlog categories, dedupe, delta and plugin exports;
-- P10 official Figma URL/file-key CLI and canonical snapshot CLI;
-- raw `.fig` clear unsupported/supported-bridge behavior;
-- plugin/CLI parity and deterministic outputs;
-- Windows/macOS CLI path handling where applicable;
-- P11 final integrated release package provenance/reproducibility;
-- local dev import + normal installed/private plugin flow;
-- final release menu matches actually integrated capabilities;
-- filled Community metadata, support contact, category/target and final visual assets;
-- final publishable readiness check.
-
-Figma Community review/approval is external and must never be reported as completed until it actually occurs.
+- real plugin backlog/report export quality;
+- real credentialed Figma REST URL/file-key CLI;
+- equivalent plugin/CLI parity;
+- final integrated release package with real publisher/plugin identity;
+- local development import + normal/private installed plugin flow;
+- final release menu matched to integrated capabilities;
+- filled Community support/category/target/assets and publishable readiness;
+- final release exit review;
+- actual Community approval remains external.
 
 ## Progress tracking
 
-- historical P0–P7 core progress remains `93%`;
-- P9 implementation: `100%`, P12 validation pending;
-- P10 implementation: `100%`, P12 validation pending;
-- P11 implementation: `100%`, P12 validation pending;
-- P12 final validation: `0%`, active next gate.
+- historical P0–P7 core progress: `93%`;
+- P9 implementation: `100%`;
+- P10 implementation: `100%`, partial P12 acceptance;
+- P11 implementation: `100%`, partial P12 acceptance;
+- P12 final validation: `20%`.
