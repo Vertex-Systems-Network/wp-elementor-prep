@@ -1,4 +1,21 @@
-export function assertRegistrySchemaReferences(schemaVersion, documents) {
+export const STATUS_SCHEMA_ANCHORS = Object.freeze({
+  'README.md': /Machine-readable operational registry:[^\n]*schema v(\d+)\b/i,
+  'memory-bank/PROJECT_STATE.md': /`config\/runtime-artifacts\.json` is runtime artifact registry schema v(\d+)\b/i,
+  'memory-bank/ROADMAP.md': /The artifact is registered in `config\/runtime-artifacts\.json` schema v(\d+)\b/i,
+  'memory-bank/NEXT_ACTIONS.md': /Runtime artifact preflight requires[^\n]*schema-v(\d+)\b/i
+});
+
+function collectAnchorVersions(text, pattern) {
+  const flags = pattern.flags.replace(/g/g, '');
+  const matcher = new RegExp(pattern.source, `${flags}g`);
+  return [...text.matchAll(matcher)].map((match) => Number(match[1]));
+}
+
+export function assertRegistrySchemaReferences(
+  schemaVersion,
+  documents,
+  anchors = STATUS_SCHEMA_ANCHORS
+) {
   if (!Number.isInteger(schemaVersion) || schemaVersion < 1) {
     throw new Error(`Runtime artifact registry schemaVersion must be a positive integer, got ${schemaVersion}`);
   }
@@ -11,21 +28,26 @@ export function assertRegistrySchemaReferences(schemaVersion, documents) {
 
   for (const [path, text] of entries) {
     if (typeof text !== 'string') {
-      throw new Error(`${path} must reference active runtime artifact registry ${expected}.`);
+      throw new Error(`${path} must expose exactly one current runtime registry schema anchor.`);
     }
 
-    const versions = [...text.matchAll(/\bschema v(\d+)\b/gi)].map((match) => Number(match[1]));
-    if (!versions.includes(schemaVersion)) {
-      throw new Error(`${path} must reference active runtime artifact registry ${expected}.`);
+    const pattern = anchors?.[path];
+    if (!(pattern instanceof RegExp)) {
+      throw new Error(`${path} has no configured current runtime registry schema anchor.`);
     }
 
-    const staleVersions = [...new Set(versions.filter((version) => version !== schemaVersion))]
-      .sort((a, b) => a - b);
+    const versions = collectAnchorVersions(text, pattern);
+    if (versions.length === 0) {
+      throw new Error(`${path} must expose exactly one current runtime registry schema anchor.`);
+    }
 
-    if (staleVersions.length > 0) {
-      const staleLabels = staleVersions.map((version) => `schema v${version}`).join(', ');
+    if (versions.length > 1) {
+      throw new Error(`${path} exposes multiple current runtime registry schema anchors.`);
+    }
+
+    if (versions[0] !== schemaVersion) {
       throw new Error(
-        `${path} references stale runtime artifact registry ${staleLabels} while active is ${expected}.`
+        `${path} current runtime artifact registry anchor is schema v${versions[0]} while active is ${expected}.`
       );
     }
   }
