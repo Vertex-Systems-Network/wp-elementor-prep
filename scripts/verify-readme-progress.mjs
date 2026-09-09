@@ -39,17 +39,18 @@ const rows = moduleSection
   .slice(1)
   .map((line) => line.split('|').slice(1, -1).map((cell) => cell.trim()));
 
-if (rows.length < 5) {
-  throw new Error(`Expected at least 5 module progress rows, found ${rows.length}.`);
+if (rows.length < 10) {
+  throw new Error(`Expected at least 10 module progress rows for the P0-P12 roadmap, found ${rows.length}.`);
 }
 
-const requiredModules = ['AI-native', 'P0–P4', 'P5', 'P6', 'P7', 'P8'];
+const requiredModules = ['AI-native', 'P0–P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12'];
 for (const moduleName of requiredModules) {
   if (!rows.some(([module]) => module?.includes(moduleName))) {
     throw new Error(`README progress table is missing required module row: ${moduleName}`);
   }
 }
 
+const activePercentages = [];
 for (const row of rows) {
   if (row.length !== 5) {
     throw new Error(`Malformed README module progress row: ${JSON.stringify(row)}`);
@@ -75,6 +76,8 @@ for (const row of rows) {
   if (isDeferred && !status.includes('DEFERRED')) {
     throw new Error(`N/A progress is only valid for a DEFERRED module: ${module}`);
   }
+
+  if (isPercent) activePercentages.push(Number.parseInt(progress, 10));
 }
 
 const overall = readme.match(/\*\*Overall active project progress:\*\*\s+`([█░]{10})\s+(\d{1,3})%`/);
@@ -85,6 +88,19 @@ if (!overall) {
 const overallPercent = Number(overall[2]);
 if (!Number.isInteger(overallPercent) || overallPercent < 0 || overallPercent > 100) {
   throw new Error(`Overall project progress is outside 0–100: ${overall[2]}`);
+}
+
+if (activePercentages.length === 0) {
+  throw new Error('README progress table has no active numeric module rows.');
+}
+
+const computedOverall = Math.round(
+  activePercentages.reduce((sum, value) => sum + value, 0) / activePercentages.length,
+);
+if (overallPercent !== computedOverall) {
+  throw new Error(
+    `Overall project progress must equal the rounded mean of active module rows: expected ${computedOverall}%, got ${overallPercent}%.`,
+  );
 }
 
 console.log(`README progress contract PASS: ${rows.length} modules, overall ${overallPercent}%, runtime registry ${schemaTag}.`);
