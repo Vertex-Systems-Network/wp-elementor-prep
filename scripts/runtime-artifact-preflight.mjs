@@ -103,6 +103,61 @@ function readRequiredFile(
   return bytes ? { path, bytes } : null;
 }
 
+function readArtifactArchive(
+  archivePath,
+  errors,
+  {
+    existsSyncImpl = existsSync,
+    lstatSyncImpl = lstatSync,
+    openSyncImpl = openSync,
+    fstatSyncImpl = fstatSync,
+    readFileSyncImpl = readFileSync,
+    closeSyncImpl = closeSync
+  }
+) {
+  const path = resolve(archivePath);
+  if (!existsSyncImpl(path)) {
+    errors.push(`Artifact archive does not exist: ${path}`);
+    return null;
+  }
+
+  const metadata = lstatSyncImpl(path);
+  if (metadata.isSymbolicLink()) {
+    errors.push(`Artifact archive must not be a symbolic link: ${path}`);
+    return null;
+  }
+  if (!metadata.isFile()) {
+    errors.push(`Artifact archive is not a regular file: ${path}`);
+    return null;
+  }
+
+  let fd = null;
+  let bytes = null;
+  try {
+    fd = openSyncImpl(path, 'r');
+    const openedMetadata = fstatSyncImpl(fd);
+    if (!openedMetadata.isFile()) {
+      errors.push(`Artifact archive did not open as a regular file: ${path}`);
+    } else if (!sameFileIdentity(metadata, openedMetadata)) {
+      errors.push(`Artifact archive changed between validation and open: ${path}`);
+    } else {
+      bytes = readFileSyncImpl(fd);
+    }
+  } catch (error) {
+    errors.push(`Artifact archive could not be opened safely: ${path}: ${error.message}`);
+  } finally {
+    if (fd !== null) {
+      try {
+        closeSyncImpl(fd);
+      } catch (error) {
+        errors.push(`Artifact archive descriptor could not be closed cleanly: ${path}: ${error.message}`);
+      }
+    }
+  }
+
+  return bytes ? { path, bytes } : null;
+}
+
 function normalizeExpectedSha256(value) {
   return String(value || '').toLowerCase().replace(/^sha256:/, '');
 }
@@ -112,6 +167,7 @@ export function inspectRuntimeArtifact(
   artifactDir,
   {
     intent = 'final-closure',
+    archivePath = null,
     registry = loadRegistry(),
     existsSyncImpl = existsSync,
     lstatSyncImpl = lstatSync,
@@ -150,6 +206,30 @@ export function inspectRuntimeArtifact(
   }
 
   const fileOps = { existsSyncImpl, lstatSyncImpl, openSyncImpl, fstatSyncImpl, readFileSyncImpl, closeSyncImpl };
+  const expectedArchiveSha256 = normalizeExpectedSha256(track.digest);
+  const archiveIntegrity = {
+    supplied: Boolean(archivePath),
+    path: archivePath ? resolve(archivePath) : null,
+    expectedSha256: /^[a-f0-9]{64}$/.test(expectedArchiveSha256) ? expectedArchiveSha256 : null,
+    observedSha256: null,
+    matched: null
+  };
+
+  if (archivePath) {
+    if (!/^[a-f0-9]{64}$/.test(expectedArchiveSha256)) {
+      errors.push(`Registry artifact digest is invalid for ${normalizedTrack}: ${track.digest ?? '<missing>'}`);
+    } else {
+      const archive = readArtifactArchive(archivePath, errors, fileOps);
+      if (archive) {
+        archiveIntegrity.observedSha256 = sha256Bytes(archive.bytes);
+        archiveIntegrity.matched = archiveIntegrity.observedSha256 === expectedArchiveSha256;
+        if (!archiveIntegrity.matched) {
+          errors.push(`Artifact archive SHA-256 mismatch: expected ${expectedArchiveSha256}, got ${archiveIntegrity.observedSha256}`);
+        }
+      }
+    }
+  }
+
   const requiredFiles = ['BUILD_INFO.txt', 'manifest.json', 'code.js', 'ui.html', 'prepare-figma-import.mjs', track.verifier];
   const files = {};
   for (const name of requiredFiles) files[name] = readRequiredFile(dir, name, errors, fileOps);
@@ -249,6 +329,7 @@ export function inspectRuntimeArtifact(
       digest: track.digest,
       finalClosureEligible: track.finalClosureEligible
     },
+    archiveIntegrity,
     observedBuild: {
       sourceSha: buildInfo.source_sha ?? null,
       workflowSha: buildInfo.workflow_sha ?? null,
@@ -269,7 +350,7 @@ export function inspectRuntimeArtifact(
 }
 
 function usage() {
-  console.error('Usage: node scripts/runtime-artifact-preflight.mjs <p5|p6|p7> <artifact-dir> [--intent=final-closure|reference] [--json]');
+  console.error('Usage: node scripts/runtime-artifact-preflight.mjs <p5|p6|p7> <artifact-dir> [--archive=/path/to/artifact.zip] [--intent=final-closure|reference] [--json]');
   process.exit(2);
 }
 
@@ -282,6 +363,12 @@ function printHuman(result) {
     console.log(`Source SHA: ${result.registeredArtifact.sourceSha}`);
     console.log(`CI run: #${result.registeredArtifact.runNumber} (${result.registeredArtifact.runId})`);
     console.log(`Final closure eligible: ${result.registeredArtifact.finalClosureEligible ? 'yes' : 'no'}`);
+  }
+  if (result.archiveIntegrity?.supplied) {
+    console.log(`Artifact archive SHA-256: ${result.archiveIntegrity.matched ? 'MATCH' : 'MISMATCH'}`);
+    if (result.archiveIntegrity.observedSha256) console.log(`Observed archive SHA-256: ${result.archiveIntegrity.observedSha256}`);
+  } else if (result.registeredArtifact?.digest) {
+    console.log('Artifact archive SHA-256: not supplied (optional; unpacked-file pins still enforced)');
   }
   if (result.immutableFileIntegrity) {
     console.log(`Immutable files: ${result.immutableFileIntegrity.matched}/${result.immutableFileIntegrity.checked} SHA-256 pins matched`);
@@ -298,11 +385,14 @@ if (invokedPath === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   const json = args.includes('--json');
   const intentArg = args.find((arg) => arg.startsWith('--intent='));
+  const archiveArg = args.find((arg) => arg.startsWith('--archive='));
   const positional = args.filter((arg) => !arg.startsWith('--'));
   if (positional.length !== 2) usage();
   const intent = intentArg ? intentArg.slice('--intent='.length) : 'final-closure';
   if (!['final-closure', 'reference'].includes(intent)) usage();
-  const result = inspectRuntimeArtifact(positional[0], positional[1], { intent });
+  const archivePath = archiveArg ? archiveArg.slice('--archive='.length) : null;
+  if (archiveArg && !archivePath) usage();
+  const result = inspectRuntimeArtifact(positional[0], positional[1], { intent, archivePath });
   if (json) console.log(JSON.stringify(result, null, 2));
   else printHuman(result);
   process.exit(result.ok ? 0 : 1);
