@@ -34,6 +34,17 @@ Each backlog item contains:
 - aggregated file/page/frame/section/node contexts;
 - aggregated evidence entries.
 
+The summary exposes:
+
+- `total` including retained resolved history;
+- `active` excluding resolved items;
+- active counts by `ERROR` / `WARNING` / `INFO` / `IMPROVEMENT`;
+- active counts by `CRITICAL` / `HIGH` / `MEDIUM` / `LOW` severity;
+- lifecycle counts by status;
+- run-to-run counts by delta.
+
+Resolved history therefore remains available for regression detection without inflating the UI's active category/severity cards.
+
 ## Fingerprint and dedupe contract
 
 Fingerprint identity deliberately excludes volatile Figma node IDs, timestamps, context names and evidence values. It is derived from the semantic category/code/title/action/recipe identity using two deterministic 32-bit FNV-1a passes.
@@ -62,7 +73,7 @@ Existing `AuditFinding` values map as follows:
 - `warning` → `WARNING`, medium severity, P2;
 - `info` → `INFO`, low severity, P3.
 
-Non-PASS sections with a deterministic `recommendedRecipe` additionally produce an `IMPROVEMENT` item.
+Only non-PASS sections with a deterministic `recommendedRecipe` additionally produce an `IMPROVEMENT` item. A stale recipe string on an already-PASS section is ignored.
 
 P9 never upgrades a recipe candidate into mutation permission. Audit-derived recipe backlog items are emitted with `autoFixEligible: false`; P5+ safety gates remain authoritative for any mutation eligibility.
 
@@ -70,17 +81,28 @@ P9 never upgrades a recipe candidate into mutation permission. Audit-derived rec
 
 `RuntimeBacklogFinding` allows later P5/P6/P7/P12 runtime signals to enter the same model without coupling the backlog engine to those modules. The default runtime category is fail-safe `ERROR`, and auto-fix eligibility defaults to `false`.
 
+## Plugin persistence and stale-result safety
+
+Backlog history adds asynchronous `clientStorage` reads/writes to the audit path. The plugin therefore uses a monotonically increasing audit sequence:
+
+- every explicit audit request creates a new sequence;
+- every selection change invalidates all older sequences, including changes to zero or two selected nodes;
+- starting validation invalidates any earlier audit still in flight;
+- an older audit checks its sequence after async boundaries and cannot post a stale result into the UI.
+
+The storage key captures file/page/frame identity from the audit start so later selection/page changes do not redirect persistence to a different frame.
+
 ## Outputs
 
 The plugin UI shows active backlog counts/items and exports:
 
 - `backlog.json` — complete schema-v1 machine-readable document;
-- `backlog.md` — deterministic human-readable summary/table.
+- `backlog.md` — deterministic human-readable summary/table including active severity counts.
 
 These serializers are also the P10 CLI-compatible output boundary.
 
 ## Validation policy
 
-Automated tests cover mapping, stable fingerprints, repeated-occurrence dedupe, durable resolved history, regressions, accepted-risk preservation, runtime input, JSON/Markdown serialization, plugin persistence wiring and UI export controls.
+Implementation-side contract coverage is included for mapping, stable fingerprints, repeated-occurrence dedupe, durable resolved history, regressions, accepted-risk preservation, runtime input, category/severity summaries, JSON/Markdown serialization, plugin persistence wiring, stale-audit invalidation and UI export controls.
 
 Per issue #84, manual/runtime/end-to-end product acceptance is deferred to P12 final integrated validation. P9 implementation can be complete before that point, but it must not be described as production-accepted until the P12 matrix passes.
