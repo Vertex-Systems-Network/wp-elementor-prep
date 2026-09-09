@@ -51,6 +51,12 @@ Evidence:
 - macOS artifact `10127561512` / SHA-256 `9ff90da24595c89dc57f67daa0fa12e01a122fd21551745b69cf52c2988ba9cd`;
 - Windows artifact `10127564618` / SHA-256 `e2a95df86973adacc70f4cd2aa403f72c7ae9c4396ad2eb205aa10165070e9b8`.
 
+## P5 integration rehearsal checkpoint
+
+Before real runtime closure, current main `3c3dc14bc48c3ea8e5df7620e223de0229737d9e` and canonical P5 `810d98d6e09cb4cf3fe4758fcb07e87734254a8e` were exercised through a real three-way merge rehearsal. Latest repeat run `34416999259` resolved the `11` known conflicts to `0` and passed the full integrated repository/release/offline suite, including `195/195` tests. Retained artifact `10129465465` has ZIP SHA-256 `faac0ca60f83c85931ccfd030f70d9672afbd03e55224a48631a2d5b029779b7`.
+
+Current-contract canonical #488 + retained-ZIP preflight also passed in run `34416999458`. This lowers final integration risk but has no acceptance authority; the conflict map must still be refreshed after genuine P5 closure and no progress percentage changes from this rehearsal.
+
 ## P5 — next critical path
 
 Canonical exact artifact remains P5 #488 on `810d98d` with ZIP digest `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09` and schema-v3 id-excluded manifest semantic SHA `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`.

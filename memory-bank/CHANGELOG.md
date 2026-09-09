@@ -2,6 +2,14 @@
 
 ## 2026-09-10
 
+### P12 P5 integration rehearsal and current-contract preflight
+- Rehearsed canonical P5 `810d98d6e09cb4cf3fe4758fcb07e87734254a8e` against current main `3c3dc14bc48c3ea8e5df7620e223de0229737d9e` through a real branch-only three-way merge; exact conflict set was `11` paths and resolved to `0` unresolved entries.
+- Latest repeat rehearsal run `34416999259` on head `536d4b0f3b07d1675ab5cf87b69a83dbce7d6ebc` passed `195/195` integrated tests plus status/typecheck/plugin build/CLI build/release-contract/release-package/Community/P12-offline/import-safety checks.
+- Preserved P9 audit/backlog non-mutation, P5 runtime-gated Safe Fix seams, current-main source/output overlap protection, separate development/release UI exposure and P5 source/run provenance defines in release code.
+- Retained latest rehearsal artifact `10129465465`, ZIP SHA-256 `faac0ca60f83c85931ccfd030f70d9672afbd03e55224a48631a2d5b029779b7`.
+- Re-downloaded canonical P5 Actions artifact #488 and retained ZIP; current-contract `runtime:preflight` passed in run `34416999458`.
+- Rehearsal evidence is explicitly non-authorizing; P5 remains 94%, P12 remains 20%, and real imported-Figma Desktop/rendered-pixel/closure-intake evidence is still required.
+
 ### Exact P5 operator preflight and closure rejection calibration
 - Re-ran the mandatory issue-first/PR-first cycle from verified `main` `c3c1c7475395785e3db5ed753513a645e7dd42c7`; the product/runtime dependency chain remained #6/#7/#8 and there were no open PRs before the calibration.
 - Downloaded the actual canonical P5 GitHub Actions artifact #488 (`figma-plugin-dist-488`, artifact id `10062772456`) and retained ZIP. Its raw SHA-256 matched the registered digest `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`.

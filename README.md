@@ -75,6 +75,18 @@ P12 is the sole release-expansion acceptance gate:
 - ✅ canonical P5 #488 artifact provenance/preflight/archive plumbing remains hardened and calibrated.
 - ✅ P6 #494 and P7 #490 remain engineering/reference artifacts; final production integration requires fresh exact builds after final P5 merge.
 
+### P5 integration rehearsal checkpoint — non-authorizing
+
+- ✅ current-main + canonical P5 three-way integration rehearsal PASS: main `3c3dc14bc48c3ea8e5df7620e223de0229737d9e` + P5 `810d98d6e09cb4cf3fe4758fcb07e87734254a8e`;
+- ✅ exact current conflict set resolved in rehearsal: `11 → 0` unresolved paths, with no conflict markers;
+- ✅ latest repeat rehearsal run `34416999259` on head `536d4b0f3b07d1675ab5cf87b69a83dbce7d6ebc` passed `195/195` integrated tests plus status/typecheck/plugin build/CLI build/release/Community/P12-offline checks;
+- ✅ P9 audit/backlog remained non-mutating while P5 Safe Fix stayed separately runtime-gated;
+- ✅ P5 development UI remained available without leaking P5 validation/mutation controls into the normal P11 release UI;
+- ✅ P5 source/run provenance globals were resolved in release code and current local-import overlap safety remained enforced;
+- ✅ retained rehearsal artifact `10129465465`, ZIP SHA-256 `faac0ca60f83c85931ccfd030f70d9672afbd03e55224a48631a2d5b029779b7`;
+- ✅ canonical Actions artifact #488 + retained ZIP re-downloaded and current-contract `runtime:preflight` PASS in run `34416999458`;
+- ⚠️ rehearsal evidence is explicitly `acceptanceAuthority: false`: P5 remains 94%, P12 remains 20%, and real Figma Desktop/rendered-pixel/closure evidence is still mandatory.
+
 Detailed engineering history is retained in `memory-bank/CHANGELOG.md`.
 
 ## P9 — Actionable backlog generator
