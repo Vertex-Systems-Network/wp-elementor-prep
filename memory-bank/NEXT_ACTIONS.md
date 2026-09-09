@@ -29,7 +29,7 @@ Execute in this order before starting unrelated new implementation:
 - Open issues: #6, #7, #8.
 - #6 is blocked only on real imported-Figma runtime evidence.
 - #7/#8 require P5 merge before integration/fresh runtime artifacts.
-- Open PR/MR: `0` after PR #51 merge.
+- Open PR/MR: `0` after PR #52 merge.
 - PR #48 final head `d9aa202`: CI #565 PASS; squash-merged at `c97b9d7`; post-merge CI #566 + Integration Readiness #49 PASS.
 - PR #49 pins every required artifact preflight read to one opened file descriptor so BUILD_INFO parsing, manifest parsing and immutable SHA-256 checks consume the exact bytes tied to the validated file identity.
 - PR #49 head `dfdec23`: CI #570 PASS with no review/thread blockers; squash-merged at `7cc8a85`; post-merge CI #571 + Integration Readiness #53 PASS.
@@ -38,10 +38,13 @@ Execute in this order before starting unrelated new implementation:
 - PR #51 removes the remaining same-artifact verifier execution-path race: closure intake re-opens the verifier through a stable descriptor after preflight, requires its SHA-256 to match the immutable verifier hash already accepted by preflight, and executes those exact bytes through a hash-checking in-memory Node module bootstrap rather than trusting the mutable artifact path at spawn time.
 - Canonical P5 #488, P6 #494 and P7 #490 verifier artifacts were inspected before PR #51; all three current verifier scripts are self-contained bundled `.mjs` files with no relative imports/`require()` dependency.
 - PR #51 head `bf7ba3c`: CI #577 PASS with no review/thread blockers; squash-merged at `15f3f023`; post-merge CI #578 + Integration Readiness #58 PASS.
+- PR #52 makes the registered GitHub Actions artifact digest operationally verifiable when the original ZIP is retained: `runtime:preflight -- --archive=<zip>` hashes raw archive bytes from a stable descriptor and requires exact registry digest equality.
+- Archive verification remains optional so extracted-artifact-only workflows continue to rely on the existing descriptor-pinned BUILD_INFO/manifest/immutable-file checks; supplying an archive that is a symlink, changes between validation/open, or has the wrong digest fails closed.
+- PR #52 head `1bf182f`: CI #582 PASS with no review/thread blockers; squash-merged at `5b75ff2e`; post-merge CI #583 + Integration Readiness #62 PASS.
 - Closure evidence SHA-256 remains byte-exact and descriptor-pinned; invalid UTF-8 fails before verifier execution.
 - Operator-supplied closure evidence paths must be regular non-symlink files and remain the same `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open.
-- Runtime artifact preflight requires a non-symlink artifact root, non-symlink required files, stable pre-open/opened file identity, and descriptor-pinned bytes for BUILD_INFO/manifest/hash verification.
-- Closure intake now also requires stable post-preflight verifier identity, exact verifier SHA-256 equality with preflight, and `executionMode: verified-bytes-memory-bootstrap` before a verifier result can be accepted.
+- Runtime artifact preflight requires a non-symlink artifact root, non-symlink required files, stable pre-open/opened file identity, and descriptor-pinned bytes for BUILD_INFO/manifest/hash verification; retained original ZIPs may additionally be bound to the registry digest with `--archive`.
+- Closure intake also requires stable post-preflight verifier identity, exact verifier SHA-256 equality with preflight, and `executionMode: verified-bytes-memory-bootstrap` before a verifier result can be accepted.
 - Canonical P5/P6/P7 feature heads and registered runtime artifact bytes remain unchanged.
 
 ## P5 — first release gate / issue #6
@@ -53,8 +56,15 @@ Execute in this order before starting unrelated new implementation:
 npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
 ```
 
+If the original downloaded GitHub Actions ZIP is retained, also bind its raw bytes to the registered digest:
+
+```bash
+npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488 --archive=/path/to/figma-plugin-dist-488.zip
+```
+
 3. Require:
    - artifact directory is a real non-symlink directory,
+   - if `--archive` is supplied, archive path is a stable regular non-symlink file and raw archive SHA-256 matches the registry digest exactly,
    - required artifact files are regular non-symlink files,
    - every required file retains matching `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open,
    - BUILD_INFO, manifest semantics and immutable hashes are evaluated from descriptor-pinned bytes,
@@ -106,7 +116,7 @@ Current #494 is reference-only. Both `runtime:preflight` final-closure mode and 
 2. Run full CI.
 3. Produce a fresh exact-build P6 artifact.
 4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require a non-symlink artifact root, non-symlink required files, stable descriptor identity, exact identity + immutable pins PASS.
+5. Run preflight and require a non-symlink artifact root, optional retained-ZIP digest verification when available, non-symlink required files, stable descriptor identity, exact identity + immutable pins PASS.
 6. Establish exact-build P5 prerequisite in that fresh build.
 7. Run real image-bearing positive calibration and require Full P3 PASS with unchanged image-anchor count.
 8. Run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS.
@@ -123,7 +133,7 @@ Current #490 is reference-only. Both `runtime:preflight` final-closure mode and 
 2. Run full CI.
 3. Produce a fresh exact-build P7 artifact.
 4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require a non-symlink artifact root, non-symlink required files, stable descriptor identity, exact identity + immutable pins PASS.
+5. Run preflight and require a non-symlink artifact root, optional retained-ZIP digest verification when available, non-symlink required files, stable descriptor identity, exact identity + immutable pins PASS.
 6. Establish exact-build P5 prerequisite.
 7. Run realistic 60+ Frame stress and require `maxConcurrentProcessors === 1`.
 8. Request cancellation during genuinely active long Full P3.
