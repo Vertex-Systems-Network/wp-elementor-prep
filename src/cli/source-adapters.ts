@@ -34,7 +34,7 @@ export class SourceAdapterError extends Error {
   }
 }
 
-interface FigmaRestOptions {
+export interface FigmaRestOptions {
   fileKey: string;
   token: string;
   authMode: 'personal' | 'oauth';
@@ -91,51 +91,52 @@ function parseAuditNode(value: unknown, path: string): AuditNode {
   if (!isRecord(value)) {
     throw new SourceAdapterError('INVALID_SNAPSHOT', `Expected object at ${path}.`, 2);
   }
-
-  if (!isRecord(value.geometry)) {
+  const geometry = value['geometry'];
+  if (!isRecord(geometry)) {
     throw new SourceAdapterError('INVALID_SNAPSHOT', `Expected geometry object at ${path}.geometry.`, 2);
   }
-
-  if (!Array.isArray(value.children)) {
+  const rawChildren = value['children'];
+  if (!Array.isArray(rawChildren)) {
     throw new SourceAdapterError('INVALID_SNAPSHOT', `Expected children array at ${path}.children.`, 2);
   }
 
-  const children = value.children.map((child, index) => parseAuditNode(child, `${path}.children[${index}]`));
+  const children = rawChildren.map((child, index) => parseAuditNode(child, `${path}.children[${index}]`));
   const childIds = children.map((child) => child.id);
-
-  if (Array.isArray(value.childIds)) {
-    const supplied = value.childIds.map((id, index) => asString(id, `${path}.childIds[${index}]`));
+  const suppliedChildIds = value['childIds'];
+  if (Array.isArray(suppliedChildIds)) {
+    const supplied = suppliedChildIds.map((id, index) => asString(id, `${path}.childIds[${index}]`));
     if (supplied.length !== childIds.length || supplied.some((id, index) => id !== childIds[index])) {
       throw new SourceAdapterError('INVALID_SNAPSHOT', `childIds do not match children at ${path}.`, 2);
     }
   }
 
-  const textAutoResize = value.textAutoResize === null
+  const rawTextAutoResize = value['textAutoResize'];
+  const textAutoResize = rawTextAutoResize === null
     ? null
-    : asString(value.textAutoResize, `${path}.textAutoResize`);
+    : asString(rawTextAutoResize, `${path}.textAutoResize`);
 
   return {
-    id: asString(value.id, `${path}.id`),
-    name: asString(value.name, `${path}.name`),
-    type: asString(value.type, `${path}.type`),
+    id: asString(value['id'], `${path}.id`),
+    name: asString(value['name'], `${path}.name`),
+    type: asString(value['type'], `${path}.type`),
     geometry: {
-      x: asFiniteNumber(value.geometry.x, `${path}.geometry.x`),
-      y: asFiniteNumber(value.geometry.y, `${path}.geometry.y`),
-      width: asFiniteNumber(value.geometry.width, `${path}.geometry.width`),
-      height: asFiniteNumber(value.geometry.height, `${path}.geometry.height`),
+      x: asFiniteNumber(geometry['x'], `${path}.geometry.x`),
+      y: asFiniteNumber(geometry['y'], `${path}.geometry.y`),
+      width: asFiniteNumber(geometry['width'], `${path}.geometry.width`),
+      height: asFiniteNumber(geometry['height'], `${path}.geometry.height`),
     },
-    layoutMode: parseSnapshotLayoutMode(value.layoutMode, `${path}.layoutMode`),
-    isAutoLayout: asBoolean(value.isAutoLayout, `${path}.isAutoLayout`),
-    isContainer: asBoolean(value.isContainer, `${path}.isContainer`),
-    isText: asBoolean(value.isText, `${path}.isText`),
-    isImageLike: asBoolean(value.isImageLike, `${path}.isImageLike`),
-    isGenericName: asBoolean(value.isGenericName, `${path}.isGenericName`),
-    textLength: asNonNegativeInteger(value.textLength, `${path}.textLength`),
+    layoutMode: parseSnapshotLayoutMode(value['layoutMode'], `${path}.layoutMode`),
+    isAutoLayout: asBoolean(value['isAutoLayout'], `${path}.isAutoLayout`),
+    isContainer: asBoolean(value['isContainer'], `${path}.isContainer`),
+    isText: asBoolean(value['isText'], `${path}.isText`),
+    isImageLike: asBoolean(value['isImageLike'], `${path}.isImageLike`),
+    isGenericName: asBoolean(value['isGenericName'], `${path}.isGenericName`),
+    textLength: asNonNegativeInteger(value['textLength'], `${path}.textLength`),
     textAutoResize,
-    absolutePositioned: asBoolean(value.absolutePositioned, `${path}.absolutePositioned`),
-    clipsContent: asBoolean(value.clipsContent, `${path}.clipsContent`),
-    opacity: asFiniteNumber(value.opacity, `${path}.opacity`),
-    visible: asBoolean(value.visible, `${path}.visible`),
+    absolutePositioned: asBoolean(value['absolutePositioned'], `${path}.absolutePositioned`),
+    clipsContent: asBoolean(value['clipsContent'], `${path}.clipsContent`),
+    opacity: asFiniteNumber(value['opacity'], `${path}.opacity`),
+    visible: asBoolean(value['visible'], `${path}.visible`),
     childIds,
     children,
   };
@@ -145,12 +146,12 @@ function parseSource(value: unknown): CanonicalSnapshotSource {
   if (!isRecord(value)) {
     throw new SourceAdapterError('INVALID_SNAPSHOT', 'Expected source object.', 2);
   }
-
-  if (value.kind !== 'figma-rest' && value.kind !== 'plugin-export' && value.kind !== 'adapter-export') {
+  const kind = value['kind'];
+  if (kind !== 'figma-rest' && kind !== 'plugin-export' && kind !== 'adapter-export') {
     throw new SourceAdapterError('INVALID_SNAPSHOT', 'Unsupported snapshot source kind.', 2);
   }
 
-  const source: CanonicalSnapshotSource = { kind: value.kind };
+  const source: CanonicalSnapshotSource = { kind };
   for (const field of ['fileKey', 'fileName', 'pageId', 'pageName', 'nodeId', 'nodeName', 'revision'] as const) {
     const current = value[field];
     if (current !== undefined) source[field] = asString(current, `source.${field}`);
@@ -159,20 +160,18 @@ function parseSource(value: unknown): CanonicalSnapshotSource {
 }
 
 export function parseCanonicalSnapshot(value: unknown): CanonicalSnapshot {
-  if (!isRecord(value) || value.schemaVersion !== 1) {
+  if (!isRecord(value) || value['schemaVersion'] !== 1) {
     throw new SourceAdapterError('INVALID_SNAPSHOT', 'Canonical snapshot must be an object with schemaVersion 1.', 2);
   }
-
-  const capturedAt = asString(value.capturedAt, 'capturedAt');
+  const capturedAt = asString(value['capturedAt'], 'capturedAt');
   if (Number.isNaN(Date.parse(capturedAt))) {
     throw new SourceAdapterError('INVALID_SNAPSHOT', 'capturedAt must be a valid ISO-style timestamp.', 2);
   }
-
   return {
     schemaVersion: 1,
     capturedAt,
-    source: parseSource(value.source),
-    root: parseAuditNode(value.root, 'root'),
+    source: parseSource(value['source']),
+    root: parseAuditNode(value['root'], 'root'),
   };
 }
 
@@ -210,7 +209,6 @@ export function parseFigmaUrl(input: string): FigmaUrlResolution {
   } catch {
     throw new SourceAdapterError('INVALID_FIGMA_URL', 'Expected a valid Figma design/file URL.', 2);
   }
-
   if (url.protocol !== 'https:' || !/(^|\.)figma\.com$/i.test(url.hostname)) {
     throw new SourceAdapterError('INVALID_FIGMA_URL', 'Only https://*.figma.com design/file URLs are supported.', 2);
   }
@@ -240,25 +238,28 @@ function restString(value: unknown, fallback = ''): string {
 }
 
 function restChildren(node: Record<string, unknown>): Record<string, unknown>[] {
-  return Array.isArray(node.children) ? node.children.filter(isRecord) : [];
+  const children = node['children'];
+  return Array.isArray(children) ? children.filter(isRecord) : [];
 }
 
 function hasImageFill(value: unknown): boolean {
   if (!Array.isArray(value)) return false;
-  return value.some((paint) => isRecord(paint) && paint.type === 'IMAGE');
+  return value.some((paint) => isRecord(paint) && paint['type'] === 'IMAGE');
 }
 
 function geometryFromRest(node: Record<string, unknown>): AuditNode['geometry'] {
-  const box = isRecord(node.absoluteBoundingBox)
-    ? node.absoluteBoundingBox
-    : isRecord(node.absoluteRenderBounds)
-      ? node.absoluteRenderBounds
+  const absoluteBoundingBox = node['absoluteBoundingBox'];
+  const absoluteRenderBounds = node['absoluteRenderBounds'];
+  const box = isRecord(absoluteBoundingBox)
+    ? absoluteBoundingBox
+    : isRecord(absoluteRenderBounds)
+      ? absoluteRenderBounds
       : {};
   return {
-    x: restNumber(box.x),
-    y: restNumber(box.y),
-    width: restNumber(box.width),
-    height: restNumber(box.height),
+    x: restNumber(box['x']),
+    y: restNumber(box['y']),
+    width: restNumber(box['width']),
+    height: restNumber(box['height']),
   };
 }
 
@@ -267,19 +268,21 @@ export function auditNodeFromFigmaRest(value: unknown): AuditNode {
     throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma API node is not an object.');
   }
 
-  const id = restString(value.id);
-  const name = restString(value.name);
-  const type = restString(value.type);
+  const id = restString(value['id']);
+  const name = restString(value['name']);
+  const type = restString(value['type']);
   if (!id || !name || !type) {
     throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma API node is missing id, name or type.');
   }
 
   const children = restChildren(value).map(auditNodeFromFigmaRest);
-  const layoutMode = normalizeLayoutMode(value.layoutMode);
+  const layoutMode = normalizeLayoutMode(value['layoutMode']);
   const isText = type === 'TEXT';
-  const text = isText ? restString(value.characters) : '';
+  const text = isText ? restString(value['characters']) : '';
+  const style = value['style'];
+  const styleTextAutoResize = isRecord(style) ? style['textAutoResize'] : null;
   const textAutoResize = isText
-    ? restString(value.textAutoResize || (isRecord(value.style) ? value.style.textAutoResize : null), 'NONE')
+    ? restString(value['textAutoResize'] ?? styleTextAutoResize, 'NONE')
     : null;
 
   return {
@@ -289,27 +292,27 @@ export function auditNodeFromFigmaRest(value: unknown): AuditNode {
     geometry: geometryFromRest(value),
     layoutMode,
     isAutoLayout: layoutMode === 'HORIZONTAL' || layoutMode === 'VERTICAL' || layoutMode === 'GRID',
-    isContainer: Array.isArray(value.children),
+    isContainer: Array.isArray(value['children']),
     isText,
-    isImageLike: hasImageFill(value.fills),
+    isImageLike: hasImageFill(value['fills']),
     isGenericName: isGenericLayerName(name),
     textLength: text.length,
     textAutoResize,
-    absolutePositioned: value.layoutPositioning === 'ABSOLUTE',
-    clipsContent: restBoolean(value.clipsContent, false),
-    opacity: restNumber(value.opacity, 1),
-    visible: restBoolean(value.visible, true),
+    absolutePositioned: value['layoutPositioning'] === 'ABSOLUTE',
+    clipsContent: restBoolean(value['clipsContent'], false),
+    opacity: restNumber(value['opacity'], 1),
+    visible: restBoolean(value['visible'], true),
     childIds: children.map((child) => child.id),
     children,
   };
 }
 
 function collectTopLevelFrames(document: Record<string, unknown>): Array<{ page: Record<string, unknown>; frame: Record<string, unknown> }> {
-  const pages = restChildren(document).filter((page) => page.type === 'CANVAS');
+  const pages = restChildren(document).filter((page) => page['type'] === 'CANVAS');
   const results: Array<{ page: Record<string, unknown>; frame: Record<string, unknown> }> = [];
   for (const page of pages) {
     for (const child of restChildren(page)) {
-      if (child.type === 'FRAME') results.push({ page, frame: child });
+      if (child['type'] === 'FRAME') results.push({ page, frame: child });
     }
   }
   return results;
@@ -360,18 +363,22 @@ export class FigmaRestSourceAdapter {
     let selectedPage: Record<string, unknown> | undefined;
 
     if (options.nodeId) {
-      const nodes = isRecord(payload.nodes) ? payload.nodes : null;
-      const entry = nodes && isRecord(nodes[options.nodeId]) ? nodes[options.nodeId] : null;
-      const document = entry && isRecord(entry.document) ? entry.document : null;
+      const rawNodes = payload['nodes'];
+      const nodes = isRecord(rawNodes) ? rawNodes : null;
+      const rawEntry = nodes?.[options.nodeId];
+      const entry = isRecord(rawEntry) ? rawEntry : null;
+      const rawDocument = entry?.['document'];
+      const document = isRecord(rawDocument) ? rawDocument : null;
       if (!document) {
         throw new SourceAdapterError('FIGMA_NODE_NOT_FOUND', `Node ${options.nodeId} was not returned by Figma.`);
       }
-      if (document.type !== 'FRAME') {
-        throw new SourceAdapterError('FIGMA_NODE_NOT_FRAME', `Node ${options.nodeId} is ${String(document.type ?? 'unknown')}; P10 audit input requires a FRAME.`);
+      if (document['type'] !== 'FRAME') {
+        throw new SourceAdapterError('FIGMA_NODE_NOT_FRAME', `Node ${options.nodeId} is ${String(document['type'] ?? 'unknown')}; P10 audit input requires a FRAME.`);
       }
       selectedNode = document;
     } else {
-      const document = isRecord(payload.document) ? payload.document : null;
+      const rawDocument = payload['document'];
+      const document = isRecord(rawDocument) ? rawDocument : null;
       if (!document) {
         throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma file response is missing document.');
       }
@@ -380,27 +387,35 @@ export class FigmaRestSourceAdapter {
         throw new SourceAdapterError('FIGMA_FRAME_NOT_FOUND', 'No top-level Figma Frame was found. Supply an explicit --node-id.');
       }
       if (frames.length > 1) {
-        const preview = frames.slice(0, 8).map(({ frame }) => `${restString(frame.id)} (${restString(frame.name)})`).join(', ');
+        const preview = frames
+          .slice(0, 8)
+          .map(({ frame }) => `${restString(frame['id'])} (${restString(frame['name'])})`)
+          .join(', ');
         throw new SourceAdapterError('AMBIGUOUS_FIGMA_FRAME', `Found ${frames.length} top-level Frames. Supply --node-id. Candidates: ${preview}`);
       }
       selectedNode = frames[0]!.frame;
       selectedPage = frames[0]!.page;
     }
 
-    const capturedAtCandidate = restString(payload.lastModified);
+    const capturedAtCandidate = restString(payload['lastModified']);
     const capturedAt = !Number.isNaN(Date.parse(capturedAtCandidate))
       ? capturedAtCandidate
       : '1970-01-01T00:00:00.000Z';
 
     const root = auditNodeFromFigmaRest(selectedNode);
+    const fileName = restString(payload['name']);
+    const revision = restString(payload['version']);
     const source: CanonicalSnapshotSource = {
       kind: 'figma-rest',
       fileKey: options.fileKey,
-      ...(restString(payload.name) ? { fileName: restString(payload.name) } : {}),
-      ...(selectedPage ? { pageId: restString(selectedPage.id), pageName: restString(selectedPage.name) } : {}),
+      ...(fileName ? { fileName } : {}),
+      ...(selectedPage ? {
+        pageId: restString(selectedPage['id']),
+        pageName: restString(selectedPage['name']),
+      } : {}),
       nodeId: root.id,
       nodeName: root.name,
-      ...(restString(payload.version) ? { revision: restString(payload.version) } : {}),
+      ...(revision ? { revision } : {}),
     };
 
     return {
