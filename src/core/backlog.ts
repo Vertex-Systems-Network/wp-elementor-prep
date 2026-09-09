@@ -146,7 +146,11 @@ function fingerprintFor(draft: BacklogDraft): string {
     normalizeText(draft.proposedAction),
     normalizeText(draft.recipeCandidate ?? ''),
   ].join('|');
-  return `p9-${fnv1a32(semanticIdentity)}`;
+  // Two deterministic 32-bit passes make accidental collisions far less likely while keeping
+  // the implementation browser/Node portable without crypto or BigInt dependencies.
+  const forward = fnv1a32(semanticIdentity);
+  const reverse = fnv1a32([...semanticIdentity].reverse().join(''));
+  return `p9-${forward}${reverse}`;
 }
 
 function contextKey(context: BacklogContext): string {
@@ -216,11 +220,7 @@ function baseContext(report: AuditReport, context?: GenerateBacklogOptions['cont
   };
 }
 
-function findingDraft(
-  report: AuditReport,
-  finding: AuditFinding,
-  context: BacklogContext,
-): BacklogDraft {
+function findingDraft(finding: AuditFinding, context: BacklogContext): BacklogDraft {
   const category = categoryForFinding(finding.severity);
   return {
     category,
@@ -239,7 +239,7 @@ function findingDraft(
   };
 }
 
-function recipeDraft(report: AuditReport, section: SectionAudit, context: BacklogContext): BacklogDraft | null {
+function recipeDraft(section: SectionAudit, context: BacklogContext): BacklogDraft | null {
   if (!section.recommendedRecipe) return null;
   const detection = section.detection;
   const label = detection?.semanticHint ?? detection?.pattern ?? 'structured layout';
@@ -287,7 +287,7 @@ function runtimeDraft(finding: RuntimeBacklogFinding, fallbackContext: BacklogCo
 
 function collectDrafts(report: AuditReport, options: GenerateBacklogOptions): BacklogDraft[] {
   const frameContext = baseContext(report, options.context);
-  const drafts: BacklogDraft[] = report.findings.map((finding) => findingDraft(report, finding, frameContext));
+  const drafts: BacklogDraft[] = report.findings.map((finding) => findingDraft(finding, frameContext));
 
   for (const section of report.sections) {
     const sectionContext: BacklogContext = {
@@ -295,8 +295,8 @@ function collectDrafts(report: AuditReport, options: GenerateBacklogOptions): Ba
       sectionId: section.id,
       sectionName: section.name,
     };
-    for (const finding of section.findings) drafts.push(findingDraft(report, finding, sectionContext));
-    const recipe = recipeDraft(report, section, sectionContext);
+    for (const finding of section.findings) drafts.push(findingDraft(finding, sectionContext));
+    const recipe = recipeDraft(section, sectionContext);
     if (recipe) drafts.push(recipe);
   }
 
@@ -383,7 +383,17 @@ function applyDelta(current: BacklogItem[], previous: BacklogDocument | null | u
   });
 
   for (const before of previous.items) {
-    if (currentFingerprints.has(before.fingerprint) || before.status === 'RESOLVED') continue;
+    if (currentFingerprints.has(before.fingerprint)) continue;
+    if (before.status === 'RESOLVED') {
+      // Retain resolved history so a finding that returns after multiple clean runs is
+      // classified as REGRESSED instead of being forgotten and reintroduced as NEW.
+      result.push({
+        ...before,
+        delta: 'UNCHANGED',
+        occurrences: 0,
+      });
+      continue;
+    }
     result.push({
       ...before,
       status: 'RESOLVED',
