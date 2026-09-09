@@ -29,16 +29,15 @@ Execute in this order before starting unrelated new implementation:
 - Open issues: #6, #7, #8.
 - #6 is blocked only on real imported-Figma runtime evidence.
 - #7/#8 require P5 merge before integration/fresh runtime artifacts.
-- Open PR/MR: `0` after PR #48 merge.
-- PR #46 head `7fa579e`: CI #557 PASS; squash-merged at `15cc973`; post-merge CI #558 + Integration Readiness #44 PASS.
-- PR #47 head `6a90c11`: CI #559 PASS; squash-merged at `8297b69`; post-merge CI #560 + Integration Readiness #45 PASS.
-- PR #48 closes the remaining evidence-read TOCTOU window by pinning evidence bytes to one opened file descriptor and comparing pre-open/opened file identity metadata before reading.
-- PR #48 initial CI #564 correctly failed the replacement-race regression when `dev` + `ino` alone were insufficient because inode reuse was possible.
-- PR #48 final head `d9aa202`: CI #565 PASS with no review/thread blockers.
-- PR #48 squash-merged to `main` at `c97b9d7`; post-merge CI #566 + Integration Readiness #49 PASS.
-- Closure evidence SHA-256 remains byte-exact; invalid UTF-8 fails before verifier execution.
-- Operator-supplied closure evidence paths must be regular non-symlink files, and the file must remain the same `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open.
-- Runtime artifact preflight requires the supplied artifact root and every required artifact file to be non-symlink paths before identity/hash/manifest verification proceeds.
+- Open PR/MR: `0` after PR #50 merge.
+- PR #48 final head `d9aa202`: CI #565 PASS; squash-merged at `c97b9d7`; post-merge CI #566 + Integration Readiness #49 PASS.
+- PR #49 pins every required artifact preflight read to one opened file descriptor so BUILD_INFO parsing, manifest parsing and immutable SHA-256 checks consume the exact bytes tied to the validated file identity.
+- PR #49 head `dfdec23`: CI #570 PASS with no review/thread blockers; squash-merged at `7cc8a85`; post-merge CI #571 + Integration Readiness #53 PASS.
+- PR #50 aligns artifact preflight identity matching with evidence intake by requiring matching `dev`/`ino`/size/mtime/ctime`, including a regression that simulates reused `dev`/`ino` after path replacement.
+- PR #50 head `2160b6e`: CI #572 PASS with no review/thread blockers; squash-merged at `c99b2c65`; post-merge CI #573 + Integration Readiness #54 PASS.
+- Closure evidence SHA-256 remains byte-exact and descriptor-pinned; invalid UTF-8 fails before verifier execution.
+- Operator-supplied closure evidence paths must be regular non-symlink files and remain the same `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open.
+- Runtime artifact preflight requires a non-symlink artifact root, non-symlink required files, stable pre-open/opened file identity, and descriptor-pinned bytes for BUILD_INFO/manifest/hash verification.
 - Canonical P5/P6/P7 feature heads remain unchanged.
 
 ## P5 — first release gate / issue #6
@@ -53,6 +52,8 @@ npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
 3. Require:
    - artifact directory is a real non-symlink directory,
    - required artifact files are regular non-symlink files,
+   - every required file retains matching `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open,
+   - BUILD_INFO, manifest semantics and immutable hashes are evaluated from descriptor-pinned bytes,
    - preflight PASS,
    - exact source SHA / run ID / run number,
    - `5/5` immutable SHA-256 pins matched.
@@ -76,9 +77,9 @@ npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /pa
 ```
 
 12. Require:
-   - artifact preflight PASS,
+   - descriptor-pinned artifact preflight PASS,
    - evidence path is a regular non-symlink file,
-   - stable pre-open/opened file identity acceptance,
+   - stable pre-open/opened evidence-file identity acceptance,
    - raw evidence-file SHA-256 emitted for exact descriptor-pinned bytes,
    - `hashScope: raw-file-bytes`,
    - strict UTF-8 acceptance,
@@ -98,7 +99,7 @@ Current #494 is reference-only. Both `runtime:preflight` final-closure mode and 
 2. Run full CI.
 3. Produce a fresh exact-build P6 artifact.
 4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require a non-symlink artifact root, non-symlink required files, exact identity + immutable pins PASS.
+5. Run preflight and require a non-symlink artifact root, non-symlink required files, stable descriptor identity, exact identity + immutable pins PASS.
 6. Establish exact-build P5 prerequisite in that fresh build.
 7. Run real image-bearing positive calibration and require Full P3 PASS with unchanged image-anchor count.
 8. Run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS.
@@ -115,7 +116,7 @@ Current #490 is reference-only. Both `runtime:preflight` final-closure mode and 
 2. Run full CI.
 3. Produce a fresh exact-build P7 artifact.
 4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require a non-symlink artifact root, non-symlink required files, exact identity + immutable pins PASS.
+5. Run preflight and require a non-symlink artifact root, non-symlink required files, stable descriptor identity, exact identity + immutable pins PASS.
 6. Establish exact-build P5 prerequisite.
 7. Run realistic 60+ Frame stress and require `maxConcurrentProcessors === 1`.
 8. Request cancellation during genuinely active long Full P3.
