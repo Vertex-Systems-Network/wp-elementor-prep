@@ -1,5 +1,11 @@
 import { scanSceneNode } from '../core/scanner';
 import { buildAuditReport } from '../core/scoring';
+import {
+  generateBacklog,
+  serializeBacklogJson,
+  serializeBacklogMarkdown,
+  type BacklogDocument,
+} from '../core/backlog';
 import { captureIntegritySnapshot } from './integrity-snapshot';
 import { DEFAULT_VALIDATION_THRESHOLDS, mergePixelValidation, validateIntegrity } from '../core/validator';
 import type { PixelDiffMetrics, ValidationReport } from '../core/validation-types';
@@ -8,6 +14,8 @@ declare const __html__: string;
 
 const PLUGIN_VERSION = '0.1.0-alpha.1';
 const MAX_VALIDATION_RENDER_DIMENSION = 2048;
+const BACKLOG_STORAGE_PREFIX = 'p9-backlog-v1';
+let auditSequence = 0;
 let validationSequence = 0;
 
 interface PendingValidation {
@@ -28,25 +36,71 @@ function postError(message: string, type: 'audit-error' | 'validation-error' = '
   figma.ui.postMessage({ type, message });
 }
 
-function runAudit(): void {
-  const selection = figma.currentPage.selection;
+function isBacklogDocument(value: unknown): value is BacklogDocument {
+  if (typeof value !== 'object' || value === null) return false;
+  const candidate = value as { schemaVersion?: unknown; items?: unknown; summary?: unknown };
+  return candidate.schemaVersion === 1
+    && Array.isArray(candidate.items)
+    && typeof candidate.summary === 'object'
+    && candidate.summary !== null;
+}
+
+function backlogStorageKey(fileKey: string, pageId: string, frameId: string): string {
+  return `${BACKLOG_STORAGE_PREFIX}:${fileKey}:${pageId}:${frameId}`;
+}
+
+async function runAudit(sequence: number): Promise<void> {
+  const page = figma.currentPage;
+  const selection = page.selection;
 
   if (selection.length !== 1) {
-    postError('Select exactly one desktop frame to audit.');
+    if (sequence === auditSequence) postError('Select exactly one desktop frame to audit.');
     return;
   }
 
   const selected = selection[0];
   if (!selected || selected.type !== 'FRAME') {
-    postError('Audit currently supports one selected Figma Frame.');
+    if (sequence === auditSequence) postError('Audit currently supports one selected Figma Frame.');
     return;
   }
+
+  const fileKey = typeof figma.fileKey === 'string' && figma.fileKey ? figma.fileKey : 'local-file';
+  const pageId = page.id;
+  const pageName = page.name;
+  const storageKey = backlogStorageKey(fileKey, pageId, selected.id);
 
   try {
     const root = scanSceneNode(selected);
     const report = buildAuditReport(root, PLUGIN_VERSION);
-    figma.ui.postMessage({ type: 'audit-result', report });
+    const stored = await figma.clientStorage.getAsync(storageKey) as unknown;
+
+    // Audit persistence introduces async boundaries. A later selection/audit/validation request
+    // invalidates this sequence so an older run can never overwrite the UI with stale results.
+    if (sequence !== auditSequence) return;
+
+    const previous = isBacklogDocument(stored) ? stored : null;
+    const backlog = generateBacklog(report, {
+      context: {
+        ...(fileKey !== 'local-file' ? { fileKey } : {}),
+        pageId,
+        pageName,
+      },
+      previous,
+    });
+
+    if (sequence !== auditSequence) return;
+    await figma.clientStorage.setAsync(storageKey, backlog);
+    if (sequence !== auditSequence) return;
+
+    figma.ui.postMessage({
+      type: 'audit-result',
+      report,
+      backlog,
+      backlogJson: serializeBacklogJson(backlog),
+      backlogMarkdown: serializeBacklogMarkdown(backlog),
+    });
   } catch (error) {
+    if (sequence !== auditSequence) return;
     const message = error instanceof Error ? error.message : String(error);
     postError(`Audit failed: ${message}`);
   }
@@ -126,11 +180,14 @@ figma.ui.onmessage = async (message: unknown) => {
   const type = (message as { type?: unknown }).type;
 
   if (type === 'audit-request') {
-    runAudit();
+    const sequence = ++auditSequence;
+    await runAudit(sequence);
     return;
   }
 
   if (type === 'validation-request') {
+    // Validation owns the UI next; invalidate any earlier async audit still in flight.
+    auditSequence += 1;
     await runValidation();
     return;
   }
@@ -149,7 +206,13 @@ figma.ui.onmessage = async (message: unknown) => {
 };
 
 figma.on('selectionchange', () => {
-  if (figma.currentPage.selection.length === 1) runAudit();
+  // Increment for every selection change, including 0/2-item selections, so any previous async
+  // audit is invalidated even when no replacement audit should run.
+  const sequence = ++auditSequence;
+  if (figma.currentPage.selection.length === 1) void runAudit(sequence);
 });
 
-if (figma.currentPage.selection.length === 1) runAudit();
+if (figma.currentPage.selection.length === 1) {
+  const sequence = ++auditSequence;
+  void runAudit(sequence);
+}
