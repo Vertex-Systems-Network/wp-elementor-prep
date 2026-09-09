@@ -29,16 +29,20 @@ Execute in this order before starting unrelated new implementation:
 - Open issues: #6, #7, #8.
 - #6 is blocked only on real imported-Figma runtime evidence.
 - #7/#8 require P5 merge before integration/fresh runtime artifacts.
-- Open PR/MR: `0` after PR #50 merge.
+- Open PR/MR: `0` after PR #51 merge.
 - PR #48 final head `d9aa202`: CI #565 PASS; squash-merged at `c97b9d7`; post-merge CI #566 + Integration Readiness #49 PASS.
 - PR #49 pins every required artifact preflight read to one opened file descriptor so BUILD_INFO parsing, manifest parsing and immutable SHA-256 checks consume the exact bytes tied to the validated file identity.
 - PR #49 head `dfdec23`: CI #570 PASS with no review/thread blockers; squash-merged at `7cc8a85`; post-merge CI #571 + Integration Readiness #53 PASS.
 - PR #50 aligns artifact preflight identity matching with evidence intake by requiring matching `dev`/`ino`/size/mtime/ctime`, including a regression that simulates reused `dev`/`ino` after path replacement.
 - PR #50 head `2160b6e`: CI #572 PASS with no review/thread blockers; squash-merged at `c99b2c65`; post-merge CI #573 + Integration Readiness #54 PASS.
+- PR #51 removes the remaining same-artifact verifier execution-path race: closure intake re-opens the verifier through a stable descriptor after preflight, requires its SHA-256 to match the immutable verifier hash already accepted by preflight, and executes those exact bytes through a hash-checking in-memory Node module bootstrap rather than trusting the mutable artifact path at spawn time.
+- Canonical P5 #488, P6 #494 and P7 #490 verifier artifacts were inspected before PR #51; all three current verifier scripts are self-contained bundled `.mjs` files with no relative imports/`require()` dependency.
+- PR #51 head `bf7ba3c`: CI #577 PASS with no review/thread blockers; squash-merged at `15f3f023`; post-merge CI #578 + Integration Readiness #58 PASS.
 - Closure evidence SHA-256 remains byte-exact and descriptor-pinned; invalid UTF-8 fails before verifier execution.
 - Operator-supplied closure evidence paths must be regular non-symlink files and remain the same `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open.
 - Runtime artifact preflight requires a non-symlink artifact root, non-symlink required files, stable pre-open/opened file identity, and descriptor-pinned bytes for BUILD_INFO/manifest/hash verification.
-- Canonical P5/P6/P7 feature heads remain unchanged.
+- Closure intake now also requires stable post-preflight verifier identity, exact verifier SHA-256 equality with preflight, and `executionMode: verified-bytes-memory-bootstrap` before a verifier result can be accepted.
+- Canonical P5/P6/P7 feature heads and registered runtime artifact bytes remain unchanged.
 
 ## P5 — first release gate / issue #6
 
@@ -84,7 +88,10 @@ npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /pa
    - `hashScope: raw-file-bytes`,
    - strict UTF-8 acceptance,
    - top-level JSON object acceptance,
-   - exact same-artifact verifier executed,
+   - same-artifact verifier re-opened through a stable descriptor after preflight,
+   - verifier SHA-256 exactly matches the immutable verifier hash accepted by preflight,
+   - `executionMode: verified-bytes-memory-bootstrap`,
+   - exact re-verified verifier bytes execute through the hash-checking in-memory bootstrap rather than the original artifact path,
    - verifier exit `0`,
    - final `Runtime closure intake: PASS`.
 13. Apply the proven documentation integration resolution, merge P5 and close #6.
@@ -105,7 +112,7 @@ Current #494 is reference-only. Both `runtime:preflight` final-closure mode and 
 8. Run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS.
 9. Require final P6 closure PASS in the plugin.
 10. Export `p6-closure.json` to a stable regular non-symlink file path.
-11. Run descriptor-pinned, byte-exact `runtime:closure-intake` against the fresh P6 artifact and require PASS.
+11. Run descriptor-pinned, byte-exact, verified-byte `runtime:closure-intake` against the fresh P6 artifact and require verifier SHA revalidation + in-memory execution + final PASS.
 12. Merge and close #7.
 
 ## P7 — after P5 merge / issue #8
@@ -123,7 +130,7 @@ Current #490 is reference-only. Both `runtime:preflight` final-closure mode and 
 9. Require cooperative settlement, final batch `CANCELLED`, and matching processor evidence.
 10. Require final P7 closure PASS in the plugin.
 11. Export `p7-closure.json` to a stable regular non-symlink file path.
-12. Run descriptor-pinned, byte-exact `runtime:closure-intake` against the fresh P7 artifact and require PASS.
+12. Run descriptor-pinned, byte-exact, verified-byte `runtime:closure-intake` against the fresh P7 artifact and require verifier SHA revalidation + in-memory execution + final PASS.
 13. Merge and close #8.
 
 ## Development that may proceed while runtime is externally blocked
