@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { existsSync, lstatSync, readFileSync } from 'node:fs';
+import { closeSync, existsSync, fstatSync, lstatSync, openSync, readFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -22,27 +22,47 @@ export function parseBuildInfo(text) {
   return values;
 }
 
-export function sha256File(path) {
-  return createHash('sha256').update(readFileSync(path)).digest('hex');
+function sha256Bytes(bytes) {
+  return createHash('sha256').update(bytes).digest('hex');
 }
 
-function readJson(path, errors, label) {
+export function sha256File(path) {
+  return sha256Bytes(readFileSync(path));
+}
+
+function readJsonBytes(bytes, errors, label) {
   try {
-    return JSON.parse(readFileSync(path, 'utf8'));
+    return JSON.parse(bytes.toString('utf8'));
   } catch (error) {
     errors.push(`${label} is missing or invalid JSON: ${error.message}`);
     return null;
   }
 }
 
-function requireFile(dir, name, errors) {
+function sameFileIdentity(before, opened) {
+  return before.dev === opened.dev && before.ino === opened.ino;
+}
+
+function readRequiredFile(
+  dir,
+  name,
+  errors,
+  {
+    existsSyncImpl = existsSync,
+    lstatSyncImpl = lstatSync,
+    openSyncImpl = openSync,
+    fstatSyncImpl = fstatSync,
+    readFileSyncImpl = readFileSync,
+    closeSyncImpl = closeSync
+  }
+) {
   const path = join(dir, name);
-  if (!existsSync(path)) {
+  if (!existsSyncImpl(path)) {
     errors.push(`Missing required artifact file: ${name}`);
     return null;
   }
 
-  const metadata = lstatSync(path);
+  const metadata = lstatSyncImpl(path);
   if (metadata.isSymbolicLink()) {
     errors.push(`Required artifact file must not be a symbolic link: ${name}`);
     return null;
@@ -51,14 +71,52 @@ function requireFile(dir, name, errors) {
     errors.push(`Missing required artifact file: ${name}`);
     return null;
   }
-  return path;
+
+  let fd = null;
+  let bytes = null;
+  try {
+    fd = openSyncImpl(path, 'r');
+    const openedMetadata = fstatSyncImpl(fd);
+    if (!openedMetadata.isFile()) {
+      errors.push(`Required artifact file did not open as a regular file: ${name}`);
+    } else if (!sameFileIdentity(metadata, openedMetadata)) {
+      errors.push(`Required artifact file changed between validation and open: ${name}`);
+    } else {
+      bytes = readFileSyncImpl(fd);
+    }
+  } catch (error) {
+    errors.push(`Required artifact file could not be opened safely: ${name}: ${error.message}`);
+  } finally {
+    if (fd !== null) {
+      try {
+        closeSyncImpl(fd);
+      } catch (error) {
+        errors.push(`Required artifact file descriptor could not be closed cleanly: ${name}: ${error.message}`);
+      }
+    }
+  }
+
+  return bytes ? { path, bytes } : null;
 }
 
 function normalizeExpectedSha256(value) {
   return String(value || '').toLowerCase().replace(/^sha256:/, '');
 }
 
-export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final-closure', registry = loadRegistry() } = {}) {
+export function inspectRuntimeArtifact(
+  trackName,
+  artifactDir,
+  {
+    intent = 'final-closure',
+    registry = loadRegistry(),
+    existsSyncImpl = existsSync,
+    lstatSyncImpl = lstatSync,
+    openSyncImpl = openSync,
+    fstatSyncImpl = fstatSync,
+    readFileSyncImpl = readFileSync,
+    closeSyncImpl = closeSync
+  } = {}
+) {
   const normalizedTrack = String(trackName).toLowerCase();
   const track = registry.tracks?.[normalizedTrack];
   const errors = [];
@@ -75,11 +133,11 @@ export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final
   }
 
   const dir = resolve(artifactDir);
-  if (!existsSync(dir)) {
+  if (!existsSyncImpl(dir)) {
     return { ok: false, track: normalizedTrack, intent, artifactDir: dir, errors: [`Artifact directory does not exist: ${dir}`], warnings };
   }
 
-  const artifactDirMetadata = lstatSync(dir);
+  const artifactDirMetadata = lstatSyncImpl(dir);
   if (artifactDirMetadata.isSymbolicLink()) {
     return { ok: false, track: normalizedTrack, intent, artifactDir: dir, errors: [`Artifact directory must not be a symbolic link: ${dir}`], warnings };
   }
@@ -87,13 +145,14 @@ export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final
     return { ok: false, track: normalizedTrack, intent, artifactDir: dir, errors: [`Artifact directory does not exist: ${dir}`], warnings };
   }
 
+  const fileOps = { existsSyncImpl, lstatSyncImpl, openSyncImpl, fstatSyncImpl, readFileSyncImpl, closeSyncImpl };
   const requiredFiles = ['BUILD_INFO.txt', 'manifest.json', 'code.js', 'ui.html', 'prepare-figma-import.mjs', track.verifier];
-  const paths = {};
-  for (const name of requiredFiles) paths[name] = requireFile(dir, name, errors);
+  const files = {};
+  for (const name of requiredFiles) files[name] = readRequiredFile(dir, name, errors, fileOps);
 
   let buildInfo = {};
-  if (paths['BUILD_INFO.txt']) {
-    buildInfo = parseBuildInfo(readFileSync(paths['BUILD_INFO.txt'], 'utf8'));
+  if (files['BUILD_INFO.txt']) {
+    buildInfo = parseBuildInfo(files['BUILD_INFO.txt'].bytes.toString('utf8'));
     const expectedIdentity = {
       source_sha: track.sourceSha,
       workflow_sha: track.sourceSha,
@@ -122,13 +181,13 @@ export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final
         continue;
       }
 
-      const path = Object.prototype.hasOwnProperty.call(paths, name)
-        ? paths[name]
-        : requireFile(dir, name, errors);
-      if (!path) continue;
+      const file = Object.prototype.hasOwnProperty.call(files, name)
+        ? files[name]
+        : readRequiredFile(dir, name, errors, fileOps);
+      if (!file) continue;
 
       immutableFilesChecked += 1;
-      const actualHash = sha256File(path);
+      const actualHash = sha256Bytes(file.bytes);
       observedImmutableFileSha256[name] = actualHash;
       if (actualHash !== expectedHash) {
         errors.push(`SHA-256 mismatch for ${name}: expected ${expectedHash}, got ${actualHash}`);
@@ -138,7 +197,7 @@ export function inspectRuntimeArtifact(trackName, artifactDir, { intent = 'final
     }
   }
 
-  const manifest = paths['manifest.json'] ? readJson(paths['manifest.json'], errors, 'manifest.json') : null;
+  const manifest = files['manifest.json'] ? readJsonBytes(files['manifest.json'].bytes, errors, 'manifest.json') : null;
   let needsManifestRebind = null;
   if (manifest) {
     if (manifest.main !== 'code.js') errors.push(`manifest.main must be code.js, got ${manifest.main ?? '<missing>'}`);

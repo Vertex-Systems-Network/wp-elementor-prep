@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, openSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inspectRuntimeArtifact } from '../scripts/runtime-artifact-preflight.mjs';
@@ -187,6 +187,31 @@ describe('runtime artifact preflight', () => {
       const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
       expect(result.ok).toBe(false);
       expect(result.errors.join('\n')).toContain('Required artifact file must not be a symbolic link: code.js');
+      expect(result.immutableFileIntegrity.checked).toBe(4);
+      expect(result.immutableFileIntegrity.matched).toBe(4);
+    });
+  });
+
+  it.skipIf(process.platform === 'win32')('fails closed when a required artifact file is replaced between validation and open', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const codePath = join(dir, 'code.js');
+      let replaced = false;
+      const result = inspectRuntimeArtifact('p5', dir, {
+        intent: 'final-closure',
+        registry,
+        openSyncImpl: (path, flags) => {
+          if (!replaced && path === codePath) {
+            const replacementPath = join(dir, 'code-replacement.js');
+            writeFileSync(replacementPath, 'replacement compiled runtime');
+            renameSync(replacementPath, codePath);
+            replaced = true;
+          }
+          return openSync(path, flags);
+        }
+      });
+
+      expect(result.ok).toBe(false);
+      expect(result.errors.join('\n')).toContain('Required artifact file changed between validation and open: code.js');
       expect(result.immutableFileIntegrity.checked).toBe(4);
       expect(result.immutableFileIntegrity.matched).toBe(4);
     });
