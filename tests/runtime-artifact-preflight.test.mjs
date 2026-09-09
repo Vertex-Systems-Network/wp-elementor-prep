@@ -108,9 +108,92 @@ describe('runtime artifact preflight', () => {
       expect(result.ok).toBe(true);
       expect(result.needsManifestRebind).toBe(true);
       expect(result.registeredArtifact.finalClosureEligible).toBe(true);
+      expect(result.archiveIntegrity.supplied).toBe(false);
       expect(result.immutableFileIntegrity.checked).toBe(5);
       expect(result.immutableFileIntegrity.matched).toBe(5);
       expect(result.immutableFileIntegrity.manifestIntentionallyExcluded).toBe(true);
+    });
+  });
+
+  it('verifies a supplied artifact archive against the registered raw ZIP digest', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const archivePath = `${dir}.zip`;
+      try {
+        writeFileSync(archivePath, Buffer.from('fixture artifact zip bytes'));
+        const expectedArchiveHash = fileSha256(archivePath);
+        registry.tracks.p5.digest = `sha256:${expectedArchiveHash}`;
+
+        const result = inspectRuntimeArtifact('p5', dir, {
+          intent: 'final-closure',
+          registry,
+          archivePath
+        });
+
+        expect(result.ok).toBe(true);
+        expect(result.archiveIntegrity.supplied).toBe(true);
+        expect(result.archiveIntegrity.path).toBe(archivePath);
+        expect(result.archiveIntegrity.expectedSha256).toBe(expectedArchiveHash);
+        expect(result.archiveIntegrity.observedSha256).toBe(expectedArchiveHash);
+        expect(result.archiveIntegrity.matched).toBe(true);
+      } finally {
+        rmSync(archivePath, { force: true });
+      }
+    });
+  });
+
+  it('fails closed when a supplied artifact archive digest does not match the registry', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const archivePath = `${dir}.zip`;
+      try {
+        writeFileSync(archivePath, Buffer.from('unexpected artifact zip bytes'));
+        registry.tracks.p5.digest = `sha256:${'f'.repeat(64)}`;
+
+        const result = inspectRuntimeArtifact('p5', dir, {
+          intent: 'final-closure',
+          registry,
+          archivePath
+        });
+
+        expect(result.ok).toBe(false);
+        expect(result.archiveIntegrity.supplied).toBe(true);
+        expect(result.archiveIntegrity.matched).toBe(false);
+        expect(result.errors.join('\n')).toContain('Artifact archive SHA-256 mismatch');
+      } finally {
+        rmSync(archivePath, { force: true });
+      }
+    });
+  });
+
+  it.skipIf(process.platform === 'win32')('fails closed when a supplied archive is replaced between validation and descriptor open', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const archivePath = `${dir}.zip`;
+      try {
+        writeFileSync(archivePath, Buffer.from('original artifact zip bytes'));
+        registry.tracks.p5.digest = `sha256:${fileSha256(archivePath)}`;
+        let replaced = false;
+
+        const result = inspectRuntimeArtifact('p5', dir, {
+          intent: 'final-closure',
+          registry,
+          archivePath,
+          openSyncImpl: (path, flags) => {
+            if (!replaced && path === archivePath) {
+              const replacementPath = `${archivePath}.replacement`;
+              writeFileSync(replacementPath, Buffer.from('replacement artifact zip bytes with different metadata'));
+              renameSync(replacementPath, archivePath);
+              replaced = true;
+            }
+            return openSync(path, flags);
+          }
+        });
+
+        expect(result.ok).toBe(false);
+        expect(result.archiveIntegrity.supplied).toBe(true);
+        expect(result.archiveIntegrity.matched).toBe(null);
+        expect(result.errors.join('\n')).toContain('Artifact archive changed between validation and open');
+      } finally {
+        rmSync(archivePath, { force: true });
+      }
     });
   });
 
