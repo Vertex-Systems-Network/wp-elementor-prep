@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { mkdtempSync, openSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { fstatSync, lstatSync, mkdtempSync, openSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inspectRuntimeArtifact } from '../scripts/runtime-artifact-preflight.mjs';
@@ -192,21 +192,37 @@ describe('runtime artifact preflight', () => {
     });
   });
 
-  it.skipIf(process.platform === 'win32')('fails closed when a required artifact file is replaced between validation and open', () => {
+  it.skipIf(process.platform === 'win32')('fails closed when a required artifact file is replaced even if dev and ino are reused', () => {
     withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
       const codePath = join(dir, 'code.js');
+      const originalCodeStat = lstatSync(codePath);
       let replaced = false;
+      let spoofNextIdentity = false;
       const result = inspectRuntimeArtifact('p5', dir, {
         intent: 'final-closure',
         registry,
         openSyncImpl: (path, flags) => {
           if (!replaced && path === codePath) {
             const replacementPath = join(dir, 'code-replacement.js');
-            writeFileSync(replacementPath, 'replacement compiled runtime');
+            writeFileSync(replacementPath, 'replacement compiled runtime with different metadata');
             renameSync(replacementPath, codePath);
             replaced = true;
+            spoofNextIdentity = true;
           }
           return openSync(path, flags);
+        },
+        fstatSyncImpl: (fd) => {
+          const opened = fstatSync(fd);
+          if (!spoofNextIdentity) return opened;
+          spoofNextIdentity = false;
+          return {
+            dev: originalCodeStat.dev,
+            ino: originalCodeStat.ino,
+            size: opened.size,
+            mtimeMs: opened.mtimeMs,
+            ctimeMs: opened.ctimeMs,
+            isFile: () => opened.isFile()
+          };
         }
       });
 
