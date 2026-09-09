@@ -2,6 +2,19 @@
 
 ## 2026-09-09
 
+### Runtime artifact archive digest verification
+- Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and open PR/MR count was `0` before development.
+- Concurrent repository work had already completed PR #51 verifier-execution pinning, so duplicate work was skipped and the next unaddressed provenance gap was audited instead.
+- Confirmed `config/runtime-artifacts.json` records a GitHub Actions artifact `digest` for P5/P6/P7, while existing runtime preflight enforced extracted-file hashes but did not directly verify the original downloaded ZIP bytes.
+- PR #52 adds optional `--archive=/path/to/artifact.zip` support to `runtime:preflight` so a retained original archive can be bound to the registry digest without making ZIP retention mandatory for normal extracted-artifact workflows.
+- Supplied archives must be regular non-symlink files, preserve matching `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open, and are hashed from the exact bytes read through that descriptor.
+- A supplied archive fails closed on missing/non-regular/symlink paths, validation/open replacement, invalid registered digest, or raw SHA-256 mismatch.
+- Added regressions for a matching registered archive digest, a wrong digest, and archive replacement between path validation and descriptor open.
+- Updated `docs/RUNTIME_ARTIFACT_PREFLIGHT.md` with the optional archive verification workflow and the distinction between raw ZIP digest verification and extracted immutable-file pinning.
+- PR #52 head `1bf182f` passed CI #582 with no review/thread blockers.
+- PR #52 squash-merged to `main` at `5b75ff2e`; post-merge CI #583 and Integration Readiness #62 passed.
+- Open PR/MR count returned to `0`; overall project progress remains 93% because no real imported-Figma acceptance gate advanced and canonical P5/P6/P7 exact-build feature heads/artifact bytes were not modified.
+
 ### Same-artifact verifier execution hardening
 - Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and open PR/MR count was `0` before the new hardening work.
 - Identified the remaining closure-intake execution TOCTOU boundary: immutable verifier bytes were accepted by preflight, but `runtime:closure-intake` later spawned the verifier again by its mutable artifact filesystem path.
