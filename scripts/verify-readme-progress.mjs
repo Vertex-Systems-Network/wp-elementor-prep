@@ -1,6 +1,16 @@
 import { readFile } from 'node:fs/promises';
+import { assertRegistrySchemaReferences } from './status-schema-contract.mjs';
 
 const readme = await readFile('README.md', 'utf8');
+const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
+const statusDocuments = {
+  'README.md': readme,
+  'memory-bank/PROJECT_STATE.md': await readFile('memory-bank/PROJECT_STATE.md', 'utf8'),
+  'memory-bank/ROADMAP.md': await readFile('memory-bank/ROADMAP.md', 'utf8'),
+  'memory-bank/NEXT_ACTIONS.md': await readFile('memory-bank/NEXT_ACTIONS.md', 'utf8')
+};
+
+const schemaTag = assertRegistrySchemaReferences(registry.schemaVersion, statusDocuments);
 
 const requiredFragments = [
   '### Module-wise progress',
@@ -77,4 +87,4 @@ if (!Number.isInteger(overallPercent) || overallPercent < 0 || overallPercent > 
   throw new Error(`Overall project progress is outside 0–100: ${overall[2]}`);
 }
 
-console.log(`README progress contract PASS: ${rows.length} modules, overall ${overallPercent}%.`);
+console.log(`README progress contract PASS: ${rows.length} modules, overall ${overallPercent}%, runtime registry ${schemaTag}.`);
