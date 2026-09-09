@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, openSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inspectRuntimeClosureIntake } from '../scripts/runtime-closure-intake.mjs';
@@ -169,6 +169,25 @@ describe('runtime closure intake', () => {
       expect(result.verifier.executed).toBe(false);
       expect(result.evidence).toEqual({});
       expect(result.errors.join('\n')).toContain('must not be a symbolic link');
+    });
+  });
+
+  it('rejects evidence replaced between path validation and descriptor open', () => {
+    withFixture({}, ({ artifactDir, evidencePath, registry }) => {
+      writeFileSync(evidencePath, JSON.stringify({ accepted: true, original: true }));
+      const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, {
+        registry,
+        openSyncImpl: (path, flags) => {
+          rmSync(path);
+          writeFileSync(path, JSON.stringify({ accepted: false, replacement: true }));
+          return openSync(path, flags);
+        },
+        spawnSyncImpl: () => { throw new Error('verifier must not run'); }
+      });
+      expect(result.ok).toBe(false);
+      expect(result.stage).toBe('evidence');
+      expect(result.verifier.executed).toBe(false);
+      expect(result.errors.join('\n')).toContain('changed between validation and open');
     });
   });
 

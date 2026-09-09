@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { existsSync, lstatSync, readFileSync } from 'node:fs';
+import { closeSync, existsSync, fstatSync, lstatSync, openSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { inspectRuntimeArtifact } from './runtime-artifact-preflight.mjs';
@@ -32,6 +32,14 @@ function evidenceFailure(track, artifactDir, evidencePath, preflight, errors, wa
   };
 }
 
+function sameFileIdentity(before, opened) {
+  return before.dev === opened.dev
+    && before.ino === opened.ino
+    && before.size === opened.size
+    && before.mtimeMs === opened.mtimeMs
+    && before.ctimeMs === opened.ctimeMs;
+}
+
 export function inspectRuntimeClosureIntake(
   trackName,
   artifactDir,
@@ -39,6 +47,10 @@ export function inspectRuntimeClosureIntake(
   {
     registry,
     spawnSyncImpl = spawnSync,
+    openSyncImpl = openSync,
+    fstatSyncImpl = fstatSync,
+    readFileSyncImpl = readFileSync,
+    closeSyncImpl = closeSync,
     maxEvidenceBytes = DEFAULT_MAX_EVIDENCE_BYTES,
     verifierTimeoutMs = DEFAULT_VERIFIER_TIMEOUT_MS,
     verifierOutputBytes = DEFAULT_VERIFIER_OUTPUT_BYTES
@@ -96,7 +108,36 @@ export function inspectRuntimeClosureIntake(
     });
   }
 
-  const evidenceBytes = readFileSync(resolvedEvidencePath);
+  let evidenceBytes;
+  let evidenceFd = null;
+  try {
+    evidenceFd = openSyncImpl(resolvedEvidencePath, 'r');
+    const openedStat = fstatSyncImpl(evidenceFd);
+    if (!openedStat.isFile()) {
+      evidenceErrors.push(`Evidence path did not open as a regular file: ${resolvedEvidencePath}`);
+    } else if (!sameFileIdentity(evidenceStat, openedStat)) {
+      evidenceErrors.push(`Evidence file changed between validation and open: ${resolvedEvidencePath}`);
+    } else {
+      evidenceBytes = readFileSyncImpl(evidenceFd);
+    }
+  } catch (error) {
+    evidenceErrors.push(`Evidence file could not be opened safely: ${error.message}`);
+  } finally {
+    if (evidenceFd !== null) {
+      try {
+        closeSyncImpl(evidenceFd);
+      } catch (error) {
+        evidenceErrors.push(`Evidence file descriptor could not be closed cleanly: ${error.message}`);
+      }
+    }
+  }
+
+  if (evidenceErrors.length > 0 || !evidenceBytes) {
+    return evidenceFailure(normalizedTrack, resolvedArtifactDir, resolvedEvidencePath, preflight, evidenceErrors, warnings, {
+      bytes: evidenceStat.size
+    });
+  }
+
   const evidence = {
     bytes: evidenceBytes.length,
     sha256: sha256Bytes(evidenceBytes),
