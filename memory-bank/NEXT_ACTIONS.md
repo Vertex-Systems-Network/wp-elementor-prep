@@ -30,7 +30,8 @@ Execute in this order before starting unrelated new implementation:
 - #6 is blocked only on real imported-Figma runtime evidence.
 - #7/#8 require P5 merge before integration/fresh runtime artifacts.
 - Operator-path issue #54 was resolved by PR #57 and is no longer a runtime blocker.
-- Open PR/MR: `0` after PR #57 merge.
+- Manifest-provenance issue #58 was resolved by PR #59; only top-level `manifest.id` may vary from the registered canonical manifest semantics.
+- Open PR/MR: `0` after PR #59 merge.
 - PR #48 final head `d9aa202`: CI #565 PASS; squash-merged at `c97b9d7`; post-merge CI #566 + Integration Readiness #49 PASS.
 - PR #49 pins every required artifact preflight read to one opened file descriptor so BUILD_INFO parsing, manifest parsing and immutable SHA-256 checks consume the exact bytes tied to the validated file identity.
 - PR #49 head `dfdec23`: CI #570 PASS with no review/thread blockers; squash-merged at `7cc8a85`; post-merge CI #571 + Integration Readiness #53 PASS.
@@ -53,11 +54,15 @@ Execute in this order before starting unrelated new implementation:
 - PR #57 adds direct regression tests for nested-output rejection and sibling-output success with byte-identical compiled targets + manifest-ID-only rebinding, and corrects the real-Figma/preflight/closure runbooks.
 - PR #57 head `6852ac6`: CI #595 PASS with no review/thread blockers; squash-merged at `5179eca3`; post-merge CI #596 + Integration Readiness #73 PASS.
 - Issue #6 tracker now uses the sibling/non-nested local import path; no canonical P5/P6/P7 artifact bytes were modified by the fix.
+- PR #59 upgrades `config/runtime-artifacts.json` to schema v3 and adds a deterministic semantic SHA-256 for each manifest with only top-level `id` excluded. Object keys are recursively sorted before hashing while array order/content remains significant.
+- Canonical id-excluded manifest semantic pins are P5 `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`, P6 `b687205564abb72ac7b00447d2bec3e00c266a1d4ddf9ec6980ce15c62c893f9`, P7 `3cb617c2d47d8b3d887ca94897781998226f9ec6c1b242bc880a2e18d9f6587e`.
+- Schema-v3 preflight now fails closed if the manifest semantic pin is missing/invalid or any non-ID manifest semantic content drifts. Placeholder or numeric plugin-ID-only rebinding still passes the same semantic hash.
+- PR #59 head `8246e3f`: CI #600 PASS with no review/thread blockers; squash-merged at `8f0d5bbd`; post-merge CI #601 + Integration Readiness #77 PASS.
 - Closure evidence SHA-256 remains byte-exact and descriptor-pinned; invalid UTF-8 fails before verifier execution.
 - Operator-supplied closure evidence paths must be regular non-symlink files and remain the same `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open.
-- Runtime artifact preflight requires a non-symlink artifact root, non-symlink required files, stable pre-open/opened file identity, and descriptor-pinned bytes for BUILD_INFO/manifest/hash verification; retained original ZIPs may additionally be bound to the registry digest with `--archive`.
+- Runtime artifact preflight requires a non-symlink artifact root, non-symlink required files, stable pre-open/opened file identity, descriptor-pinned bytes for BUILD_INFO/manifest/hash verification, `5/5` immutable file pins and schema-v3 id-excluded manifest semantic SHA-256 equality; retained original ZIPs may additionally be bound to the registry digest with `--archive`.
 - Closure intake forwards the optional retained-ZIP digest gate into final-closure preflight, then requires stable evidence identity, stable post-preflight verifier identity, exact verifier SHA-256 equality with preflight, and `executionMode: verified-bytes-memory-bootstrap` before accepting a verifier result.
-- Local manifest preparation must always use a separate non-nested output directory and keep compiled code/UI byte-identical.
+- Local manifest preparation must always use a separate non-nested output directory and keep compiled code/UI byte-identical; the only permitted manifest semantic difference from the registered canonical artifact is top-level plugin `id`.
 - Canonical P5/P6/P7 feature heads and registered runtime artifact bytes remain unchanged.
 
 ## P5 — first release gate / issue #6
@@ -81,6 +86,7 @@ npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488 --archiv
    - required artifact files are regular non-symlink files,
    - every required file retains matching `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open,
    - BUILD_INFO, manifest semantics and immutable hashes are evaluated from descriptor-pinned bytes,
+   - schema-v3 manifest semantic SHA-256 matches the canonical manifest with only top-level plugin `id` excluded,
    - preflight PASS,
    - exact source SHA / run ID / run number,
    - `5/5` immutable SHA-256 pins matched.
@@ -91,7 +97,7 @@ cd /path/to/unpacked/figma-plugin-dist-488
 node prepare-figma-import.mjs <your-figma-plugin-id> . ../figma-plugin-dist-488-local
 ```
 
-5. Import `../figma-plugin-dist-488-local/manifest.json` (or original manifest if already rebound) in Figma Desktop. Confirm its `LOCAL_IMPORT_INFO.txt` reports unchanged compiled targets.
+5. Import `../figma-plugin-dist-488-local/manifest.json` (or original manifest if already rebound) in Figma Desktop. Confirm its `LOCAL_IMPORT_INFO.txt` reports unchanged compiled targets. Re-run preflight on the prepared copy if desired; the manifest semantic hash must remain unchanged because `id` is excluded.
 6. Run `Developer: P5 Runtime Self-Test`.
 7. Require `P5 Compiled Runtime Acceptance: PASS`.
 8. Verify real rendered-pixel forced reject, restore and finalize flows.
@@ -110,7 +116,7 @@ npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /pa
 ```
 
 12. Require:
-   - descriptor-pinned artifact preflight PASS,
+   - descriptor-pinned artifact preflight PASS, including schema-v3 id-excluded manifest semantic pin MATCH,
    - when `--archive` is supplied, stable non-symlink archive identity + exact raw ZIP SHA-256 registry match,
    - evidence path is a regular non-symlink file,
    - stable pre-open/opened evidence-file identity acceptance,
@@ -135,8 +141,8 @@ Current #494 is reference-only. Both `runtime:preflight` final-closure mode and 
 1. Resolve/rebase P6 against merged P5.
 2. Run full CI.
 3. Produce a fresh exact-build P6 artifact.
-4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require a non-symlink artifact root, optional retained-ZIP digest verification when available, non-symlink required files, stable descriptor identity, exact identity + immutable pins PASS.
+4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest, schema-v3 manifest semantic SHA-256 and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
+5. Run preflight and require a non-symlink artifact root, optional retained-ZIP digest verification when available, non-symlink required files, stable descriptor identity, exact identity + manifest semantic pin + immutable pins PASS.
 6. Establish exact-build P5 prerequisite in that fresh build.
 7. If plugin-ID rebinding is required, prepare a separate sibling/non-nested output directory with the helper packaged in that fresh artifact.
 8. Run real image-bearing positive calibration and require Full P3 PASS with unchanged image-anchor count.
@@ -153,8 +159,8 @@ Current #490 is reference-only. Both `runtime:preflight` final-closure mode and 
 1. Resolve/rebase P7 against merged P5.
 2. Run full CI.
 3. Produce a fresh exact-build P7 artifact.
-4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require a non-symlink artifact root, optional retained-ZIP digest verification when available, non-symlink required files, stable descriptor identity, exact identity + immutable pins PASS.
+4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest, schema-v3 manifest semantic SHA-256 and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
+5. Run preflight and require a non-symlink artifact root, optional retained-ZIP digest verification when available, non-symlink required files, stable descriptor identity, exact identity + manifest semantic pin + immutable pins PASS.
 6. Establish exact-build P5 prerequisite.
 7. If plugin-ID rebinding is required, prepare a separate sibling/non-nested output directory with the helper packaged in that fresh artifact.
 8. Run realistic 60+ Frame stress and require `maxConcurrentProcessors === 1`.
