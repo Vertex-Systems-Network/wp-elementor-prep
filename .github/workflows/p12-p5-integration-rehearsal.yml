@@ -55,6 +55,7 @@ jobs:
 
           cp /tmp/p12-release-ui.html src/ui/release-ui.html
           node scripts/p12-resolve-p5-rehearsal.mjs
+          node scripts/p12-update-p9-integration-contract.mjs
 
           git add -A
           git diff --name-only --diff-filter=U > p5-merge-rehearsal/conflicts-after-resolution.txt
