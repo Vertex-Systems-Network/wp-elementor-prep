@@ -29,9 +29,11 @@ Execute in this order before starting unrelated new implementation:
 - Open product/runtime issues: #6, #7, #8.
 - #6 is blocked only on real imported-Figma runtime evidence.
 - #7/#8 require P5 merge before integration/fresh runtime artifacts.
-- Operator-path issue #54 was resolved by PR #57 and is no longer a runtime blocker.
-- Manifest-provenance issue #58 was resolved by PR #59; only top-level `manifest.id` may vary from the registered canonical manifest semantics.
-- Open PR/MR: `0` after PR #59 merge.
+- Latest verified tooling merge is PR #72 at `ed8b6b26`; head `52ea254` passed CI #611 and post-merge CI #612 + Integration Readiness #85 passed.
+- PR #63 head `97c51b6` passed CI #609, squash-merged at `acef3c2c`, with post-merge CI #610 + Integration Readiness #84 PASS.
+- PR #61 head `d2dc43d` passed CI #606, squash-merged at `933b2fc2`, with post-merge CI #607 + Integration Readiness #82 PASS.
+- Issues #60, #62 and #64 are completed/closed; operator-path issue #54 and manifest-provenance issue #58 were already resolved by PR #57 and PR #59.
+- Open PR/MR: `0` after PR #72 merge.
 - PR #48 final head `d9aa202`: CI #565 PASS; squash-merged at `c97b9d7`; post-merge CI #566 + Integration Readiness #49 PASS.
 - PR #49 pins every required artifact preflight read to one opened file descriptor so BUILD_INFO parsing, manifest parsing and immutable SHA-256 checks consume the exact bytes tied to the validated file identity.
 - PR #49 head `dfdec23`: CI #570 PASS with no review/thread blockers; squash-merged at `7cc8a85`; post-merge CI #571 + Integration Readiness #53 PASS.
