@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "tracks": {
     "p5": {
       "branch": "feat/p5-safe-recipes",
@@ -9,6 +9,7 @@
       "runNumber": "488",
       "artifactName": "figma-plugin-dist-488",
       "digest": "sha256:9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09",
+      "manifestSemanticSha256": "640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46",
       "verifier": "verify-p5-evidence.mjs",
       "immutableFileSha256": {
         "BUILD_INFO.txt": "d1fda143957eaa3be097cf830e5727fcc10ea7072c7986662aca4030caa34519",
@@ -29,6 +30,7 @@
       "runNumber": "494",
       "artifactName": "figma-plugin-dist-494",
       "digest": "sha256:82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3",
+      "manifestSemanticSha256": "b687205564abb72ac7b00447d2bec3e00c266a1d4ddf9ec6980ce15c62c893f9",
       "verifier": "verify-p6-closure.mjs",
       "immutableFileSha256": {
         "BUILD_INFO.txt": "5d805c07db77f88cde3046c6fbdd6527e60ecfd2e367c6ed0f8b3f7759bfd609",
@@ -49,6 +51,7 @@
       "runNumber": "490",
       "artifactName": "figma-plugin-dist-490",
       "digest": "sha256:c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43",
+      "manifestSemanticSha256": "3cb617c2d47d8b3d887ca94897781998226f9ec6c1b242bc880a2e18d9f6587e",
       "verifier": "verify-p7-closure.mjs",
       "immutableFileSha256": {
         "BUILD_INFO.txt": "477782f946509a9b354f829a157c27f7eb2173a7ea1ee59c06e83d55a644dfe9",

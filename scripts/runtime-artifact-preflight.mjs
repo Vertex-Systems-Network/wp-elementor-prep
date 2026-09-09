@@ -30,6 +30,26 @@ export function sha256File(path) {
   return sha256Bytes(readFileSync(path));
 }
 
+function canonicalizeJson(value) {
+  if (Array.isArray(value)) return value.map((item) => canonicalizeJson(item));
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, canonicalizeJson(value[key])])
+    );
+  }
+  return value;
+}
+
+export function manifestSemanticSha256(manifest) {
+  if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) {
+    throw new TypeError('Manifest semantic hashing requires a top-level JSON object.');
+  }
+  const { id: _ignoredPluginId, ...withoutPluginId } = manifest;
+  return sha256Bytes(Buffer.from(JSON.stringify(canonicalizeJson(withoutPluginId)), 'utf8'));
+}
+
 function readJsonBytes(bytes, errors, label) {
   try {
     return JSON.parse(bytes.toString('utf8'));
@@ -282,8 +302,30 @@ export function inspectRuntimeArtifact(
   }
 
   const manifest = files['manifest.json'] ? readJsonBytes(files['manifest.json'].bytes, errors, 'manifest.json') : null;
+  const manifestSemanticPinRequired = Number(registry.schemaVersion) >= 3;
+  const expectedManifestSemanticSha256 = normalizeExpectedSha256(track.manifestSemanticSha256);
+  const manifestSemanticIntegrity = {
+    required: manifestSemanticPinRequired,
+    idExcluded: true,
+    expectedSha256: /^[a-f0-9]{64}$/.test(expectedManifestSemanticSha256) ? expectedManifestSemanticSha256 : null,
+    observedSha256: null,
+    matched: null
+  };
+
+  if (manifestSemanticPinRequired && !manifestSemanticIntegrity.expectedSha256) {
+    errors.push(`Registry manifest semantic SHA-256 is missing or invalid for ${normalizedTrack}: ${track.manifestSemanticSha256 ?? '<missing>'}`);
+  }
+
   let needsManifestRebind = null;
   if (manifest) {
+    if (manifestSemanticIntegrity.expectedSha256) {
+      manifestSemanticIntegrity.observedSha256 = manifestSemanticSha256(manifest);
+      manifestSemanticIntegrity.matched = manifestSemanticIntegrity.observedSha256 === manifestSemanticIntegrity.expectedSha256;
+      if (!manifestSemanticIntegrity.matched) {
+        errors.push(`Manifest semantic SHA-256 mismatch (plugin id excluded): expected ${manifestSemanticIntegrity.expectedSha256}, got ${manifestSemanticIntegrity.observedSha256}`);
+      }
+    }
+
     if (manifest.main !== 'code.js') errors.push(`manifest.main must be code.js, got ${manifest.main ?? '<missing>'}`);
     if (manifest.ui !== 'ui.html') errors.push(`manifest.ui must be ui.html, got ${manifest.ui ?? '<missing>'}`);
 
@@ -342,6 +384,7 @@ export function inspectRuntimeArtifact(
       observedSha256: observedImmutableFileSha256,
       manifestIntentionallyExcluded: true
     },
+    manifestSemanticIntegrity,
     verifier: track.verifier,
     needsManifestRebind,
     errors,
@@ -372,7 +415,11 @@ function printHuman(result) {
   }
   if (result.immutableFileIntegrity) {
     console.log(`Immutable files: ${result.immutableFileIntegrity.matched}/${result.immutableFileIntegrity.checked} SHA-256 pins matched`);
-    console.log('Manifest hash: intentionally not pinned because plugin-id rebinding is an allowed manifest-only change');
+    console.log('Manifest raw bytes: intentionally not pinned because plugin-id rebinding is allowed');
+  }
+  if (result.manifestSemanticIntegrity?.required) {
+    console.log(`Manifest semantics (plugin id excluded): ${result.manifestSemanticIntegrity.matched ? 'MATCH' : 'MISMATCH'}`);
+    if (result.manifestSemanticIntegrity.observedSha256) console.log(`Observed manifest semantic SHA-256: ${result.manifestSemanticIntegrity.observedSha256}`);
   }
   if (result.needsManifestRebind === true) console.log('Manifest: placeholder id; local rebinding required before Figma import');
   if (result.needsManifestRebind === false) console.log('Manifest: plugin id already rebound');
