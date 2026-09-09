@@ -18,7 +18,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 |---|---|---:|---|---|
 | AI-native governance + repo tooling | ✅ COMPLETE | 100% | `██████████` | Keep Issues → PR/MR → development lifecycle, status verification and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
-| P5 Conservative Safe Fix | 🟡 RUNTIME ACCEPTANCE | 94% | `█████████░` | Hash-pinned #488 → real imported-Figma proof → descriptor-pinned, verified-byte closure intake PASS → merge #6 |
+| P5 Conservative Safe Fix | 🟡 RUNTIME ACCEPTANCE | 94% | `█████████░` | Hash-pinned #488 → real imported-Figma proof → descriptor-pinned, optional ZIP-bound, verified-byte closure intake PASS → merge #6 |
 | P6 Advanced structures | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh registered artifact → real closure #7 |
 | P7 60+ Frame batch queue | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh registered artifact → stress/cancel closure #8 |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
@@ -61,7 +61,10 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 - ✅ PR #51 head `bf7ba3c` passed CI #577 with no review/thread blockers; squash-merged at `15f3f023`; post-merge CI #578 + Integration Readiness #58 passed.
 - ✅ PR #52 makes each registry Actions artifact digest directly verifiable when the original ZIP is retained: `runtime:preflight -- --archive=<zip>` hashes raw archive bytes from a stable descriptor and requires exact registered digest equality.
 - ✅ PR #52 head `1bf182f` passed CI #582 with no review/thread blockers; squash-merged at `5b75ff2e`; post-merge CI #583 + Integration Readiness #62 passed.
-- ✅ archive verification is optional; extracted-artifact-only workflows still enforce stable descriptor identity, BUILD_INFO/manifest checks and all immutable per-file SHA-256 pins.
+- ✅ PR #53 binds the same optional retained-ZIP digest gate into `runtime:closure-intake`; a supplied archive now passes through final-closure preflight before evidence intake or verifier logic can run.
+- ✅ PR #53 regressions prove a matching archive reaches verifier PASS while a mismatching archive fails at preflight with verifier execution suppressed.
+- ✅ PR #53 head `b813db3` passed CI #587 with no review/thread blockers; squash-merged at `6ffda876`; post-merge CI #588 + Integration Readiness #66 passed.
+- ✅ archive verification remains optional; extracted-artifact-only workflows still enforce stable descriptor identity, BUILD_INFO/manifest checks and all immutable per-file SHA-256 pins.
 - ✅ canonical P5/P6/P7 feature heads and registered runtime artifact bytes remained unchanged by these tooling batches.
 
 ## Phase status
@@ -82,7 +85,7 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 | P6 | `feat/p6-advanced-structures` · `9a6ae3b` | ✅ #494 · `figma-plugin-dist-494` | `sha256:82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3` | ⚠️ Reference only; rebuild after P5 merge |
 | P7 | `feat/p7-batch-queue-core` · `cbfdb66` | ✅ #490 · `figma-plugin-dist-490` | `sha256:c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43` | ⚠️ Reference only; rebuild after P5 merge |
 
-Machine-readable operational registry: `config/runtime-artifacts.json` schema v2. It records exact build identity, ZIP digest, closure eligibility and immutable per-file SHA-256 pins. If the original Actions ZIP is retained, the registered digest can be enforced directly with `--archive`.
+Machine-readable operational registry: `config/runtime-artifacts.json` schema v2. It records exact build identity, ZIP digest, closure eligibility and immutable per-file SHA-256 pins. If the original Actions ZIP is retained, the registered digest can be enforced directly with `--archive` in preflight or closure intake.
 
 ## Runtime artifact preflight
 
@@ -142,9 +145,15 @@ After real runtime evidence has been exported, use one fail-closed command to bi
 npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /path/to/p5-evidence.json
 ```
 
+If the original downloaded Actions ZIP is retained, bind it into the same closure command:
+
+```bash
+npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /path/to/p5-evidence.json --archive=/path/to/figma-plugin-dist-488.zip
+```
+
 It requires, in order:
 
-1. final-closure artifact preflight PASS, including a non-symlink artifact root, non-symlink required files, stable descriptor identity and immutable SHA-256 pins;
+1. final-closure artifact preflight PASS, including a non-symlink artifact root, non-symlink required files, stable descriptor identity and immutable SHA-256 pins; when `--archive` is supplied, its stable descriptor-pinned raw SHA-256 must match the registered artifact digest;
 2. an operator-supplied regular, non-symlink, non-empty evidence file no larger than 5 MiB by default;
 3. opening that evidence file once and requiring its pre-open/opened `dev`, `ino`, size, mtime and ctime metadata to match;
 4. SHA-256 of the **exact raw bytes read from that pinned descriptor** for forensic traceability;
@@ -154,7 +163,7 @@ It requires, in order:
 8. copying only those verified verifier bytes into a private temporary file, then having a direct Node bootstrap re-hash that temporary source and import the exact bytes as an in-memory `data:` module;
 9. same-artifact verifier exit code exactly `0`.
 
-If artifact/evidence/verifier preparation stages fail, no verifier logic is executed. Symbolic-link artifact roots/files, artifact-file path replacement, symbolic-link evidence paths, evidence path replacement, verifier replacement after preflight, invalid UTF-8, verifier hash drift, and bootstrap hash drift all fail closed.
+If artifact/archive/evidence/verifier preparation stages fail, no verifier logic is executed. Symbolic-link artifact roots/files, archive mismatch/replacement, artifact-file path replacement, symbolic-link evidence paths, evidence path replacement, verifier replacement after preflight, invalid UTF-8, verifier hash drift, and bootstrap hash drift all fail closed.
 
 The original artifact verifier path is not used as the executable module path after verification. The child Node process receives the validated evidence text through stdin and executes the exact re-verified verifier bytes in memory; no shell command is constructed from operator paths or evidence. The temporary verified source is removed after execution.
 
@@ -194,7 +203,7 @@ npm run integration:readiness
 
 ### 1. P5 / issue #6
 
-- unpack canonical `figma-plugin-dist-488`;
+- retain the original canonical `figma-plugin-dist-488` Actions ZIP when practical and unpack it;
 - if the original Actions ZIP is retained, optionally run preflight with `--archive=<zip>` and require raw archive digest MATCH;
 - run preflight on the real non-symlink artifact directory and require all required files to be non-symlink regular files, stable descriptor identity, exact build identity + `5/5` immutable SHA-256 matches;
 - rebind manifest locally if needed using the packaged helper;
@@ -202,7 +211,7 @@ npm run integration:readiness
 - run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
 - prove rendered-pixel forced rejection, restore, finalize and `0` leftovers;
 - export `p5-evidence.json` to a stable regular non-symlink path;
-- run `npm run runtime:closure-intake -- p5 <artifact-dir> p5-evidence.json` and require descriptor-pinned artifact/evidence identity + raw-byte evidence SHA-256 + strict UTF-8/JSON acceptance + re-verified verifier SHA-256 + verified-byte in-memory verifier execution + verifier exit `0` + final PASS;
+- run `npm run runtime:closure-intake -- p5 <artifact-dir> p5-evidence.json [--archive=<zip>]` and require optional raw archive digest match + descriptor-pinned artifact/evidence identity + raw-byte evidence SHA-256 + strict UTF-8/JSON acceptance + re-verified verifier SHA-256 + verified-byte in-memory verifier execution + verifier exit `0` + final PASS;
 - apply the CI-proven documentation integration resolution, merge P5 and close #6.
 
 ### 2. P6 / issue #7 — only after P5 lands
@@ -215,7 +224,7 @@ npm run integration:readiness
 - run image-bearing positive page-flow clone calibration with Full P3 PASS and unchanged image-anchor count;
 - run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS;
 - require combined P6 closure PASS;
-- export `p6-closure.json` to a stable regular non-symlink path and run descriptor-pinned, verified-byte `runtime:closure-intake` against the fresh final-closure-eligible P6 artifact;
+- export `p6-closure.json` to a stable regular non-symlink path and run descriptor-pinned, verified-byte `runtime:closure-intake` against the fresh final-closure-eligible P6 artifact; pass `--archive` when the fresh ZIP is retained;
 - merge and close #7.
 
 ### 3. P7 / issue #8 — only after P5 lands
@@ -228,7 +237,7 @@ npm run integration:readiness
 - execute a realistic 60+ Frame batch with every item terminal and `maxConcurrentProcessors === 1`;
 - request cancellation during a genuinely long active Full P3 operation and retain matching cooperative settlement evidence;
 - require final closure PASS;
-- export `p7-closure.json` to a stable regular non-symlink path and run descriptor-pinned, verified-byte `runtime:closure-intake` against the fresh final-closure-eligible P7 artifact;
+- export `p7-closure.json` to a stable regular non-symlink path and run descriptor-pinned, verified-byte `runtime:closure-intake` against the fresh final-closure-eligible P7 artifact; pass `--archive` when the fresh ZIP is retained;
 - merge and close #8.
 
 Full real-runtime operator checklist: `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md`.
@@ -243,7 +252,7 @@ node verify-p6-closure.mjs < p6-closure.json
 node verify-p7-closure.mjs < p7-closure.json
 ```
 
-For operator closure, prefer `runtime:closure-intake` because it requires the registry-backed final-closure artifact preflight, post-preflight verifier hash revalidation, and exact verified-byte execution before accepting that same verifier result.
+For operator closure, prefer `runtime:closure-intake` because it requires the registry-backed final-closure artifact preflight, optional retained-archive digest binding, post-preflight verifier hash revalidation, and exact verified-byte execution before accepting that same verifier result.
 
 Exit code `0` requires canonical acceptance and exact artifact-build binding. Offline verification cannot replace real Figma observation.
 
@@ -259,7 +268,7 @@ Exit code `0` requires canonical acceptance and exact artifact-build binding. Of
 - required artifact-file validation/read/hash/parse operations must bind to one stable descriptor identity (`dev`/`ino`/size/mtime/ctime) and pinned byte snapshot;
 - immutable runtime/helper/verifier files must match registry SHA-256 pins exactly;
 - manifest-only plugin-ID rebinding is allowed, but compiled code/UI must remain byte-for-byte unchanged;
-- closure intake must accept only a regular non-symlink evidence path, bind validation/read/hash to one stable file identity and descriptor, hash exact evidence bytes, reject invalid UTF-8, require a top-level JSON object, and never execute verifier logic until final-closure artifact/evidence gates pass;
+- closure intake must forward any supplied archive into final-closure preflight, accept only a regular non-symlink evidence path, bind validation/read/hash to one stable file identity and descriptor, hash exact evidence bytes, reject invalid UTF-8, require a top-level JSON object, and never execute verifier logic until final-closure artifact/archive/evidence gates pass;
 - verifier execution must re-bind to the immutable verifier hash accepted by preflight and execute the exact re-verified bytes in memory rather than trusting the artifact path at spawn time;
 - offline verifiers must recompute canonical acceptance and match that artifact build;
 - proof chronology must be valid and cannot occur after evidence capture;
@@ -287,7 +296,7 @@ npm run runtime:preflight -- <p5|p6|p7> <unpacked-artifact-dir> [--archive=/path
 Runtime closure intake:
 
 ```bash
-npm run runtime:closure-intake -- <p5|p6|p7> <unpacked-artifact-dir> <evidence-json>
+npm run runtime:closure-intake -- <p5|p6|p7> <unpacked-artifact-dir> <evidence-json> [--archive=/path/to/artifact.zip]
 ```
 
 For a repository-local development artifact:
