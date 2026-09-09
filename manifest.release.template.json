@@ -1,0 +1,19 @@
+{
+  "name": "Pella Elementor Prep",
+  "id": "__FIGMA_PLUGIN_ID__",
+  "api": "1.0.0",
+  "editorType": ["figma"],
+  "main": "code.js",
+  "ui": "ui.html",
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  },
+  "menu": [
+    { "name": "Open Elementor Prep", "command": "open" },
+    { "separator": true },
+    { "name": "Audit & Backlog", "command": "audit" },
+    { "name": "Compare Two Frames", "command": "validate" },
+    { "name": "Audit & Export Report", "command": "export-report" }
+  ]
+}

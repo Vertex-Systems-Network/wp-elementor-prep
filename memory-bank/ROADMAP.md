@@ -14,10 +14,10 @@ Last updated: 2026-09-10
 | P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Final P12 P5 merge → resolve P6 → fresh registered artifact → positive/refusal closure #7 |
 | P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Final P12 P5 merge → resolve P7 → fresh registered artifact → 60+ stress/cancel closure #8 |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate after normalization line stabilizes |
-| P9 | Actionable backlog generator | PLANNED | 0% | `░░░░░░░░░░` | Implement ERROR/WARNING/INFO/IMPROVEMENT backlog + dedupe/delta/export (#81) |
-| P10 | npm/Node CLI + source adapters | PLANNED | 0% | `░░░░░░░░░░` | Shared core + Figma URL/file key + canonical snapshot path (#82) |
-| P11 | Normal Figma plugin distribution | PLANNED | 0% | `░░░░░░░░░░` | Production manifest/package + private/Community-ready distribution (#83) |
-| P12 | Final integrated validation/release acceptance | PLANNED FINAL GATE | 0% | `░░░░░░░░░░` | Batch all deferred manual/runtime/end-to-end acceptance after implementation (#84) |
+| P9 | Actionable backlog generator | IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged PR #89; validate real plugin/export/parity behavior in #84 |
+| P10 | npm/Node CLI + source adapters | IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged PR #93; validate real URL/snapshot/OS-path/parity behavior in #84 |
+| P11 | Normal Figma plugin distribution | IMPLEMENTATION IN PROGRESS | 85% | `█████████░` | Finish release/community contracts → PR/CI → merge #83 → P12 normal-install/release validation |
+| P12 | Final integrated validation/release acceptance | PLANNED FINAL GATE | 0% | `░░░░░░░░░░` | Batch all deferred manual/runtime/end-to-end acceptance after P11 implementation (#84) |
 
 ## Progress interpretation
 
@@ -25,7 +25,11 @@ Last updated: 2026-09-10
 
 This preserves the original verified core denominator.
 
-**Release-expansion P9–P12:** `0%` planning baseline.
+**Release-expansion implementation:**
+- P9: 100%;
+- P10: 100%;
+- P11: 85%;
+- P12 final validation: 0%.
 
 P8 remains optional/deferred and is not counted as an active blocker unless explicitly reactivated.
 
@@ -59,9 +63,9 @@ Engineering and exact-artifact offline verification are complete on:
 
 The artifact is registered in `config/runtime-artifacts.json` schema v3 as the current final-closure-eligible P5 build. Main-side preflight/archive/provenance plumbing is hardened.
 
-Real imported-Figma acceptance is deferred to P12 rather than blocking unrelated P9–P11 implementation.
+Real imported-Figma acceptance is deferred to P12 rather than blocking P9–P11 implementation.
 
-After P12 P5 closure-intake PASS, a fresh integration against the then-current `main` is still mandatory. Latest Integration Readiness #90 reported P5 → main `CODE_CONFLICT`, including `.github/workflows/ci.yml`, `scripts/prepare-figma-import.mjs`, README and memory-bank files. Historical proof #37 / CI #500 is superseded. The final resolution must preserve current-main source/output-overlap safety, CI/status tooling and closure/runbook hardening while deliberately integrating P5 runtime code.
+After P12 P5 closure-intake PASS, a fresh integration against the then-current `main` is mandatory. Latest Integration Readiness reported P5 → main `CODE_CONFLICT`; the final resolution must preserve current-main source/output-overlap safety, CI/status tooling and closure/runbook hardening while deliberately integrating P5 runtime code.
 
 ## P6 — issue #7
 
@@ -81,56 +85,63 @@ Optional exporter adapters remain intentionally deferred; issue #9 is closed as 
 
 ## P9 — actionable backlog / issue #81
 
-Build a deterministic continuous-improvement queue from audit/prep findings.
+Implementation completed and merged via PR #89.
 
-Required categories:
-- ERROR;
-- WARNING;
-- INFO;
-- IMPROVEMENT.
+Delivered:
+- ERROR / WARNING / INFO / IMPROVEMENT backlog categories;
+- deterministic identity, severity/priority, context/evidence and actions;
+- OPEN / RESOLVED / REGRESSED / ACCEPTED_RISK lifecycle;
+- NEW / RESOLVED / REGRESSED / UNCHANGED delta;
+- category/severity summaries;
+- deterministic JSON/Markdown export;
+- plugin history/view/export;
+- stale async invalidation;
+- non-mutating boundary.
 
-Each item should include deterministic identity, severity/priority, rule code, Figma context, explanation, evidence/confidence, proposed action, auto-fix eligibility, occurrence history and lifecycle status.
-
-Required outputs:
-- `backlog.json`;
-- `backlog.md`;
-- category/severity counts;
-- deterministic dedupe;
-- run-to-run new/resolved/regressed/unchanged delta;
-- plugin UI export;
-- CLI export.
+P12 retains real plugin/export/parity validation.
 
 ## P10 — npm/Node CLI / issue #82
 
-Expose the same deterministic analysis core through Node/npm.
+Implementation completed and merged via PR #93 at `7e6aa85958060cc927d8fe09dc5cb88a3feba53e`.
 
-Initial adapters:
+Delivered:
 - official Figma REST URL/file-key input;
-- canonical versioned snapshot/package path.
+- canonical versioned snapshot path;
+- explicit Frame/node selection and ambiguous-frame refusal;
+- personal-token + OAuth environment auth modes;
+- cloud source snapshot export;
+- audit/backlog JSON + Markdown outputs;
+- previous backlog delta, summary-only and CI fail thresholds;
+- Node >=20 cross-platform runner and persistent CLI bundle;
+- explicit `UNSUPPORTED_FIG_LOCAL_FILE` for raw `.fig`;
+- no credential serialization;
+- strict implementation-side tests/typecheck/build contracts.
 
-Target examples:
-
-```bash
-npm run audit:figma -- --url "https://www.figma.com/design/<file-key>/<name>"
-npm run audit:figma -- --file-key "<file-key>"
-npm run audit:snapshot -- --input "/path/to/figma-snapshot.json"
-npm run backlog:generate -- --input "/path/to/audit-report.json" --out "/path/to/output"
-```
-
-Raw proprietary `.fig` files must not be reverse-engineered by an undocumented parser. Until a supported bridge exists, `/path/file.fig` must fail clearly with `UNSUPPORTED_FIG_LOCAL_FILE` and point to URL/file-key or canonical snapshot alternatives.
+P12 retains real credentialed execution, snapshot parity, OS-path behavior and production acceptance.
 
 ## P11 — Figma plugin distribution / issue #83
 
-Complete production packaging/distribution around the existing classic-plugin runtime:
-- production plugin ID/manifest;
-- dev vs release command surface;
-- reproducible release package;
-- normal user commands: Audit, Backlog, Safe Fix/Prep, Batch, Export Report;
-- local/private/team distribution guidance;
-- Community submission assets/checklist;
-- versioning/update process;
-- privacy/network declaration;
-- release provenance metadata.
+Implementation is active on `feat/p11-release-packaging`.
+
+Delivered on the branch so far:
+- release-only manifest template;
+- explicit release capability/menu registry;
+- deterministic release package builder requiring a real plugin ID and exact source SHA;
+- release package verifier for placeholder IDs, unexpected files, network/menu drift and provenance/hash mismatches;
+- current-capability normal-user commands and audit/backlog exports;
+- developer-only evidence/self-test exclusion from release menu;
+- release fixture verification in CI;
+- Community listing template + readiness verifier;
+- privacy/offline network declaration;
+- local/private/team/Community distribution guide.
+
+Before P11 implementation completion:
+- finish version/changelog/static release contracts;
+- run PR CI and repair any defects;
+- merge #83;
+- leave actual install/runtime/Community acceptance to P12.
+
+Safe Fix/Prep and Batch are not exposed on the current release line until final integrated runtime capabilities exist.
 
 Community publication remains subject to Figma review.
 
@@ -163,7 +174,7 @@ For every future development cycle:
 1. inspect/process open Issues;
 2. inspect open PR/MR;
 3. continue the highest-priority unblocked implementation item;
-4. synchronize README + memory-bank state;
+4. synchronize README + memory-bank state during the work, not only after it;
 5. distinguish implementation progress from final validation progress;
 6. preserve safety/provenance and latest integration-conflict truth while testing is deferred;
 7. run final manual/runtime/end-to-end validation only in P12 unless the user explicitly changes that policy.

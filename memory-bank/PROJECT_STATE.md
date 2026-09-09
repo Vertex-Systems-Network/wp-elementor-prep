@@ -13,7 +13,7 @@ Final planned user surfaces:
 
 ## Current policy
 
-Manual/runtime/end-to-end product testing is deferred until P12 final integrated validation.
+Manual/runtime/end-to-end product testing remains deferred until P12 final integrated validation.
 
 Before P12:
 - implementation may continue where safe;
@@ -24,7 +24,9 @@ Before P12:
 
 ## Repository baseline
 
-Latest merged implementation baseline before P10 is `main` `67d6b3df05c8e4550b3df80f95cb5fabeb77de42` from P9 PR #89.
+Latest merged implementation baseline is `main` `7e6aa85958060cc927d8fe09dc5cb88a3feba53e` from P10 PR #93.
+
+P9 merged through PR #89 at `67d6b3df05c8e4550b3df80f95cb5fabeb77de42`.
 
 PR #85 remains authoritative for final P5 integration: latest verified Integration Readiness reports canonical P5 → current main as `CODE_CONFLICT`, not docs-only. Historical integration proof #37 / CI #500 is superseded for merge authorization. The final P5 integration resolution must preserve current-main source/output-overlap safety, CI/status tooling and closure/runbook hardening.
 
@@ -35,10 +37,10 @@ Core/runtime validation-pending:
 - #7 — P6 Advanced structures;
 - #8 — P7 Batch queue.
 
-Release-expansion implementation:
-- #81 — P9 actionable backlog generator: implementation completed via PR #89 and issue closed; P12 validation pending;
-- #82 — P10 npm/CLI + supported Figma source adapters: implementation active on PR #93;
-- #83 — P11 normal Figma plugin packaging/distribution: next after P10;
+Release expansion:
+- #81 — P9 actionable backlog generator: implementation completed via PR #89; issue closed; P12 validation pending;
+- #82 — P10 npm/CLI + supported Figma source adapters: implementation completed via PR #93; issue closed; P12 validation pending;
+- #83 — P11 normal Figma plugin packaging/distribution: active implementation on `feat/p11-release-packaging`;
 - #84 — P12 final integrated validation/release acceptance.
 
 P8 Elementor exporter remains deferred.
@@ -54,8 +56,8 @@ P8 Elementor exporter remains deferred.
 | P7 batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | P12 after P5 merge: fresh exact artifact + 60+ stress/cancel closure #8 |
 | P8 exporter adapters | DEFERRED | N/A | Re-evaluate later |
 | P9 backlog generator | IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | Final plugin/runtime/parity checks in #84 |
-| P10 npm/CLI | IMPLEMENTATION IN PROGRESS | 70% | PR #93 static integrity → merge #82 implementation → P12 real URL/snapshot parity validation |
-| P11 Figma plugin distribution | PLANNED | 0% | Implement #83 after P10 |
+| P10 npm/CLI | IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | Final real URL/snapshot/OS-path/parity checks in #84 |
+| P11 Figma plugin distribution | IMPLEMENTATION IN PROGRESS | 85% | Finish static package/community contracts → PR/CI → merge #83 → P12 release validation |
 | P12 final validation | PLANNED FINAL GATE | 0% | Run all deferred final acceptance #84 |
 
 ## Progress interpretation
@@ -68,7 +70,7 @@ P9–P12 are a separate release-expansion line. Module percentages there represe
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3.
 
-The registry continues to bind canonical P5/P6/P7 engineering artifacts to exact source/run/digest/file hashes and manifest semantics. P10 does not mutate those registered artifacts or relax any closure gate.
+The registry continues to bind canonical P5/P6/P7 engineering artifacts to exact source/run/digest/file hashes and manifest semantics. P9–P11 do not mutate those registered artifacts or relax any closure gate.
 
 ## P5 current technical state
 
@@ -86,7 +88,7 @@ Current-main exact-artifact preflight/archive/provenance calibration is complete
 
 P6 #494 and P7 #490 remain engineering/reference artifacts. Their final production integration requires fresh exact artifacts after the final P5 merge. Those integrated runtime scenarios belong to P12.
 
-## P9 — implemented backlog layer
+## P9 — implementation complete
 
 P9 merged in PR #89 at `67d6b3df05c8e4550b3df80f95cb5fabeb77de42`.
 
@@ -106,15 +108,14 @@ Implemented:
 
 Production/manual/runtime acceptance remains part of P12.
 
-## P10 — npm/CLI implementation state
+## P10 — implementation complete
 
-PR #93 implements the Node/npm surface on top of the same deterministic core.
+P10 merged in PR #93 at `7e6aa85958060cc927d8fe09dc5cb88a3feba53e`.
 
-Current branch scope:
+Implemented:
 - `audit:figma` using official Figma REST URL/file-key input;
-- personal token via `FIGMA_TOKEN` / `X-Figma-Token`;
-- OAuth token via `FIGMA_OAUTH_TOKEN` / Bearer header;
-- explicit `--node-id`, with URL `node-id` support;
+- personal token + OAuth environment credential modes;
+- explicit `--node-id` and URL `node-id` support;
 - fail-closed ambiguous top-level frame selection;
 - owned canonical snapshot schema v1;
 - `audit:snapshot` offline path input;
@@ -124,23 +125,38 @@ Current branch scope:
 - cloud audit `source-snapshot.json` export;
 - `--out`, `--previous-backlog`, `--summary-only`, `--fail-on`;
 - stable CLI exit-code contract;
-- cross-platform Node >=20 temporary esbuild runner;
-- persistent `build:cli` bundle for later release packaging;
-- source-bound audit timestamps so a saved cloud snapshot reuses the same report timestamp;
-- credentials excluded from snapshot/report/backlog payloads.
+- Node >=20 esbuild runner + persistent `build:cli` bundle;
+- source-bound audit timestamps;
+- credentials excluded from serialized outputs;
+- strict TypeScript/CI implementation contracts.
 
-P10 implementation-side CI/static checks may run now. Real Figma credential execution, Windows/macOS path behavior, snapshot parity and production acceptance remain P12 obligations.
+Real Figma credential execution, Windows/macOS path behavior, snapshot parity and production acceptance remain P12 obligations.
 
-## P11 — next implementation target
+## P11 — active implementation
 
-Complete the production layer around the classic-plugin runtime:
-- production plugin ID/manifest;
-- dev/release command surfaces;
-- reproducible release package;
-- stable user-facing commands;
-- local/private/team distribution guidance;
-- Community submission package/checklist;
-- release assets/versioning/support/privacy/network metadata.
+Branch: `feat/p11-release-packaging`.
+
+Implemented so far:
+- separate release manifest template;
+- explicit release capability/menu registry;
+- deterministic release package builder requiring real plugin ID + source SHA;
+- fail-closed release package verifier;
+- normal-user release commands for current integrated capabilities;
+- audit report and backlog JSON/Markdown exports;
+- developer-only self-test/evidence command exclusion from normal release menu;
+- release package fixture verification in CI;
+- Community listing template + readiness verifier;
+- privacy/offline network declaration;
+- local/private/team/Community distribution documentation;
+- release output source-control exclusion.
+
+Remaining before implementation-complete:
+- finish static release/community/version/changelog contracts;
+- run PR CI and resolve implementation defects;
+- merge #83;
+- preserve actual normal-install/Community/runtime acceptance for P12.
+
+Safe Fix/Prep and Batch are intentionally not exposed by the current release menu until their final integrated P12 runtime line exists.
 
 Community publication remains subject to Figma review.
 
@@ -167,7 +183,7 @@ Only after P12 passes should the expanded release be production-accepted / 100%.
 
 ## Immediate development target
 
-1. finish PR #93 static integrity and merge P10 implementation;
-2. close #90 and mark #82 implementation complete / P12 validation pending;
-3. proceed to P11 #83;
-4. defer manual/runtime/end-to-end product testing to P12 #84.
+1. finish P11 static package/community/version contracts on `feat/p11-release-packaging`;
+2. keep README + memory-bank synchronized during the P11 PR lifecycle;
+3. run PR CI, fix defects and merge #83 implementation;
+4. then P12 #84 becomes the sole release-expansion final gate.
