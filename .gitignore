@@ -2,6 +2,7 @@ node_modules/
 dist/
 dist-cli/
 dist-local/
+dist-release/
 .env
 .DS_Store
 coverage/
