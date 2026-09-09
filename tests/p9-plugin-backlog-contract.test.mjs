@@ -15,6 +15,14 @@ describe('P9 plugin backlog contract', () => {
     expect(pluginMain).toContain('backlogMarkdown: serializeBacklogMarkdown(backlog)');
   });
 
+  it('invalidates stale async audits before they can overwrite the UI', () => {
+    expect(pluginMain).toContain('let auditSequence = 0');
+    expect(pluginMain).toContain('const sequence = ++auditSequence');
+    expect(pluginMain).toContain('if (sequence !== auditSequence) return');
+    expect(pluginMain).toContain("figma.on('selectionchange'");
+    expect(pluginMain).toContain('auditSequence += 1');
+  });
+
   it('exposes backlog view and both required exports in the plugin UI', () => {
     expect(ui).toContain('Actionable backlog');
     expect(ui).toContain('export-backlog-json');
