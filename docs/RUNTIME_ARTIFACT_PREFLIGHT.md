@@ -12,14 +12,14 @@ For the canonical P5 issue #6 artifact:
 npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
 ```
 
-Expected result: `PASS`. The report must show all registered immutable SHA-256 pins matched. If the artifact still has placeholder Figma plugin ID `000000000000000000`, the preflight reports that local manifest rebinding is required. Run the **packaged artifact helper**:
+Expected result: `PASS`. The report must show all registered immutable SHA-256 pins matched. If the artifact still has placeholder Figma plugin ID `000000000000000000`, use the **packaged artifact helper** with a separate, non-nested output directory. From inside canonical #488:
 
 ```bash
 cd /path/to/unpacked/figma-plugin-dist-488
-node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
+node prepare-figma-import.mjs <your-figma-plugin-id> . ../figma-plugin-dist-488-local
 ```
 
-Then import `dist-local/manifest.json` in Figma Desktop. Manifest rebinding does not replace runtime acceptance.
+Then import `../figma-plugin-dist-488-local/manifest.json` in Figma Desktop. The source artifact and local import output must be separate/non-nested directories. The old `. dist-local` form is invalid: canonical #488's packaged helper cannot copy the source into its own child, and the current main helper explicitly rejects path overlap. Manifest rebinding does not replace runtime acceptance.
 
 ## Optional raw archive verification
 
@@ -88,6 +88,8 @@ Any byte change to those files fails closed even if `BUILD_INFO.txt` still claim
 ## Why manifest.json is intentionally excluded from SHA-256 pinning
 
 `manifest.json` is the only artifact file allowed to change during supported local import preparation because Figma requires a real numeric development-plugin ID instead of the packaged placeholder. The packaged helper rebinds that ID while preserving compiled `code.js` and `ui.html` byte-for-byte.
+
+Local preparation must always copy into a **separate non-nested directory**. The source artifact remains immutable; only the prepared copy's manifest ID changes.
 
 Therefore:
 
