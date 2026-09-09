@@ -2,176 +2,165 @@
 
 Last updated: 2026-09-10
 
-## Mandatory order for every work cycle
+## Current policy
 
-1. **Issues first** — list open issues, solve actionable code/docs/test work, and identify genuine dependency/manual-runtime blockers.
-2. **PR/MR second** — inspect CI, mergeability, conflicts, reviews and threads; merge only eligible work.
-3. **Development third** — continue the highest-priority unblocked roadmap work.
-4. **End-of-work sync** — run verification and synchronize README + memory-bank state before completion.
+Manual/runtime/end-to-end product testing is deferred until P12.
 
-Never fabricate real Figma observations or closure evidence.
+For now:
+- continue implementation where safe;
+- preserve P5/P6/P7 safety/provenance locks;
+- do not fabricate Figma runtime evidence;
+- do not call validation-pending modules production-accepted;
+- preserve latest P5→main `CODE_CONFLICT` truth from PR #85.
 
-## Current repository queue
+## Mandatory order
 
-- Latest verified `main` before issue #80 work: `698940369635b6f40972e6404e7e7ff71b57ea14` from PR #79.
-- PR #79 post-merge CI #618 and Integration Readiness #90 passed.
-- Open product/runtime dependency chain remains #6 → #7/#8; issue #80 is a repo-side integration-contract correction only.
-- P5 #6 engineering is complete and its current-main artifact/archive preflight has been exercised against the actual canonical #488 package.
-- Latest Integration Readiness #90 reports **P5 → current main = CODE_CONFLICT**, not docs-only. Conflicts include `.github/workflows/ci.yml` and `scripts/prepare-figma-import.mjs` plus README/memory-bank files.
-- Therefore the historical integration proof #37 / CI #500 is superseded for merge authorization. After real P5 acceptance + closure intake PASS, a fresh P5→then-current-main integration resolution and full CI are mandatory before #6 can close.
-- That fresh resolution must preserve current-main source/output overlap safety in `scripts/prepare-figma-import.mjs`, current CI/status verification/tooling hardening, and current closure/runbook contracts while integrating P5 runtime code deliberately.
-- P6 #7 and P7 #8 remain blocked on P5 merge and require fresh post-P5 integration artifacts before final runtime evidence.
-- Canonical P5/P6/P7 feature heads and registered artifact bytes remain unchanged.
-- Overall active product progress remains `93%`.
+1. Inspect/process open Issues.
+2. Inspect open PR/MR.
+3. Continue the highest-priority unblocked implementation item.
+4. Synchronize README + memory-bank state.
+5. Reserve final manual/runtime/end-to-end acceptance for P12 unless the user changes this policy.
 
-## Hardened final closure contract
+## Current queue
 
-The canonical operator rule is explicit:
+Core/runtime validation-pending:
+- #6 — P5 Safe Fix;
+- #7 — P6 Advanced structures;
+- #8 — P7 Batch queue.
 
-- real Figma runtime observations are collected first from the exact imported artifact;
-- exported evidence must be retained as a stable regular non-symlink file;
-- final authorization is **current-main `runtime:closure-intake` PASS**, not a direct `node verify-*.mjs` invocation;
-- direct packaged-verifier execution may be used only as an optional local diagnostic and cannot authorize merge/issue closure;
-- fresh post-P5 P6/P7 artifacts must be registered in current `main` as final-closure eligible with exact source/run/digest, immutable file hashes, schema-v3 manifest semantic SHA and verifier identity before their final runtime observations are accepted;
-- current-main closure intake must then PASS for P5, P6 or P7 before the corresponding issue can close.
+Release expansion:
+- #81 — P9 Backlog generator;
+- #82 — P10 npm/CLI runner + supported Figma source adapters;
+- #83 — P11 Normal Figma plugin packaging/distribution;
+- #84 — P12 Final integrated validation/release acceptance.
 
-A dedicated regression test (`tests/real-figma-runbook-contract.test.mjs`) pins the closure boundary, sibling/non-nested import rule, and fresh P5 integration requirement.
+P8 Elementor exporter remains deferred.
 
-## Completed P5 operator verification
+## P5/P6/P7 state while testing is deferred
 
-Canonical P5 runtime artifact:
+Canonical P5 #488 provenance/preflight/archive plumbing is hardened.
 
-- artifact: `figma-plugin-dist-488`
-- artifact ID: `10062772456`
-- source head: `810d98d6e09cb4cf3fe4758fcb07e87734254a8e`
-- run ID / run number: `34242984963` / `488`
-- retained ZIP SHA-256: `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`
+Latest Integration Readiness #90 established P5 → current main as `CODE_CONFLICT`, including `.github/workflows/ci.yml`, `scripts/prepare-figma-import.mjs`, README and memory-bank files. Historical integration proof #37 / CI #500 is superseded.
 
-Verified current-main operator outcomes:
+When P12 reaches P5 closure:
+1. collect real imported-Figma/rendered-pixel evidence;
+2. pass current-main `runtime:closure-intake`;
+3. re-run integration readiness against the then-current main;
+4. resolve the exact current conflict set;
+5. preserve current-main source/output-overlap safety, CI/status tooling and closure/runbook hardening while integrating P5 runtime code;
+6. complete the final integration gate before merging #6.
 
-- canonical #488 final-closure preflight: PASS;
-- retained ZIP raw SHA-256: MATCH;
-- BUILD_INFO exact source/workflow SHA + run ID/number: MATCH;
-- immutable registry hashes: `5/5` MATCH;
-- schema-v3 manifest semantic SHA-256: MATCH;
-- sibling prepared calibration copy: byte-identical `code.js` / `ui.html`, manifest semantic SHA unchanged, preflight PASS;
-- exact closure intake with intentionally invalid `{}` evidence reached the exact same-artifact verifier via `verified-bytes-memory-bootstrap` and correctly rejected the missing runtime proof with exit `1`.
+P6 #494 and P7 #490 remain reference artifacts. Their final fresh artifacts and runtime closure belong to the P12 final line after P5 merges.
 
-This proves operator/provenance plumbing only. It does not satisfy real imported-Figma runtime acceptance.
+## Immediate implementation order
 
-Runtime artifact preflight requires a non-symlink artifact root, stable required-file descriptor identities, exact build identity, `5/5` immutable file pins and schema-v3 id-excluded manifest semantic SHA-256 equality; a retained original ZIP may additionally be bound with `--archive`.
+### 1. P9 — backlog generator / #81
 
-## P5 — immediate critical path / issue #6
+Implement a deterministic structured backlog from audit/prep findings.
 
-The canonical current-main preflight and retained-ZIP digest checks are complete.
+Required categories:
+- `ERROR`;
+- `WARNING`;
+- `INFO`;
+- `IMPROVEMENT`.
 
-### Next actual step
+Required item data:
+- deterministic fingerprint/id;
+- category/severity/priority;
+- rule/finding code;
+- file/page/frame/section/node context when available;
+- title/explanation;
+- evidence/confidence;
+- proposed action/recipe candidate;
+- auto-fix eligibility;
+- firstSeen/lastSeen/occurrences;
+- OPEN / RESOLVED / REGRESSED / ACCEPTED_RISK state.
 
-Prepare canonical #488 with the **actual Figma development-plugin ID** using the helper packaged inside #488 and a sibling/non-nested output directory:
+Outputs:
+- `backlog.json`;
+- `backlog.md`;
+- category/severity counts;
+- deterministic dedupe;
+- run-to-run delta;
+- plugin UI export;
+- CLI-compatible export.
 
-```bash
-cd /path/to/unpacked/figma-plugin-dist-488
-node prepare-figma-import.mjs <your-actual-figma-plugin-id> . ../figma-plugin-dist-488-local
-```
+Backlog generation must remain non-mutating.
 
-Then import:
+### 2. P10 — npm/CLI / #82
 
-```text
-../figma-plugin-dist-488-local/manifest.json
-```
+Use the same deterministic scanner/classifier/scoring/backlog core as the plugin.
 
-Do not use the calibration numeric ID as runtime evidence.
-
-### Real Figma acceptance sequence
-
-1. prepare sibling copy with the actual Figma development-plugin ID;
-2. import the exact artifact-derived prepared copy into Figma Desktop;
-3. run `Developer: P5 Runtime Self-Test`;
-4. require `P5 Compiled Runtime Acceptance: PASS`;
-5. collect real rendered-pixel forced-reject evidence;
-6. prove restore and finalize behavior;
-7. require checkpoint cleanup with `0` leftovers;
-8. confirm stale proof from another artifact cannot unlock the current build;
-9. export provenance-bound `p5-evidence.json` to a stable regular non-symlink path.
-
-### Final P5 closure + integration sequence
-
-After real evidence exists, from current `main` run:
+Target commands:
 
 ```bash
-npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /path/to/p5-evidence.json --archive=/path/to/figma-plugin-dist-488.zip
+npm run audit:figma -- --url "https://www.figma.com/design/<file-key>/<name>"
+npm run audit:figma -- --file-key "<file-key>"
+npm run audit:snapshot -- --input "/path/to/figma-snapshot.json"
+npm run backlog:generate -- --input "/path/to/audit-report.json" --out "/path/to/output"
 ```
 
-Require:
+Initial source adapters:
+- official Figma REST URL/file-key adapter;
+- canonical versioned snapshot/package-path adapter.
 
-- final-closure preflight PASS;
-- retained archive digest MATCH when supplied;
-- exact raw evidence SHA-256;
-- strict UTF-8 + top-level JSON object acceptance;
-- exact immutable verifier SHA revalidation;
-- `executionMode: verified-bytes-memory-bootstrap`;
-- same-artifact verifier exit `0`;
-- final `Runtime closure intake: PASS`.
+Future local Figma bridge may be added only if a documented supported mechanism exists.
 
-Then, before merging P5:
+Raw `.fig` rule:
+- do not build an undocumented proprietary parser;
+- `/path/file.fig` returns `UNSUPPORTED_FIG_LOCAL_FILE` until a supported bridge exists;
+- the error must direct users to URL/file-key or canonical snapshot input.
 
-1. re-run `npm run integration:readiness` against the then-current `main` and canonical P5;
-2. create a fresh resolution for the exact reported conflict set;
-3. preserve current-main `.github/workflows/ci.yml`, status verification/tooling, non-nested import safety in `scripts/prepare-figma-import.mjs`, and hardened closure/runbook contracts while integrating P5 runtime code deliberately;
-4. run full PR CI and require PASS;
-5. review the resolved diff/integration result;
-6. only then merge P5 and close #6.
+CLI outputs:
+- audit JSON/Markdown;
+- backlog JSON/Markdown;
+- machine-usable exit codes;
+- summary-only mode;
+- output-directory controls;
+- no token/credential leakage.
 
-Do not reuse historical integration proof #37 / CI #500 as current merge authorization.
+### 3. P11 — normal Figma plugin distribution / #83
 
-## Why the connected Figma API is not a substitute
+Complete production distribution around the existing classic-plugin runtime:
+- production plugin ID/manifest;
+- dev vs release commands;
+- reproducible release package;
+- normal user commands: Audit, Backlog, Safe Fix/Prep, Batch, Export Report;
+- hide developer-only self-test/evidence commands from normal release UI where appropriate;
+- local development import instructions;
+- private/team/organization distribution guidance;
+- Community submission package/checklist;
+- icon/cover/screenshots/description/category/tags/support details;
+- versioning/changelog/update process;
+- privacy/network declaration;
+- release provenance metadata.
 
-The connected Figma `use_figma` capability executes Plugin API JavaScript in a known design file, but it does not demonstrate importing/running this exact downloaded development-plugin package with its own `manifest.json`, developer menu commands and packaged UI iframe. P5 acceptance is intentionally bound to that exact artifact/runtime condition.
+Community approval is not automatic and remains subject to Figma review.
 
-## P6 — after P5 merge / issue #7
+### 4. P12 — final integrated validation / #84
 
-Current #494 is reference-only.
+Only after implementation is complete, run:
+- final release artifact provenance/reproducibility;
+- local development-plugin import;
+- normal Figma plugin install/run;
+- P5 rendered-pixel reject/restore/finalize + zero leftovers;
+- P5 closure intake + fresh then-current-main conflict resolution preserving #85 requirements;
+- P6 fresh final-line positive/refusal acceptance;
+- P7 fresh final-line 60+ sequential queue + active cancellation;
+- P9 backlog categories/dedupe/delta/export;
+- P10 Figma URL/file-key CLI;
+- P10 canonical snapshot-path CLI;
+- raw `.fig` supported/unsupported behavior;
+- plugin/CLI parity and deterministic outputs;
+- P11 distribution/release package readiness;
+- final closure-intake;
+- Windows/macOS CLI path handling where applicable.
 
-1. resolve/rebase P6 against merged P5/main;
-2. run full CI;
-3. produce a fresh exact-build P6 artifact;
-4. register exact source/workflow SHA, run ID/number, digest, schema-v3 manifest semantic pin, immutable file hashes and verifier identity with `finalClosureEligible: true`;
-5. require current-main final-closure preflight PASS on that fresh artifact;
-6. establish exact-build P5 prerequisite in the imported fresh P6 build;
-7. collect real image-bearing positive calibration with Full P3 PASS and unchanged image-anchor count;
-8. collect preservation-sensitive refusal / `NO_CANDIDATE` evidence;
-9. require combined P6 runtime closure acceptance PASS;
-10. export stable `p6-closure.json`;
-11. require current-main `runtime:closure-intake -- p6 ...` PASS;
-12. merge/close #7.
+Only after P12 passes should the expanded release be production-accepted / 100%.
 
-## P7 — after P5 merge / issue #8
+## Progress tracking
 
-Current #490 is reference-only.
-
-1. resolve/rebase P7 against merged P5/main;
-2. run full CI;
-3. produce a fresh exact-build P7 artifact;
-4. register exact source/workflow SHA, run ID/number, digest, schema-v3 manifest semantic pin, immutable file hashes and verifier identity with `finalClosureEligible: true`;
-5. require current-main final-closure preflight PASS on that fresh artifact;
-6. establish exact-build P5 prerequisite in the imported fresh P7 build;
-7. execute a realistic 60+ Frame batch and require every item terminal with `maxConcurrentProcessors === 1`;
-8. request cancellation during a genuinely active long Full P3 operation;
-9. require cooperative settlement + matching active processor evidence;
-10. require final P7 runtime closure acceptance PASS;
-11. export stable `p7-closure.json`;
-12. require current-main `runtime:closure-intake -- p7 ...` PASS;
-13. merge/close #8.
-
-## Development allowed while P5 runtime is externally blocked
-
-Only perform work that does not invalidate exact-build acceptance artifacts or violate dependency order:
-
-- fail-closed repository/operator tooling when a concrete defect is identified;
-- evidence/provenance verification that cannot mint runtime proof;
-- non-mutating integration analysis;
-- CI/status consistency fixes;
-- documentation/runbook consistency work;
-- tests for newly discovered repo-side defects.
-
-Do not churn canonical P5/P6/P7 feature branches for documentation-only changes, and do not raise the 93% overall progress until a real product/runtime gate advances.
+- Historical P0–P7 core progress remains `93%`.
+- P9–P12 release expansion starts at `0%` planning baseline.
+- Track implementation and final validation separately.
+- Do not count P12 manual/runtime checks before they actually run.

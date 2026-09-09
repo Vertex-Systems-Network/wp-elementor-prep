@@ -10,16 +10,37 @@ Last updated: 2026-09-10
 | P2 | Deterministic classifier semantics + evidence | COMPLETE | 100% | `██████████` | None |
 | P3 | Geometry/content/image + rendered-pixel validation | COMPLETE | 100% | `██████████` | None |
 | P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
-| P5 | Conservative Safe Fix recipes + exact-build proof | RUNTIME ACCEPTANCE | 94% | `█████████░` | Hash-pinned #488 → real Figma proof → closure intake PASS → fresh P5→current-main conflict resolution + full CI → merge #6 |
-| P6 | Advanced timeline/carousel/milestone/page normalization | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh registered artifact + provenance pins → #7 closure |
-| P7 | Sequential multi-frame/page batch queue | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh registered artifact + provenance pins → #8 closure |
+| P5 | Conservative Safe Fix recipes + exact-build proof | IMPLEMENTED / VALIDATION DEFERRED | 94% | `█████████░` | Final P12 real-Figma closure → fresh P5→then-current-main conflict resolution preserving #85 requirements → merge #6 |
+| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Final P12 P5 merge → resolve P6 → fresh registered artifact → positive/refusal closure #7 |
+| P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Final P12 P5 merge → resolve P7 → fresh registered artifact → 60+ stress/cancel closure #8 |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate after normalization line stabilizes |
+| P9 | Actionable backlog generator | PLANNED | 0% | `░░░░░░░░░░` | Implement ERROR/WARNING/INFO/IMPROVEMENT backlog + dedupe/delta/export (#81) |
+| P10 | npm/Node CLI + source adapters | PLANNED | 0% | `░░░░░░░░░░` | Shared core + Figma URL/file key + canonical snapshot path (#82) |
+| P11 | Normal Figma plugin distribution | PLANNED | 0% | `░░░░░░░░░░` | Production manifest/package + private/Community-ready distribution (#83) |
+| P12 | Final integrated validation/release acceptance | PLANNED FINAL GATE | 0% | `░░░░░░░░░░` | Batch all deferred manual/runtime/end-to-end acceptance after implementation (#84) |
 
-## Overall active roadmap progress
+## Progress interpretation
 
-`█████████░ 93%`
+**Historical core P0–P7 progress:** `█████████░ 93%`
 
-The overall percentage tracks the currently active P0–P7 delivery line plus governance/tooling. Deferred P8 is not treated as an active incomplete blocker.
+This preserves the original verified core denominator.
+
+**Release-expansion P9–P12:** `0%` planning baseline.
+
+P8 remains optional/deferred and is not counted as an active blocker unless explicitly reactivated.
+
+## Validation policy
+
+Manual/runtime/end-to-end product testing is deferred until P12.
+
+Before P12:
+- implementation may continue where safe;
+- safety/provenance locks remain authoritative;
+- no real Figma evidence may be fabricated;
+- implementation-complete must not be confused with production-accepted;
+- latest P5→main `CODE_CONFLICT` state from PR #85 must be preserved rather than reverted to a stale docs-only assumption.
+
+Automated repository safeguards may still exist, but they do not count as final product acceptance under this policy.
 
 ## P0–P4
 
@@ -36,39 +57,113 @@ Engineering and exact-artifact offline verification are complete on:
 - digest `sha256:9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`,
 - manifest semantic SHA-256 `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46` with only top-level plugin `id` excluded.
 
-The artifact is registered in `config/runtime-artifacts.json` schema v3 as the current final-closure-eligible P5 build. Main-side `runtime:preflight` validates exact build identity, stable descriptor-backed artifact reads, `5/5` immutable SHA-256 pins, and deterministic manifest semantics while allowing only placeholder/numeric top-level plugin-ID rebinding. An optionally retained Actions ZIP can also be bound to the registry digest.
+The artifact is registered in `config/runtime-artifacts.json` schema v3 as the current final-closure-eligible P5 build. Main-side preflight/archive/provenance plumbing is hardened.
 
-The main-side `runtime:closure-intake` combines final-closure preflight, optional raw ZIP binding, descriptor-pinned evidence intake, byte-exact evidence hashing, strict UTF-8/JSON validation, verifier revalidation and verified-byte in-memory verifier execution. It cannot create runtime evidence.
+Real imported-Figma acceptance is deferred to P12 rather than blocking unrelated P9–P11 implementation.
 
-Remaining runtime gate is real imported-Figma acceptance followed by `runtime:closure-intake` PASS. After that PASS, P5 still requires a fresh integration against the then-current `main`: latest Integration Readiness #90 on `main` `698940369635b6f40972e6404e7e7ff71b57ea14` reports P5 → main as `CODE_CONFLICT`, including `.github/workflows/ci.yml` and `scripts/prepare-figma-import.mjs` plus status/docs files. Historical integration proof #37 / CI #500 is superseded for merge authorization. The fresh resolution must preserve current-main import-helper overlap safety and CI/status/closure hardening, run full PR CI, and only then merge #6.
-
-Production Safe Fix mutation remains locked until the real-runtime evidence passes the exact-artifact verifier chain; issue closure additionally requires the fresh current-main integration proof.
+After P12 P5 closure-intake PASS, a fresh integration against the then-current `main` is still mandatory. Latest Integration Readiness #90 reported P5 → main `CODE_CONFLICT`, including `.github/workflows/ci.yml`, `scripts/prepare-figma-import.mjs`, README and memory-bank files. Historical proof #37 / CI #500 is superseded. The final resolution must preserve current-main source/output-overlap safety, CI/status tooling and closure/runbook hardening while deliberately integrating P5 runtime code.
 
 ## P6 — issue #7
 
-Engineering is complete on reference head `9a6ae3b` / CI #494 PASS. Automated integration readiness proves real shared-code conflicts against latest P5.
+Engineering is complete on reference head `9a6ae3b` / CI #494 PASS.
 
-Artifact #494 is reference-only in runtime artifact registry schema v3 and fails closed for final closure. Its immutable files and id-excluded manifest semantics are pinned for safe inspection. After P5 merges, P6 must be integrated, rebuilt as a fresh exact artifact, registered with fresh identity/digest/immutable hashes/manifest semantic pin, then validated with real positive + preservation-refusal Figma scenarios and current-main closure intake.
+Artifact #494 remains reference-only. After P5 final closure + fresh current-main integration merge, P6 must be resolved on that line, rebuilt as a fresh exact artifact, registered with fresh provenance, and validated through real positive + preservation-refusal scenarios and current-main closure intake in P12.
 
 ## P7 — issue #8
 
-Engineering is complete on reference head `cbfdb66` / CI #490 PASS. Automated integration readiness proves real shared-code conflicts against latest P5.
+Engineering is complete on reference head `cbfdb66` / CI #490 PASS.
 
-Artifact #490 is reference-only in runtime artifact registry schema v3 and fails closed for final closure. Its immutable files and id-excluded manifest semantics are pinned for safe inspection. After P5 merges, P7 must be integrated, rebuilt as a fresh exact artifact, registered with fresh identity/digest/immutable hashes/manifest semantic pin, then validated with a realistic 60+ Frame stress run plus active Full-P3 cooperative cancellation and current-main closure intake.
+Artifact #490 remains reference-only. After P5 final closure + fresh current-main integration merge, P7 must be resolved on that line, rebuilt as a fresh exact artifact, registered with fresh provenance, and validated through a realistic 60+ Frame run plus active Full-P3 cancellation and current-main closure intake in P12.
 
 ## P8
 
-Optional exporter adapters remain intentionally deferred; issue #9 is closed as not planned for the active delivery line. It is future product development, not a blocker for the current P0–P7 release line.
+Optional exporter adapters remain intentionally deferred; issue #9 is closed as not planned for the active delivery line.
+
+## P9 — actionable backlog / issue #81
+
+Build a deterministic continuous-improvement queue from audit/prep findings.
+
+Required categories:
+- ERROR;
+- WARNING;
+- INFO;
+- IMPROVEMENT.
+
+Each item should include deterministic identity, severity/priority, rule code, Figma context, explanation, evidence/confidence, proposed action, auto-fix eligibility, occurrence history and lifecycle status.
+
+Required outputs:
+- `backlog.json`;
+- `backlog.md`;
+- category/severity counts;
+- deterministic dedupe;
+- run-to-run new/resolved/regressed/unchanged delta;
+- plugin UI export;
+- CLI export.
+
+## P10 — npm/Node CLI / issue #82
+
+Expose the same deterministic analysis core through Node/npm.
+
+Initial adapters:
+- official Figma REST URL/file-key input;
+- canonical versioned snapshot/package path.
+
+Target examples:
+
+```bash
+npm run audit:figma -- --url "https://www.figma.com/design/<file-key>/<name>"
+npm run audit:figma -- --file-key "<file-key>"
+npm run audit:snapshot -- --input "/path/to/figma-snapshot.json"
+npm run backlog:generate -- --input "/path/to/audit-report.json" --out "/path/to/output"
+```
+
+Raw proprietary `.fig` files must not be reverse-engineered by an undocumented parser. Until a supported bridge exists, `/path/file.fig` must fail clearly with `UNSUPPORTED_FIG_LOCAL_FILE` and point to URL/file-key or canonical snapshot alternatives.
+
+## P11 — Figma plugin distribution / issue #83
+
+Complete production packaging/distribution around the existing classic-plugin runtime:
+- production plugin ID/manifest;
+- dev vs release command surface;
+- reproducible release package;
+- normal user commands: Audit, Backlog, Safe Fix/Prep, Batch, Export Report;
+- local/private/team distribution guidance;
+- Community submission assets/checklist;
+- versioning/update process;
+- privacy/network declaration;
+- release provenance metadata.
+
+Community publication remains subject to Figma review.
+
+## P12 — final integrated validation / issue #84
+
+Run one final validation matrix after implementation is complete:
+- release artifact provenance/reproducibility;
+- local dev-plugin import;
+- normal plugin install/run;
+- P5 rendered-pixel reject/restore/finalize + zero leftovers;
+- P5 closure intake + fresh current-main conflict resolution preserving PR #85 requirements;
+- P6 positive/refusal scenarios on a fresh final-line artifact;
+- P7 60+ sequential queue + active cancellation on a fresh final-line artifact;
+- P9 backlog categories/dedupe/delta/export;
+- P10 Figma URL/file-key CLI;
+- P10 canonical snapshot-path CLI;
+- raw `.fig` supported/unsupported behavior;
+- plugin/CLI parity;
+- deterministic outputs;
+- final closure-intake;
+- P11 distribution/release-package readiness;
+- Windows/macOS CLI path behavior where applicable.
+
+Only after P12 passes should the expanded release be marked 100% / production-accepted.
 
 ## Mandatory roadmap execution policy
 
 For every future development cycle:
 
-1. inspect/process open Issues,
-2. inspect/fix/merge open PR/MR,
-3. continue the highest-priority unblocked roadmap item,
-4. run verification,
-5. update memory-bank + runtime registry when canonical artifact state changes,
-6. update root README module-wise and overall progress bars before declaring the batch complete.
-
-Runtime/manual acceptance evidence must never be synthesized merely to advance a progress percentage.
+1. inspect/process open Issues;
+2. inspect open PR/MR;
+3. continue the highest-priority unblocked implementation item;
+4. synchronize README + memory-bank state;
+5. distinguish implementation progress from final validation progress;
+6. preserve safety/provenance and latest integration-conflict truth while testing is deferred;
+7. run final manual/runtime/end-to-end validation only in P12 unless the user explicitly changes that policy.
