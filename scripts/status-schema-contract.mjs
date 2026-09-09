@@ -10,8 +10,23 @@ export function assertRegistrySchemaReferences(schemaVersion, documents) {
   }
 
   for (const [path, text] of entries) {
-    if (typeof text !== 'string' || !text.includes(expected)) {
+    if (typeof text !== 'string') {
       throw new Error(`${path} must reference active runtime artifact registry ${expected}.`);
+    }
+
+    const versions = [...text.matchAll(/\bschema v(\d+)\b/gi)].map((match) => Number(match[1]));
+    if (!versions.includes(schemaVersion)) {
+      throw new Error(`${path} must reference active runtime artifact registry ${expected}.`);
+    }
+
+    const staleVersions = [...new Set(versions.filter((version) => version !== schemaVersion))]
+      .sort((a, b) => a - b);
+
+    if (staleVersions.length > 0) {
+      const staleLabels = staleVersions.map((version) => `schema v${version}`).join(', ');
+      throw new Error(
+        `${path} references stale runtime artifact registry ${staleLabels} while active is ${expected}.`
+      );
     }
   }
 
