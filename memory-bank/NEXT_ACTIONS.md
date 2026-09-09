@@ -44,6 +44,10 @@ Execute in this order before starting unrelated new implementation:
 - PR #53 closes the orchestration gap by adding optional `--archive=<zip>` to `runtime:closure-intake`; the same raw ZIP digest gate is now enforced inside final-closure preflight before evidence intake or verifier execution.
 - PR #53 adds isolated regressions proving a matching retained archive reaches verifier PASS and a mismatching archive fails at preflight with verifier execution suppressed.
 - PR #53 head `b813db3`: CI #587 PASS with no review/thread blockers; squash-merged at `6ffda876`; post-merge CI #588 + Integration Readiness #66 PASS.
+- Canonical GitHub Actions artifacts were independently downloaded and raw-byte audited on 2026-09-09: P5 artifact id `10062772456` / run `34242984963`, P6 artifact id `10063239506` / run `34244113623`, and P7 artifact id `10062907870` / corrected exact run `34243303097`.
+- Independently computed raw ZIP SHA-256 values exactly match both GitHub artifact metadata and `config/runtime-artifacts.json`: P5 `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`, P6 `82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3`, P7 `c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43`.
+- Independent extraction audit also confirmed all canonical top-level packaged entries are regular files, each track has exact BUILD_INFO source/workflow SHA + run ID/number, all `5/5` immutable registry file hashes match, manifests retain `main=code.js`, `ui=ui.html`, required developer commands and `allowedDomains=["none"]`, and all three canonical manifests still carry placeholder plugin id `000000000000000000` as expected before local rebind.
+- No new provenance defect was found by this canonical byte/package audit; product/runtime progress is unchanged because no real imported-Figma acceptance gate advanced.
 - Closure evidence SHA-256 remains byte-exact and descriptor-pinned; invalid UTF-8 fails before verifier execution.
 - Operator-supplied closure evidence paths must be regular non-symlink files and remain the same `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open.
 - Runtime artifact preflight requires a non-symlink artifact root, non-symlink required files, stable pre-open/opened file identity, and descriptor-pinned bytes for BUILD_INFO/manifest/hash verification; retained original ZIPs may additionally be bound to the registry digest with `--archive`.
@@ -52,7 +56,7 @@ Execute in this order before starting unrelated new implementation:
 
 ## P5 — first release gate / issue #6
 
-1. Retain the original canonical `figma-plugin-dist-488` ZIP when practical and unpack P5 head `810d98d` / CI #488.
+1. Retain the original canonical `figma-plugin-dist-488` ZIP when practical and unpack P5 head `810d98d` / CI #488. The canonical GitHub artifact ZIP was independently byte-verified on 2026-09-09 against registry digest `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`.
 2. Run the hash-pinned preflight:
 
 ```bash
