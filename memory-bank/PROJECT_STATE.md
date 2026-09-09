@@ -27,12 +27,14 @@ Overall active project progress remains `93%`. Tooling/documentation hardening d
 
 ## Repository status
 
-- Latest fully verified provenance/tooling feature merge: PR #59, squash-merged at `8f0d5bbd62832481085f0e2dfa3891fd76a33fcb`.
-- PR #59 head `8246e3f` passed CI #600 with no review/thread blockers.
-- Post-merge CI #601 and Integration Readiness #77 passed.
-- Final schema-v3 documentation checkpoint before the current follow-up: `0a10d8244a982bfe43074a0dbebf8641239b05ac`, with CI #605 and Integration Readiness #81 PASS.
-- Open product/runtime issues: #6, #7, #8.
-- Current actionable tooling follow-up: issue #60, synchronizing stale memory-bank state and making `status:verify` enforce the active runtime registry schema across status documents.
+- Latest verified main-side tooling merge: PR #61, squash-merged at `933b2fc2edbd421794713efb55d415aff4091914`.
+- PR #61 head `d2dc43d` passed CI #606 with no review/thread blockers.
+- Post-merge CI #607 and Integration Readiness #82 passed.
+- Issue #60 is completed and closed.
+- `status:verify` now reads `config/runtime-artifacts.json.schemaVersion` and requires README, PROJECT_STATE, ROADMAP and NEXT_ACTIONS to reference the active runtime registry schema.
+- Regression coverage proves current schema documents pass while a stale schema document fails closed.
+- Open product/runtime issues are exactly #6, #7, #8.
+- Open PR/MR count returned to `0` after PR #61 merge.
 - Canonical P5/P6/P7 feature heads and registered runtime artifact bytes remain unchanged by main-side tooling work.
 
 ## Module state
@@ -99,7 +101,8 @@ Main-side tooling now provides:
 - bounded regular non-symlink evidence intake,
 - descriptor-pinned exact evidence-byte SHA-256 + strict UTF-8/top-level JSON validation,
 - post-preflight verifier revalidation,
-- verified-byte in-memory verifier execution rather than trusting a mutable artifact path.
+- verified-byte in-memory verifier execution rather than trusting a mutable artifact path,
+- status-document registry schema synchronization enforced by CI.
 
 These gates validate provenance and supplied evidence only. They cannot create real Figma observations.
 
