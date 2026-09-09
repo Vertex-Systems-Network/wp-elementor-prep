@@ -10,14 +10,14 @@ Last updated: 2026-09-10
 | P2 | Deterministic classifier semantics + evidence | COMPLETE | 100% | `██████████` | None |
 | P3 | Geometry/content/image + rendered-pixel validation | COMPLETE | 100% | `██████████` | None |
 | P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
-| P5 | Conservative Safe Fix recipes + exact-build proof | IMPLEMENTED / VALIDATION DEFERRED | 94% | `█████████░` | Final P12 real-Figma closure → fresh P5→then-current-main conflict resolution preserving #85 requirements → merge #6 |
-| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Final P12 P5 merge → resolve P6 → fresh registered artifact → positive/refusal closure #7 |
-| P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Final P12 P5 merge → resolve P7 → fresh registered artifact → 60+ stress/cancel closure #8 |
+| P5 | Conservative Safe Fix recipes + exact-build proof | IMPLEMENTED / VALIDATION DEFERRED | 94% | `█████████░` | P12 real-Figma closure → fresh P5→then-current-main conflict resolution → merge #6 |
+| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 merge → fresh registered artifact → positive/refusal closure #7 |
+| P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 merge → fresh registered artifact → 60+ stress/cancel closure #8 |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate after normalization line stabilizes |
-| P9 | Actionable backlog generator | IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged PR #89; validate real plugin/export/parity behavior in #84 |
-| P10 | npm/Node CLI + source adapters | IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged PR #93; validate real URL/snapshot/OS-path/parity behavior in #84 |
-| P11 | Normal Figma plugin distribution | IMPLEMENTATION IN PROGRESS | 85% | `█████████░` | Finish release/community contracts → PR/CI → merge #83 → P12 normal-install/release validation |
-| P12 | Final integrated validation/release acceptance | PLANNED FINAL GATE | 0% | `░░░░░░░░░░` | Batch all deferred manual/runtime/end-to-end acceptance after P11 implementation (#84) |
+| P9 | Actionable backlog generator | IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged PR #89; final real plugin/export/parity validation in #84 |
+| P10 | npm/Node CLI + source adapters | IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged PR #93; final real URL/snapshot/OS-path/parity validation in #84 |
+| P11 | Normal Figma plugin distribution | IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged PR #94; final integrated install/runtime/release/Community-readiness validation in #84 |
+| P12 | Final integrated validation/release acceptance | ACTIVE FINAL GATE | 0% | `░░░░░░░░░░` | Execute all deferred manual/runtime/end-to-end acceptance (#84) |
 
 ## Progress interpretation
 
@@ -28,23 +28,23 @@ This preserves the original verified core denominator.
 **Release-expansion implementation:**
 - P9: 100%;
 - P10: 100%;
-- P11: 85%;
+- P11: 100%;
 - P12 final validation: 0%.
 
 P8 remains optional/deferred and is not counted as an active blocker unless explicitly reactivated.
 
 ## Validation policy
 
-Manual/runtime/end-to-end product testing is deferred until P12.
+P12 is now the sole release-expansion acceptance gate.
 
-Before P12:
-- implementation may continue where safe;
+Until P12 passes:
 - safety/provenance locks remain authoritative;
 - no real Figma evidence may be fabricated;
 - implementation-complete must not be confused with production-accepted;
-- latest P5→main `CODE_CONFLICT` state from PR #85 must be preserved rather than reverted to a stale docs-only assumption.
+- Community approval must not be claimed;
+- latest P5→main `CODE_CONFLICT` truth must be refreshed/resolved only through the final P12 integration sequence.
 
-Automated repository safeguards may still exist, but they do not count as final product acceptance under this policy.
+Automated repository safeguards protect implementation integrity but do not replace real runtime/product acceptance.
 
 ## P0–P4
 
@@ -53,31 +53,24 @@ Complete and merged. The core line provides deterministic scanning/classificatio
 ## P5 — issue #6
 
 Engineering and exact-artifact offline verification are complete on:
-
-- branch `feat/p5-safe-recipes`,
-- head `810d98d`,
-- CI #488 PASS / run ID `34242984963`,
-- artifact `figma-plugin-dist-488`,
-- digest `sha256:9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`,
+- branch `feat/p5-safe-recipes`;
+- head `810d98d`;
+- CI #488 PASS / run ID `34242984963`;
+- artifact `figma-plugin-dist-488`;
+- digest `sha256:9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`;
 - manifest semantic SHA-256 `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46` with only top-level plugin `id` excluded.
 
 The artifact is registered in `config/runtime-artifacts.json` schema v3 as the current final-closure-eligible P5 build. Main-side preflight/archive/provenance plumbing is hardened.
 
-Real imported-Figma acceptance is deferred to P12 rather than blocking P9–P11 implementation.
-
-After P12 P5 closure-intake PASS, a fresh integration against the then-current `main` is mandatory. Latest Integration Readiness reported P5 → main `CODE_CONFLICT`; the final resolution must preserve current-main source/output-overlap safety, CI/status tooling and closure/runbook hardening while deliberately integrating P5 runtime code.
+P12 must collect real imported-Figma acceptance, pass closure intake and then resolve P5 against the then-current main while preserving current-main safety/tooling contracts.
 
 ## P6 — issue #7
 
-Engineering is complete on reference head `9a6ae3b` / CI #494 PASS.
-
-Artifact #494 remains reference-only. After P5 final closure + fresh current-main integration merge, P6 must be resolved on that line, rebuilt as a fresh exact artifact, registered with fresh provenance, and validated through real positive + preservation-refusal scenarios and current-main closure intake in P12.
+Engineering is complete on reference head `9a6ae3b` / CI #494 PASS. Artifact #494 remains reference-only. After final P5 merge, P6 must be resolved on that line, rebuilt as a fresh exact artifact, registered with fresh provenance, and validated through real positive + preservation-refusal scenarios and current-main closure intake.
 
 ## P7 — issue #8
 
-Engineering is complete on reference head `cbfdb66` / CI #490 PASS.
-
-Artifact #490 remains reference-only. After P5 final closure + fresh current-main integration merge, P7 must be resolved on that line, rebuilt as a fresh exact artifact, registered with fresh provenance, and validated through a realistic 60+ Frame run plus active Full-P3 cancellation and current-main closure intake in P12.
+Engineering is complete on reference head `cbfdb66` / CI #490 PASS. Artifact #490 remains reference-only. After final P5 merge, P7 must be resolved on that line, rebuilt as a fresh exact artifact, registered with fresh provenance, and validated through a realistic 60+ Frame run plus active Full-P3 cancellation and current-main closure intake.
 
 ## P8
 
@@ -85,74 +78,49 @@ Optional exporter adapters remain intentionally deferred; issue #9 is closed as 
 
 ## P9 — actionable backlog / issue #81
 
-Implementation completed and merged via PR #89.
-
-Delivered:
-- ERROR / WARNING / INFO / IMPROVEMENT backlog categories;
-- deterministic identity, severity/priority, context/evidence and actions;
-- OPEN / RESOLVED / REGRESSED / ACCEPTED_RISK lifecycle;
-- NEW / RESOLVED / REGRESSED / UNCHANGED delta;
-- category/severity summaries;
-- deterministic JSON/Markdown export;
-- plugin history/view/export;
-- stale async invalidation;
-- non-mutating boundary.
+Implementation completed and merged via PR #89. Delivered deterministic categories, identity, severity/priority, context/evidence/actions, lifecycle/delta, summaries, JSON/Markdown export, plugin UI/history and stale async invalidation.
 
 P12 retains real plugin/export/parity validation.
 
 ## P10 — npm/Node CLI / issue #82
 
-Implementation completed and merged via PR #93 at `7e6aa85958060cc927d8fe09dc5cb88a3feba53e`.
-
-Delivered:
-- official Figma REST URL/file-key input;
-- canonical versioned snapshot path;
-- explicit Frame/node selection and ambiguous-frame refusal;
-- personal-token + OAuth environment auth modes;
-- cloud source snapshot export;
-- audit/backlog JSON + Markdown outputs;
-- previous backlog delta, summary-only and CI fail thresholds;
-- Node >=20 cross-platform runner and persistent CLI bundle;
-- explicit `UNSUPPORTED_FIG_LOCAL_FILE` for raw `.fig`;
-- no credential serialization;
-- strict implementation-side tests/typecheck/build contracts.
+Implementation completed and merged via PR #93. Delivered official Figma REST URL/file-key input, canonical snapshot path/schema, explicit Frame selection, personal/OAuth auth modes, source snapshot export, deterministic audit/backlog outputs, CI thresholds, Node >=20 runner/bundle, raw `.fig` refusal and credential-safe serialization.
 
 P12 retains real credentialed execution, snapshot parity, OS-path behavior and production acceptance.
 
 ## P11 — Figma plugin distribution / issue #83
 
-Implementation is active on `feat/p11-release-packaging`.
+Implementation completed and merged via PR #94 at `7f83a1f82459cd9354882235dd04153bb20e5760`.
 
-Delivered on the branch so far:
-- release-only manifest template;
-- explicit release capability/menu registry;
-- deterministic release package builder requiring a real plugin ID and exact source SHA;
-- release package verifier for placeholder IDs, unexpected files, network/menu drift and provenance/hash mismatches;
-- current-capability normal-user commands and audit/backlog exports;
-- developer-only evidence/self-test exclusion from release menu;
-- release fixture verification in CI;
-- Community listing template + readiness verifier;
-- privacy/offline network declaration;
-- local/private/team/Community distribution guide.
+Delivered:
+- normal-release manifest and capability/menu registry;
+- deterministic real-ID/source-SHA release builder;
+- release SHA/provenance/menu/network verifier;
+- destructive release-output overlap guard;
+- current-capability normal-user menu commands;
+- audit/backlog JSON + Markdown exports;
+- developer command exclusion;
+- root CHANGELOG + release-contract verifier;
+- Community listing template + publishable readiness verifier;
+- privacy/offline-network disclosure;
+- private/team/Community distribution guidance;
+- CI release/CLI/community checks.
 
-Before P11 implementation completion:
-- finish version/changelog/static release contracts;
-- run PR CI and repair any defects;
-- merge #83;
-- leave actual install/runtime/Community acceptance to P12.
+Pre-merge evidence:
+- CI #640 PASS, including 129 tests and all release checks;
+- Integration Readiness #99 PASS;
+- reviews 0 / review threads 0.
 
-Safe Fix/Prep and Batch are not exposed on the current release line until final integrated runtime capabilities exist.
-
-Community publication remains subject to Figma review.
+P12 retains normal installed/private plugin flow, final integrated P5/P6/P7 capability exposure, final release provenance and filled Community metadata/assets/support readiness.
 
 ## P12 — final integrated validation / issue #84
 
-Run one final validation matrix after implementation is complete:
+Run one final validation matrix:
 - release artifact provenance/reproducibility;
 - local dev-plugin import;
 - normal plugin install/run;
 - P5 rendered-pixel reject/restore/finalize + zero leftovers;
-- P5 closure intake + fresh current-main conflict resolution preserving PR #85 requirements;
+- P5 closure intake + fresh current-main conflict resolution preserving current safety contracts;
 - P6 positive/refusal scenarios on a fresh final-line artifact;
 - P7 60+ sequential queue + active cancellation on a fresh final-line artifact;
 - P9 backlog categories/dedupe/delta/export;
@@ -169,12 +137,11 @@ Only after P12 passes should the expanded release be marked 100% / production-ac
 
 ## Mandatory roadmap execution policy
 
-For every future development cycle:
-
+For every P12 cycle:
 1. inspect/process open Issues;
 2. inspect open PR/MR;
-3. continue the highest-priority unblocked implementation item;
-4. synchronize README + memory-bank state during the work, not only after it;
-5. distinguish implementation progress from final validation progress;
-6. preserve safety/provenance and latest integration-conflict truth while testing is deferred;
-7. run final manual/runtime/end-to-end validation only in P12 unless the user explicitly changes that policy.
+3. continue the highest-priority unblocked validation/integration obligation;
+4. synchronize README + memory-bank state during the same cycle;
+5. distinguish implementation completion from observed final acceptance;
+6. preserve exact-build safety/provenance and latest integration-conflict truth;
+7. never synthesize or fabricate real runtime evidence.
