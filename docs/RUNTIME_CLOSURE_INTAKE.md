@@ -70,14 +70,21 @@ If preflight, archive verification, evidence intake, verifier preparation, verif
 
 1. retain the original `figma-plugin-dist-488` ZIP when practical and unpack it;
 2. optionally run `runtime:preflight` before import, using `--archive` when the raw ZIP is available;
-3. if needed, rebind only the manifest plugin ID with the helper packaged in the artifact;
-4. import the exact artifact into Figma Desktop;
+3. if needed, rebind only the manifest plugin ID with the helper packaged in the artifact, writing to a **separate non-nested sibling directory**; for canonical #488, from inside the artifact use:
+
+```bash
+node prepare-figma-import.mjs <your-figma-plugin-id> . ../figma-plugin-dist-488-local
+```
+
+4. import `../figma-plugin-dist-488-local/manifest.json` (or the original manifest if no rebind was needed) into Figma Desktop;
 5. run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
 6. collect real rendered-pixel forced-reject, restore, finalize and cleanup evidence;
 7. export `p5-evidence.json` to a stable regular non-symlink path;
 8. run `runtime:closure-intake` with the exact artifact directory, exported evidence, and `--archive` when the retained ZIP is available;
 9. require `Runtime closure intake: PASS` / exit `0`;
 10. only then proceed to P5 integration/merge and issue #6 closure.
+
+The prepared local import directory must never be nested inside the source artifact. Canonical #488's packaged helper cannot safely copy `.` into `./dist-local`, and current main intentionally rejects such overlap.
 
 ## Safety properties
 
