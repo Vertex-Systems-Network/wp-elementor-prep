@@ -2,6 +2,19 @@
 
 ## 2026-09-09
 
+### Closure intake archive digest binding
+- Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and open PR/MR count was `0` before development.
+- Confirmed PR #52 made the registered Actions ZIP digest operationally verifiable in `runtime:preflight`, but the one-command `runtime:closure-intake` flow did not expose or forward that optional archive gate.
+- PR #53 adds optional `archivePath` / `--archive=/path/to/artifact.zip` support to closure intake and forwards it into the existing final-closure preflight before evidence intake or verifier preparation.
+- A supplied retained ZIP therefore must satisfy the same regular non-symlink, stable `dev`/`ino`/size/mtime/ctime descriptor identity and exact raw SHA-256 registry digest equality already enforced by preflight.
+- Archive verification remains optional so operators retaining only the extracted artifact continue to use descriptor-pinned BUILD_INFO/manifest/immutable-file verification without a new mandatory file requirement.
+- Human closure output now surfaces archive digest MATCH/MISMATCH when an archive is supplied.
+- Added isolated regressions proving a matching archive reaches verifier PASS and a mismatching archive fails at preflight with verifier execution suppressed.
+- Refreshed `docs/RUNTIME_CLOSURE_INTAKE.md` so the current descriptor-pinned artifact/evidence gates, optional raw ZIP digest binding and verified-byte in-memory verifier execution are documented together.
+- PR #53 head `b813db3` passed CI #587 with no review/thread blockers.
+- PR #53 squash-merged to `main` at `6ffda876`; post-merge CI #588 and Integration Readiness #66 passed.
+- Open PR/MR count returned to `0`; overall project progress remains 93% because no real imported-Figma acceptance gate advanced and canonical P5/P6/P7 exact-build feature heads/artifact bytes were not modified.
+
 ### Runtime artifact archive digest verification
 - Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and open PR/MR count was `0` before development.
 - Concurrent repository work had already completed PR #51 verifier-execution pinning, so duplicate work was skipped and the next unaddressed provenance gap was audited instead.
