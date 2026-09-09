@@ -2,6 +2,18 @@
 
 ## 2026-09-09
 
+### Closure evidence stable-descriptor hardening
+- Continued the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and there were no open PRs before this hardening batch.
+- Identified a TOCTOU gap in `runtime:closure-intake`: evidence was validated with `lstatSync()` but then reopened by path for reading, allowing replacement between validation and read.
+- PR #48 now opens the evidence once, compares pre-open and opened file identity metadata, reads exact bytes from that pinned descriptor, and only then hashes/decodes/verifies them.
+- File identity comparison now includes `dev`, `ino`, size, mtime and ctime so inode reuse or same-path replacement fails closed.
+- Added an injected race regression that replaces the evidence path exactly between validation and descriptor open and requires verifier suppression.
+- Initial CI #564 correctly failed because `dev` + `ino` alone did not reliably detect immediate inode reuse in the test environment.
+- Strengthened identity matching with size/mtime/ctime; final PR #48 head `d9aa202` passed CI #565 with no review/thread blockers.
+- PR #48 squash-merged to `main` at `c97b9d7`.
+- Post-merge main CI #566 and Integration Readiness #49 passed.
+- Open PR/MR count returned to `0`; canonical P5/P6/P7 exact-build feature heads and registered runtime artifact bytes were not modified.
+
 ### Runtime artifact symlink hardening
 - Continued the mandatory issue-first/PR-first cycle with open issues still #6/#7/#8 and no actionable product issue unblocked by real runtime evidence.
 - Identified that runtime artifact preflight followed symbolic links for required packaged files.
