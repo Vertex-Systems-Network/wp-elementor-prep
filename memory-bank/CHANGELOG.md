@@ -2,6 +2,20 @@
 
 ## 2026-09-09
 
+### Figma local-import sibling-output operator fix
+- Continued the mandatory issue-first/PR-first cycle after the canonical artifact byte audit; product/runtime issues remained #6/#7/#8 and open PR/MR count was `0` before the new defect was filed.
+- Exact canonical P5 #488 calibration exposed an actionable operator-path defect: the documented `node prepare-figma-import.mjs <id> . dist-local` command asks the packaged helper to recursively copy the source artifact into its own child and fails before producing a prepared import.
+- Verified the current `main` helper already has an explicit source/output overlap guard, so future builds intentionally reject nested output as unsafe rather than recursing.
+- Filed focused issue #54 and verified the safe canonical #488 workaround uses a sibling/non-nested output: `node prepare-figma-import.mjs <id> . ../figma-plugin-dist-488-local`.
+- Canonical #488 sibling-output calibration preserved compiled bytes exactly: `code.js` SHA-256 `f6d772772268da119c5e5e4485a96539bb27db6102c63420bea78c31aa23692a` and `ui.html` SHA-256 `81d6f35562254a72e84ee3a815e24d6f6e68f325a62e2de34ad5e2e9efc1f8c0`; the prepared manifest changed only plugin `id` and the original artifact remained unchanged.
+- PR #57 adds direct regression coverage proving current helper nested-output rejection and sibling-output success with byte-identical compiled targets, source manifest preservation and manifest-ID-only rebinding.
+- PR #57 corrected `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md`, `docs/RUNTIME_ARTIFACT_PREFLIGHT.md` and `docs/RUNTIME_CLOSURE_INTAKE.md` to require separate non-nested local import output directories.
+- Issue #6 runtime tracker was synchronized to the verified canonical sibling-output command before merge.
+- PR #57 head `6852ac6` passed CI #595 with no review/thread blockers.
+- PR #57 squash-merged to `main` at `5179eca3`; post-merge CI #596 and Integration Readiness #73 passed.
+- README and `memory-bank/NEXT_ACTIONS.md` were synchronized after merge with the same sibling-output rule and the canonical #488 calibration details.
+- Canonical P5/P6/P7 feature heads and registered artifact bytes were not changed; real imported-Figma acceptance did not advance, so overall project progress remains 93%.
+
 ### Canonical Actions artifact byte/package audit
 - Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and open PR/MR count was `0` before the audit.
 - Downloaded the exact canonical GitHub Actions ZIPs rather than relying only on registry/API metadata: P5 artifact id `10062772456` / run id `34242984963`, P6 artifact id `10063239506` / run id `34244113623`, and P7 artifact id `10062907870` / exact run id `34243303097` for CI run #490.
