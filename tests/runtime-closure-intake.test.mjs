@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
 import { mkdirSync, mkdtempSync, openSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -99,6 +100,7 @@ describe('runtime closure intake', () => {
     withFixture({}, ({ artifactDir, evidencePath, registry }) => {
       writeFileSync(evidencePath, JSON.stringify({ accepted: true }));
       const expectedEvidenceHash = sha256File(evidencePath);
+      const expectedVerifierHash = registry.tracks.p5.immutableFileSha256[P5.verifier];
       const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, { registry });
       expect(result.ok).toBe(true);
       expect(result.stage).toBe('complete');
@@ -110,6 +112,8 @@ describe('runtime closure intake', () => {
       expect(result.evidence.sha256).toBe(expectedEvidenceHash);
       expect(result.verifier.executed).toBe(true);
       expect(result.verifier.exitCode).toBe(0);
+      expect(result.verifier.sha256).toBe(expectedVerifierHash);
+      expect(result.verifier.executionMode).toBe('verified-bytes-memory-bootstrap');
       expect(result.verifier.stdout).toContain('fixture verifier PASS');
     });
   });
@@ -178,8 +182,10 @@ describe('runtime closure intake', () => {
       const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, {
         registry,
         openSyncImpl: (path, flags) => {
-          rmSync(path);
-          writeFileSync(path, JSON.stringify({ accepted: false, replacement: true }));
+          if (path === evidencePath) {
+            rmSync(path);
+            writeFileSync(path, JSON.stringify({ accepted: false, replacement: true }));
+          }
           return openSync(path, flags);
         },
         spawnSyncImpl: () => { throw new Error('verifier must not run'); }
@@ -188,6 +194,55 @@ describe('runtime closure intake', () => {
       expect(result.stage).toBe('evidence');
       expect(result.verifier.executed).toBe(false);
       expect(result.errors.join('\n')).toContain('changed between validation and open');
+    });
+  });
+
+  it('rejects verifier replacement between post-preflight validation and descriptor open', () => {
+    withFixture({}, ({ artifactDir, evidencePath, registry }) => {
+      writeFileSync(evidencePath, JSON.stringify({ accepted: true }));
+      const verifierPath = join(artifactDir, P5.verifier);
+      let replaced = false;
+      const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, {
+        registry,
+        openSyncImpl: (path, flags) => {
+          if (!replaced && path === verifierPath) {
+            rmSync(path);
+            writeFileSync(path, 'process.exit(99);');
+            replaced = true;
+          }
+          return openSync(path, flags);
+        },
+        spawnSyncImpl: () => { throw new Error('tampered verifier must not run'); }
+      });
+      expect(result.ok).toBe(false);
+      expect(result.stage).toBe('verifier');
+      expect(result.verifier.executed).toBe(false);
+      expect(result.errors.join('\n')).toMatch(/changed between validation and open|bytes changed after preflight/);
+    });
+  });
+
+  it('executes pinned verifier bytes even if the original verifier path is replaced at spawn time', () => {
+    withFixture({}, ({ artifactDir, evidencePath, registry }) => {
+      writeFileSync(evidencePath, JSON.stringify({ accepted: true }));
+      const verifierPath = join(artifactDir, P5.verifier);
+      let replaced = false;
+      const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, {
+        registry,
+        spawnSyncImpl: (command, args, options) => {
+          if (!replaced) {
+            writeFileSync(verifierPath, "console.error('tampered original verifier executed'); process.exit(99);");
+            replaced = true;
+          }
+          return spawnSync(command, args, options);
+        }
+      });
+      expect(result.ok).toBe(true);
+      expect(result.stage).toBe('complete');
+      expect(result.verifier.executed).toBe(true);
+      expect(result.verifier.exitCode).toBe(0);
+      expect(result.verifier.executionMode).toBe('verified-bytes-memory-bootstrap');
+      expect(result.verifier.stdout).toContain('fixture verifier PASS');
+      expect(result.verifier.stderr).not.toContain('tampered original verifier executed');
     });
   });
 

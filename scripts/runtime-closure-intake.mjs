@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { closeSync, existsSync, fstatSync, lstatSync, openSync, readFileSync } from 'node:fs';
+import { closeSync, existsSync, fstatSync, lstatSync, mkdtempSync, openSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { inspectRuntimeArtifact } from './runtime-artifact-preflight.mjs';
@@ -8,6 +9,26 @@ import { inspectRuntimeArtifact } from './runtime-artifact-preflight.mjs';
 export const DEFAULT_MAX_EVIDENCE_BYTES = 5 * 1024 * 1024;
 export const DEFAULT_VERIFIER_TIMEOUT_MS = 30_000;
 export const DEFAULT_VERIFIER_OUTPUT_BYTES = 1024 * 1024;
+
+const VERIFIED_VERIFIER_BOOTSTRAP = [
+  "import { createHash } from 'node:crypto';",
+  "import { readFileSync } from 'node:fs';",
+  'const [verifierPath, expectedSha256] = process.argv.slice(1);',
+  'try {',
+  '  const verifierBytes = readFileSync(verifierPath);',
+  "  const actualSha256 = createHash('sha256').update(verifierBytes).digest('hex');",
+  '  if (actualSha256 !== expectedSha256) {',
+  '    process.stderr.write(`Verified verifier bootstrap SHA-256 mismatch: expected ${expectedSha256}, got ${actualSha256}\\n`);',
+  '    process.exitCode = 3;',
+  '  } else {',
+  "    await import(`data:text/javascript;base64,${verifierBytes.toString('base64')}`);",
+  '  }',
+  '} catch (error) {',
+  "  const message = error instanceof Error ? error.message : String(error);",
+  '  process.stderr.write(`Verified verifier bootstrap failed: ${message}\\n`);',
+  '  process.exitCode = 3;',
+  '}'
+].join('\n');
 
 function sha256Bytes(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
@@ -38,6 +59,69 @@ function sameFileIdentity(before, opened) {
     && before.size === opened.size
     && before.mtimeMs === opened.mtimeMs
     && before.ctimeMs === opened.ctimeMs;
+}
+
+function readStableVerifierBytes(
+  verifierPath,
+  verifierName,
+  preflight,
+  { openSyncImpl, fstatSyncImpl, readFileSyncImpl, closeSyncImpl }
+) {
+  const errors = [];
+  if (!existsSync(verifierPath)) {
+    errors.push(`Same-artifact verifier no longer exists after preflight: ${verifierName}`);
+    return { bytes: null, sha256: null, errors };
+  }
+
+  const verifierStat = lstatSync(verifierPath);
+  if (verifierStat.isSymbolicLink()) {
+    errors.push(`Same-artifact verifier became a symbolic link after preflight: ${verifierName}`);
+    return { bytes: null, sha256: null, errors };
+  }
+  if (!verifierStat.isFile()) {
+    errors.push(`Same-artifact verifier is no longer a regular file after preflight: ${verifierName}`);
+    return { bytes: null, sha256: null, errors };
+  }
+
+  let verifierFd = null;
+  let verifierBytes = null;
+  try {
+    verifierFd = openSyncImpl(verifierPath, 'r');
+    const openedStat = fstatSyncImpl(verifierFd);
+    if (!openedStat.isFile()) {
+      errors.push(`Same-artifact verifier did not open as a regular file: ${verifierName}`);
+    } else if (!sameFileIdentity(verifierStat, openedStat)) {
+      errors.push(`Same-artifact verifier changed between validation and open: ${verifierName}`);
+    } else {
+      verifierBytes = readFileSyncImpl(verifierFd);
+    }
+  } catch (error) {
+    errors.push(`Same-artifact verifier could not be opened safely: ${verifierName}: ${error.message}`);
+  } finally {
+    if (verifierFd !== null) {
+      try {
+        closeSyncImpl(verifierFd);
+      } catch (error) {
+        errors.push(`Same-artifact verifier descriptor could not be closed cleanly: ${verifierName}: ${error.message}`);
+      }
+    }
+  }
+
+  if (!verifierBytes || errors.length > 0) return { bytes: null, sha256: null, errors };
+
+  const verifierSha256 = sha256Bytes(verifierBytes);
+  const preflightSha256 = preflight.immutableFileIntegrity?.observedSha256?.[verifierName] ?? null;
+  if (!preflightSha256) {
+    errors.push(`Preflight did not report an immutable SHA-256 for the same-artifact verifier: ${verifierName}`);
+  } else if (verifierSha256 !== preflightSha256) {
+    errors.push(`Same-artifact verifier bytes changed after preflight: expected ${preflightSha256}, got ${verifierSha256}`);
+  }
+
+  return {
+    bytes: errors.length === 0 ? verifierBytes : null,
+    sha256: verifierSha256,
+    errors
+  };
 }
 
 export function inspectRuntimeClosureIntake(
@@ -173,45 +257,97 @@ export function inspectRuntimeClosureIntake(
   }
 
   const verifierPath = join(resolvedArtifactDir, preflight.verifier);
-  const verifierRun = spawnSyncImpl(process.execPath, [verifierPath], {
-    cwd: resolvedArtifactDir,
-    input: evidenceText,
-    encoding: 'utf8',
-    timeout: verifierTimeoutMs,
-    maxBuffer: verifierOutputBytes,
-    windowsHide: true
+  const stableVerifier = readStableVerifierBytes(verifierPath, preflight.verifier, preflight, {
+    openSyncImpl,
+    fstatSyncImpl,
+    readFileSyncImpl,
+    closeSyncImpl
   });
 
+  if (stableVerifier.errors.length > 0 || !stableVerifier.bytes || !stableVerifier.sha256) {
+    return {
+      ok: false,
+      stage: 'verifier',
+      track: normalizedTrack,
+      artifactDir: resolvedArtifactDir,
+      evidencePath: resolvedEvidencePath,
+      preflight,
+      evidence,
+      verifier: {
+        executed: false,
+        path: verifierPath,
+        sha256: stableVerifier.sha256,
+        executionMode: 'verified-bytes-memory-bootstrap'
+      },
+      errors: stableVerifier.errors,
+      warnings
+    };
+  }
+
+  let verifierTempDir = null;
+  let verifierRun = null;
+  const verifierErrors = [];
+  try {
+    verifierTempDir = mkdtempSync(join(tmpdir(), 'wp-elementor-prep-verifier-'));
+    const verifierExecutionPath = join(verifierTempDir, 'verified-verifier.mjs');
+    writeFileSync(verifierExecutionPath, stableVerifier.bytes, { flag: 'wx', mode: 0o600 });
+    verifierRun = spawnSyncImpl(process.execPath, [
+      '--input-type=module',
+      '--eval',
+      VERIFIED_VERIFIER_BOOTSTRAP,
+      verifierExecutionPath,
+      stableVerifier.sha256
+    ], {
+      cwd: resolvedArtifactDir,
+      input: evidenceText,
+      encoding: 'utf8',
+      timeout: verifierTimeoutMs,
+      maxBuffer: verifierOutputBytes,
+      windowsHide: true
+    });
+  } catch (error) {
+    verifierErrors.push(`Same-artifact verifier failed to prepare or execute: ${error.message}`);
+  } finally {
+    if (verifierTempDir !== null) {
+      try {
+        rmSync(verifierTempDir, { recursive: true, force: true });
+      } catch (error) {
+        warnings.push(`Verified verifier temporary directory could not be removed cleanly: ${error.message}`);
+      }
+    }
+  }
+
   const verifier = {
-    executed: true,
+    executed: verifierRun !== null,
     path: verifierPath,
+    sha256: stableVerifier.sha256,
+    executionMode: 'verified-bytes-memory-bootstrap',
     exitCode: Number.isInteger(verifierRun?.status) ? verifierRun.status : null,
     signal: verifierRun?.signal ?? null,
     stdout: typeof verifierRun?.stdout === 'string' ? verifierRun.stdout.trim() : '',
     stderr: typeof verifierRun?.stderr === 'string' ? verifierRun.stderr.trim() : ''
   };
 
-  const errors = [];
   if (verifierRun?.error) {
-    errors.push(`Same-artifact verifier failed to execute: ${verifierRun.error.message}`);
+    verifierErrors.push(`Same-artifact verifier failed to execute: ${verifierRun.error.message}`);
   }
   if (verifier.signal) {
-    errors.push(`Same-artifact verifier terminated by signal: ${verifier.signal}`);
+    verifierErrors.push(`Same-artifact verifier terminated by signal: ${verifier.signal}`);
   }
-  if (verifier.exitCode !== 0) {
-    errors.push(`Same-artifact verifier did not accept the evidence (exit ${verifier.exitCode ?? 'unknown'}).`);
+  if (verifier.executed && verifier.exitCode !== 0) {
+    verifierErrors.push(`Same-artifact verifier did not accept the evidence (exit ${verifier.exitCode ?? 'unknown'}).`);
   }
 
   return {
-    ok: errors.length === 0,
-    stage: errors.length === 0 ? 'complete' : 'verifier',
+    ok: verifierErrors.length === 0 && verifier.executed,
+    stage: verifierErrors.length === 0 && verifier.executed ? 'complete' : 'verifier',
     track: normalizedTrack,
     artifactDir: resolvedArtifactDir,
     evidencePath: resolvedEvidencePath,
     preflight,
     evidence,
     verifier,
-    errors,
+    errors: verifierErrors,
     warnings
   };
 }
@@ -232,6 +368,9 @@ function printHuman(result) {
   if (result.evidence?.sha256) {
     console.log(`Evidence SHA-256 (raw bytes): ${result.evidence.sha256}`);
     console.log(`Evidence bytes: ${result.evidence.bytes}`);
+  }
+  if (result.verifier?.sha256) {
+    console.log(`Same-artifact verifier SHA-256: ${result.verifier.sha256}`);
   }
   if (result.verifier?.executed) {
     console.log(`Same-artifact verifier: exit ${result.verifier.exitCode ?? 'unknown'}`);
