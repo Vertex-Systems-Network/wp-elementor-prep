@@ -53,6 +53,7 @@ export interface BacklogSummary {
   total: number;
   active: number;
   byCategory: Record<BacklogCategory, number>;
+  bySeverity: Record<BacklogSeverity, number>;
   byStatus: Record<BacklogStatus, number>;
   byDelta: Record<BacklogDelta, number>;
 }
@@ -240,7 +241,7 @@ function findingDraft(finding: AuditFinding, context: BacklogContext): BacklogDr
 }
 
 function recipeDraft(section: SectionAudit, context: BacklogContext): BacklogDraft | null {
-  if (!section.recommendedRecipe) return null;
+  if (!section.recommendedRecipe || section.status === 'PASS') return null;
   const detection = section.detection;
   const label = detection?.semanticHint ?? detection?.pattern ?? 'structured layout';
   return {
@@ -422,19 +423,24 @@ function zeroRecord<T extends string>(keys: readonly T[]): Record<T, number> {
 
 function summarize(items: BacklogItem[]): BacklogSummary {
   const byCategory = zeroRecord(['ERROR', 'WARNING', 'INFO', 'IMPROVEMENT'] as const);
+  const bySeverity = zeroRecord(['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] as const);
   const byStatus = zeroRecord(['OPEN', 'RESOLVED', 'REGRESSED', 'ACCEPTED_RISK'] as const);
   const byDelta = zeroRecord(['NEW', 'RESOLVED', 'REGRESSED', 'UNCHANGED'] as const);
 
   for (const item of items) {
-    byCategory[item.category] += 1;
     byStatus[item.status] += 1;
     byDelta[item.delta] += 1;
+    if (item.status !== 'RESOLVED') {
+      byCategory[item.category] += 1;
+      bySeverity[item.severity] += 1;
+    }
   }
 
   return {
     total: items.length,
     active: items.filter((item) => item.status !== 'RESOLVED').length,
     byCategory,
+    bySeverity,
     byStatus,
     byDelta,
   };
@@ -477,10 +483,11 @@ export function serializeBacklogMarkdown(backlog: BacklogDocument): string {
     '## Summary',
     '',
     `- Active: ${backlog.summary.active}`,
-    `- ERROR: ${backlog.summary.byCategory.ERROR}`,
-    `- WARNING: ${backlog.summary.byCategory.WARNING}`,
-    `- IMPROVEMENT: ${backlog.summary.byCategory.IMPROVEMENT}`,
-    `- INFO: ${backlog.summary.byCategory.INFO}`,
+    `- Active ERROR: ${backlog.summary.byCategory.ERROR}`,
+    `- Active WARNING: ${backlog.summary.byCategory.WARNING}`,
+    `- Active IMPROVEMENT: ${backlog.summary.byCategory.IMPROVEMENT}`,
+    `- Active INFO: ${backlog.summary.byCategory.INFO}`,
+    `- Active severity CRITICAL / HIGH / MEDIUM / LOW: ${backlog.summary.bySeverity.CRITICAL} / ${backlog.summary.bySeverity.HIGH} / ${backlog.summary.bySeverity.MEDIUM} / ${backlog.summary.bySeverity.LOW}`,
     `- New / resolved / regressed / unchanged: ${backlog.summary.byDelta.NEW} / ${backlog.summary.byDelta.RESOLVED} / ${backlog.summary.byDelta.REGRESSED} / ${backlog.summary.byDelta.UNCHANGED}`,
     '',
     '## Items',
