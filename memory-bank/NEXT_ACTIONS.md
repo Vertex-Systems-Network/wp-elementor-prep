@@ -1,189 +1,153 @@
 # Next Actions
 
-Last updated: 2026-09-09
+Last updated: 2026-09-10
 
 ## Mandatory order for every work cycle
 
-Execute in this order before starting unrelated new implementation:
+1. **Issues first** — list open issues, solve actionable code/docs/test work, and identify genuine dependency/manual-runtime blockers.
+2. **PR/MR second** — inspect CI, mergeability, conflicts, reviews and threads; merge only eligible work.
+3. **Development third** — continue the highest-priority unblocked roadmap work.
+4. **End-of-work sync** — run verification and synchronize README + memory-bank state before completion.
 
-1. **Issues first**
-   - list all open issues,
-   - solve actionable code/docs/test issues,
-   - identify dependency/manual-runtime blockers,
-   - update/close only after real acceptance criteria pass.
-2. **PR/MR second**
-   - list all open PR/MR,
-   - inspect CI, mergeability, conflicts and reviews,
-   - fix safely actionable problems,
-   - merge eligible work.
-3. **Development third**
-   - continue the highest-priority unblocked roadmap task.
-4. **End-of-work sync**
-   - run verification,
-   - update memory-bank,
-   - update README issue/PR status,
-   - update module-wise progress percentages/bars and overall progress.
+Never fabricate real Figma observations or closure evidence.
 
 ## Current repository queue
 
-- Open product/runtime issues: #6, #7, #8.
-- #6 is blocked only on real imported-Figma runtime evidence.
-- #7/#8 require P5 merge before integration/fresh runtime artifacts.
-- Latest verified tooling merge is PR #72 at `ed8b6b26`; head `52ea254` passed CI #611 and post-merge CI #612 + Integration Readiness #85 passed.
-- PR #63 head `97c51b6` passed CI #609, squash-merged at `acef3c2c`, with post-merge CI #610 + Integration Readiness #84 PASS.
-- PR #61 head `d2dc43d` passed CI #606, squash-merged at `933b2fc2`, with post-merge CI #607 + Integration Readiness #82 PASS.
-- Issues #60, #62 and #64 are completed/closed; operator-path issue #54 and manifest-provenance issue #58 were already resolved by PR #57 and PR #59.
-- Open PR/MR: `0` after PR #72 merge.
-- PR #48 final head `d9aa202`: CI #565 PASS; squash-merged at `c97b9d7`; post-merge CI #566 + Integration Readiness #49 PASS.
-- PR #49 pins every required artifact preflight read to one opened file descriptor so BUILD_INFO parsing, manifest parsing and immutable SHA-256 checks consume the exact bytes tied to the validated file identity.
-- PR #49 head `dfdec23`: CI #570 PASS with no review/thread blockers; squash-merged at `7cc8a85`; post-merge CI #571 + Integration Readiness #53 PASS.
-- PR #50 aligns artifact preflight identity matching with evidence intake by requiring matching `dev`/`ino`/size/mtime/ctime`, including a regression that simulates reused `dev`/`ino` after path replacement.
-- PR #50 head `2160b6e`: CI #572 PASS with no review/thread blockers; squash-merged at `c99b2c65`; post-merge CI #573 + Integration Readiness #54 PASS.
-- PR #51 removes the remaining same-artifact verifier execution-path race: closure intake re-opens the verifier through a stable descriptor after preflight, requires its SHA-256 to match the immutable verifier hash already accepted by preflight, and executes those exact bytes through a hash-checking in-memory Node module bootstrap rather than trusting the mutable artifact path at spawn time.
-- Canonical P5 #488, P6 #494 and P7 #490 verifier artifacts were inspected before PR #51; all three current verifier scripts are self-contained bundled `.mjs` files with no relative imports/`require()` dependency.
-- PR #51 head `bf7ba3c`: CI #577 PASS with no review/thread blockers; squash-merged at `15f3f023`; post-merge CI #578 + Integration Readiness #58 PASS.
-- PR #52 makes the registered GitHub Actions artifact digest operationally verifiable when the original ZIP is retained: `runtime:preflight -- --archive=<zip>` hashes raw archive bytes from a stable descriptor and requires exact registry digest equality.
-- Archive verification remains optional so extracted-artifact-only workflows continue to rely on descriptor-pinned BUILD_INFO/manifest/immutable-file checks; supplying a symlinked, replaced or wrong-digest archive fails closed.
-- PR #52 head `1bf182f`: CI #582 PASS with no review/thread blockers; squash-merged at `5b75ff2e`; post-merge CI #583 + Integration Readiness #62 PASS.
-- PR #53 closes the orchestration gap by adding optional `--archive=<zip>` to `runtime:closure-intake`; the same raw ZIP digest gate is now enforced inside final-closure preflight before evidence intake or verifier execution.
-- PR #53 adds isolated regressions proving a matching retained archive reaches verifier PASS and a mismatching archive fails at preflight with verifier execution suppressed.
-- PR #53 head `b813db3`: CI #587 PASS with no review/thread blockers; squash-merged at `6ffda876`; post-merge CI #588 + Integration Readiness #66 PASS.
-- Canonical GitHub Actions artifacts were independently downloaded and raw-byte audited on 2026-09-09: P5 artifact id `10062772456` / run `34242984963`, P6 artifact id `10063239506` / run `34244113623`, and P7 artifact id `10062907870` / exact run `34243303097`.
-- Independently computed raw ZIP SHA-256 values exactly match both GitHub artifact metadata and `config/runtime-artifacts.json`: P5 `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`, P6 `82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3`, P7 `c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43`.
-- Independent extraction audit confirmed all canonical top-level packaged entries are regular files, each track has exact BUILD_INFO source/workflow SHA + run ID/number, all `5/5` immutable registry file hashes match, manifests retain `main=code.js`, `ui=ui.html`, required developer commands and `allowedDomains=["none"]`, and all three canonical manifests still carry placeholder plugin id `000000000000000000` as expected before local rebind.
-- Exact P5 #488 local-import calibration found the previously documented nested output `node prepare-figma-import.mjs <id> . dist-local` is invalid because the packaged helper attempts to copy the source artifact into its own child. Current main also intentionally rejects source/output overlap.
-- Verified canonical workaround: from the unpacked #488 directory run `node prepare-figma-import.mjs <your-figma-plugin-id> . ../figma-plugin-dist-488-local`. The sibling output preserves `code.js` SHA `f6d772772268da119c5e5e4485a96539bb27db6102c63420bea78c31aa23692a`, `ui.html` SHA `81d6f35562254a72e84ee3a815e24d6f6e68f325a62e2de34ad5e2e9efc1f8c0`, and changes only manifest `id`.
-- PR #57 adds direct regression tests for nested-output rejection and sibling-output success with byte-identical compiled targets + manifest-ID-only rebinding, and corrects the real-Figma/preflight/closure runbooks.
-- PR #57 head `6852ac6`: CI #595 PASS with no review/thread blockers; squash-merged at `5179eca3`; post-merge CI #596 + Integration Readiness #73 PASS.
-- Issue #6 tracker now uses the sibling/non-nested local import path; no canonical P5/P6/P7 artifact bytes were modified by the fix.
-- PR #59 upgrades `config/runtime-artifacts.json` to schema v3 and adds a deterministic semantic SHA-256 for each manifest with only top-level `id` excluded. Object keys are recursively sorted before hashing while array order/content remains significant.
-- Canonical id-excluded manifest semantic pins are P5 `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`, P6 `b687205564abb72ac7b00447d2bec3e00c266a1d4ddf9ec6980ce15c62c893f9`, P7 `3cb617c2d47d8b3d887ca94897781998226f9ec6c1b242bc880a2e18d9f6587e`.
-- Schema-v3 preflight now fails closed if the manifest semantic pin is missing/invalid or any non-ID manifest semantic content drifts. Placeholder or numeric plugin-ID-only rebinding still passes the same semantic hash.
-- PR #59 head `8246e3f`: CI #600 PASS with no review/thread blockers; squash-merged at `8f0d5bbd`; post-merge CI #601 + Integration Readiness #77 PASS.
-- Closure evidence SHA-256 remains byte-exact and descriptor-pinned; invalid UTF-8 fails before verifier execution.
-- Operator-supplied closure evidence paths must be regular non-symlink files and remain the same `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open.
-- Runtime artifact preflight requires a non-symlink artifact root, non-symlink required files, stable pre-open/opened file identity, descriptor-pinned bytes for BUILD_INFO/manifest/hash verification, `5/5` immutable file pins and schema-v3 id-excluded manifest semantic SHA-256 equality; retained original ZIPs may additionally be bound to the registry digest with `--archive`.
-- Closure intake forwards the optional retained-ZIP digest gate into final-closure preflight, then requires stable evidence identity, stable post-preflight verifier identity, exact verifier SHA-256 equality with preflight, and `executionMode: verified-bytes-memory-bootstrap` before accepting a verifier result.
-- Local manifest preparation must always use a separate non-nested output directory and keep compiled code/UI byte-identical; the only permitted manifest semantic difference from the registered canonical artifact is top-level plugin `id`.
-- Canonical P5/P6/P7 feature heads and registered runtime artifact bytes remain unchanged.
+- Open product/runtime dependency chain: #6, #7, #8.
+- P5 #6 engineering is complete and its current-main artifact/archive preflight has now been exercised against the actual canonical #488 package.
+- P6 #7 and P7 #8 remain blocked on P5 merge and require fresh post-P5 integration artifacts before final runtime evidence.
+- Canonical P5/P6/P7 feature heads and registered artifact bytes remain unchanged.
+- Verified base before issue #75 documentation sync: `main` `c3c1c7475395785e3db5ed753513a645e7dd42c7` from PR #74; post-merge CI #614 + Integration Readiness #87 PASS.
+- Overall active product progress remains `93%`.
 
-## P5 — first release gate / issue #6
+## Newly completed P5 operator verification
 
-1. Retain the original canonical `figma-plugin-dist-488` ZIP when practical and unpack P5 head `810d98d` / CI #488. The canonical GitHub artifact ZIP was independently byte-verified on 2026-09-09 against registry digest `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`.
-2. Run the hash-pinned preflight:
+The actual canonical GitHub Actions P5 artifact was downloaded again:
 
-```bash
-npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
-```
+- artifact: `figma-plugin-dist-488`
+- artifact ID: `10062772456`
+- source head: `810d98d6e09cb4cf3fe4758fcb07e87734254a8e`
+- run ID / run number: `34242984963` / `488`
+- retained ZIP SHA-256: `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`
 
-If the original downloaded GitHub Actions ZIP is retained, also bind its raw bytes to the registered digest:
+Before execution, exact current-main source bytes were reconstructed from GitHub and Git-blob verified:
 
-```bash
-npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488 --archive=/path/to/figma-plugin-dist-488.zip
-```
+- `scripts/runtime-artifact-preflight.mjs`: `8d2d459b310ed2426f353ea91687d2a6d1dd6e09`
+- `config/runtime-artifacts.json`: `de517b340cf951896fa3e312b40d9ddb4e86f944`
+- `scripts/runtime-closure-intake.mjs`: `52bb19fead394579e1e89f09141bfbc6900f5cc3`
 
-3. Require:
-   - artifact directory is a real non-symlink directory,
-   - if `--archive` is supplied, archive path is a stable regular non-symlink file and raw archive SHA-256 matches the registry digest exactly,
-   - required artifact files are regular non-symlink files,
-   - every required file retains matching `dev`/`ino`/size/mtime/ctime identity between validation and descriptor open,
-   - BUILD_INFO, manifest semantics and immutable hashes are evaluated from descriptor-pinned bytes,
-   - schema-v3 manifest semantic SHA-256 matches the canonical manifest with only top-level plugin `id` excluded,
-   - preflight PASS,
-   - exact source SHA / run ID / run number,
-   - `5/5` immutable SHA-256 pins matched.
-4. If the artifact still has placeholder plugin ID, use the helper packaged **inside that same artifact** with a separate sibling/non-nested output directory:
+Verified outcomes:
+
+- canonical #488 final-closure preflight: PASS;
+- retained ZIP raw SHA-256: MATCH;
+- BUILD_INFO exact source/workflow SHA + run ID/number: MATCH;
+- immutable registry hashes: `5/5` MATCH;
+- schema-v3 manifest semantic SHA-256: MATCH;
+- sibling prepared calibration copy: byte-identical `code.js` / `ui.html`, manifest semantic SHA unchanged, current-main preflight PASS;
+- exact closure intake with intentionally invalid `{}` evidence: artifact/archive/evidence plumbing reached the exact same-artifact verifier via `verified-bytes-memory-bootstrap`, and the verifier correctly rejected the missing runtime proof with exit `1`.
+
+This is an operator/provenance calibration only. It does not satisfy real imported-Figma runtime acceptance.
+
+Runtime artifact preflight requires a non-symlink artifact root, stable required-file descriptor identities, exact build identity, `5/5` immutable file pins and schema-v3 id-excluded manifest semantic SHA-256 equality; a retained original ZIP may additionally be bound with `--archive`.
+
+## P5 — immediate critical path / issue #6
+
+The first two operator checklist items are complete: canonical current-main preflight PASS and retained-ZIP digest MATCH.
+
+### Next actual step
+
+Prepare the canonical artifact with the **actual Figma development-plugin ID** using the helper inside #488 and a sibling/non-nested output directory:
 
 ```bash
 cd /path/to/unpacked/figma-plugin-dist-488
-node prepare-figma-import.mjs <your-figma-plugin-id> . ../figma-plugin-dist-488-local
+node prepare-figma-import.mjs <your-actual-figma-plugin-id> . ../figma-plugin-dist-488-local
 ```
 
-5. Import `../figma-plugin-dist-488-local/manifest.json` (or original manifest if already rebound) in Figma Desktop. Confirm its `LOCAL_IMPORT_INFO.txt` reports unchanged compiled targets. Re-run preflight on the prepared copy if desired; the manifest semantic hash must remain unchanged because `id` is excluded.
-6. Run `Developer: P5 Runtime Self-Test`.
-7. Require `P5 Compiled Runtime Acceptance: PASS`.
-8. Verify real rendered-pixel forced reject, restore and finalize flows.
-9. Require checkpoint cleanup with `0` leftovers.
-10. Export real closure JSON as `p5-evidence.json` to a regular non-symlink file path and do not replace it during intake.
-11. From current `main`, run one-command closure intake:
+Then import:
 
-```bash
-npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /path/to/p5-evidence.json
+```text
+../figma-plugin-dist-488-local/manifest.json
 ```
 
-If the original ZIP is retained, bind it into the same closure command:
+Do not use the calibration numeric ID as runtime evidence. The actual Figma development-plugin import is still required.
+
+### Real Figma acceptance sequence
+
+1. prepare sibling copy with the actual Figma development-plugin ID;
+2. import the exact artifact-derived prepared copy into Figma Desktop;
+3. run `Developer: P5 Runtime Self-Test`;
+4. require `P5 Compiled Runtime Acceptance: PASS`;
+5. collect real rendered-pixel forced-reject evidence;
+6. prove restore and finalize behavior;
+7. require checkpoint cleanup with `0` leftovers;
+8. confirm stale proof from another artifact cannot unlock the current build;
+9. export the provenance-bound closure JSON as `p5-evidence.json` to a stable regular non-symlink path.
+
+### Final closure sequence
+
+After real evidence exists:
 
 ```bash
 npm run runtime:closure-intake -- p5 /path/to/unpacked/figma-plugin-dist-488 /path/to/p5-evidence.json --archive=/path/to/figma-plugin-dist-488.zip
 ```
 
-12. Require:
-   - descriptor-pinned artifact preflight PASS, including schema-v3 id-excluded manifest semantic pin MATCH,
-   - when `--archive` is supplied, stable non-symlink archive identity + exact raw ZIP SHA-256 registry match,
-   - evidence path is a regular non-symlink file,
-   - stable pre-open/opened evidence-file identity acceptance,
-   - raw evidence-file SHA-256 emitted for exact descriptor-pinned bytes,
-   - `hashScope: raw-file-bytes`,
-   - strict UTF-8 acceptance,
-   - top-level JSON object acceptance,
-   - same-artifact verifier re-opened through a stable descriptor after preflight,
-   - verifier SHA-256 exactly matches the immutable verifier hash accepted by preflight,
-   - `executionMode: verified-bytes-memory-bootstrap`,
-   - exact re-verified verifier bytes execute through the hash-checking in-memory bootstrap rather than the original artifact path,
-   - verifier exit `0`,
-   - final `Runtime closure intake: PASS`.
-13. Apply the proven documentation integration resolution, merge P5 and close #6.
+Require:
 
-Preflight/closure intake/CI cannot create runtime proof. The evidence must still come from the actual imported Figma Desktop runtime.
+- final-closure preflight PASS;
+- retained archive digest MATCH when supplied;
+- exact raw evidence SHA-256;
+- strict UTF-8 + top-level JSON object acceptance;
+- exact immutable verifier SHA revalidation;
+- `executionMode: verified-bytes-memory-bootstrap`;
+- same-artifact verifier exit `0`;
+- final `Runtime closure intake: PASS`.
+
+Only then apply the already proven P5 documentation-side integration resolution, merge P5 and close #6.
+
+## Why the connected Figma API is not a substitute
+
+The connected Figma `use_figma` capability executes Plugin API JavaScript in a known design file, but it does not demonstrate importing/running this exact downloaded development-plugin package with its own `manifest.json`, developer menu commands and packaged UI iframe. P5 acceptance is intentionally bound to that exact artifact/runtime condition, so no substitute proof should be minted from the connector.
 
 ## P6 — after P5 merge / issue #7
 
-Current #494 is reference-only. Both `runtime:preflight` final-closure mode and `runtime:closure-intake` must reject it before verifier execution.
+Current #494 is reference-only.
 
-1. Resolve/rebase P6 against merged P5.
-2. Run full CI.
-3. Produce a fresh exact-build P6 artifact.
-4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest, schema-v3 manifest semantic SHA-256 and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require a non-symlink artifact root, optional retained-ZIP digest verification when available, non-symlink required files, stable descriptor identity, exact identity + manifest semantic pin + immutable pins PASS.
-6. Establish exact-build P5 prerequisite in that fresh build.
-7. If plugin-ID rebinding is required, prepare a separate sibling/non-nested output directory with the helper packaged in that fresh artifact.
-8. Run real image-bearing positive calibration and require Full P3 PASS with unchanged image-anchor count.
-9. Run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS.
-10. Require final P6 closure PASS in the plugin.
-11. Export `p6-closure.json` to a stable regular non-symlink file path.
-12. Run descriptor-pinned, byte-exact, verified-byte `runtime:closure-intake` against the fresh P6 artifact; when the fresh raw ZIP is retained, pass `--archive` and require the raw digest match before verifier execution.
-13. Merge and close #7.
+1. resolve/rebase P6 against merged P5/main;
+2. run full CI;
+3. produce a fresh exact-build P6 artifact;
+4. register new source/run/digest, schema-v3 manifest semantic pin and immutable file hashes;
+5. establish exact-build P5 prerequisite;
+6. prepare a real Figma-ID sibling copy if required;
+7. collect real image-bearing positive calibration with Full P3 PASS and unchanged image-anchor count;
+8. collect preservation-sensitive refusal / `NO_CANDIDATE` evidence;
+9. require combined P6 closure PASS;
+10. run closure intake against the fresh exact artifact and merge/close #7.
 
 ## P7 — after P5 merge / issue #8
 
-Current #490 is reference-only. Both `runtime:preflight` final-closure mode and `runtime:closure-intake` must reject it before verifier execution.
+Current #490 is reference-only.
 
-1. Resolve/rebase P7 against merged P5.
-2. Run full CI.
-3. Produce a fresh exact-build P7 artifact.
-4. Update `config/runtime-artifacts.json` with fresh identity, ZIP digest, schema-v3 manifest semantic SHA-256 and immutable SHA-256 file pins; mark that fresh build final-closure eligible only when dependency conditions are satisfied.
-5. Run preflight and require a non-symlink artifact root, optional retained-ZIP digest verification when available, non-symlink required files, stable descriptor identity, exact identity + manifest semantic pin + immutable pins PASS.
-6. Establish exact-build P5 prerequisite.
-7. If plugin-ID rebinding is required, prepare a separate sibling/non-nested output directory with the helper packaged in that fresh artifact.
-8. Run realistic 60+ Frame stress and require `maxConcurrentProcessors === 1`.
-9. Request cancellation during genuinely active long Full P3.
-10. Require cooperative settlement, final batch `CANCELLED`, and matching processor evidence.
-11. Require final P7 closure PASS in the plugin.
-12. Export `p7-closure.json` to a stable regular non-symlink file path.
-13. Run descriptor-pinned, byte-exact, verified-byte `runtime:closure-intake` against the fresh P7 artifact; when the fresh raw ZIP is retained, pass `--archive` and require the raw digest match before verifier execution.
-14. Merge and close #8.
+1. resolve/rebase P7 against merged P5/main;
+2. run full CI;
+3. produce a fresh exact-build P7 artifact;
+4. register new source/run/digest, schema-v3 manifest semantic pin and immutable file hashes;
+5. establish exact-build P5 prerequisite;
+6. prepare a real Figma-ID sibling copy if required;
+7. execute a realistic 60+ Frame batch and require every item terminal with `maxConcurrentProcessors === 1`;
+8. request cancellation during a genuinely active long Full P3 operation;
+9. require cooperative settlement + matching active processor evidence;
+10. require final P7 closure PASS;
+11. run closure intake against the fresh exact artifact and merge/close #8.
 
-## Development that may proceed while runtime is externally blocked
+## Development allowed while P5 runtime is externally blocked
 
-Only perform work that does **not** invalidate exact-build acceptance artifacts or violate dependency order, such as:
+Only perform work that does not invalidate exact-build acceptance artifacts or violate dependency order:
 
-- repository/process hardening on `main`,
-- fail-closed operator tooling around immutable artifacts,
-- evidence intake/verification orchestration that does not mint evidence,
-- non-mutating integration analysis,
-- documentation/runbook consistency fixes,
-- CI/tooling improvements,
-- stale memory-bank synchronization,
-- tests for newly discovered code-side defects on isolated branches.
+- fail-closed repository/operator tooling when a concrete defect is identified;
+- evidence/provenance verification that cannot mint runtime proof;
+- non-mutating integration analysis;
+- CI/status consistency fixes;
+- documentation/runbook consistency work;
+- tests for newly discovered repo-side defects.
 
-Do not churn the canonical P5/P6/P7 feature branches for docs-only changes.
+Do not churn canonical P5/P6/P7 feature branches for documentation-only changes, and do not raise the 93% overall progress until a real product/runtime gate advances.
