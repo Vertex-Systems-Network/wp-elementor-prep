@@ -113,7 +113,6 @@ export function auditSection(section: AuditNode): SectionAudit {
   const roleDetections = detectSpecialRoles(section);
   let score = scoreStats(stats);
 
-  // Detection is evidence that the layout is understandable, not that it is already structurally ready.
   if (detection && detection.confidence >= 85) score = clamp(score + 3);
 
   const status = statusFor(score);
@@ -127,12 +126,11 @@ export function auditSection(section: AuditNode): SectionAudit {
     detection,
     detections,
     roleDetections,
-    // Already-compliant sections do not need a repair recipe even when a pattern is recognized.
     recommendedRecipe: status === 'PASS' || !detection ? null : recipeForDetection(detection),
   };
 }
 
-export function buildAuditReport(root: AuditNode, pluginVersion: string): AuditReport {
+export function buildAuditReport(root: AuditNode, pluginVersion: string, generatedAt = new Date().toISOString()): AuditReport {
   const stats = computeStats(root);
   const sections = discoverSections(root).map(auditSection);
   const score = sections.length > 0
@@ -153,6 +151,6 @@ export function buildAuditReport(root: AuditNode, pluginVersion: string): AuditR
     stats,
     findings: findingsFor(stats),
     sections,
-    generatedAt: new Date().toISOString(),
+    generatedAt,
   };
 }
