@@ -4,7 +4,7 @@ Deterministic Figma structure auditor and safe-prep engine for WordPress Element
 
 The project prepares approved desktop Figma designs for Elementor **without visually redesigning them** and without depending on external generative AI in the core runtime.
 
-Planned final product surfaces:
+Final planned user surfaces:
 
 - normal Figma plugin;
 - npm/Node CLI for supported Figma inputs;
@@ -14,9 +14,9 @@ Planned final product surfaces:
 
 ## Live development status
 
-> **Progress policy:** implementation progress and final validation progress are tracked separately. Manual/runtime/end-to-end product testing is currently deferred until P12 final integrated validation.
+> **Progress policy:** implementation progress and final validation progress are tracked separately. Manual/runtime/end-to-end product testing remains deferred until P12 final integrated validation.
 
-**Open PR/MR:** `0`
+**Open PR/MR:** `0` — P11 implementation is active on `feat/p11-release-packaging`; PR opens after repository integrity checks are ready.
 
 ### Module-wise progress
 
@@ -28,14 +28,21 @@ Planned final product surfaces:
 | P6 Advanced structures | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 merge: resolve P6 → fresh artifact → real positive/refusal closure #7 |
 | P7 60+ Frame batch queue | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 merge: resolve P7 → fresh artifact → 60+ stress + active cancellation closure #8 |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
-| P9 Actionable backlog generator | 📝 PLANNED | 0% | `░░░░░░░░░░` | Implement ERROR/WARNING/INFO/IMPROVEMENT backlog (#81) |
-| P10 npm/Node CLI | 📝 PLANNED | 0% | `░░░░░░░░░░` | Shared core + Figma URL/file key + canonical snapshot path (#82) |
-| P11 Normal Figma plugin distribution | 📝 PLANNED | 0% | `░░░░░░░░░░` | Production manifest/package + private/Community-ready distribution (#83) |
-| P12 Final integrated validation | 🧪 FINAL GATE | 0% | `░░░░░░░░░░` | Run all deferred manual/runtime/end-to-end acceptance after implementation (#84) |
+| P9 Actionable backlog generator | ✅ IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged via PR #89; validate real plugin/export/parity behavior in #84 |
+| P10 npm/Node CLI | ✅ IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged via PR #93; validate real Figma URL/snapshot parity + OS path behavior in #84 |
+| P11 Normal Figma plugin distribution | 🔵 IMPLEMENTATION IN PROGRESS | 85% | `█████████░` | Finish package/community contracts → PR/CI → merge #83 → P12 runtime/release acceptance |
+| P12 Final integrated validation | 🧪 FINAL GATE | 0% | `░░░░░░░░░░` | Run all deferred manual/runtime/end-to-end acceptance after P11 implementation (#84) |
 
 **Overall active project progress:** `█████████░ 93%`
 
-> The 93% figure preserves the historical P0–P7 core-delivery denominator. P9–P12 are newly added release-expansion scope and start at a separate 0% planning baseline so new scope does not rewrite verified historical progress.
+> The 93% figure preserves the historical P0–P7 core-delivery denominator. P9–P12 are tracked as a separate release-expansion line so new scope does not rewrite verified historical progress.
+
+### Release-expansion implementation status
+
+- P9 implementation: `██████████ 100%`
+- P10 implementation: `██████████ 100%`
+- P11 implementation: `█████████░ 85%`
+- P12 final validation: `░░░░░░░░░░ 0%`
 
 ### Current testing policy
 
@@ -46,12 +53,12 @@ Per current project direction:
 - production safety locks and provenance rules remain active;
 - no real Figma evidence may be fabricated;
 - implementation-complete is not the same as production-accepted;
-- automated repository checks, if they run, are implementation safeguards only and do not count as final product acceptance;
-- latest P5→main `CODE_CONFLICT` state from PR #85 must remain authoritative until a fresh final integration resolution is performed.
+- automated repository checks are implementation safeguards only and do not count as final product acceptance;
+- latest P5→main `CODE_CONFLICT` state from PR #85 remains authoritative until a fresh final integration resolution is performed.
 
 ### Mandatory AI-native work order
 
-Every work cycle must execute in this order:
+Every work cycle executes in this order:
 
 1. **Issues first** — inspect open issues and distinguish implementation work from validation-pending work.
 2. **PR/MR second** — inspect open Pull Requests / Merge Requests and avoid duplicate/stale work.
@@ -62,63 +69,70 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, `memory-bank/DECISIONS.
 
 ## Current repository checkpoint — 2026-09-10
 
-- ✅ latest main baseline for this plan is `6526d1c9784e07becaa065c039ba5f00f9fb674b` from PR #85.
-- ✅ PR #85 corrected the P5 integration contract: latest Integration Readiness #90 reports P5 → current main as `CODE_CONFLICT`, not docs-only. Conflicts include `.github/workflows/ci.yml`, `scripts/prepare-figma-import.mjs`, README and memory-bank files.
-- ✅ historical integration proof #37 / CI #500 is superseded; final P5 integration must preserve current-main source/output-overlap safety, CI/status/tooling and closure/runbook hardening.
-- ✅ canonical P5 #488 artifact provenance/preflight/archive plumbing is already hardened and calibrated.
-- ✅ P6 #494 and P7 #490 remain engineering/reference artifacts; their final production integration requires fresh exact builds after final P5 merge.
-- 📝 release-expansion issues: #81 backlog, #82 CLI/source adapters, #83 normal Figma plugin distribution, #84 final integrated validation.
+- ✅ latest merged main baseline is `7e6aa85958060cc927d8fe09dc5cb88a3feba53e` from P10 PR #93.
+- ✅ P9 backlog implementation merged through PR #89 at `67d6b3df05c8e4550b3df80f95cb5fabeb77de42`; issue #81 is implementation-complete with P12 validation pending.
+- ✅ P10 CLI/source-adapter implementation merged through PR #93; issue #82 and implementation subtask #90 are closed as implementation-complete with P12 validation pending.
+- 🔵 P11 #83 implementation is active on `feat/p11-release-packaging`.
+- ✅ PR #85 remains authoritative for the final P5 integration contract: P5 → current main is `CODE_CONFLICT`, not docs-only.
+- ✅ canonical P5 #488 artifact provenance/preflight/archive plumbing remains hardened and calibrated.
+- ✅ P6 #494 and P7 #490 remain engineering/reference artifacts; final production integration requires fresh exact builds after final P5 merge.
 - 🧪 manual/runtime/end-to-end acceptance is intentionally deferred to #84/P12.
 
 Detailed engineering history is retained in `memory-bank/CHANGELOG.md`.
 
-## Expanded release plan
+## Expanded release implementation
 
 ### P9 — Actionable backlog generator / issue #81
 
-Every audit/prep run should be able to emit a structured continuous-improvement backlog with:
+P9 implementation is complete and merged.
 
-- `ERROR` — blocking failures/invariant violations;
-- `WARNING` — risky or ambiguous structures requiring review;
-- `INFO` — non-blocking observations/context;
-- `IMPROVEMENT` — actionable opportunities for Elementor-readiness, consistency, performance, accessibility or maintainability.
+Implemented:
 
-Each backlog item should contain deterministic identity, severity/priority, rule/finding code, file/page/frame/section/node context, explanation, evidence/confidence, proposed action, auto-fix eligibility, occurrence history and lifecycle state.
+- `ERROR`, `WARNING`, `INFO`, `IMPROVEMENT` categories;
+- deterministic semantic fingerprints and IDs;
+- severity/priority, Figma context, evidence/confidence and proposed action;
+- OPEN / RESOLVED / REGRESSED / ACCEPTED_RISK lifecycle;
+- NEW / RESOLVED / REGRESSED / UNCHANGED run-to-run delta;
+- retained resolved history;
+- category and severity summaries;
+- deterministic `backlog.json` / `backlog.md` serialization;
+- plugin UI backlog view/export;
+- clientStorage history with stale-audit invalidation;
+- non-mutating reporting boundary.
 
-Planned outputs:
-
-- `backlog.json`;
-- `backlog.md`;
-- category/severity counts;
-- deterministic dedupe;
-- run-to-run new/resolved/regressed/unchanged delta;
-- plugin UI view/export;
-- CLI-compatible output.
-
-Backlog generation is non-mutating.
+P12 still owns real plugin/export/parity validation.
 
 ### P10 — npm/Node CLI / issue #82
 
-Plugin and CLI will share one deterministic scanner/classifier/scoring/backlog core.
+P10 implementation is complete and merged through PR #93.
 
-Target commands:
+Implemented commands:
 
 ```bash
 npm run audit:figma -- --url "https://www.figma.com/design/<file-key>/<name>"
-npm run audit:figma -- --file-key "<file-key>"
+npm run audit:figma -- --file-key "<file-key>" --node-id "<frame-id>"
 npm run audit:snapshot -- --input "/path/to/figma-snapshot.json"
 npm run backlog:generate -- --input "/path/to/audit-report.json" --out "/path/to/output"
 ```
 
-Initial source adapters:
+Implemented source/runtime contracts:
 
-- `FigmaRestSourceAdapter` — official Figma cloud URL/file key;
-- `CanonicalSnapshotSourceAdapter` — our own versioned snapshot/package file path;
-- future `LocalFigmaBridgeAdapter` only if a documented supported mechanism exists.
+- official Figma REST URL/file-key adapter;
+- personal token and OAuth environment credential modes;
+- explicit Frame/node selection with fail-closed ambiguous-frame behavior;
+- owned canonical snapshot schema v1;
+- cloud `source-snapshot.json` export;
+- audit/backlog JSON + Markdown outputs;
+- previous-backlog delta input;
+- summary-only mode and CI fail thresholds;
+- stable exit-code contract;
+- Node >=20 temporary esbuild runner and persistent `build:cli` bundle;
+- source-bound timestamps for snapshot reproducibility;
+- credentials excluded from serialized reports/backlogs/snapshots.
 
 #### Raw `.fig` path rule
 
-The deterministic core will **not** reverse-engineer proprietary raw `.fig` files through an undocumented parser.
+The deterministic core does **not** reverse-engineer proprietary raw `.fig` files through an undocumented parser.
 
 Until a supported bridge exists:
 
@@ -126,26 +140,36 @@ Until a supported bridge exists:
 /path/file.fig -> UNSUPPORTED_FIG_LOCAL_FILE
 ```
 
-The CLI must direct the user to a supported Figma URL/file key or canonical snapshot path instead of guessing.
+P12 owns real credentialed Figma execution, snapshot parity, Windows/macOS path behavior and production acceptance.
 
 ### P11 — Normal Figma plugin distribution / issue #83
 
-The repository already uses a classic-plugin manifest shape. P11 adds the production/distribution layer so the product can be used like normal Figma plugins.
+P11 implementation is active on `feat/p11-release-packaging`.
 
-Planned work:
+Implemented on the branch so far:
 
-- production plugin ID/manifest;
-- development vs release command/menu variants;
-- reproducible release package;
-- stable user commands: Audit, Backlog, Safe Fix/Prep, Batch, Export Report;
-- hide developer-only self-test/evidence commands from normal release UI where appropriate;
-- local development import instructions;
-- private/team/organization distribution guidance;
-- Figma Community submission checklist/assets;
-- icon, cover/thumbnail, screenshots, description, category/tags and support contact;
-- versioning/changelog/update process;
-- privacy/network declaration;
-- release provenance/build metadata.
+- separate `manifest.release.template.json` for the normal release surface;
+- explicit release capability/menu registry in `config/plugin-release.json`;
+- deterministic release package builder requiring a real Figma plugin ID and source SHA;
+- fail-closed release verifier for placeholder IDs, network/menu drift, unexpected files and SHA/provenance mismatches;
+- normal-user release menu commands for open/audit/validate/export-report on the currently integrated main capability set;
+- audit report JSON/Markdown export plus backlog JSON/Markdown export;
+- developer-only evidence/self-test commands excluded from the normal release menu;
+- release package CI fixture verification;
+- Community listing metadata template and readiness verifier;
+- privacy/offline-network declaration;
+- local/private/team/Community distribution guidance;
+- generated release directories excluded from source control.
+
+Still required before marking P11 implementation complete:
+
+- finish static release/community contract coverage and version/changelog workflow;
+- run PR CI over release builder/verifier + existing core checks;
+- fix any CI/review defects;
+- merge #83 implementation;
+- keep actual Community submission/approval and normal-install runtime acceptance in P12.
+
+Safe Fix/Prep and Batch are **not falsely exposed** by the current P11 release menu before their final integrated P12 line exists. Their normal-user release exposure must follow the final integrated runtime capability set.
 
 Community publication remains subject to Figma review and is not assumed to be automatic.
 
@@ -181,9 +205,9 @@ Only after P12 passes should the expanded release be called production-accepted 
 | P6 | Advanced clone-only calibration | 🟠 Engineering complete on reference head; final integration/runtime acceptance deferred to P12 (#7) |
 | P7 | Sequential 60+ Frame batch queue | 🟠 Engineering complete on reference head; final integration/stress/cancellation acceptance deferred to P12 (#8) |
 | P8 | Optional exporter adapters | ⏸ DEFERRED / #9 closed as not planned |
-| P9 | Actionable backlog | 📝 Planned / #81 |
-| P10 | npm/Node CLI + source adapters | 📝 Planned / #82 |
-| P11 | Normal Figma plugin distribution | 📝 Planned / #83 |
+| P9 | Actionable backlog | ✅ Implementation complete / P12 validation pending; PR #89 / #81 closed |
+| P10 | npm/Node CLI + source adapters | ✅ Implementation complete / P12 validation pending; PR #93 / #82 closed |
+| P11 | Normal Figma plugin distribution | 🔵 Implementation in progress on `feat/p11-release-packaging` / #83 |
 | P12 | Final integrated validation | 🧪 Planned final gate / #84 |
 
 ## Canonical runtime artifact registry
@@ -271,7 +295,7 @@ Direct packaged verifier invocation is diagnostic-only and cannot authorize fina
 
 Latest verified Integration Readiness #90 reports:
 
-- ⚠️ **P5 → current main: `CODE_CONFLICT`**. Conflicts include `.github/workflows/ci.yml`, `scripts/prepare-figma-import.mjs`, README and memory-bank files. Historical proof #37 / CI #500 is superseded. After P12 P5 closure PASS, resolve against then-current main and preserve current-main overlap safety + CI/status/tooling/closure hardening.
+- ⚠️ **P5 → current main: `CODE_CONFLICT`**. Historical proof #37 / CI #500 is superseded. After P12 P5 closure PASS, resolve against then-current main and preserve current-main overlap safety + CI/status/tooling/closure hardening.
 - ⚠️ P6 → latest P5: `CODE_CONFLICT`; final resolution requires merged P5 and a fresh exact build.
 - ⚠️ P7 → latest P5: `CODE_CONFLICT`; final resolution requires merged P5 and a fresh exact build.
 
@@ -285,20 +309,21 @@ Latest verified Integration Readiness #90 reports:
 - runtime proof must remain traceable to exact final artifacts;
 - artifact/archive/evidence/verifier reads remain fail-closed at documented trust boundaries;
 - current-main source/output overlap protection and hardened CI/status/closure tooling must not be lost during final P5 integration;
-- plugin and CLI must share one deterministic analysis core;
-- raw proprietary `.fig` files must not be parsed through undocumented reverse engineering;
-- final P6/P7 closure evidence must come from fresh final-line exact builds.
+- plugin and CLI share one deterministic analysis core;
+- raw proprietary `.fig` files are not parsed through undocumented reverse engineering;
+- final P6/P7 closure evidence must come from fresh final-line exact builds;
+- normal release menus expose only capabilities actually integrated on the release line.
 
-## Planned implementation order
+## Current implementation order
 
-1. **P9 / #81** — backlog generator.
-2. **P10 / #82** — shared-core npm/CLI + Figma source adapters.
-3. **P11 / #83** — production Figma plugin package/distribution.
-4. **P12 / #84** — final integrated validation of P5–P7 + P9–P11.
+1. ✅ **P9 / #81** — implementation complete.
+2. ✅ **P10 / #82** — implementation complete.
+3. 🔵 **P11 / #83** — finish release package/distribution implementation, PR/CI, merge.
+4. 🧪 **P12 / #84** — final integrated validation of P5–P7 + P9–P11.
 
 P8 remains optional/deferred.
 
-## Existing development commands
+## Development and release commands
 
 ```bash
 npm install
@@ -306,10 +331,22 @@ npm run status:verify
 npm run typecheck
 npm test
 npm run build
+npm run build:cli
 npm run integration:readiness
 ```
 
-> Under the current policy, automated checks are implementation safeguards only. They are not a substitute for P12 final manual/runtime/end-to-end acceptance.
+> Automated checks are implementation safeguards only. They are not a substitute for P12 final manual/runtime/end-to-end acceptance.
+
+P10 CLI commands:
+
+```bash
+npm run audit:figma -- --url "https://www.figma.com/design/<file-key>/<name>"
+npm run audit:figma -- --file-key "<file-key>" --node-id "<frame-id>"
+npm run audit:snapshot -- --input "/path/to/figma-snapshot.json"
+npm run backlog:generate -- --input "/path/to/audit-report.json" --out "/path/to/output"
+```
+
+P11 release-package commands are documented in `docs/P11_RELEASE_DISTRIBUTION.md`. A publishable package must use a real Figma plugin ID and exact source SHA; fixture/placeholder packages are not publishable.
 
 Runtime artifact preflight:
 
@@ -327,13 +364,4 @@ Repository-local development import preparation:
 
 ```bash
 npm run prepare:figma-import -- <your-figma-plugin-id> dist dist-local-sibling
-```
-
-Planned P10 CLI commands:
-
-```bash
-npm run audit:figma -- --url "https://www.figma.com/design/<file-key>/<name>"
-npm run audit:figma -- --file-key "<file-key>"
-npm run audit:snapshot -- --input "/path/to/figma-snapshot.json"
-npm run backlog:generate -- --input "/path/to/audit-report.json" --out "/path/to/output"
 ```
