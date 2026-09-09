@@ -2,6 +2,19 @@
 
 ## 2026-09-09
 
+### Runtime artifact stable-descriptor hardening
+- Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and there were no open PRs before the new hardening work.
+- Identified a matching TOCTOU gap in `runtime:preflight`: required artifact files were validated with `lstatSync()` but BUILD_INFO, manifest and immutable hash reads later reopened those paths.
+- PR #49 pins every required artifact file to one opened file descriptor, compares pre-open/opened identity before consuming bytes, and evaluates BUILD_INFO, manifest semantics and immutable SHA-256 from that same pinned byte snapshot.
+- Added an atomic `code.js` replacement regression proving path replacement between validation and open fails closed.
+- PR #49 head `dfdec23` passed CI #570 with no review/thread blockers.
+- PR #49 squash-merged to `main` at `7cc8a85`; post-merge main CI #571 and Integration Readiness #53 passed.
+- Follow-up consistency review caught that PR #49 initially used only `dev` + `ino`, even though PR #48 had already demonstrated immediate inode reuse can make that identity insufficient.
+- PR #50 strengthens artifact-file identity to matching `dev`, `ino`, size, mtime and ctime and adds a regression that deliberately reuses `dev`/`ino` after replacing `code.js`.
+- PR #50 head `2160b6e` passed CI #572 with no review/thread blockers.
+- PR #50 squash-merged to `main` at `c99b2c65`; post-merge main CI #573 and Integration Readiness #54 passed.
+- Open PR/MR count returned to `0`; canonical P5/P6/P7 exact-build feature heads and registered runtime artifact bytes were not modified.
+
 ### Closure evidence stable-descriptor hardening
 - Continued the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and there were no open PRs before this hardening batch.
 - Identified a TOCTOU gap in `runtime:closure-intake`: evidence was validated with `lstatSync()` but then reopened by path for reading, allowing replacement between validation and read.
