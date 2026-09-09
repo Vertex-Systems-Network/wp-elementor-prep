@@ -14,14 +14,21 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - name: Fetch canonical P5
-        run: git fetch --no-tags origin '+refs/heads/feat/p5-safe-recipes:refs/remotes/origin/feat/p5-safe-recipes'
-      - name: Capture exact three-way merge conflict tree
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Fetch canonical integration refs
+        run: |
+          git fetch --no-tags origin \
+            '+refs/heads/main:refs/remotes/origin/main' \
+            '+refs/heads/feat/p5-safe-recipes:refs/remotes/origin/feat/p5-safe-recipes'
+      - name: Merge and resolve P5 rehearsal candidate
         shell: bash
         run: |
-          set -u
+          set -euo pipefail
           rm -rf p5-merge-rehearsal
-          mkdir -p p5-merge-rehearsal/conflicts
+          mkdir -p p5-merge-rehearsal
+          cp src/ui/ui.html /tmp/p12-release-ui.html
 
           git config user.name "P12 Integration Rehearsal"
           git config user.email "p12-integration-rehearsal@invalid.local"
@@ -30,23 +37,107 @@ jobs:
           git merge --no-commit --no-ff origin/feat/p5-safe-recipes
           merge_exit=$?
           set -e
-
           printf '%s\n' "$merge_exit" > p5-merge-rehearsal/merge-exit-code.txt
-          git status --porcelain=v1 > p5-merge-rehearsal/status.txt
-          git diff --name-only --diff-filter=U > p5-merge-rehearsal/conflicts.txt
-          git diff --cc > p5-merge-rehearsal/combined.diff
+          if [ "$merge_exit" -ne 1 ]; then
+            echo "Expected the current P5 integration rehearsal to produce conflicts; got exit $merge_exit" >&2
+            exit 1
+          fi
 
-          while IFS= read -r file; do
-            [ -n "$file" ] || continue
-            mkdir -p "p5-merge-rehearsal/conflicts/$(dirname "$file")"
-            cp -- "$file" "p5-merge-rehearsal/conflicts/$file"
-          done < p5-merge-rehearsal/conflicts.txt
+          git diff --name-only --diff-filter=U > p5-merge-rehearsal/conflicts-before-resolution.txt
 
-          git rev-parse HEAD > p5-merge-rehearsal/main-head.txt
+          git checkout --ours -- \
+            .github/workflows/ci.yml \
+            README.md \
+            memory-bank/CHANGELOG.md \
+            memory-bank/NEXT_ACTIONS.md \
+            memory-bank/PROJECT_STATE.md \
+            memory-bank/ROADMAP.md
+
+          cp /tmp/p12-release-ui.html src/ui/release-ui.html
+          node scripts/p12-resolve-p5-rehearsal.mjs
+
+          git add -A
+          git diff --name-only --diff-filter=U > p5-merge-rehearsal/conflicts-after-resolution.txt
+          if [ -s p5-merge-rehearsal/conflicts-after-resolution.txt ]; then
+            echo 'Unresolved merge entries remain:' >&2
+            cat p5-merge-rehearsal/conflicts-after-resolution.txt >&2
+            exit 1
+          fi
+
+          if git grep -n -E '^(<<<<<<<|=======|>>>>>>>)' -- ':!package-lock.json'; then
+            echo 'Conflict markers remain after rehearsal resolution.' >&2
+            exit 1
+          fi
+
+          git rev-parse origin/main > p5-merge-rehearsal/main-head.txt
           git rev-parse origin/feat/p5-safe-recipes > p5-merge-rehearsal/p5-head.txt
-          git merge-base HEAD origin/feat/p5-safe-recipes > p5-merge-rehearsal/merge-base.txt
+          git merge-base origin/main origin/feat/p5-safe-recipes > p5-merge-rehearsal/merge-base.txt
+          git diff --cached --stat > p5-merge-rehearsal/resolved-stat.txt
+          git diff --cached > p5-merge-rehearsal/resolved.diff
+      - name: Install and verify integrated repository
+        run: |
+          npm install
+          npm run status:verify
+          npm run typecheck
+          npm test
+          npm run build
+          npm run build:cli
+          npm run verify:release-contract
+          npm run test:release-package
+          npm run community:verify
+          npm run p12:offline
+      - name: Verify integration-specific release and import invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/verify-p5-evidence.mjs
+          grep -q 'id="plan"' dist/ui.html
+          grep -q 'id="selftest"' dist/ui.html
 
-          git merge --abort || true
+          if grep -q 'id="plan"' dist-release/plugin/ui.html || grep -q 'id="selftest"' dist-release/plugin/ui.html; then
+            echo 'P5 developer/validation controls leaked into the normal release UI.' >&2
+            exit 1
+          fi
+          if grep -q '__P5_SOURCE_SHA__\|__P5_GITHUB_RUN_ID__\|__P5_GITHUB_RUN_NUMBER__' dist-release/plugin/code.js; then
+            echo 'Unresolved P5 build identity globals leaked into release code.' >&2
+            exit 1
+          fi
+
+          npm run prepare:figma-import -- 123456789012345678 dist dist-local-rehearsal
+          cmp dist/code.js dist-local-rehearsal/code.js
+          cmp dist/ui.html dist-local-rehearsal/ui.html
+          if npm run prepare:figma-import -- 123456789012345678 dist dist/nested; then
+            echo 'Expected nested local-import output to remain rejected.' >&2
+            exit 1
+          fi
+      - name: Emit rehearsal evidence
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const report = {
+            schemaVersion: 1,
+            kind: 'p12-p5-integration-rehearsal',
+            acceptanceAuthority: false,
+            mainHead: fs.readFileSync('p5-merge-rehearsal/main-head.txt', 'utf8').trim(),
+            p5Head: fs.readFileSync('p5-merge-rehearsal/p5-head.txt', 'utf8').trim(),
+            mergeBase: fs.readFileSync('p5-merge-rehearsal/merge-base.txt', 'utf8').trim(),
+            originalConflicts: fs.readFileSync('p5-merge-rehearsal/conflicts-before-resolution.txt', 'utf8').trim().split(/\r?\n/).filter(Boolean),
+            unresolvedConflicts: fs.readFileSync('p5-merge-rehearsal/conflicts-after-resolution.txt', 'utf8').trim().split(/\r?\n/).filter(Boolean),
+            repositoryChecks: 'PASS',
+            p5DevelopmentUiPresent: true,
+            p5ReleaseUiGated: true,
+            releaseP5ProvenanceDefinesResolved: true,
+            note: 'Rehearsal only. Does not replace exact-artifact Figma Desktop evidence or authorize P5 merge.'
+          };
+          fs.writeFileSync('p5-merge-rehearsal/rehearsal-evidence.json', JSON.stringify(report, null, 2) + '\n');
+          NODE
+          mkdir -p p5-merge-rehearsal/resolved-files/src/plugin p5-merge-rehearsal/resolved-files/src/ui p5-merge-rehearsal/resolved-files/scripts
+          cp src/plugin/main.ts p5-merge-rehearsal/resolved-files/src/plugin/main.ts
+          cp src/ui/ui.html p5-merge-rehearsal/resolved-files/src/ui/ui.html
+          cp src/ui/release-ui.html p5-merge-rehearsal/resolved-files/src/ui/release-ui.html
+          cp package.json p5-merge-rehearsal/resolved-files/package.json
+          cp scripts/build.mjs scripts/build-release.mjs scripts/prepare-figma-import.mjs p5-merge-rehearsal/resolved-files/scripts/
       - uses: actions/upload-artifact@v7
         with:
           name: p12-p5-integration-rehearsal
