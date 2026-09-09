@@ -1,0 +1,25 @@
+name: P12 P5 Canonical Artifact Preflight
+
+on:
+  push:
+    branches: [integration/p12-p5-rehearsal]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Download canonical P5 Actions artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/p5-488
+          gh api /repos/Vertex-Systems-Network/wp-elementor-prep/actions/artifacts/10062772456/zip > /tmp/figma-plugin-dist-488.zip
+          unzip -q /tmp/figma-plugin-dist-488.zip -d /tmp/p5-488
+      - name: Verify canonical artifact and retained ZIP against current contract
+        run: |
+          npm run runtime:preflight -- p5 /tmp/p5-488 --archive=/tmp/figma-plugin-dist-488.zip
