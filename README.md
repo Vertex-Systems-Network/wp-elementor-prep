@@ -64,8 +64,12 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 - ✅ PR #53 binds the same optional retained-ZIP digest gate into `runtime:closure-intake`; a supplied archive now passes through final-closure preflight before evidence intake or verifier logic can run.
 - ✅ PR #53 regressions prove a matching archive reaches verifier PASS while a mismatching archive fails at preflight with verifier execution suppressed.
 - ✅ PR #53 head `b813db3` passed CI #587 with no review/thread blockers; squash-merged at `6ffda876`; post-merge CI #588 + Integration Readiness #66 passed.
+- ✅ canonical Actions ZIPs were independently downloaded on 2026-09-09 from artifact ids P5 `10062772456`, P6 `10063239506`, P7 `10062907870`; P7 run #490 was resolved to exact run id `34243303097` rather than guessed.
+- ✅ independently computed raw ZIP SHA-256 values exactly match GitHub artifact metadata and the registry for all three tracks: P5 `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`, P6 `82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3`, P7 `c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43`.
+- ✅ independent extraction audit confirmed only regular top-level packaged files, exact BUILD_INFO head/run identities, `5/5` immutable registry hash matches on each track, manifest `main=code.js` / `ui=ui.html`, required developer commands, offline `allowedDomains=["none"]`, and expected placeholder plugin id on all three canonical artifacts.
+- ✅ this canonical byte/package audit found no new provenance defect; product/runtime progress remains unchanged because no real imported-Figma acceptance gate advanced.
 - ✅ archive verification remains optional; extracted-artifact-only workflows still enforce stable descriptor identity, BUILD_INFO/manifest checks and all immutable per-file SHA-256 pins.
-- ✅ canonical P5/P6/P7 feature heads and registered runtime artifact bytes remained unchanged by these tooling batches.
+- ✅ canonical P5/P6/P7 feature heads and registered runtime artifact bytes remained unchanged by these tooling/audit batches.
 
 ## Phase status
 
@@ -203,7 +207,7 @@ npm run integration:readiness
 
 ### 1. P5 / issue #6
 
-- retain the original canonical `figma-plugin-dist-488` Actions ZIP when practical and unpack it;
+- retain the original canonical `figma-plugin-dist-488` Actions ZIP when practical and unpack it; canonical GitHub archive bytes were independently verified on 2026-09-09 against registry digest `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`;
 - if the original Actions ZIP is retained, optionally run preflight with `--archive=<zip>` and require raw archive digest MATCH;
 - run preflight on the real non-symlink artifact directory and require all required files to be non-symlink regular files, stable descriptor identity, exact build identity + `5/5` immutable SHA-256 matches;
 - rebind manifest locally if needed using the packaged helper;
