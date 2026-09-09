@@ -1,5 +1,11 @@
 import { scanSceneNode } from '../core/scanner';
 import { buildAuditReport } from '../core/scoring';
+import {
+  generateBacklog,
+  serializeBacklogJson,
+  serializeBacklogMarkdown,
+  type BacklogDocument,
+} from '../core/backlog';
 import { captureIntegritySnapshot } from './integrity-snapshot';
 import { DEFAULT_VALIDATION_THRESHOLDS, mergePixelValidation, validateIntegrity } from '../core/validator';
 import type { PixelDiffMetrics, ValidationReport } from '../core/validation-types';
@@ -8,6 +14,7 @@ declare const __html__: string;
 
 const PLUGIN_VERSION = '0.1.0-alpha.1';
 const MAX_VALIDATION_RENDER_DIMENSION = 2048;
+const BACKLOG_STORAGE_PREFIX = 'p9-backlog-v1';
 let validationSequence = 0;
 
 interface PendingValidation {
@@ -28,7 +35,18 @@ function postError(message: string, type: 'audit-error' | 'validation-error' = '
   figma.ui.postMessage({ type, message });
 }
 
-function runAudit(): void {
+function isBacklogDocument(value: unknown): value is BacklogDocument {
+  if (typeof value !== 'object' || value === null) return false;
+  const candidate = value as { schemaVersion?: unknown; items?: unknown; summary?: unknown };
+  return candidate.schemaVersion === 1 && Array.isArray(candidate.items) && typeof candidate.summary === 'object' && candidate.summary !== null;
+}
+
+function backlogStorageKey(frameId: string): string {
+  const fileKey = typeof figma.fileKey === 'string' && figma.fileKey ? figma.fileKey : 'local-file';
+  return `${BACKLOG_STORAGE_PREFIX}:${fileKey}:${figma.currentPage.id}:${frameId}`;
+}
+
+async function runAudit(): Promise<void> {
   const selection = figma.currentPage.selection;
 
   if (selection.length !== 1) {
@@ -45,7 +63,26 @@ function runAudit(): void {
   try {
     const root = scanSceneNode(selected);
     const report = buildAuditReport(root, PLUGIN_VERSION);
-    figma.ui.postMessage({ type: 'audit-result', report });
+    const storageKey = backlogStorageKey(selected.id);
+    const stored = await figma.clientStorage.getAsync(storageKey) as unknown;
+    const previous = isBacklogDocument(stored) ? stored : null;
+    const backlog = generateBacklog(report, {
+      context: {
+        ...(typeof figma.fileKey === 'string' && figma.fileKey ? { fileKey: figma.fileKey } : {}),
+        pageId: figma.currentPage.id,
+        pageName: figma.currentPage.name,
+      },
+      previous,
+    });
+
+    await figma.clientStorage.setAsync(storageKey, backlog);
+    figma.ui.postMessage({
+      type: 'audit-result',
+      report,
+      backlog,
+      backlogJson: serializeBacklogJson(backlog),
+      backlogMarkdown: serializeBacklogMarkdown(backlog),
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     postError(`Audit failed: ${message}`);
@@ -126,7 +163,7 @@ figma.ui.onmessage = async (message: unknown) => {
   const type = (message as { type?: unknown }).type;
 
   if (type === 'audit-request') {
-    runAudit();
+    await runAudit();
     return;
   }
 
@@ -149,7 +186,7 @@ figma.ui.onmessage = async (message: unknown) => {
 };
 
 figma.on('selectionchange', () => {
-  if (figma.currentPage.selection.length === 1) runAudit();
+  if (figma.currentPage.selection.length === 1) void runAudit();
 });
 
-if (figma.currentPage.selection.length === 1) runAudit();
+if (figma.currentPage.selection.length === 1) void runAudit();
