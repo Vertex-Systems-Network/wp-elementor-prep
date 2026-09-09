@@ -7,6 +7,10 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:cli": "node scripts/build-cli.mjs",
+    "build:release": "node scripts/build-release.mjs",
+    "verify:release": "node scripts/verify-release-package.mjs dist-release",
+    "test:release-package": "node scripts/build-release.mjs --fixture --plugin-id=123456789012345678 --source-sha=0123456789abcdef0123456789abcdef01234567 && node scripts/verify-release-package.mjs dist-release --allow-fixture",
+    "community:verify": "node scripts/verify-community-readiness.mjs community/listing.template.json --template",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
