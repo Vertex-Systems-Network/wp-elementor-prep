@@ -18,7 +18,7 @@ The project prepares approved desktop Figma designs for Elementor **without visu
 |---|---|---:|---|---|
 | AI-native governance + repo tooling | ✅ COMPLETE | 100% | `██████████` | Keep Issues → PR/MR → development lifecycle, status verification and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
-| P5 Conservative Safe Fix | 🟡 RUNTIME ACCEPTANCE | 94% | `█████████░` | Hash-pinned #488 → real imported-Figma proof → byte-exact closure intake PASS → merge #6 |
+| P5 Conservative Safe Fix | 🟡 RUNTIME ACCEPTANCE | 94% | `█████████░` | Hash-pinned #488 → real imported-Figma proof → descriptor-pinned byte-exact closure intake PASS → merge #6 |
 | P6 Advanced structures | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh registered artifact → real closure #7 |
 | P7 60+ Frame batch queue | 🟠 INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh registered artifact → stress/cancel closure #8 |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
@@ -41,26 +41,25 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 ## Latest verified checkpoint — 2026-09-09
 
 - ✅ issue-first sweep confirmed open issues remain exactly #6, #7 and #8; no new actionable product/code defect issue was found.
-- ✅ open PR/MR count returned to `0` after the latest hardening merges.
+- ✅ open PR/MR count returned to `0` after the latest hardening merge.
 - ✅ issue #6 remains blocked only on real imported-Figma runtime evidence; #7/#8 remain dependency-blocked on P5 merge.
-- ✅ PR #42 previously upgraded the artifact registry/preflight with immutable SHA-256 file pins and merged to `main` at `92a4440`.
+- ✅ PR #42 upgraded the artifact registry/preflight with immutable SHA-256 file pins and merged to `main` at `92a4440`.
 - ✅ PR #43 added `runtime:closure-intake`, combining final-closure preflight, bounded evidence intake, evidence SHA-256 traceability and the exact hash-pinned same-artifact verifier; it merged at `7d9f22b`.
 - ✅ PR #44 hardened closure evidence traceability so SHA-256 is computed from the **exact raw file bytes**, not decoded text.
-- ✅ closure intake performs strict/fatal UTF-8 decoding before JSON parsing; invalid UTF-8 fails closed before verifier execution while the exact on-disk evidence SHA-256 remains reportable.
-- ✅ PR #45 hardens the operator evidence-path boundary: symbolic-link evidence paths fail closed before evidence read/hash/verifier execution.
-- ✅ PR #45 head `f2233fb` passed CI #551, squash-merged at `8444698`, then post-merge CI #552 + Integration Readiness #40 passed.
-- ✅ PR #46 hardens required runtime artifact files: symbolic-link `BUILD_INFO.txt`, manifest, compiled runtime/UI, import helper or verifier paths fail closed before artifact acceptance.
-- ✅ PR #46 head `7fa579e` passed CI #557, squash-merged at `15cc973`, then post-merge CI #558 + Integration Readiness #44 passed.
-- ✅ PR #47 hardens the artifact-root boundary: a symbolic-link artifact directory now fails closed before required-file, identity, hash or manifest checks.
-- ✅ PR #47 head `6a90c11` passed CI #559, squash-merged at `8297b69`, then post-merge CI #560 + Integration Readiness #45 passed.
-- ✅ canonical P5/P6/P7 feature heads and registered runtime artifact bytes remained unchanged by the tooling batches.
+- ✅ PR #45 made operator evidence paths non-symlink and merged at `8444698`; post-merge CI #552 + Integration Readiness #40 passed.
+- ✅ PR #46 made all required runtime artifact files non-symlink and merged at `15cc973`; post-merge CI #558 + Integration Readiness #44 passed.
+- ✅ PR #47 made the supplied artifact root directory non-symlink and merged at `8297b69`; post-merge CI #560 + Integration Readiness #45 passed.
+- ✅ PR #48 closes the evidence-path TOCTOU window by opening evidence once, comparing pre-open/opened `dev`/`ino`/size/mtime/ctime identity, and hashing/decoding the exact bytes from that pinned file descriptor.
+- ✅ PR #48 initial CI #564 intentionally exposed that `dev` + `ino` alone were insufficient under inode reuse; the final metadata-strengthened head `d9aa202` passed CI #565 with no review/thread blockers.
+- ✅ PR #48 squash-merged to `main` at `c97b9d7`; post-merge CI #566 + Integration Readiness #49 passed.
+- ✅ canonical P5/P6/P7 feature heads and registered runtime artifact bytes remained unchanged by these tooling batches.
 
 ## Phase status
 
 | Phase | Scope | Current status |
 |---|---|---|
 | P0–P4 | Core audit, validation, transaction/rollback | ✅ Complete |
-| P5 | Conservative Safe Fix recipes | 🟡 Engineering/exact-build/offline verification + hash-pinned artifact preflight + byte-exact closure intake complete; imported-Figma acceptance pending (#6) |
+| P5 | Conservative Safe Fix recipes | 🟡 Engineering/exact-build/offline verification + hash-pinned artifact preflight + descriptor-pinned byte-exact closure intake complete; imported-Figma acceptance pending (#6) |
 | P6 | Advanced clone-only calibration | 🟠 Engineering complete on reference head; post-P5 integration + fresh exact-build real-Figma closure pending (#7) |
 | P7 | Sequential 60+ Frame batch queue | 🟠 Engineering complete on reference head; post-P5 integration + fresh exact-build stress/cancellation closure pending (#8) |
 | P8 | Optional exporter adapters | ⏸ Deferred / #9 closed as not planned |
@@ -128,13 +127,14 @@ It requires, in order:
 
 1. final-closure artifact preflight PASS, including a non-symlink artifact root, non-symlink required files and immutable SHA-256 pins;
 2. an operator-supplied regular, non-symlink, non-empty evidence file no larger than 5 MiB by default;
-3. SHA-256 of the **exact raw evidence file bytes** for forensic traceability;
-4. strict valid UTF-8 decoding with no replacement-character recovery;
-5. valid JSON with a top-level object;
-6. execution of the exact hash-pinned verifier shipped inside that artifact;
-7. verifier exit code exactly `0`.
+3. opening that evidence file once and requiring its pre-open/opened `dev`, `ino`, size, mtime and ctime metadata to match;
+4. SHA-256 of the **exact raw bytes read from that pinned descriptor** for forensic traceability;
+5. strict valid UTF-8 decoding with no replacement-character recovery;
+6. valid JSON with a top-level object;
+7. execution of the exact hash-pinned verifier shipped inside that artifact;
+8. verifier exit code exactly `0`.
 
-If artifact/evidence stages fail, no verifier process is launched. Symbolic-link artifact roots/files, symbolic-link evidence paths and invalid UTF-8 are rejected before evidence verification. The verifier is invoked directly with Node and receives the validated evidence text through stdin; no shell command is constructed from operator paths or evidence.
+If artifact/evidence stages fail, no verifier process is launched. Symbolic-link artifact roots/files, symbolic-link evidence paths, path replacement between validation/open and invalid UTF-8 all fail closed before verifier execution. The verifier is invoked directly with Node and receives the validated evidence text through stdin; no shell command is constructed from operator paths or evidence.
 
 Current P6 #494 / P7 #490 reference builds cannot reach verifier execution through this command because final-closure preflight rejects them first.
 
@@ -178,8 +178,8 @@ npm run integration:readiness
 - import the exact build into Figma Desktop;
 - run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
 - prove rendered-pixel forced rejection, restore, finalize and `0` leftovers;
-- export `p5-evidence.json` to a regular non-symlink path;
-- run `npm run runtime:closure-intake -- p5 <artifact-dir> p5-evidence.json` and require raw-byte evidence SHA-256 + strict UTF-8/JSON acceptance + verifier exit `0` + final PASS;
+- export `p5-evidence.json` to a stable regular non-symlink path;
+- run `npm run runtime:closure-intake -- p5 <artifact-dir> p5-evidence.json` and require stable descriptor identity + raw-byte SHA-256 + strict UTF-8/JSON acceptance + verifier exit `0` + final PASS;
 - apply the CI-proven documentation integration resolution, merge P5 and close #6.
 
 ### 2. P6 / issue #7 — only after P5 lands
@@ -191,7 +191,7 @@ npm run integration:readiness
 - run image-bearing positive page-flow clone calibration with Full P3 PASS and unchanged image-anchor count;
 - run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS;
 - require combined P6 closure PASS;
-- export `p6-closure.json` to a regular non-symlink path and run `runtime:closure-intake` against the fresh final-closure-eligible P6 artifact;
+- export `p6-closure.json` to a stable regular non-symlink path and run descriptor-pinned `runtime:closure-intake` against the fresh final-closure-eligible P6 artifact;
 - merge and close #7.
 
 ### 3. P7 / issue #8 — only after P5 lands
@@ -203,7 +203,7 @@ npm run integration:readiness
 - execute a realistic 60+ Frame batch with every item terminal and `maxConcurrentProcessors === 1`;
 - request cancellation during a genuinely long active Full P3 operation and retain matching cooperative settlement evidence;
 - require final closure PASS;
-- export `p7-closure.json` to a regular non-symlink path and run `runtime:closure-intake` against the fresh final-closure-eligible P7 artifact;
+- export `p7-closure.json` to a stable regular non-symlink path and run descriptor-pinned `runtime:closure-intake` against the fresh final-closure-eligible P7 artifact;
 - merge and close #8.
 
 Full real-runtime operator checklist: `docs/REAL_FIGMA_ACCEPTANCE_RUNBOOK.md`.
@@ -232,7 +232,7 @@ Exit code `0` requires canonical acceptance and exact artifact-build binding. Of
 - the supplied artifact root and required artifact files must be real non-symlink filesystem entries before acceptance;
 - immutable runtime/helper/verifier files must match registry SHA-256 pins exactly;
 - manifest-only plugin-ID rebinding is allowed, but compiled code/UI must remain byte-for-byte unchanged;
-- closure intake must accept only a regular non-symlink evidence path, hash exact evidence bytes, reject invalid UTF-8, require a top-level JSON object, and never execute a verifier until final-closure artifact/evidence gates pass;
+- closure intake must accept only a regular non-symlink evidence path, bind validation/read/hash to one stable file identity and descriptor, hash exact evidence bytes, reject invalid UTF-8, require a top-level JSON object, and never execute a verifier until final-closure artifact/evidence gates pass;
 - offline verifiers must recompute canonical acceptance and match that artifact build;
 - proof chronology must be valid and cannot occur after evidence capture;
 - P6 advanced calibration remains clone-only with no production commit seam;
