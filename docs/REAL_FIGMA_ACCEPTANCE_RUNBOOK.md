@@ -6,6 +6,7 @@ This runbook is the single operator path for closing P5, P6 and P7 runtime accep
 
 - Use one exact CI artifact per observation set.
 - If an artifact contains placeholder Figma plugin ID `000000000000000000`, prepare a separate local import directory with the packaged helper; never edit compiled `code.js` or `ui.html`.
+- The local import output must be **separate and non-nested** relative to the unpacked source artifact. Never place the prepared output inside the source artifact directory.
 - Do not treat CI, local manifest rebinding or offline verification as Figma runtime proof.
 - Keep the same imported artifact loaded while collecting evidence that must share an exact build identity.
 - Do not manually edit exported evidence JSON.
@@ -28,19 +29,25 @@ Current verified reference artifacts:
 
 ## Artifact preparation
 
-If the selected artifact uses the placeholder plugin ID, run inside the unpacked artifact directory:
+If the selected artifact uses the placeholder plugin ID, use the helper packaged inside that exact artifact and write to a **sibling/non-nested** output directory. For canonical P5 #488, from inside the unpacked artifact directory:
 
 ```bash
-node prepare-figma-import.mjs <your-figma-plugin-id> . dist-local
+node prepare-figma-import.mjs <your-figma-plugin-id> . ../figma-plugin-dist-488-local
 ```
 
-Import `dist-local/manifest.json`. Confirm `LOCAL_IMPORT_INFO.txt` reports unchanged compiled targets.
+Then import:
+
+```text
+../figma-plugin-dist-488-local/manifest.json
+```
+
+Confirm `../figma-plugin-dist-488-local/LOCAL_IMPORT_INFO.txt` reports unchanged compiled targets. The source artifact directory and prepared output directory must not overlap. The previously documented `. dist-local` nested-output form is invalid for canonical #488 and is rejected by the current helper safety contract.
 
 ## Step 1 — P5 compiled runtime acceptance
 
 Use `figma-plugin-dist-488` / CI #488.
 
-1. Import the verified P5 artifact.
+1. Import the verified P5 artifact using the sibling prepared directory above when plugin-ID rebinding is required.
 2. Run `Developer: P5 Runtime Self-Test`.
 3. Require `P5 Compiled Runtime Acceptance: PASS`.
 4. Confirm real rendered-pixel evidence exists for:
@@ -79,14 +86,15 @@ Do not use current artifact #494 as the final closure artifact after P5 lands.
 3. Run install, typecheck, tests, build, provenance checks, offline-verifier checks and artifact packaging.
 4. Record the fresh P6 source SHA, CI run, artifact name and digest.
 5. Keep that exact fresh P6 artifact loaded for its prerequisite and both P6 observations.
-6. Run its embedded `Developer: P5 Runtime Self-Test`; require exact-build prerequisite PASS.
-7. Select a real image-bearing page and run page-flow clone calibration.
-8. Require Full P3 PASS, `imageAnchorCountBefore > 0`, unchanged image-anchor count and zero cleanup risk.
-9. Select a preservation-sensitive real page and run calibration.
-10. Require explicit preservation refusal / `NO_CANDIDATE`, not a guessed mutation.
-11. Open `Developer: P6 Runtime Evidence` and require `P6 Closure acceptance: PASS`.
-12. Export schema-v2 `p6-closure.json`.
-13. From that same fresh artifact run:
+6. If local plugin-ID rebinding is needed, use that fresh artifact's helper with a separate non-nested sibling output directory.
+7. Run its embedded `Developer: P5 Runtime Self-Test`; require exact-build prerequisite PASS.
+8. Select a real image-bearing page and run page-flow clone calibration.
+9. Require Full P3 PASS, `imageAnchorCountBefore > 0`, unchanged image-anchor count and zero cleanup risk.
+10. Select a preservation-sensitive real page and run calibration.
+11. Require explicit preservation refusal / `NO_CANDIDATE`, not a guessed mutation.
+12. Open `Developer: P6 Runtime Evidence` and require `P6 Closure acceptance: PASS`.
+13. Export schema-v2 `p6-closure.json`.
+14. From that same fresh artifact run:
 
 ```bash
 node verify-p6-closure.mjs < p6-closure.json
@@ -105,15 +113,16 @@ Do not use current artifact #490 as the final closure artifact after P5 lands.
 3. Run the complete CI/provenance/offline-verifier/artifact pipeline.
 4. Record the fresh P7 source SHA, CI run, artifact name and digest.
 5. Keep that exact fresh P7 artifact loaded for prerequisite, stress and cancellation observations.
-6. Run its embedded P5 self-test and require the exact-build P5/P7 prerequisite receipt to be valid.
-7. Execute a realistic queue containing at least 60 Frames/pages.
-8. Require every queued item to reach a terminal state and `maxConcurrentProcessors === 1`.
-9. Separately start work containing a genuinely long active Full P3 operation.
-10. Request cancellation while that processor Frame is active.
-11. Require cooperative settlement after the in-flight transaction, final batch state `CANCELLED`, and a recorded processor attempt matching the active Frame ID.
-12. Open `Developer: P7 Runtime Evidence` and require final `Closure acceptance: PASS`.
-13. Export schema-v2 `p7-closure.json`.
-14. From that same fresh artifact run:
+6. If local plugin-ID rebinding is needed, use that fresh artifact's helper with a separate non-nested sibling output directory.
+7. Run its embedded P5 self-test and require the exact-build P5/P7 prerequisite receipt to be valid.
+8. Execute a realistic queue containing at least 60 Frames/pages.
+9. Require every queued item to reach a terminal state and `maxConcurrentProcessors === 1`.
+10. Separately start work containing a genuinely long active Full P3 operation.
+11. Request cancellation while that processor Frame is active.
+12. Require cooperative settlement after the in-flight transaction, final batch state `CANCELLED`, and a recorded processor attempt matching the active Frame ID.
+13. Open `Developer: P7 Runtime Evidence` and require final `Closure acceptance: PASS`.
+14. Export schema-v2 `p7-closure.json`.
+15. From that same fresh artifact run:
 
 ```bash
 node verify-p7-closure.mjs < p7-closure.json
