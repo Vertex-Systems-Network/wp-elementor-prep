@@ -2,6 +2,18 @@
 
 ## 2026-09-09
 
+### Status synchronization and migration-safe schema contract
+- Re-ran the mandatory issue-first/PR-first cycle; open product/runtime issues remained #6/#7/#8 and open PR/MR count was `0` before each tooling batch.
+- Issue #60 / PR #61 synchronized runtime-registry schema state across README, PROJECT_STATE, ROADMAP and NEXT_ACTIONS and made `status:verify` derive the active schema version from `config/runtime-artifacts.json`.
+- PR #61 head `d2dc43d` passed CI #606, squash-merged at `933b2fc2`, and post-merge CI #607 + Integration Readiness #82 passed.
+- Issue #62 / PR #63 hardened the schema-status contract so mixed stale/current explicit registry schema references no longer pass by simple substring masking.
+- PR #63 head `97c51b6` passed CI #609, squash-merged at `acef3c2c`, and post-merge CI #610 + Integration Readiness #84 passed.
+- Follow-up migration review found whole-document stale-schema rejection would wrongly block future schema migrations whenever legitimate historical prose retained older schema references.
+- Issue #64 / PR #72 replaced whole-document rejection with path-specific current-status anchors: current anchors must match the active registry schema, while historical older-schema prose remains valid.
+- PR #72 head `52ea254` passed CI #611 with no review/thread blockers, squash-merged at `ed8b6b26`, and post-merge CI #612 + Integration Readiness #85 passed.
+- Issues #60, #62 and #64 are completed/closed. Canonical P5/P6/P7 feature heads and registered runtime artifact bytes were unchanged throughout these tooling batches.
+- Real imported-Figma P5 acceptance did not advance, so overall active project progress remains 93% and P6/P7 final integration/closure remain dependency-blocked on P5 merge.
+
 ### Manifest semantic provenance pinning
 - Re-ran the mandatory issue-first/PR-first cycle: product/runtime issues were #6/#7/#8 and open PR/MR count was `0` before the new provenance defect was filed.
 - Audited the manifest exception in `runtime:preflight`: raw `manifest.json` bytes were intentionally not pinned so local Figma plugin-ID rebinding could remain supported, but selected-field validation still allowed unrelated non-ID semantic drift to pass.
