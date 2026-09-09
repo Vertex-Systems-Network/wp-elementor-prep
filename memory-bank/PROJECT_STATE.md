@@ -27,14 +27,14 @@ Overall active project progress remains `93%`. Tooling/documentation hardening d
 
 ## Repository status
 
-- Latest verified main-side tooling merge: PR #61, squash-merged at `933b2fc2edbd421794713efb55d415aff4091914`.
-- PR #61 head `d2dc43d` passed CI #606 with no review/thread blockers.
-- Post-merge CI #607 and Integration Readiness #82 passed.
-- Issue #60 is completed and closed.
-- `status:verify` now reads `config/runtime-artifacts.json.schemaVersion` and requires README, PROJECT_STATE, ROADMAP and NEXT_ACTIONS to reference the active runtime registry schema.
-- Regression coverage proves current schema documents pass while a stale schema document fails closed.
+- Latest verified main-side tooling merge: PR #72, squash-merged at `ed8b6b26116bb9d8109a950a7e76798c41637e76`.
+- PR #72 head `52ea254` passed CI #611 with no review/thread blockers; post-merge CI #612 and Integration Readiness #85 passed.
+- PR #63 head `97c51b6` passed CI #609, squash-merged at `acef3c2c`; post-merge CI #610 and Integration Readiness #84 passed.
+- PR #61 head `d2dc43d` passed CI #606, squash-merged at `933b2fc2`; post-merge CI #607 and Integration Readiness #82 passed.
+- Issues #60, #62 and #64 are completed and closed.
+- `status:verify` reads `config/runtime-artifacts.json.schemaVersion`, binds each required status document to its path-specific current-schema anchor, rejects stale/missing/duplicate current anchors, and allows legitimate historical older-schema prose.
 - Open product/runtime issues are exactly #6, #7, #8.
-- Open PR/MR count returned to `0` after PR #61 merge.
+- Open PR/MR count returned to `0` after PR #72 merge.
 - Canonical P5/P6/P7 feature heads and registered runtime artifact bytes remain unchanged by main-side tooling work.
 
 ## Module state
@@ -102,7 +102,7 @@ Main-side tooling now provides:
 - descriptor-pinned exact evidence-byte SHA-256 + strict UTF-8/top-level JSON validation,
 - post-preflight verifier revalidation,
 - verified-byte in-memory verifier execution rather than trusting a mutable artifact path,
-- status-document registry schema synchronization enforced by CI.
+- migration-safe status-document registry schema synchronization enforced by CI.
 
 These gates validate provenance and supplied evidence only. They cannot create real Figma observations.
 
