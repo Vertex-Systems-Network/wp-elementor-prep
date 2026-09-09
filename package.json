@@ -12,6 +12,7 @@
     "verify:release-contract": "node scripts/verify-release-contract.mjs",
     "test:release-package": "node scripts/build-release.mjs --fixture --plugin-id=123456789012345678 --source-sha=0123456789abcdef0123456789abcdef01234567 && node scripts/verify-release-package.mjs dist-release --allow-fixture",
     "community:verify": "node scripts/verify-community-readiness.mjs community/listing.template.json --template",
+    "p12:offline": "node scripts/p12-offline-acceptance.mjs --report=dist-p12/p12-offline-acceptance.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

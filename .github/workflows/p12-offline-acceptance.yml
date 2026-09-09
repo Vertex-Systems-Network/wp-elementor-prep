@@ -1,0 +1,34 @@
+name: P12 Offline Acceptance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p12-offline-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-acceptance:
+    name: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run p12:offline
+      - uses: actions/upload-artifact@v7
+        with:
+          name: p12-offline-acceptance-${{ runner.os }}
+          path: dist-p12/p12-offline-acceptance.json
+          if-no-files-found: error
