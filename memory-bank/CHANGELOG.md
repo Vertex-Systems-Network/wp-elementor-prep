@@ -2,6 +2,16 @@
 
 ## 2026-09-09
 
+### Canonical Actions artifact byte/package audit
+- Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and open PR/MR count was `0` before the audit.
+- Downloaded the exact canonical GitHub Actions ZIPs rather than relying only on registry/API metadata: P5 artifact id `10062772456` / run id `34242984963`, P6 artifact id `10063239506` / run id `34244113623`, and P7 artifact id `10062907870` / exact run id `34243303097` for CI run #490.
+- Independently computed raw ZIP SHA-256 and confirmed three-way equality with GitHub artifact metadata and `config/runtime-artifacts.json`: P5 `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`, P6 `82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3`, P7 `c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43`.
+- Independently extracted all three ZIPs and confirmed top-level packaged entries are regular files, with no symlinked packaged runtime/helper/verifier entries.
+- Verified exact BUILD_INFO source/workflow SHA, Actions run ID and run number for all three canonical artifacts.
+- Recomputed every immutable registry pin from the downloaded packages and confirmed `5/5` matches on P5, P6 and P7 for BUILD_INFO, compiled code, UI, packaged import helper and same-artifact verifier.
+- Verified manifest semantics independently: `main=code.js`, `ui=ui.html`, required developer commands present, `allowedDomains=["none"]`, and placeholder plugin id `000000000000000000` retained as expected before local rebind.
+- No new provenance defect was found; no product/runtime acceptance state advanced, canonical P5/P6/P7 feature heads/artifact bytes were not modified, open PR/MR remains `0`, and overall project progress remains 93%.
+
 ### Closure intake archive digest binding
 - Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and open PR/MR count was `0` before development.
 - Confirmed PR #52 made the registered Actions ZIP digest operationally verifiable in `runtime:preflight`, but the one-command `runtime:closure-intake` flow did not expose or forward that optional archive gate.
