@@ -2,6 +2,19 @@
 
 ## 2026-09-09
 
+### Same-artifact verifier execution hardening
+- Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and open PR/MR count was `0` before the new hardening work.
+- Identified the remaining closure-intake execution TOCTOU boundary: immutable verifier bytes were accepted by preflight, but `runtime:closure-intake` later spawned the verifier again by its mutable artifact filesystem path.
+- Inspected the exact P5 #488, P6 #494 and P7 #490 artifact verifiers before implementation and confirmed all three current verifier scripts are self-contained bundled `.mjs` files with no relative imports or `require()` dependency.
+- PR #51 re-opens the same-artifact verifier after final-closure preflight through a stable descriptor, requires matching `dev`/`ino`/size/mtime/ctime`, hashes the exact bytes read from that descriptor and requires the SHA-256 to equal the immutable verifier hash already accepted by preflight.
+- Only those re-verified bytes are copied to a private temporary file; a direct Node bootstrap independently re-hashes that temporary source and imports the exact bytes as an in-memory `data:` module before verifier logic can run.
+- The original artifact verifier path is no longer used as the executable module path after verification; evidence stdin, artifact cwd, timeout/output bounds and no-shell execution semantics remain preserved.
+- Added a regression proving verifier replacement between post-preflight validation and descriptor open fails closed with verifier execution suppressed.
+- Added a regression proving replacement of the original artifact verifier path at the exact spawn boundary cannot alter executed verifier bytes; the original verified logic still runs and the tampered artifact path is ignored for execution.
+- PR #51 head `bf7ba3c` passed CI #577 with no review/thread blockers.
+- PR #51 squash-merged to `main` at `15f3f023`; post-merge main CI #578 and Integration Readiness #58 passed.
+- Open PR/MR count returned to `0`; canonical P5/P6/P7 exact-build feature heads and registered runtime artifact bytes were not modified.
+
 ### Runtime artifact stable-descriptor hardening
 - Re-ran the mandatory issue-first/PR-first cycle: open issues remain #6/#7/#8 and there were no open PRs before the new hardening work.
 - Identified a matching TOCTOU gap in `runtime:preflight`: required artifact files were validated with `lstatSync()` but BUILD_INFO, manifest and immutable hash reads later reopened those paths.
