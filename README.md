@@ -59,6 +59,9 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 - ✅ PR #51 closes the remaining verifier-execution path race: closure intake re-reads the verifier through a stable descriptor, requires the same immutable SHA-256 observed by preflight, and executes those exact bytes through a hash-checking in-memory Node module bootstrap instead of spawning the mutable artifact path.
 - ✅ canonical P5 #488, P6 #494 and P7 #490 verifier artifacts were inspected before PR #51; all three current verifier scripts are self-contained bundled `.mjs` files with no relative imports/`require()` dependency.
 - ✅ PR #51 head `bf7ba3c` passed CI #577 with no review/thread blockers; squash-merged at `15f3f023`; post-merge CI #578 + Integration Readiness #58 passed.
+- ✅ PR #52 makes each registry Actions artifact digest directly verifiable when the original ZIP is retained: `runtime:preflight -- --archive=<zip>` hashes raw archive bytes from a stable descriptor and requires exact registered digest equality.
+- ✅ PR #52 head `1bf182f` passed CI #582 with no review/thread blockers; squash-merged at `5b75ff2e`; post-merge CI #583 + Integration Readiness #62 passed.
+- ✅ archive verification is optional; extracted-artifact-only workflows still enforce stable descriptor identity, BUILD_INFO/manifest checks and all immutable per-file SHA-256 pins.
 - ✅ canonical P5/P6/P7 feature heads and registered runtime artifact bytes remained unchanged by these tooling batches.
 
 ## Phase status
@@ -66,7 +69,7 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 | Phase | Scope | Current status |
 |---|---|---|
 | P0–P4 | Core audit, validation, transaction/rollback | ✅ Complete |
-| P5 | Conservative Safe Fix recipes | 🟡 Engineering/exact-build/offline verification + descriptor-pinned hash-pinned artifact preflight + descriptor-pinned evidence + verified-byte verifier execution complete; imported-Figma acceptance pending (#6) |
+| P5 | Conservative Safe Fix recipes | 🟡 Engineering/exact-build/offline verification + descriptor-pinned hash-pinned artifact preflight + optional raw archive digest verification + descriptor-pinned evidence + verified-byte verifier execution complete; imported-Figma acceptance pending (#6) |
 | P6 | Advanced clone-only calibration | 🟠 Engineering complete on reference head; post-P5 integration + fresh exact-build real-Figma closure pending (#7) |
 | P7 | Sequential 60+ Frame batch queue | 🟠 Engineering complete on reference head; post-P5 integration + fresh exact-build stress/cancellation closure pending (#8) |
 | P8 | Optional exporter adapters | ⏸ Deferred / #9 closed as not planned |
@@ -79,7 +82,7 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 | P6 | `feat/p6-advanced-structures` · `9a6ae3b` | ✅ #494 · `figma-plugin-dist-494` | `sha256:82324e0ea98b0c13b55eda103d2945ed7e6371f046af1eee93e20fc032fb8fc3` | ⚠️ Reference only; rebuild after P5 merge |
 | P7 | `feat/p7-batch-queue-core` · `cbfdb66` | ✅ #490 · `figma-plugin-dist-490` | `sha256:c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43` | ⚠️ Reference only; rebuild after P5 merge |
 
-Machine-readable operational registry: `config/runtime-artifacts.json` schema v2. It records exact build identity, ZIP digest, closure eligibility and immutable per-file SHA-256 pins.
+Machine-readable operational registry: `config/runtime-artifacts.json` schema v2. It records exact build identity, ZIP digest, closure eligibility and immutable per-file SHA-256 pins. If the original Actions ZIP is retained, the registered digest can be enforced directly with `--archive`.
 
 ## Runtime artifact preflight
 
@@ -89,9 +92,16 @@ Before importing an artifact into Figma or collecting closure evidence, run the 
 npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
 ```
 
+If the original downloaded Actions artifact ZIP is available, optionally verify its raw bytes too:
+
+```bash
+npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488 --archive=/path/to/figma-plugin-dist-488.zip
+```
+
 It validates:
 
 - the supplied artifact root is a real directory and not a symbolic link;
+- if `--archive` is supplied, the archive is a regular non-symlink file, retains matching pre-open/opened `dev`, `ino`, size, mtime and ctime metadata, and its descriptor-pinned raw SHA-256 exactly matches the registered artifact digest;
 - required `BUILD_INFO.txt`, `code.js`, `ui.html`, manifest, packaged import helper and same-artifact verifier are real regular files and not symbolic links;
 - each required file retains matching pre-open/opened `dev`, `ino`, size, mtime and ctime metadata;
 - BUILD_INFO parsing, manifest semantics and immutable hashing consume the exact bytes read from each validated file descriptor;
@@ -185,6 +195,7 @@ npm run integration:readiness
 ### 1. P5 / issue #6
 
 - unpack canonical `figma-plugin-dist-488`;
+- if the original Actions ZIP is retained, optionally run preflight with `--archive=<zip>` and require raw archive digest MATCH;
 - run preflight on the real non-symlink artifact directory and require all required files to be non-symlink regular files, stable descriptor identity, exact build identity + `5/5` immutable SHA-256 matches;
 - rebind manifest locally if needed using the packaged helper;
 - import the exact build into Figma Desktop;
@@ -199,6 +210,7 @@ npm run integration:readiness
 - resolve/rebase P6 against merged P5/main;
 - run full CI and create a fresh exact-build artifact;
 - update `config/runtime-artifacts.json` with new identity, digest and immutable file hashes;
+- optionally verify the fresh retained Actions ZIP against its new registered digest;
 - establish its exact-build P5 prerequisite;
 - run image-bearing positive page-flow clone calibration with Full P3 PASS and unchanged image-anchor count;
 - run preservation-sensitive refusal and require `NO_CANDIDATE` / refusal PASS;
@@ -211,6 +223,7 @@ npm run integration:readiness
 - resolve/rebase P7 against merged P5/main;
 - run full CI and create a fresh exact-build artifact;
 - update `config/runtime-artifacts.json` with new identity, digest and immutable file hashes;
+- optionally verify the fresh retained Actions ZIP against its new registered digest;
 - establish its exact-build P5 prerequisite;
 - execute a realistic 60+ Frame batch with every item terminal and `maxConcurrentProcessors === 1`;
 - request cancellation during a genuinely long active Full P3 operation and retain matching cooperative settlement evidence;
@@ -242,6 +255,7 @@ Exit code `0` requires canonical acceptance and exact artifact-build binding. Of
 - rendered-pixel evidence is mandatory where required by runtime acceptance;
 - runtime evidence must be traceable to the exact CI-built artifact loaded in Figma;
 - the supplied artifact root and required artifact files must be real non-symlink filesystem entries before acceptance;
+- if an original Actions archive is supplied for verification, its validation/read/hash must bind to one stable descriptor identity and its raw SHA-256 must equal the registered digest exactly;
 - required artifact-file validation/read/hash/parse operations must bind to one stable descriptor identity (`dev`/`ino`/size/mtime/ctime) and pinned byte snapshot;
 - immutable runtime/helper/verifier files must match registry SHA-256 pins exactly;
 - manifest-only plugin-ID rebinding is allowed, but compiled code/UI must remain byte-for-byte unchanged;
@@ -267,7 +281,7 @@ npm run integration:readiness
 Runtime artifact preflight:
 
 ```bash
-npm run runtime:preflight -- <p5|p6|p7> <unpacked-artifact-dir>
+npm run runtime:preflight -- <p5|p6|p7> <unpacked-artifact-dir> [--archive=/path/to/artifact.zip]
 ```
 
 Runtime closure intake:
