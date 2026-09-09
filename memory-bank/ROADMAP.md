@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-09-09
+Last updated: 2026-09-10
 
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
@@ -10,7 +10,7 @@ Last updated: 2026-09-09
 | P2 | Deterministic classifier semantics + evidence | COMPLETE | 100% | `██████████` | None |
 | P3 | Geometry/content/image + rendered-pixel validation | COMPLETE | 100% | `██████████` | None |
 | P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
-| P5 | Conservative Safe Fix recipes + exact-build proof | RUNTIME ACCEPTANCE | 94% | `█████████░` | Hash-pinned #488 → real Figma proof → one-command closure intake PASS → merge #6 |
+| P5 | Conservative Safe Fix recipes + exact-build proof | RUNTIME ACCEPTANCE | 94% | `█████████░` | Hash-pinned #488 → real Figma proof → closure intake PASS → fresh P5→current-main conflict resolution + full CI → merge #6 |
 | P6 | Advanced timeline/carousel/milestone/page normalization | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P6 conflicts → fresh registered artifact + provenance pins → #7 closure |
 | P7 | Sequential multi-frame/page batch queue | INTEGRATION BLOCKED | 80% | `████████░░` | P5 merge → resolve P7 conflicts → fresh registered artifact + provenance pins → #8 closure |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate after normalization line stabilizes |
@@ -40,19 +40,21 @@ The artifact is registered in `config/runtime-artifacts.json` schema v3 as the c
 
 The main-side `runtime:closure-intake` combines final-closure preflight, optional raw ZIP binding, descriptor-pinned evidence intake, byte-exact evidence hashing, strict UTF-8/JSON validation, verifier revalidation and verified-byte in-memory verifier execution. It cannot create runtime evidence.
 
-Remaining gate is real imported-Figma acceptance followed by `runtime:closure-intake` PASS. Production Safe Fix mutation remains locked until that real-runtime evidence passes the exact-artifact verifier chain.
+Remaining runtime gate is real imported-Figma acceptance followed by `runtime:closure-intake` PASS. After that PASS, P5 still requires a fresh integration against the then-current `main`: latest Integration Readiness #90 on `main` `698940369635b6f40972e6404e7e7ff71b57ea14` reports P5 → main as `CODE_CONFLICT`, including `.github/workflows/ci.yml` and `scripts/prepare-figma-import.mjs` plus status/docs files. Historical integration proof #37 / CI #500 is superseded for merge authorization. The fresh resolution must preserve current-main import-helper overlap safety and CI/status/closure hardening, run full PR CI, and only then merge #6.
+
+Production Safe Fix mutation remains locked until the real-runtime evidence passes the exact-artifact verifier chain; issue closure additionally requires the fresh current-main integration proof.
 
 ## P6 — issue #7
 
 Engineering is complete on reference head `9a6ae3b` / CI #494 PASS. Automated integration readiness proves real shared-code conflicts against latest P5.
 
-Artifact #494 is reference-only in runtime artifact registry schema v3 and fails closed for final closure. Its immutable files and id-excluded manifest semantics are pinned for safe inspection. After P5 merges, P6 must be integrated, rebuilt as a fresh exact artifact, registered with fresh identity/digest/immutable hashes/manifest semantic pin, then validated with real positive + preservation-refusal Figma scenarios.
+Artifact #494 is reference-only in runtime artifact registry schema v3 and fails closed for final closure. Its immutable files and id-excluded manifest semantics are pinned for safe inspection. After P5 merges, P6 must be integrated, rebuilt as a fresh exact artifact, registered with fresh identity/digest/immutable hashes/manifest semantic pin, then validated with real positive + preservation-refusal Figma scenarios and current-main closure intake.
 
 ## P7 — issue #8
 
 Engineering is complete on reference head `cbfdb66` / CI #490 PASS. Automated integration readiness proves real shared-code conflicts against latest P5.
 
-Artifact #490 is reference-only in runtime artifact registry schema v3 and fails closed for final closure. Its immutable files and id-excluded manifest semantics are pinned for safe inspection. After P5 merges, P7 must be integrated, rebuilt as a fresh exact artifact, registered with fresh identity/digest/immutable hashes/manifest semantic pin, then validated with a realistic 60+ Frame stress run plus active Full-P3 cooperative cancellation.
+Artifact #490 is reference-only in runtime artifact registry schema v3 and fails closed for final closure. Its immutable files and id-excluded manifest semantics are pinned for safe inspection. After P5 merges, P7 must be integrated, rebuilt as a fresh exact artifact, registered with fresh identity/digest/immutable hashes/manifest semantic pin, then validated with a realistic 60+ Frame stress run plus active Full-P3 cooperative cancellation and current-main closure intake.
 
 ## P8
 
