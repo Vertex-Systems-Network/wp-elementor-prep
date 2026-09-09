@@ -2,6 +2,19 @@
 
 ## 2026-09-09
 
+### Manifest semantic provenance pinning
+- Re-ran the mandatory issue-first/PR-first cycle: product/runtime issues were #6/#7/#8 and open PR/MR count was `0` before the new provenance defect was filed.
+- Audited the manifest exception in `runtime:preflight`: raw `manifest.json` bytes were intentionally not pinned so local Figma plugin-ID rebinding could remain supported, but selected-field validation still allowed unrelated non-ID semantic drift to pass.
+- Filed focused issue #58 and defined a fail-closed semantic pin that removes only the top-level plugin `id`, recursively sorts object keys, preserves array order/content, serializes deterministic compact JSON and hashes those semantics with SHA-256.
+- Upgraded `config/runtime-artifacts.json` to schema v3 with canonical id-excluded manifest semantic SHA-256 values: P5 #488 `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`, P6 #494 `b687205564abb72ac7b00447d2bec3e00c266a1d4ddf9ec6980ce15c62c893f9`, P7 #490 `3cb617c2d47d8b3d887ca94897781998226f9ec6c1b242bc880a2e18d9f6587e`.
+- Schema-v3 preflight now fails closed when a required manifest semantic pin is missing/invalid or any semantic content other than top-level plugin `id` changes. JSON formatting/object-key-order differences and placeholder/numeric ID-only rebinding remain accepted.
+- Existing field-specific manifest checks remain as defense-in-depth for main/UI targets, required developer commands, offline network policy and plugin-ID shape.
+- Added focused regressions proving canonical schema-v3 PASS, numeric ID-only rebind PASS with the same semantic hash, non-ID manifest drift FAIL, and missing schema-v3 semantic pin FAIL.
+- PR #59 head `8246e3f` passed CI #600 with no review/thread blockers and was mergeable.
+- PR #59 squash-merged to `main` at `8f0d5bbd`; post-merge CI #601 and Integration Readiness #77 passed.
+- README, `memory-bank/NEXT_ACTIONS.md`, `docs/RUNTIME_ARTIFACT_PREFLIGHT.md` and issue #6 were synchronized to require schema-v3 manifest semantic MATCH in the P5 operator/closure path and in future fresh P6/P7 artifact registration.
+- Canonical P5/P6/P7 feature heads and registered artifact bytes were not changed; real imported-Figma acceptance did not advance, so overall project progress remains 93%.
+
 ### Figma local-import sibling-output operator fix
 - Continued the mandatory issue-first/PR-first cycle after the canonical artifact byte audit; product/runtime issues remained #6/#7/#8 and open PR/MR count was `0` before the new defect was filed.
 - Exact canonical P5 #488 calibration exposed an actionable operator-path defect: the documented `node prepare-figma-import.mjs <id> . dist-local` command asks the packaged helper to recursively copy the source artifact into its own child and fails before producing a prepared import.
