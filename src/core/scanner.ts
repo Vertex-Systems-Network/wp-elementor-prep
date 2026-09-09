@@ -6,13 +6,21 @@ function numeric(value: unknown, fallback = 0): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 }
 
-function readLayoutMode(node: SceneNode): LayoutMode {
-  if (!('layoutMode' in node)) return 'UNKNOWN';
-  const value = String((node as SceneNode & { layoutMode: unknown }).layoutMode);
-  if (value === 'NONE' || value === 'HORIZONTAL' || value === 'VERTICAL' || value === 'GRID') {
-    return value;
+export function normalizeLayoutMode(value: unknown): LayoutMode {
+  const normalized = String(value ?? 'NONE');
+  if (normalized === 'NONE' || normalized === 'HORIZONTAL' || normalized === 'VERTICAL' || normalized === 'GRID') {
+    return normalized;
   }
   return 'UNKNOWN';
+}
+
+export function isGenericLayerName(name: string): boolean {
+  return GENERIC_NAME.test(name.trim());
+}
+
+function readLayoutMode(node: SceneNode): LayoutMode {
+  if (!('layoutMode' in node)) return 'UNKNOWN';
+  return normalizeLayoutMode((node as SceneNode & { layoutMode: unknown }).layoutMode);
 }
 
 function hasImageFill(node: SceneNode): boolean {
@@ -68,7 +76,7 @@ export function scanSceneNode(node: SceneNode): AuditNode {
     isContainer,
     isText,
     isImageLike: hasImageFill(node),
-    isGenericName: GENERIC_NAME.test(node.name.trim()),
+    isGenericName: isGenericLayerName(node.name),
     textLength: isText ? node.characters.length : 0,
     textAutoResize: textAutoResize(node),
     absolutePositioned: isAbsolute(node),
