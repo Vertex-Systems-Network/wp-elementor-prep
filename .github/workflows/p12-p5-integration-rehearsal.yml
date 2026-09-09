@@ -23,6 +23,9 @@ jobs:
           rm -rf p5-merge-rehearsal
           mkdir -p p5-merge-rehearsal/conflicts
 
+          git config user.name "P12 Integration Rehearsal"
+          git config user.email "p12-integration-rehearsal@invalid.local"
+
           set +e
           git merge --no-commit --no-ff origin/feat/p5-safe-recipes
           merge_exit=$?
