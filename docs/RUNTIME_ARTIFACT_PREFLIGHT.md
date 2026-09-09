@@ -2,7 +2,7 @@
 
 Use this check **before** importing a runtime-acceptance artifact into Figma or collecting closure evidence.
 
-The goal is to fail closed when an unpacked artifact has the wrong source SHA/run identity, altered immutable runtime bytes, missing required files or developer commands, or is a reference-only build that must not be used for final issue closure.
+The goal is to fail closed when an unpacked artifact has the wrong source SHA/run identity, altered immutable runtime bytes, non-ID manifest semantic drift, missing required files or developer commands, or is a reference-only build that must not be used for final issue closure.
 
 ## Commands
 
@@ -12,7 +12,7 @@ For the canonical P5 issue #6 artifact:
 npm run runtime:preflight -- p5 /path/to/unpacked/figma-plugin-dist-488
 ```
 
-Expected result: `PASS`. The report must show all registered immutable SHA-256 pins matched. If the artifact still has placeholder Figma plugin ID `000000000000000000`, use the **packaged artifact helper** with a separate, non-nested output directory. From inside canonical #488:
+Expected result: `PASS`. The report must show all registered immutable SHA-256 pins matched and `Manifest semantics (plugin id excluded): MATCH`. If the artifact still has placeholder Figma plugin ID `000000000000000000`, use the **packaged artifact helper** with a separate, non-nested output directory. From inside canonical #488:
 
 ```bash
 cd /path/to/unpacked/figma-plugin-dist-488
@@ -69,6 +69,7 @@ The preflight validates:
 - required artifact files are regular non-symlink entries and retain stable file identity between validation and descriptor open;
 - BUILD_INFO/manifest/hash checks consume descriptor-pinned bytes;
 - SHA-256 of immutable packaged files matches `config/runtime-artifacts.json` exactly;
+- schema-v3 manifest semantic SHA-256 matches the registered canonical manifest after removing only the top-level `id` field and recursively sorting object keys;
 - `manifest.json` points to the packaged `code.js` / `ui.html`;
 - required developer menu commands exist for the selected track;
 - core manifest network access remains offline-only (`allowedDomains: ["none"]`);
@@ -83,27 +84,36 @@ Current immutable pins cover:
 - packaged `prepare-figma-import.mjs`;
 - the track's same-artifact closure verifier.
 
-Any byte change to those files fails closed even if `BUILD_INFO.txt` still claims the expected source/run identity.
+Any byte change to those immutable files fails closed even if `BUILD_INFO.txt` still claims the expected source/run identity.
 
-## Why manifest.json is intentionally excluded from SHA-256 pinning
+## Manifest semantic pinning
 
-`manifest.json` is the only artifact file allowed to change during supported local import preparation because Figma requires a real numeric development-plugin ID instead of the packaged placeholder. The packaged helper rebinds that ID while preserving compiled `code.js` and `ui.html` byte-for-byte.
+`manifest.json` raw bytes are intentionally not pinned because supported local import preparation rewrites JSON and changes the Figma development-plugin ID. Schema v3 instead records `manifestSemanticSha256` for each track.
 
-Local preparation must always copy into a **separate non-nested directory**. The source artifact remains immutable; only the prepared copy's manifest ID changes.
+The semantic digest is calculated by:
 
-Therefore:
+1. parsing the manifest JSON;
+2. removing only the **top-level** `id` field;
+3. recursively sorting object keys;
+4. preserving array order and all array content;
+5. hashing the resulting compact canonical JSON as SHA-256.
 
-- manifest structure, main/UI targets, menu commands, network policy and plugin-ID shape are validated semantically;
-- immutable runtime/helper/verifier files are cryptographically pinned;
-- an approved manifest-only plugin-ID rebind can still pass;
-- compiled/runtime/verifier tampering cannot pass merely by copying expected metadata.
+This means formatting and object-key order do not matter, and placeholder/numeric plugin-ID-only rebinding remains valid. Any other semantic change — including plugin name, API/editor type, document access, menu entries/labels/order, network policy or newly added fields — changes the digest and fails closed.
 
-`--json` emits a machine-readable report including optional archive integrity, observed immutable file hashes and matched/checked counts.
+Canonical semantic pins:
+
+- P5 #488: `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`
+- P6 #494: `b687205564abb72ac7b00447d2bec3e00c266a1d4ddf9ec6980ce15c62c893f9`
+- P7 #490: `3cb617c2d47d8b3d887ca94897781998226f9ec6c1b242bc880a2e18d9f6587e`
+
+Local preparation must always copy into a **separate non-nested directory**. The source artifact remains immutable; the prepared copy may change top-level manifest `id` only. Compiled `code.js` and `ui.html` remain byte-for-byte pinned.
+
+`--json` emits a machine-readable report including optional archive integrity, observed immutable file hashes, matched/checked counts and `manifestSemanticIntegrity`.
 
 ## Canonical registry
 
-`config/runtime-artifacts.json` schema v2 is the repository-side registry of currently accepted runtime artifacts, their closure eligibility, GitHub Actions artifact digest and immutable file SHA-256 pins. It must be updated whenever a new exact-build runtime artifact supersedes a registered build.
+`config/runtime-artifacts.json` schema v3 is the repository-side registry of currently accepted runtime artifacts, their closure eligibility, GitHub Actions artifact digest, id-excluded manifest semantic digest and immutable file SHA-256 pins. It must be updated whenever a new exact-build runtime artifact supersedes a registered build.
 
-The GitHub Actions artifact digest can now be verified directly against an operator-supplied original ZIP with `--archive`. The per-file pins provide the independent fail-closed check after extraction and after files have been handed between machines/operators.
+The GitHub Actions artifact digest can be verified directly against an operator-supplied original ZIP with `--archive`. The manifest semantic pin and per-file immutable pins provide independent fail-closed checks after extraction and after files have been handed between machines/operators.
 
 The registry is operational metadata only. It cannot create runtime proof, replace the verifier shipped in an artifact, or substitute for real imported-Figma observation.
