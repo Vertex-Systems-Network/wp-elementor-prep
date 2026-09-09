@@ -12,14 +12,17 @@ This runbook is the single operator path for closing P5, P6 and P7 runtime accep
 - Do not manually edit exported evidence JSON.
 - Final issue closure requires **current-main `runtime:closure-intake` PASS**, not only a direct `node verify-*.mjs` invocation from the artifact.
 - Do not collect final P6/P7 closure evidence before their post-P5 integration build exists. Integration probes #35/#36 proved both branches require conflict resolution against the latest P5 line.
+- Do not reuse historical P5→main merge proof after `main` has moved. Latest Integration Readiness #90 reports P5 → current `main` as `CODE_CONFLICT`.
 
 ## Dependency order
 
-1. Close P5 runtime acceptance first on canonical P5 artifact #488.
-2. Merge P5 into `main` using the already validated documentation-only integration resolution.
-3. Rebase/resolve P6 and P7 against merged P5 and produce fresh verified exact-build artifacts.
-4. Register each fresh P6/P7 artifact in current `main` as final-closure eligible with exact source/run/digest, immutable file hashes, manifest semantic SHA and verifier identity.
-5. Collect P6/P7 real-Figma closure only from those resulting artifacts and finish each with current-main `runtime:closure-intake` PASS.
+1. Close P5 runtime acceptance first on canonical P5 artifact #488 and require current-main closure intake PASS.
+2. Resolve canonical P5 into the then-current `main` with a **fresh integration resolution**; do not reuse the historical docs-only proof.
+3. Preserve current-main safety/tooling during that resolution, especially `.github/workflows/ci.yml`, `scripts/prepare-figma-import.mjs`, status verification, non-nested import preparation, and current operator/runbook contracts; integrate P5 runtime code deliberately rather than blindly preferring either side.
+4. Run full PR CI on the resolved P5→main integration and require PASS before merging/closing #6.
+5. Rebase/resolve P6 and P7 against merged P5 and produce fresh verified exact-build artifacts.
+6. Register each fresh P6/P7 artifact in current `main` as final-closure eligible with exact source/run/digest, immutable file hashes, manifest semantic SHA and verifier identity.
+7. Collect P6/P7 real-Figma closure only from those resulting artifacts and finish each with current-main `runtime:closure-intake` PASS.
 
 Current verified reference artifacts:
 
@@ -88,12 +91,16 @@ Do not unlock or merge P5 if any item fails. A direct artifact verifier invocati
 
 After Step 1 and current-main closure intake both pass:
 
-1. Integrate canonical P5 into the current `main` line.
-2. Preserve the current main README/runbook documentation when resolving the known docs-only P5/main conflict.
-3. Run full PR CI and require PASS before merge.
-4. Merge P5 and close issue #6 only after the exact-build real evidence and successful closure-intake result are retained.
+1. Re-run `npm run integration:readiness` against the then-current `main` and canonical P5 head.
+2. Treat the merge result as authoritative for that moment. **Do not reuse integration proof #37 or any earlier docs-only resolution claim.**
+3. Latest verified snapshot, Integration Readiness #90 on `main` `698940369635b6f40972e6404e7e7ff71b57ea14`, reports P5 → current `main` as `CODE_CONFLICT`, including `.github/workflows/ci.yml` and `scripts/prepare-figma-import.mjs` plus documentation/status files.
+4. Create a fresh integration resolution that preserves current-main import-helper overlap safety, status verification, current CI/tooling hardening, closure-intake/runbook contracts, and deliberately integrates P5 runtime code.
+5. Never resolve `.github/workflows/ci.yml` or `scripts/prepare-figma-import.mjs` by blindly taking the older P5 side: canonical P5 predates the current source/output overlap guard and current-main CI safety checks.
+6. Run full PR CI on the resolved integration and require status verification, typecheck, tests, build and import-preparation safety checks to PASS.
+7. Re-run Integration Readiness on the resolved line as appropriate and review the exact diff before merge.
+8. Merge P5 and close issue #6 only after both the canonical #488 real evidence/closure-intake result **and** the fresh current-main integration proof are retained.
 
-Integration proof #37 already demonstrated that the current documentation resolution is mergeable and passes CI (#500) without changing P5 runtime code. That proof does not replace Step 1 runtime acceptance or closure intake.
+Historical integration proof #37 / CI #500 is superseded for merge authorization because `main` has materially changed since that proof. It remains history only and does not authorize the current P5 merge.
 
 ## Step 3 — rebuild P6 on merged P5, then collect closure
 
@@ -162,8 +169,8 @@ Omit `--archive` only when the original ZIP was not retained.
 
 Only close:
 
-- issue #6 after P5 artifact #488 real runtime **and current-main `runtime:closure-intake` PASS**;
+- issue #6 after P5 artifact #488 real runtime, current-main `runtime:closure-intake` PASS, **and a fresh P5→current-main integration resolution with full CI PASS**;
 - issue #7 after P5 is merged, P6 is rebuilt/registered on that line, fresh-build positive/refusal runtime evidence is retained, **and current-main P6 closure intake PASSes**;
 - issue #8 after P5 is merged, P7 is rebuilt/registered on that line, fresh-build 60+ stress + active Full P3 cancellation evidence is retained, **and current-main P7 closure intake PASSes**.
 
-Attach or retain each bounded evidence bundle, exact artifact/run identity and final closure-intake result when closing its issue. Never substitute synthetic CI evidence, a direct packaged-verifier run, or another Plugin API runtime for the actual imported-Figma observation and hardened main-side closure boundary.
+Attach or retain each bounded evidence bundle, exact artifact/run identity, final closure-intake result, and applicable fresh integration proof when closing its issue. Never substitute synthetic CI evidence, a direct packaged-verifier run, stale integration proof, or another Plugin API runtime for the actual imported-Figma observation and hardened current-main boundaries.
