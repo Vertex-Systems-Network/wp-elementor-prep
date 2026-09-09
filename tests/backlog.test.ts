@@ -125,6 +125,7 @@ describe('P9 actionable backlog', () => {
     expect(secondWarning?.fingerprint).toBe(firstWarning?.fingerprint);
     expect(secondImprovement?.fingerprint).toBe(firstImprovement?.fingerprint);
     expect(secondImprovement?.id).toBe(firstImprovement?.id);
+    expect(firstWarning?.fingerprint).toMatch(/^p9-[0-9a-f]{16}$/);
   });
 
   it('reports NEW, RESOLVED, REGRESSED and UNCHANGED across runs', () => {
@@ -137,7 +138,7 @@ describe('P9 actionable backlog', () => {
     expect(resolved).toMatchObject({ status: 'RESOLVED', delta: 'RESOLVED', occurrences: 0 });
     expect(withoutSection.summary.byDelta.RESOLVED).toBeGreaterThan(0);
 
-    const reappeared = generateBacklog(report([section('section-c', 'Cards')] ), { previous: withoutSection });
+    const reappeared = generateBacklog(report([section('section-c', 'Cards')]), { previous: withoutSection });
     const regressed = reappeared.items.find((item) => item.code === 'TEXT_REFLOW_RISK');
     expect(regressed).toMatchObject({ status: 'REGRESSED', delta: 'REGRESSED' });
 
@@ -145,6 +146,22 @@ describe('P9 actionable backlog', () => {
     const current = unchanged.items.find((item) => item.code === 'TEXT_REFLOW_RISK');
     expect(current).toMatchObject({ status: 'OPEN', delta: 'UNCHANGED' });
     expect(current?.firstSeen).toBe(first.generatedAt);
+  });
+
+  it('retains resolved history across multiple clean runs so later return is REGRESSED', () => {
+    const first = generateBacklog(report([section('section-a', 'Cards')]));
+    const resolvedOnce = generateBacklog(report([]), { previous: first });
+    const stillClean = generateBacklog(report([]), { previous: resolvedOnce });
+    const retained = stillClean.items.find((item) => item.code === 'TEXT_REFLOW_RISK');
+
+    expect(retained).toMatchObject({ status: 'RESOLVED', delta: 'UNCHANGED', occurrences: 0 });
+    expect(stillClean.summary.active).toBe(1); // Root-level LOW_AUTO_LAYOUT_COVERAGE remains active.
+
+    const returned = generateBacklog(report([section('section-z', 'Cards')]), { previous: stillClean });
+    expect(returned.items.find((item) => item.code === 'TEXT_REFLOW_RISK')).toMatchObject({
+      status: 'REGRESSED',
+      delta: 'REGRESSED',
+    });
   });
 
   it('preserves ACCEPTED_RISK for a finding that remains present', () => {
