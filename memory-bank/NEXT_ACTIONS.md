@@ -47,6 +47,12 @@ Evidence:
 
 Runtime artifact preflight requires a non-symlink artifact root, stable descriptor identity, immutable file hashes, exact build identity and schema-v3 manifest semantics.
 
+## Completed P5 integration rehearsal — no acceptance credit
+
+Latest repeat run `34416999259` on rehearsal head `536d4b0f3b07d1675ab5cf87b69a83dbce7d6ebc` proved a current-main/P5 resolution path: `11 → 0` conflicts, `195/195` tests PASS, all status/build/release/offline checks PASS, P5 dev UI retained, normal release UI gated, provenance globals resolved and import-overlap safety retained. Evidence artifact: `10129465465` / SHA-256 `faac0ca60f83c85931ccfd030f70d9672afbd03e55224a48631a2d5b029779b7`.
+
+Canonical #488 + retained ZIP current-contract preflight also PASSed in run `34416999458`. Do not merge the rehearsal branch or count this as runtime acceptance. The next action remains genuine exact-artifact Figma Desktop closure, followed by a fresh integration refresh.
+
 ## Immediate P5 sequence
 
 Canonical P5:

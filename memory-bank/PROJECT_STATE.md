@@ -79,6 +79,14 @@ PR #95 evidence:
 
 These are genuine offline/cross-platform observations, not substitutes for real Figma runtime evidence.
 
+## P5 integration rehearsal — non-authorizing PASS
+
+A branch-only three-way rehearsal integrated canonical P5 `810d98d6e09cb4cf3fe4758fcb07e87734254a8e` with current main `3c3dc14bc48c3ea8e5df7620e223de0229737d9e` without merging P5 or changing acceptance state. Latest repeat run `34416999259` on rehearsal head `536d4b0f3b07d1675ab5cf87b69a83dbce7d6ebc` resolved the exact `11` current conflicts to `0`, then passed `195/195` integrated tests, status verification, strict typecheck, plugin/CLI builds, release-contract/package verification, Community template verification, P12 offline acceptance and local-import overlap invariants.
+
+The rehearsal retained P9 audit/backlog non-mutation, P5 runtime-gated Safe Fix seams, current-main import safety, separate development vs normal-release UI exposure, and resolved P5 source/run provenance defines in release code. Retained artifact: `10129465465`, SHA-256 `faac0ca60f83c85931ccfd030f70d9672afbd03e55224a48631a2d5b029779b7`.
+
+Canonical #488 + retained ZIP also passed current-contract `runtime:preflight` in run `34416999458`. The rehearsal is explicitly non-authorizing and does not replace genuine Figma Desktop evidence; P5 remains `94%` and P12 remains `20%`.
+
 ## P5 current technical state
 
 Canonical P5:
