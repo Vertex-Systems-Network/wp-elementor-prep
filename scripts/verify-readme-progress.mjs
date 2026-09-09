@@ -39,11 +39,11 @@ const rows = moduleSection
   .slice(1)
   .map((line) => line.split('|').slice(1, -1).map((cell) => cell.trim()));
 
-if (rows.length < 5) {
-  throw new Error(`Expected at least 5 module progress rows, found ${rows.length}.`);
+if (rows.length < 10) {
+  throw new Error(`Expected at least 10 module progress rows for the P0-P12 roadmap, found ${rows.length}.`);
 }
 
-const requiredModules = ['AI-native', 'P0–P4', 'P5', 'P6', 'P7', 'P8'];
+const requiredModules = ['AI-native', 'P0–P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12'];
 for (const moduleName of requiredModules) {
   if (!rows.some(([module]) => module?.includes(moduleName))) {
     throw new Error(`README progress table is missing required module row: ${moduleName}`);
@@ -87,4 +87,7 @@ if (!Number.isInteger(overallPercent) || overallPercent < 0 || overallPercent > 
   throw new Error(`Overall project progress is outside 0–100: ${overall[2]}`);
 }
 
-console.log(`README progress contract PASS: ${rows.length} modules, overall ${overallPercent}%, runtime registry ${schemaTag}.`);
+// Overall active progress intentionally preserves the historical P0-P7 core denominator.
+// P9-P12 are a separately tracked release-expansion scope, so their numeric rows must not be
+// averaged into the historical core percentage merely because new scope was added.
+console.log(`README progress contract PASS: ${rows.length} modules, historical core overall ${overallPercent}%, runtime registry ${schemaTag}.`);
