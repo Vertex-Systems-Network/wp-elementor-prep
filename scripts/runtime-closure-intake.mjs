@@ -130,6 +130,7 @@ export function inspectRuntimeClosureIntake(
   evidencePath,
   {
     registry,
+    archivePath = null,
     spawnSyncImpl = spawnSync,
     openSyncImpl = openSync,
     fstatSyncImpl = fstatSync,
@@ -145,6 +146,7 @@ export function inspectRuntimeClosureIntake(
   const resolvedEvidencePath = resolve(evidencePath);
   const preflightOptions = { intent: 'final-closure' };
   if (registry) preflightOptions.registry = registry;
+  if (archivePath) preflightOptions.archivePath = archivePath;
 
   const preflight = inspectRuntimeArtifact(normalizedTrack, resolvedArtifactDir, preflightOptions);
   const warnings = [...(preflight.warnings || [])];
@@ -353,7 +355,7 @@ export function inspectRuntimeClosureIntake(
 }
 
 function usage() {
-  console.error('Usage: node scripts/runtime-closure-intake.mjs <p5|p6|p7> <artifact-dir> <evidence-json> [--json]');
+  console.error('Usage: node scripts/runtime-closure-intake.mjs <p5|p6|p7> <artifact-dir> <evidence-json> [--archive=/path/to/artifact.zip] [--json]');
   process.exit(2);
 }
 
@@ -362,6 +364,12 @@ function printHuman(result) {
   console.log(`Track: ${result.track}`);
   console.log(`Stage: ${result.stage}`);
   console.log(`Artifact preflight: ${result.preflight?.ok ? 'PASS' : 'FAIL'}`);
+  if (result.preflight?.archiveIntegrity?.supplied) {
+    console.log(`Artifact archive SHA-256: ${result.preflight.archiveIntegrity.matched ? 'MATCH' : 'MISMATCH'}`);
+    if (result.preflight.archiveIntegrity.observedSha256) {
+      console.log(`Observed archive SHA-256: ${result.preflight.archiveIntegrity.observedSha256}`);
+    }
+  }
   if (result.preflight?.immutableFileIntegrity) {
     console.log(`Immutable files: ${result.preflight.immutableFileIntegrity.matched}/${result.preflight.immutableFileIntegrity.checked} SHA-256 pins matched`);
   }
@@ -387,10 +395,13 @@ const invokedPath = process.argv[1] ? resolve(process.argv[1]) : null;
 if (invokedPath === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   const json = args.includes('--json');
+  const archiveArg = args.find((arg) => arg.startsWith('--archive='));
   const positional = args.filter((arg) => !arg.startsWith('--'));
   if (positional.length !== 3) usage();
+  const archivePath = archiveArg ? archiveArg.slice('--archive='.length) : null;
+  if (archiveArg && !archivePath) usage();
 
-  const result = inspectRuntimeClosureIntake(positional[0], positional[1], positional[2]);
+  const result = inspectRuntimeClosureIntake(positional[0], positional[1], positional[2], { archivePath });
   if (json) console.log(JSON.stringify(result, null, 2));
   else printHuman(result);
   process.exit(result.ok ? 0 : 1);
