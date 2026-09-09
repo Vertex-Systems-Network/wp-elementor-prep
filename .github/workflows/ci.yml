@@ -25,6 +25,9 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - run: npm run build:cli
+      - run: npm run test:release-package
+      - run: npm run community:verify
       - name: Verify self-contained local Figma import preparation
         run: |
           npm run prepare:figma-import -- 123456789012345678 dist dist-local
