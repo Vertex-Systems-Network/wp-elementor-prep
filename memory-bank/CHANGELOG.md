@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-10
+
+### Exact P5 operator preflight and closure rejection calibration
+- Re-ran the mandatory issue-first/PR-first cycle from verified `main` `c3c1c7475395785e3db5ed753513a645e7dd42c7`; the product/runtime dependency chain remained #6/#7/#8 and there were no open PRs before the calibration.
+- Downloaded the actual canonical P5 GitHub Actions artifact #488 (`figma-plugin-dist-488`, artifact id `10062772456`) and retained ZIP. Its raw SHA-256 matched the registered digest `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`.
+- Reconstructed exact current-main `scripts/runtime-artifact-preflight.mjs` and `config/runtime-artifacts.json` bytes from GitHub and verified their Git blob SHAs (`8d2d459b310ed2426f353ea91687d2a6d1dd6e09` and `de517b340cf951896fa3e312b40d9ddb4e86f944`) before execution.
+- Current-main final-closure preflight on canonical #488 + retained ZIP passed with exact BUILD_INFO source/workflow SHA + run identity, archive digest MATCH, `5/5` immutable file SHA-256 matches and schema-v3 id-excluded manifest semantic SHA-256 MATCH.
+- Ran the helper packaged inside #488 to a sibling/non-nested prepared directory with a calibration numeric plugin ID. `code.js` and `ui.html` remained byte-identical; only top-level manifest `id` changed semantically, and the prepared copy passed the same current-main preflight with the same registered manifest semantic hash.
+- The calibration numeric ID is not the actual Figma development-plugin ID and does not satisfy the required real Desktop import step.
+- Reconstructed exact current-main `scripts/runtime-closure-intake.mjs` and verified Git blob SHA `52bb19fead394579e1e89f09141bfbc6900f5cc3` before execution.
+- Exercised closure intake on both the canonical artifact and prepared sibling copy with intentionally invalid `{}` evidence. In both cases artifact/archive preflight passed, exact evidence bytes were accepted only as syntactically valid JSON, the immutable P5 verifier SHA remained `62568fdc30682830b0f6ab6b804385bcf8651cac62014aa370655f25ca75ca41`, execution used `verified-bytes-memory-bootstrap`, and the verifier correctly rejected absent runtime proof with exit `1`.
+- Updated issue #6 so canonical current-main preflight and retained-ZIP digest verification are checked complete while all actual Figma import/runtime/rendered-pixel/real-evidence closure items remain open.
+- Inspected the connected Figma capability: it can execute Plugin API JavaScript in a known design file, but does not establish importing/running this exact downloaded development-plugin artifact with its own manifest/menu/UI iframe. It therefore cannot substitute for P5 acceptance.
+- Canonical P5/P6/P7 feature heads and registered artifact bytes were unchanged. P5 remains 94% and overall active product progress remains 93%.
+
 ## 2026-09-09
 
 ### Status synchronization and migration-safe schema contract
