@@ -40,8 +40,11 @@ Canonical policy: `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, and `memory-bank/DECISI
 
 ## Latest verified checkpoint — 2026-09-09
 
-- ✅ issue-first sweep confirmed product/runtime issues #6, #7 and #8 remain; actionable operator-path defect #54 was fixed through PR #57 and manifest-provenance defect #58 was fixed through PR #59.
-- ✅ open PR/MR count returned to `0` after PR #59 merge.
+- ✅ latest tooling chain is PR #61 → PR #63 → PR #72; open product/runtime issues remain exactly #6, #7 and #8, and open PR/MR count is `0` after PR #72 merge.
+- ✅ PR #61 fixed status-schema synchronization across README/PROJECT_STATE/ROADMAP/NEXT_ACTIONS; head `d2dc43d` passed CI #606, squash-merged at `933b2fc2`, and post-merge CI #607 + Integration Readiness #82 passed.
+- ✅ PR #63 rejected mixed stale/current runtime-registry schema references; head `97c51b6` passed CI #609, squash-merged at `acef3c2c`, and post-merge CI #610 + Integration Readiness #84 passed.
+- ✅ PR #72 made schema status verification migration-safe by binding validation to current-status anchors while allowing historical older-schema prose; head `52ea254` passed CI #611, squash-merged at `ed8b6b26`, and post-merge CI #612 + Integration Readiness #85 passed.
+- ✅ issues #60, #62 and #64 are completed/closed; canonical P5/P6/P7 feature heads and artifact bytes remain unchanged, so real product progress remains 93% until imported-Figma P5 acceptance advances.
 - ✅ issue #6 remains blocked only on real imported-Figma runtime evidence; #7/#8 remain dependency-blocked on P5 merge.
 - ✅ PR #42 upgraded the artifact registry/preflight with immutable SHA-256 file pins and merged to `main` at `92a4440`.
 - ✅ PR #43 added `runtime:closure-intake`, combining final-closure preflight, bounded evidence intake, evidence SHA-256 traceability and the exact hash-pinned same-artifact verifier; it merged at `7d9f22b`.
