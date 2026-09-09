@@ -6,13 +6,15 @@ import {
   serializeBacklogMarkdown,
   type BacklogDocument,
 } from '../core/backlog';
+import { serializeAuditReportJson, serializeAuditReportMarkdown } from '../core/report-serialization';
 import { captureIntegritySnapshot } from './integrity-snapshot';
 import { DEFAULT_VALIDATION_THRESHOLDS, mergePixelValidation, validateIntegrity } from '../core/validator';
 import type { PixelDiffMetrics, ValidationReport } from '../core/validation-types';
 
 declare const __html__: string;
+declare const __PLUGIN_VERSION__: string;
 
-const PLUGIN_VERSION = '0.1.0-alpha.1';
+const PLUGIN_VERSION = __PLUGIN_VERSION__;
 const MAX_VALIDATION_RENDER_DIMENSION = 2048;
 const BACKLOG_STORAGE_PREFIX = 'p9-backlog-v1';
 let auditSequence = 0;
@@ -74,8 +76,6 @@ async function runAudit(sequence: number): Promise<void> {
     const report = buildAuditReport(root, PLUGIN_VERSION);
     const stored = await figma.clientStorage.getAsync(storageKey) as unknown;
 
-    // Audit persistence introduces async boundaries. A later selection/audit/validation request
-    // invalidates this sequence so an older run can never overwrite the UI with stale results.
     if (sequence !== auditSequence) return;
 
     const previous = isBacklogDocument(stored) ? stored : null;
@@ -96,6 +96,8 @@ async function runAudit(sequence: number): Promise<void> {
       type: 'audit-result',
       report,
       backlog,
+      auditJson: serializeAuditReportJson(report),
+      auditMarkdown: serializeAuditReportMarkdown(report),
       backlogJson: serializeBacklogJson(backlog),
       backlogMarkdown: serializeBacklogMarkdown(backlog),
     });
@@ -175,6 +177,16 @@ function finishPixelValidation(validationId: number, pixelMetrics: PixelDiffMetr
   });
 }
 
+function startAudit(): void {
+  const sequence = ++auditSequence;
+  void runAudit(sequence);
+}
+
+function startValidation(): void {
+  auditSequence += 1;
+  void runValidation();
+}
+
 figma.ui.onmessage = async (message: unknown) => {
   if (typeof message !== 'object' || message === null || !('type' in message)) return;
   const type = (message as { type?: unknown }).type;
@@ -186,7 +198,6 @@ figma.ui.onmessage = async (message: unknown) => {
   }
 
   if (type === 'validation-request') {
-    // Validation owns the UI next; invalidate any earlier async audit still in flight.
     auditSequence += 1;
     await runValidation();
     return;
@@ -206,13 +217,20 @@ figma.ui.onmessage = async (message: unknown) => {
 };
 
 figma.on('selectionchange', () => {
-  // Increment for every selection change, including 0/2-item selections, so any previous async
-  // audit is invalidated even when no replacement audit should run.
   const sequence = ++auditSequence;
   if (figma.currentPage.selection.length === 1) void runAudit(sequence);
 });
 
-if (figma.currentPage.selection.length === 1) {
-  const sequence = ++auditSequence;
-  void runAudit(sequence);
+switch (figma.command) {
+  case 'audit':
+  case 'export-report':
+    startAudit();
+    break;
+  case 'validate':
+    startValidation();
+    break;
+  case 'open':
+  default:
+    if (figma.currentPage.selection.length === 1) startAudit();
+    break;
 }
