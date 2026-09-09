@@ -83,7 +83,7 @@ await build({
 await cp('src/ui/ui.html', resolve(pluginDir, 'ui.html'));
 await writeFile(resolve(pluginDir, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
 
-const releaseFiles = releaseConfig.releaseFiles;
+const releaseFiles = [...releaseConfig.releaseFiles].sort();
 const fileHashes = {};
 for (const filename of releaseFiles) {
   const bytes = await readFile(resolve(pluginDir, filename));
