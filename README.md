@@ -25,7 +25,7 @@ Final planned user surfaces:
 | AI-native governance + repo tooling | ✅ COMPLETE | 100% | `██████████` | Keep Issues → PR/MR → development lifecycle, status verification and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
 | P5 Conservative Safe Fix | ✅ COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Real Figma Desktop acceptance + hardened closure-intake + PR #99 merge PASS |
-| P6 Advanced structures | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P5 merged; refresh onto current main → fresh final artifact → real positive/refusal closure #7 |
+| P6 Advanced structures | 🟠 IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh post-P5 artifact registered + exact current-main preflight PASS; genuine Figma positive/refusal closure #7 next |
 | P7 60+ Frame batch queue | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | After final P6/P5 line → fresh artifact → 60+ stress + active cancellation closure #8 |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
 | P9 Actionable backlog generator | ✅ IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged via PR #89; real plugin/export/parity behavior remains in #84 |
@@ -73,7 +73,7 @@ P12 is the sole release-expansion acceptance gate:
   - macOS artifact `10127561512`, ZIP digest `sha256:9ff90da24595c89dc57f67daa0fa12e01a122fd21551745b69cf52c2988ba9cd`;
   - Windows artifact `10127564618`, ZIP digest `sha256:e2a95df86973adacc70f4cd2aa403f72c7ae9c4396ad2eb205aa10165070e9b8`.
 - ✅ canonical P5 #488 artifact provenance/preflight/archive plumbing remains hardened and calibrated.
-- ✅ P6 #494 and P7 #490 remain engineering/reference artifacts; final production integration requires fresh exact builds after final P5 merge.
+- ✅ P6 fresh final-line artifact `figma-plugin-dist-p6-final-v2-1` (`ae691fac3c65dcdaf472392e6895fd402ae8fa3c`, run `34472374285`) is registered final-closure eligible and passed exact current-main archive-bound preflight; P7 #490 remains engineering/reference only.
 
 ### P5 integration rehearsal checkpoint — non-authorizing
 
@@ -168,9 +168,7 @@ Still pending:
 P12 offline acceptance is now complete for the properties above. The workflow explicitly retains these limitations as PENDING:
 
 - real credentialed Figma REST execution;
-- real Figma Desktop development-plugin import;
-- P5 rendered-pixel closure;
-- P6 real-Figma closure;
+- P6 real Figma Desktop development-plugin import and positive/refusal closure;
 - P7 real-Figma stress/cancellation closure;
 - Community submission/review.
 
@@ -189,7 +187,7 @@ Evidence provenance: the repository-retained JSON was reconstructed exactly from
 
 ### Next critical path — P6
 
-Freshly resolve/rebuild P6 on merged P5/current main, register a fresh final-closure-eligible artifact, collect genuine image-bearing positive + preservation-refusal evidence, pass current-main closure intake, then merge/close #7.
+P6 final-line resolve/rebuild, fresh artifact publication/registration and exact current-main preflight are complete. Next collect genuine image-bearing positive + preservation-refusal evidence in Figma Desktop, pass current-main closure intake, then merge/close #7.
 
 ## Current P5 integration map — historical pre-merge
 
