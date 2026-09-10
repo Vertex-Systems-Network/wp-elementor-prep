@@ -69,11 +69,32 @@ jobs:
           git rev-parse origin/feat/p5-safe-recipes > /tmp/p12-downstream-evidence/p5-head.txt
           git rev-parse origin/feat/p6-advanced-structures > /tmp/p12-downstream-evidence/p6-head.txt
           git rev-parse origin/feat/p7-batch-queue-core > /tmp/p12-downstream-evidence/p7-head.txt
-      - name: Probe P6 and P7 merges
+      - name: Probe P6 and P7 merges with stage snapshots
         shell: bash
         run: |
           set -euo pipefail
           candidate="$(cat /tmp/p12-downstream-evidence/resolved-p5-candidate.txt)"
+
+          snapshot_conflicts() {
+            track="$1"
+            while IFS= read -r path; do
+              [ -n "$path" ] || continue
+              for stage in 1 2 3; do
+                case "$stage" in
+                  1) label=base ;;
+                  2) label=ours ;;
+                  3) label=theirs ;;
+                esac
+                out="/tmp/p12-downstream-evidence/stages/${track}/${label}/${path}"
+                mkdir -p "$(dirname "$out")"
+                if git show ":${stage}:${path}" > "$out" 2>/dev/null; then
+                  :
+                else
+                  rm -f "$out"
+                fi
+              done
+            done < "/tmp/p12-downstream-evidence/${track}-conflicts.txt"
+          }
 
           probe() {
             track="$1"
@@ -87,6 +108,7 @@ jobs:
             printf '%s\n' "$exit_code" > "/tmp/p12-downstream-evidence/${track}-merge-exit-code.txt"
             git diff --name-only --diff-filter=U | sort > "/tmp/p12-downstream-evidence/${track}-conflicts.txt"
             git diff --stat > "/tmp/p12-downstream-evidence/${track}-working-tree-stat.txt" || true
+            snapshot_conflicts "$track"
             if [ "$exit_code" -eq 0 ]; then
               git merge --abort || git reset --hard "$candidate"
             else
@@ -102,7 +124,7 @@ jobs:
           set -euo pipefail
           rm -rf downstream-conflict-probe
           mkdir -p downstream-conflict-probe
-          cp /tmp/p12-downstream-evidence/* downstream-conflict-probe/
+          cp -R /tmp/p12-downstream-evidence/. downstream-conflict-probe/
           node - <<'NODE'
           const fs = require('fs');
           const read = (name) => fs.readFileSync(`downstream-conflict-probe/${name}`, 'utf8').trim();
@@ -111,7 +133,7 @@ jobs:
             return value ? value.split(/\r?\n/).filter(Boolean) : [];
           };
           const report = {
-            schemaVersion: 1,
+            schemaVersion: 2,
             kind: 'p12-downstream-conflict-probe',
             acceptanceAuthority: false,
             mainHead: read('main-head.txt'),
@@ -127,6 +149,7 @@ jobs:
               mergeExitCode: Number(read('p7-merge-exit-code.txt')),
               conflicts: lines('p7-conflicts.txt')
             },
+            stageSnapshotsRetained: true,
             note: 'Conflict probe only. Does not authorize P5/P6/P7 integration or runtime acceptance.'
           };
           fs.writeFileSync('downstream-conflict-probe/probe-evidence.json', JSON.stringify(report, null, 2) + '\n');
