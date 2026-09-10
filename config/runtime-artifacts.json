@@ -44,25 +44,25 @@
       "closureNote": "Fresh exact build integrated on the corrected post-P5 main line; registered for issue #7 real imported-Figma acceptance."
     },
     "p7": {
-      "branch": "feat/p7-batch-queue-core",
+      "branch": "integration/p7-final-20260910",
       "issue": 8,
-      "sourceSha": "cbfdb66db531da8613582c84523265e42dad63a2",
-      "runId": "34243303097",
-      "runNumber": "490",
-      "artifactName": "figma-plugin-dist-490",
-      "digest": "sha256:c5c7c6c30ccaaf56901d121ef9166e75f7628b77ad22fdb7238bf931a3e91f43",
-      "manifestSemanticSha256": "3cb617c2d47d8b3d887ca94897781998226f9ec6c1b242bc880a2e18d9f6587e",
+      "sourceSha": "d6bf2e12e3d877be125d336e423001baef92831b",
+      "runId": "34497801237",
+      "runNumber": "1",
+      "artifactName": "figma-plugin-dist-p7-final-v2-1",
+      "digest": "sha256:b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc",
+      "manifestSemanticSha256": "4c909c9cba64bc9c8c7b725c39ed712e6d6bdfaab0eb896991975160121b9c5c",
       "verifier": "verify-p7-closure.mjs",
       "immutableFileSha256": {
-        "BUILD_INFO.txt": "477782f946509a9b354f829a157c27f7eb2173a7ea1ee59c06e83d55a644dfe9",
-        "code.js": "6a58d9052f5c9aa8ec748709645ca6eda95fb17b070a14308809b016397792e9",
-        "ui.html": "357375daaa1dbc09322aaab79b73fd3f2db71aa6a70a3c32150af509a31cb569",
-        "prepare-figma-import.mjs": "d754f7ebfee3df53f39e41da06548ffdc551b31ae24c0ad35869d60215f7cb1b",
-        "verify-p7-closure.mjs": "2da43a2e3e8431a3d3ec04a9302cfaf21eea5c4a241a660bd5664260607bb3ad"
+        "BUILD_INFO.txt": "6deeb0ef20e235df0726b8647a3cf23861038669366898814f47a4eb469a92fd",
+        "code.js": "5d3b445011e199113dab9fa366dd2cc97b6c92e419ff49ea931b519aabad3c43",
+        "ui.html": "4d343c6c65493b46ed2bd836c2c23929b407e074a929f1c0407ba094cf0b8085",
+        "prepare-figma-import.mjs": "81cb6af39e2772ebb6c0cd4c05bd0c9baa3a4226344009533a60af5a48ed470b",
+        "verify-p7-closure.mjs": "ec30b6b030b7e8118a575b54dde96b0bf073d7803a8906cf70c1e405cb6f2b6a"
       },
-      "requiredMenuCommands": ["p5-runtime-self-test", "p7-runtime-evidence"],
-      "finalClosureEligible": false,
-      "closureNote": "Reference engineering build only. Final P7 closure requires P5 merge, conflict resolution and a fresh exact-build artifact."
+      "requiredMenuCommands": ["p5-runtime-self-test", "p6-page-flow-calibration", "p6-runtime-evidence", "p7-runtime-evidence"],
+      "finalClosureEligible": true,
+      "closureNote": "Fresh exact post-P6 final-line build registered for issue #8 genuine real-Figma 60+ stress and active-cancellation closure."
     }
   }
 }
