@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "capturedAt": "2026-09-10T09:10:34.525Z",
+  "pluginVersion": "0.1.0-alpha.1",
+  "runtimeGateVersion": "p5-runtime-proof-v3",
+  "build": {
+    "sourceSha": "810d98d6e09cb4cf3fe4758fcb07e87734254a8e",
+    "runId": "34242984963",
+    "runNumber": "488"
+  },
+  "runtimeProofPassedAt": "2026-09-10T09:10:34.524Z",
+  "acceptance": {
+    "accepted": true,
+    "failures": []
+  },
+  "calibration": {
+    "schemaVersion": 1,
+    "passed": true,
+    "forcedReject": {
+      "state": "REJECTED",
+      "validationRejected": true,
+      "pixelEvidenceReturned": true,
+      "changedPixelPct": 5.4545,
+      "candidateDeleted": true,
+      "originalUntouched": true
+    },
+    "passRestore": {
+      "state": "COMMITTED",
+      "validationPassed": true,
+      "pixelEvidenceReturned": true,
+      "changedPixelPct": 0,
+      "committed": true,
+      "restored": true,
+      "checkpointCleared": true
+    },
+    "passFinalize": {
+      "state": "COMMITTED",
+      "validationPassed": true,
+      "pixelEvidenceReturned": true,
+      "changedPixelPct": 0,
+      "committed": true,
+      "finalized": true,
+      "candidateRetained": true,
+      "originalDiscarded": true,
+      "checkpointCleared": true
+    },
+    "leftovers": 0
+  }
+}
