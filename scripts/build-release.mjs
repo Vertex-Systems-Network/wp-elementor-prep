@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { build } from 'esbuild';
 import { assertSafeReleaseOutput } from './release-path-safety.mjs';
+import { buildReleaseUi } from './release-ui-contract.mjs';
 
 function parseArgs(argv) {
   const result = new Map();
@@ -58,6 +59,8 @@ const releaseConfig = JSON.parse(await readFile('config/plugin-release.json', 'u
 const template = await readFile('manifest.release.template.json', 'utf8');
 const manifestText = template.replace('__FIGMA_PLUGIN_ID__', pluginId);
 const manifest = JSON.parse(manifestText);
+const developmentUi = await readFile('src/ui/ui.html', 'utf8');
+const releaseUi = buildReleaseUi(developmentUi);
 
 if (manifest.id !== pluginId) throw new Error('Release manifest plugin ID substitution failed.');
 if (manifest.networkAccess?.allowedDomains?.length !== 1 || manifest.networkAccess.allowedDomains[0] !== 'none') {
@@ -85,7 +88,7 @@ await build({
     __P5_GITHUB_RUN_NUMBER__: JSON.stringify(githubRunNumber),
   },
 });
-await cp('src/ui/release-ui.html', resolve(pluginDir, 'ui.html'));
+await writeFile(resolve(pluginDir, 'ui.html'), releaseUi, 'utf8');
 await writeFile(resolve(pluginDir, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
 
 const releaseFiles = [...releaseConfig.releaseFiles].sort();
@@ -105,7 +108,7 @@ const releaseInfo = {
   editorTypes: releaseConfig.editorTypes,
   networkAccess: releaseConfig.networkAccess,
   userCommands: releaseConfig.userCommands,
-  deferredIntegratedCapabilities: releaseConfig.deferredIntegratedCapabilities,
+  acceptedIntegratedCapabilities: releaseConfig.acceptedIntegratedCapabilities,
   releaseFiles,
   fileHashes,
 };
@@ -119,3 +122,4 @@ await writeFile(
 console.log(`Built ${fixture ? 'fixture' : 'publishable'} Figma release package at ${outRoot}`);
 console.log(`Plugin ID: ${pluginId}`);
 console.log(`Source SHA: ${sourceSha}`);
+console.log(`Integrated capabilities: ${releaseConfig.acceptedIntegratedCapabilities.map((entry) => entry.capability).join(', ')}`);
