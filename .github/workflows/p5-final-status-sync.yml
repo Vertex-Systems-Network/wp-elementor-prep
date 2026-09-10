@@ -35,7 +35,7 @@ jobs:
           npm install
           npm run status:verify
           git diff --check
-      - name: Commit clean status-only result
+      - name: Commit and verify clean status-only branch
         shell: bash
         run: |
           set -euo pipefail
@@ -43,8 +43,9 @@ jobs:
           git config user.email "p5-status-sync@invalid.local"
           git rm -f .github/workflows/p5-final-status-sync.yml scripts/p5-final-status-sync.mjs
           git add README.md memory-bank/PROJECT_STATE.md memory-bank/ROADMAP.md memory-bank/NEXT_ACTIONS.md memory-bank/CHANGELOG.md
-          changed="$(git diff --cached --name-only | sort)"
+          git commit -m "Docs: record final P5 acceptance and advance P12"
+          git fetch --no-tags origin '+refs/heads/main:refs/remotes/origin/main'
+          changed="$(git diff --name-only origin/main..HEAD | sort)"
           expected="$(printf '%s\n' README.md memory-bank/CHANGELOG.md memory-bank/NEXT_ACTIONS.md memory-bank/PROJECT_STATE.md memory-bank/ROADMAP.md | sort)"
           test "$changed" = "$expected"
-          git commit -m "Docs: record final P5 acceptance and advance P12"
           git push origin HEAD:docs/p5-final-status-sync
