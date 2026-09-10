@@ -1,0 +1,66 @@
+name: Correct WP Builders Prepare branding
+
+on:
+  push:
+    branches:
+      - chore/rename-wp-builders-prepare
+
+permissions:
+  contents: write
+
+jobs:
+  correct-branding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+      - name: Correct display name everywhere on current product surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(git grep -l -F 'WP Builders Prepear' || true)
+          test "${#files[@]}" -gt 0
+          for path in "${files[@]}"; do
+            sed -i 's/WP Builders Prepear/WP Builders Prepare/g' "$path"
+          done
+          if git grep -n -F 'WP Builders Prepear'; then
+            echo 'Misspelled display name remains.' >&2
+            exit 1
+          fi
+          grep -F '# WP Builders Prepare' README.md
+          grep -F '"name": "WP Builders Prepare"' manifest.template.json
+          grep -F '"name": "WP Builders Prepare"' manifest.release.template.json
+          grep -F '"pluginName": "WP Builders Prepare"' config/plugin-release.json
+          grep -F '"name": "WP Builders Prepare"' community/listing.template.json
+          grep -F '<title>WP Builders Prepare</title>' src/ui/ui.html
+          grep -F '<title>WP Builders Prepare</title>' src/ui/release-ui.html
+      - name: Verify repository after branding correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install
+          npm run status:verify
+          npm run typecheck
+          npm test
+          npm run build
+          npm run build:cli
+          npm run verify:release-contract
+          npm run test:release-package
+          npm run community:verify
+          npm run p12:offline
+          git diff --check
+      - name: Commit verified correction and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'WP Builders Prepare Automation'
+          git config user.email 'wp-builders-prepare@invalid.local'
+          rm .github/workflows/rename-wp-builders-prepare.yml
+          git add -A
+          git diff --cached --quiet && { echo 'No changes to commit.' >&2; exit 1; }
+          git commit -m 'Correct plugin name to WP Builders Prepare'
+          git push origin HEAD:chore/rename-wp-builders-prepare
