@@ -1,10 +1,10 @@
 # Next Actions
 
-Last updated: 2026-09-10
+Last updated: 2026-09-11
 
 ## Current policy
 
-P9–P11 implementation is complete. P12 #84 is active at `60%` after cross-platform offline acceptance plus genuine P5 and P6 Desktop/runtime closure and final integration.
+P9–P11 implementation is complete. P12 #84 is active at `80%` after cross-platform offline acceptance plus genuine P5, P6 and P7 Desktop/runtime closure and final integration.
 
 For every P12 cycle:
 1. inspect open Issues;
@@ -18,8 +18,8 @@ For every P12 cycle:
 
 - #6 — P5 Safe Fix: CLOSED COMPLETED; real Desktop acceptance + closure-intake + PR #99 merge PASS;
 - #7 — P6 Advanced structures: CLOSED COMPLETED; genuine positive/refusal closure + current-main intake + PR #106 merge PASS;
-- #8 — P7 Batch queue: **next critical path**; fresh final-line artifact registered and exact-current-main preflight PASS; genuine 60+ stress + active cancellation closure now remains;
-- #84 — P12 final integrated validation, 60% complete.
+- #8 — P7 Batch queue: CLOSED COMPLETED; genuine 64-Frame stress + active cancellation closure + current-main intake + PR #110 merge PASS;
+- #84 — P12 final integrated validation, 80% complete and now the sole active product/release path.
 
 P8 exporter remains deferred. P9/P10/P11 implementation issues are closed.
 
@@ -83,21 +83,24 @@ P6:
 - PR #106 merged / #7 closed.
 
 P7:
-- ✅ final two-parent source `d6bf2e12e3d877be125d336e423001baef92831b` built and verified;
-- ✅ fresh artifact `figma-plugin-dist-p7-final-v2-1` / ID `10160543369` registered final-closure eligible;
-- ✅ exact-current-main archive-bound preflight `34499068236` PASS;
-- next: genuine realistic 64-Frame sequential queue, all terminal, max concurrency 1;
-- next: cancellation during genuinely active long Full P3;
-- then untouched P7 closure export → current-main closure intake PASS → merge/close #8.
+- ✅ final source `d6bf2e12e3d877be125d336e423001baef92831b` built and verified;
+- ✅ retained artifact `figma-plugin-dist-p7-final-v2-1` / ID `10160543369` registered final-closure eligible;
+- ✅ real Figma exact-build P5 prerequisite PASS;
+- ✅ genuine 64-Frame stress completed with `maxConcurrentProcessors = 1`;
+- ✅ cooperative active-frame cancellation retained and accepted;
+- ✅ untouched closure export accepted; exact-current-main intake `34524838931` PASS;
+- ✅ PR #110 merged as `f1ee668329de9b05f05885fbc70192a391e5b2c9`; #8 closed completed.
 
-## P7 final-line repo-side preparation — COMPLETE
+## P7 final acceptance — COMPLETE
 
 - exact source: `d6bf2e12e3d877be125d336e423001baef92831b`;
 - final integration run `34497801237`: 81 files / 387 tests plus all build/release/offline gates PASS;
 - retained artifact: `figma-plugin-dist-p7-final-v2-1`, ID `10160543369`, SHA-256 `b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc`;
-- registration preflight `34498730566` PASS; PR #108 merged as `b5c973ffd3b2c8fa99aacd6e7bc10c4aa709e34e`;
-- exact merged-main preflight `34499068236` PASS;
-- percentages unchanged: P7 80%, historical core 98%, P12 60%.
+- real Figma 64-Frame sequential stress + active cancellation closure: PASS;
+- untouched closure SHA-256 `d2cf6853d4063599fc1f04b4f16507d1be75a6a1e556d6eedb4a5bfc9dd79ab9`;
+- exact-current-main closure intake run `34524838931`: PASS;
+- PR #110 CI #682 + P12 Offline #37: PASS; merge `f1ee668329de9b05f05885fbc70192a391e5b2c9`;
+- percentages now: P7 100%, historical core 100%, P12 80%.
 
 ## Remaining P9/P10/P11 acceptance
 
@@ -113,11 +116,11 @@ P7:
 
 ## Progress tracking
 
-- historical P0–P7 core progress: `98%`;
+- historical P0–P7 core progress: `100%`;
 - P9 implementation: `100%`;
 - P10 implementation: `100%`, partial P12 acceptance;
 - P11 implementation: `100%`, partial P12 acceptance;
-- P12 final validation: `60%`.
+- P12 final validation: `80%`.
 
 ## P6/P7 downstream integration rehearsal checkpoint — 2026-09-10
 

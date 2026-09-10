@@ -26,25 +26,25 @@ Final planned user surfaces:
 | P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
 | P5 Conservative Safe Fix | ✅ COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Real Figma Desktop acceptance + hardened closure-intake + PR #99 merge PASS |
 | P6 Advanced structures | ✅ COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Genuine Figma positive/refusal closure + current-main closure intake + PR #106 merge PASS |
-| P7 60+ Frame batch queue | 🟠 IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh exact final-line artifact registered + exact-current-main preflight PASS → genuine 60+ stress + active cancellation closure #8 |
+| P7 60+ Frame batch queue | ✅ COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Genuine 64-Frame sequential stress + active cancellation + current-main closure intake + PR #110 merge PASS |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
 | P9 Actionable backlog generator | ✅ IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged via PR #89; real plugin/export/parity behavior remains in #84 |
 | P10 npm/Node CLI | ✅ IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Cross-OS offline CLI acceptance PASS; real Figma API + plugin parity still pending |
 | P11 Normal Figma plugin distribution | ✅ IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Offline release reproducibility PASS; final integrated install/runtime/Community readiness pending |
-| P12 Final integrated validation | 🧪 IN PROGRESS | 60% | `██████░░░░` | Offline + genuine P5 + genuine P6 slices PASS → next P7 final-line runtime closure |
+| P12 Final integrated validation | 🧪 IN PROGRESS | 80% | `████████░░` | Offline + genuine P5 + genuine P6 + genuine P7 retained slices PASS; real API/plugin parity + final release/Community readiness remain |
 
-**Overall active project progress:** `██████████ 98%`
+**Overall active project progress:** `██████████ 100%`
 
-> Historical P0–P7 core progress is now 98%: P0–P6 are 100% and P7 remains 80% (780 / 800 phase-points, rounded). P12 validation is tracked separately.
+> Historical P0–P7 core progress is now 100%: P0–P7 are all production-complete under the original eight-phase denominator (800 / 800 phase-points). P12 validation is tracked separately.
 
 ### Release-expansion status
 
 - P9 implementation: `██████████ 100%`
 - P10 implementation: `██████████ 100%`; cross-platform offline acceptance PASS
 - P11 implementation: `██████████ 100%`; offline release-package reproducibility PASS
-- P12 final validation: `██████░░░░ 60%`
+- P12 final validation: `████████░░ 80%`
 
-The P12 `60%` credit is three retained major validation slices: 20% cross-platform/offline acceptance + 20% genuine P5 Figma Desktop/runtime closure and final integration + 20% genuine P6 positive/refusal runtime closure, current-main intake and final integration. P7 real closure, credentialed API/plugin parity and final Community readiness remain uncredited.
+The P12 `80%` credit is four retained major validation slices: 20% cross-platform/offline acceptance + 20% genuine P5 Figma Desktop/runtime closure and final integration + 20% genuine P6 positive/refusal runtime closure/current-main intake/final integration + 20% genuine P7 64-Frame sequential stress/active cancellation/current-main intake/final integration. Real credentialed API/plugin parity and final release/Community readiness remain uncredited.
 
 ## Current testing policy
 
@@ -53,12 +53,12 @@ P12 is the sole release-expansion acceptance gate:
 - no real Figma evidence may be fabricated;
 - implementation-complete is not the same as production-accepted;
 - production safety locks and exact-build provenance remain active;
-- P5 and P6 runtime acceptance are complete and merged; P7 runtime acceptance must still use genuine final-line evidence and current-main closure intake;
+- P5, P6 and P7 runtime acceptance are complete and merged with genuine exact-build evidence and current-main closure intake;
 - real Figma REST execution and plugin/CLI parity remain pending;
 - normal installed/private plugin flow and final Community readiness remain pending;
 - Figma Community review/approval is external and must not be claimed until it actually occurs.
 
-## Current repository checkpoint — 2026-09-10
+## Current repository checkpoint — 2026-09-11
 
 - ✅ P9 implementation merged through PR #89 at `67d6b3df05c8e4550b3df80f95cb5fabeb77de42`.
 - ✅ P10 implementation merged through PR #93 at `7e6aa85958060cc927d8fe09dc5cb88a3feba53e`.
@@ -74,18 +74,20 @@ P12 is the sole release-expansion acceptance gate:
   - Windows artifact `10127564618`, ZIP digest `sha256:e2a95df86973adacc70f4cd2aa403f72c7ae9c4396ad2eb205aa10165070e9b8`.
 - ✅ canonical P5 #488 artifact provenance/preflight/archive plumbing remains hardened and calibrated.
 - ✅ P6 fresh final-line artifact `figma-plugin-dist-p6-final-v2-1` (`ae691fac3c65dcdaf472392e6895fd402ae8fa3c`, run `34472374285`) passed genuine Figma positive/refusal closure, exact current-main archive-bound closure intake (`34495685047`), and merged through PR #106 as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`.
-- ✅ P7 fresh final-line source `d6bf2e12e3d877be125d336e423001baef92831b` passed 81 files / 387 tests plus typecheck/build/release/Community/P12-offline gates in run `34497801237`; artifact `figma-plugin-dist-p7-final-v2-1` (ID `10160543369`, ZIP SHA-256 `b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc`) is registered final-closure eligible via PR #108, and exact merged-main preflight `34499068236` PASS. Genuine Figma stress/cancellation evidence remains pending.
+- ✅ P7 final-line source `d6bf2e12e3d877be125d336e423001baef92831b` passed 81 files / 387 tests plus typecheck/build/release/Community/P12-offline gates in run `34497801237`; retained artifact `figma-plugin-dist-p7-final-v2-1` (ID `10160543369`, ZIP SHA-256 `b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc`) then passed genuine 64-Frame sequential stress + active cancellation closure, exact-current-main intake `34524838931`, and merged via PR #110 as `f1ee668329de9b05f05885fbc70192a391e5b2c9`; issue #8 is closed completed.
 
-### P7 final-line closure-preparation checkpoint — repo-side complete
+### P7 final acceptance checkpoint — COMPLETE
 
 - ✅ final two-parent source: `d6bf2e12e3d877be125d336e423001baef92831b`;
-- ✅ first final integration attempt failed closed on conflict drift (15 rehearsal paths → 21 current paths), then the expanded boundary was explicitly reviewed and resolved;
-- ✅ canonical-P7 test fixtures were migrated to the hardened exact-build P5 proof signature without weakening runtime production contracts;
 - ✅ final integration run `34497801237`: strict typecheck + 81 test files / 387 tests + plugin/CLI/release/Community/P12-offline PASS;
 - ✅ retained artifact `figma-plugin-dist-p7-final-v2-1`, ID `10160543369`, ZIP SHA-256 `b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc`;
-- ✅ registry PR #108 CI #678 + P12 Offline #33 PASS; merged as `b5c973ffd3b2c8fa99aacd6e7bc10c4aa709e34e`;
-- ✅ exact-current-main archive-bound preflight run `34499068236` PASS, including 5/5 immutable pins, manifest semantics and plugin-ID rebind byte integrity;
-- ⚠️ no P7/P12 acceptance credit is added by these repo-side checks. P7 remains 80% and P12 remains 60% until genuine Figma Desktop 60+ stress + active cancellation closure passes.
+- ✅ exact-build P5 prerequisite / P7 receipt PASS in real Figma Desktop;
+- ✅ genuine 64-Frame stress evidence: all 64 terminal with `maxConcurrentProcessors = 1`;
+- ✅ genuine cooperative cancellation evidence retained with active frame identity at request and final `CANCELLED` status;
+- ✅ untouched schema-v2 closure SHA-256 `d2cf6853d4063599fc1f04b4f16507d1be75a6a1e556d6eedb4a5bfc9dd79ab9`;
+- ✅ exact-current-main closure intake run `34524838931` PASS: retained archive digest MATCH, immutable 5/5 MATCH, same-artifact verifier exit 0;
+- ✅ PR #110 CI #682 + P12 Offline #37 PASS and merge `f1ee668329de9b05f05885fbc70192a391e5b2c9`; issue #8 closed completed;
+- ✅ P7 = 100%, historical P0–P7 core = 100%, retained P12 validation = 80%.
 
 ### P5 integration rehearsal checkpoint — non-authorizing
 
@@ -169,7 +171,7 @@ P12 PR #95 additionally accepted offline release-package reproducibility on Linu
 Still pending:
 - exact final integrated release package using real publisher/plugin identity;
 - local development-plugin import and normal installed/private plugin flow;
-- final P5/P6/P7 release menu exposure after those runtime lines integrate;
+- final integrated P5/P6/P7 release menu exposure audit;
 - filled Community metadata/support/category/assets and final publishable readiness;
 - actual Community submission/review.
 

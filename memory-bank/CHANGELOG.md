@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-11 — P7 genuine runtime closure and production merge
+
+- Exact final-line build `d6bf2e12e3d877be125d336e423001baef92831b` / run `34497801237` established a valid exact-build P5 prerequisite in real Figma Desktop.
+- Retained real-Figma stress evidence completed 64/64 terminal items with `maxConcurrentProcessors = 1`.
+- Retained cooperative cancellation evidence captured an active frame at request and settled to final `CANCELLED`; P7 runtime/closure acceptance returned accepted with zero failures.
+- Untouched schema-v2 closure export SHA-256 `d2cf6853d4063599fc1f04b4f16507d1be75a6a1e556d6eedb4a5bfc9dd79ab9` (281232 bytes).
+- Exact-current-main closure intake run `34524838931` reset to `f50ac7f8e39822e6278b7da06ca305285d9e6cad`, matched retained archive SHA `b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc`, matched immutable files 5/5 and accepted same-artifact verifier exit 0.
+- PR #110 CI #682 and P12 Offline #37 passed; merge `f1ee668329de9b05f05885fbc70192a391e5b2c9`; issue #8 closed completed.
+- P7 = 100%; historical P0–P7 core = 100%; retained P12 final validation = 80%.
+
 ## 2026-09-10 — P7 fresh final-line artifact registered and exact-main preflighted
 
 - P7 final integration failed closed on conflict drift from 15 rehearsal paths to 21 current paths; the expanded boundary was reviewed explicitly.

@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-09-10
+Last updated: 2026-09-11
 
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
@@ -12,22 +12,22 @@ Last updated: 2026-09-10
 | P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
 | P5 | Conservative Safe Fix recipes + exact-build proof | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Real Desktop + closure-intake + PR #99 merge PASS |
 | P6 | Advanced timeline/carousel/milestone/page normalization | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Genuine Figma positive/refusal closure + current-main intake + PR #106 merge PASS |
-| P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh final-line artifact registered + exact-current-main preflight PASS → genuine 60+ stress/cancel closure #8 |
+| P7 | Sequential multi-frame/page batch queue | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Genuine 64-Frame stress + active cancellation + current-main intake + PR #110 merge PASS |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate later |
 | P9 | Actionable backlog generator | IMPLEMENTATION COMPLETE / REAL-PLUGIN VALIDATION PENDING | 100% | `██████████` | Real plugin/export/parity quality in #84 |
 | P10 | npm/Node CLI + source adapters | IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Linux/macOS/Windows offline acceptance PASS; real Figma API/parity pending |
 | P11 | Normal Figma plugin distribution | IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Offline package reproducibility PASS; final integrated install/Community readiness pending |
-| P12 | Final integrated validation/release acceptance | IN PROGRESS | 60% | `██████░░░░` | Offline + genuine P5 + genuine P6 slices PASS; next P7 final-line runtime closure |
+| P12 | Final integrated validation/release acceptance | IN PROGRESS | 80% | `████████░░` | Offline + genuine P5 + genuine P6 + genuine P7 retained slices PASS; real API/plugin parity + final release/Community readiness remain |
 
 ## Progress interpretation
 
-**Historical core P0–P7 progress:** `██████████ 98%`
+**Historical core P0–P7 progress:** `██████████ 100%`
 
-This remains the original eight-phase core denominator: P0–P6 are complete and P7 remains at 80% (780/800 phase-points, rounded).
+This remains the original eight-phase core denominator: P0–P7 are all complete (800/800 phase-points).
 
-**P12 final validation:** `██████░░░░ 60%`.
+**P12 final validation:** `████████░░ 80%`.
 
-The 60% credit consists of retained cross-platform/offline acceptance (20%), genuine P5 Figma Desktop/runtime closure and final integration (20%), and genuine P6 Figma positive/refusal closure + current-main intake + final integration (20%). P7, real API/plugin parity and Community readiness remain pending.
+The 80% credit consists of retained cross-platform/offline acceptance (20%), genuine P5 Figma Desktop/runtime closure and final integration (20%), genuine P6 Figma positive/refusal closure + current-main intake + final integration (20%), and genuine P7 64-Frame sequential stress + active cancellation closure + current-main intake + final integration (20%). Real API/plugin parity and final release/Community readiness remain pending.
 
 ## P12 accepted slice — PR #95
 
@@ -65,19 +65,18 @@ The artifact is registered in `config/runtime-artifacts.json` schema v3 as the c
 
 Fresh final-line build `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` passed genuine image-bearing positive calibration and preservation refusal, exact-current-main closure intake run `34495685047`, PR #106 CI/P12 Offline, and merged as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; issue #7 is closed.
 
-## P7 — next critical path
+## P7 — COMPLETE / PRODUCTION ACCEPTED
 
-Fresh exact P7 final-line source `d6bf2e12e3d877be125d336e423001baef92831b` is built, registered and exact-current-main preflighted. Run genuine 64-Frame sequential stress and active cancellation closure next.
+Fresh exact P7 final-line source `d6bf2e12e3d877be125d336e423001baef92831b` passed genuine real-Figma 64-Frame sequential stress with max concurrency 1, cooperative active-frame cancellation, untouched closure verification and exact-current-main intake run `34524838931`; PR #110 merged as `f1ee668329de9b05f05885fbc70192a391e5b2c9` and issue #8 is closed completed.
 
 ## P6/P7
 
-P6 #494 and P7 #490 remain reference-only. P6 final-line artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` is runtime-accepted and merged through PR #106. P7 fresh final-line artifact `figma-plugin-dist-p7-final-v2-1` at `d6bf2e12e3d877be125d336e423001baef92831b` is registered final-closure eligible and exact-current-main preflight `34499068236` passed; genuine stress/cancel closure remains.
+P6 #494 and P7 #490 remain reference-only. P6 final-line artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` is runtime-accepted and merged through PR #106. P7 fresh final-line artifact `figma-plugin-dist-p7-final-v2-1` at `d6bf2e12e3d877be125d336e423001baef92831b` is runtime-accepted after genuine stress/cancellation closure + exact-current-main intake and merged through PR #110.
 
 ## Remaining P12 acceptance
 
 - real credentialed Figma REST CLI;
 - equivalent real plugin audit + parity;
-- P7 fresh real 60+ stress/cancellation closure;
 - real plugin backlog/report export quality;
 - real-ID final integrated release package and normal/private install flow;
 - final release menu matched to integrated capabilities;
