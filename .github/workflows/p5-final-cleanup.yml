@@ -1,0 +1,27 @@
+name: P5 Final Integration Cleanup
+
+on:
+  push:
+    branches:
+      - integration/p5-final-20260910
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Remove generated merge-time residue
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "P5 Final Integration"
+          git config user.email "p5-final-integration@invalid.local"
+          git rm -r --ignore-unmatch dist-local-final package-lock.json
+          git rm -f .github/workflows/p5-final-cleanup.yml
+          git commit -m "P5: clean integration-generated residue"
+          git push origin HEAD:integration/p5-final-20260910
