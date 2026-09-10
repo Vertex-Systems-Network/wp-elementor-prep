@@ -2,6 +2,7 @@ import { detectPatterns } from '../core/classification';
 import {
   isValidP5RuntimeProof,
   P5_RUNTIME_PROOF_STORAGE_KEY,
+  type P5RuntimeBuildIdentity,
 } from '../core/p5-runtime-gate';
 import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
@@ -26,6 +27,11 @@ import {
   persistP5RuntimeEvidenceBestEffort,
 } from './p5-runtime-evidence-storage';
 import { buildP5RuntimeEvidenceViewerHtml } from './p5-runtime-evidence-viewer';
+import { inspectP6ClosureEvidence } from './p6-closure-inspector';
+import { persistP6ClosureEvidenceBestEffort } from './p6-closure-evidence-storage';
+import { buildP6ClosureViewerHtml } from './p6-closure-viewer';
+import { runP6DeveloperPageFlowCalibration } from './p6-developer-calibration';
+import { buildP6DeveloperEvidenceView } from './p6-developer-evidence-view';
 import {
   finalizeLastSafeFix,
   hasPendingSafeFixCheckpoint,
@@ -41,7 +47,7 @@ const RUNTIME_BUILD = currentP5RuntimeBuildIdentity();
 const BACKLOG_STORAGE_PREFIX = 'p9-backlog-v1';
 let auditSequence = 0;
 
-type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize';
+type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize' | 'p6-page-flow-calibration';
 let p5OperationInFlight: P5ExclusiveOperation | null = null;
 
 figma.showUI(__html__, {
@@ -94,10 +100,10 @@ function selectedFrame(): FrameNode | null {
   return selected?.type === 'FRAME' ? selected : null;
 }
 
-async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string | null }> {
+async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string | null; build: P5RuntimeBuildIdentity | null }> {
   const stored = await figma.clientStorage.getAsync(P5_RUNTIME_PROOF_STORAGE_KEY);
-  if (!isValidP5RuntimeProof(stored, RUNTIME_BUILD)) return { valid: false, passedAt: null };
-  return { valid: true, passedAt: stored.passedAt };
+  if (!isValidP5RuntimeProof(stored, RUNTIME_BUILD)) return { valid: false, passedAt: null, build: null };
+  return { valid: true, passedAt: stored.passedAt, build: { ...stored.build } };
 }
 
 async function runAudit(sequence: number): Promise<void> {
@@ -292,6 +298,97 @@ async function runRuntimeEvidenceViewer(): Promise<void> {
   });
 }
 
+async function runP6ClosureEvidenceViewer(): Promise<void> {
+  const inspection = await inspectP6ClosureEvidence(figma.clientStorage, RUNTIME_BUILD);
+  figma.showUI(buildP6ClosureViewerHtml(inspection), {
+    width: 520,
+    height: 720,
+    themeColors: true,
+  });
+}
+
+async function runP6PageFlowDeveloperCalibration(): Promise<void> {
+  const selected = selectedFrame();
+  if (!selected) {
+    postError('Select exactly one page Frame before running P6 page-flow clone calibration.', 'validation-error');
+    return;
+  }
+
+  const operation: P5ExclusiveOperation = 'p6-page-flow-calibration';
+  if (!beginExclusiveP5Operation(operation, 'validation-error')) return;
+
+  figma.ui.postMessage({
+    type: 'p6-page-flow-calibration-started',
+    frameId: selected.id,
+    frameName: selected.name,
+    runtimeBuild: { ...RUNTIME_BUILD },
+  });
+
+  try {
+    const proof = await runtimeProofState();
+    const outcome = await runP6DeveloperPageFlowCalibration(selected, {
+      runtimeProofValid: async () => proof.valid,
+      hasPendingCheckpoint: hasPendingSafeFixCheckpoint,
+      validateFullP3: async (before, after) => {
+        const validation = await fullFrameValidator.validate(before, after);
+        return validation.report;
+      },
+    });
+
+    const evidenceView = buildP6DeveloperEvidenceView({
+      pluginVersion: PLUGIN_VERSION,
+      build: RUNTIME_BUILD,
+      p5RuntimeProofPassedAt: proof.passedAt,
+      p5RuntimeProofBuild: proof.build,
+      frame: selected,
+      outcome,
+    });
+    const closureEvidencePersisted = await persistP6ClosureEvidenceBestEffort(figma.clientStorage, evidenceView);
+
+    figma.ui.postMessage({
+      type: 'p6-page-flow-calibration-result',
+      outcome,
+      evidenceKind: evidenceView.kind,
+      evidence: evidenceView.evidence,
+      closureEvidencePersisted,
+      runtimeBuild: { ...RUNTIME_BUILD },
+    });
+
+    figma.showUI(evidenceView.html, { width: 520, height: 700, themeColors: true });
+
+    if (outcome.status === 'BLOCKED') {
+      figma.notify(`P6 clone calibration blocked: ${outcome.reason}`);
+      return;
+    }
+    if (outcome.status === 'NO_CANDIDATE') {
+      figma.notify(closureEvidencePersisted
+        ? 'P6 preservation/refusal acceptance passed and was retained for closure review.'
+        : 'P6 clone calibration did not run; preservation/refusal evidence is open for review.');
+      return;
+    }
+
+    const result = outcome.result;
+    if (result.leftoverCandidateRisk) {
+      postError(`P6 clone calibration cleanup failed. Inspect candidate ${result.candidateNodeId ?? 'unknown'} before continuing.`, 'validation-error');
+      return;
+    }
+    if (result.status === 'PASSED') {
+      figma.notify(closureEvidencePersisted
+        ? 'P6 page-flow clone calibration passed Full P3; accepted evidence retained for closure review.'
+        : 'P6 page-flow clone calibration passed Full P3; candidate was discarded.');
+    } else if (result.status === 'REJECTED') {
+      figma.notify('P6 page-flow clone calibration was rejected by Full P3; candidate was discarded.');
+    } else {
+      figma.notify(`P6 page-flow clone calibration ended ${result.status.toLowerCase()}; no production commit was attempted.`);
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    postError(`P6 page-flow clone calibration failed: ${message}`, 'validation-error');
+  } finally {
+    endExclusiveP5Operation(operation);
+  }
+}
+
 async function runSafeFixApply(message: { targetNodeId: string; recipe: SafeRecipeKind }): Promise<void> {
   const selected = selectedFrame();
   if (!selected) {
@@ -453,6 +550,16 @@ figma.ui.onmessage = async (message: unknown) => {
     return;
   }
 
+  if (type === 'p6-page-flow-calibration-request') {
+    await runP6PageFlowDeveloperCalibration();
+    return;
+  }
+
+  if (type === 'p6-runtime-evidence-request') {
+    await runP6ClosureEvidenceViewer();
+    return;
+  }
+
   if (type === 'validation-pixel-result') {
     const payload = message as {
       validationId?: unknown;
@@ -489,6 +596,10 @@ if (figma.command === 'p5-runtime-self-test') {
   void runRuntimeSelfTest();
 } else if (figma.command === 'p5-runtime-evidence') {
   void runRuntimeEvidenceViewer();
+} else if (figma.command === 'p6-page-flow-calibration') {
+  void runP6PageFlowDeveloperCalibration();
+} else if (figma.command === 'p6-runtime-evidence') {
+  void runP6ClosureEvidenceViewer();
 } else {
   switch (figma.command) {
     case 'audit':

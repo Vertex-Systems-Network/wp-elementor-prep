@@ -38,6 +38,17 @@ await build({
   define: provenanceDefines,
 });
 
+await build({
+  entryPoints: ['src/tools/verify-p6-closure.ts'],
+  bundle: true,
+  outfile: 'dist/verify-p6-closure.mjs',
+  platform: 'node',
+  target: 'node20',
+  format: 'esm',
+  minify: false,
+  define: provenanceDefines,
+});
+
 await cp('src/ui/ui.html', 'dist/ui.html');
 
 const template = await readFile('manifest.template.json', 'utf8');
