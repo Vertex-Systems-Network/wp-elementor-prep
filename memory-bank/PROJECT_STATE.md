@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-10
+Last updated: 2026-09-11
 
 ## Product
 
@@ -11,9 +11,9 @@ Last updated: 2026-09-10
 
 ## Current policy
 
-P9–P11 implementation is complete. P12 #84 is the sole release-expansion final validation gate and is now `60%` complete after cross-platform offline acceptance plus genuine P5 and P6 Desktop/runtime closure and final integration.
+P9–P11 implementation is complete. P12 #84 is the sole release-expansion final validation gate and is now `80%` complete after cross-platform offline acceptance plus genuine P5, P6 and P7 Desktop/runtime closure and final integration.
 
-Only properties directly exercised by retained evidence receive P12 credit. P5 and P6 real Desktop/runtime closure are complete; real Figma API/plugin parity, P7 closure and Community review remain pending.
+Only properties directly exercised by retained evidence receive P12 credit. P5, P6 and P7 real Desktop/runtime closure are complete; real Figma API/plugin parity, final integrated release readiness and Community review remain pending.
 
 ## Repository baseline
 
@@ -27,8 +27,8 @@ Post-P11 main `f689fd0b703f83ee81953d36aef8d63bc2a56574` passed CI #645 and Inte
 
 - #6 — P5 Safe Fix: CLOSED COMPLETED after real Desktop acceptance, closure-intake PASS and PR #99 merge;
 - #7 — P6 Advanced structures: CLOSED COMPLETED after genuine Figma closure, current-main intake PASS and PR #106 merge;
-- #8 — P7 Batch queue: next critical path; fresh final-line artifact registered + exact-current-main preflight PASS; genuine 60+ stress/cancel closure pending;
-- #84 — P12 final integrated validation/release acceptance, active at 60%.
+- #8 — P7 Batch queue: CLOSED COMPLETED after genuine 64-Frame stress + active cancellation closure, current-main intake PASS and PR #110 merge;
+- #84 — P12 final integrated validation/release acceptance, active at 80%.
 
 P8 exporter remains deferred. P9/P10/P11 implementation issues are closed.
 
@@ -40,14 +40,14 @@ P8 exporter remains deferred. P9/P10/P11 implementation issues are closed.
 | P0–P4 core audit/validation/transaction | COMPLETE | 100% | None |
 | P5 Safe Fix | COMPLETE / PRODUCTION ACCEPTED | 100% | Real Desktop + closure-intake + PR #99 merge PASS |
 | P6 advanced structures | COMPLETE / PRODUCTION ACCEPTED | 100% | Genuine Figma positive/refusal closure + current-main intake + PR #106 merge PASS |
-| P7 batch queue | IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | Fresh exact artifact registered + exact-current-main preflight PASS; genuine 60+ stress/cancel closure #8 |
+| P7 batch queue | COMPLETE / PRODUCTION ACCEPTED | 100% | Genuine 64-Frame stress + active cancellation + current-main intake + PR #110 merge PASS |
 | P8 exporter adapters | DEFERRED | N/A | Re-evaluate later |
 | P9 backlog generator | IMPLEMENTATION COMPLETE / P12 REAL-PLUGIN VALIDATION PENDING | 100% | Real plugin/export/parity quality in #84 |
 | P10 npm/CLI | IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | Offline cross-OS acceptance PASS; real Figma API/plugin parity pending |
 | P11 Figma plugin distribution | IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | Offline release reproducibility PASS; final integrated install/Community readiness pending |
-| P12 final validation | IN PROGRESS | 60% | Next critical path: genuine P7 60+ stress + active-cancellation runtime closure |
+| P12 final validation | IN PROGRESS | 80% | Next: real Figma API/plugin parity + final integrated release/Community readiness |
 
-Historical P0–P7 core progress is now `98%` under its original eight-phase denominator: P0–P6 at 100%, P7 at 80% (780/800 phase-points, rounded).
+Historical P0–P7 core progress is now `100%` under its original eight-phase denominator: P0–P7 are complete (800/800 phase-points).
 
 ## Runtime artifact registry
 
@@ -101,14 +101,13 @@ Canonical P5 #488 real Desktop evidence passed for source `810d98d6e09cb4cf3fe47
 
 ## P6/P7 state
 
-P6 #494 remains reference-only. Fresh final-line P6 artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` passed genuine Figma positive/refusal closure and exact current-main intake, then PR #106 merged as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; #7 is closed completed. P7 #490 remains reference-only; fresh exact final-line P7 source `d6bf2e12e3d877be125d336e423001baef92831b` produced registered artifact `figma-plugin-dist-p7-final-v2-1` (ID `10160543369`) and exact-current-main preflight `34499068236` PASS. Genuine P7 runtime stress/cancellation closure remains.
+P6 #494 remains reference-only. Fresh final-line P6 artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` passed genuine Figma positive/refusal closure and exact current-main intake, then PR #106 merged as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; #7 is closed completed. P7 #490 remains reference-only; fresh final-line P7 source `d6bf2e12e3d877be125d336e423001baef92831b` produced retained artifact `figma-plugin-dist-p7-final-v2-1` (ID `10160543369`), passed genuine 64-Frame stress + active cancellation closure and exact-current-main intake `34524838931`, then PR #110 merged as `f1ee668329de9b05f05885fbc70192a391e5b2c9`; #8 is closed completed.
 
 ## Remaining P12 matrix
 
 Still unaccepted:
 - real credentialed Figma REST URL/file-key CLI execution;
 - equivalent real plugin audit + plugin/CLI parity;
-- fresh P7 final-line artifact is registered/preflighted; real 60+ sequential stress/cancellation closure remains;
 - real plugin backlog/report export quality;
 - exact final integrated release artifact with real publisher/plugin identity;
 - local dev import + normal installed/private plugin flow;
@@ -119,7 +118,7 @@ Still unaccepted:
 
 ## Immediate target
 
-P7 final integration/artifact registration/current-main preflight are complete on registered main `b5c973ffd3b2c8fa99aacd6e7bc10c4aa709e34e` → **NEXT:** genuine 64-Frame stress + active-cancellation closure → untouched closure export → current-main intake → merge/close #8.
+P7 is production accepted and merged at `f1ee668329de9b05f05885fbc70192a391e5b2c9`. **NEXT:** complete the remaining P12 real Figma API/plugin parity, real plugin backlog/export quality, final integrated release identity/install/menu checks and Community-readiness exit review.
 
 ## P6/P7 downstream integration rehearsal checkpoint — 2026-09-10
 
