@@ -16,6 +16,23 @@ These rules define the target architecture the Figma plugin audits for. They are
 | Max/min size | Max/min sizing controls |
 | Absolute child | Absolute positioning only for genuine overlay/decorative use |
 
+## P5 v1 recipe mapping
+
+The Safe Fix engine targets Elementor-native structure, not one hard-coded Elementor JSON schema.
+
+| P5 recipe | Required Figma contract | Elementor reconstruction intent |
+|---|---|---|
+| Vertical Stack | `vertical-stack` -> `VERTICAL` Auto Layout | one column container; measured sibling spacing becomes container gap; measured edge spacing becomes padding |
+| Horizontal Row | `horizontal-row` -> `HORIZONTAL` Auto Layout | one row container; direct children remain in existing visual/layer order |
+| Two Column | `two-column` -> `HORIZONTAL` Auto Layout | parent row container with two direct child containers/blocks; no spacer columns |
+| Facts List | `facts-list <- vertical-stack` -> `VERTICAL` | stacked fact/list wrapper; individual facts remain ordinary-flow children |
+| Footer Columns | `footer-columns <- horizontal-row` -> `HORIZONTAL` | footer inner row containing logical column wrappers; responsive stacking can later be handled by Elementor breakpoints |
+| Simple Card Grid | `repeated-cards <- grid` -> fixed Figma `GRID` | repeated-card grid container with explicit tracks/gaps rather than manual X/Y card placement |
+| Metric Grid | `metric-grid <- grid` -> fixed Figma `GRID` | KPI/stat grid container; metric cells remain live text/content wrappers |
+| Social/Link Strip | `social-link-strip <- horizontal-row` -> `HORIZONTAL` | compact row container for link/icon items with normal gap and alignment controls |
+
+P5 preserves current desktop geometry. Responsive behavior is a later reconstruction concern; the Safe Fix layer does not invent tablet/mobile layouts or reorder content to make a desktop screenshot easier to match.
+
 ## Positive signals
 
 - Normal content participates in Auto Layout.

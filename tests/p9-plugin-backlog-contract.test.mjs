@@ -33,10 +33,16 @@ describe('P9 plugin backlog contract', () => {
     expect(ui).toContain('summary.byDelta.REGRESSED');
   });
 
-  it('keeps P9 reporting non-mutating', () => {
-    expect(ui).toContain('no design mutations');
-    expect(pluginMain).not.toContain('appendChild(');
-    expect(pluginMain).not.toContain('remove()');
-    expect(pluginMain).not.toContain('resize(');
+  it('keeps the P9 audit/backlog path non-mutating after P5 integration', () => {
+    const auditStart = pluginMain.indexOf('async function runAudit(sequence: number)');
+    const safeFixStart = pluginMain.indexOf('async function currentSafePlans');
+    expect(auditStart).toBeGreaterThanOrEqual(0);
+    expect(safeFixStart).toBeGreaterThan(auditStart);
+    const auditPath = pluginMain.slice(auditStart, safeFixStart);
+    expect(auditPath).toContain('generateBacklog(report');
+    expect(auditPath).not.toContain('runSafeFixTransaction');
+    expect(auditPath).not.toContain('appendChild(');
+    expect(auditPath).not.toContain('remove()');
+    expect(auditPath).not.toContain('resize(');
   });
 });

@@ -44,6 +44,30 @@ function textDescendants(node: AuditNode): number {
   return count;
 }
 
+function imageDescendants(node: AuditNode): number {
+  let count = 0;
+  const stack = [...node.children];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current) continue;
+    if (current.isImageLike) count += 1;
+    stack.push(...current.children);
+  }
+  return count;
+}
+
+function descendantCount(node: AuditNode): number {
+  let count = 0;
+  const stack = [...node.children];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current) continue;
+    count += 1;
+    stack.push(...current.children);
+  }
+  return count;
+}
+
 function containsNode(root: AuditNode, targetId: string): boolean {
   if (root.id === targetId) return true;
   return root.children.some((child) => containsNode(child, targetId));
@@ -125,6 +149,66 @@ function factsLikeStack(target: AuditNode): { matched: boolean; evidence: Record
   };
 }
 
+function metricLikeGrid(section: AuditNode, target: AuditNode, detection: PatternDetection): SemanticResult | null {
+  const itemCount = Number(detection.evidence.itemCount ?? 0);
+  if (itemCount < 4 || itemCount > 8) return null;
+
+  const items = target.children.filter((child) => child.visible && child.isContainer);
+  if (items.length !== itemCount) return null;
+
+  const semanticName = `${section.name} ${target.name}`.toLowerCase();
+  const explicitMetricName = /\b(metric|metrics|stat|stats|statistics|kpi|kpis|number|numbers|counter|counters|figures?)\b/.test(semanticName);
+  if (!explicitMetricName) return null;
+
+  const simple = items.filter((item) => {
+    const texts = textDescendants(item);
+    return texts >= 1 && texts <= 3 && imageDescendants(item) === 0 && descendantCount(item) <= 8;
+  }).length;
+  const simplePct = Math.round((simple / Math.max(1, items.length)) * 100);
+  const targetHeightPct = Math.round((target.geometry.height / Math.max(1, section.geometry.height)) * 100);
+  if (simplePct < 80 || targetHeightPct > 45) return null;
+
+  return {
+    hint: 'metric-grid',
+    evidence: {
+      semanticRule: 'explicit-metric-name-simple-text-grid',
+      semanticMetricItemCount: itemCount,
+      semanticSimpleMetricPct: simplePct,
+      semanticTargetHeightPct: targetHeightPct,
+      semanticMetricNameEvidence: true,
+    },
+  };
+}
+
+function socialLikeRow(section: AuditNode, target: AuditNode, detection: PatternDetection): SemanticResult | null {
+  const itemCount = Number(detection.evidence.itemCount ?? 0);
+  if (itemCount < 2 || itemCount > 8) return null;
+
+  const semanticName = `${section.name} ${target.name}`.toLowerCase();
+  const explicitSocialName = /\b(social|socials|follow|connect)\b/.test(semanticName);
+  if (!explicitSocialName) return null;
+
+  const children = target.children.filter((child) => child.visible && child.isContainer);
+  if (children.length !== itemCount) return null;
+  const compact = children.filter((child) => textDescendants(child) <= 2 && descendantCount(child) <= 6).length;
+  const compactPct = Math.round((compact / Math.max(1, children.length)) * 100);
+  const heightPct = Math.round((target.geometry.height / Math.max(1, section.geometry.height)) * 100);
+  const maxChildWidthPct = Math.round(Math.max(...children.map((child) => child.geometry.width / Math.max(1, target.geometry.width))) * 100);
+  if (compactPct < 80 || heightPct > 18 || maxChildWidthPct > 40) return null;
+
+  return {
+    hint: 'social-link-strip',
+    evidence: {
+      semanticRule: 'explicit-social-name-compact-horizontal-row',
+      semanticSocialItemCount: itemCount,
+      semanticCompactSocialPct: compactPct,
+      semanticHeightPct: heightPct,
+      semanticMaxChildWidthPct: maxChildWidthPct,
+      semanticSocialNameEvidence: true,
+    },
+  };
+}
+
 function semanticFor(section: AuditNode, detection: PatternDetection, all: PatternDetection[]): SemanticResult | null {
   const located = locate(section, detection.targetNodeId);
   if (!located) return null;
@@ -142,6 +226,9 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
   }
 
   if (detection.pattern === 'grid') {
+    const metric = metricLikeGrid(section, target, detection);
+    if (metric) return metric;
+
     const itemCount = Number(detection.evidence.itemCount ?? 0);
     const widthConsistency = Number(detection.evidence.widthConsistencyPct ?? 0);
     const occupancy = Number(detection.evidence.occupancyPct ?? 0);
@@ -159,8 +246,6 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
     const parentTopRatio = located.parentOffsetY / sectionHeight;
     const topLevelContext = located.depth <= 1 || parentTopRatio <= 0.02;
 
-    // A split header must belong to the section's top-level context. Nested chapter/content rows
-    // can also be shallow and near the top, so position alone is not sufficient.
     if (topRatio <= 0.28 && heightRatio <= 0.38 && topLevelContext) {
       return {
         hint: 'split-header',
@@ -178,8 +263,6 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
   if (detection.pattern === 'vertical-stack') {
     const itemCount = Number(detection.evidence.itemCount ?? 0);
 
-    // Timeline semantics require at least five repeated stack items. Four-item content blocks
-    // are common in metric/media sections and were a real cross-template false-positive source.
     if (itemCount >= 5) {
       const nestedTwoColumns = all.filter((candidate) => {
         if (candidate.pattern !== 'two-column' || candidate.targetNodeId === detection.targetNodeId) return false;
@@ -217,9 +300,6 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
     const textRatio = withText / visibleCount;
     const coverage = horizontalCoverage(target);
 
-    // Footer/contact channel rows are typically shallow, lower in their section, text-heavy and
-    // span a broad horizontal region. The maximum-height gate prevents About/card rows from being
-    // mislabeled merely because they also contain three or four text columns near the section end.
     if (
       itemCount >= 3 &&
       itemCount <= 6 &&
@@ -239,6 +319,9 @@ function semanticFor(section: AuditNode, detection: PatternDetection, all: Patte
         },
       };
     }
+
+    const social = socialLikeRow(section, target, detection);
+    if (social) return social;
   }
 
   return null;

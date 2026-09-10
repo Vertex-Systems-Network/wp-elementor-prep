@@ -1,0 +1,30 @@
+{
+  "name": "Pella Elementor Prep",
+  "id": "1679803102348456572",
+  "api": "1.0.0",
+  "editorType": [
+    "figma"
+  ],
+  "main": "code.js",
+  "ui": "ui.html",
+  "documentAccess": "dynamic-page",
+  "menu": [
+    {
+      "name": "Open",
+      "command": "open"
+    },
+    {
+      "name": "Developer: P5 Runtime Self-Test",
+      "command": "p5-runtime-self-test"
+    },
+    {
+      "name": "Developer: P5 Runtime Evidence",
+      "command": "p5-runtime-evidence"
+    }
+  ],
+  "networkAccess": {
+    "allowedDomains": [
+      "none"
+    ]
+  }
+}

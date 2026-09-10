@@ -50,6 +50,8 @@ const sourceSha = requireSourceSha(
   args.values.get('source-sha') ?? process.env.SOURCE_SHA ?? process.env.GITHUB_SHA,
   fixture,
 );
+const githubRunId = process.env.GITHUB_RUN_ID ?? 'local';
+const githubRunNumber = process.env.GITHUB_RUN_NUMBER ?? 'local';
 
 const packageJson = JSON.parse(await readFile('package.json', 'utf8'));
 const releaseConfig = JSON.parse(await readFile('config/plugin-release.json', 'utf8'));
@@ -78,9 +80,12 @@ await build({
   legalComments: 'none',
   define: {
     __PLUGIN_VERSION__: JSON.stringify(packageJson.version),
+    __P5_SOURCE_SHA__: JSON.stringify(sourceSha),
+    __P5_GITHUB_RUN_ID__: JSON.stringify(githubRunId),
+    __P5_GITHUB_RUN_NUMBER__: JSON.stringify(githubRunNumber),
   },
 });
-await cp('src/ui/ui.html', resolve(pluginDir, 'ui.html'));
+await cp('src/ui/release-ui.html', resolve(pluginDir, 'ui.html'));
 await writeFile(resolve(pluginDir, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
 
 const releaseFiles = [...releaseConfig.releaseFiles].sort();
