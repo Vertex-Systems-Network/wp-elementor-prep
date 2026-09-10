@@ -28,8 +28,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf downstream-conflict-probe
-          mkdir -p downstream-conflict-probe
+          rm -rf /tmp/p12-downstream-evidence
+          mkdir -p /tmp/p12-downstream-evidence
           cp src/ui/ui.html /tmp/p12-release-ui.html
 
           git config user.name "P12 Downstream Probe"
@@ -64,16 +64,16 @@ jobs:
           fi
 
           git commit -m 'P12 temporary resolved P5 candidate'
-          git rev-parse HEAD > downstream-conflict-probe/resolved-p5-candidate.txt
-          git rev-parse origin/main > downstream-conflict-probe/main-head.txt
-          git rev-parse origin/feat/p5-safe-recipes > downstream-conflict-probe/p5-head.txt
-          git rev-parse origin/feat/p6-advanced-structures > downstream-conflict-probe/p6-head.txt
-          git rev-parse origin/feat/p7-batch-queue-core > downstream-conflict-probe/p7-head.txt
+          git rev-parse HEAD > /tmp/p12-downstream-evidence/resolved-p5-candidate.txt
+          git rev-parse origin/main > /tmp/p12-downstream-evidence/main-head.txt
+          git rev-parse origin/feat/p5-safe-recipes > /tmp/p12-downstream-evidence/p5-head.txt
+          git rev-parse origin/feat/p6-advanced-structures > /tmp/p12-downstream-evidence/p6-head.txt
+          git rev-parse origin/feat/p7-batch-queue-core > /tmp/p12-downstream-evidence/p7-head.txt
       - name: Probe P6 and P7 merges
         shell: bash
         run: |
           set -euo pipefail
-          candidate="$(cat downstream-conflict-probe/resolved-p5-candidate.txt)"
+          candidate="$(cat /tmp/p12-downstream-evidence/resolved-p5-candidate.txt)"
 
           probe() {
             track="$1"
@@ -84,9 +84,9 @@ jobs:
             git merge --no-commit --no-ff "$ref"
             exit_code=$?
             set -e
-            printf '%s\n' "$exit_code" > "downstream-conflict-probe/${track}-merge-exit-code.txt"
-            git diff --name-only --diff-filter=U | sort > "downstream-conflict-probe/${track}-conflicts.txt"
-            git diff --stat > "downstream-conflict-probe/${track}-working-tree-stat.txt" || true
+            printf '%s\n' "$exit_code" > "/tmp/p12-downstream-evidence/${track}-merge-exit-code.txt"
+            git diff --name-only --diff-filter=U | sort > "/tmp/p12-downstream-evidence/${track}-conflicts.txt"
+            git diff --stat > "/tmp/p12-downstream-evidence/${track}-working-tree-stat.txt" || true
             if [ "$exit_code" -eq 0 ]; then
               git merge --abort || git reset --hard "$candidate"
             else
@@ -99,6 +99,10 @@ jobs:
       - name: Emit machine-readable probe evidence
         shell: bash
         run: |
+          set -euo pipefail
+          rm -rf downstream-conflict-probe
+          mkdir -p downstream-conflict-probe
+          cp /tmp/p12-downstream-evidence/* downstream-conflict-probe/
           node - <<'NODE'
           const fs = require('fs');
           const read = (name) => fs.readFileSync(`downstream-conflict-probe/${name}`, 'utf8').trim();
