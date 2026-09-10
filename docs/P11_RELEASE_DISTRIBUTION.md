@@ -13,7 +13,7 @@ Both remain Figma Design classic-plugin manifests with `documentAccess: "dynamic
 
 The release manifest currently exposes only capabilities implemented on current `main`:
 
-- Open WP Builders Prepear;
+- Open WP Builders Prepare;
 - Audit & Backlog;
 - Compare Two Frames;
 - Audit & Export Report.

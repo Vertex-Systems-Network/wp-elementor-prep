@@ -2,11 +2,11 @@
 
 ## 2026-09-10
 
-### Plugin display-name rename — WP Builders Prepear
+### Plugin display-name rename — WP Builders Prepare
 
-- User-requested shipped plugin/product display name changed from `Pella Elementor Prep` / `WP Elementor Prep` to exactly `WP Builders Prepear`.
+- User-requested shipped plugin/product display name changed from `Pella Elementor Prep` / `WP Elementor Prep` to exactly `WP Builders Prepare`.
 - Updated development/release manifests, release contract config, Community listing, development/release UI titles, current operator docs and generic runtime manifest fixtures.
-- Updated the release menu label from `Open Elementor Prep` to `Open WP Builders Prepear`.
+- Updated the release menu label from `Open Elementor Prep` to `Open WP Builders Prepare`.
 - The canonical P5 #488 semantic-pin fixture intentionally retains `Pella Elementor Prep` because it models immutable accepted artifact bytes; registry hash and accepted provenance remain unchanged.
 - Technical repository/npm/CLI slug `wp-elementor-prep`, Figma plugin ID/provenance identities and historical accepted runtime artifacts remain unchanged.
 - Branding-only change: no progress percentage or runtime acceptance credit changes.

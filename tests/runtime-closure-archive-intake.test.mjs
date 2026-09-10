@@ -33,7 +33,7 @@ function makeFixture() {
     ''
   ].join('\n'));
   writeFileSync(join(artifactDir, 'manifest.json'), JSON.stringify({
-    name: 'WP Builders Prepear',
+    name: 'WP Builders Prepare',
     id: '000000000000000000',
     api: '1.0.0',
     editorType: ['figma'],

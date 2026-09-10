@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "pluginName": "WP Builders Prepear",
+  "pluginName": "WP Builders Prepare",
   "editorTypes": ["figma"],
   "networkAccess": {
     "allowedDomains": ["none"]
   },
   "userCommands": [
-    { "command": "open", "label": "Open WP Builders Prepear", "capability": "ui" },
+    { "command": "open", "label": "Open WP Builders Prepare", "capability": "ui" },
     { "command": "audit", "label": "Audit & Backlog", "capability": "audit-backlog" },
     { "command": "validate", "label": "Compare Two Frames", "capability": "p3-validation" },
     { "command": "export-report", "label": "Audit & Export Report", "capability": "report-export" }
