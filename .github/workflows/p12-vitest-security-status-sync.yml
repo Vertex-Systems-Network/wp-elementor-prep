@@ -33,7 +33,7 @@ jobs:
           git config user.email "p12-security-status-sync@invalid.local"
           git rm scripts/p12-sync-vitest-security-status.mjs .github/workflows/p12-vitest-security-status-sync.yml
           git add README.md memory-bank/PROJECT_STATE.md memory-bank/NEXT_ACTIONS.md memory-bank/ROADMAP.md memory-bank/CHANGELOG.md
-          git diff --cached --name-only | sort
-          test "$(git diff --cached --name-only | sort | tr '\n' ' ')" = "README.md memory-bank/CHANGELOG.md memory-bank/NEXT_ACTIONS.md memory-bank/PROJECT_STATE.md memory-bank/ROADMAP.md "
+          git diff origin/main --name-only | sort
+          test "$(git diff origin/main --name-only | sort | tr '\n' ' ')" = "README.md memory-bank/CHANGELOG.md memory-bank/NEXT_ACTIONS.md memory-bank/PROJECT_STATE.md memory-bank/ROADMAP.md "
           git commit -m 'docs: record Vitest security remediation checkpoint'
           git push origin HEAD:docs/p12-vitest-security-sync
