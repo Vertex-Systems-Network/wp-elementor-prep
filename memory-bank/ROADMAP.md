@@ -12,7 +12,7 @@ Last updated: 2026-09-10
 | P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
 | P5 | Conservative Safe Fix recipes + exact-build proof | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Real Desktop + closure-intake + PR #99 merge PASS |
 | P6 | Advanced timeline/carousel/milestone/page normalization | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Genuine Figma positive/refusal closure + current-main intake + PR #106 merge PASS |
-| P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Resolve onto merged P6/P5 main → fresh registered artifact → 60+ stress/cancel closure #8 |
+| P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh final-line artifact registered + exact-current-main preflight PASS → genuine 60+ stress/cancel closure #8 |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate later |
 | P9 | Actionable backlog generator | IMPLEMENTATION COMPLETE / REAL-PLUGIN VALIDATION PENDING | 100% | `██████████` | Real plugin/export/parity quality in #84 |
 | P10 | npm/Node CLI + source adapters | IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Linux/macOS/Windows offline acceptance PASS; real Figma API/parity pending |
@@ -67,11 +67,11 @@ Fresh final-line build `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` passed genuine
 
 ## P7 — next critical path
 
-Resolve canonical P7 onto merged P6/P5/main, publish/register a fresh exact artifact, then run genuine 60+ sequential stress and active cancellation closure.
+Fresh exact P7 final-line source `d6bf2e12e3d877be125d336e423001baef92831b` is built, registered and exact-current-main preflighted. Run genuine 64-Frame sequential stress and active cancellation closure next.
 
 ## P6/P7
 
-P6 #494 and P7 #490 remain reference-only. P6 final-line artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` is now runtime-accepted and merged through PR #106. P7 still needs its fresh post-P6 final-line artifact and genuine stress/cancel closure.
+P6 #494 and P7 #490 remain reference-only. P6 final-line artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` is runtime-accepted and merged through PR #106. P7 fresh final-line artifact `figma-plugin-dist-p7-final-v2-1` at `d6bf2e12e3d877be125d336e423001baef92831b` is registered final-closure eligible and exact-current-main preflight `34499068236` passed; genuine stress/cancel closure remains.
 
 ## Remaining P12 acceptance
 

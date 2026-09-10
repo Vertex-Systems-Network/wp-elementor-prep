@@ -18,7 +18,7 @@ For every P12 cycle:
 
 - #6 — P5 Safe Fix: CLOSED COMPLETED; real Desktop acceptance + closure-intake + PR #99 merge PASS;
 - #7 — P6 Advanced structures: CLOSED COMPLETED; genuine positive/refusal closure + current-main intake + PR #106 merge PASS;
-- #8 — P7 Batch queue: **next critical path**; resolve onto merged P6/P5 line, publish fresh artifact, then genuine 60+ stress/cancel closure;
+- #8 — P7 Batch queue: **next critical path**; fresh final-line artifact registered and exact-current-main preflight PASS; genuine 60+ stress + active cancellation closure now remains;
 - #84 — P12 final integrated validation, 60% complete.
 
 P8 exporter remains deferred. P9/P10/P11 implementation issues are closed.
@@ -83,12 +83,21 @@ P6:
 - PR #106 merged / #7 closed.
 
 P7:
-- resolve onto merged final line;
-- build/register fresh exact artifact;
-- realistic 60+ sequential queue, all terminal, max concurrency 1;
-- cancellation during genuinely active long Full P3;
-- closure intake PASS;
-- merge/close #8.
+- ✅ final two-parent source `d6bf2e12e3d877be125d336e423001baef92831b` built and verified;
+- ✅ fresh artifact `figma-plugin-dist-p7-final-v2-1` / ID `10160543369` registered final-closure eligible;
+- ✅ exact-current-main archive-bound preflight `34499068236` PASS;
+- next: genuine realistic 64-Frame sequential queue, all terminal, max concurrency 1;
+- next: cancellation during genuinely active long Full P3;
+- then untouched P7 closure export → current-main closure intake PASS → merge/close #8.
+
+## P7 final-line repo-side preparation — COMPLETE
+
+- exact source: `d6bf2e12e3d877be125d336e423001baef92831b`;
+- final integration run `34497801237`: 81 files / 387 tests plus all build/release/offline gates PASS;
+- retained artifact: `figma-plugin-dist-p7-final-v2-1`, ID `10160543369`, SHA-256 `b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc`;
+- registration preflight `34498730566` PASS; PR #108 merged as `b5c973ffd3b2c8fa99aacd6e7bc10c4aa709e34e`;
+- exact merged-main preflight `34499068236` PASS;
+- percentages unchanged: P7 80%, historical core 98%, P12 60%.
 
 ## Remaining P9/P10/P11 acceptance
 
