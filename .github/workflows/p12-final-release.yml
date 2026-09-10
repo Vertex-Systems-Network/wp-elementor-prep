@@ -1,0 +1,73 @@
+name: P12 Final Release Artifact
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-final-release:
+    runs-on: ubuntu-latest
+    env:
+      FIGMA_PLUGIN_ID: "1679803102348456572"
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v7
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify repository status and contracts
+        run: |
+          npm run status:verify
+          npm run typecheck
+          npm test
+          npm run verify:release-contract
+          npm run community:verify:publishable
+
+      - name: Build and verify exact release package twice
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          node scripts/build-release.mjs --out=dist-final-a --plugin-id="$FIGMA_PLUGIN_ID" --source-sha="$SOURCE_SHA"
+          node scripts/verify-release-package.mjs dist-final-a
+          node scripts/build-release.mjs --out=dist-final-b --plugin-id="$FIGMA_PLUGIN_ID" --source-sha="$SOURCE_SHA"
+          node scripts/verify-release-package.mjs dist-final-b
+          node scripts/verify-release-reproducibility.mjs dist-final-a dist-final-b
+
+      - name: Assemble final release bundle and attestation
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          mkdir -p dist-final-bundle/community
+          cp -R dist-final-a dist-final-bundle/release
+          cp community/listing.publishable.json dist-final-bundle/community/listing.publishable.json
+          cp -R community/assets dist-final-bundle/community/assets
+          node scripts/final-release-attestation.mjs \
+            --release=dist-final-bundle/release \
+            --community=dist-final-bundle/community/listing.publishable.json \
+            --asset-root=dist-final-bundle \
+            --expected-plugin-id="$FIGMA_PLUGIN_ID" \
+            --source-sha="$SOURCE_SHA" \
+            --out=dist-final-bundle/FINAL_RELEASE_ATTESTATION.json
+          find dist-final-bundle -type f ! -name BUNDLE_SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > dist-final-bundle/BUNDLE_SHA256SUMS.txt
+
+      - name: Upload authoritative main release bundle
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v7
+        with:
+          name: wp-builders-prepare-final-release-${{ github.run_number }}
+          path: dist-final-bundle
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
