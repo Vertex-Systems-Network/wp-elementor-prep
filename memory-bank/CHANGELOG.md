@@ -362,3 +362,13 @@
 - PR #104 registered the fresh P6 artifact as `finalClosureEligible: true` on main `47b983bd45923f96486964453423de1800e89fd6`.
 - Exact current-main archive-bound `runtime:preflight -- p6 ... --intent=final-closure` PASS: archive digest MATCH, immutable files 5/5 MATCH, manifest semantics MATCH.
 - No P6/P12 acceptance percentage was added. Next authority gate remains genuine Figma Desktop image-bearing positive calibration + preservation refusal, unedited `p6-closure.json`, then current-main closure intake.
+
+## 2026-09-10 — P6 production acceptance and merge
+
+- Genuine Figma P6 closure accepted on exact build `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` / run `34472374285` using the retained final artifact `figma-plugin-dist-p6-final-v2-1`.
+- Positive real-image page-flow calibration passed Full P3 at 98% classifier confidence with image anchors `6 → 6`, zero text/image positional drift, candidate discard, zero leftover risk and no production commit attempt.
+- Preservation-sensitive refusal evidence passed on the same exact P5 prerequisite/build.
+- Untouched schema-v2 closure evidence raw SHA-256: `ab5f52fce30637b83d3dcf213a591c66d6bd24535cc27a81d57f7bf6ce9cdcc7`.
+- Exact-current-main closure-intake run `34495685047` passed retained ZIP digest, immutable files `5/5`, manifest semantics, raw evidence hash and same-artifact verifier execution (`accepted: true`, failures empty).
+- PR #106 passed CI #674 + P12 Offline #29 and merged as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; issue #7 closed completed.
+- P6 is now `100% / PRODUCTION ACCEPTED`; historical P0–P7 core becomes `98%` (780/800 rounded); P12 retained final-validation evidence becomes `60%`. P7 is the next core runtime closure path.
