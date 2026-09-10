@@ -97,6 +97,17 @@ P12 is the sole release-expansion acceptance gate:
 - ✅ retained P7 artifact `10131008310`, ZIP SHA-256 `22a9473bead40053fb07e80aa0b00e1dd117c9bd0bbd94e395dd8afd57567982`;
 - ⚠️ both evidence bundles are explicitly `acceptanceAuthority: false`. P6 stays 80%, P7 stays 80%, P12 stays 20%; real Figma closure and fresh final-line artifacts remain mandatory.
 
+### P12 dependency security checkpoint — complete
+
+- ✅ pre-fix dependency audit run `34422011818` found exactly 2 moderate **dev-only** findings in Vitest / `@vitest/mocker` under `GHSA-82fw-gwwq-j7x9`; production-only `npm audit --omit=dev` was already 0;
+- ✅ retained pre-fix audit artifact `10131236873`, ZIP SHA-256 `4d7c7b7f7d0e4bc5798e5d56465071e0bcf6fc28e04878ab96a292f9ed0ed8c9`;
+- ✅ issue #96 / PR #97 updated only dev dependency `vitest` from `^3.2.0` to `^4.1.11`, without `npm audit fix --force`;
+- ✅ one-shot compatibility run `34423555371` installed Vitest 4.1.11 and passed status/typecheck/tests/plugin build/CLI build/release/Community/P12-offline/import-integrity checks; full audit = 0 and production-only audit = 0;
+- ✅ retained clean-audit artifact `10131793673`, ZIP SHA-256 `c64dd7a76bc61c9980f3a254e50fa90deeb16fc7e19ba06de4c7fccb4e21aa91`;
+- ✅ PR #97 CI #657 PASS and P12 Offline #12 PASS on Linux/macOS/Windows; squash merge `01f959ebc792823ee67aa386a65335aab564d667`;
+- ✅ post-merge CI #658 PASS, Integration Readiness #115 PASS and P12 Offline #13 PASS on Linux/macOS/Windows; issue #96 closed completed;
+- ⚠️ this is dependency-security maintenance only: P5 stays 94%, P6/P7 stay 80%, P12 stays 20%, historical core stays 93%, and all genuine Figma/runtime gates remain unchanged.
+
 Detailed engineering history is retained in `memory-bank/CHANGELOG.md`.
 
 ## P9 — Actionable backlog generator

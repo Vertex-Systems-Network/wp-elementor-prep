@@ -2,6 +2,15 @@
 
 ## 2026-09-10
 
+
+### P12 Vitest dependency advisory remediation
+- Audited the recurring `npm install` warning with retained run `34422011818`: full audit reported exactly two moderate dev-only findings, while `npm audit --omit=dev` reported zero production vulnerabilities.
+- Both findings mapped to Vitest / `@vitest/mocker` advisory `GHSA-82fw-gwwq-j7x9`; retained pre-fix artifact `10131236873` has ZIP SHA-256 `4d7c7b7f7d0e4bc5798e5d56465071e0bcf6fc28e04878ab96a292f9ed0ed8c9`.
+- Filed #96 and updated only the dev dependency `vitest` from `^3.2.0` to `^4.1.11`; did not use `npm audit fix --force`.
+- One-shot compatibility run `34423555371` installed Vitest 4.1.11 and passed status verification, typecheck, all tests, plugin/CLI builds, release checks, Community template check, P12 offline acceptance and import byte-preservation; both full and production audit totals were zero.
+- Retained clean-audit artifact `10131793673`, ZIP SHA-256 `c64dd7a76bc61c9980f3a254e50fa90deeb16fc7e19ba06de4c7fccb4e21aa91`.
+- PR #97 passed CI #657 and P12 Offline #12 on Linux/macOS/Windows, was mergeable with zero reviews/threads, and squash-merged at `01f959ebc792823ee67aa386a65335aab564d667`, auto-closing #96.
+- Post-merge CI #658, Integration Readiness #115 and P12 Offline #13 all passed. No product/runtime acceptance percentages changed.
 ### P6/P7 downstream integration rehearsals
 - Built a retained current-main/P5 downstream conflict probe and fixed its evidence-retention harness before treating any output as valid.
 - P6 canonical head `9a6ae3b` produced 10 post-P5 conflicts; deterministic resolution preserved current-main P9–P12/import/provenance safety, added only P6-specific runtime surfaces, and passed run `34421353122`.
