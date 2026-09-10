@@ -1,0 +1,156 @@
+name: P6 Production Status Sync
+
+on:
+  push:
+    branches:
+      - docs/p6-production-acceptance-sync
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize accepted P6 status surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          def repl(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              if old not in text:
+                  raise SystemExit(f"missing expected fragment in {path}: {old[:120]!r}")
+              p.write_text(text.replace(old, new))
+
+          # README primary status / accounting.
+          repl('README.md',
+               '| P6 Advanced structures | 🟠 IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh post-P5 artifact registered + exact current-main preflight PASS; genuine Figma positive/refusal closure #7 next |',
+               '| P6 Advanced structures | ✅ COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Genuine Figma positive/refusal closure + current-main closure intake + PR #106 merge PASS |')
+          repl('README.md',
+               '| P7 60+ Frame batch queue | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | After final P6/P5 line → fresh artifact → 60+ stress + active cancellation closure #8 |',
+               '| P7 60+ Frame batch queue | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Resolve onto merged P6 main → fresh artifact → 60+ stress + active cancellation closure #8 |')
+          repl('README.md',
+               '| P12 Final integrated validation | 🧪 IN PROGRESS | 40% | `████░░░░░░` | Offline cross-platform slice + genuine P5 Desktop/closure/integration slice PASS → next P6 final-line runtime closure |',
+               '| P12 Final integrated validation | 🧪 IN PROGRESS | 60% | `██████░░░░` | Offline + genuine P5 + genuine P6 slices PASS → next P7 final-line runtime closure |')
+          repl('README.md', '**Overall active project progress:** `██████████ 95%`', '**Overall active project progress:** `██████████ 98%`')
+          repl('README.md',
+               '> Historical P0–P7 core progress is now 95%: P0–P5 are 100%, P6/P7 remain 80% (760 / 800 phase-points). P12 validation is tracked separately.',
+               '> Historical P0–P7 core progress is now 98%: P0–P6 are 100% and P7 remains 80% (780 / 800 phase-points, rounded). P12 validation is tracked separately.')
+          repl('README.md', '- P12 final validation: `████░░░░░░ 40%`', '- P12 final validation: `██████░░░░ 60%`')
+          repl('README.md',
+               'The P12 `40%` credit is two retained major validation slices: 20% cross-platform/offline acceptance + 20% genuine P5 Figma Desktop/runtime closure and final integration. P6/P7 real closure, credentialed API/plugin parity and final Community readiness remain uncredited.',
+               'The P12 `60%` credit is three retained major validation slices: 20% cross-platform/offline acceptance + 20% genuine P5 Figma Desktop/runtime closure and final integration + 20% genuine P6 positive/refusal runtime closure, current-main intake and final integration. P7 real closure, credentialed API/plugin parity and final Community readiness remain uncredited.')
+          repl('README.md',
+               '- P5 runtime acceptance is complete and merged; P6/P7 runtime acceptance must still use genuine final-line evidence and current-main closure intake;',
+               '- P5 and P6 runtime acceptance are complete and merged; P7 runtime acceptance must still use genuine final-line evidence and current-main closure intake;')
+          repl('README.md',
+               '- ✅ P6 fresh final-line artifact `figma-plugin-dist-p6-final-v2-1` (`ae691fac3c65dcdaf472392e6895fd402ae8fa3c`, run `34472374285`) is registered final-closure eligible and passed exact current-main archive-bound preflight; P7 #490 remains engineering/reference only.',
+               '- ✅ P6 fresh final-line artifact `figma-plugin-dist-p6-final-v2-1` (`ae691fac3c65dcdaf472392e6895fd402ae8fa3c`, run `34472374285`) passed genuine Figma positive/refusal closure, exact current-main archive-bound closure intake (`34495685047`), and merged through PR #106 as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; P7 #490 remains engineering/reference only.')
+          repl('README.md',
+               '### Next critical path — P6\n\nP6 final-line resolve/rebuild, fresh artifact publication/registration and exact current-main preflight are complete. Next collect genuine image-bearing positive + preservation-refusal evidence in Figma Desktop, pass current-main closure intake, then merge/close #7.',
+               '### P6 final acceptance checkpoint — COMPLETE\n\nP6 genuine image-bearing positive calibration and preservation refusal both passed on exact build `ae691fac3c65dcdaf472392e6895fd402ae8fa3c`. The untouched schema-v2 closure export was accepted by exact-current-main `runtime:closure-intake` in run `34495685047`; PR #106 passed CI/P12 Offline and merged as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; issue #7 closed completed.\n\n### Next critical path — P7\n\nResolve canonical P7 onto the exact merged P6/P5/main line, publish/register a fresh exact-build artifact, then collect genuine 60+ Frame stress and active-cancellation closure evidence.')
+
+          # NEXT_ACTIONS primary queue / accounting / immediate sequence.
+          repl('memory-bank/NEXT_ACTIONS.md',
+               'P9–P11 implementation is complete. P12 #84 is active at `40%` after cross-platform offline acceptance plus genuine P5 Desktop/runtime closure and final integration.',
+               'P9–P11 implementation is complete. P12 #84 is active at `60%` after cross-platform offline acceptance plus genuine P5 and P6 Desktop/runtime closure and final integration.')
+          repl('memory-bank/NEXT_ACTIONS.md',
+               '- #7 — P6 Advanced structures: **next critical path**; fresh post-P5 artifact is registered and current-main preflight PASS; real positive/refusal closure remains;\n- #8 — P7 Batch queue: follows final P6/P5 line with fresh 60+ stress/cancel closure;\n- #84 — P12 final integrated validation, 40% complete.',
+               '- #7 — P6 Advanced structures: CLOSED COMPLETED; genuine positive/refusal closure + current-main intake + PR #106 merge PASS;\n- #8 — P7 Batch queue: **next critical path**; resolve onto merged P6/P5 line, publish fresh artifact, then genuine 60+ stress/cancel closure;\n- #84 — P12 final integrated validation, 60% complete.')
+          repl('memory-bank/NEXT_ACTIONS.md',
+               '5. **NEXT:** genuine Figma image-bearing positive calibration + preservation refusal;\n6. export unedited `p6-closure.json`;\n7. current-main `runtime:closure-intake -- p6 ...` PASS;\n8. merge P6 and close #7.',
+               '5. ✅ genuine Figma image-bearing positive calibration + preservation refusal — PASS;\n6. ✅ export unedited `p6-closure.json` — accepted, raw SHA-256 `ab5f52fce30637b83d3dcf213a591c66d6bd24535cc27a81d57f7bf6ce9cdcc7`;\n7. ✅ current-main `runtime:closure-intake -- p6 ...` — PASS in run `34495685047`;\n8. ✅ merge P6 and close #7 — PR #106 → `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`.')
+          repl('memory-bank/NEXT_ACTIONS.md',
+               'P6:\n- final-line resolve/build/registration/preflight: COMPLETE;\n- real image-bearing positive calibration + preservation refusal: NEXT;\n- closure intake PASS;\n- merge/close #7.\n\nP7:',
+               'P6:\n- COMPLETE / PRODUCTION ACCEPTED;\n- real image-bearing positive calibration + preservation refusal: PASS;\n- current-main closure intake: PASS;\n- PR #106 merged / #7 closed.\n\nP7:')
+          repl('memory-bank/NEXT_ACTIONS.md', '- historical P0–P7 core progress: `95%`;', '- historical P0–P7 core progress: `98%`;')
+          repl('memory-bank/NEXT_ACTIONS.md', '- P12 final validation: `40%`.', '- P12 final validation: `60%`.')
+
+          # PROJECT_STATE primary status.
+          repl('memory-bank/PROJECT_STATE.md',
+               'P9–P11 implementation is complete. P12 #84 is the sole release-expansion final validation gate and is now `40%` complete after cross-platform offline acceptance plus genuine P5 Desktop/runtime closure and final integration.',
+               'P9–P11 implementation is complete. P12 #84 is the sole release-expansion final validation gate and is now `60%` complete after cross-platform offline acceptance plus genuine P5 and P6 Desktop/runtime closure and final integration.')
+          repl('memory-bank/PROJECT_STATE.md',
+               'Only properties directly exercised by retained evidence receive P12 credit. P5 real Desktop/runtime closure is complete; real Figma API/plugin parity, P6/P7 closure and Community review remain pending.',
+               'Only properties directly exercised by retained evidence receive P12 credit. P5 and P6 real Desktop/runtime closure are complete; real Figma API/plugin parity, P7 closure and Community review remain pending.')
+          repl('memory-bank/PROJECT_STATE.md',
+               '- #7 — P6 Advanced structures: fresh post-P5 final-line artifact registered and exact current-main preflight PASS; genuine Figma runtime closure remains;\n- #8 — P7 Batch queue: implementation complete on reference head, fresh final-line stress/cancel closure pending after P5;\n- #84 — P12 final integrated validation/release acceptance, active at 40%.',
+               '- #7 — P6 Advanced structures: CLOSED COMPLETED after genuine Figma closure, current-main intake PASS and PR #106 merge;\n- #8 — P7 Batch queue: next critical path; fresh final-line integration/artifact + genuine 60+ stress/cancel closure pending;\n- #84 — P12 final integrated validation/release acceptance, active at 60%.')
+          repl('memory-bank/PROJECT_STATE.md',
+               '| P6 advanced structures | IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | Fresh exact artifact registered + current-main preflight PASS; real positive/refusal closure #7 next |',
+               '| P6 advanced structures | COMPLETE / PRODUCTION ACCEPTED | 100% | Genuine Figma positive/refusal closure + current-main intake + PR #106 merge PASS |')
+          repl('memory-bank/PROJECT_STATE.md',
+               '| P7 batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | After P5: fresh exact artifact + 60+ stress/cancel closure #8 |',
+               '| P7 batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | Resolve onto merged P6/P5 main + fresh exact artifact + 60+ stress/cancel closure #8 |')
+          repl('memory-bank/PROJECT_STATE.md',
+               '| P12 final validation | IN PROGRESS | 40% | Next critical path: P6 fresh final-line runtime closure |',
+               '| P12 final validation | IN PROGRESS | 60% | Next critical path: P7 fresh final-line integration + runtime closure |')
+          repl('memory-bank/PROJECT_STATE.md',
+               'Historical P0–P7 core progress is now `95%` under its original eight-phase denominator: P0–P5 at 100%, P6/P7 at 80%.',
+               'Historical P0–P7 core progress is now `98%` under its original eight-phase denominator: P0–P6 at 100%, P7 at 80% (780/800 phase-points, rounded).')
+          repl('memory-bank/PROJECT_STATE.md',
+               'P6 #494 remains a reference artifact only, but fresh final-line P6 artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` is now registered final-closure eligible and exact current-main preflight has passed. Genuine Figma positive/refusal closure remains. P7 #490 remains reference-only and follows the final P6 line.',
+               'P6 #494 remains reference-only. Fresh final-line P6 artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` passed genuine Figma positive/refusal closure and exact current-main intake, then PR #106 merged as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; #7 is closed completed. P7 #490 remains reference-only and now follows the merged final P6 line.')
+          repl('memory-bank/PROJECT_STATE.md',
+               '- fresh P6 final-line artifact is registered/preflighted; genuine P6 real-Figma positive/refusal closure remains;\n- fresh P7 final-line artifact + real 60+ sequential stress/cancellation closure;',
+               '- fresh P7 final-line artifact + real 60+ sequential stress/cancellation closure;')
+          repl('memory-bank/PROJECT_STATE.md',
+               'P6 integration/build/registry/preflight are complete → **NEXT:** genuine real-Figma positive/refusal evidence → current-main closure intake → merge/close #7.',
+               'P6 is COMPLETE / PRODUCTION ACCEPTED on merged main `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8` → **NEXT:** fresh P7 final integration/artifact → genuine 60+ stress + active-cancellation closure → current-main intake → merge/close #8.')
+
+          # ROADMAP current rows / interpretation / critical path.
+          repl('memory-bank/ROADMAP.md',
+               '| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh post-P5 artifact registered + current-main preflight PASS → real positive/refusal closure #7 |',
+               '| P6 | Advanced timeline/carousel/milestone/page normalization | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Genuine Figma positive/refusal closure + current-main intake + PR #106 merge PASS |')
+          repl('memory-bank/ROADMAP.md',
+               '| P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 → fresh registered artifact → 60+ stress/cancel closure #8 |',
+               '| P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Resolve onto merged P6/P5 main → fresh registered artifact → 60+ stress/cancel closure #8 |')
+          repl('memory-bank/ROADMAP.md',
+               '| P12 | Final integrated validation/release acceptance | IN PROGRESS | 40% | `████░░░░░░` | Offline slice + genuine P5 slice PASS; next P6 final-line runtime closure |',
+               '| P12 | Final integrated validation/release acceptance | IN PROGRESS | 60% | `██████░░░░` | Offline + genuine P5 + genuine P6 slices PASS; next P7 final-line runtime closure |')
+          repl('memory-bank/ROADMAP.md', '**Historical core P0–P7 progress:** `██████████ 95%`', '**Historical core P0–P7 progress:** `██████████ 98%`')
+          repl('memory-bank/ROADMAP.md',
+               'This remains the original eight-phase core denominator: P0–P5 are complete, P6/P7 remain at 80%.',
+               'This remains the original eight-phase core denominator: P0–P6 are complete and P7 remains at 80% (780/800 phase-points, rounded).')
+          repl('memory-bank/ROADMAP.md', '**P12 final validation:** `████░░░░░░ 40%`.', '**P12 final validation:** `██████░░░░ 60%`.')
+          repl('memory-bank/ROADMAP.md',
+               'The 40% credit consists of retained cross-platform/offline acceptance (20%) plus genuine P5 Figma Desktop/runtime closure and final integration (20%). P6/P7, real API/plugin parity and Community readiness remain pending.',
+               'The 60% credit consists of retained cross-platform/offline acceptance (20%), genuine P5 Figma Desktop/runtime closure and final integration (20%), and genuine P6 Figma positive/refusal closure + current-main intake + final integration (20%). P7, real API/plugin parity and Community readiness remain pending.')
+          repl('memory-bank/ROADMAP.md',
+               '## P6 — next critical path\n\nFinal-line resolve/rebuild, fresh exact artifact publication/registration and exact current-main preflight are complete. Collect genuine image-bearing positive + preservation-refusal observations, pass current-main closure intake, then merge/close #7.',
+               '## P6 — COMPLETE / PRODUCTION ACCEPTED\n\nFresh final-line build `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` passed genuine image-bearing positive calibration and preservation refusal, exact-current-main closure intake run `34495685047`, PR #106 CI/P12 Offline, and merged as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; issue #7 is closed.\n\n## P7 — next critical path\n\nResolve canonical P7 onto merged P6/P5/main, publish/register a fresh exact artifact, then run genuine 60+ sequential stress and active cancellation closure.')
+          repl('memory-bank/ROADMAP.md',
+               'P6 #494 and P7 #490 remain reference-only. P6 now also has registered final-line artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` with exact current-main preflight PASS; its genuine Figma closure remains. P7 still needs its fresh final-line artifact and genuine stress/cancel closure.',
+               'P6 #494 and P7 #490 remain reference-only. P6 final-line artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` is now runtime-accepted and merged through PR #106. P7 still needs its fresh post-P6 final-line artifact and genuine stress/cancel closure.')
+          repl('memory-bank/ROADMAP.md', '- P6 fresh real positive/refusal closure;\n- P7 fresh real 60+ stress/cancellation closure;', '- P7 fresh real 60+ stress/cancellation closure;')
+
+          changelog = Path('memory-bank/CHANGELOG.md')
+          text = changelog.read_text()
+          marker = '## 2026-09-10 — P6 production acceptance and merge'
+          if marker not in text:
+              entry = '''\n\n## 2026-09-10 — P6 production acceptance and merge\n\n- Genuine Figma P6 closure accepted on exact build `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` / run `34472374285` using the retained final artifact `figma-plugin-dist-p6-final-v2-1`.\n- Positive real-image page-flow calibration passed Full P3 at 98% classifier confidence with image anchors `6 → 6`, zero text/image positional drift, candidate discard, zero leftover risk and no production commit attempt.\n- Preservation-sensitive refusal evidence passed on the same exact P5 prerequisite/build.\n- Untouched schema-v2 closure evidence raw SHA-256: `ab5f52fce30637b83d3dcf213a591c66d6bd24535cc27a81d57f7bf6ce9cdcc7`.\n- Exact-current-main closure-intake run `34495685047` passed retained ZIP digest, immutable files `5/5`, manifest semantics, raw evidence hash and same-artifact verifier execution (`accepted: true`, failures empty).\n- PR #106 passed CI #674 + P12 Offline #29 and merged as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; issue #7 closed completed.\n- P6 is now `100% / PRODUCTION ACCEPTED`; historical P0–P7 core becomes `98%` (780/800 rounded); P12 retained final-validation evidence becomes `60%`. P7 is the next core runtime closure path.\n'''
+              changelog.write_text(text.rstrip() + entry)
+          PY
+
+      - name: Verify status contract
+        run: node scripts/verify-readme-progress.mjs
+
+      - name: Commit synchronized status without temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "P6 Status Sync"
+          git config user.email "p6-status-sync@invalid.local"
+          git rm .github/workflows/p6-production-status-sync.yml
+          git add README.md memory-bank/NEXT_ACTIONS.md memory-bank/PROJECT_STATE.md memory-bank/ROADMAP.md memory-bank/CHANGELOG.md
+          git commit -m "Sync P6 production acceptance status"
+          git push origin HEAD:docs/p6-production-acceptance-sync
