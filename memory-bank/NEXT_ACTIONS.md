@@ -4,7 +4,7 @@ Last updated: 2026-09-10
 
 ## Current policy
 
-P9–P11 implementation is complete. P12 #84 is active at `40%` after cross-platform offline acceptance plus genuine P5 Desktop/runtime closure and final integration.
+P9–P11 implementation is complete. P12 #84 is active at `60%` after cross-platform offline acceptance plus genuine P5 and P6 Desktop/runtime closure and final integration.
 
 For every P12 cycle:
 1. inspect open Issues;
@@ -17,9 +17,9 @@ For every P12 cycle:
 ## Current queue
 
 - #6 — P5 Safe Fix: CLOSED COMPLETED; real Desktop acceptance + closure-intake + PR #99 merge PASS;
-- #7 — P6 Advanced structures: **next critical path**; fresh post-P5 artifact is registered and current-main preflight PASS; real positive/refusal closure remains;
-- #8 — P7 Batch queue: follows final P6/P5 line with fresh 60+ stress/cancel closure;
-- #84 — P12 final integrated validation, 40% complete.
+- #7 — P6 Advanced structures: CLOSED COMPLETED; genuine positive/refusal closure + current-main intake + PR #106 merge PASS;
+- #8 — P7 Batch queue: **next critical path**; resolve onto merged P6/P5 line, publish fresh artifact, then genuine 60+ stress/cancel closure;
+- #84 — P12 final integrated validation, 60% complete.
 
 P8 exporter remains deferred. P9/P10/P11 implementation issues are closed.
 
@@ -69,18 +69,18 @@ Canonical #488 + retained ZIP current-contract preflight also PASSed in run `344
 2. ✅ run full repository/provenance/release checks — complete; 48 files / 259 tests plus typecheck/build/release/Community/P12 offline PASS;
 3. ✅ publish and register fresh exact P6 artifact `figma-plugin-dist-p6-final-v2-1` as final-closure eligible — complete via PR #104;
 4. ✅ exact current-main final-closure preflight with retained ZIP — PASS on `47b983bd45923f96486964453423de1800e89fd6`;
-5. **NEXT:** genuine Figma image-bearing positive calibration + preservation refusal;
-6. export unedited `p6-closure.json`;
-7. current-main `runtime:closure-intake -- p6 ...` PASS;
-8. merge P6 and close #7.
+5. ✅ genuine Figma image-bearing positive calibration + preservation refusal — PASS;
+6. ✅ export unedited `p6-closure.json` — accepted, raw SHA-256 `ab5f52fce30637b83d3dcf213a591c66d6bd24535cc27a81d57f7bf6ce9cdcc7`;
+7. ✅ current-main `runtime:closure-intake -- p6 ...` — PASS in run `34495685047`;
+8. ✅ merge P6 and close #7 — PR #106 → `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`.
 
 ## After P5
 
 P6:
-- final-line resolve/build/registration/preflight: COMPLETE;
-- real image-bearing positive calibration + preservation refusal: NEXT;
-- closure intake PASS;
-- merge/close #7.
+- COMPLETE / PRODUCTION ACCEPTED;
+- real image-bearing positive calibration + preservation refusal: PASS;
+- current-main closure intake: PASS;
+- PR #106 merged / #7 closed.
 
 P7:
 - resolve onto merged final line;
@@ -104,11 +104,11 @@ P7:
 
 ## Progress tracking
 
-- historical P0–P7 core progress: `95%`;
+- historical P0–P7 core progress: `98%`;
 - P9 implementation: `100%`;
 - P10 implementation: `100%`, partial P12 acceptance;
 - P11 implementation: `100%`, partial P12 acceptance;
-- P12 final validation: `40%`.
+- P12 final validation: `60%`.
 
 ## P6/P7 downstream integration rehearsal checkpoint — 2026-09-10
 

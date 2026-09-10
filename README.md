@@ -25,26 +25,26 @@ Final planned user surfaces:
 | AI-native governance + repo tooling | ✅ COMPLETE | 100% | `██████████` | Keep Issues → PR/MR → development lifecycle, status verification and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
 | P5 Conservative Safe Fix | ✅ COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Real Figma Desktop acceptance + hardened closure-intake + PR #99 merge PASS |
-| P6 Advanced structures | 🟠 IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh post-P5 artifact registered + exact current-main preflight PASS; genuine Figma positive/refusal closure #7 next |
-| P7 60+ Frame batch queue | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | After final P6/P5 line → fresh artifact → 60+ stress + active cancellation closure #8 |
+| P6 Advanced structures | ✅ COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Genuine Figma positive/refusal closure + current-main closure intake + PR #106 merge PASS |
+| P7 60+ Frame batch queue | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Resolve onto merged P6 main → fresh artifact → 60+ stress + active cancellation closure #8 |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
 | P9 Actionable backlog generator | ✅ IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged via PR #89; real plugin/export/parity behavior remains in #84 |
 | P10 npm/Node CLI | ✅ IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Cross-OS offline CLI acceptance PASS; real Figma API + plugin parity still pending |
 | P11 Normal Figma plugin distribution | ✅ IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Offline release reproducibility PASS; final integrated install/runtime/Community readiness pending |
-| P12 Final integrated validation | 🧪 IN PROGRESS | 40% | `████░░░░░░` | Offline cross-platform slice + genuine P5 Desktop/closure/integration slice PASS → next P6 final-line runtime closure |
+| P12 Final integrated validation | 🧪 IN PROGRESS | 60% | `██████░░░░` | Offline + genuine P5 + genuine P6 slices PASS → next P7 final-line runtime closure |
 
-**Overall active project progress:** `██████████ 95%`
+**Overall active project progress:** `██████████ 98%`
 
-> Historical P0–P7 core progress is now 95%: P0–P5 are 100%, P6/P7 remain 80% (760 / 800 phase-points). P12 validation is tracked separately.
+> Historical P0–P7 core progress is now 98%: P0–P6 are 100% and P7 remains 80% (780 / 800 phase-points, rounded). P12 validation is tracked separately.
 
 ### Release-expansion status
 
 - P9 implementation: `██████████ 100%`
 - P10 implementation: `██████████ 100%`; cross-platform offline acceptance PASS
 - P11 implementation: `██████████ 100%`; offline release-package reproducibility PASS
-- P12 final validation: `████░░░░░░ 40%`
+- P12 final validation: `██████░░░░ 60%`
 
-The P12 `40%` credit is two retained major validation slices: 20% cross-platform/offline acceptance + 20% genuine P5 Figma Desktop/runtime closure and final integration. P6/P7 real closure, credentialed API/plugin parity and final Community readiness remain uncredited.
+The P12 `60%` credit is three retained major validation slices: 20% cross-platform/offline acceptance + 20% genuine P5 Figma Desktop/runtime closure and final integration + 20% genuine P6 positive/refusal runtime closure, current-main intake and final integration. P7 real closure, credentialed API/plugin parity and final Community readiness remain uncredited.
 
 ## Current testing policy
 
@@ -53,7 +53,7 @@ P12 is the sole release-expansion acceptance gate:
 - no real Figma evidence may be fabricated;
 - implementation-complete is not the same as production-accepted;
 - production safety locks and exact-build provenance remain active;
-- P5 runtime acceptance is complete and merged; P6/P7 runtime acceptance must still use genuine final-line evidence and current-main closure intake;
+- P5 and P6 runtime acceptance are complete and merged; P7 runtime acceptance must still use genuine final-line evidence and current-main closure intake;
 - real Figma REST execution and plugin/CLI parity remain pending;
 - normal installed/private plugin flow and final Community readiness remain pending;
 - Figma Community review/approval is external and must not be claimed until it actually occurs.
@@ -73,7 +73,7 @@ P12 is the sole release-expansion acceptance gate:
   - macOS artifact `10127561512`, ZIP digest `sha256:9ff90da24595c89dc57f67daa0fa12e01a122fd21551745b69cf52c2988ba9cd`;
   - Windows artifact `10127564618`, ZIP digest `sha256:e2a95df86973adacc70f4cd2aa403f72c7ae9c4396ad2eb205aa10165070e9b8`.
 - ✅ canonical P5 #488 artifact provenance/preflight/archive plumbing remains hardened and calibrated.
-- ✅ P6 fresh final-line artifact `figma-plugin-dist-p6-final-v2-1` (`ae691fac3c65dcdaf472392e6895fd402ae8fa3c`, run `34472374285`) is registered final-closure eligible and passed exact current-main archive-bound preflight; P7 #490 remains engineering/reference only.
+- ✅ P6 fresh final-line artifact `figma-plugin-dist-p6-final-v2-1` (`ae691fac3c65dcdaf472392e6895fd402ae8fa3c`, run `34472374285`) passed genuine Figma positive/refusal closure, exact current-main archive-bound closure intake (`34495685047`), and merged through PR #106 as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; P7 #490 remains engineering/reference only.
 
 ### P5 integration rehearsal checkpoint — non-authorizing
 
@@ -185,9 +185,13 @@ P12 offline acceptance is now complete for the properties above. The workflow ex
 
 Evidence provenance: the repository-retained JSON was reconstructed exactly from the JSON text supplied by the user because conversation inventory did not expose a separately mounted JSON attachment. The real Desktop screenshot/result and hardened verifier agree on acceptance.
 
-### Next critical path — P6
+### P6 final acceptance checkpoint — COMPLETE
 
-P6 final-line resolve/rebuild, fresh artifact publication/registration and exact current-main preflight are complete. Next collect genuine image-bearing positive + preservation-refusal evidence in Figma Desktop, pass current-main closure intake, then merge/close #7.
+P6 genuine image-bearing positive calibration and preservation refusal both passed on exact build `ae691fac3c65dcdaf472392e6895fd402ae8fa3c`. The untouched schema-v2 closure export was accepted by exact-current-main `runtime:closure-intake` in run `34495685047`; PR #106 passed CI/P12 Offline and merged as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; issue #7 closed completed.
+
+### Next critical path — P7
+
+Resolve canonical P7 onto the exact merged P6/P5/main line, publish/register a fresh exact-build artifact, then collect genuine 60+ Frame stress and active-cancellation closure evidence.
 
 ## Current P5 integration map — historical pre-merge
 
