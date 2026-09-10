@@ -247,6 +247,25 @@ function hasImageFill(value: unknown): boolean {
   return value.some((paint) => isRecord(paint) && paint['type'] === 'IMAGE');
 }
 
+function transformTranslation(value: unknown): { x: number; y: number } | null {
+  if (!Array.isArray(value) || value.length < 2) return null;
+  const row0 = value[0];
+  const row1 = value[1];
+  if (!Array.isArray(row0) || !Array.isArray(row1)) return null;
+  const x = row0[2];
+  const y = row1[2];
+  if (typeof x !== 'number' || !Number.isFinite(x) || typeof y !== 'number' || !Number.isFinite(y)) return null;
+  return { x, y };
+}
+
+function localSize(value: unknown): { width: number; height: number } | null {
+  if (!isRecord(value)) return null;
+  const width = value['x'];
+  const height = value['y'];
+  if (typeof width !== 'number' || !Number.isFinite(width) || typeof height !== 'number' || !Number.isFinite(height)) return null;
+  return { width, height };
+}
+
 function geometryFromRest(node: Record<string, unknown>): AuditNode['geometry'] {
   const absoluteBoundingBox = node['absoluteBoundingBox'];
   const absoluteRenderBounds = node['absoluteRenderBounds'];
@@ -255,11 +274,14 @@ function geometryFromRest(node: Record<string, unknown>): AuditNode['geometry'] 
     : isRecord(absoluteRenderBounds)
       ? absoluteRenderBounds
       : {};
+  const translation = transformTranslation(node['relativeTransform']);
+  const size = localSize(node['size']);
+
   return {
-    x: restNumber(box['x']),
-    y: restNumber(box['y']),
-    width: restNumber(box['width']),
-    height: restNumber(box['height']),
+    x: translation?.x ?? restNumber(box['x']),
+    y: translation?.y ?? restNumber(box['y']),
+    width: size?.width ?? restNumber(box['width']),
+    height: size?.height ?? restNumber(box['height']),
   };
 }
 
