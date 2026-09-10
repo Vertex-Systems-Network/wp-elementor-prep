@@ -1,0 +1,181 @@
+name: P12 P7 Integration Rehearsal
+
+on:
+  push:
+    branches: [integration/p12-p5-rehearsal]
+
+permissions:
+  contents: read
+
+jobs:
+  rehearse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Fetch refs and preserve rehearsal resolvers
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin \
+            '+refs/heads/main:refs/remotes/origin/main' \
+            '+refs/heads/feat/p5-safe-recipes:refs/remotes/origin/feat/p5-safe-recipes' \
+            '+refs/heads/feat/p7-batch-queue-core:refs/remotes/origin/feat/p7-batch-queue-core'
+          cp scripts/p12-resolve-p5-rehearsal.mjs /tmp/p12-resolve-p5-rehearsal.mjs
+          cp scripts/p12-update-p9-integration-contract.mjs /tmp/p12-update-p9-integration-contract.mjs
+          cp scripts/p12-resolve-p7-rehearsal.mjs /tmp/p12-resolve-p7-rehearsal.mjs
+      - name: Build exact current-main plus resolved P5 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "P12 P7 Rehearsal"
+          git config user.email "p12-p7-rehearsal@invalid.local"
+          git reset --hard origin/main
+          git clean -fd
+          cp src/ui/ui.html /tmp/p12-release-ui.html
+
+          set +e
+          git merge --no-commit --no-ff origin/feat/p5-safe-recipes
+          exit_code=$?
+          set -e
+          if [ "$exit_code" -ne 1 ]; then
+            echo "Expected P5 conflicts on current main; got $exit_code" >&2
+            exit 1
+          fi
+          git checkout --ours -- \
+            .github/workflows/ci.yml \
+            README.md \
+            memory-bank/CHANGELOG.md \
+            memory-bank/NEXT_ACTIONS.md \
+            memory-bank/PROJECT_STATE.md \
+            memory-bank/ROADMAP.md
+          cp /tmp/p12-release-ui.html src/ui/release-ui.html
+          node /tmp/p12-resolve-p5-rehearsal.mjs
+          node /tmp/p12-update-p9-integration-contract.mjs
+          git add -A
+          test -z "$(git diff --name-only --diff-filter=U)"
+          git commit -m 'P12 temporary current-main plus P5 candidate'
+          git rev-parse HEAD > /tmp/p12-p5-candidate.txt
+      - name: Merge and resolve P7
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf p7-integration-rehearsal
+          mkdir -p p7-integration-rehearsal
+          git rev-parse origin/main > p7-integration-rehearsal/main-head.txt
+          git rev-parse origin/feat/p5-safe-recipes > p7-integration-rehearsal/p5-head.txt
+          git rev-parse origin/feat/p7-batch-queue-core > p7-integration-rehearsal/p7-head.txt
+          cat /tmp/p12-p5-candidate.txt > p7-integration-rehearsal/resolved-p5-candidate.txt
+
+          set +e
+          git merge --no-commit --no-ff origin/feat/p7-batch-queue-core
+          exit_code=$?
+          set -e
+          printf '%s\n' "$exit_code" > p7-integration-rehearsal/merge-exit-code.txt
+          if [ "$exit_code" -ne 1 ]; then
+            echo "Expected canonical P7 to conflict with resolved P5 candidate; got $exit_code" >&2
+            exit 1
+          fi
+          git diff --name-only --diff-filter=U | sort > p7-integration-rehearsal/conflicts-before-resolution.txt
+
+          git checkout --ours -- \
+            .github/workflows/ci.yml \
+            README.md \
+            manifest.template.json \
+            package.json \
+            scripts/build.mjs \
+            scripts/prepare-figma-import.mjs \
+            src/core/p5-runtime-gate.ts \
+            src/plugin/main.ts \
+            src/plugin/p5-runtime-calibration.ts \
+            src/plugin/p5-runtime-evidence-storage.ts \
+            src/plugin/p5-runtime-evidence-viewer.ts \
+            src/plugin/p5-runtime-evidence.ts \
+            src/plugin/p5-runtime-proof-storage.ts \
+            src/ui/ui.html \
+            tests/p5-runtime-acceptance.test.ts
+          node /tmp/p12-resolve-p7-rehearsal.mjs
+          git add -A
+          git diff --name-only --diff-filter=U | sort > p7-integration-rehearsal/conflicts-after-resolution.txt
+          if [ -s p7-integration-rehearsal/conflicts-after-resolution.txt ]; then
+            cat p7-integration-rehearsal/conflicts-after-resolution.txt >&2
+            exit 1
+          fi
+          if git grep -n -E '^(<<<<<<<|=======|>>>>>>>)' -- ':!package-lock.json'; then
+            echo 'Conflict markers remain.' >&2
+            exit 1
+          fi
+          git diff --cached --stat > p7-integration-rehearsal/resolved-stat.txt
+      - name: Verify integrated repository
+        run: |
+          npm install
+          npm run status:verify
+          npm run typecheck
+          npm test
+          npm run build
+          npm run build:cli
+          npm run verify:release-contract
+          npm run test:release-package
+          npm run community:verify
+          npm run p12:offline
+      - name: Verify P7-specific integration invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/verify-p5-evidence.mjs
+          test -f dist/verify-p7-closure.mjs
+          grep -q 'p7-runtime-evidence' dist/manifest.json
+          grep -q 'Run selected batch' dist/ui.html
+          grep -q 'batch-start-request' dist/ui.html
+          grep -q 'exact-build P7 receipt' src/plugin/main.ts
+          if grep -q 'p7-runtime-evidence' dist-release/plugin/manifest.json; then
+            echo 'P7 developer command leaked into normal release manifest.' >&2
+            exit 1
+          fi
+          if grep -q 'Run selected batch\|P7 BATCH\|batch-start-request' dist-release/plugin/ui.html; then
+            echo 'P7 batch controls leaked into normal release UI.' >&2
+            exit 1
+          fi
+          if grep -q '__P5_SOURCE_SHA__\|__P5_GITHUB_RUN_ID__\|__P5_GITHUB_RUN_NUMBER__\|__WPEP_BUILD_SOURCE_SHA__\|__WPEP_BUILD_RUN_ID__\|__WPEP_BUILD_RUN_NUMBER__\|__PLUGIN_VERSION__' dist/code.js; then
+            echo 'Unresolved compile-time globals remain in P7 integrated plugin.' >&2
+            exit 1
+          fi
+          npm run prepare:figma-import -- 123456789012345678 dist dist-local-p7-rehearsal
+          cmp dist/code.js dist-local-p7-rehearsal/code.js
+          cmp dist/ui.html dist-local-p7-rehearsal/ui.html
+      - name: Emit rehearsal evidence
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const read = (name) => fs.readFileSync(`p7-integration-rehearsal/${name}`, 'utf8').trim();
+          const lines = (name) => { const v = read(name); return v ? v.split(/\r?\n/).filter(Boolean) : []; };
+          const report = {
+            schemaVersion: 1,
+            kind: 'p12-p7-integration-rehearsal',
+            acceptanceAuthority: false,
+            mainHead: read('main-head.txt'),
+            p5Head: read('p5-head.txt'),
+            p7Head: read('p7-head.txt'),
+            resolvedP5Candidate: read('resolved-p5-candidate.txt'),
+            originalConflicts: lines('conflicts-before-resolution.txt'),
+            unresolvedConflicts: lines('conflicts-after-resolution.txt'),
+            repositoryChecks: 'PASS',
+            p7VerifierBundled: true,
+            p7DevelopmentBatchUiPresent: true,
+            p7ExactBuildReceiptGatePreserved: true,
+            p7ReleaseSurfaceGated: true,
+            note: 'Rehearsal only. Does not authorize P5/P7 merge or replace real Figma stress/cancellation closure evidence.'
+          };
+          fs.writeFileSync('p7-integration-rehearsal/rehearsal-evidence.json', JSON.stringify(report, null, 2) + '\n');
+          NODE
+          cat p7-integration-rehearsal/rehearsal-evidence.json
+      - uses: actions/upload-artifact@v7
+        with:
+          name: p12-p7-integration-rehearsal
+          path: p7-integration-rehearsal
+          if-no-files-found: error
