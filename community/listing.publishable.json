@@ -10,15 +10,27 @@
   "commentsEnabled": true,
   "publishTarget": "Community",
   "assets": {
-    "icon": "community/assets/icon.png",
-    "thumbnail": "community/assets/thumbnail.png",
-    "carousel": [
-      "community/assets/carousel-01-audit.png",
-      "community/assets/carousel-02-safe-fix.png",
-      "community/assets/carousel-03-batch.png"
-    ],
-    "maxItems": 9
+    "icon": {
+      "path": "community/assets/icon.png",
+      "recommendedWidth": 128,
+      "recommendedHeight": 128
+    },
+    "thumbnail": {
+      "path": "community/assets/thumbnail.png",
+      "recommendedWidth": 1920,
+      "recommendedHeight": 1080
+    },
+    "carousel": {
+      "paths": [
+        "community/assets/carousel-01-audit.png",
+        "community/assets/carousel-02-safe-fix.png",
+        "community/assets/carousel-03-batch.png"
+      ],
+      "recommendedWidth": 1920,
+      "recommendedHeight": 1080,
+      "maxItems": 9
+    }
   },
   "reviewRequiredForCommunity": true,
-  "figmaAccount2FARequiredBeforePublishing": true
+  "twoFactorAuthenticationRequiredBeforePublishing": true
 }
