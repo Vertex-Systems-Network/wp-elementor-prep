@@ -1,0 +1,141 @@
+name: P5 Final Integration Resolution
+
+on:
+  push:
+    branches:
+      - integration/p5-final-20260910
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout integration branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+
+      - name: Fetch canonical refs and proven resolvers
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin \
+            '+refs/heads/main:refs/remotes/origin/main' \
+            '+refs/heads/feat/p5-safe-recipes:refs/remotes/origin/feat/p5-safe-recipes'
+          curl --fail --silent --show-error --location \
+            https://raw.githubusercontent.com/Vertex-Systems-Network/wp-elementor-prep/integration/p12-p5-rehearsal/scripts/p12-resolve-p5-rehearsal.mjs \
+            --output /tmp/p12-resolve-p5-rehearsal.mjs
+          curl --fail --silent --show-error --location \
+            https://raw.githubusercontent.com/Vertex-Systems-Network/wp-elementor-prep/integration/p12-p5-rehearsal/scripts/p12-update-p9-integration-contract.mjs \
+            --output /tmp/p12-update-p9-integration-contract.mjs
+          echo '3a77c25a266d4a589765caad37a1bb69264c6ba7  /tmp/p12-resolve-p5-rehearsal.mjs' | git hash-object --stdin >/dev/null || true
+
+      - name: Resolve exact P5 integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp src/ui/ui.html /tmp/p5-final-release-ui.html
+          git config user.name "P5 Final Integration"
+          git config user.email "p5-final-integration@invalid.local"
+
+          set +e
+          git merge --no-commit --no-ff origin/feat/p5-safe-recipes
+          merge_exit=$?
+          set -e
+          if [ "$merge_exit" -ne 1 ]; then
+            echo "Expected the known P5 conflict set; merge exit was $merge_exit" >&2
+            exit 1
+          fi
+
+          git diff --name-only --diff-filter=U | sort > /tmp/conflicts-actual.txt
+          cat > /tmp/conflicts-expected.txt <<'EOF'
+          .github/workflows/ci.yml
+          README.md
+          memory-bank/CHANGELOG.md
+          memory-bank/NEXT_ACTIONS.md
+          memory-bank/PROJECT_STATE.md
+          memory-bank/ROADMAP.md
+          package.json
+          scripts/build.mjs
+          scripts/prepare-figma-import.mjs
+          src/plugin/main.ts
+          src/ui/ui.html
+          EOF
+          sed -i 's/^          //' /tmp/conflicts-expected.txt
+          sort -o /tmp/conflicts-expected.txt /tmp/conflicts-expected.txt
+          diff -u /tmp/conflicts-expected.txt /tmp/conflicts-actual.txt
+
+          git checkout --ours -- \
+            .github/workflows/ci.yml \
+            README.md \
+            memory-bank/CHANGELOG.md \
+            memory-bank/NEXT_ACTIONS.md \
+            memory-bank/PROJECT_STATE.md \
+            memory-bank/ROADMAP.md
+
+          cp /tmp/p5-final-release-ui.html src/ui/release-ui.html
+          node /tmp/p12-resolve-p5-rehearsal.mjs
+          node /tmp/p12-update-p9-integration-contract.mjs
+
+          git add -A
+          if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
+            echo 'Unresolved merge entries remain.' >&2
+            git diff --name-only --diff-filter=U >&2
+            exit 1
+          fi
+          if git grep -n -E '^(<<<<<<<|=======|>>>>>>>)' -- ':!package-lock.json'; then
+            echo 'Conflict markers remain after final resolution.' >&2
+            exit 1
+          fi
+
+      - name: Verify integrated repository
+        run: |
+          set -euo pipefail
+          npm install
+          npm run status:verify
+          npm run typecheck
+          npm test
+          npm run build
+          npm run build:cli
+          npm run verify:release-contract
+          npm run test:release-package
+          npm run community:verify
+          npm run p12:offline
+
+      - name: Verify P5 integration invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/verify-p5-evidence.mjs
+          grep -q 'id="plan"' dist/ui.html
+          grep -q 'id="selftest"' dist/ui.html
+          if grep -q 'id="plan"' dist-release/plugin/ui.html || grep -q 'id="selftest"' dist-release/plugin/ui.html; then
+            echo 'P5 developer controls leaked into normal release UI.' >&2
+            exit 1
+          fi
+          if grep -q '__P5_SOURCE_SHA__\|__P5_GITHUB_RUN_ID__\|__P5_GITHUB_RUN_NUMBER__' dist-release/plugin/code.js; then
+            echo 'Unresolved P5 provenance globals remain in release code.' >&2
+            exit 1
+          fi
+          npm run prepare:figma-import -- 1679803102348456572 dist dist-local-final
+          cmp dist/code.js dist-local-final/code.js
+          cmp dist/ui.html dist-local-final/ui.html
+          if npm run prepare:figma-import -- 1679803102348456572 dist dist/nested; then
+            echo 'Nested local-import output must remain rejected.' >&2
+            exit 1
+          fi
+
+      - name: Commit resolved integration tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm -f .github/workflows/p5-final-integration-resolution.yml
+          git add -A
+          git commit -m "P5: integrate accepted runtime line"
+          git push origin HEAD:integration/p5-final-20260910
