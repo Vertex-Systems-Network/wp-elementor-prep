@@ -1,0 +1,147 @@
+name: P6 Final Preflight Status Sync
+
+on:
+  push:
+    branches:
+      - docs/p6-final-preflight-status-sync
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+      - name: Synchronize P6 status surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              if old not in text:
+                  raise SystemExit(f'missing expected text in {path}: {old[:120]!r}')
+              p.write_text(text.replace(old, new, 1))
+
+          replace(
+              'README.md',
+              '| P6 Advanced structures | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P5 merged; refresh onto current main → fresh final artifact → real positive/refusal closure #7 |',
+              '| P6 Advanced structures | 🟠 IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh post-P5 artifact registered + exact current-main preflight PASS; genuine Figma positive/refusal closure #7 next |'
+          )
+          replace(
+              'README.md',
+              '- ✅ P6 #494 and P7 #490 remain engineering/reference artifacts; final production integration requires fresh exact builds after final P5 merge.',
+              '- ✅ P6 fresh final-line artifact `figma-plugin-dist-p6-final-v2-1` (`ae691fac3c65dcdaf472392e6895fd402ae8fa3c`, run `34472374285`) is registered final-closure eligible and passed exact current-main archive-bound preflight; P7 #490 remains engineering/reference only.'
+          )
+          replace(
+              'README.md',
+              'Freshly resolve/rebuild P6 on merged P5/current main, register a fresh final-closure-eligible artifact, collect genuine image-bearing positive + preservation-refusal evidence, pass current-main closure intake, then merge/close #7.',
+              'P6 final-line resolve/rebuild, fresh artifact publication/registration and exact current-main preflight are complete. Next collect genuine image-bearing positive + preservation-refusal evidence in Figma Desktop, pass current-main closure intake, then merge/close #7.'
+          )
+          replace(
+              'README.md',
+              '- real Figma Desktop development-plugin import;\n- P5 rendered-pixel closure;\n- P6 real-Figma closure;',
+              '- P6 real Figma Desktop development-plugin import and positive/refusal closure;'
+          )
+
+          replace(
+              'memory-bank/NEXT_ACTIONS.md',
+              '- #7 — P6 Advanced structures: **next critical path**; fresh post-P5 artifact + real positive/refusal closure;',
+              '- #7 — P6 Advanced structures: **next critical path**; fresh post-P5 artifact is registered and current-main preflight PASS; real positive/refusal closure remains;'
+          )
+          replace(
+              'memory-bank/NEXT_ACTIONS.md',
+              '1. refresh/resolve canonical P6 against merged P5/current main;\n2. run full repository/provenance/release checks;\n3. publish and register a fresh exact P6 artifact as final-closure eligible;\n4. current-main final-closure preflight PASS;\n5. genuine Figma image-bearing positive calibration + preservation refusal;\n6. export unedited `p6-closure.json`;\n7. current-main `runtime:closure-intake -- p6 ...` PASS;\n8. merge P6 and close #7.',
+              '1. ✅ refresh/resolve canonical P6 against merged P5/current main — complete at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c`;\n2. ✅ run full repository/provenance/release checks — complete; 48 files / 259 tests plus typecheck/build/release/Community/P12 offline PASS;\n3. ✅ publish and register fresh exact P6 artifact `figma-plugin-dist-p6-final-v2-1` as final-closure eligible — complete via PR #104;\n4. ✅ exact current-main final-closure preflight with retained ZIP — PASS on `47b983bd45923f96486964453423de1800e89fd6`;\n5. **NEXT:** genuine Figma image-bearing positive calibration + preservation refusal;\n6. export unedited `p6-closure.json`;\n7. current-main `runtime:closure-intake -- p6 ...` PASS;\n8. merge P6 and close #7.'
+          )
+          replace(
+              'memory-bank/NEXT_ACTIONS.md',
+              'P6:\n- resolve onto merged final line;\n- build/register fresh exact artifact;\n- real image-bearing positive calibration + preservation refusal;\n- closure intake PASS;\n- merge/close #7.',
+              'P6:\n- final-line resolve/build/registration/preflight: COMPLETE;\n- real image-bearing positive calibration + preservation refusal: NEXT;\n- closure intake PASS;\n- merge/close #7.'
+          )
+
+          replace(
+              'memory-bank/PROJECT_STATE.md',
+              '- #7 — P6 Advanced structures: implementation complete on reference head, now unblocked for a fresh post-P5 final-line artifact/runtime closure;',
+              '- #7 — P6 Advanced structures: fresh post-P5 final-line artifact registered and exact current-main preflight PASS; genuine Figma runtime closure remains;'
+          )
+          replace(
+              'memory-bank/PROJECT_STATE.md',
+              '- #84 — P12 final integrated validation/release acceptance, active at 20%.',
+              '- #84 — P12 final integrated validation/release acceptance, active at 40%.'
+          )
+          replace(
+              'memory-bank/PROJECT_STATE.md',
+              '| P6 advanced structures | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | After P5: fresh exact artifact + real positive/refusal closure #7 |',
+              '| P6 advanced structures | IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | Fresh exact artifact registered + current-main preflight PASS; real positive/refusal closure #7 next |'
+          )
+          replace(
+              'memory-bank/PROJECT_STATE.md',
+              'P6 #494 and P7 #490 remain engineering/reference artifacts only. P5 is now merged, so P6 is unblocked for a fresh exact final-line build and real closure; P7 follows on the resulting final line.',
+              'P6 #494 remains a reference artifact only, but fresh final-line P6 artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` is now registered final-closure eligible and exact current-main preflight has passed. Genuine Figma positive/refusal closure remains. P7 #490 remains reference-only and follows the final P6 line.'
+          )
+          replace(
+              'memory-bank/PROJECT_STATE.md',
+              '- genuine P5 Figma Desktop runtime/rendered-pixel closure;\n- P5 current-main integration and merge;\n- fresh P6 final-line artifact + real positive/refusal closure;',
+              '- fresh P6 final-line artifact is registered/preflighted; genuine P6 real-Figma positive/refusal closure remains;'
+          )
+          replace(
+              'memory-bank/PROJECT_STATE.md',
+              'P6 fresh post-P5 integration/build → final-closure-eligible registry/preflight → genuine real-Figma positive/refusal evidence → current-main closure intake → merge/close #7.',
+              'P6 integration/build/registry/preflight are complete → **NEXT:** genuine real-Figma positive/refusal evidence → current-main closure intake → merge/close #7.'
+          )
+
+          replace(
+              'memory-bank/ROADMAP.md',
+              '| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P5 merged → fresh post-P5 registered artifact → real positive/refusal closure #7 |',
+              '| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh post-P5 artifact registered + current-main preflight PASS → real positive/refusal closure #7 |'
+          )
+          replace(
+              'memory-bank/ROADMAP.md',
+              'Resolve/rebuild P6 on merged P5/current main, publish/register a fresh exact artifact, collect genuine image-bearing positive + preservation-refusal observations, pass current-main closure intake, then merge/close #7.',
+              'Final-line resolve/rebuild, fresh exact artifact publication/registration and exact current-main preflight are complete. Collect genuine image-bearing positive + preservation-refusal observations, pass current-main closure intake, then merge/close #7.'
+          )
+          replace(
+              'memory-bank/ROADMAP.md',
+              'P6 #494 and P7 #490 remain reference-only. After P5 merges they need fresh exact final-line artifacts and genuine P12 runtime closure.',
+              'P6 #494 and P7 #490 remain reference-only. P6 now also has registered final-line artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` with exact current-main preflight PASS; its genuine Figma closure remains. P7 still needs its fresh final-line artifact and genuine stress/cancel closure.'
+          )
+
+          changelog = Path('memory-bank/CHANGELOG.md')
+          text = changelog.read_text()
+          marker = '## 2026-09-10 — P6 fresh final-line artifact registered and current-main preflight PASS'
+          if marker not in text:
+              text += f'''\n\n{marker}\n\n- Corrected the user-facing product name to **WP Builders Prepare** via PR #103; technical repo/npm slug remains `wp-elementor-prep`.\n- Resolved canonical P6 `9a6ae3b29e2f70ebbd987a686856c2957f590b75` onto corrected post-P5 main and produced final-line source `ae691fac3c65dcdaf472392e6895fd402ae8fa3c`.\n- Rebuilt after rejecting an earlier metadata-incomplete candidate; authoritative run `34472374285` produced `figma-plugin-dist-p6-final-v2-1`.\n- Artifact ZIP SHA-256: `4d96a313c93865029737f6ce0f05c09dda9c38a15a0d2594e2428bf360fe26c0`; manifest semantic SHA-256: `cc4bcdd36099dbe578d4a640ae1ce1c143a4f8ce3bc1fb54c5672cf46dec3ba0`.\n- Full final-line verification PASS: 48 test files / 259 tests, typecheck, plugin/CLI builds, release contract/package, Community verification, P12 offline and import-rebind integrity.\n- PR #104 registered the fresh P6 artifact as `finalClosureEligible: true` on main `47b983bd45923f96486964453423de1800e89fd6`.\n- Exact current-main archive-bound `runtime:preflight -- p6 ... --intent=final-closure` PASS: archive digest MATCH, immutable files 5/5 MATCH, manifest semantics MATCH.\n- No P6/P12 acceptance percentage was added. Next authority gate remains genuine Figma Desktop image-bearing positive calibration + preservation refusal, unedited `p6-closure.json`, then current-main closure intake.\n'''
+              changelog.write_text(text)
+          PY
+      - name: Verify synchronized repository state
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install
+          npm run status:verify
+          npm run typecheck
+          npm test
+          git diff --check
+          grep -F 'WP Builders Prepare' README.md
+          grep -F 'figma-plugin-dist-p6-final-v2-1' README.md memory-bank/NEXT_ACTIONS.md memory-bank/PROJECT_STATE.md memory-bank/ROADMAP.md memory-bank/CHANGELOG.md
+          grep -F 'P12 final integrated validation/release acceptance, active at 40%.' memory-bank/PROJECT_STATE.md
+      - name: Commit verified status sync and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'P6 Status Sync'
+          git config user.email 'p6-status-sync@invalid.local'
+          rm .github/workflows/p6-status-sync.yml
+          git add -A
+          git commit -m 'Sync P6 final-preflight status surfaces'
+          git push origin HEAD:docs/p6-final-preflight-status-sync
