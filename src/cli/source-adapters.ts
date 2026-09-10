@@ -377,8 +377,8 @@ export class FigmaRestSourceAdapter {
   async load(options: FigmaRestOptions): Promise<CanonicalSnapshot> {
     const encodedKey = encodeURIComponent(options.fileKey);
     const endpoint = options.nodeId
-      ? `https://api.figma.com/v1/files/${encodedKey}/nodes?ids=${encodeURIComponent(options.nodeId)}`
-      : `https://api.figma.com/v1/files/${encodedKey}`;
+      ? `https://api.figma.com/v1/files/${encodedKey}/nodes?ids=${encodeURIComponent(options.nodeId)}&geometry=paths`
+      : `https://api.figma.com/v1/files/${encodedKey}?geometry=paths`;
     const payload = await fetchJson(endpoint, options);
 
     let selectedNode: Record<string, unknown>;
