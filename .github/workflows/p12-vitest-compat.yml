@@ -1,0 +1,49 @@
+name: P12 Vitest Compatibility
+
+on:
+  push:
+    branches: [fix/p12-vitest-audit]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - run: npm install
+      - name: Verify installed Vitest version
+        run: node -e "const p=require('./node_modules/vitest/package.json'); console.log('vitest='+p.version); if (p.version !== '4.1.11') process.exit(1)"
+      - run: npm run status:verify
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm run build:cli
+      - run: npm run verify:release-contract
+      - run: npm run test:release-package
+      - run: npm run community:verify
+      - run: npm run p12:offline
+      - name: Verify self-contained local Figma import preparation
+        run: |
+          npm run prepare:figma-import -- 123456789012345678 dist dist-local
+          cmp dist/code.js dist-local/code.js
+          cmp dist/ui.html dist-local/ui.html
+      - name: Require zero full audit findings
+        run: |
+          npm audit --json > npm-audit-full.json
+          node -e "const a=require('./npm-audit-full.json'); const v=a.metadata?.vulnerabilities ?? {}; console.log(JSON.stringify(v)); if ((v.total ?? 0) !== 0) process.exit(1)"
+      - name: Require zero production audit findings
+        run: |
+          npm audit --omit=dev --json > npm-audit-prod.json
+          node -e "const a=require('./npm-audit-prod.json'); const v=a.metadata?.vulnerabilities ?? {}; console.log(JSON.stringify(v)); if ((v.total ?? 0) !== 0) process.exit(1)"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: p12-vitest-compat-audit
+          path: |
+            npm-audit-full.json
+            npm-audit-prod.json
+          if-no-files-found: error
