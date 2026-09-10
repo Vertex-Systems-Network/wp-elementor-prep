@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { dirname, relative, resolve } from 'node:path';
 
 function fail(message) {
   throw new Error(`Final release attestation failed: ${message}`);
@@ -65,6 +65,11 @@ for (const path of assetPaths.sort()) {
   communityAssets[path] = await hashFile(resolve(assetRoot, path));
 }
 
+const listingPath = relative(assetRoot, communityListingPath).replaceAll('\\', '/');
+if (!listingPath || listingPath.startsWith('../') || listingPath === '..') {
+  fail('Community listing must live inside the declared asset root.');
+}
+
 const attestation = {
   schemaVersion: 1,
   pluginName: releaseInfo.pluginName,
@@ -77,7 +82,7 @@ const attestation = {
   acceptedIntegratedCapabilities: releaseInfo.acceptedIntegratedCapabilities,
   releaseFiles,
   community: {
-    listingPath: communityArg.replaceAll('\\', '/'),
+    listingPath,
     listingSha256: await hashFile(communityListingPath),
     publishTarget: listing.publishTarget,
     category: listing.category,

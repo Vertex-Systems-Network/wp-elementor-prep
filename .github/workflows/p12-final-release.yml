@@ -45,7 +45,7 @@ jobs:
           node scripts/verify-release-package.mjs dist-final-b
           node scripts/verify-release-reproducibility.mjs dist-final-a dist-final-b
 
-      - name: Assemble final release bundle and attestation
+      - name: Assemble and self-verify final release bundle
         env:
           SOURCE_SHA: ${{ github.sha }}
         run: |
@@ -60,7 +60,11 @@ jobs:
             --expected-plugin-id="$FIGMA_PLUGIN_ID" \
             --source-sha="$SOURCE_SHA" \
             --out=dist-final-bundle/FINAL_RELEASE_ATTESTATION.json
-          find dist-final-bundle -type f ! -name BUNDLE_SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > dist-final-bundle/BUNDLE_SHA256SUMS.txt
+          (
+            cd dist-final-bundle
+            find . -type f ! -name BUNDLE_SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > BUNDLE_SHA256SUMS.txt
+            sha256sum -c BUNDLE_SHA256SUMS.txt
+          )
 
       - name: Upload authoritative main release bundle
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
