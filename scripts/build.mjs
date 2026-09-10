@@ -12,6 +12,11 @@ const provenanceDefines = {
   __P5_GITHUB_RUN_ID__: JSON.stringify(githubRunId),
   __P5_GITHUB_RUN_NUMBER__: JSON.stringify(githubRunNumber),
 };
+const p7BuildDefines = {
+  __WPEP_BUILD_SOURCE_SHA__: JSON.stringify(sourceSha),
+  __WPEP_BUILD_RUN_ID__: JSON.stringify(githubRunId),
+  __WPEP_BUILD_RUN_NUMBER__: JSON.stringify(githubRunNumber),
+};
 
 await build({
   entryPoints: ['src/plugin/main.ts'],
@@ -23,6 +28,7 @@ await build({
   sourcemap: true,
   define: {
     ...provenanceDefines,
+    ...p7BuildDefines,
     __PLUGIN_VERSION__: JSON.stringify(packageJson.version),
   },
 });
@@ -47,6 +53,17 @@ await build({
   format: 'esm',
   minify: false,
   define: provenanceDefines,
+});
+
+await build({
+  entryPoints: ['src/tools/verify-p7-closure.ts'],
+  bundle: true,
+  outfile: 'dist/verify-p7-closure.mjs',
+  platform: 'node',
+  target: 'node20',
+  format: 'esm',
+  minify: false,
+  define: { ...provenanceDefines, ...p7BuildDefines },
 });
 
 await cp('src/ui/ui.html', 'dist/ui.html');

@@ -83,6 +83,9 @@ await build({
     __P5_SOURCE_SHA__: JSON.stringify(sourceSha),
     __P5_GITHUB_RUN_ID__: JSON.stringify(githubRunId),
     __P5_GITHUB_RUN_NUMBER__: JSON.stringify(githubRunNumber),
+    __WPEP_BUILD_SOURCE_SHA__: JSON.stringify(sourceSha),
+    __WPEP_BUILD_RUN_ID__: JSON.stringify(githubRunId),
+    __WPEP_BUILD_RUN_NUMBER__: JSON.stringify(githubRunNumber),
   },
 });
 await cp('src/ui/release-ui.html', resolve(pluginDir, 'ui.html'));
