@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "name": "WP Builders Prepare",
+  "tagline": "Audit, validate, and prepare Figma layouts safely",
+  "description": "WP Builders Prepare helps designers and builders turn complex Figma files into safer, more structured handoff work. Audit selected Frames, generate an actionable backlog, compare two Frames with visual validation, preview conservative Safe Fix candidates behind a local build safety check, and process multiple selected Frames through a bounded sequential batch queue. Reports can be exported as JSON or Markdown. The release is designed to work offline and does not send document content to external services or use generative AI.",
+  "category": "Software development",
+  "tags": ["developer tools", "workflow", "quality", "audit", "handoff"],
+  "supportContact": "https://github.com/Vertex-Systems-Network/wp-elementor-prep/issues",
+  "privacyPolicy": "docs/PRIVACY.md",
+  "commentsEnabled": true,
+  "publishTarget": "Community",
+  "assets": {
+    "icon": "community/assets/icon.png",
+    "thumbnail": "community/assets/thumbnail.png",
+    "carousel": [
+      "community/assets/carousel-01-audit.png",
+      "community/assets/carousel-02-safe-fix.png",
+      "community/assets/carousel-03-batch.png"
+    ],
+    "maxItems": 9
+  },
+  "reviewRequiredForCommunity": true,
+  "figmaAccount2FARequiredBeforePublishing": true
+}
