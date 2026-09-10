@@ -1,0 +1,57 @@
+name: P5 Real Closure Validation
+
+on:
+  push:
+    branches:
+      - validation/p5-real-closure-20260910
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current-main validation branch
+        uses: actions/checkout@v7
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+
+      - name: Download exact canonical P5 #488 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/p5-488
+          curl --fail --location \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/10062772456/zip" \
+            --output /tmp/figma-plugin-dist-488.zip
+          echo "9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09  /tmp/figma-plugin-dist-488.zip" | sha256sum --check
+          unzip -q /tmp/figma-plugin-dist-488.zip -d /tmp/p5-488
+
+      - name: Run current-main hardened P5 closure intake
+        run: |
+          set -euo pipefail
+          node scripts/runtime-closure-intake.mjs \
+            p5 \
+            /tmp/p5-488 \
+            evidence/p5/2026-09-10-runtime-evidence.json \
+            --archive=/tmp/figma-plugin-dist-488.zip \
+            --json | tee /tmp/p5-closure-result.json
+          node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('/tmp/p5-closure-result.json','utf8'));if(!r.ok||r.stage!=='complete'||r.verifier?.exitCode!==0)process.exit(1);"
+
+      - name: Retain closure evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: p5-real-closure-validation
+          path: |
+            evidence/p5/2026-09-10-runtime-evidence.json
+            /tmp/p5-closure-result.json
+          if-no-files-found: error
