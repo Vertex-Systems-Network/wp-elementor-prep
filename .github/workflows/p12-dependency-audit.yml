@@ -1,0 +1,44 @@
+name: P12 Dependency Audit
+
+on:
+  push:
+    branches: [audit/p12-dependency-security]
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - run: npm install
+      - name: Capture full audit
+        shell: bash
+        run: |
+          set +e
+          npm audit --json > npm-audit-full.json
+          code=$?
+          set -e
+          echo "$code" > npm-audit-full-exit-code.txt
+          node -e "const a=require('./npm-audit-full.json'); console.log(JSON.stringify(a.metadata?.vulnerabilities ?? {}, null, 2))"
+      - name: Capture production-only audit
+        shell: bash
+        run: |
+          set +e
+          npm audit --omit=dev --json > npm-audit-prod.json
+          code=$?
+          set -e
+          echo "$code" > npm-audit-prod-exit-code.txt
+          node -e "const a=require('./npm-audit-prod.json'); console.log(JSON.stringify(a.metadata?.vulnerabilities ?? {}, null, 2))"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: p12-dependency-audit
+          path: |
+            npm-audit-full.json
+            npm-audit-full-exit-code.txt
+            npm-audit-prod.json
+            npm-audit-prod-exit-code.txt
