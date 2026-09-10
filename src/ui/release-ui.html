@@ -30,11 +30,7 @@
     summary { font-size: 10px; cursor: pointer; opacity: .65; }
     pre { white-space: pre-wrap; word-break: break-word; font-size: 9px; opacity: .7; margin: 5px 0 0; }
     .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-    .inlineActions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
-    .inlineActions.one { grid-template-columns: 1fr; }
     button { width: 100%; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg-secondary); color: var(--figma-color-text); font-weight: 600; cursor: pointer; }
-    button:disabled { opacity: .45; cursor: default; }
-    .smallButton { font-size: 10px; padding: 7px 8px; }
     .empty { border: 1px dashed var(--figma-color-border); border-radius: 8px; padding: 18px; font-size: 12px; line-height: 1.5; opacity: .75; }
     .metricGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin-top: 10px; }
     .metric { font-size: 10px; opacity: .72; }
@@ -48,19 +44,16 @@
     .backlogMeta { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-top: 4px; font-size: 9px; opacity: .68; }
     .backlogAction { font-size: 10px; line-height: 1.35; margin-top: 5px; opacity: .8; }
     .exportPanel[hidden] { display: none; }
-    .checkpoint { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 10px; margin: 10px 0; }
   </style>
 </head>
 <body>
   <div class="app">
     <h1>Pella Elementor Prep</h1>
-    <div class="sub">Audit + actionable backlog + P3 validator + compiled-runtime-gated P5 Safe Fix</div>
-    <div id="root" class="empty">Select one Frame to audit/preview, or two Frames to compare original vs candidate.</div>
+    <div class="sub">Audit + actionable backlog + P3 read-only validator · no design mutations</div>
+    <div id="root" class="empty">Select one Frame to audit, or two Frames to compare original vs candidate.</div>
     <div class="actions">
       <button id="audit">Run audit</button>
-      <button id="plan">Preview safe fixes</button>
       <button id="validate">Compare 2 frames</button>
-      <button id="selftest">Runtime self-test</button>
     </div>
     <div id="export-panel" class="actions exportPanel" hidden>
       <button id="export-audit-json">Export audit-report.json</button>
@@ -78,28 +71,14 @@
     let latestBacklogJson = '';
     let latestBacklogMarkdown = '';
 
-    function post(type, extra = {}) {
-      parent.postMessage({ pluginMessage: { type, ...extra } }, '*');
-    }
-
-    document.getElementById('audit').addEventListener('click', () => post('audit-request'));
-    document.getElementById('plan').addEventListener('click', () => {
-      root.className = 'empty';
-      root.textContent = 'Classifying conservative P5 Safe Fix eligibility…';
-      exportPanel.hidden = true;
-      post('safe-plan-request');
+    document.getElementById('audit').addEventListener('click', () => {
+      parent.postMessage({ pluginMessage: { type: 'audit-request' } }, '*');
     });
     document.getElementById('validate').addEventListener('click', () => {
       root.className = 'empty';
       root.textContent = 'Exporting and comparing selected section frames…';
       exportPanel.hidden = true;
-      post('validation-request');
-    });
-    document.getElementById('selftest').addEventListener('click', () => {
-      root.className = 'empty';
-      root.textContent = 'Running disposable compiled P5 → P3 pixel broker → P4 self-test…';
-      exportPanel.hidden = true;
-      post('runtime-calibration-request');
+      parent.postMessage({ pluginMessage: { type: 'validation-request' } }, '*');
     });
 
     function downloadText(filename, content, type) {
@@ -249,34 +228,6 @@
         ${summary.active > 12 ? `<div class="meta">Showing first 12 active items. Export JSON/Markdown for the full backlog.</div>` : ''}`;
     }
 
-    function checkpointHtml() {
-      return `
-        <div class="checkpoint">
-          <div class="status">SAFE FIX CHECKPOINT PENDING</div>
-          <div class="finding">The previous approved original is retained until you restore or explicitly finalize this commit.</div>
-          <div class="inlineActions">
-            <button class="smallButton" id="restoreCheckpoint">Restore original</button>
-            <button class="smallButton" id="finalizeCheckpoint">Finalize fix</button>
-          </div>
-        </div>`;
-    }
-
-    function bindCheckpointActions() {
-      const restore = document.getElementById('restoreCheckpoint');
-      if (restore) restore.addEventListener('click', () => {
-        root.className = 'empty';
-        root.textContent = 'Restoring retained approved original…';
-        post('safe-fix-restore-request');
-      });
-      const finalize = document.getElementById('finalizeCheckpoint');
-      if (finalize) finalize.addEventListener('click', () => {
-        if (!window.confirm('Finalize this Safe Fix? The retained previous original will be removed and this checkpoint cannot be restored afterward.')) return;
-        root.className = 'empty';
-        root.textContent = 'Finalizing Safe Fix checkpoint…';
-        post('safe-fix-finalize-request');
-      });
-    }
-
     function renderAudit(report, backlog) {
       const sections = report.sections.map((section) => {
         const first = section.findings[0];
@@ -331,57 +282,6 @@
         ${renderBacklog(backlog)}`;
     }
 
-    function renderSafePlan(message) {
-      const counts = { ELIGIBLE: 0, REVIEW: 0, NOOP: 0, UNSUPPORTED: 0 };
-      for (const plan of message.plans) counts[plan.decision] = (counts[plan.decision] || 0) + 1;
-      const rows = message.plans.map((plan) => {
-        const apply = message.mutationEnabled && plan.decision === 'ELIGIBLE' && plan.recipe
-          ? `<div class="inlineActions one"><button class="smallButton applySafeFix" data-target="${escapeHtml(plan.targetNodeId)}" data-recipe="${escapeHtml(plan.recipe)}">Apply this Safe Fix</button></div>`
-          : '';
-        return `
-          <div class="row">
-            <div class="rowHead">
-              <div class="name">${escapeHtml(plan.recipe || plan.pattern)}</div>
-              <div class="badge">${escapeHtml(plan.decision)} · ${plan.confidence}%</div>
-            </div>
-            <div class="recipe">${escapeHtml(plan.semanticHint ? `${plan.semanticHint} ← ${plan.pattern}` : plan.pattern)} @ ${escapeHtml(plan.targetNodeName)}</div>
-            <div class="finding">${escapeHtml(plan.reason)}</div>
-            ${apply}
-            <details><summary>Plan evidence</summary><pre>${escapeHtml(JSON.stringify(plan, null, 2))}</pre></details>
-          </div>`;
-      }).join('');
-
-      const gateMessage = message.runtimeProofValid
-        ? `Compiled runtime proof: PASS${message.runtimeProofPassedAt ? ` · ${escapeHtml(message.runtimeProofPassedAt)}` : ''}`
-        : 'Compiled runtime proof: NOT PASSED — run Runtime self-test before mutation can unlock.';
-      const mutationLabel = message.pendingUndo ? 'LOCKED — checkpoint pending' : (message.mutationEnabled ? 'UNLOCKED' : 'LOCKED');
-
-      root.className = '';
-      root.innerHTML = `
-        ${message.pendingUndo ? checkpointHtml() : ''}
-        <div class="hero">
-          <div class="score">${counts.ELIGIBLE}</div>
-          <div class="status">P5 SAFE FIX PREVIEW</div>
-          <div class="meta">${escapeHtml(message.root.name)} · ${Math.round(message.root.width)} × ${Math.round(message.root.height)}</div>
-          <div class="meta">Eligible ${counts.ELIGIBLE} · Review ${counts.REVIEW} · No-op ${counts.NOOP} · Unsupported ${counts.UNSUPPORTED}</div>
-          <div class="meta">Mutation gate: ${mutationLabel}</div>
-          <div class="meta">${gateMessage}</div>
-        </div>
-        ${rows || '<div class="empty">No supported layout detections were found for this selected Frame.</div>'}`;
-
-      root.querySelectorAll('.applySafeFix').forEach((button) => {
-        button.addEventListener('click', () => {
-          const targetNodeId = button.getAttribute('data-target');
-          const recipe = button.getAttribute('data-recipe');
-          if (!targetNodeId || !recipe) return;
-          root.className = 'empty';
-          root.textContent = `Applying ${recipe} to a staged candidate and running full P3 validation…`;
-          post('safe-fix-apply-request', { targetNodeId, recipe });
-        });
-      });
-      bindCheckpointActions();
-    }
-
     function renderValidation(message) {
       const report = message.report;
       const pixel = report.metrics.pixel;
@@ -412,49 +312,11 @@
         ${findingRows || '<div class="empty">All current integrity and rendered-pixel gates passed.</div>'}`;
     }
 
-    function renderSafeFixResult(message) {
-      const transaction = message.transaction;
-      const validation = transaction && transaction.validation;
-      const pixel = validation && validation.metrics ? validation.metrics.pixel : null;
-      const state = transaction ? transaction.state : 'SKIPPED';
-      const detail = message.skippedReason || (transaction && transaction.error) || (validation && validation.passed === false
-        ? 'Candidate failed mandatory validation and was discarded.'
-        : 'Candidate completed the transaction pipeline.');
-
-      root.className = '';
-      root.innerHTML = `
-        ${message.pendingUndo ? checkpointHtml() : ''}
-        <div class="hero">
-          <div class="score">${escapeHtml(state)}</div>
-          <div class="status">P5 SAFE FIX RESULT</div>
-          <div class="meta">Recipe: ${escapeHtml(message.plan.recipe || message.plan.pattern)} @ ${escapeHtml(message.plan.targetNodeName)}</div>
-          <div class="meta">${escapeHtml(detail)}</div>
-          ${validation ? `<div class="meta">Full P3: ${validation.passed ? 'PASS' : 'FAIL'} · changed pixels ${pixel ? `${pixel.changedPixelPct}%` : '—'}</div>` : ''}
-        </div>
-        <details><summary>Transaction evidence</summary><pre>${escapeHtml(JSON.stringify(message, null, 2))}</pre></details>`;
-      bindCheckpointActions();
-    }
-
-    function renderRuntimeCalibration(message) {
-      const result = message.result;
-      root.className = '';
-      root.innerHTML = `
-        <div class="hero">
-          <div class="score">${result.passed ? 'PASS' : 'FAIL'}</div>
-          <div class="status">P5 COMPILED RUNTIME SELF-TEST</div>
-          <div class="meta">Forced reject: ${result.forcedReject.validationRejected ? 'PASS' : 'FAIL'} · pixel evidence ${result.forcedReject.pixelEvidenceReturned ? 'YES' : 'NO'}</div>
-          <div class="meta">Pass/commit/restore: ${result.passRestore.restored ? 'PASS' : 'FAIL'} · checkpoint cleared ${result.passRestore.checkpointCleared ? 'YES' : 'NO'}</div>
-          <div class="meta">Leftovers: ${result.leftovers}</div>
-          <div class="meta">Mutation gate: ${message.mutationGateUnlocked ? 'UNLOCKED' : 'LOCKED'}</div>
-        </div>
-        <details><summary>Self-test evidence</summary><pre>${escapeHtml(JSON.stringify(result, null, 2))}</pre></details>`;
-    }
-
     window.onmessage = async (event) => {
       const message = event.data.pluginMessage;
       if (!message) return;
 
-      if (message.type === 'audit-error' || message.type === 'validation-error' || message.type === 'safe-fix-error') {
+      if (message.type === 'audit-error' || message.type === 'validation-error') {
         root.className = 'empty';
         root.textContent = message.message;
         if (message.type === 'audit-error') exportPanel.hidden = true;
@@ -471,49 +333,6 @@
         return;
       }
 
-      if (message.type === 'safe-plan-result') {
-        renderSafePlan(message);
-        return;
-      }
-
-      if (message.type === 'safe-fix-started') {
-        root.className = 'empty';
-        root.textContent = `Staging ${message.recipe} candidate for ${message.targetNodeName} and running full P3…`;
-        return;
-      }
-
-      if (message.type === 'safe-fix-result') {
-        renderSafeFixResult(message);
-        return;
-      }
-
-      if (message.type === 'safe-fix-restore-result') {
-        root.className = 'empty';
-        root.textContent = message.restored
-          ? 'Restore complete. The retained approved original is back in place and the committed candidate was removed.'
-          : 'No Safe Fix checkpoint was pending.';
-        return;
-      }
-
-      if (message.type === 'safe-fix-finalize-result') {
-        root.className = 'empty';
-        root.textContent = message.finalized
-          ? 'Safe Fix finalized. The committed candidate remains and the retained previous original backup was removed.'
-          : 'No Safe Fix checkpoint was pending.';
-        return;
-      }
-
-      if (message.type === 'runtime-calibration-started') {
-        root.className = 'empty';
-        root.textContent = 'Running disposable compiled P5 → FullFrameValidator → UI pixel broker → P4 self-test…';
-        return;
-      }
-
-      if (message.type === 'runtime-calibration-result') {
-        renderRuntimeCalibration(message);
-        return;
-      }
-
       if (message.type === 'validation-pixel-request') {
         try {
           const [before, after] = await Promise.all([
@@ -521,18 +340,16 @@
             decodePng(message.afterPng),
           ]);
           const pixelMetrics = comparePixels(before, after, message.channelTolerance);
-          post('validation-pixel-result', {
-            validationId: message.validationId,
-            pixelMetrics,
-          });
+          parent.postMessage({
+            pluginMessage: {
+              type: 'validation-pixel-result',
+              validationId: message.validationId,
+              pixelMetrics,
+            },
+          }, '*');
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : String(error);
           root.className = 'empty';
-          root.textContent = `Pixel comparison failed: ${errorMessage}`;
-          post('validation-pixel-error', {
-            validationId: message.validationId,
-            message: errorMessage,
-          });
+          root.textContent = `Pixel comparison failed: ${error instanceof Error ? error.message : String(error)}`;
         }
         return;
       }

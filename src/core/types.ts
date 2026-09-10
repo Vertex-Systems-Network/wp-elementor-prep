@@ -64,9 +64,11 @@ export type PatternKind =
 export type SemanticHint =
   | 'carousel-viewport'
   | 'repeated-cards'
+  | 'metric-grid'
   | 'split-header'
   | 'facts-list'
   | 'footer-columns'
+  | 'social-link-strip'
   | 'timeline-chapter';
 
 export interface PatternDetection {
