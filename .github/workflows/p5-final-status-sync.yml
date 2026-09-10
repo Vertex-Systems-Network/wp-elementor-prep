@@ -19,7 +19,17 @@ jobs:
         with:
           node-version: '20'
       - name: Synchronize P5 final status
-        run: node scripts/p5-final-status-sync.mjs
+        run: |
+          node scripts/p5-final-status-sync.mjs
+          node - <<'NODE'
+          const fs=require('fs');
+          const p='memory-bank/ROADMAP.md';
+          let s=fs.readFileSync(p,'utf8');
+          const old='Canonical P5 #488 remains registered in `config/runtime-artifacts.json` schema v3 as final-closure eligible.';
+          const next='The artifact is registered in `config/runtime-artifacts.json` schema v3 as the current final-closure-eligible P5 build. Canonical P5 #488 remains the accepted runtime reference.';
+          if((s.split(old).length-1)!==1) throw new Error('ROADMAP canonical schema anchor source missing');
+          fs.writeFileSync(p,s.replace(old,next));
+          NODE
       - name: Verify status contract
         run: |
           npm install
