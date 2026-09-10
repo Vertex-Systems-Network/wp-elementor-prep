@@ -26,7 +26,7 @@ Final planned user surfaces:
 | P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
 | P5 Conservative Safe Fix | ✅ COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Real Figma Desktop acceptance + hardened closure-intake + PR #99 merge PASS |
 | P6 Advanced structures | ✅ COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Genuine Figma positive/refusal closure + current-main closure intake + PR #106 merge PASS |
-| P7 60+ Frame batch queue | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Resolve onto merged P6 main → fresh artifact → 60+ stress + active cancellation closure #8 |
+| P7 60+ Frame batch queue | 🟠 IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh exact final-line artifact registered + exact-current-main preflight PASS → genuine 60+ stress + active cancellation closure #8 |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
 | P9 Actionable backlog generator | ✅ IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged via PR #89; real plugin/export/parity behavior remains in #84 |
 | P10 npm/Node CLI | ✅ IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Cross-OS offline CLI acceptance PASS; real Figma API + plugin parity still pending |
@@ -73,7 +73,19 @@ P12 is the sole release-expansion acceptance gate:
   - macOS artifact `10127561512`, ZIP digest `sha256:9ff90da24595c89dc57f67daa0fa12e01a122fd21551745b69cf52c2988ba9cd`;
   - Windows artifact `10127564618`, ZIP digest `sha256:e2a95df86973adacc70f4cd2aa403f72c7ae9c4396ad2eb205aa10165070e9b8`.
 - ✅ canonical P5 #488 artifact provenance/preflight/archive plumbing remains hardened and calibrated.
-- ✅ P6 fresh final-line artifact `figma-plugin-dist-p6-final-v2-1` (`ae691fac3c65dcdaf472392e6895fd402ae8fa3c`, run `34472374285`) passed genuine Figma positive/refusal closure, exact current-main archive-bound closure intake (`34495685047`), and merged through PR #106 as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`; P7 #490 remains engineering/reference only.
+- ✅ P6 fresh final-line artifact `figma-plugin-dist-p6-final-v2-1` (`ae691fac3c65dcdaf472392e6895fd402ae8fa3c`, run `34472374285`) passed genuine Figma positive/refusal closure, exact current-main archive-bound closure intake (`34495685047`), and merged through PR #106 as `dfbed556f0a6de564ca5c9afb395b7b2dd62abc8`.
+- ✅ P7 fresh final-line source `d6bf2e12e3d877be125d336e423001baef92831b` passed 81 files / 387 tests plus typecheck/build/release/Community/P12-offline gates in run `34497801237`; artifact `figma-plugin-dist-p7-final-v2-1` (ID `10160543369`, ZIP SHA-256 `b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc`) is registered final-closure eligible via PR #108, and exact merged-main preflight `34499068236` PASS. Genuine Figma stress/cancellation evidence remains pending.
+
+### P7 final-line closure-preparation checkpoint — repo-side complete
+
+- ✅ final two-parent source: `d6bf2e12e3d877be125d336e423001baef92831b`;
+- ✅ first final integration attempt failed closed on conflict drift (15 rehearsal paths → 21 current paths), then the expanded boundary was explicitly reviewed and resolved;
+- ✅ canonical-P7 test fixtures were migrated to the hardened exact-build P5 proof signature without weakening runtime production contracts;
+- ✅ final integration run `34497801237`: strict typecheck + 81 test files / 387 tests + plugin/CLI/release/Community/P12-offline PASS;
+- ✅ retained artifact `figma-plugin-dist-p7-final-v2-1`, ID `10160543369`, ZIP SHA-256 `b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc`;
+- ✅ registry PR #108 CI #678 + P12 Offline #33 PASS; merged as `b5c973ffd3b2c8fa99aacd6e7bc10c4aa709e34e`;
+- ✅ exact-current-main archive-bound preflight run `34499068236` PASS, including 5/5 immutable pins, manifest semantics and plugin-ID rebind byte integrity;
+- ⚠️ no P7/P12 acceptance credit is added by these repo-side checks. P7 remains 80% and P12 remains 60% until genuine Figma Desktop 60+ stress + active cancellation closure passes.
 
 ### P5 integration rehearsal checkpoint — non-authorizing
 

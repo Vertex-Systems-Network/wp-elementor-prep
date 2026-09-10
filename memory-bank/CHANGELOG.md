@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-10 — P7 fresh final-line artifact registered and exact-main preflighted
+
+- P7 final integration failed closed on conflict drift from 15 rehearsal paths to 21 current paths; the expanded boundary was reviewed explicitly.
+- Five stale P7 test fixtures were forward-ported to the hardened exact-build P5 proof API without weakening production runtime contracts.
+- Final two-parent source `d6bf2e12e3d877be125d336e423001baef92831b` passed strict typecheck, 81 test files / 387 tests, plugin/CLI builds, release contract/package, Community verification and P12 offline in run `34497801237`.
+- Retained artifact `figma-plugin-dist-p7-final-v2-1`, ID `10160543369`, ZIP SHA-256 `b0f16004d35f70aca7bb9edc65f162afe731db4c7d02044b4518e4b31ef685fc`, manifest semantic SHA-256 `4c909c9cba64bc9c8c7b725c39ed712e6d6bdfaab0eb896991975160121b9c5c`.
+- Registration preflight `34498730566` passed archive/immutable/manifest/import-rebind gates; PR #108 CI #678 + P12 Offline #33 passed and merged as `b5c973ffd3b2c8fa99aacd6e7bc10c4aa709e34e`.
+- Exact merged-main preflight `34499068236` passed. P7 remains 80%, core remains 98%, P12 remains 60%; real Figma 64-Frame stress + active cancellation evidence is still required.
+
 ## 2026-09-10
 
 ### Plugin display-name rename — WP Builders Prepare
