@@ -1,5 +1,5 @@
 import { access, readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { extname, resolve } from 'node:path';
 
 function fail(message) {
   throw new Error(`Community readiness verification failed: ${message}`);
@@ -7,6 +7,26 @@ function fail(message) {
 
 function isContact(value) {
   return typeof value === 'string' && (value.includes('@') || /^https:\/\//.test(value));
+}
+
+async function readPngDimensions(path) {
+  if (extname(path).toLowerCase() !== '.png') fail(`final Community asset must be PNG: ${path}.`);
+  const bytes = await readFile(resolve(path));
+  if (bytes.length < 24 || bytes.toString('hex', 0, 8) !== '89504e470d0a1a0a' || bytes.toString('ascii', 12, 16) !== 'IHDR') {
+    fail(`invalid PNG asset: ${path}.`);
+  }
+  return {
+    width: bytes.readUInt32BE(16),
+    height: bytes.readUInt32BE(20),
+  };
+}
+
+async function requirePngSize(path, width, height, label) {
+  await access(resolve(path));
+  const actual = await readPngDimensions(path);
+  if (actual.width !== width || actual.height !== height) {
+    fail(`${label} must be exactly ${width}×${height}; got ${actual.width}×${actual.height}.`);
+  }
 }
 
 const args = process.argv.slice(2);
@@ -59,10 +79,23 @@ if (unresolved.length > 0) fail(`publishable listing contains unresolved placeho
 if (!isContact(listing.supportContact)) fail('supportContact must be a real email address or https URL.');
 if (typeof listing.category !== 'string' || listing.category.trim().length === 0) fail('category is required.');
 if (listing.publishTarget !== 'Community' && listing.publishTarget !== 'Organization') fail('publishTarget must be Community or Organization.');
-for (const asset of [listing.assets?.icon, listing.assets?.thumbnail]) {
-  if (!asset || typeof asset.path !== 'string') fail('final icon and thumbnail paths are required.');
-  await access(resolve(asset.path));
-}
-for (const carouselPath of listing.assets?.carousel?.paths ?? []) await access(resolve(carouselPath));
+if (!listing.assets?.icon || typeof listing.assets.icon.path !== 'string') fail('final icon path is required.');
+if (!listing.assets?.thumbnail || typeof listing.assets.thumbnail.path !== 'string') fail('final thumbnail path is required.');
 
-console.log(`Community readiness metadata PASS for target: ${listing.publishTarget}`);
+await requirePngSize(listing.assets.icon.path, 128, 128, 'Community icon');
+await requirePngSize(listing.assets.thumbnail.path, 1920, 1080, 'Community thumbnail');
+
+const carouselPaths = listing.assets?.carousel?.paths;
+if (!Array.isArray(carouselPaths) || carouselPaths.length < 3 || carouselPaths.length > 9) {
+  fail('publishable Community carousel must contain 3–9 final assets.');
+}
+if (listing.assets.carousel.recommendedWidth !== 1920 || listing.assets.carousel.recommendedHeight !== 1080) {
+  fail('carousel recommendation must remain 1920×1080.');
+}
+for (const carouselPath of carouselPaths) {
+  await requirePngSize(carouselPath, 1920, 1080, `Community carousel asset ${carouselPath}`);
+}
+
+console.log(`Community readiness metadata + assets PASS for target: ${listing.publishTarget}`);
+console.log(`Category: ${listing.category}`);
+console.log(`Assets: 1 icon + 1 thumbnail + ${carouselPaths.length} carousel images`);
