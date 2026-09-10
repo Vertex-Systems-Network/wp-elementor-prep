@@ -25,13 +25,13 @@ Final planned user surfaces:
 | AI-native governance + repo tooling | ✅ COMPLETE | 100% | `██████████` | Keep Issues → PR/MR → development lifecycle, status verification and artifact registry synchronized |
 | P0–P4 core audit/validation/transaction | ✅ COMPLETE | 100% | `██████████` | None |
 | P5 Conservative Safe Fix | 🟡 IMPLEMENTED / VALIDATION DEFERRED | 94% | `█████████░` | P12 real Figma closure → fresh P5→then-current-main `CODE_CONFLICT` resolution preserving current-main safety → merge #6 |
-| P6 Advanced structures | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 merge: resolve P6 → fresh artifact → real positive/refusal closure #7 |
-| P7 60+ Frame batch queue | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 merge: resolve P7 → fresh artifact → 60+ stress + active cancellation closure #8 |
+| P6 Advanced structures | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Post-P5 rehearsal 10→0 PASS; after actual P5 merge refresh resolution → fresh artifact → real positive/refusal closure #7 |
+| P7 60+ Frame batch queue | 🟠 IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | Post-P5 rehearsal 15→0 PASS; after actual P5 merge refresh resolution → fresh artifact → 60+ stress + active cancellation closure #8 |
 | P8 Elementor exporter adapters | ⏸ DEFERRED | N/A | `──────────` | Re-evaluate after normalization line is stable |
 | P9 Actionable backlog generator | ✅ IMPLEMENTATION COMPLETE / P12 VALIDATION PENDING | 100% | `██████████` | Merged via PR #89; real plugin/export/parity behavior remains in #84 |
 | P10 npm/Node CLI | ✅ IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Cross-OS offline CLI acceptance PASS; real Figma API + plugin parity still pending |
 | P11 Normal Figma plugin distribution | ✅ IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Offline release reproducibility PASS; final integrated install/runtime/Community readiness pending |
-| P12 Final integrated validation | 🧪 IN PROGRESS | 20% | `██░░░░░░░░` | Offline cross-platform slice PASS → next genuine P5 Desktop/runtime closure + real API/plugin acceptance |
+| P12 Final integrated validation | 🧪 IN PROGRESS | 20% | `██░░░░░░░░` | Offline cross-platform + P5/P6/P7 integration rehearsals PASS → next genuine P5 Desktop/runtime closure + real API/plugin acceptance |
 
 **Overall active project progress:** `█████████░ 93%`
 
@@ -86,6 +86,16 @@ P12 is the sole release-expansion acceptance gate:
 - ✅ retained rehearsal artifact `10129465465`, ZIP SHA-256 `faac0ca60f83c85931ccfd030f70d9672afbd03e55224a48631a2d5b029779b7`;
 - ✅ canonical Actions artifact #488 + retained ZIP re-downloaded and current-contract `runtime:preflight` PASS in run `34416999458`;
 - ⚠️ rehearsal evidence is explicitly `acceptanceAuthority: false`: P5 remains 94%, P12 remains 20%, and real Figma Desktop/rendered-pixel/closure evidence is still mandatory.
+
+### P6/P7 downstream integration rehearsal checkpoint — non-authorizing
+
+- ✅ both rehearsals are based on current main `84ea74f7550edb1a4857e40fe4addb14369abb6f` after applying the proven canonical P5 resolution;
+- ✅ P6 canonical `9a6ae3b29e2f70ebbd987a686856c2957f590b75`: exact post-P5 conflict set `10 → 0`; latest same-head rehearsal run `34421353122` PASS; retained artifact `10131008051`, ZIP SHA-256 `96a175e83970a168c5ea2f0af0df2f057e50937330200632e468c86b7be6c650`;
+- ✅ P7 canonical `cbfdb66db531da8613582c84523265e42dad63a2`: exact post-P5 conflict set `15 → 0`; latest rehearsal run `34421353146` PASS with 66 test files / 323 tests plus status/typecheck/build/CLI/release/Community/P12-offline checks;
+- ✅ P7 rehearsal preserves the current stronger build-bound P5 proof contract plus exact-build P7 receipt rather than adopting the older unbound P5 proof model from the P7 branch;
+- ✅ P7 development batch/runtime controls remain present in the development artifact while the normal release manifest/UI stays gated; prepared-import code/UI bytes remain unchanged;
+- ✅ retained P7 artifact `10131008310`, ZIP SHA-256 `22a9473bead40053fb07e80aa0b00e1dd117c9bd0bbd94e395dd8afd57567982`;
+- ⚠️ both evidence bundles are explicitly `acceptanceAuthority: false`. P6 stays 80%, P7 stays 80%, P12 stays 20%; real Figma closure and fresh final-line artifacts remain mandatory.
 
 Detailed engineering history is retained in `memory-bank/CHANGELOG.md`.
 

@@ -2,6 +2,15 @@
 
 ## 2026-09-10
 
+### P6/P7 downstream integration rehearsals
+- Built a retained current-main/P5 downstream conflict probe and fixed its evidence-retention harness before treating any output as valid.
+- P6 canonical head `9a6ae3b` produced 10 post-P5 conflicts; deterministic resolution preserved current-main P9–P12/import/provenance safety, added only P6-specific runtime surfaces, and passed run `34421353122`.
+- Retained P6 rehearsal artifact `10131008051`, ZIP SHA-256 `96a175e83970a168c5ea2f0af0df2f057e50937330200632e468c86b7be6c650`.
+- P7 canonical head `cbfdb66` produced 15 post-P5 conflicts. The first integrated run exposed old unbound-P5-proof API assumptions; the rehearsal was migrated to the stronger current build-bound P5 proof contract rather than weakening it.
+- Final P7 rehearsal run `34421353146` passed 66 test files / 323 tests plus status, typecheck, builds, CLI, release, Community and P12-offline checks; exact-build P7 receipt and release-surface gating were preserved.
+- Retained P7 rehearsal artifact `10131008310`, ZIP SHA-256 `22a9473bead40053fb07e80aa0b00e1dd117c9bd0bbd94e395dd8afd57567982`.
+- Both rehearsals are non-authorizing and leave P6 80%, P7 80%, P12 20%; genuine runtime evidence and fresh final-line artifacts remain mandatory.
+
 ### P12 P5 integration rehearsal and current-contract preflight
 - Rehearsed canonical P5 `810d98d6e09cb4cf3fe4758fcb07e87734254a8e` against current main `3c3dc14bc48c3ea8e5df7620e223de0229737d9e` through a real branch-only three-way merge; exact conflict set was `11` paths and resolved to `0` unresolved entries.
 - Latest repeat rehearsal run `34416999259` on head `536d4b0f3b07d1675ab5cf87b69a83dbce7d6ebc` passed `195/195` integrated tests plus status/typecheck/plugin build/CLI build/release-contract/release-package/Community/P12-offline/import-safety checks.
