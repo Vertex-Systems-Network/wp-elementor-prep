@@ -28,6 +28,7 @@ jobs:
           cp scripts/p12-resolve-p5-rehearsal.mjs /tmp/p12-resolve-p5-rehearsal.mjs
           cp scripts/p12-update-p9-integration-contract.mjs /tmp/p12-update-p9-integration-contract.mjs
           cp scripts/p12-resolve-p7-rehearsal.mjs /tmp/p12-resolve-p7-rehearsal.mjs
+          cp scripts/p12-update-p7-integration-contract.mjs /tmp/p12-update-p7-integration-contract.mjs
       - name: Build exact current-main plus resolved P5 candidate
         shell: bash
         run: |
@@ -99,6 +100,7 @@ jobs:
             src/ui/ui.html \
             tests/p5-runtime-acceptance.test.ts
           node /tmp/p12-resolve-p7-rehearsal.mjs
+          node /tmp/p12-update-p7-integration-contract.mjs
           git add -A
           git diff --name-only --diff-filter=U | sort > p7-integration-rehearsal/conflicts-after-resolution.txt
           if [ -s p7-integration-rehearsal/conflicts-after-resolution.txt ]; then
