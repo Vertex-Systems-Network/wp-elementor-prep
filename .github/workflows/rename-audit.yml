@@ -1,0 +1,23 @@
+name: Rename Surface Audit
+
+on:
+  push:
+    branches:
+      - chore/rename-wp-builders-prepear
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Find current product-name surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '--- exact product/display name matches ---'
+          git grep -n -E 'Pella Elementor Prep|WP Elementor Prep|Open Elementor Prep' -- . ':!memory-bank/CHANGELOG.md' ':!CHANGELOG.md' || true
+          echo '--- technical slug matches (informational only; do not rename) ---'
+          git grep -n 'wp-elementor-prep' -- package.json README.md docs config community scripts src tests || true
