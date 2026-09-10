@@ -1,21 +1,45 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "pluginName": "WP Builders Prepare",
   "editorTypes": ["figma"],
   "networkAccess": {
     "allowedDomains": ["none"]
   },
   "userCommands": [
-    { "command": "open", "label": "Open WP Builders Prepare", "capability": "ui" },
+    { "command": "open", "label": "Open WP Builders Prepare", "capability": "integrated-ui" },
     { "command": "audit", "label": "Audit & Backlog", "capability": "audit-backlog" },
     { "command": "validate", "label": "Compare Two Frames", "capability": "p3-validation" },
     { "command": "export-report", "label": "Audit & Export Report", "capability": "report-export" }
   ],
-  "deferredIntegratedCapabilities": [
-    { "capability": "safe-fix", "sourceIssue": 6, "releaseGate": 84 },
-    { "capability": "advanced-structures", "sourceIssue": 7, "releaseGate": 84 },
-    { "capability": "batch-queue", "sourceIssue": 8, "releaseGate": 84 }
+  "acceptedIntegratedCapabilities": [
+    {
+      "capability": "safe-fix",
+      "sourceIssue": 6,
+      "status": "production-accepted",
+      "exposure": "integrated-ui",
+      "requiresBuildSafetyCheck": true
+    },
+    {
+      "capability": "advanced-structures",
+      "sourceIssue": 7,
+      "status": "production-accepted",
+      "exposure": "audit-and-conservative-planning",
+      "requiresBuildSafetyCheck": false
+    },
+    {
+      "capability": "batch-queue",
+      "sourceIssue": 8,
+      "status": "production-accepted",
+      "exposure": "integrated-ui",
+      "requiresBuildSafetyCheck": true
+    }
   ],
+  "releaseUiPolicy": {
+    "safeFixVisible": true,
+    "batchQueueVisible": true,
+    "buildSafetyCheckVisible": true,
+    "developerEvidenceControlsVisible": false
+  },
   "developerCommandPolicy": {
     "releaseManifestMayExposeDeveloperCommands": false,
     "reservedPrefixes": ["developer:", "dev-", "p5-", "p6-", "p7-"]
