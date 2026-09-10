@@ -350,3 +350,15 @@
 
 ### Safety status
 - General Safe Fix remains disabled until P4 is merged and each P5 recipe proves its own confidence + validation path.
+
+
+## 2026-09-10 — P6 fresh final-line artifact registered and current-main preflight PASS
+
+- Corrected the user-facing product name to **WP Builders Prepare** via PR #103; technical repo/npm slug remains `wp-elementor-prep`.
+- Resolved canonical P6 `9a6ae3b29e2f70ebbd987a686856c2957f590b75` onto corrected post-P5 main and produced final-line source `ae691fac3c65dcdaf472392e6895fd402ae8fa3c`.
+- Rebuilt after rejecting an earlier metadata-incomplete candidate; authoritative run `34472374285` produced `figma-plugin-dist-p6-final-v2-1`.
+- Artifact ZIP SHA-256: `4d96a313c93865029737f6ce0f05c09dda9c38a15a0d2594e2428bf360fe26c0`; manifest semantic SHA-256: `cc4bcdd36099dbe578d4a640ae1ce1c143a4f8ce3bc1fb54c5672cf46dec3ba0`.
+- Full final-line verification PASS: 48 test files / 259 tests, typecheck, plugin/CLI builds, release contract/package, Community verification, P12 offline and import-rebind integrity.
+- PR #104 registered the fresh P6 artifact as `finalClosureEligible: true` on main `47b983bd45923f96486964453423de1800e89fd6`.
+- Exact current-main archive-bound `runtime:preflight -- p6 ... --intent=final-closure` PASS: archive digest MATCH, immutable files 5/5 MATCH, manifest semantics MATCH.
+- No P6/P12 acceptance percentage was added. Next authority gate remains genuine Figma Desktop image-bearing positive calibration + preservation refusal, unedited `p6-closure.json`, then current-main closure intake.

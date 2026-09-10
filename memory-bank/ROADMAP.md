@@ -11,7 +11,7 @@ Last updated: 2026-09-10
 | P3 | Geometry/content/image + rendered-pixel validation | COMPLETE | 100% | `██████████` | None |
 | P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
 | P5 | Conservative Safe Fix recipes + exact-build proof | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Real Desktop + closure-intake + PR #99 merge PASS |
-| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P5 merged → fresh post-P5 registered artifact → real positive/refusal closure #7 |
+| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / RUNTIME CLOSURE PENDING | 80% | `████████░░` | Fresh post-P5 artifact registered + current-main preflight PASS → real positive/refusal closure #7 |
 | P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 → fresh registered artifact → 60+ stress/cancel closure #8 |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate later |
 | P9 | Actionable backlog generator | IMPLEMENTATION COMPLETE / REAL-PLUGIN VALIDATION PENDING | 100% | `██████████` | Real plugin/export/parity quality in #84 |
@@ -63,11 +63,11 @@ The artifact is registered in `config/runtime-artifacts.json` schema v3 as the c
 
 ## P6 — next critical path
 
-Resolve/rebuild P6 on merged P5/current main, publish/register a fresh exact artifact, collect genuine image-bearing positive + preservation-refusal observations, pass current-main closure intake, then merge/close #7.
+Final-line resolve/rebuild, fresh exact artifact publication/registration and exact current-main preflight are complete. Collect genuine image-bearing positive + preservation-refusal observations, pass current-main closure intake, then merge/close #7.
 
 ## P6/P7
 
-P6 #494 and P7 #490 remain reference-only. After P5 merges they need fresh exact final-line artifacts and genuine P12 runtime closure.
+P6 #494 and P7 #490 remain reference-only. P6 now also has registered final-line artifact `figma-plugin-dist-p6-final-v2-1` at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c` with exact current-main preflight PASS; its genuine Figma closure remains. P7 still needs its fresh final-line artifact and genuine stress/cancel closure.
 
 ## Remaining P12 acceptance
 

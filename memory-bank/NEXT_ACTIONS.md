@@ -17,7 +17,7 @@ For every P12 cycle:
 ## Current queue
 
 - #6 — P5 Safe Fix: CLOSED COMPLETED; real Desktop acceptance + closure-intake + PR #99 merge PASS;
-- #7 — P6 Advanced structures: **next critical path**; fresh post-P5 artifact + real positive/refusal closure;
+- #7 — P6 Advanced structures: **next critical path**; fresh post-P5 artifact is registered and current-main preflight PASS; real positive/refusal closure remains;
 - #8 — P7 Batch queue: follows final P6/P5 line with fresh 60+ stress/cancel closure;
 - #84 — P12 final integrated validation, 40% complete.
 
@@ -65,11 +65,11 @@ Canonical #488 + retained ZIP current-contract preflight also PASSed in run `344
 
 ## Immediate P6 sequence
 
-1. refresh/resolve canonical P6 against merged P5/current main;
-2. run full repository/provenance/release checks;
-3. publish and register a fresh exact P6 artifact as final-closure eligible;
-4. current-main final-closure preflight PASS;
-5. genuine Figma image-bearing positive calibration + preservation refusal;
+1. ✅ refresh/resolve canonical P6 against merged P5/current main — complete at `ae691fac3c65dcdaf472392e6895fd402ae8fa3c`;
+2. ✅ run full repository/provenance/release checks — complete; 48 files / 259 tests plus typecheck/build/release/Community/P12 offline PASS;
+3. ✅ publish and register fresh exact P6 artifact `figma-plugin-dist-p6-final-v2-1` as final-closure eligible — complete via PR #104;
+4. ✅ exact current-main final-closure preflight with retained ZIP — PASS on `47b983bd45923f96486964453423de1800e89fd6`;
+5. **NEXT:** genuine Figma image-bearing positive calibration + preservation refusal;
 6. export unedited `p6-closure.json`;
 7. current-main `runtime:closure-intake -- p6 ...` PASS;
 8. merge P6 and close #7.
@@ -77,9 +77,8 @@ Canonical #488 + retained ZIP current-contract preflight also PASSed in run `344
 ## After P5
 
 P6:
-- resolve onto merged final line;
-- build/register fresh exact artifact;
-- real image-bearing positive calibration + preservation refusal;
+- final-line resolve/build/registration/preflight: COMPLETE;
+- real image-bearing positive calibration + preservation refusal: NEXT;
 - closure intake PASS;
 - merge/close #7.
 
