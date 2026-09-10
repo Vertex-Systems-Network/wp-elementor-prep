@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "name": "Pella Elementor Prep",
+  "name": "WP Builders Prepear",
   "tagline": "Audit Figma structure for safer Elementor preparation",
   "description": "Deterministically audit a selected Figma frame, review Elementor-readiness findings, generate an actionable backlog, compare original and candidate frames with P3 integrity checks, and export audit/backlog reports. The release plugin is offline and does not use generative AI.",
   "category": "__SELECT_IN_FIGMA_PUBLISH_MODAL__",

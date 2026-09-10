@@ -2,6 +2,15 @@
 
 ## 2026-09-10
 
+### Plugin display-name rename — WP Builders Prepear
+
+- User-requested shipped plugin/product display name changed from `Pella Elementor Prep` / `WP Elementor Prep` to exactly `WP Builders Prepear`.
+- Updated development/release manifests, release contract config, Community listing, development/release UI titles, current operator docs and generic runtime manifest fixtures.
+- Updated the release menu label from `Open Elementor Prep` to `Open WP Builders Prepear`.
+- The canonical P5 #488 semantic-pin fixture intentionally retains `Pella Elementor Prep` because it models immutable accepted artifact bytes; registry hash and accepted provenance remain unchanged.
+- Technical repository/npm/CLI slug `wp-elementor-prep`, Figma plugin ID/provenance identities and historical accepted runtime artifacts remain unchanged.
+- Branding-only change: no progress percentage or runtime acceptance credit changes.
+
 ### P5 genuine Desktop acceptance, hardened closure and final integration
 
 - Real Figma development plugin ID `1679803102348456572`; canonical #488 Desktop Runtime Self-Test accepted true with failures empty and leftovers 0.

@@ -23,7 +23,7 @@ The P5 branch contains a developer-only disposable self-test that exercises the 
 
 Build/import the canonical development plugin and invoke:
 
-`Plugins -> Pella Elementor Prep -> Developer: P5 Runtime Self-Test`
+`Plugins -> WP Builders Prepear -> Developer: P5 Runtime Self-Test`
 
 The plugin UI must remain available while validation runs because `FullFrameValidator` delegates PNG decoding and pixel comparison to the UI Canvas broker.
 
@@ -40,7 +40,7 @@ After the run completes, the plugin opens **P5 Compiled Runtime Acceptance** wit
 
 The latest valid evidence is also persisted in client storage and can be reopened later without rerunning the self-test:
 
-`Plugins -> Pella Elementor Prep -> Developer: P5 Runtime Evidence`
+`Plugins -> WP Builders Prepear -> Developer: P5 Runtime Evidence`
 
 Missing or structurally corrupt stored evidence is refused rather than guessed.
 

@@ -1,4 +1,4 @@
-# WP Elementor Prep
+# WP Builders Prepear
 
 Deterministic Figma structure auditor and safe-prep engine for WordPress Elementor.
 
