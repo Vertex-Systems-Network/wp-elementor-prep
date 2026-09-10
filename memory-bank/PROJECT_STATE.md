@@ -11,9 +11,9 @@ Last updated: 2026-09-10
 
 ## Current policy
 
-P9–P11 implementation is complete. P12 #84 is the sole release-expansion final validation gate and is now `20%` complete after the cross-platform offline acceptance slice.
+P9–P11 implementation is complete. P12 #84 is the sole release-expansion final validation gate and is now `40%` complete after cross-platform offline acceptance plus genuine P5 Desktop/runtime closure and final integration.
 
-Only properties directly exercised by retained evidence receive P12 credit. Real Figma Desktop/runtime/API, P5/P6/P7 closure and Community review remain pending.
+Only properties directly exercised by retained evidence receive P12 credit. P5 real Desktop/runtime closure is complete; real Figma API/plugin parity, P6/P7 closure and Community review remain pending.
 
 ## Repository baseline
 
@@ -25,8 +25,8 @@ Post-P11 main `f689fd0b703f83ee81953d36aef8d63bc2a56574` passed CI #645 and Inte
 
 ## Current issue queue
 
-- #6 — P5 Safe Fix: implementation complete, genuine Figma closure + final current-main integration pending;
-- #7 — P6 Advanced structures: implementation complete on reference head, fresh final-line artifact/runtime closure pending after P5;
+- #6 — P5 Safe Fix: CLOSED COMPLETED after real Desktop acceptance, closure-intake PASS and PR #99 merge;
+- #7 — P6 Advanced structures: implementation complete on reference head, now unblocked for a fresh post-P5 final-line artifact/runtime closure;
 - #8 — P7 Batch queue: implementation complete on reference head, fresh final-line stress/cancel closure pending after P5;
 - #84 — P12 final integrated validation/release acceptance, active at 20%.
 
@@ -38,16 +38,16 @@ P8 exporter remains deferred. P9/P10/P11 implementation issues are closed.
 |---|---|---:|---|
 | AI-native governance/tooling | COMPLETE | 100% | Keep Issues/PR/status/provenance synchronized |
 | P0–P4 core audit/validation/transaction | COMPLETE | 100% | None |
-| P5 Safe Fix | IMPLEMENTED / VALIDATION DEFERRED | 94% | Genuine P12 Figma Desktop closure → current-main integration → merge #6 |
+| P5 Safe Fix | COMPLETE / PRODUCTION ACCEPTED | 100% | Real Desktop + closure-intake + PR #99 merge PASS |
 | P6 advanced structures | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | After P5: fresh exact artifact + real positive/refusal closure #7 |
 | P7 batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | After P5: fresh exact artifact + 60+ stress/cancel closure #8 |
 | P8 exporter adapters | DEFERRED | N/A | Re-evaluate later |
 | P9 backlog generator | IMPLEMENTATION COMPLETE / P12 REAL-PLUGIN VALIDATION PENDING | 100% | Real plugin/export/parity quality in #84 |
 | P10 npm/CLI | IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | Offline cross-OS acceptance PASS; real Figma API/plugin parity pending |
 | P11 Figma plugin distribution | IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | Offline release reproducibility PASS; final integrated install/Community readiness pending |
-| P12 final validation | IN PROGRESS | 20% | Next critical path: genuine P5 Desktop/runtime closure |
+| P12 final validation | IN PROGRESS | 40% | Next critical path: P6 fresh final-line runtime closure |
 
-Historical P0–P7 core progress remains `93%` under its original denominator.
+Historical P0–P7 core progress is now `95%` under its original eight-phase denominator: P0–P5 at 100%, P6/P7 at 80%.
 
 ## Runtime artifact registry
 
@@ -95,35 +95,13 @@ Vitest was updated from `^3.2.0` to `^4.1.11`. Compatibility run `34423555371` p
 
 No P5/P6/P7/P12 acceptance percentage changes from this maintenance checkpoint; genuine real-Figma/API/runtime/Community gates remain pending.
 
-## P5 current technical state
+## P5 final technical state — COMPLETE
 
-Canonical P5:
-- branch `feat/p5-safe-recipes`;
-- head `810d98d6e09cb4cf3fe4758fcb07e87734254a8e`;
-- CI #488 / artifact `figma-plugin-dist-488`;
-- ZIP SHA-256 `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`;
-- manifest semantic SHA-256 `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`.
-
-Exact artifact/archive/preflight calibration is complete. P12 must now use the genuine development-plugin ID and real Figma Desktop to collect compiled runtime + rendered-pixel reject/restore/finalize evidence, export `p5-evidence.json`, pass current-main closure intake, then refresh and resolve P5 → current-main integration.
-
-Integration Readiness #104 conflict set against `f689fd0b703f`:
-- `.github/workflows/ci.yml`;
-- `README.md`;
-- `memory-bank/CHANGELOG.md`;
-- `memory-bank/NEXT_ACTIONS.md`;
-- `memory-bank/PROJECT_STATE.md`;
-- `memory-bank/ROADMAP.md`;
-- `package.json`;
-- `scripts/build.mjs`;
-- `scripts/prepare-figma-import.mjs`;
-- `src/plugin/main.ts`;
-- `src/ui/ui.html`.
-
-Final integration must refresh this list after genuine P5 closure because main may move.
+Canonical P5 #488 real Desktop evidence passed for source `810d98d6e09cb4cf3fe4758fcb07e87734254a8e` / run `34242984963` (#488). Current-main closure run `34463444342` completed with canonical archive SHA MATCH, immutable 5/5 MATCH, manifest semantic MATCH and same-artifact verifier exit 0. Final integration PR #99 passed CI #661 and merged as `91c3feda1e8841f5b07ec189c5289c701ce199f5`; post-merge CI #662, Integration Readiness #118 and P12 Offline #17 passed. Issue #6 is closed completed.
 
 ## P6/P7 state
 
-P6 #494 and P7 #490 remain engineering/reference artifacts only. Final production integration requires fresh exact builds after final P5 merge and real runtime evidence in P12.
+P6 #494 and P7 #490 remain engineering/reference artifacts only. P5 is now merged, so P6 is unblocked for a fresh exact final-line build and real closure; P7 follows on the resulting final line.
 
 ## Remaining P12 matrix
 
@@ -144,7 +122,7 @@ Still unaccepted:
 
 ## Immediate target
 
-Next critical path is genuine P5 Figma Desktop/runtime acceptance. If the environment cannot import/run the exact development-plugin artifact, do not fabricate evidence or merge P5; continue only with other independently genuine P12 checks.
+P6 fresh post-P5 integration/build → final-closure-eligible registry/preflight → genuine real-Figma positive/refusal evidence → current-main closure intake → merge/close #7.
 
 ## P6/P7 downstream integration rehearsal checkpoint — 2026-09-10
 

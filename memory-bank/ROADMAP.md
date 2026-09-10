@@ -10,24 +10,24 @@ Last updated: 2026-09-10
 | P2 | Deterministic classifier semantics + evidence | COMPLETE | 100% | `██████████` | None |
 | P3 | Geometry/content/image + rendered-pixel validation | COMPLETE | 100% | `██████████` | None |
 | P4 | Candidate transaction + rollback | COMPLETE | 100% | `██████████` | None |
-| P5 | Conservative Safe Fix recipes + exact-build proof | IMPLEMENTED / VALIDATION DEFERRED | 94% | `█████████░` | P12 genuine Desktop closure → current-main integration → merge #6 |
-| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 → fresh registered artifact → positive/refusal closure #7 |
+| P5 | Conservative Safe Fix recipes + exact-build proof | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Real Desktop + closure-intake + PR #99 merge PASS |
+| P6 | Advanced timeline/carousel/milestone/page normalization | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P5 merged → fresh post-P5 registered artifact → real positive/refusal closure #7 |
 | P7 | Sequential multi-frame/page batch queue | IMPLEMENTED / FINAL INTEGRATION PENDING | 80% | `████████░░` | P12 after P5 → fresh registered artifact → 60+ stress/cancel closure #8 |
 | P8 | Optional Elementor schema exporters | DEFERRED | N/A | `──────────` | Re-evaluate later |
 | P9 | Actionable backlog generator | IMPLEMENTATION COMPLETE / REAL-PLUGIN VALIDATION PENDING | 100% | `██████████` | Real plugin/export/parity quality in #84 |
 | P10 | npm/Node CLI + source adapters | IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Linux/macOS/Windows offline acceptance PASS; real Figma API/parity pending |
 | P11 | Normal Figma plugin distribution | IMPLEMENTATION COMPLETE / PARTIAL P12 ACCEPTANCE | 100% | `██████████` | Offline package reproducibility PASS; final integrated install/Community readiness pending |
-| P12 | Final integrated validation/release acceptance | IN PROGRESS | 20% | `██░░░░░░░░` | Cross-platform offline slice PASS; next genuine P5 Desktop/runtime closure |
+| P12 | Final integrated validation/release acceptance | IN PROGRESS | 40% | `████░░░░░░` | Offline slice + genuine P5 slice PASS; next P6 final-line runtime closure |
 
 ## Progress interpretation
 
-**Historical core P0–P7 progress:** `█████████░ 93%`
+**Historical core P0–P7 progress:** `██████████ 95%`
 
-This remains the original core denominator.
+This remains the original eight-phase core denominator: P0–P5 are complete, P6/P7 remain at 80%.
 
-**P12 final validation:** `██░░░░░░░░ 20%`.
+**P12 final validation:** `████░░░░░░ 40%`.
 
-The 20% credit is limited to retained cross-platform/offline evidence. No credit is assigned for pending real Figma Desktop/API/runtime/Community gates.
+The 40% credit consists of retained cross-platform/offline acceptance (20%) plus genuine P5 Figma Desktop/runtime closure and final integration (20%). P6/P7, real API/plugin parity and Community readiness remain pending.
 
 ## P12 accepted slice — PR #95
 
@@ -57,22 +57,13 @@ Before real runtime closure, current main `3c3dc14bc48c3ea8e5df7620e223de0229737
 
 Current-contract canonical #488 + retained-ZIP preflight also passed in run `34416999458`. This lowers final integration risk but has no acceptance authority; the conflict map must still be refreshed after genuine P5 closure and no progress percentage changes from this rehearsal.
 
-## P5 — next critical path
+## P5 final acceptance — COMPLETE
 
-Canonical exact artifact remains P5 #488 on `810d98d` with ZIP digest `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09` and schema-v3 id-excluded manifest semantic SHA `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`.
+The artifact is registered in `config/runtime-artifacts.json` schema v3 as the current final-closure-eligible P5 build. Canonical P5 #488 remains the accepted runtime reference. Real Figma Desktop acceptance passed using plugin ID `1679803102348456572`; closure run `34463444342` passed archive/artifact/evidence/verifier gates. PR #99 merged at `91c3feda1e8841f5b07ec189c5289c701ce199f5` after CI #661; issue #6 is closed.
 
-The artifact is registered in `config/runtime-artifacts.json` schema v3 as final-closure eligible.
+## P6 — next critical path
 
-P12 must next:
-1. import an exact artifact-derived prepared copy into genuine Figma Desktop using the real development-plugin ID;
-2. run P5 Runtime Self-Test and require compiled acceptance PASS;
-3. collect real rendered-pixel reject/restore/finalize + zero-leftover evidence;
-4. export unedited stable `p5-evidence.json`;
-5. pass current-main closure intake;
-6. refresh and resolve P5 → current-main conflicts preserving P9/P10/P11 and current safety/tooling;
-7. require final CI and merge #6.
-
-Integration Readiness #104 refreshed the pre-closure conflict set to 11 paths. This map must be refreshed again after genuine closure because main may move.
+Resolve/rebuild P6 on merged P5/current main, publish/register a fresh exact artifact, collect genuine image-bearing positive + preservation-refusal observations, pass current-main closure intake, then merge/close #7.
 
 ## P6/P7
 
@@ -82,7 +73,6 @@ P6 #494 and P7 #490 remain reference-only. After P5 merges they need fresh exact
 
 - real credentialed Figma REST CLI;
 - equivalent real plugin audit + parity;
-- P5 real Desktop/rendered-pixel closure + final integration;
 - P6 fresh real positive/refusal closure;
 - P7 fresh real 60+ stress/cancellation closure;
 - real plugin backlog/report export quality;
@@ -96,7 +86,7 @@ P6 #494 and P7 #490 remain reference-only. After P5 merges they need fresh exact
 
 P12 maintenance issue #96 / PR #97 cleared Vitest advisory `GHSA-82fw-gwwq-j7x9` by moving the dev dependency from `^3.2.0` to `^4.1.11`. Pre-fix audit run `34422011818` had 2 moderate dev-only findings and zero production findings; compatibility run `34423555371` passed the complete repository/release/offline/import matrix with full audit = 0 and production audit = 0. PR #97 merged at `01f959ebc792823ee67aa386a65335aab564d667`; post-merge CI #658, Integration Readiness #115 and P12 Offline #13 all passed.
 
-This is maintenance, not product/runtime acceptance. P12 remains 20%, P5 94%, P6/P7 80%, and historical core 93%.
+This maintenance did not itself consume acceptance credit; subsequent genuine P5 completion moved P5 to 100%, P12 to 40%, and historical core to 95%.
 
 ## Execution policy
 

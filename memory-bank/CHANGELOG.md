@@ -2,6 +2,19 @@
 
 ## 2026-09-10
 
+### P5 genuine Desktop acceptance, hardened closure and final integration
+
+- Real Figma development plugin ID `1679803102348456572`; canonical #488 Desktop Runtime Self-Test accepted true with failures empty and leftovers 0.
+- Rendered-pixel forced reject, restore and finalize calibration PASS.
+- Current-main closure run `34463444342`: canonical ZIP SHA MATCH, immutable 5/5 MATCH, manifest semantic MATCH, same-artifact verifier exit 0.
+- Evidence byte SHA-256 `ce5800eb3c5fb3e57d56ac61ffcb0e97d9d569d3d4097f103c546c1605c5a8b5`; retained closure artifact `10146495702`, ZIP SHA-256 `e17f0f25821fb52d8cf6427f2bda99e154eb188a62d278bbea299f6402a533d8`.
+- Provenance: retained repository JSON is an exact reconstruction of user-provided JSON text because conversation inventory did not expose a separately mounted JSON attachment.
+- Fresh 11-conflict integration resolution passed full suite; PR #99 CI #661 + P12 Offline #16 PASS; squash merge `91c3feda1e8841f5b07ec189c5289c701ce199f5`.
+- Post-merge CI #662, Integration Readiness #118 and P12 Offline #17 PASS; issue #6 closed completed.
+- P5 = 100%; historical P0–P7 core = 95%; P12 = 40%. P6 is the next final-line runtime gate.
+
+## 2026-09-10
+
 
 ### P12 Vitest dependency advisory remediation
 - Audited the recurring `npm install` warning with retained run `34422011818`: full audit reported exactly two moderate dev-only findings, while `npm audit --omit=dev` reported zero production vulnerabilities.

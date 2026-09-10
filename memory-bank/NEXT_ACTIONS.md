@@ -4,7 +4,7 @@ Last updated: 2026-09-10
 
 ## Current policy
 
-P9–P11 implementation is complete. P12 #84 is active at `20%` after the cross-platform offline acceptance slice.
+P9–P11 implementation is complete. P12 #84 is active at `40%` after cross-platform offline acceptance plus genuine P5 Desktop/runtime closure and final integration.
 
 For every P12 cycle:
 1. inspect open Issues;
@@ -16,10 +16,10 @@ For every P12 cycle:
 
 ## Current queue
 
-- #6 — P5 Safe Fix: **next critical path**; exact artifact ready, genuine Desktop/rendered-pixel closure + final main integration pending;
-- #7 — P6 Advanced structures: waits for P5 final merge, then fresh artifact + real positive/refusal closure;
-- #8 — P7 Batch queue: waits for P5 final merge, then fresh artifact + real 60+ stress/cancel closure;
-- #84 — P12 final integrated validation, 20% complete.
+- #6 — P5 Safe Fix: CLOSED COMPLETED; real Desktop acceptance + closure-intake + PR #99 merge PASS;
+- #7 — P6 Advanced structures: **next critical path**; fresh post-P5 artifact + real positive/refusal closure;
+- #8 — P7 Batch queue: follows final P6/P5 line with fresh 60+ stress/cancel closure;
+- #84 — P12 final integrated validation, 40% complete.
 
 P8 exporter remains deferred. P9/P10/P11 implementation issues are closed.
 
@@ -53,45 +53,26 @@ Latest repeat run `34416999259` on rehearsal head `536d4b0f3b07d1675ab5cf87b69a8
 
 Canonical #488 + retained ZIP current-contract preflight also PASSed in run `34416999458`. Do not merge the rehearsal branch or count this as runtime acceptance. The next action remains genuine exact-artifact Figma Desktop closure, followed by a fresh integration refresh.
 
-## Immediate P5 sequence
+## Completed P5 final sequence
 
-Canonical P5:
-- branch `feat/p5-safe-recipes`;
-- head `810d98d6e09cb4cf3fe4758fcb07e87734254a8e`;
-- artifact `figma-plugin-dist-488`;
-- ZIP SHA-256 `9422e83511a82b1dd2b4de8e52a67a70a252799d0922a52ef92addfb0b253a09`;
-- manifest semantic SHA-256 `640b8cf980c1ff43230656fc453c9f581ad5aa4ad35da45e766e53bfd00ccf46`.
+- real Figma development plugin ID `1679803102348456572` used;
+- canonical #488-derived plugin imported and Runtime Self-Test passed in genuine Figma Desktop;
+- accepted true / failures empty / leftovers 0, with rendered-pixel reject/restore/finalize PASS;
+- current-main closure run `34463444342` PASS with canonical ZIP SHA MATCH, immutable 5/5, manifest semantic MATCH and verifier exit 0;
+- final integration PR #99 CI #661 + P12 Offline #16 PASS;
+- merge `91c3feda1e8841f5b07ec189c5289c701ce199f5`; #6 closed;
+- post-merge CI #662 + Integration Readiness #118 + P12 Offline #17 PASS.
 
-Next steps:
-1. obtain/use the genuine Figma development-plugin ID for the exact P5 artifact-derived import;
-2. prepare only to a sibling/non-nested directory;
-3. import the exact derived `manifest.json` in real Figma Desktop;
-4. run `Developer: P5 Runtime Self-Test` and require `P5 Compiled Runtime Acceptance: PASS`;
-5. collect genuine rendered-pixel forced-reject / restore / finalize evidence;
-6. require checkpoint cleanup and zero leftovers;
-7. export stable unedited `p5-evidence.json`;
-8. run current-main `runtime:closure-intake -- p5 ...`, binding retained ZIP when available;
-9. refresh P5 → then-current-main integration readiness;
-10. resolve the exact current conflict set preserving current-main P9/P10/P11, overlap safety, CI/status/provenance/closure tooling;
-11. require final integration CI PASS;
-12. merge P5 and close #6 only then.
+## Immediate P6 sequence
 
-## Current integration fact
-
-Integration Readiness #104 against main `f689fd0b703f` reported P5 → main `CODE_CONFLICT` in 11 paths:
-- `.github/workflows/ci.yml`;
-- `README.md`;
-- `memory-bank/CHANGELOG.md`;
-- `memory-bank/NEXT_ACTIONS.md`;
-- `memory-bank/PROJECT_STATE.md`;
-- `memory-bank/ROADMAP.md`;
-- `package.json`;
-- `scripts/build.mjs`;
-- `scripts/prepare-figma-import.mjs`;
-- `src/plugin/main.ts`;
-- `src/ui/ui.html`.
-
-This list is a pre-closure planning fact only; refresh again before final P5 integration.
+1. refresh/resolve canonical P6 against merged P5/current main;
+2. run full repository/provenance/release checks;
+3. publish and register a fresh exact P6 artifact as final-closure eligible;
+4. current-main final-closure preflight PASS;
+5. genuine Figma image-bearing positive calibration + preservation refusal;
+6. export unedited `p6-closure.json`;
+7. current-main `runtime:closure-intake -- p6 ...` PASS;
+8. merge P6 and close #7.
 
 ## After P5
 
@@ -124,11 +105,11 @@ P7:
 
 ## Progress tracking
 
-- historical P0–P7 core progress: `93%`;
+- historical P0–P7 core progress: `95%`;
 - P9 implementation: `100%`;
 - P10 implementation: `100%`, partial P12 acceptance;
 - P11 implementation: `100%`, partial P12 acceptance;
-- P12 final validation: `20%`.
+- P12 final validation: `40%`.
 
 ## P6/P7 downstream integration rehearsal checkpoint — 2026-09-10
 
@@ -145,4 +126,4 @@ P7:
 - Pre-fix run `34422011818`: 2 moderate dev-only findings, production audit 0; artifact `10131236873` / SHA-256 `4d7c7b7f7d0e4bc5798e5d56465071e0bcf6fc28e04878ab96a292f9ed0ed8c9`.
 - Compatibility run `34423555371`: full suite PASS, full audit 0, production audit 0; artifact `10131793673` / SHA-256 `c64dd7a76bc61c9980f3a254e50fa90deeb16fc7e19ba06de4c7fccb4e21aa91`.
 - PR #97 CI #657 + P12 Offline #12 PASS; merge `01f959ebc792823ee67aa386a65335aab564d667`; post-merge CI #658 + Integration Readiness #115 + P12 Offline #13 PASS.
-- This does not consume P12 acceptance credit. The immediate next product action remains genuine P5 Figma Desktop/rendered-pixel closure.
+- This maintenance did not itself consume P12 credit. Genuine P5 completion subsequently moved the immediate product action to P6 final-line closure.
