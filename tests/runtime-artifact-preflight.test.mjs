@@ -45,7 +45,7 @@ function makeArtifact(track, overrides = {}) {
 
   const commands = overrides.commands || track.commands;
   writeFileSync(join(dir, 'manifest.json'), JSON.stringify({
-    name: 'WP Builders Prepear',
+    name: 'WP Builders Prepare',
     id: overrides.pluginId || '000000000000000000',
     api: '1.0.0',
     editorType: ['figma'],
