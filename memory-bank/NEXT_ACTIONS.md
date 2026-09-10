@@ -139,3 +139,10 @@ P7:
 - Development-only P6/P7 controls remain excluded from the normal release surface.
 - These rehearsals are `acceptanceAuthority: false`; they do not change P6/P7/P12 percentages or remove real-Figma/fresh-artifact closure requirements.
 
+## Completed dependency-security maintenance — 2026-09-10
+
+- #96 / PR #97 updated dev-only Vitest `^3.2.0 → ^4.1.11` for `GHSA-82fw-gwwq-j7x9`; no force audit fix was used.
+- Pre-fix run `34422011818`: 2 moderate dev-only findings, production audit 0; artifact `10131236873` / SHA-256 `4d7c7b7f7d0e4bc5798e5d56465071e0bcf6fc28e04878ab96a292f9ed0ed8c9`.
+- Compatibility run `34423555371`: full suite PASS, full audit 0, production audit 0; artifact `10131793673` / SHA-256 `c64dd7a76bc61c9980f3a254e50fa90deeb16fc7e19ba06de4c7fccb4e21aa91`.
+- PR #97 CI #657 + P12 Offline #12 PASS; merge `01f959ebc792823ee67aa386a65335aab564d667`; post-merge CI #658 + Integration Readiness #115 + P12 Offline #13 PASS.
+- This does not consume P12 acceptance credit. The immediate next product action remains genuine P5 Figma Desktop/rendered-pixel closure.

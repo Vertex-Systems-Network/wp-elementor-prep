@@ -92,6 +92,12 @@ P6 #494 and P7 #490 remain reference-only. After P5 merges they need fresh exact
 - final closure/release exit review;
 - Community review/approval remains external.
 
+## Dependency security checkpoint — 2026-09-10
+
+P12 maintenance issue #96 / PR #97 cleared Vitest advisory `GHSA-82fw-gwwq-j7x9` by moving the dev dependency from `^3.2.0` to `^4.1.11`. Pre-fix audit run `34422011818` had 2 moderate dev-only findings and zero production findings; compatibility run `34423555371` passed the complete repository/release/offline/import matrix with full audit = 0 and production audit = 0. PR #97 merged at `01f959ebc792823ee67aa386a65335aab564d667`; post-merge CI #658, Integration Readiness #115 and P12 Offline #13 all passed.
+
+This is maintenance, not product/runtime acceptance. P12 remains 20%, P5 94%, P6/P7 80%, and historical core 93%.
+
 ## Execution policy
 
 For every P12 cycle:

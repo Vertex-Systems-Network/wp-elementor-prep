@@ -87,6 +87,14 @@ The rehearsal retained P9 audit/backlog non-mutation, P5 runtime-gated Safe Fix 
 
 Canonical #488 + retained ZIP also passed current-contract `runtime:preflight` in run `34416999458`. The rehearsal is explicitly non-authorizing and does not replace genuine Figma Desktop evidence; P5 remains `94%` and P12 remains `20%`.
 
+## P12 dependency security checkpoint — complete
+
+Issue #96 / PR #97 cleared the two moderate dev-toolchain audit findings without changing runtime/product code. The pre-fix retained audit (run `34422011818`, artifact `10131236873`, SHA-256 `4d7c7b7f7d0e4bc5798e5d56465071e0bcf6fc28e04878ab96a292f9ed0ed8c9`) showed both findings were Vitest / `@vitest/mocker` advisory `GHSA-82fw-gwwq-j7x9`; production-only audit was already zero.
+
+Vitest was updated from `^3.2.0` to `^4.1.11`. Compatibility run `34423555371` passed the full repository/release/offline/import suite and both full + production audits at zero; retained artifact `10131793673` has SHA-256 `c64dd7a76bc61c9980f3a254e50fa90deeb16fc7e19ba06de4c7fccb4e21aa91`. PR #97 CI #657 and cross-platform P12 Offline #12 passed, squash merge `01f959ebc792823ee67aa386a65335aab564d667` closed #96, and post-merge CI #658 / Integration Readiness #115 / P12 Offline #13 all passed.
+
+No P5/P6/P7/P12 acceptance percentage changes from this maintenance checkpoint; genuine real-Figma/API/runtime/Community gates remain pending.
+
 ## P5 current technical state
 
 Canonical P5:
