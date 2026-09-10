@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { buildReleaseUi } from './release-ui-contract.mjs';
 
 function fail(message) {
   throw new Error(`Release contract verification failed: ${message}`);
@@ -23,6 +24,13 @@ const listing = JSON.parse(await readFile('community/listing.template.json', 'ut
 const changelog = await readFile('CHANGELOG.md', 'utf8');
 const privacy = await readFile('docs/PRIVACY.md', 'utf8');
 const releaseGuide = await readFile('docs/P11_RELEASE_DISTRIBUTION.md', 'utf8');
+const developmentUi = await readFile('src/ui/ui.html', 'utf8');
+let releaseUi;
+try {
+  releaseUi = buildReleaseUi(developmentUi);
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error));
+}
 
 if (typeof packageJson.version !== 'string' || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(packageJson.version)) {
   fail(`package.json version is not supported semver-like text: ${packageJson.version}`);
@@ -35,6 +43,38 @@ if (!releaseGuide.includes('`package.json` is the canonical software version.'))
 }
 if (!releaseGuide.includes('`CHANGELOG.md` records release-facing changes.')) {
   fail('release guide no longer requires CHANGELOG.md.');
+}
+
+if (releaseConfig.schemaVersion !== 2) fail('release config must use schemaVersion 2 for the accepted integrated capability line.');
+if ('deferredIntegratedCapabilities' in releaseConfig) fail('accepted P5-P7 capabilities must not remain in deferredIntegratedCapabilities.');
+const integrated = releaseConfig.acceptedIntegratedCapabilities;
+if (!Array.isArray(integrated)) fail('acceptedIntegratedCapabilities is required.');
+const expectedIntegrated = [
+  ['safe-fix', 6, 'production-accepted', 'integrated-ui', true],
+  ['advanced-structures', 7, 'production-accepted', 'audit-and-conservative-planning', false],
+  ['batch-queue', 8, 'production-accepted', 'integrated-ui', true],
+];
+const actualIntegrated = integrated.map((entry) => [
+  entry.capability,
+  entry.sourceIssue,
+  entry.status,
+  entry.exposure,
+  entry.requiresBuildSafetyCheck,
+]);
+if (JSON.stringify(actualIntegrated) !== JSON.stringify(expectedIntegrated)) {
+  fail(`accepted integrated capability line drifted: ${JSON.stringify(actualIntegrated)}.`);
+}
+const uiPolicy = releaseConfig.releaseUiPolicy;
+if (
+  uiPolicy?.safeFixVisible !== true
+  || uiPolicy?.batchQueueVisible !== true
+  || uiPolicy?.buildSafetyCheckVisible !== true
+  || uiPolicy?.developerEvidenceControlsVisible !== false
+) {
+  fail('releaseUiPolicy must expose accepted Safe Fix/batch/safety-check controls and hide developer evidence controls.');
+}
+for (const marker of ['Run safety check', 'Preview safe fixes', 'Run selected batch', 'safe-fix-apply-request', 'batch-cancel-request']) {
+  if (!releaseUi.includes(marker)) fail(`publishable UI is missing accepted capability marker: ${marker}.`);
 }
 
 const placeholderMatches = manifestText.match(/__FIGMA_PLUGIN_ID__/g) ?? [];
@@ -79,4 +119,5 @@ if (JSON.stringify([...releaseConfig.provenanceFiles].sort()) !== JSON.stringify
 
 console.log(`Release contract PASS: ${releaseConfig.pluginName} ${packageJson.version}`);
 console.log(`Normal user commands: ${configuredCommands.map((entry) => entry.command).join(', ')}`);
+console.log(`Accepted integrated capabilities: ${integrated.map((entry) => entry.capability).join(', ')}`);
 console.log('Network policy: offline');
