@@ -25,10 +25,14 @@ async function hashFile(path) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-const releaseRoot = resolve(args.get('release') ?? 'dist-release');
-const communityListingPath = resolve(args.get('community') ?? 'community/listing.publishable.json');
-const assetRoot = resolve(args.get('asset-root') ?? '.');
-const outputPath = resolve(args.get('out') ?? 'FINAL_RELEASE_ATTESTATION.json');
+const releaseArg = args.get('release') ?? 'dist-release';
+const communityArg = args.get('community') ?? 'community/listing.publishable.json';
+const assetRootArg = args.get('asset-root') ?? '.';
+const outputArg = args.get('out') ?? 'FINAL_RELEASE_ATTESTATION.json';
+const releaseRoot = resolve(releaseArg);
+const communityListingPath = resolve(communityArg);
+const assetRoot = resolve(assetRootArg);
+const outputPath = resolve(outputArg);
 const expectedPluginId = args.get('expected-plugin-id');
 const expectedSourceSha = args.get('source-sha')?.toLowerCase();
 
@@ -73,7 +77,7 @@ const attestation = {
   acceptedIntegratedCapabilities: releaseInfo.acceptedIntegratedCapabilities,
   releaseFiles,
   community: {
-    listingPath: communityListingPath.replaceAll('\\', '/'),
+    listingPath: communityArg.replaceAll('\\', '/'),
     listingSha256: await hashFile(communityListingPath),
     publishTarget: listing.publishTarget,
     category: listing.category,
@@ -87,4 +91,4 @@ await writeFile(outputPath, `${JSON.stringify(attestation, null, 2)}\n`, 'utf8')
 console.log(`Final release attestation PASS: ${releaseInfo.pluginName} ${releaseInfo.packageVersion}`);
 console.log(`Plugin ID: ${releaseInfo.pluginId}`);
 console.log(`Source SHA: ${releaseInfo.sourceSha}`);
-console.log(`Attestation: ${outputPath}`);
+console.log(`Attestation: ${outputArg.replaceAll('\\', '/')}`);
