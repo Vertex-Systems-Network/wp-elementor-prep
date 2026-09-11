@@ -30,8 +30,23 @@ After reading repository context and **before starting new implementation**, exe
    - fix safely actionable failures/conflicts,
    - merge only when documented gates pass,
    - do not duplicate work already owned by an issue or PR/MR.
-3. **New development third**
-   - only after the issue and PR/MR queues are processed,
+3. **R0 research gate when external targets are involved**
+   - refresh official platform documentation,
+   - refresh competitor/market signals,
+   - verify target format/API stability,
+   - record privacy/network/licensing constraints,
+   - update acceptance criteria if the external platform changed.
+4. **R1 reliability/compatibility gate for target adapters**
+   - freeze immutable versioned `TargetProfile`,
+   - freeze machine-readable capability descriptor,
+   - define option dependency/reset rules,
+   - define source staleness/run identity rules,
+   - define state machine, structured errors and retry/cancel behavior,
+   - define atomic generation/download contract,
+   - define schema/package/reference/assets validators,
+   - define real import/build/render/round-trip acceptance harness where applicable.
+5. **New development third**
+   - only after issues, PR/MRs and required R0/R1 gates are processed,
    - follow roadmap/dependency order,
    - use independent parallel workstreams where safe.
 
@@ -70,16 +85,27 @@ Progress must be evidence-based. Do not mark externally blocked runtime acceptan
 - Low-confidence detection must result in `REVIEW`, not mutation.
 - Original visual design is authoritative. Structural cleanup must adapt to the design, not redesign it.
 - New fixes must be transaction-safe: candidate -> validate -> commit or rollback.
-- Every classifier/score/recipe change must have tests.
-- Keep the engine generic. Do not hard-code Marcus Vane node IDs or project-specific copy into product logic.
-- Elementor compatibility is evaluated against modern nested container/data structures, not the legacy section/column model.
-- Avoid unnecessary custom CSS/JS assumptions in the target Elementor mapping.
+- Every classifier/score/recipe/adapter/estimator change must have tests.
+- Keep the engine generic. Do not hard-code customer-specific node IDs or project copy into product logic.
+- Target adapters must be versioned and declare support limits.
+- Target UI must be capability-driven; stale incompatible option values must be cleared/invalidated when target/profile changes.
+- A locally valid artifact is not the same as a real import/render proof. Use precise readiness labels.
+- Target generation must be atomic: incomplete/failed/cancelled artifacts are never exposed as ready downloads.
+- Do not silently fall back to screenshots, custom HTML/JS or alternative widgets/blocks when native mapping fails.
+- Elementor compatibility must distinguish v3 Container-oriented and v4 Atomic-oriented structures rather than assuming one universal schema.
+- Unsupported Elementor Pro/third-party widgets are explicit REVIEW/UNSUPPORTED unless a dedicated tested adapter exists.
+- Gutenberg outputs require parse/serialize/editor validity checks for supported target versions.
+- Framework output must use pinned adapter dependency matrices; accepted artifacts must not depend on unbounded `latest` versions.
+- Code-to-design arbitrary JavaScript execution is disabled by default until a separate sandbox specification is accepted.
+- Figma image export must distinguish Stored Original bytes from Rendered Appearance.
+- Current Community core remains `allowedDomains: ["none"]`; arbitrary direct customer-domain push is not part of the core contract.
 
 ## Branching
 
 Use focused branches and PRs. Recommended prefixes:
 
 - `plan/`
+- `audit/`
 - `feat/`
 - `fix/`
 - `test/`
@@ -90,9 +116,12 @@ Use focused branches and PRs. Recommended prefixes:
 A task is not complete because code exists. It is complete when:
 
 - the Issues-first and PR/MR-second queues were checked,
+- required R0/R1 gates were completed for external target work,
 - tests/verification pass,
 - relevant memory-bank state is updated,
 - README module and overall progress are updated,
 - docs are updated when behavior/contracts changed,
 - no known visual safety regression is introduced,
+- no unsupported option combination is exposed as valid,
+- local artifact validation is not misreported as real target verification,
 - next work is unambiguous.

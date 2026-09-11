@@ -25,36 +25,64 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - no undocumented reverse engineering when a documented adapter/bridge is possible;
 - responsive risk may be reported but mobile/tablet composition is not invented;
 - target adapters are versioned and isolated;
+- capability-driven UI prevents invalid option combinations;
+- target/package/live-environment validation states remain separate;
+- no silent fallback to a different widget/block/code strategy;
 - implementation-complete != production-accepted;
 - no fabricated runtime/external evidence.
 
 ## Current issue queue
 
 - #84 — P12 final integrated validation/release acceptance: **ACTIVE / external-manual-runtime blocked**, retained at 80% until the exact publishing package/account/2FA/final-exit evidence is genuinely retained. Community approval remains external.
-- #119 — post-P12 P13-P26 commercial/multi-target roadmap: **PLANNED / dependency-blocked by #84 internal exit**. Research/planning docs may progress; runtime implementation may not start yet.
+- #119 — post-P12 P13-P26 commercial/multi-target roadmap: **PLANNED / dependency-blocked by #84 internal exit**. Research/reliability planning may progress; runtime implementation may not start yet.
 
 ## Current PR queue
 
-PR #122 merged the researched P13-P26 planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. The current post-merge status-sync PR is documentation-only and is intended to leave the open PR/MR count at `0` after merge.
+- PR #122 merged the researched P13-P26 planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed.
+- PR #123 merged the post-plan status synchronization as `d34c026202ae6ecd8f88f71e6056d619578ce56f` after CI #723, Integration Readiness #158, P12 Offline Acceptance #78 and P12 Final Release Artifact #34 passed.
+- This reliability-audit branch is planning/docs only; no P13 runtime implementation or acceptance credit is authorized.
 
 ## Current planning baseline
 
-The commercial plan now includes a recurring **R0 market/platform intelligence gate** and phases P13-P26.
+The commercial plan now has two recurring pre-implementation gates plus phases P13-P26:
 
-R0 requires AI-assisted public research plus official-platform verification before major target adapters are implemented. Research is advisory and does not override safety or count as runtime acceptance.
+- **R0 — Market/Platform Research:** AI-assisted public research + official-platform verification before major externally evolving adapters.
+- **R1 — Reliability/Compatibility Gate:** explicit target profile, capability matrix, option-state contract, structured errors, atomic export, target validator and acceptance harness before implementation.
+
+Research is advisory and neither R0 nor R1 overrides safety or counts as runtime acceptance.
 
 Canonical docs:
 
 - `docs/MARKET_RESEARCH_PLAN.md`;
+- `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md`;
 - `docs/COMMERCIAL_EXPANSION_PLAN.md`;
 - `docs/AI_NATIVE_PLAN.md`;
 - `docs/FEATURE_PLAN.md`.
+
+## Reliability audit conclusions
+
+The P13-P26 direction remains commercially strong, but the reliable product contract now requires:
+
+- immutable versioned `TargetProfile` per run;
+- machine-readable adapter capability descriptors that generate valid UI options;
+- stale validation invalidation whenever target/source/options change;
+- separate `SOURCE READY`, `ARTIFACT VALIDATED`, `IMPORT VERIFIED`, `RENDER VERIFIED` and `ROUND-TRIP VERIFIED` states;
+- no claim that an offline-valid WordPress package is guaranteed to import on an unobserved site;
+- separate Elementor v3 Container and v4 Atomic adapter families rather than one generic exporter;
+- explicit Pro/third-party capability declarations;
+- Gutenberg parse/serialize/editor validation;
+- generated framework projects must compile/build under pinned adapter matrices;
+- image export must distinguish stored original image bytes from rendered appearance;
+- raw font binaries remain user-supplied/license-permitted only;
+- export jobs use a strict state machine, bounded concurrency, cooperative cancel, deterministic retry and atomic final download;
+- stable error codes and actionable recovery instead of generic-only failures;
+- direct arbitrary WordPress-domain push remains outside the offline Community core; bridge file/paste import is preferred first.
 
 ## Module state
 
 | Module | Status | Progress | Blocker / Next |
 |---|---|---:|---|
-| AI-native governance/tooling | COMPLETE | 100% | Maintain issues/PR/research/evidence sync |
+| AI-native governance/tooling | COMPLETE | 100% | Maintain issues/PR/R0/R1/evidence sync |
 | P0-P4 core audit/validation/transaction | COMPLETE | 100% | None |
 | P5 Safe Fix | COMPLETE / PRODUCTION ACCEPTED | 100% | None |
 | P6 advanced structures | COMPLETE / PRODUCTION ACCEPTED | 100% | None |
@@ -64,31 +92,15 @@ Canonical docs:
 | P10 npm/CLI | COMPLETE / P12 ACCEPTED | 100% | Retained real REST/auth/plugin parity |
 | P11 Figma distribution | IMPLEMENTATION COMPLETE | 100% | Live publisher/install evidence belongs to P12 |
 | P12 final validation | IN PROGRESS | 80% | Exact publish-ID package/account/2FA/exit review |
+| R0 market/platform research | PLANNING GATE | N/A | Refresh before each major adapter |
+| R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13-P26 multi-target commercial expansion | PLANNED / BLOCKED | 0% | Do not implement before #84 internal exit |
 
 Historical P0-P7 core progress remains 100%.
 
 ## Approved user-facing future flow
 
-`Choose source -> Choose target -> Audit -> Target Compatibility -> Build/Target-Ready Score -> Responsive Risk -> Create Target-Ready Duplicate if needed -> Validate -> Generate target artifact -> Validate package/schema/assets -> Round-trip preview/diff -> Download/Copy/Import -> Handoff/QA`
-
-## Requested target capabilities now represented in plan
-
-- Elementor/Elementor Pro/WordPress native template JSON/ZIP/kit strategy with validation;
-- automatic target-ready duplicate preparation before export;
-- selected-section Elementor transfer through documented artifact/optional bridge path;
-- Gutenberg native block/pattern export + section transfer;
-- HTML/CSS/JS export;
-- HTML/CSS static-first code-to-design reconstruction, with JS sandbox requirements;
-- React/Next/Vue/Nuxt/Svelte/Angular/Astro adapter platform;
-- NestJS treated as optional backend/API scaffold paired with front-end output, not as a visual renderer;
-- asset/image/icon export with source-vs-rendered sizing policy;
-- font manifest and user-supplied licensed font-file packaging only where legally/technically available;
-- round-trip target visual QA;
-- existing component-library bindings;
-- change-only regeneration;
-- agency/project/white-label/estimator features;
-- optional AI for research/explanation/drafting only.
+`Choose source -> Choose target/profile -> Audit -> Compatibility -> Build/Target-Ready Score -> Responsive Risk -> Create Target-Ready Duplicate if needed -> Validate -> Generate atomically -> Validate artifact -> Verify real target when available -> Round-trip QA -> Receipt -> Download/Copy/Import -> Handoff/QA`
 
 ## P12 publishing candidate truth
 
@@ -110,4 +122,5 @@ Immediate executable product path remains #84:
 2. confirm intended publisher identity/eligibility and required 2FA;
 3. perform final P12 internal exit review;
 4. only then open the focused P13 implementation issue;
-5. run R0 research refresh before each major external target adapter.
+5. run R0 + R1 before each major external target adapter;
+6. implement only after target profile, capability matrix, error model, validator and acceptance harness are frozen.

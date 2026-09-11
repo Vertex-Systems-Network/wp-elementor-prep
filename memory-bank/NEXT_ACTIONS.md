@@ -7,10 +7,11 @@ Last updated: 2026-09-11
 1. Issues first.
 2. PR/MR second.
 3. R0 research refresh when the next task depends on an evolving external target.
-4. Highest-priority unblocked roadmap work.
-5. Tests/verification before acceptance claims.
-6. README + memory-bank sync in the same cycle.
-7. No fabricated runtime/external evidence.
+4. R1 reliability/compatibility contract freeze for that target.
+5. Highest-priority unblocked roadmap work.
+6. Tests/verification before acceptance claims.
+7. README + memory-bank sync in the same cycle.
+8. No fabricated runtime/external evidence.
 
 ## Current queue classification
 
@@ -43,11 +44,12 @@ Community submission/review/approval remains external.
 
 Classification: **planning active / implementation dependency-blocked by #84 internal exit**.
 
-Research/planning may proceed; P13 runtime code may not.
+Research/reliability planning may proceed; P13 runtime code may not.
 
 Canonical future order:
 
 - R0 — recurring AI-assisted market/platform research gate;
+- R1 — recurring adapter reliability/compatibility gate;
 - P13 — Build-Ready Score 2.0 + Responsive Risk;
 - P14 — Target-Ready Duplicate + Guided Prepare;
 - P15 — Elementor native export + import validation;
@@ -68,12 +70,31 @@ Canonical future order:
 Current September 2026 snapshot records:
 
 - official Elementor JSON/ZIP/template/kit import paths and modern container/Atomic data structures;
-- official Gutenberg serialization/pattern import/export model;
-- market competition from native WordPress conversion and Figma-to-code tools;
-- Figma asset export capabilities;
-- Figma raw-font-file export limitation.
+- Elementor v4 Atomic architecture and hybrid coexistence with v3 content;
+- official Gutenberg serialization/parse/serialize model;
+- Figma export, original image-byte and font limitations;
+- market competition from native WordPress conversion and Figma-to-code tools.
 
-Before implementing P15, P16, P17 or P18, refresh official target docs and competitor baseline again rather than assuming the September snapshot is still current.
+Before implementing P15, P16, P17 or P18, refresh official target docs and competitor baseline again rather than assuming this snapshot is still current.
+
+## R1 reliability actions now mandatory
+
+Canonical contract: `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md`.
+
+Before implementation of a target adapter, freeze and test:
+
+1. immutable versioned `TargetProfile` schema;
+2. adapter capability descriptor (`SUPPORTED`, `SUPPORTED_WITH_REVIEW`, `UNSUPPORTED`, `REQUIRES`);
+3. UI dependency/reset rules so stale incompatible options cannot survive target/version changes;
+4. target-specific structured error codes and recovery paths;
+5. source fingerprint/staleness policy;
+6. atomic generation/download policy;
+7. artifact schema/reference/assets validator;
+8. real target import/build/render harness where applicable;
+9. round-trip QA policy where feasible;
+10. acceptance labels: SOURCE READY / ARTIFACT VALIDATED / IMPORT VERIFIED / RENDER VERIFIED / ROUND-TRIP VERIFIED / REVIEW / BLOCKED.
+
+No adapter may claim live target compatibility from local package validation alone.
 
 ## First implementation sequence after P12 internal exit
 
@@ -95,30 +116,60 @@ After P13 acceptance:
 2. ensure original remains untouched;
 3. prepare only already-explainable patterns;
 4. validate/re-score duplicate;
-5. real Figma acceptance.
+5. add cancellation/retry/source-staleness coverage;
+6. real Figma acceptance.
 
-### P15/P16 target exporters
+### P15 Elementor
 
-For each target:
+Before implementation:
 
-1. R0 official-doc refresh;
-2. versioned adapter contract;
-3. native element/block mapping matrix;
-4. schema/package validator;
-5. target-ready duplicate prerequisites;
-6. representative export fixtures;
-7. real import into supported target version;
-8. section-level artifact transfer proof;
-9. record unsupported mappings explicitly.
+1. R0 refresh official Elementor docs;
+2. R1 freeze separate initial adapter families (`elementor-v3-container`, `elementor-v4-atomic`);
+3. define Core/Pro capability overlays explicitly;
+4. distinguish template JSON, template ZIP and website-kit ZIP contracts;
+5. define global-style/variable/reference closure rules;
+6. define DECLARED vs OBSERVED WordPress environment profiles;
+7. add schema/package/asset validators;
+8. add real import tests into supported Elementor versions;
+9. add server/import failure diagnostics for ZIP support/upload/memory/third-party requirements where observable;
+10. prove section artifact/bridge flow without undocumented clipboard internals.
+
+### P16 Gutenberg
+
+Before implementation:
+
+1. R0 refresh target WordPress/block docs;
+2. R1 freeze WordPress version/block capability profile;
+3. native core-block mapping matrix;
+4. parse -> serialize -> parse stability tests;
+5. editor-open tests without invalid-block recovery prompts;
+6. explicit theme/custom-block dependency reporting;
+7. section/pattern transfer proof.
+
+### P17/P18 web/framework
+
+Before implementation:
+
+1. R0 demand/version research;
+2. R1 target profile and option capability matrix;
+3. generated project dependency versions pinned, never `latest`;
+4. generated fixture install/typecheck/build matrix;
+5. invalid option combinations impossible in UI and rejected by core contracts;
+6. static-first code import only;
+7. ZIP path traversal/zip-bomb/file-count/remote-resource tests;
+8. arbitrary JS remains OFF until separate sandbox acceptance.
 
 ## Important implementation guardrails
 
 - Do not reverse-engineer undocumented Elementor clipboard internals; prefer template artifacts and optional WP Builders Bridge.
+- Keep the Community core offline; arbitrary direct push to customer WordPress domains is not part of the current `allowedDomains: ["none"]` contract.
 - Do not claim "NestJS design export"; NestJS is backend/API scaffold only and must pair with a front-end adapter.
 - Code-to-design JavaScript execution stays OFF by default until a separate sandbox specification is accepted.
-- Raw font binaries are not exportable from Figma merely because font names are accessible. Default is a font manifest; package raw fonts only when user-supplied and license-permitted.
-- Image export UI must state whether output is source-oriented/original where available or rendered/scaled from the design.
+- Figma image-fill bytes may be exported as `Stored Original` when `getImageByHash(...).getBytesAsync()` succeeds; cropped/effected appearance is a separate rendered export.
+- Do not call stored image bytes the upstream upload source when provenance is unknown.
+- Raw font binaries are not exported from Figma merely because font names are accessible. Default is a font manifest; package raw fonts only when user-supplied and license-permitted.
 - Every downloadable target artifact requires target validation and an export receipt.
+- Offline-valid package != observed live-site import success.
 - Round-trip visual QA must never auto-pass unsupported target rendering.
 - Optional AI cannot authorize mutations, change score evidence or replace target validators.
 
@@ -140,7 +191,7 @@ npm run p12:offline
 npm run integration:readiness
 ```
 
-Target phases will add their own adapter/schema/import/render harness tests.
+Target phases will add adapter capability, option-state, schema/package, malformed-input, import/build/render and round-trip harness tests.
 
 Runtime artifact preflight requires exact-build provenance, immutable/manifest checks and the active schema-v3 registry contract.
 
@@ -150,4 +201,5 @@ Runtime artifact preflight requires exact-build provenance, immutable/manifest c
 - P9/P10 accepted technical slices: `100%`;
 - P11 implementation: `100%`;
 - P12 final validation: `80%`;
+- R0/R1: planning gates, no runtime completion percentage;
 - P13-P26: `0%`, planned/dependency-blocked.

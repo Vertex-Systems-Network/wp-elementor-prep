@@ -1,7 +1,8 @@
 # Feature Plan
 
 Date: 2026-09-07  
-Post-P12 multi-target expansion aligned: 2026-09-11
+Post-P12 multi-target expansion aligned: 2026-09-11  
+Reliability/compatibility audit aligned: 2026-09-11
 
 > P0-P8 below are the original foundation plan. Live completion truth is in `memory-bank/ROADMAP.md`. Post-P12 work is implementation-blocked by the internal P12 exit in #84.
 
@@ -56,7 +57,11 @@ Historical/deferred placeholder. The post-P12 plan now replaces this with a broa
 
 # Post-P12 commercial expansion
 
-Canonical contract: `docs/COMMERCIAL_EXPANSION_PLAN.md`. Market process: `docs/MARKET_RESEARCH_PLAN.md`.
+Canonical contracts:
+
+- `docs/COMMERCIAL_EXPANSION_PLAN.md` — commercial roadmap;
+- `docs/MARKET_RESEARCH_PLAN.md` — R0 market/platform research;
+- `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md` — R1 adapter/option/system reliability.
 
 ## R0 — Market / platform intelligence gate
 
@@ -70,6 +75,25 @@ Recurring planning gate, not a runtime feature.
 - privacy/network/licensing review;
 - roadmap/decision updates before adapter implementation.
 
+## R1 — Reliability / compatibility gate
+
+Recurring architecture/acceptance gate, not a runtime feature.
+
+Before implementing a major target adapter, freeze:
+
+- immutable versioned `TargetProfile`;
+- machine-readable capability descriptor;
+- option dependency/reset rules;
+- source fingerprint/stale-result rules;
+- target export state machine;
+- structured error/retry/cancel model;
+- atomic generation/download contract;
+- schema/package/reference/assets validators;
+- real import/build/render harness where applicable;
+- precise readiness labels separating local artifact validity from observed target verification.
+
+No adapter may expose invalid option combinations or claim live compatibility from local serialization alone.
+
 ## P13 — Build-Ready Score 2.0 + Responsive Risk
 
 Read-only first.
@@ -81,11 +105,12 @@ Read-only first.
 - absolute normal-content dependencies;
 - section/frame summaries;
 - versioned score contract;
+- source fingerprint for stale-result invalidation;
 - no invented responsive design.
 
 ## P14 — Target-Ready Duplicate + Guided Prepare
 
-- choose target;
+- choose target profile;
 - run target-readiness check;
 - `Create Target-Ready Duplicate` when needed;
 - proposed changes + confidence;
@@ -93,33 +118,54 @@ Read-only first.
 - preserve legitimate overlays;
 - candidate/duplicate -> full validation -> accept/reject;
 - original remains unchanged;
-- before/after target-ready score.
+- before/after target-ready score;
+- cooperative cancellation and deterministic retry from safe boundaries.
 
 ## P15 — Elementor Native Export + Import Validation
 
-- modern Container JSON adapter;
-- Atomic adapter only where documented/stable;
-- Elementor Pro widget mappings only when selected and supported;
-- template JSON export;
-- ZIP/library import package where documented;
-- website-template/kit ZIP only after real documented compatibility validation;
-- global colors/fonts/classes/variables mapping;
-- responsive settings adapter;
-- alignment/layout/widget/asset/package validation;
-- full page + selected section artifact;
-- optional WordPress bridge path for robust section transfer;
-- no undocumented clipboard reverse engineering.
+Initial adapter families are separate:
+
+- `elementor-v3-container`;
+- `elementor-v4-atomic`;
+- explicit Core/Pro capability overlays only where documented/tested.
+
+Outputs are separate contracts:
+
+- template JSON;
+- template/multi-template ZIP where officially supported;
+- website-template/kit ZIP only after kit-specific structure/dependency validation;
+- selected-section artifact/bridge payload.
+
+Checks:
+
+- target data/schema version;
+- modern Container/Atomic structure rules;
+- widget mapping coverage;
+- responsive settings coverage;
+- unique IDs/references;
+- global colors/fonts/classes/variables reference closure;
+- asset references;
+- package integrity;
+- explicit unsupported Pro/third-party add-ons;
+- layout/alignment validation;
+- local artifact validation separated from actual live-site import verification.
+
+A hybrid Elementor site chooses the intended output family; the generator does not silently mix v3/v4 architectures.
+
+No undocumented clipboard reverse engineering.
 
 ## P16 — Gutenberg Native Export + Transfer
 
+- versioned WordPress/block capability profile;
 - native core-block mapping first;
 - serialized block markup;
 - pattern JSON export/import;
 - selected section -> block/pattern artifact;
-- parse/serialize round-trip validation;
-- supported WordPress-version contract;
+- parse -> serialize -> parse stability;
+- real supported editor-open validation without invalid-block recovery prompts;
 - optional WP Builders Bridge receiver;
-- unsupported/custom-block cases become explicit REVIEW.
+- unsupported/custom-block cases become explicit REVIEW;
+- theme/runtime differences are reported separately from serializer correctness.
 
 ## P17 — HTML/CSS/JS Export + Code-to-Design Import
 
@@ -129,12 +175,15 @@ Read-only first.
 - vanilla JS only for representable interactions;
 - optional Tailwind adapter;
 - assets + manifest;
-- code package ZIP.
+- code package ZIP;
+- atomic generation + validation before download.
 
 ### Code -> design
 - HTML + CSS paste/upload;
 - folder/ZIP import;
 - static-first parser/reconstruction;
+- archive path traversal, zip-bomb, file-count, nesting and oversize protections;
+- remote resource auto-fetch disabled by default;
 - JS disabled by default;
 - any JS-enabled rendering must use a separately accepted sandbox/companion architecture;
 - imported output creates a new reconstruction, not silent mutation of an approved design.
@@ -152,7 +201,7 @@ Initial target candidates, prioritized by R0 research:
 - Astro;
 - optional React Native only after separate feasibility/safety specification.
 
-Config options:
+Config options are capability-driven, not globally assumed:
 
 - JS/TS;
 - CSS/Tailwind/CSS Modules and accepted styling adapters;
@@ -162,6 +211,13 @@ Config options:
 - component-library binding;
 - accessibility/semantic preferences.
 
+Reliability requirements:
+
+- generated project dependency versions are pinned/adapter-bounded, never unbounded `latest`;
+- every accepted adapter option matrix has fixture coverage;
+- generated fixture projects install/typecheck/build in CI;
+- changing framework/version/styling invalidates stale validation.
+
 Add adapter SDK so new frameworks do not require core-scanner changes.
 
 NestJS is treated as optional backend/API scaffold paired with a front-end target, not as a visual renderer.
@@ -170,7 +226,9 @@ NestJS is treated as optional backend/API scaffold paired with a front-end targe
 
 - raster images;
 - SVG/icons/vectors;
-- source/display/custom-scale image policy;
+- **Stored Original** image bytes for Figma image fills when `getImageByHash(...).getBytesAsync()` is available;
+- **Rendered Appearance** for crop/mask/effects/composited appearance;
+- rendered display-size / 1x / 2x / custom scale modes;
 - deterministic naming/de-duplication;
 - asset usage manifest;
 - font family/style/weight/usage manifest;
@@ -180,21 +238,26 @@ NestJS is treated as optional backend/API scaffold paired with a front-end targe
 - CSS variables/framework token adapters;
 - documented Elementor variables/classes and Gutenberg/theme.json mapping where supported.
 
+Stored image bytes are not marketed as proven upstream-upload provenance when Figma cannot prove that provenance.
+
 ## P20 — Round-Trip Visual QA + Exact Section Portability
 
 - generate target artifact;
 - render in controlled target harness;
 - compare geometry/content/assets/pixels against Figma;
 - calibrated PASS/REVIEW/BLOCKED;
-- export receipt tied to source audit/adapter version;
+- export receipt tied to source fingerprint + target profile + adapter version;
 - Elementor section/container artifact;
 - Gutenberg pattern/block artifact;
 - versioned clipboard/bridge payload;
-- optional `WP Builders Bridge` WordPress companion plugin.
+- optional `WP Builders Bridge` WordPress companion plugin using file/paste import first.
+
+Current Community core remains offline. Arbitrary direct push to customer WordPress domains is separate future networked scope.
 
 ## P21 — Developer Handoff + Client/QA + Bounded A11y/SEO Advisories
 
 - Build-Ready/Target-Ready report;
+- exact validation level: SOURCE READY / ARTIFACT VALIDATED / IMPORT VERIFIED / RENDER VERIFIED / ROUND-TRIP VERIFIED / REVIEW / BLOCKED;
 - responsive risks;
 - target mapping limitations;
 - asset/font/token summary;
@@ -205,7 +268,7 @@ NestJS is treated as optional backend/API scaffold paired with a front-end targe
 - deterministic contrast check where resolvable;
 - CTA/link naming completeness;
 - obvious media/performance advisories;
-- READY / REVIEW / BLOCKED reasons.
+- stable error codes and actionable recovery notes.
 
 Not a claim of complete legal accessibility or SEO compliance.
 
@@ -236,7 +299,8 @@ No opaque AI market-price guessing.
 - baseline/re-audit comparison;
 - change-only regeneration;
 - export history/target-version history;
-- bind Figma components to existing React/Vue/etc components and props.
+- bind Figma components to existing React/Vue/etc components and props;
+- target-profile version history and deterministic regeneration receipts.
 
 ## P24 — CMS / Dynamic Data / Forms / Interactions
 
@@ -285,7 +349,7 @@ May not:
 ## Additional differentiators to keep in research queue
 
 - Export Preview Lab with desktop/tablet/mobile target preview.
-- Target capability matrix: Native / Converted / Review percentages before export.
+- Target capability matrix: Native / Review / Unsupported percentages before export.
 - Shareable exact-run readiness certificate.
 - Bricks and other WordPress-builder adapters after Elementor/Gutenberg.
 - Adapter SDK/marketplace after contracts stabilize.
