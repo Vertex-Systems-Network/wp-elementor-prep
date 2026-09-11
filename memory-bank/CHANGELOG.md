@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-11 — Post-P12 commercial expansion roadmap
+
+- User approved expanding WP Builders Prepare from an audit utility toward a deterministic **Figma -> build-ready website workflow** designed to improve paid value, agency adoption and retention.
+- Mandatory issue-first / PR-second sweep found #84 as the active P12 manual/publisher gate and no open PRs before new planning work.
+- Created owner issue #119 for the P13-P21 roadmap and classified it as dependency-blocked by the internal P12 exit gate.
+- Added `docs/COMMERCIAL_EXPANSION_PLAN.md` with the full future user flow, commercial outcomes, architecture boundaries and acceptance model.
+- Added P13 Build-Ready Score 2.0 + Responsive Risk, P14 Advanced Safe Fix + Prepare Frame, P15 Elementor Readiness + Build Plan, P16 design-system/token advisory, P17 developer handoff + client/QA, P18 deterministic complexity/effort estimator, P19 agency presets/custom rules/white label/project workflows, P20 Free/Pro/Agency packaging, and P21 optional AI assistance.
+- Preserved audit-before-mutate, low-confidence REVIEW, visual-authority, candidate validation/rollback, deterministic/offline core, neutral Elementor adapter boundary and exact evidence requirements.
+- Added explicit rules that responsive analysis may report risk but not invent mobile/tablet composition; commercial entitlements gate surfaces rather than correctness; estimator factors remain transparent/configurable; optional AI is isolated and non-authoritative.
+- Updated `docs/AI_NATIVE_PLAN.md`, `docs/FEATURE_PLAN.md`, `memory-bank/DECISIONS.md`, `PROJECT_STATE.md`, `NEXT_ACTIONS.md`, `ROADMAP.md` and root README.
+- Opened PR #120 `Plan P13-P21 commercial expansion` on branch `plan/ai-native-commercial-expansion`.
+- No runtime/plugin behavior changed and no P12/P13+ acceptance percentage was granted. P13 implementation remains blocked until #84 internal release-exit acceptance genuinely closes.
+
 ## 2026-09-11 — P7 genuine runtime closure and production merge
 
 - Exact final-line build `d6bf2e12e3d877be125d336e423001baef92831b` / run `34497801237` established a valid exact-build P5 prerequisite in real Figma Desktop.
