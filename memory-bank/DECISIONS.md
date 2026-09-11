@@ -257,3 +257,43 @@ Status: ACCEPTED
 For Figma image fills, `getImageByHash(...).getBytesAsync()` may provide the encoded image bytes stored by Figma. That is labeled `Stored Original`, while crop/mask/effects/layout appearance is exported separately as a rendered result.
 
 The product must not claim those stored bytes prove the upstream user-upload provenance when Figma does not expose that provenance.
+
+## D-038 — Verified readiness states are a product feature, not internal-only metadata
+Date: 2026-09-11  
+Status: ACCEPTED
+
+Market research confirms that generic design-to-code generation is crowded, including first-party Figma direction. WP Builders Prepare therefore differentiates by making reliability states visible to users: `ARTIFACT VALIDATED`, `IMPORT VERIFIED`, `RENDER VERIFIED`, `ROUND-TRIP VERIFIED`, `REVIEW` and `BLOCKED` where applicable.
+
+These labels may only be earned by the corresponding evidence; they are never marketing aliases for an unobserved target environment.
+
+## D-039 — Elementor readiness includes environment diagnostics without pretending the server was observed
+Date: 2026-09-11  
+Status: ACCEPTED
+
+P15 must distinguish Figma/design compatibility, generated package validity and WordPress/Elementor environment compatibility. Target version, Core/Pro profile, upload/import limits, memory/time/security/REST constraints and similar environment facts are reported only when explicitly declared or actually observed.
+
+`DECLARED ENVIRONMENT` and `OBSERVED ENVIRONMENT` are separate. A locally valid JSON/ZIP cannot become `IMPORT VERIFIED` merely because common hosting requirements are known.
+
+## D-040 — Shared semantic IR should prevent unnecessary re-tagging across targets
+Date: 2026-09-11  
+Status: ACCEPTED
+
+When layout/component/token intent can be inferred safely once, Elementor, Gutenberg, HTML and framework adapters should consume the same neutral semantic representation rather than forcing the user to re-tag/re-prepare the same source separately for every target.
+
+Each adapter still owns its own capability limits and may return REVIEW/UNSUPPORTED. Shared IR is not permission for lossy or silent target conversion.
+
+## D-041 — Failed or refused generation is non-billable if usage credits are introduced
+Date: 2026-09-11  
+Status: ACCEPTED
+
+If P25 later adopts credits or usage units, validation refusal, failed generation and cancellation before the defined successful-artifact boundary must not consume paid usage. Entitlement charging occurs only after the product-defined successful generation boundary.
+
+Correctness validators are always enforced regardless of tier, and this decision does not itself require a credit-based pricing model.
+
+## D-042 — Pricing is an evidence-driven hypothesis until target value is accepted
+Date: 2026-09-11  
+Status: ACCEPTED
+
+Competitor prices are point-in-time market signals, not a price list to copy. Free / Pro / Agency remains the packaging hypothesis, but exact price points should not be frozen until accepted P15-P20 workflows provide evidence about user value, support burden, conversion friction and operating cost.
+
+Current research snapshot: `docs/R0_MARKET_SNAPSHOT_2026-09-11.md`.
