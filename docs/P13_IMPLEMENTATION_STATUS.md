@@ -1,57 +1,68 @@
 # P13 Implementation Status
 
-Status: IMPLEMENTATION IN PROGRESS / PRODUCTION ACCEPTANCE BLOCKED BY P12 FINAL RELEASE GATE  
-Issues: #153, #155  
+Status: IMPLEMENTATION IN PROGRESS / REAL-BASELINE CALIBRATION CANDIDATE RETAINED / PRODUCTION ACCEPTANCE BLOCKED BY P12 FINAL RELEASE GATE  
+Issues: #153, #155, #157  
 Roadmap: #119  
 Date: 2026-09-11
 
 ## Sequencing
 
-Per the user-directed roadmap sequencing recorded in #119 comment `5637327490`, P13 implementation, tests, CI and non-authorizing development may proceed before the remaining P12 live publisher evidence is collected.
+Per the user-directed roadmap sequencing recorded in #119, P13 implementation, tests, CI and non-authorizing development may proceed before the remaining P12 live publisher evidence is collected.
 
 This does **not** waive #84. Production acceptance, release authorization and any final commercial release still require the remaining P12 internal publisher/account/2FA evidence and final exit review.
 
-## First implementation slice — deterministic core
+## Implemented foundation
 
-The initial P13 slice is additive and leaves audit score v1 unchanged. It introduces:
+P13 is additive and leaves audit score v1 unchanged. It now includes:
 
 - `Build-Ready Score 2.0` report/version types;
 - `Responsive Risk v1` report/version types;
 - deterministic structural/config fingerprinting and stable run identity;
 - explicit evidence coverage and `INSUFFICIENT_EVIDENCE` fail-closed behavior;
 - bounded per-rule penalty aggregation;
-- target-agnostic responsive-risk detectors that can be justified from the current normalized `AuditNode` facts;
-- explicit limitations for rule families that need source facts not yet retained.
+- target-agnostic responsive-risk detectors justified by retained `AuditNode` facts;
+- plugin and CLI integration through the same shared deterministic core;
+- machine-readable `build-ready-report.json` export;
+- plugin UI summary clearly labeled as a P13 implementation candidate.
 
-Implemented detector families in this slice:
+Implemented detector families:
 
 - horizontal density/contraction pressure;
-- clipping/overflow dependency from retained geometry;
-- bounded non-overlay sibling collision;
-- content-bearing absolute-positioning dependency (review-only);
+- clipping/overflow dependency from retained geometry and known deterministic layout semantics;
+- bounded sibling collision review with preservation-aware handling for manual/layered composition;
+- content-bearing absolute-positioning dependency;
 - geometry-only media wrapper advisory;
-- fixed-resize long-text advisory with zero penalty because font metrics/sizing constraints are not retained.
+- fixed-resize long-text advisory with zero penalty where stronger source facts are not retained.
 
-Additional Build-Ready evidence in this slice:
+Additional Build-Ready evidence:
 
 - Auto Layout/manual-flow structure debt;
 - deep-nesting advisory;
 - repeated sibling structural-width drift advisory;
 - generic layer-name handoff debt.
 
-## Second implementation slice — plugin + CLI integration
+## Real-baseline calibration
 
-Issue #155 binds the same deterministic P13 core into both real audit entry paths while keeping audit v1 and backlog semantics separate:
+The merged plugin/CLI implementation was calibrated against the already-retained accepted P9/P10 Pella Nova canonical snapshot without committing the private design snapshot to this repository.
 
-- plugin audit computes `buildBuildReadyReport(root, {}, report.generatedAt)` from the same normalized selected-frame root used by audit v1;
-- CLI `audit:figma` and `audit:snapshot` compute `buildBuildReadyReport(snapshot.root, {}, report.generatedAt)` from the same canonical root;
-- CLI retains the existing audit/backlog files and adds `build-ready-report.json`;
-- CLI summary output adds a separate `buildReady` object, while `--fail-on` continues to use the existing backlog threshold only;
-- plugin `audit-result` adds the Build-Ready report and serialized JSON without granting mutation authority;
-- plugin UI displays a clearly labeled `P13 IMPLEMENTATION CANDIDATE` summary and offers a separate `build-ready-report.json` download;
-- the UI states that the report is target-agnostic, read-only analysis and does not present it as production acceptance.
+The calibration found and corrected false-positive pressure in the initial responsive-risk implementation:
 
-A real CLI execution contract test runs `audit:snapshot` through `scripts/run-cli.mjs`, verifies the existing audit/backlog artifacts remain present, and verifies the versioned Build-Ready artifact and summary output.
+- intentional/manual layered overlaps no longer become responsive HIGH findings from geometry alone and are retained as LOW zero-penalty advisory evidence;
+- known clipped carousel geometry is not duplicated as a generic HIGH clipping defect;
+- absolute image composition and small controlled clipping are review-level rather than HIGH;
+- horizontal density requires either an applicable configured reference-width probe or direct current-width overflow.
+
+Final retained real-baseline candidate:
+
+- audit v1 remains exactly `75 / REVIEW`;
+- Build-Ready v2 is `85 / REVIEW`;
+- analyzed coverage is `1152 / 1152` (`100%`);
+- Responsive Risk is `MEDIUM` with `0` responsive HIGH findings;
+- Responsive Risk category is `70 / REVIEW`;
+- blocker count is `0`;
+- two independent snapshot runs produced byte-identical audit, backlog and Build-Ready JSON outputs.
+
+Full aggregate provenance and hashes are retained in `docs/P13_REAL_BASELINE_CALIBRATION_2026-09-11.md`.
 
 ## Explicitly deferred rather than guessed
 
@@ -61,8 +72,8 @@ A real CLI execution contract test runs `audit:snapshot` through `scripts/run-cl
 - strong fixed-width text reflow claims: font metrics and horizontal sizing constraints are not retained;
 - strong media responsiveness claims: media sizing modes are not retained.
 
-These limitations are emitted in every report so a partial implementation cannot present itself as a complete responsive audit.
+These limitations remain emitted in every report so a partial implementation cannot present itself as a complete responsive audit.
 
 ## Acceptance state
 
-Green implementation/integration PRs prove only the deterministic P13 implementation slices. P13 remains production-unaccepted until calibration against retained real-file/plugin evidence, plugin/CLI semantic parity on that retained evidence, and the final P12 release gate are complete.
+A green calibration PR establishes the deterministic core/integration and retained real-source calibration candidate. P13 still remains production-unaccepted until retained real Figma plugin/runtime P13 evidence and a separate final P13 internal acceptance review are completed. Final production release authority also remains blocked by P12 #84.
