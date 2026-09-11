@@ -14,6 +14,7 @@
     "community:verify": "node scripts/verify-community-readiness.mjs community/listing.template.json --template",
     "community:verify:publishable": "node scripts/verify-community-readiness.mjs community/listing.publishable.json --publishable",
     "p12:offline": "node scripts/p12-offline-acceptance.mjs --report=dist-p12/p12-offline-acceptance.json",
+    "p12:publisher-preflight": "node scripts/p12-publisher-evidence-intake.mjs --preflight-only=yes",
     "p12:publisher-evidence": "node scripts/p12-publisher-evidence-intake.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
