@@ -160,6 +160,66 @@ function findingToAction(
   };
 }
 
+function topologicallyOrderEligibleActions(eligible: P14PreparationAction[]): {
+  ordered: P14PreparationAction[];
+  cycleActionIds: string[];
+} {
+  const byId = new Map(eligible.map((action) => [action.actionId, action]));
+  const byRecipe = new Map<string, P14PreparationAction[]>();
+  for (const action of eligible) {
+    if (!action.recipeId) continue;
+    const group = byRecipe.get(action.recipeId) ?? [];
+    group.push(action);
+    group.sort(actionSort);
+    byRecipe.set(action.recipeId, group);
+  }
+
+  const indegree = new Map(eligible.map((action) => [action.actionId, 0]));
+  const outgoing = new Map(eligible.map((action) => [action.actionId, new Set<string>()]));
+
+  for (const action of eligible) {
+    for (const prerequisiteRecipeId of action.prerequisiteRecipeIds) {
+      const prerequisites = byRecipe.get(prerequisiteRecipeId) ?? [];
+      for (const prerequisite of prerequisites) {
+        const edges = outgoing.get(prerequisite.actionId);
+        if (!edges || edges.has(action.actionId)) continue;
+        edges.add(action.actionId);
+        indegree.set(action.actionId, (indegree.get(action.actionId) ?? 0) + 1);
+      }
+    }
+  }
+
+  const ready = eligible
+    .filter((action) => (indegree.get(action.actionId) ?? 0) === 0)
+    .sort(actionSort);
+  const ordered: P14PreparationAction[] = [];
+
+  while (ready.length > 0) {
+    const current = ready.shift();
+    if (!current) break;
+    ordered.push(current);
+    const dependents = [...(outgoing.get(current.actionId) ?? [])]
+      .map((id) => byId.get(id))
+      .filter((action): action is P14PreparationAction => Boolean(action))
+      .sort(actionSort);
+    for (const dependent of dependents) {
+      const next = (indegree.get(dependent.actionId) ?? 0) - 1;
+      indegree.set(dependent.actionId, next);
+      if (next === 0) {
+        ready.push(dependent);
+        ready.sort(actionSort);
+      }
+    }
+  }
+
+  const orderedIds = new Set(ordered.map((action) => action.actionId));
+  const cycleActionIds = eligible
+    .filter((action) => !orderedIds.has(action.actionId))
+    .map((action) => action.actionId)
+    .sort();
+  return { ordered, cycleActionIds };
+}
+
 function planDigest(input: {
   p13RunId: string;
   sourceNodeId: string;
@@ -190,9 +250,9 @@ export function buildP14PreparationPlan(input: {
   recipes: P14PreparationRecipeDefinition[];
 }): P14PreparationPlanV1 {
   const registry = new Map(input.recipes.map((recipe) => [recipe.id, recipe]));
-  const actions = input.findings.map((finding) => findingToAction(finding, registry)).sort(actionSort);
+  const rawActions = input.findings.map((finding) => findingToAction(finding, registry)).sort(actionSort);
   const blockers: P14PlanBlocker[] = [];
-  const eligible = actions.filter((action) => action.decision === 'ELIGIBLE');
+  const eligible = rawActions.filter((action) => action.decision === 'ELIGIBLE');
   const eligibleRecipeIds = new Set(eligible.flatMap((action) => action.recipeId ? [action.recipeId] : []));
 
   for (const action of eligible) {
@@ -224,9 +284,21 @@ export function buildP14PreparationPlan(input: {
     }
   }
 
-  const review = actions.filter((action) => action.decision === 'REVIEW');
-  const refused = actions.filter((action) => action.decision === 'REFUSED');
-  const noops = actions.filter((action) => action.decision === 'NOOP');
+  const topological = topologicallyOrderEligibleActions(eligible);
+  if (topological.cycleActionIds.length > 0) {
+    blockers.push({
+      code: 'P14_RECIPE_CONFLICT',
+      detail: 'Recipe prerequisite graph contains a dependency cycle; safe sequential ordering is impossible.',
+      actionIds: topological.cycleActionIds,
+    });
+  }
+
+  const review = rawActions.filter((action) => action.decision === 'REVIEW').sort(actionSort);
+  const refused = rawActions.filter((action) => action.decision === 'REFUSED').sort(actionSort);
+  const noops = rawActions.filter((action) => action.decision === 'NOOP').sort(actionSort);
+  const cycleIds = new Set(topological.cycleActionIds);
+  const cyclicEligible = eligible.filter((action) => cycleIds.has(action.actionId)).sort(actionSort);
+  const actions = [...topological.ordered, ...cyclicEligible, ...noops, ...review, ...refused];
 
   if (eligible.length === 0 && (review.length > 0 || refused.length > 0 || noops.length === 0)) {
     blockers.push({
@@ -254,7 +326,7 @@ export function buildP14PreparationPlan(input: {
     status,
     actions,
     blockers,
-    eligibleActionIds: eligible.map((action) => action.actionId),
+    eligibleActionIds: topological.ordered.map((action) => action.actionId),
     noOpActionIds: noops.map((action) => action.actionId),
     reviewActionIds: review.map((action) => action.actionId),
     refusedActionIds: refused.map((action) => action.actionId),
