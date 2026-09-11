@@ -142,7 +142,7 @@ npm run integration:readiness
 
 Target phases will add their own adapter/schema/import/render harness tests.
 
-Runtime artifact preflight remains exact-build and schema-v3 provenance bound.
+Runtime artifact preflight requires exact-build provenance, immutable/manifest checks and the active schema-v3 registry contract.
 
 ## Progress tracking
 
