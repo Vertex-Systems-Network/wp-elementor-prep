@@ -1,4 +1,5 @@
 import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import { validateP14RescoreEvidence } from './p14-rescore-evidence';
 import {
   P14_PREPARATION_ENGINE_VERSION,
   type P14PreparationReceiptV1,
@@ -200,15 +201,9 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   }
 
   if (value.rescore !== undefined) {
-    if (!isRecord(value.rescore)
-      || !nonEmptyString(value.rescore.runId)
-      || typeof value.rescore.status !== 'string'
-      || !Number.isFinite(value.rescore.score)
-      || !finiteNonNegative(value.rescore.blockerCount)
-      || !finiteNonNegative(value.rescore.highRiskCount)
-      || !finiteNonNegative(value.rescore.introducedBlockerOrHighCount)
-      || typeof value.rescore.reviewRequired !== 'boolean') {
-      failures.push('rescore is malformed.');
+    const rescoreIntegrity = validateP14RescoreEvidence(value.rescore);
+    if (!rescoreIntegrity.valid) {
+      failures.push('rescore is malformed or outside the accepted scored P13 evidence domain.');
     }
   }
 

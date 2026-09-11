@@ -7,6 +7,7 @@ import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
 import { assessP14ValidationProfileCoverage } from './p14-validation-profile-coverage';
+import { validateP14RescoreEvidence } from './p14-rescore-evidence';
 import {
   DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR,
   type P14SourceTransactionCoordinator,
@@ -645,7 +646,12 @@ export async function runP14RetainedDuplicateTransaction(
   events.push(event(now, 'RESCORING'));
   let rescore;
   try {
-    rescore = await adapter.rescoreCandidate(candidate, plan);
+    const rawRescore: unknown = await adapter.rescoreCandidate(candidate, plan);
+    const evidence = validateP14RescoreEvidence(rawRescore);
+    if (!evidence.valid || !evidence.value) {
+      throw new Error(`Candidate re-score evidence is invalid: ${evidence.failures.join(' | ')}`);
+    }
+    rescore = evidence.value;
   } catch (error) {
     const discardError = await discardCandidate(adapter, candidate);
     const result = cleanupOutcome({
@@ -663,7 +669,7 @@ export async function runP14RetainedDuplicateTransaction(
     return { ...result, validation };
   }
 
-  if (rescore.introducedBlockerOrHighCount > 0 || rescore.blockerCount < 0 || rescore.highRiskCount < 0) {
+  if (rescore.introducedBlockerOrHighCount > 0) {
     const discardError = await discardCandidate(adapter, candidate);
     const result = cleanupOutcome({
       plan,
@@ -674,7 +680,7 @@ export async function runP14RetainedDuplicateTransaction(
       appliedActions,
       events,
       now,
-      primaryError: receiptError('P14_VALIDATION_FAILED', 'rescore', 'Preparation introduced a new HIGH/BLOCKER finding or produced invalid risk counts.'),
+      primaryError: receiptError('P14_VALIDATION_FAILED', 'rescore', 'Preparation introduced a new HIGH/BLOCKER finding.'),
       discardError,
     });
     return { ...result, validation, rescore };
