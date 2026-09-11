@@ -12,6 +12,7 @@ export interface P13RuntimeParityAssessment {
   acceptanceAuthority: false;
   parityCandidateAccepted: boolean;
   traceablePluginBuild: boolean;
+  realFigmaContext: boolean;
   sameRunIdentity: boolean;
   mismatchCount: number;
   mismatches: P13RuntimeParityMismatch[];
@@ -109,8 +110,12 @@ export function compareP13PluginEvidenceToCli(
   return {
     schemaVersion: 1,
     acceptanceAuthority: false,
-    parityCandidateAccepted: evidence.traceableBuild && sameRunIdentity && mismatches.length === 0,
+    parityCandidateAccepted: evidence.traceableBuild
+      && evidence.realFigmaContext
+      && sameRunIdentity
+      && mismatches.length === 0,
     traceablePluginBuild: evidence.traceableBuild,
+    realFigmaContext: evidence.realFigmaContext,
     sameRunIdentity,
     mismatchCount: mismatches.length,
     mismatches,
