@@ -78,7 +78,8 @@ class Adapter implements P14RetainedDuplicateAdapter {
 
   async fingerprintSource(): Promise<string> {
     this.calls.fingerprint += 1;
-    return (this.fingerprints.shift() ?? SOURCE_FP) as string;
+    if (this.fingerprints.length === 0) return SOURCE_FP;
+    return this.fingerprints.shift() as string;
   }
 
   async cloneSource(sourceNodeId: string): Promise<P14CandidateHandle> {

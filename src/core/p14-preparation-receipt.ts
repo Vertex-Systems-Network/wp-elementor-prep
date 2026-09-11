@@ -1,6 +1,10 @@
 import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
 import { validateP14RescoreEvidence } from './p14-rescore-evidence';
 import {
+  P14_UNKNOWN_SOURCE_FINGERPRINT,
+  isP14ReceiptSourceFingerprintEvidence,
+} from './p14-source-fingerprint-evidence';
+import {
   P14_PREPARATION_ENGINE_VERSION,
   type P14PreparationReceiptV1,
   type P14PreparationStatus,
@@ -105,9 +109,9 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   if (!nonEmptyString(value.planDigest) || !String(value.planDigest).startsWith('p14-plan-')) failures.push('planDigest is missing or malformed.');
   if (!isRecord(value.source)
     || !nonEmptyString(value.source.nodeId)
-    || !nonEmptyString(value.source.beforeFingerprint)
-    || !nonEmptyString(value.source.afterFingerprint)) {
-    failures.push('Receipt source fingerprint evidence is missing.');
+    || !isP14ReceiptSourceFingerprintEvidence(value.source.beforeFingerprint)
+    || !isP14ReceiptSourceFingerprintEvidence(value.source.afterFingerprint)) {
+    failures.push('Receipt source fingerprint evidence is missing, malformed or oversized.');
   }
   if (!Array.isArray(value.appliedActions)) failures.push('appliedActions must be an array.');
   if (!Array.isArray(value.errors)) failures.push('errors must be an array.');
@@ -230,8 +234,8 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   const terminal = value.terminalState as P14TransactionState;
   const source = isRecord(value.source) ? value.source : null;
   const sourceProvenEqual = source
-    && source.beforeFingerprint !== 'UNKNOWN'
-    && source.afterFingerprint !== 'UNKNOWN'
+    && source.beforeFingerprint !== P14_UNKNOWN_SOURCE_FINGERPRINT
+    && source.afterFingerprint !== P14_UNKNOWN_SOURCE_FINGERPRINT
     && source.beforeFingerprint === source.afterFingerprint;
   const errors = Array.isArray(value.errors) ? value.errors : [];
 

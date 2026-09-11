@@ -9,6 +9,10 @@ import { validateP14PreparationConfirmation } from './p14-preparation-confirmati
 import { assessP14ValidationProfileCoverage } from './p14-validation-profile-coverage';
 import { validateP14RescoreEvidence } from './p14-rescore-evidence';
 import {
+  P14_UNKNOWN_SOURCE_FINGERPRINT,
+  validateP14SourceFingerprintEvidence,
+} from './p14-source-fingerprint-evidence';
+import {
   DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR,
   type P14SourceTransactionCoordinator,
   type P14TransactionLease,
@@ -66,6 +70,19 @@ function isP14ValidationSummary(value: unknown): value is P14ValidationSummary {
     && typeof check.passed === 'boolean'
     && typeof check.required === 'boolean'
     && (check.detail === undefined || typeof check.detail === 'string'));
+}
+
+
+async function readP14SourceFingerprint(
+  adapter: P14RetainedDuplicateAdapter,
+  sourceNodeId: string,
+): Promise<string> {
+  const rawFingerprint: unknown = await adapter.fingerprintSource(sourceNodeId);
+  const evidence = validateP14SourceFingerprintEvidence(rawFingerprint);
+  if (!evidence.valid || !evidence.value) {
+    throw new Error(`Source fingerprint adapter returned invalid evidence: ${evidence.failures.join(' | ')}`);
+  }
+  return evidence.value;
 }
 
 function event(now: () => string, state: P14TransactionState, detail?: string): P14TransactionEvent {
@@ -270,7 +287,7 @@ export async function runP14RetainedDuplicateTransaction(
     return invalidPlanReceipt(input.plan, input.transactionId, now, planIntegrity.failures);
   }
   const plan = input.plan as P14PreparationPlanV1;
-  const unknownFingerprint = 'UNKNOWN';
+  const unknownFingerprint = P14_UNKNOWN_SOURCE_FINGERPRINT;
 
   if (plan.schemaVersion !== 1 || plan.engineVersion !== P14_PREPARATION_ENGINE_VERSION) {
     return baseReceipt({
@@ -394,7 +411,7 @@ export async function runP14RetainedDuplicateTransaction(
   try {
   let beforeFingerprint: string;
   try {
-    beforeFingerprint = await adapter.fingerprintSource(plan.source.nodeId);
+    beforeFingerprint = await readP14SourceFingerprint(adapter, plan.source.nodeId);
   } catch (error) {
     return baseReceipt({
       plan,
@@ -430,7 +447,7 @@ export async function runP14RetainedDuplicateTransaction(
     events.push(event(now, 'PLAN_READY', 'non-mutating no-op plan ready'));
     let afterFingerprint = beforeFingerprint;
     try {
-      afterFingerprint = await adapter.fingerprintSource(plan.source.nodeId);
+      afterFingerprint = await readP14SourceFingerprint(adapter, plan.source.nodeId);
     } catch (error) {
       return baseReceipt({
         plan,
@@ -723,7 +740,7 @@ export async function runP14RetainedDuplicateTransaction(
 
   let preRetainFingerprint: string;
   try {
-    preRetainFingerprint = await adapter.fingerprintSource(plan.source.nodeId);
+    preRetainFingerprint = await readP14SourceFingerprint(adapter, plan.source.nodeId);
   } catch (error) {
     const discardError = await discardCandidate(adapter, candidate);
     const result = cleanupOutcome({
@@ -792,7 +809,7 @@ export async function runP14RetainedDuplicateTransaction(
 
   let afterFingerprint: string;
   try {
-    afterFingerprint = await adapter.fingerprintSource(plan.source.nodeId);
+    afterFingerprint = await readP14SourceFingerprint(adapter, plan.source.nodeId);
   } catch (error) {
     const discardError = await discardCandidate(adapter, candidate);
     const result = cleanupOutcome({
