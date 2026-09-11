@@ -31,14 +31,14 @@ Canonical planning docs:
 
 > **Progress policy:** implementation, runtime acceptance and external Community review are tracked separately. New future scope does not reduce already-completed historical core progress.
 
-**Open PR/MR:** `current reliability-audit planning PR only; expected 0 after merge`
+**Open PR/MR:** `0 after this status-sync PR lands`
 
 Open issues:
 
 - `#84` — P12 final validation: active manual/publisher/runtime exit gate.
 - `#119` — P13-P26 commercial/multi-target expansion owner; implementation blocked by #84 internal exit.
 
-PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 then synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f` after CI #723, Integration Readiness #158, P12 Offline Acceptance #78 and P12 Final Release Artifact #34 passed. These changes were planning/docs only and granted no P13-P26 runtime acceptance credit.
+PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 then synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f` after CI #723, Integration Readiness #158, P12 Offline Acceptance #78 and P12 Final Release Artifact #34 passed. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81` after CI #726, Integration Readiness #161, P12 Offline Acceptance #81 and P12 Final Release Artifact #37 passed. These changes were planning/docs only and granted no P13-P26 runtime acceptance credit.
 
 ### Module-wise progress
 

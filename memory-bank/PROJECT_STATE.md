@@ -40,7 +40,8 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 
 - PR #122 merged the researched P13-P26 planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed.
 - PR #123 merged the post-plan status synchronization as `d34c026202ae6ecd8f88f71e6056d619578ce56f` after CI #723, Integration Readiness #158, P12 Offline Acceptance #78 and P12 Final Release Artifact #34 passed.
-- This reliability-audit branch is planning/docs only; no P13 runtime implementation or acceptance credit is authorized.
+- PR #124 merged the R1 reliability/compatibility audit as `4d38c46c359bd030bf36100f4424760b1380db81` after CI #726, Integration Readiness #161, P12 Offline Acceptance #81 and P12 Final Release Artifact #37 passed.
+- This final post-audit status-sync PR is documentation-only and is intended to leave the open PR/MR count at `0` after merge.
 
 ## Current planning baseline
 
