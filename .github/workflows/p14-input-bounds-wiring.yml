@@ -1,0 +1,63 @@
+name: P14 Input Bounds Wiring
+
+on:
+  push:
+    branches:
+      - p14/bounded-input-preflight
+    paths:
+      - '.github/workflows/p14-input-bounds-wiring.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    env:
+      BASE_SHA: 85022ea65db9564cee7ae9f86ea41b0b0fa680f0
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: p14/bounded-input-preflight
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Verify bounded branch scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git merge-base HEAD "$BASE_SHA")" = "$BASE_SHA"
+          git diff --name-only "$BASE_SHA"..HEAD | sort > /tmp/changed.txt
+          cat > /tmp/expected.txt <<'EOF'
+          .github/workflows/p14-input-bounds-wiring.yml
+          scripts/tmp-p14-input-bounds-wiring.py
+          src/core/p14-input-bounds.ts
+          tests/p14-input-bounds.test.ts
+          EOF
+          sort -o /tmp/expected.txt /tmp/expected.txt
+          diff -u /tmp/expected.txt /tmp/changed.txt
+      - name: Apply exact bounded preflight wiring
+        run: python scripts/tmp-p14-input-bounds-wiring.py
+      - name: Install dependencies
+        run: npm install
+      - name: Verify focused P14 contracts
+        run: |
+          npm run typecheck
+          npx vitest run tests/p14-input-bounds.test.ts tests/p14-transaction-coordinator.test.ts tests/p14-plan-authorization.test.ts tests/p14-retained-duplicate.test.ts tests/p14-integrity.test.ts
+      - name: Commit product wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/core/p14-input-bounds.ts src/core/p14-retained-duplicate-transaction.ts
+          git commit -m "P14: enforce bounded input preflight before plan validation"
+          git push origin HEAD:p14/bounded-input-preflight
+      - name: Remove temporary wiring files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/p14-input-bounds-wiring.yml scripts/tmp-p14-input-bounds-wiring.py
+          git commit -m "chore: remove temporary P14 input bounds wiring"
+          git push origin HEAD:p14/bounded-input-preflight
