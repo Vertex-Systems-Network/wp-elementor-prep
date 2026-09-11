@@ -1,3 +1,7 @@
+import {
+  assessP14PreparationInputBounds,
+  type P14InputBoundsLimits,
+} from './p14-input-bounds';
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import {
@@ -27,6 +31,7 @@ export interface P14RetainedDuplicateRunInput {
   plan: unknown;
   registry?: P14SafeRecipeRegistryV1;
   coordinator?: P14SourceTransactionCoordinator;
+  inputBounds?: Partial<P14InputBoundsLimits>;
   transactionId: string;
   preparedName?: string;
   allowPreparedWithReview?: boolean;
@@ -156,6 +161,12 @@ function invalidPlanReceipt(
   transactionId: string,
   now: () => string,
   failures: string[],
+  options: {
+    code?: P14ErrorCode;
+    stage?: string;
+    detailPrefix?: string;
+    eventDetail?: string;
+  } = {},
 ): P14PreparationReceiptV1 {
   const record = typeof value === 'object' && value !== null && !Array.isArray(value)
     ? value as Record<string, unknown>
@@ -168,7 +179,7 @@ function invalidPlanReceipt(
   const planDigest = typeof record.planDigest === 'string' && record.planDigest.startsWith('p14-plan-')
     ? record.planDigest
     : 'p14-plan-invalid';
-  const detail = `Invalid P14 preparation plan: ${failures.join(' | ')}`;
+  const detail = `${options.detailPrefix ?? 'Invalid P14 preparation plan'}: ${failures.join(' | ')}`;
   return {
     schemaVersion: 1,
     engineVersion: P14_PREPARATION_ENGINE_VERSION,
@@ -185,11 +196,11 @@ function invalidPlanReceipt(
     p13RunId,
     planDigest,
     appliedActions: [],
-    errors: [receiptError('P14_INTERNAL_INVARIANT_FAILED', 'preflight', detail)],
+    errors: [receiptError(options.code ?? 'P14_INTERNAL_INVARIANT_FAILED', options.stage ?? 'preflight', detail)],
     events: [
       event(now, 'IDLE'),
       event(now, 'PREFLIGHT'),
-      event(now, 'BLOCKED', 'plan integrity validation failed'),
+      event(now, 'BLOCKED', options.eventDetail ?? 'plan integrity validation failed'),
     ],
   };
 }
@@ -207,6 +218,18 @@ export async function runP14RetainedDuplicateTransaction(
 ): Promise<P14PreparationReceiptV1> {
   const now = input.now ?? (() => new Date().toISOString());
   const events: P14TransactionEvent[] = [event(now, 'IDLE'), event(now, 'PREFLIGHT')];
+  const inputBounds = assessP14PreparationInputBounds(input.plan, input.inputBounds);
+  if (!inputBounds.allowed) {
+    const failures = inputBounds.failures.map(
+      (failure) => `${failure.code} at ${failure.path}: ${failure.actual} > ${failure.limit}`,
+    );
+    return invalidPlanReceipt(input.plan, input.transactionId, now, failures, {
+      code: 'P14_INPUT_TOO_LARGE',
+      stage: 'bounds',
+      detailPrefix: 'P14 input exceeds bounded safety limits',
+      eventDetail: 'bounded input preflight failed',
+    });
+  }
   const planIntegrity = validateP14PreparationPlan(input.plan);
   if (!planIntegrity.valid) {
     return invalidPlanReceipt(input.plan, input.transactionId, now, planIntegrity.failures);

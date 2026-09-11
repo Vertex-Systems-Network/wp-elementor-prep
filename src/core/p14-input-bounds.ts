@@ -88,8 +88,8 @@ export function resolveP14InputBounds(
   const result = {} as P14InputBoundsLimits;
   for (const key of Object.keys(DEFAULT_P14_INPUT_BOUNDS) as Array<keyof P14InputBoundsLimits>) {
     const requested = overrides[key];
-    const base = positiveInteger(requested) ? requested : DEFAULT_P14_INPUT_BOUNDS[key];
-    result[key] = Math.min(base, HARD_P14_INPUT_BOUNDS[key]);
+    const requestedLimit = positiveInteger(requested) ? requested : DEFAULT_P14_INPUT_BOUNDS[key];
+    result[key] = Math.min(requestedLimit, DEFAULT_P14_INPUT_BOUNDS[key], HARD_P14_INPUT_BOUNDS[key]);
   }
   return result;
 }
