@@ -29,6 +29,8 @@ The bundle contains:
 
 The latest valid bundle is retained in `figma.clientStorage` under a versioned key. Storage is best-effort and bounded to 512,000 UTF-8 bytes. Invalid, contradictory, oversized or schema-incompatible evidence fails closed and is not persisted as valid evidence.
 
+A new persistence attempt also invalidates the previous evidence slot before the fresh bundle can qualify. The storage instance is quarantined in the current plugin runtime as soon as replacement starts. If stale-slot invalidation, fresh validation, the byte bound, or the fresh write fails, `loadLatestP13RuntimeEvidence(...)` returns no evidence for that runtime session instead of exposing the previously valid bundle as if it were current. Quarantine clears only after a fresh valid bundle is successfully persisted. This intentionally favors losing an older convenience copy over reusing stale acceptance evidence.
+
 ## Developer evidence viewer
 
 The development manifest exposes:

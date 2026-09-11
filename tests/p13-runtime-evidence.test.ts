@@ -89,6 +89,18 @@ class MemoryStorage implements P13RuntimeEvidenceClientStorage {
   async setAsync(key: string, value: unknown): Promise<void> { this.values.set(key, value); }
 }
 
+class FailingSetStorage extends MemoryStorage {
+  failAllSets = false;
+  failNonNullSets = false;
+
+  async setAsync(key: string, value: unknown): Promise<void> {
+    if (this.failAllSets || (this.failNonNullSets && value !== null)) {
+      throw new Error('forced set failure');
+    }
+    await super.setAsync(key, value);
+  }
+}
+
 describe('P13 plugin runtime evidence', () => {
   it('binds a read-only evidence bundle to exact runtime/build/frame context', () => {
     const bundle = evidence();
@@ -157,6 +169,57 @@ describe('P13 plugin runtime evidence', () => {
 
     storage.values.set(P13_RUNTIME_EVIDENCE_STORAGE_KEY, { schemaVersion: 999 });
     expect(await loadLatestP13RuntimeEvidence(storage)).toBeNull();
+  });
+
+  it('invalidates prior valid evidence when a replacement bundle is invalid or oversized', async () => {
+    const storage = new MemoryStorage();
+    storage.values.set(P13_RUNTIME_EVIDENCE_STORAGE_KEY, evidence());
+
+    const oversized = evidence();
+    oversized.pluginVersion = 'x'.repeat(520_000);
+    const result = await persistP13RuntimeEvidenceBestEffort(storage, oversized);
+
+    expect(result.persisted).toBe(false);
+    expect(result.reason).toContain('byte bound');
+    expect(storage.values.get(P13_RUNTIME_EVIDENCE_STORAGE_KEY)).toBeNull();
+    expect(await loadLatestP13RuntimeEvidence(storage)).toBeNull();
+  });
+
+  it('does not expose stale prior evidence when the fresh replacement write fails', async () => {
+    const storage = new FailingSetStorage();
+    storage.values.set(P13_RUNTIME_EVIDENCE_STORAGE_KEY, evidence());
+    storage.failNonNullSets = true;
+
+    const result = await persistP13RuntimeEvidenceBestEffort(storage, evidence());
+
+    expect(result.persisted).toBe(false);
+    expect(result.reason).toContain('write failed after stale evidence was invalidated');
+    expect(storage.values.get(P13_RUNTIME_EVIDENCE_STORAGE_KEY)).toBeNull();
+    expect(await loadLatestP13RuntimeEvidence(storage)).toBeNull();
+
+    storage.failNonNullSets = false;
+    const fresh = evidence();
+    expect((await persistP13RuntimeEvidenceBestEffort(storage, fresh)).persisted).toBe(true);
+    expect(await loadLatestP13RuntimeEvidence(storage)).toEqual(fresh);
+  });
+
+  it('quarantines the current runtime session when stale-slot invalidation itself fails', async () => {
+    const storage = new FailingSetStorage();
+    const prior = evidence();
+    storage.values.set(P13_RUNTIME_EVIDENCE_STORAGE_KEY, prior);
+    storage.failAllSets = true;
+
+    const result = await persistP13RuntimeEvidenceBestEffort(storage, evidence());
+
+    expect(result.persisted).toBe(false);
+    expect(result.reason).toContain('stale-evidence invalidation failed');
+    expect(storage.values.get(P13_RUNTIME_EVIDENCE_STORAGE_KEY)).toEqual(prior);
+    expect(await loadLatestP13RuntimeEvidence(storage)).toBeNull();
+
+    storage.failAllSets = false;
+    const fresh = evidence();
+    expect((await persistP13RuntimeEvidenceBestEffort(storage, fresh)).persisted).toBe(true);
+    expect(await loadLatestP13RuntimeEvidence(storage)).toEqual(fresh);
   });
 
   it('accepts semantic plugin/CLI parity when only generatedAt differs and runtime provenance is eligible', () => {
