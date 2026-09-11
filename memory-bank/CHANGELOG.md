@@ -18,7 +18,10 @@
 - Corrected asset semantics using official Figma APIs: image-fill stored bytes may be exported as `Stored Original`, while crop/mask/effects/layout appearance is a distinct rendered export. Stored bytes are not claimed as upstream-upload provenance.
 - Retained raw-font policy: font identity/usage manifest from Figma; raw binaries only when separately user-supplied and license-permitted.
 - Kept the Community core offline under `allowedDomains: ["none"]`; the preferred WP Builders Bridge is file/paste import first. Arbitrary direct customer-domain push remains a separately accepted future networked module.
-- Added durable decisions D-031 through D-037 and synchronized README, PROJECT_STATE, NEXT_ACTIONS, ROADMAP and AI_NATIVE_PLAN.
+- Added durable decisions D-031 through D-037 and synchronized AGENTS, README, PROJECT_STATE, NEXT_ACTIONS, ROADMAP, AI_NATIVE_PLAN and FEATURE_PLAN.
+- First PR #124 attempt exposed a real status-contract failure because R0/R1 used `N/A` while only DEFERRED modules may use `N/A`; corrected the README to mark the gate definitions `100% / DEFINED-RECURRING` while preserving the requirement to execute each gate per adapter.
+- PR #124 final head `10b025f62679191ec43dd5afd50e6e69e8e3fcc4` passed CI #726, Integration Readiness #161, P12 Offline Acceptance #81 and P12 Final Release Artifact #37 with no review/thread blockers.
+- PR #124 squash-merged the R1 reliability/compatibility plan as `4d38c46c359bd030bf36100f4424760b1380db81`.
 - No P13-P26 runtime implementation or acceptance percentage was granted; #84 remains the internal gate before P13 starts.
 
 ## 2026-09-11 — Market-researched multi-target commercial alignment
