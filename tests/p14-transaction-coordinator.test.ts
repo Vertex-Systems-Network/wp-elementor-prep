@@ -96,7 +96,11 @@ class Adapter implements P14RetainedDuplicateAdapter {
 
   async validateCandidate(): Promise<P14ValidationSummary> {
     this.calls.validate += 1;
-    return { passed: true, checks: [{ id: 'required', passed: true, required: true }] };
+    return {
+      passed: true,
+      profileIdsRun: ['P14_SYNTHETIC_COORDINATOR_VALIDATE'],
+      checks: [{ id: 'required', passed: true, required: true }],
+    };
   }
 
   async rescoreCandidate(): Promise<P14RescoreSummary> {

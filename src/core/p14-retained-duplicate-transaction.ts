@@ -6,6 +6,7 @@ import {
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
+import { assessP14ValidationProfileCoverage } from './p14-validation-profile-coverage';
 import {
   DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR,
   type P14SourceTransactionCoordinator,
@@ -27,6 +28,7 @@ import {
   type P14RetainedDuplicateAdapter,
   type P14TransactionEvent,
   type P14TransactionState,
+  type P14ValidationSummary,
 } from './p14-preparation-types';
 
 export interface P14RetainedDuplicateRunInput {
@@ -44,6 +46,25 @@ export interface P14RetainedDuplicateRunInput {
 
 function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isP14ValidationSummary(value: unknown): value is P14ValidationSummary {
+  if (!isRecord(value)
+    || typeof value.passed !== 'boolean'
+    || !Array.isArray(value.profileIdsRun)
+    || !Array.isArray(value.checks)) {
+    return false;
+  }
+  return value.checks.every((check) => isRecord(check)
+    && typeof check.id === 'string'
+    && check.id.length > 0
+    && typeof check.passed === 'boolean'
+    && typeof check.required === 'boolean'
+    && (check.detail === undefined || typeof check.detail === 'string'));
 }
 
 function event(now: () => string, state: P14TransactionState, detail?: string): P14TransactionEvent {
@@ -570,9 +591,13 @@ export async function runP14RetainedDuplicateTransaction(
   }
 
   events.push(event(now, 'VALIDATING'));
-  let validation;
+  let validation: P14ValidationSummary;
   try {
-    validation = await adapter.validateCandidate(candidate, plan);
+    const rawValidation: unknown = await adapter.validateCandidate(candidate, plan);
+    if (!isP14ValidationSummary(rawValidation)) {
+      throw new Error('Validation adapter returned malformed evidence.');
+    }
+    validation = rawValidation;
   } catch (error) {
     const discardError = await discardCandidate(adapter, candidate);
     return cleanupOutcome({
@@ -589,9 +614,15 @@ export async function runP14RetainedDuplicateTransaction(
     });
   }
 
-  const requiredChecksPass = validation.checks.filter((check) => check.required).every((check) => check.passed);
-  if (!validation.passed || !requiredChecksPass) {
+  const profileCoverage = assessP14ValidationProfileCoverage(plan, validation.profileIdsRun);
+  validation = { ...validation, profileIdsRun: profileCoverage.observedProfileIds };
+  const requiredChecksPass = Array.isArray(validation.checks)
+    && validation.checks.filter((check) => check.required).every((check) => check.passed);
+  if (!profileCoverage.valid || !validation.passed || !requiredChecksPass) {
     const discardError = await discardCandidate(adapter, candidate);
+    const profileDetail = profileCoverage.valid
+      ? ''
+      : ` Validation profile coverage failed: ${profileCoverage.failures.join(' | ')}`;
     const result = cleanupOutcome({
       plan,
       transactionId: input.transactionId,
@@ -601,7 +632,11 @@ export async function runP14RetainedDuplicateTransaction(
       appliedActions,
       events,
       now,
-      primaryError: receiptError('P14_VALIDATION_FAILED', 'validate', 'Candidate failed one or more mandatory validators.'),
+      primaryError: receiptError(
+        'P14_VALIDATION_FAILED',
+        'validate',
+        `Candidate failed one or more mandatory validators.${profileDetail}`,
+      ),
       discardError,
     });
     return { ...result, validation };
