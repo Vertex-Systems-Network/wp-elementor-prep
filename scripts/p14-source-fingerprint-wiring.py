@@ -2,6 +2,7 @@ from pathlib import Path
 
 TX = Path('src/core/p14-retained-duplicate-transaction.ts')
 RECEIPT = Path('src/core/p14-preparation-receipt.ts')
+TX_TEST = Path('tests/p14-source-fingerprint-transaction.test.ts')
 
 
 def replace_exact(path: Path, old: str, new: str, count: int = 1):
@@ -87,4 +88,19 @@ replace_exact(
     RECEIPT,
     "    && source.beforeFingerprint !== 'UNKNOWN'\n    && source.afterFingerprint !== 'UNKNOWN'",
     "    && source.beforeFingerprint !== P14_UNKNOWN_SOURCE_FINGERPRINT\n    && source.afterFingerprint !== P14_UNKNOWN_SOURCE_FINGERPRINT",
+)
+
+replace_exact(
+    TX_TEST,
+    """  async fingerprintSource(): Promise<string> {
+    this.calls.fingerprint += 1;
+    return (this.fingerprints.shift() ?? SOURCE_FP) as string;
+  }
+""",
+    """  async fingerprintSource(): Promise<string> {
+    this.calls.fingerprint += 1;
+    if (this.fingerprints.length === 0) return SOURCE_FP;
+    return this.fingerprints.shift() as string;
+  }
+""",
 )
