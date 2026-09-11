@@ -129,4 +129,90 @@ describe('P13 responsive-risk foundation', () => {
     expect(finding?.remediationClass).toBe('MANUAL_REVIEW');
     expect(finding?.penalty).toBeGreaterThan(0);
   });
+
+
+  it('caps strong sibling overlap inside a manual layered parent at MEDIUM', () => {
+    const a = node({ id: 'manual-a', geometry: { x: 0, y: 0, width: 500, height: 200 }, children: [] });
+    const b = node({ id: 'manual-b', geometry: { x: 0, y: 0, width: 500, height: 200 }, children: [] });
+    const parent = node({
+      id: 'manual-parent',
+      layoutMode: 'NONE',
+      isAutoLayout: false,
+      geometry: { x: 0, y: 0, width: 600, height: 220 },
+      children: [a, b],
+    });
+    const report = buildBuildReadyReport(node({ id: 'root', children: [parent] }), {}, '2026-09-11T00:00:00.000Z');
+    const finding = report.findings.find((item) => item.ruleId === 'RR_OVERLAP_COLLISION');
+    expect(finding?.severity).toBe('MEDIUM');
+    expect(finding?.evidence.parentLayoutMode).toBe('NONE');
+  });
+
+  it('retains HIGH collision evidence for strong overlap inside a flow parent', () => {
+    const a = node({ id: 'flow-a', geometry: { x: 0, y: 0, width: 500, height: 200 }, children: [] });
+    const b = node({ id: 'flow-b', geometry: { x: 0, y: 0, width: 500, height: 200 }, children: [] });
+    const parent = node({
+      id: 'flow-parent',
+      layoutMode: 'HORIZONTAL',
+      isAutoLayout: true,
+      geometry: { x: 0, y: 0, width: 600, height: 220 },
+      children: [a, b],
+    });
+    const report = buildBuildReadyReport(node({ id: 'root', children: [parent] }), {}, '2026-09-11T00:00:00.000Z');
+    const finding = report.findings.find((item) => item.ruleId === 'RR_OVERLAP_COLLISION');
+    expect(finding?.severity).toBe('HIGH');
+  });
+
+  it('does not duplicate a known clipped carousel viewport as generic HIGH overflow', () => {
+    const cards = [0, 1, 2, 3].map((index) => node({
+      id: `card:${index}`,
+      geometry: { x: index * 320, y: 0, width: 300, height: 100 },
+      children: [],
+    }));
+    const carousel = node({
+      id: 'carousel',
+      layoutMode: 'NONE',
+      isAutoLayout: false,
+      clipsContent: true,
+      geometry: { x: 0, y: 0, width: 800, height: 120 },
+      children: cards,
+    });
+    const report = buildBuildReadyReport(node({ id: 'root', children: [carousel] }), {}, '2026-09-11T00:00:00.000Z');
+    expect(report.findings.some((item) =>
+      item.ruleId === 'RR_OVERFLOW_CLIP_DEPENDENCY' && item.nodeIds.includes('carousel'))).toBe(false);
+  });
+
+  it('downgrades clipped absolute image composition and small controlled overflow to MEDIUM', () => {
+    const portrait = node({
+      id: 'portrait',
+      isImageLike: true,
+      absolutePositioned: true,
+      geometry: { x: -30, y: 0, width: 620, height: 200 },
+      children: [],
+    });
+    const media = node({
+      id: 'media',
+      clipsContent: true,
+      geometry: { x: 0, y: 0, width: 600, height: 200 },
+      children: [portrait],
+    });
+    const slight = node({
+      id: 'slight',
+      isContainer: false,
+      layoutMode: 'NONE',
+      isAutoLayout: false,
+      geometry: { x: 0, y: 0, width: 1025, height: 50 },
+      children: [],
+    });
+    const smallClip = node({
+      id: 'small-clip',
+      clipsContent: true,
+      geometry: { x: 0, y: 0, width: 1000, height: 60 },
+      children: [slight],
+    });
+    const report = buildBuildReadyReport(node({ id: 'root', children: [media, smallClip] }), {}, '2026-09-11T00:00:00.000Z');
+    const overflow = report.findings.filter((item) => item.ruleId === 'RR_OVERFLOW_CLIP_DEPENDENCY');
+    expect(overflow.find((item) => item.nodeIds.includes('portrait'))?.severity).toBe('MEDIUM');
+    expect(overflow.find((item) => item.nodeIds.includes('slight'))?.severity).toBe('MEDIUM');
+  });
+
 });
