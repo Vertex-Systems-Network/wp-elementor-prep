@@ -110,7 +110,11 @@ class CountingAdapter implements P14RetainedDuplicateAdapter {
 
   async validateCandidate(): Promise<P14ValidationSummary> {
     this.calls.validate += 1;
-    return { passed: true, checks: [{ id: 'required', passed: true, required: true }] };
+    return {
+      passed: true,
+      profileIdsRun: ['P14_VALIDATE_PARENT', 'P14_VALIDATE_CHILD'],
+      checks: [{ id: 'required', passed: true, required: true }],
+    };
   }
 
   async rescoreCandidate(): Promise<P14RescoreSummary> {

@@ -165,6 +165,8 @@ export interface P14ValidationCheck {
 
 export interface P14ValidationSummary {
   passed: boolean;
+  /** Bounded evidence of validation profiles that actually ran for this candidate. */
+  profileIdsRun: string[];
   checks: P14ValidationCheck[];
 }
 

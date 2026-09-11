@@ -1,3 +1,4 @@
+import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
 import {
   P14_PREPARATION_ENGINE_VERSION,
   type P14PreparationReceiptV1,
@@ -164,9 +165,24 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   }
 
   if (value.validation !== undefined) {
-    if (!isRecord(value.validation) || typeof value.validation.passed !== 'boolean' || !Array.isArray(value.validation.checks)) {
+    if (!isRecord(value.validation)
+      || typeof value.validation.passed !== 'boolean'
+      || !Array.isArray(value.validation.profileIdsRun)
+      || !Array.isArray(value.validation.checks)) {
       failures.push('validation is malformed.');
     } else {
+      if (value.validation.profileIdsRun.length > DEFAULT_P14_INPUT_BOUNDS.maxActions) {
+        failures.push('validation.profileIdsRun exceeds the bounded profile count.');
+      } else {
+        const profileIds = value.validation.profileIdsRun as unknown[];
+        if (profileIds.some((profileId) => !nonEmptyString(profileId)
+          || String(profileId).length > DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength)) {
+          failures.push('validation.profileIdsRun contains an invalid or oversized profile ID.');
+        }
+        if (new Set(profileIds).size !== profileIds.length) {
+          failures.push('validation.profileIdsRun contains duplicate profile IDs.');
+        }
+      }
       for (const [index, check] of value.validation.checks.entries()) {
         if (!isRecord(check)
           || !nonEmptyString(check.id)
@@ -229,6 +245,9 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
     if (!candidate || candidate.retained !== true) failures.push(`${status} requires a retained candidate.`);
     if (!retention) failures.push(`${status} requires retention evidence.`);
     if (!isRecord(value.validation) || value.validation.passed !== true) failures.push(`${status} requires passing validation.`);
+    else if (!Array.isArray(value.validation.profileIdsRun) || value.validation.profileIdsRun.length === 0) {
+      failures.push(`${status} requires validation-profile execution evidence.`);
+    }
     if (!isRecord(value.rescore)) failures.push(`${status} requires a candidate re-score.`);
     else {
       if (value.rescore.introducedBlockerOrHighCount !== 0) failures.push(`${status} cannot introduce HIGH/BLOCKER findings.`);

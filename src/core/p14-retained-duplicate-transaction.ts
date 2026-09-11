@@ -6,6 +6,7 @@ import {
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
+import { assessP14ValidationProfileCoverage } from './p14-validation-profile-coverage';
 import {
   DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR,
   type P14SourceTransactionCoordinator,
@@ -589,9 +590,15 @@ export async function runP14RetainedDuplicateTransaction(
     });
   }
 
-  const requiredChecksPass = validation.checks.filter((check) => check.required).every((check) => check.passed);
-  if (!validation.passed || !requiredChecksPass) {
+  const profileCoverage = assessP14ValidationProfileCoverage(plan, validation.profileIdsRun);
+  validation = { ...validation, profileIdsRun: profileCoverage.observedProfileIds };
+  const requiredChecksPass = Array.isArray(validation.checks)
+    && validation.checks.filter((check) => check.required).every((check) => check.passed);
+  if (!profileCoverage.valid || !validation.passed || !requiredChecksPass) {
     const discardError = await discardCandidate(adapter, candidate);
+    const profileDetail = profileCoverage.valid
+      ? ''
+      : ` Validation profile coverage failed: ${profileCoverage.failures.join(' | ')}`;
     const result = cleanupOutcome({
       plan,
       transactionId: input.transactionId,
@@ -601,7 +608,11 @@ export async function runP14RetainedDuplicateTransaction(
       appliedActions,
       events,
       now,
-      primaryError: receiptError('P14_VALIDATION_FAILED', 'validate', 'Candidate failed one or more mandatory validators.'),
+      primaryError: receiptError(
+        'P14_VALIDATION_FAILED',
+        'validate',
+        `Candidate failed one or more mandatory validators.${profileDetail}`,
+      ),
       discardError,
     });
     return { ...result, validation };

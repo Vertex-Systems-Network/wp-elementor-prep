@@ -104,6 +104,7 @@ class MemoryAdapter implements P14RetainedDuplicateAdapter {
   transformFailureActionId: string | null = null;
   validation: P14ValidationSummary = {
     passed: true,
+    profileIdsRun: ['P14_STRUCTURAL_PRESERVATION_V1', 'P14_TEXT_GEOMETRY_V1'],
     checks: [
       { id: 'structure', passed: true, required: true },
       { id: 'content', passed: true, required: true },
@@ -323,6 +324,7 @@ describe('P14 retained duplicate transaction', () => {
     const validationAdapter = new MemoryAdapter();
     validationAdapter.validation = {
       passed: false,
+      profileIdsRun: ['P14_STRUCTURAL_PRESERVATION_V1', 'P14_TEXT_GEOMETRY_V1'],
       checks: [{ id: 'content', passed: false, required: true, detail: 'text changed' }],
     };
     const validation = await run(readyPlan(), validationAdapter);
