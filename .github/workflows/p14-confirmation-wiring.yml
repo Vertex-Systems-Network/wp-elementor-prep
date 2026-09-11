@@ -1,0 +1,81 @@
+name: P14 Confirmation Wiring
+
+on:
+  push:
+    branches:
+      - p14/explicit-plan-confirmation
+    paths:
+      - 'scripts/p14-confirmation-wiring.py'
+      - '.github/workflows/p14-confirmation-wiring.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run actions/checkout@v7
+        uses: actions/checkout@v7
+        with:
+          ref: p14/explicit-plan-confirmation
+          fetch-depth: 0
+
+      - name: Run actions/setup-node@v7
+        uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+
+      - name: Verify bounded branch scope
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "p14/explicit-plan-confirmation"
+          test -f scripts/p14-confirmation-wiring.py
+          test -f .github/workflows/p14-confirmation-wiring.yml
+
+      - name: Apply exact confirmation wiring
+        run: python scripts/p14-confirmation-wiring.py
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify focused P14 confirmation contracts
+        run: |
+          npm run typecheck
+          npx vitest run \
+            tests/p14-confirmation.test.ts \
+            tests/p14-confirmation-transaction.test.ts \
+            tests/p14-retained-duplicate.test.ts \
+            tests/p14-integrity.test.ts \
+            tests/p14-transaction-coordinator.test.ts \
+            tests/p14-plan-authorization.test.ts \
+            tests/p14-input-bounds.test.ts
+
+      - name: Commit product wiring
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/core/p14-preparation-types.ts \
+            src/core/p14-preparation-receipt.ts \
+            src/core/p14-input-bounds.ts \
+            src/core/p14-retained-duplicate-transaction.ts \
+            tests/p14-retained-duplicate.test.ts \
+            tests/p14-integrity.test.ts \
+            tests/p14-transaction-coordinator.test.ts
+          if git diff --cached --quiet; then
+            echo "No product changes staged"
+            exit 1
+          fi
+          git commit -m "P14: require explicit plan-bound confirmation"
+          git push origin HEAD:p14/explicit-plan-confirmation
+
+      - name: Remove temporary wiring files
+        if: success()
+        run: |
+          set -euo pipefail
+          git pull --rebase origin p14/explicit-plan-confirmation
+          git rm scripts/p14-confirmation-wiring.py .github/workflows/p14-confirmation-wiring.yml
+          git commit -m "chore: remove temporary P14 confirmation wiring files"
+          git push origin HEAD:p14/explicit-plan-confirmation
