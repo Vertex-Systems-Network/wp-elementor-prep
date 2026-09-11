@@ -1,0 +1,45 @@
+name: P13 Calibration Refine
+
+on:
+  push:
+    branches:
+      - p13/real-baseline-calibration
+    paths:
+      - .github/workflows/p13-calibration-refine.yml
+
+permissions:
+  contents: write
+
+jobs:
+  refine-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: p13/real-baseline-calibration
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+      - name: Verify exact pre-refinement source
+        run: |
+          source="9fd74b35e3a3f8bff33f8ce4b4882762b52b1358"
+          test "$(git merge-base HEAD "$source")" = "$source"
+          actual="$(git diff --name-only "$source"...HEAD | sort)"
+          expected_files="$(printf '%s\n' '.github/workflows/p13-calibration-refine.yml' 'scripts/tmp-p13-calibration-refine.py' | sort)"
+          test "$actual" = "$expected_files"
+      - name: Apply final calibration refinement
+        run: python scripts/tmp-p13-calibration-refine.py
+      - name: Install and validate
+        run: |
+          npm install
+          npm run typecheck
+          npx vitest run tests/p13-responsive-risk.test.ts tests/p13-build-ready.test.ts
+      - name: Commit refinement and remove temporary files
+        run: |
+          git rm .github/workflows/p13-calibration-refine.yml scripts/tmp-p13-calibration-refine.py
+          git add src/core/responsive-risk.ts tests/p13-responsive-risk.test.ts
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "P13: remove unsupported density and manual-overlap penalties"
+          git push origin HEAD:p13/real-baseline-calibration
