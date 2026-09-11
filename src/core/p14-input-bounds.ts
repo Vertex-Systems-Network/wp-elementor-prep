@@ -14,6 +14,11 @@ export interface P14InputBoundsLimits {
   maxDetailLength: number;
 }
 
+export interface P14InputBoundsContext {
+  transactionId?: unknown;
+  preparedName?: unknown;
+}
+
 export type P14InputBoundFailureCode =
   | 'P14_BOUND_MAX_ACTIONS'
   | 'P14_BOUND_MAX_BLOCKERS'
@@ -135,12 +140,16 @@ function checkIdentityArrayItems(
 export function assessP14PreparationInputBounds(
   value: unknown,
   overrides: Partial<P14InputBoundsLimits> = {},
+  context: P14InputBoundsContext = {},
 ): P14InputBoundsResult {
   const limits = resolveP14InputBounds(overrides);
   const failures: P14InputBoundFailure[] = [];
   let actionCount = 0;
   let blockerCount = 0;
   let totalTargetReferences = 0;
+
+  checkString(context.transactionId, 'transactionId', limits.maxIdentityLength, 'P14_BOUND_MAX_IDENTITY_LENGTH', failures);
+  checkString(context.preparedName, 'preparedName', limits.maxIdentityLength, 'P14_BOUND_MAX_IDENTITY_LENGTH', failures);
 
   if (!isRecord(value)) {
     return {

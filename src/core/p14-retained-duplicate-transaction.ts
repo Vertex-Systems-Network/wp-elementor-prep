@@ -181,6 +181,7 @@ function invalidPlanReceipt(
       && value.length <= DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength
       ? value
       : fallback;
+  const safeTransactionId = boundedIdentity(transactionId, 'p14-transaction-invalid');
   const nodeId = boundedIdentity(source.nodeId, 'UNKNOWN');
   const p13RunId = boundedIdentity(record.p13RunId, 'UNKNOWN');
   const rawPlanDigest = boundedIdentity(record.planDigest, 'p14-plan-invalid');
@@ -191,7 +192,7 @@ function invalidPlanReceipt(
     engineVersion: P14_PREPARATION_ENGINE_VERSION,
     acceptanceAuthority: false,
     targetCompatibilityClaim: false,
-    transactionId,
+    transactionId: safeTransactionId,
     status: 'BLOCKED',
     terminalState: 'BLOCKED',
     source: {
@@ -224,7 +225,10 @@ export async function runP14RetainedDuplicateTransaction(
 ): Promise<P14PreparationReceiptV1> {
   const now = input.now ?? (() => new Date().toISOString());
   const events: P14TransactionEvent[] = [event(now, 'IDLE'), event(now, 'PREFLIGHT')];
-  const inputBounds = assessP14PreparationInputBounds(input.plan, input.inputBounds);
+  const inputBounds = assessP14PreparationInputBounds(input.plan, input.inputBounds, {
+    transactionId: input.transactionId,
+    preparedName: input.preparedName,
+  });
   if (!inputBounds.allowed) {
     const failures = inputBounds.failures.map(
       (failure) => `${failure.code} at ${failure.path}: ${failure.actual} > ${failure.limit}`,

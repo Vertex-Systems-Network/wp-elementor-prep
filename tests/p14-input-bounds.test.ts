@@ -173,6 +173,48 @@ describe('P14 bounded input preflight', () => {
     expect(JSON.stringify(receipt).length).toBeLessThan(10000);
   });
 
+  it('bounds run-level transaction and prepared-name identities', () => {
+    const oversizedTransaction = assessP14PreparationInputBounds(
+      plan(),
+      {},
+      { transactionId: 't'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 1) },
+    );
+    expect(oversizedTransaction.allowed).toBe(false);
+    expect(oversizedTransaction.failures).toContainEqual(expect.objectContaining({
+      code: 'P14_BOUND_MAX_IDENTITY_LENGTH',
+      path: 'transactionId',
+    }));
+
+    const oversizedName = assessP14PreparationInputBounds(
+      plan(),
+      {},
+      { preparedName: 'p'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 1) },
+    );
+    expect(oversizedName.allowed).toBe(false);
+    expect(oversizedName.failures).toContainEqual(expect.objectContaining({
+      code: 'P14_BOUND_MAX_IDENTITY_LENGTH',
+      path: 'preparedName',
+    }));
+  });
+
+  it('sanitizes an oversized transaction id before coordinator or adapter access', async () => {
+    const adapter = new CountingAdapter();
+    const coordinator = new SpyCoordinator();
+    const receipt = await runP14RetainedDuplicateTransaction({
+      plan: plan(),
+      registry,
+      coordinator,
+      transactionId: 't'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 1),
+      now: () => '2026-09-12T00:00:00.000Z',
+    }, adapter);
+
+    expect(receipt.status).toBe('BLOCKED');
+    expect(receipt.errors[0]?.code).toBe('P14_INPUT_TOO_LARGE');
+    expect(receipt.transactionId).toBe('p14-transaction-invalid');
+    expect(coordinator.acquireCalls).toBe(0);
+    expect(Object.values(adapter.calls).every((count) => count === 0)).toBe(true);
+  });
+
   it('blocks oversized input before coordinator or adapter access', async () => {
     const value = plan() as any;
     value.actions = new Array(DEFAULT_P14_INPUT_BOUNDS.maxActions + 1).fill(null);
