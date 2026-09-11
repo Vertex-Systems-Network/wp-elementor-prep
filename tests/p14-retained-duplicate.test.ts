@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildP14PreparationPlan } from '../src/core/p14-preparation-plan';
+import { createP14SafeRecipeRegistry } from '../src/core/p14-safe-recipe-registry';
 import { runP14RetainedDuplicateTransaction } from '../src/core/p14-retained-duplicate-transaction';
 import type {
   P14CandidateHandle,
@@ -38,6 +39,11 @@ const textRecipe: P14PreparationRecipeDefinition = {
   conflictsWith: [],
   orderClass: '20-child-sizing',
 };
+
+const testRegistry = createP14SafeRecipeRegistry([
+  { sourceRuleId: 'BR_ROW_MANUAL_FLOW', sourceRuleVersion: 1, recipe: rowRecipe },
+  { sourceRuleId: 'BR_TEXT_FIXED_HEIGHT', sourceRuleVersion: 1, recipe: textRecipe },
+]);
 
 function readyPlan(findingsOrder: 'normal' | 'reverse' = 'normal'): P14PreparationPlanV1 {
   const findings = [
@@ -164,6 +170,7 @@ const fixedNow = () => '2026-09-12T00:00:00.000Z';
 function run(plan: P14PreparationPlanV1, adapter: MemoryAdapter, overrides: Record<string, unknown> = {}) {
   return runP14RetainedDuplicateTransaction({
     plan,
+    registry: testRegistry,
     transactionId: 'p14-tx-test',
     preparedName: 'Desktop — Prepared',
     now: fixedNow,
