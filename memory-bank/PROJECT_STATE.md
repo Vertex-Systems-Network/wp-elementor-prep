@@ -38,13 +38,16 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — post-P12 P13-P26 commercial/multi-target roadmap: **PLANNED / dependency-blocked by #84 internal exit**. Research/reliability planning may progress; runtime implementation may not start yet.
 - #126 — exact release #20 publisher evidence intake hardening: **COMPLETED** through PR #129.
 
-## Current PR queue
+## Current PR / main queue
 
 - PR #122 merged the researched P13-P26 planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565`.
 - PR #123 merged post-plan status synchronization as `d34c026202ae6ecd8f88f71e6056d619578ce56f`.
 - PR #124 merged the R1 reliability/compatibility audit as `4d38c46c359bd030bf36100f4424760b1380db81`.
 - PR #129 merged P12 publisher evidence intake tooling as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed.
-- This status-sync branch is documentation-only and is intended to leave the open PR/MR count at `0` after merge.
+- PR #130 synchronized the post-#129 repository state and merged as `c6a4e1df034fbd62077c58227b2c0c4dc4c116d2`.
+- PR #131 retained the current R0 commercial market snapshot and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`.
+- Current-main checks on `a22b312...` passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46.
+- Open PR/MR baseline before the present focused documentation sync was `0`.
 
 ## Current planning baseline
 
@@ -58,6 +61,7 @@ Research is advisory and neither R0 nor R1 overrides safety or counts as runtime
 Canonical docs:
 
 - `docs/MARKET_RESEARCH_PLAN.md`;
+- `docs/R0_MARKET_SNAPSHOT_2026-09-11.md`;
 - `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md`;
 - `docs/COMMERCIAL_EXPANSION_PLAN.md`;
 - `docs/AI_NATIVE_PLAN.md`;
@@ -96,8 +100,8 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | P9 backlog generator | COMPLETE / P12 ACCEPTED | 100% | Retained real plugin export quality |
 | P10 npm/CLI | COMPLETE / P12 ACCEPTED | 100% | Retained real REST/auth/plugin parity |
 | P11 Figma distribution | IMPLEMENTATION COMPLETE | 100% | Live publisher/install evidence belongs to P12 |
-| P12 final validation | IN PROGRESS | 80% | Run exact #20 evidence intake from live runtime/publish/2FA screenshots, then final internal exit review |
-| R0 market/platform research | PLANNING GATE | N/A | Refresh before each major adapter |
+| P12 final validation | IN PROGRESS | 80% | Fresh exact-#20 runtime/final-details/2FA evidence, then receipt + final internal exit review |
+| R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13-P26 multi-target commercial expansion | PLANNED / BLOCKED | 0% | Do not implement before #84 internal exit |
 
@@ -113,9 +117,17 @@ The publishing-ID candidate under manual evaluation was produced from source `5f
 
 Exact three-file publish ZIP SHA-256: `1ccfa457d4ae4145cf36b748f7758187ef3092503c270a46f28e03675878a066`.
 
-`config/p12-publisher-candidate.json` now machine-pins the exact candidate. `npm run p12:publisher-evidence` verifies the exact ZIP + extracted plugin files, hashes the required screenshots, requires explicit operator attestations, and emits `acceptanceAuthority: false` so the tool cannot self-close P12.
+`config/p12-publisher-candidate.json` machine-pins the exact candidate. `npm run p12:publisher-evidence` verifies the exact ZIP + extracted plugin files, hashes the required screenshots, requires explicit operator attestations, and emits `acceptanceAuthority: false` so the tool cannot self-close P12.
+
+Current available screenshots were manually triaged and do **not** close the gate: one final-details screenshot still contains the historical `Invalid ID in manifest.json` state, two screenshots are Data Security steps, and one plugin screenshot is historical P6 closure evidence rather than the minimal release #20 package rebind. The triage is retained in #84 comment `5633658106`.
 
 Planning/docs/support-tool changes after source `5f12...` do not automatically replace the runtime candidate or count as live acceptance.
+
+## Current R0 truth
+
+PR #131 retained `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` from current public competitor/platform research. The durable implication is that generic Figma-to-code conversion is not a defensible product moat by itself; commercial differentiation remains **validated target readiness**: compatibility analysis, safe target-ready duplication, explicit mapping/fallback states, target validation, environment diagnostics, render/round-trip proof and receipts.
+
+R0 research remains advisory and must be refreshed again when a major adapter implementation actually begins.
 
 ## Runtime artifact registry
 
@@ -128,9 +140,11 @@ Do **not** start P13 runtime implementation.
 Immediate executable product path remains #84:
 
 1. use the exact release #20 ZIP + extracted three-file directory;
-2. retain live Figma Desktop runtime screenshot, Publish/Add-final-details screenshot and Figma 2FA screenshot;
-3. run `npm run p12:publisher-evidence -- ...` and retain the receipt;
-4. perform final P12 internal exit review against receipt + screenshots;
-5. only then open the focused P13 implementation issue;
-6. run R0 + R1 before each major external target adapter;
-7. implement only after target profile, capability matrix, error model, validator and acceptance harness are frozen.
+2. retain a fresh live Figma Desktop runtime screenshot from that exact package;
+3. retain a fresh Publish/Add-final-details screenshot where the generated publishing ID is accepted and the intended publisher identity, Community target, support contact and No network access are visible;
+4. retain a fresh Figma account/security screenshot showing 2FA enabled;
+5. run `npm run p12:publisher-evidence -- ...` and retain the receipt;
+6. perform final P12 internal exit review against receipt + screenshots;
+7. only then open the focused P13 implementation issue;
+8. run R0 + R1 before each major external target adapter;
+9. implement only after target profile, capability matrix, error model, validator and acceptance harness are frozen.
