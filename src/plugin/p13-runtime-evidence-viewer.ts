@@ -16,13 +16,20 @@ function metric(label: string, value: unknown): string {
   return `<div class="metric"><strong>${escapeHtml(value ?? '—')}</strong><span>${escapeHtml(label)}</span></div>`;
 }
 
+function eligibility(bundle: P13RuntimeEvidenceBundle): string {
+  if (bundle.traceableBuild && bundle.realFigmaContext) return 'PARITY CANDIDATE READY';
+  if (!bundle.traceableBuild && !bundle.realFigmaContext) return 'LOCAL / UNTRACEABLE BUILD + FILE';
+  if (!bundle.traceableBuild) return 'REAL FIGMA FILE · UNTRACEABLE BUILD';
+  return 'TRACEABLE BUILD · LOCAL FILE';
+}
+
 export function buildP13RuntimeEvidenceViewerHtml(bundle: P13RuntimeEvidenceBundle | null): string {
   const content = bundle
     ? `
       <div class="hero">
         <div class="title">P13 Runtime Evidence</div>
-        <div class="status">${bundle.traceableBuild ? 'TRACEABLE CI BUILD' : 'LOCAL / UNTRACEABLE BUILD'}</div>
-        <div class="meta">This evidence has no mutation or release acceptance authority.</div>
+        <div class="status">${eligibility(bundle)}</div>
+        <div class="meta">This evidence is read-only and has no mutation, production acceptance, publish or release authority.</div>
       </div>
       <div class="grid">
         ${metric('Build-Ready score', bundle.buildReady.score.score ?? '—')}
@@ -32,6 +39,8 @@ export function buildP13RuntimeEvidenceViewerHtml(bundle: P13RuntimeEvidenceBund
         ${metric('coverage', `${Math.round(bundle.buildReady.coverage.overallCoverage * 100)}%`)}
         ${metric('blockers', bundle.buildReady.score.blockerCount)}
         ${metric('audit v1', `${bundle.audit.score} / ${bundle.audit.status}`)}
+        ${metric('real Figma context', bundle.realFigmaContext ? 'yes' : 'no')}
+        ${metric('traceable CI build', bundle.traceableBuild ? 'yes' : 'no')}
         ${metric('frame', bundle.context.frameName)}
         ${metric('file key', bundle.context.fileKey)}
         ${metric('page', bundle.context.pageName)}
