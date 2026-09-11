@@ -23,7 +23,9 @@ jobs:
           node-version: '20'
       - name: Verify exact calibration source
         run: |
-          test "$(git rev-parse HEAD^)" = "c27f8d14535eaf362831047623b920bde863cbd9"
+          expected="c27f8d14535eaf362831047623b920bde863cbd9"
+          test "$(git merge-base HEAD origin/main)" = "$expected"
+          test "$(git diff --name-only "$expected"...HEAD)" = ".github/workflows/p13-calibration-cli.yml"
       - name: Install and build self-contained CLI
         run: |
           npm install
