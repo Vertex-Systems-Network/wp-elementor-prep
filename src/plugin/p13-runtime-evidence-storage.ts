@@ -2,6 +2,7 @@ import {
   P13_RUNTIME_EVIDENCE_MAX_BYTES,
   P13_RUNTIME_EVIDENCE_STORAGE_KEY,
   serializeP13RuntimeEvidenceJson,
+  utf8ByteLength,
   validateP13RuntimeEvidence,
   type P13RuntimeEvidenceBundle,
 } from './p13-runtime-evidence';
@@ -19,7 +20,7 @@ export interface P13RuntimeEvidencePersistenceResult {
 }
 
 function byteLength(bundle: P13RuntimeEvidenceBundle): number {
-  return new TextEncoder().encode(serializeP13RuntimeEvidenceJson(bundle)).byteLength;
+  return utf8ByteLength(serializeP13RuntimeEvidenceJson(bundle));
 }
 
 export async function persistP13RuntimeEvidenceBestEffort(
