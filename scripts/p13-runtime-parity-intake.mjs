@@ -56,6 +56,14 @@ function traceableBuild(build) {
     && /^\d+$/.test(String(build.runNumber ?? ''));
 }
 
+function realFigmaContext(context) {
+  if (!isRecord(context)) return false;
+  for (const field of ['fileKey', 'pageId', 'pageName', 'frameId', 'frameName']) {
+    if (typeof context[field] !== 'string' || context[field].length === 0) return false;
+  }
+  return context.fileKey !== 'local-file';
+}
+
 function validateEvidence(evidence) {
   if (!isRecord(evidence) || evidence.schemaVersion !== 1) fail('Plugin evidence must use schemaVersion 1.');
   if (evidence.acceptanceAuthority !== false) fail('Plugin evidence must explicitly carry acceptanceAuthority=false.');
@@ -65,8 +73,13 @@ function validateEvidence(evidence) {
     || evidence.buildReady.responsiveRiskVersion !== 1) {
     fail('Plugin evidence does not contain a valid Build-Ready v2 / Responsive Risk v1 report.');
   }
-  if (!isRecord(evidence.context) || typeof evidence.context.frameId !== 'string' || typeof evidence.context.frameName !== 'string') {
+  if (!realFigmaContext(evidence.context) && !isRecord(evidence.context)) {
     fail('Plugin evidence runtime context is missing.');
+  }
+  if (!isRecord(evidence.context)
+    || typeof evidence.context.frameId !== 'string'
+    || typeof evidence.context.frameName !== 'string') {
+    fail('Plugin evidence runtime context is malformed.');
   }
   if (!isRecord(evidence.buildReady.source)
     || evidence.buildReady.source.rootId !== evidence.context.frameId
@@ -75,13 +88,15 @@ function validateEvidence(evidence) {
   }
   const traceable = traceableBuild(evidence.build);
   if (evidence.traceableBuild !== traceable) fail('Plugin evidence traceableBuild flag contradicts build identity.');
+  const realContext = realFigmaContext(evidence.context);
+  if (evidence.realFigmaContext !== realContext) fail('Plugin evidence realFigmaContext flag contradicts runtime context.');
   if (typeof evidence.buildReadyJson !== 'string') fail('Plugin evidence buildReadyJson is missing.');
   let embedded;
   try { embedded = JSON.parse(evidence.buildReadyJson); } catch { fail('Plugin evidence buildReadyJson is invalid JSON.'); }
   if (JSON.stringify(embedded) !== JSON.stringify(evidence.buildReady)) {
     fail('Plugin evidence buildReadyJson contradicts the embedded Build-Ready report.');
   }
-  return traceable;
+  return { traceable, realContext };
 }
 
 function validateCli(cli) {
@@ -136,7 +151,7 @@ const cliPath = required(args, 'cli-report');
 const outPath = resolve(args.get('out') ?? 'dist-p13/p13-runtime-parity-receipt.json');
 const pluginFile = await readJson(pluginPath);
 const cliFile = await readJson(cliPath);
-const traceable = validateEvidence(pluginFile.value);
+const eligibility = validateEvidence(pluginFile.value);
 validateCli(cliFile.value);
 
 const pluginReport = pluginFile.value.buildReady;
@@ -170,7 +185,8 @@ const receipt = {
   p12FinalGateRequired: true,
   pluginEvidence: {
     sha256: sha256(pluginFile.raw),
-    traceableBuild: traceable,
+    traceableBuild: eligibility.traceable,
+    realFigmaContext: eligibility.realContext,
     sourceSha: pluginFile.value.build?.sourceSha ?? null,
     runId: pluginFile.value.build?.runId ?? null,
     runNumber: pluginFile.value.build?.runNumber ?? null,
@@ -186,7 +202,10 @@ const receipt = {
   sameRunIdentity,
   mismatchCount: mismatches.length,
   mismatches,
-  parityCandidateAccepted: traceable && sameRunIdentity && mismatches.length === 0,
+  parityCandidateAccepted: eligibility.traceable
+    && eligibility.realContext
+    && sameRunIdentity
+    && mismatches.length === 0,
 };
 
 await mkdir(dirname(outPath), { recursive: true });
