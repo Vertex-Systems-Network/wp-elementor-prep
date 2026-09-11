@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -12,6 +12,26 @@ const roots = [];
 
 function digest(value) {
   return createHash('sha256').update(value).digest('hex');
+}
+
+function pngBytes(label) {
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    Buffer.from(label, 'utf8'),
+  ]);
+}
+
+function jpegBytes(label) {
+  return Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.from(label, 'utf8')]);
+}
+
+function webpBytes(label) {
+  return Buffer.concat([
+    Buffer.from('RIFF', 'ascii'),
+    Buffer.from([0x10, 0x00, 0x00, 0x00]),
+    Buffer.from('WEBP', 'ascii'),
+    Buffer.from(label, 'utf8'),
+  ]);
 }
 
 async function makeFixture({ manifestId = '1680034649341961379', expectedManifestId = manifestId } = {}) {
@@ -48,12 +68,12 @@ async function makeFixture({ manifestId = '1680034649341961379', expectedManifes
 
   const evidencePaths = {
     runtimeScreenshot: join(root, 'runtime.png'),
-    publishDetailsScreenshot: join(root, 'publish.png'),
-    twoFactorScreenshot: join(root, 'twofa.png'),
+    publishDetailsScreenshot: join(root, 'publish.jpg'),
+    twoFactorScreenshot: join(root, 'twofa.webp'),
   };
-  await writeFile(evidencePaths.runtimeScreenshot, Buffer.from('runtime screenshot bytes'));
-  await writeFile(evidencePaths.publishDetailsScreenshot, Buffer.from('publish screenshot bytes'));
-  await writeFile(evidencePaths.twoFactorScreenshot, Buffer.from('twofa screenshot bytes'));
+  await writeFile(evidencePaths.runtimeScreenshot, pngBytes('runtime screenshot bytes'));
+  await writeFile(evidencePaths.publishDetailsScreenshot, jpegBytes('publish screenshot bytes'));
+  await writeFile(evidencePaths.twoFactorScreenshot, webpBytes('twofa screenshot bytes'));
 
   const candidate = {
     schemaVersion: 1,
@@ -126,7 +146,7 @@ describe('P12 publisher evidence intake', () => {
     expect(receipt.semantics.noTwoFactorStateClaimed).toBe(true);
   });
 
-  it('binds exact package bytes and hashed manual evidence without granting acceptance authority', async () => {
+  it('binds exact package bytes and distinct format-validated image evidence without granting acceptance authority', async () => {
     const fixture = await makeFixture();
     const receipt = await collectPublisherEvidence({
       ...fixture,
@@ -139,9 +159,30 @@ describe('P12 publisher evidence intake', () => {
     expect(receipt.package.zip.sha256).toBe(fixture.candidate.importPackage.sha256);
     expect(receipt.package.manifest.id).toBe(fixture.candidate.pluginId);
     expect(receipt.evidence.runtimeScreenshot.sha256).toMatch(/^[0-9a-f]{64}$/);
+    expect(receipt.evidence.runtimeScreenshot.imageFormat).toBe('png');
+    expect(receipt.evidence.publishDetailsScreenshot.imageFormat).toBe('jpeg');
+    expect(receipt.evidence.twoFactorScreenshot.imageFormat).toBe('webp');
     expect(receipt.operatorAttestations.twoFactorEnabledObserved).toBe(true);
-    expect(receipt.semantics.screenshotsAreHashedNotInterpreted).toBe(true);
+    expect(receipt.semantics.screenshotsAreFormatValidatedAndHashedNotInterpreted).toBe(true);
+    expect(receipt.semantics.screenshotsMustBeDistinct).toBe(true);
     expect(receipt.semantics.finalInternalAcceptanceRequiresSeparateReview).toBe(true);
+  });
+
+  it('fails closed when a screenshot path contains renamed non-image bytes', async () => {
+    const fixture = await makeFixture();
+    await writeFile(fixture.evidencePaths.publishDetailsScreenshot, Buffer.from('not actually an image'));
+
+    await expect(collectPublisherEvidence(fixture)).rejects.toThrow(/publishDetailsScreenshot must contain PNG, JPEG, or WebP image bytes/);
+  });
+
+  it('fails closed when one screenshot is reused for more than one evidence role', async () => {
+    const fixture = await makeFixture();
+    const runtimeBytes = await readFile(fixture.evidencePaths.runtimeScreenshot);
+    await writeFile(fixture.evidencePaths.publishDetailsScreenshot, runtimeBytes);
+
+    await expect(collectPublisherEvidence(fixture)).rejects.toThrow(
+      /required evidence screenshots must be distinct; duplicate image bytes detected for: runtimeScreenshot \/ publishDetailsScreenshot/,
+    );
   });
 
   it('fails closed when an extracted package file does not match the pinned candidate', async () => {

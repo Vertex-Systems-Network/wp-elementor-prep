@@ -35,6 +35,36 @@ function validateCandidate(candidate) {
   if (!/^[0-9a-f]{40}$/.test(candidate.sourceSha ?? '')) fail('candidate sourceSha must be a 40-character Git SHA.');
 }
 
+function detectImageFormat(bytes) {
+  if (
+    bytes.length >= 8 &&
+    bytes[0] === 0x89 &&
+    bytes[1] === 0x50 &&
+    bytes[2] === 0x4e &&
+    bytes[3] === 0x47 &&
+    bytes[4] === 0x0d &&
+    bytes[5] === 0x0a &&
+    bytes[6] === 0x1a &&
+    bytes[7] === 0x0a
+  ) {
+    return 'png';
+  }
+
+  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+    return 'jpeg';
+  }
+
+  if (
+    bytes.length >= 12 &&
+    bytes.subarray(0, 4).toString('ascii') === 'RIFF' &&
+    bytes.subarray(8, 12).toString('ascii') === 'WEBP'
+  ) {
+    return 'webp';
+  }
+
+  return null;
+}
+
 async function readRegularFile(path, label, maxBytes = MAX_EVIDENCE_BYTES) {
   let stat;
   try {
@@ -48,6 +78,15 @@ async function readRegularFile(path, label, maxBytes = MAX_EVIDENCE_BYTES) {
   if (stat.size > maxBytes) fail(`${label} exceeds ${maxBytes} bytes: ${path}`);
   const bytes = await readFile(path);
   return { bytes, size: stat.size, sha256: sha256(bytes) };
+}
+
+async function readScreenshotFile(path, label) {
+  const file = await readRegularFile(path, label);
+  const imageFormat = detectImageFormat(file.bytes);
+  if (!imageFormat) {
+    fail(`${label} must contain PNG, JPEG, or WebP image bytes: ${path}`);
+  }
+  return { ...file, imageFormat };
 }
 
 async function validatePackageDirectory(packageDir, candidate) {
@@ -184,15 +223,29 @@ export async function collectPublisherEvidence({
   });
 
   const evidence = {};
+  const hashesToEvidenceKeys = new Map();
   for (const key of candidate.requiredEvidence ?? []) {
     const path = evidencePaths?.[key];
     if (!path) fail(`missing required evidence path: ${key}`);
-    const file = await readRegularFile(resolve(path), key);
+    const file = await readScreenshotFile(resolve(path), key);
+    const existingKeys = hashesToEvidenceKeys.get(file.sha256) ?? [];
+    existingKeys.push(key);
+    hashesToEvidenceKeys.set(file.sha256, existingKeys);
     evidence[key] = {
       filename: basename(path),
       sha256: file.sha256,
       size: file.size,
+      imageFormat: file.imageFormat,
     };
+  }
+
+  const duplicateEvidenceGroups = [...hashesToEvidenceKeys.values()].filter((keys) => keys.length > 1);
+  if (duplicateEvidenceGroups.length > 0) {
+    fail(
+      `required evidence screenshots must be distinct; duplicate image bytes detected for: ${duplicateEvidenceGroups
+        .map((keys) => keys.join(' / '))
+        .join(', ')}`,
+    );
   }
 
   const normalizedAttestations = {};
@@ -218,7 +271,8 @@ export async function collectPublisherEvidence({
     evidence,
     operatorAttestations: normalizedAttestations,
     semantics: {
-      screenshotsAreHashedNotInterpreted: true,
+      screenshotsAreFormatValidatedAndHashedNotInterpreted: true,
+      screenshotsMustBeDistinct: true,
       operatorAttestationsAreManualClaims: true,
       finalInternalAcceptanceRequiresSeparateReview: true,
       communityApprovalIsExternal: true,
