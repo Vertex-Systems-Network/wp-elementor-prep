@@ -16,6 +16,7 @@
     "p12:offline": "node scripts/p12-offline-acceptance.mjs --report=dist-p12/p12-offline-acceptance.json",
     "p12:publisher-preflight": "node scripts/p12-publisher-evidence-intake.mjs --preflight-only=yes",
     "p12:publisher-evidence": "node scripts/p12-publisher-evidence-intake.mjs",
+    "p13:runtime-parity": "node scripts/p13-runtime-parity-intake.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

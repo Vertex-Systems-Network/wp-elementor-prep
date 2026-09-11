@@ -43,6 +43,12 @@ import {
 } from './p7-p5-build-proof';
 import { inspectLatestP7RuntimeEvidence } from './p7-runtime-evidence-inspector';
 import { buildP7RuntimeEvidenceViewerHtml } from './p7-runtime-evidence-viewer';
+import { buildP13RuntimeEvidenceBundle } from './p13-runtime-evidence';
+import {
+  loadLatestP13RuntimeEvidence,
+  persistP13RuntimeEvidenceBestEffort,
+} from './p13-runtime-evidence-storage';
+import { buildP13RuntimeEvidenceViewerHtml } from './p13-runtime-evidence-viewer';
 import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
@@ -187,6 +193,26 @@ async function runAudit(sequence: number): Promise<void> {
     await figma.clientStorage.setAsync(storageKey, backlog);
     if (sequence !== auditSequence) return;
 
+    const p13RuntimeEvidence = buildP13RuntimeEvidenceBundle({
+      pluginVersion: PLUGIN_VERSION,
+      build: P7_BUILD_IDENTITY,
+      context: {
+        fileKey,
+        pageId,
+        pageName,
+        frameId: selected.id,
+        frameName: selected.name,
+      },
+      audit: report,
+      buildReady,
+      capturedAt: report.generatedAt,
+    });
+    const p13RuntimeEvidencePersistence = await persistP13RuntimeEvidenceBestEffort(
+      figma.clientStorage,
+      p13RuntimeEvidence,
+    );
+    if (sequence !== auditSequence) return;
+
     figma.ui.postMessage({
       type: 'audit-result',
       report,
@@ -197,6 +223,8 @@ async function runAudit(sequence: number): Promise<void> {
       auditMarkdown: serializeAuditReportMarkdown(report),
       backlogJson: serializeBacklogJson(backlog),
       backlogMarkdown: serializeBacklogMarkdown(backlog),
+      p13RuntimeEvidencePersisted: p13RuntimeEvidencePersistence.persisted,
+      p13RuntimeEvidencePersistence,
     });
   } catch (error) {
     if (sequence !== auditSequence) return;
@@ -355,6 +383,24 @@ async function runP7RuntimeEvidenceInspector(): Promise<void> {
   );
 }
 
+
+async function runP13RuntimeEvidenceViewer(): Promise<void> {
+  const evidence = await loadLatestP13RuntimeEvidence(figma.clientStorage);
+  figma.showUI(buildP13RuntimeEvidenceViewerHtml(evidence), {
+    width: 540,
+    height: 720,
+    themeColors: true,
+  });
+
+  if (!evidence) {
+    figma.notify('No valid persisted P13 runtime evidence is available yet. Run Audit on one Frame first.');
+    return;
+  }
+  const eligibility = evidence.traceableBuild && evidence.realFigmaContext
+    ? 'parity candidate ready'
+    : 'inspection only';
+  figma.notify(`P13 runtime evidence loaded: ${evidence.buildReady.score.score ?? '—'} / ${evidence.buildReady.score.status} · ${eligibility}.`);
+}
 
 async function runRuntimeEvidenceViewer(): Promise<void> {
   const evidence = await loadLatestP5RuntimeEvidence(figma.clientStorage);
@@ -882,6 +928,8 @@ if (figma.command === 'p5-runtime-self-test') {
   void runP6ClosureEvidenceViewer();
 } else if (figma.command === 'p7-runtime-evidence') {
   void runP7RuntimeEvidenceInspector();
+} else if (figma.command === 'p13-runtime-evidence') {
+  void runP13RuntimeEvidenceViewer();
 } else {
   switch (figma.command) {
     case 'audit':

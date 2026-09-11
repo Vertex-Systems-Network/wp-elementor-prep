@@ -12,7 +12,8 @@
     { "name": "Developer: P5 Runtime Evidence", "command": "p5-runtime-evidence" },
     { "name": "Developer: P7 Runtime Evidence", "command": "p7-runtime-evidence" },
     { "name": "Developer: P6 Page-Flow Clone Calibration", "command": "p6-page-flow-calibration" },
-    { "name": "Developer: P6 Runtime Evidence", "command": "p6-runtime-evidence" }
+    { "name": "Developer: P6 Runtime Evidence", "command": "p6-runtime-evidence" },
+    { "name": "Developer: P13 Runtime Evidence", "command": "p13-runtime-evidence" }
   ],
   "networkAccess": {
     "allowedDomains": ["none"]
