@@ -135,3 +135,63 @@ Until P12:
 - latest P5→main `CODE_CONFLICT` truth from PR #85 must be preserved until a fresh final integration resolution is performed.
 
 P12 is the final integrated validation phase covering P5/P6/P7 plus backlog, CLI/source adapters, plugin distribution and release-package behavior.
+
+## D-017 — Product expands toward a build-ready workflow
+Date: 2026-09-11  
+Status: ACCEPTED
+
+Post-P12 product direction is broader than audit-only utility behavior: WP Builders Prepare should become a deterministic **Figma -> build-ready website workflow**.
+
+The commercial expansion sequence is P13-P21 and is owned by issue #119. Elementor is the first reconstruction target, while the core remains neutral and adapter-based.
+
+Reason: the strongest paid value comes from reducing implementation risk, handoff time, responsive surprises and agency scoping friction rather than from audit output alone.
+
+## D-018 — Responsive analysis reports risk; it does not invent designs
+Date: 2026-09-11  
+Status: ACCEPTED
+
+The future responsive engine may detect probable breakpoint failure, clipping, inflexibility, overflow and reconstruction risk, but may not fabricate tablet/mobile composition, reorder content or silently redesign the source.
+
+Any future responsive mutation requires a separate explicit safety specification and acceptance path.
+
+## D-019 — Commercial and account layers stay outside deterministic correctness
+Date: 2026-09-11  
+Status: ACCEPTED
+
+Free/Pro/Agency entitlements may gate access to product surfaces, but enabled-feature correctness must remain deterministic and independent of payment service availability.
+
+No design content may be sent externally merely to verify a license.
+
+If future licensing/account functionality requires network access, that change must be isolated, documented and separately accepted before changing the current offline manifest contract.
+
+## D-020 — Complexity/effort estimation is transparent and configurable
+Date: 2026-09-11  
+Status: ACCEPTED
+
+The base estimator must use deterministic, inspectable factors and configurable weights/rules. It may report effort units/hours and user-defined monetary calculations, but may not present opaque AI guesses or universal market pricing as fact.
+
+Every estimator factor and weight-contract change requires tests.
+
+## D-021 — Optional AI is non-authoritative
+Date: 2026-09-11  
+Status: ACCEPTED
+
+Optional AI may explain deterministic findings, summarize backlog, draft developer notes, explain mappings or turn deterministic effort factors into narrative.
+
+AI may not:
+- authorize a mutation;
+- override confidence thresholds;
+- replace geometry/text/image/pixel validation;
+- change score evidence;
+- silently invent responsive layouts;
+- become required for core audit/fix operation.
+
+Any AI module must be separately enabled, isolated and privacy-reviewed.
+
+## D-022 — P13 implementation is gated by P12 internal exit
+Date: 2026-09-11  
+Status: ACCEPTED
+
+Planning for P13+ may proceed, but implementation must not begin until the internal P12 release-exit gate in issue #84 is closed.
+
+Actual Figma Community review/approval remains external and is never inferred from repository state.
