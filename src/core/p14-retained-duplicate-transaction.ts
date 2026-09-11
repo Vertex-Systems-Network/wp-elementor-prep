@@ -1,6 +1,11 @@
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import {
+  DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR,
+  type P14SourceTransactionCoordinator,
+  type P14TransactionLease,
+} from './p14-transaction-coordinator';
+import {
   PRODUCTION_P14_SAFE_RECIPE_REGISTRY,
   type P14SafeRecipeRegistryV1,
 } from './p14-safe-recipe-registry';
@@ -21,6 +26,7 @@ import {
 export interface P14RetainedDuplicateRunInput {
   plan: unknown;
   registry?: P14SafeRecipeRegistryV1;
+  coordinator?: P14SourceTransactionCoordinator;
   transactionId: string;
   preparedName?: string;
   allowPreparedWithReview?: boolean;
@@ -259,6 +265,35 @@ export async function runP14RetainedDuplicateTransaction(
     });
   }
 
+  const coordinator = input.coordinator ?? DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR;
+  let lease: P14TransactionLease | null = null;
+  if (plan.status === 'READY') {
+    const leaseResult = coordinator.tryAcquire(plan.source.nodeId, input.transactionId);
+    if (!leaseResult.acquired) {
+      const isConflict = leaseResult.reason === 'SOURCE_BUSY' || leaseResult.reason === 'TRANSACTION_ID_BUSY';
+      const owner = leaseResult.ownerTransactionId
+        ? ` Active transaction: ${leaseResult.ownerTransactionId}.`
+        : '';
+      return baseReceipt({
+        plan,
+        transactionId: input.transactionId,
+        status: 'BLOCKED',
+        terminalState: 'BLOCKED',
+        beforeFingerprint: unknownFingerprint,
+        afterFingerprint: unknownFingerprint,
+        errors: [receiptError(
+          isConflict ? 'P14_TRANSACTION_CONFLICT' : 'P14_INTERNAL_INVARIANT_FAILED',
+          'coordination',
+          `Unable to acquire P14 source transaction lease (${leaseResult.reason}).${owner}`,
+          isConflict ? 'Wait for the active preparation transaction to finish, then retry.' : 'Use a non-empty unique transaction ID and valid source scope.',
+        )],
+        events: [...events, event(now, 'BLOCKED', 'source transaction lease unavailable')],
+      });
+    }
+    lease = leaseResult.lease;
+  }
+
+  try {
   let beforeFingerprint: string;
   try {
     beforeFingerprint = await adapter.fingerprintSource(plan.source.nodeId);
@@ -696,4 +731,7 @@ export async function runP14RetainedDuplicateTransaction(
     rescore,
     retention,
   };
+  } finally {
+    if (lease) coordinator.release(lease);
+  }
 }
