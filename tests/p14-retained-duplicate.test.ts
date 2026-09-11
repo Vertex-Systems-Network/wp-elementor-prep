@@ -308,6 +308,7 @@ describe('P14 retained duplicate transaction', () => {
     const transform = await run(readyPlan(), transformAdapter);
     expect(transform.status).toBe('REJECTED');
     expect(transform.errors[0]?.code).toBe('P14_TRANSFORM_FAILED');
+    expect(transform.source.afterFingerprint).toBe('UNKNOWN');
     expect(transformAdapter.discarded).toEqual(['candidate:1']);
 
     const validationAdapter = new MemoryAdapter();
