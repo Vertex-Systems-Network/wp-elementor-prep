@@ -8,6 +8,7 @@ INTEGRITY = Path('tests/p14-integrity.test.ts')
 COORD = Path('tests/p14-transaction-coordinator.test.ts')
 CONFIRM_TX = Path('tests/p14-confirmation-transaction.test.ts')
 BOUNDS_TEST = Path('tests/p14-input-bounds.test.ts')
+PLAN_AUTH = Path('tests/p14-plan-authorization.test.ts')
 
 
 def replace_exact(path: Path, old: str, new: str, count: int = 1):
@@ -151,4 +152,10 @@ replace_exact(
     BOUNDS_TEST,
     "    return { passed: true, checks: [{ id: 'required', passed: true, required: true }] };",
     "    return {\n      passed: true,\n      profileIdsRun: ['P14_SYNTHETIC_BOUNDS_VALIDATE'],\n      checks: [{ id: 'required', passed: true, required: true }],\n    };",
+)
+
+replace_exact(
+    PLAN_AUTH,
+    "    return { passed: true, checks: [{ id: 'required', passed: true, required: true }] };",
+    "    return {\n      passed: true,\n      profileIdsRun: ['P14_SYNTHETIC_AUTH_VALIDATE'],\n      checks: [{ id: 'required', passed: true, required: true }],\n    };",
 )
