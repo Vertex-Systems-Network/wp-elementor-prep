@@ -5,6 +5,7 @@ import {
 } from './p14-input-bounds';
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
+import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
 import {
   DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR,
   type P14SourceTransactionCoordinator,
@@ -33,6 +34,7 @@ export interface P14RetainedDuplicateRunInput {
   registry?: P14SafeRecipeRegistryV1;
   coordinator?: P14SourceTransactionCoordinator;
   inputBounds?: Partial<P14InputBoundsLimits>;
+  confirmation?: unknown;
   transactionId: string;
   preparedName?: string;
   allowPreparedWithReview?: boolean;
@@ -228,6 +230,7 @@ export async function runP14RetainedDuplicateTransaction(
   const inputBounds = assessP14PreparationInputBounds(input.plan, input.inputBounds, {
     transactionId: input.transactionId,
     preparedName: input.preparedName,
+    confirmation: input.confirmation,
   });
   if (!inputBounds.allowed) {
     const failures = inputBounds.failures.map(
@@ -298,6 +301,46 @@ export async function runP14RetainedDuplicateTransaction(
     });
   }
 
+  if (plan.status === 'READY') {
+    events.push(event(now, 'PLAN_READY', 'plan integrity and safe-recipe authorization passed'));
+    events.push(event(now, 'AWAITING_CONFIRMATION', 'explicit plan-bound confirmation required'));
+    if (input.confirmation === undefined || input.confirmation === null) {
+      return baseReceipt({
+        plan,
+        transactionId: input.transactionId,
+        status: 'BLOCKED',
+        terminalState: 'BLOCKED',
+        beforeFingerprint: unknownFingerprint,
+        afterFingerprint: unknownFingerprint,
+        errors: [receiptError(
+          'P14_CONFIRMATION_REQUIRED',
+          'confirmation',
+          'Mutating P14 preparation requires explicit confirmation bound to the exact reviewed plan.',
+          'Review the proposed changes and create a confirmation for the current plan before retrying.',
+        )],
+        events: [...events, event(now, 'BLOCKED', 'explicit preparation confirmation missing')],
+      });
+    }
+    const confirmation = validateP14PreparationConfirmation(input.confirmation, plan);
+    if (!confirmation.valid) {
+      return baseReceipt({
+        plan,
+        transactionId: input.transactionId,
+        status: 'BLOCKED',
+        terminalState: 'BLOCKED',
+        beforeFingerprint: unknownFingerprint,
+        afterFingerprint: unknownFingerprint,
+        errors: [receiptError(
+          'P14_CONFIRMATION_MISMATCH',
+          'confirmation',
+          `Preparation confirmation does not match the current reviewed plan: ${confirmation.failures.join(' | ')}`,
+          'Review and confirm the current preparation plan again before retrying.',
+        )],
+        events: [...events, event(now, 'BLOCKED', 'preparation confirmation validation failed')],
+      });
+    }
+  }
+
   const coordinator = input.coordinator ?? DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR;
   let lease: P14TransactionLease | null = null;
   if (plan.status === 'READY') {
@@ -361,10 +404,8 @@ export async function runP14RetainedDuplicateTransaction(
     });
   }
 
-  events.push(event(now, 'PLAN_READY'));
-  events.push(event(now, 'AWAITING_CONFIRMATION', 'execution call represents explicit confirmation'));
-
   if (plan.status === 'NO_CHANGES_NEEDED') {
+    events.push(event(now, 'PLAN_READY', 'non-mutating no-op plan ready'));
     let afterFingerprint = beforeFingerprint;
     try {
       afterFingerprint = await adapter.fingerprintSource(plan.source.nodeId);

@@ -3,6 +3,7 @@ import {
   computeP14PlanDigest,
   validateP14PreparationPlan,
 } from '../src/core/p14-plan-integrity';
+import { buildP14PreparationConfirmation } from '../src/core/p14-preparation-confirmation';
 import { buildP14PreparationPlan } from '../src/core/p14-preparation-plan';
 import { createP14SafeRecipeRegistry } from '../src/core/p14-safe-recipe-registry';
 import {
@@ -237,6 +238,7 @@ describe('P14 receipt integrity', () => {
     const adapter = new CountingAdapter();
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      confirmation: buildP14PreparationConfirmation(plan(), fixedNow()),
       registry: testRegistry,
       transactionId: 'p14-valid',
       preparedName: 'Desktop — Prepared',
@@ -255,6 +257,7 @@ describe('P14 receipt integrity', () => {
     adapter.becomeNoOp = true;
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      confirmation: buildP14PreparationConfirmation(plan(), fixedNow()),
       registry: testRegistry,
       transactionId: 'p14-idempotent-noop',
       now: fixedNow,
@@ -271,6 +274,7 @@ describe('P14 receipt integrity', () => {
     adapter.bothOutcomes = true;
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      confirmation: buildP14PreparationConfirmation(plan(), fixedNow()),
       registry: testRegistry,
       transactionId: 'p14-dual-outcome',
       now: fixedNow,
@@ -285,6 +289,7 @@ describe('P14 receipt integrity', () => {
   it('rejects malformed error, event and validation-check evidence', async () => {
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      confirmation: buildP14PreparationConfirmation(plan(), fixedNow()),
       registry: testRegistry,
       transactionId: 'p14-shape-source',
       now: fixedNow,
@@ -311,6 +316,7 @@ describe('P14 receipt integrity', () => {
   it('fails closed on forged authority, target compatibility and retention identity', async () => {
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      confirmation: buildP14PreparationConfirmation(plan(), fixedNow()),
       registry: testRegistry,
       transactionId: 'p14-forgery-source',
       now: fixedNow,

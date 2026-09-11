@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { buildP14PreparationConfirmation } from '../src/core/p14-preparation-confirmation';
 import { buildP14PreparationPlan } from '../src/core/p14-preparation-plan';
 import { createP14SafeRecipeRegistry } from '../src/core/p14-safe-recipe-registry';
 import { runP14RetainedDuplicateTransaction } from '../src/core/p14-retained-duplicate-transaction';
@@ -171,6 +172,7 @@ function run(plan: P14PreparationPlanV1, adapter: MemoryAdapter, overrides: Reco
   return runP14RetainedDuplicateTransaction({
     plan,
     registry: testRegistry,
+    confirmation: plan.status === 'READY' ? buildP14PreparationConfirmation(plan, fixedNow()) : undefined,
     transactionId: 'p14-tx-test',
     preparedName: 'Desktop — Prepared',
     now: fixedNow,

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { buildP14PreparationConfirmation } from '../src/core/p14-preparation-confirmation';
 import { buildP14PreparationPlan } from '../src/core/p14-preparation-plan';
 import { runP14RetainedDuplicateTransaction } from '../src/core/p14-retained-duplicate-transaction';
 import { createP14SafeRecipeRegistry } from '../src/core/p14-safe-recipe-registry';
@@ -133,9 +134,11 @@ function run(
   sourceNodeId = SOURCE_ID,
   sourceFingerprint = SOURCE_FP,
 ) {
+  const preparedPlan = readyPlan(sourceNodeId, sourceFingerprint);
   return runP14RetainedDuplicateTransaction({
-    plan: readyPlan(sourceNodeId, sourceFingerprint),
+    plan: preparedPlan,
     registry,
+    confirmation: buildP14PreparationConfirmation(preparedPlan, '2026-09-12T00:00:00.000Z'),
     coordinator,
     transactionId,
     preparedName: 'Prepared',
