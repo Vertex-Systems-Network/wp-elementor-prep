@@ -54,8 +54,8 @@ PR #122 merged the market-researched multi-target planning baseline as `ade501fe
 | P10 npm/Node CLI | COMPLETE / P12 ACCEPTED | 100% | `██████████` | Real REST/auth/plugin parity retained |
 | P11 Normal Figma distribution | IMPLEMENTATION COMPLETE | 100% | `██████████` | Live publisher/install evidence remains in P12 |
 | P12 Final integrated validation | IN PROGRESS | 80% | `████████░░` | Exact publish-ID package/account/2FA/final exit review |
-| R0 Market/platform research | PLANNING GATE | N/A | `──────────` | Refresh before major external adapters |
-| R1 Reliability/compatibility | PLANNING GATE | N/A | `──────────` | Freeze target profile/capabilities/errors/validators/harness before implementation |
+| R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; refresh research per major adapter |
+| R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | P12 internal exit first |
 | P14 Target-Ready Duplicate + Guided Prepare | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Requires P13 read-only contracts |
 | P15 Elementor native export + validation | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | R0+R1; versioned v3/v4 adapter + real import proof |
@@ -73,7 +73,7 @@ PR #122 merged the market-researched multi-target planning baseline as `ade501fe
 
 **Overall active project progress:** `██████████ 100%`
 
-Historical P0-P7 core remains 100%. P12 is tracked separately at 80%. P13-P26 are approved future scope at 0% and are not implementation-authorized yet.
+Historical P0-P7 core remains 100%. P12 is tracked separately at 80%. R0/R1 gate definitions are complete but must be re-executed per applicable adapter. P13-P26 are approved future scope at 0% and are not implementation-authorized yet.
 
 ## Current P12 publishing line
 
