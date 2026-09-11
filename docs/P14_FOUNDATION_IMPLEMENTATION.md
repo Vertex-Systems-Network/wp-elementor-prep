@@ -24,6 +24,7 @@ Important safety behavior:
 - callers may inject only stricter limits — injected values cannot loosen the defaults or hard safety ceilings;
 - oversized input returns `BLOCKED` + `P14_INPUT_TOO_LARGE`;
 - source-before/source-after fingerprints remain `UNKNOWN` because no runtime source proof was attempted;
+- oversized source/run/digest identities are not echoed back into the rejection receipt; bounded placeholders are used instead;
 - source transaction coordinator and adapter methods remain untouched on a bounded-preflight rejection.
 
 These limits are freeze/resource safety bounds only. They are not estimates of Elementor/Gutenberg conversion effort or target compatibility.
@@ -59,19 +60,20 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 ## Safety invariants
 
 1. Oversized/pathological input is blocked before deep plan processing or adapter access.
-2. The approved source node is never passed to recipe mutation callbacks.
-3. A P14 transaction never swaps, replaces or deletes the approved source.
-4. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
-5. New HIGH/BLOCKER findings caused by preparation reject the candidate.
-6. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
-7. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
-8. A no-op plan completes without cloning.
-9. Target-neutral preparation does not imply target readiness.
-10. Malformed/tampered plans are blocked before adapter access.
-11. Eligible recipes require current registry authorization before adapter access.
-12. P14 receipts have no acceptance/target-compatibility authority.
-13. One executable READY transaction may own a source scope at a time.
-14. Acquired transaction leases are released in a bounded `finally` path.
+2. Oversized rejection evidence remains bounded and does not echo hostile identity payloads.
+3. The approved source node is never passed to recipe mutation callbacks.
+4. A P14 transaction never swaps, replaces or deletes the approved source.
+5. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
+6. New HIGH/BLOCKER findings caused by preparation reject the candidate.
+7. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
+8. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
+9. A no-op plan completes without cloning.
+10. Target-neutral preparation does not imply target readiness.
+11. Malformed/tampered plans are blocked before adapter access.
+12. Eligible recipes require current registry authorization before adapter access.
+13. P14 receipts have no acceptance/target-compatibility authority.
+14. One executable READY transaction may own a source scope at a time.
+15. Acquired transaction leases are released in a bounded `finally` path.
 
 ## Deliberately not wired yet
 
