@@ -1,7 +1,7 @@
 # P12 Publisher Evidence Intake
 
 Status: active support tooling for issue #84  
-Owner issue: #126 (subtask of #84)
+Owner issue: #126 (subtask of #84); package-preflight follow-up: #148
 
 ## Purpose
 
@@ -13,7 +13,12 @@ The final P12 internal release exit depends on a small set of live Figma Desktop
 4. the intended publisher identity / Community target / support contact / no-network disclosure are visible;
 5. the account has the required 2FA state.
 
-`scripts/p12-publisher-evidence-intake.mjs` makes this evidence collection deterministic and fail-closed. It does **not** inspect screenshot pixels, run OCR, infer account state, submit the plugin, or grant acceptance by itself.
+`scripts/p12-publisher-evidence-intake.mjs` supports two deliberately separate steps:
+
+- **package-only preflight** — verifies the pinned release #20 ZIP, extracted files and manifest before Figma Desktop is opened;
+- **final evidence intake** — verifies the same package again, hashes the live screenshots and requires explicit operator attestations.
+
+Neither step inspects screenshot pixels, runs OCR, infers account state, submits the plugin, or grants acceptance by itself.
 
 The exact candidate is pinned in `config/p12-publisher-candidate.json`.
 
@@ -35,7 +40,33 @@ The extracted three-file directory must contain exactly:
 
 Their SHA-256 values are pinned in the candidate config.
 
-## Required screenshots
+## Step 1 — package-only preflight
+
+Run this **before** opening Figma Desktop. It proves only that the operator is holding the exact pinned release #20 publish ZIP and matching extracted package.
+
+```bash
+npm run p12:publisher-preflight -- \
+  --package-zip=/absolute/path/WP-Builders-Prepare-Final-Publish-ID-1680034649341961379.zip \
+  --package-dir=/absolute/path/extracted-publish-package \
+  --out=dist-p12/p12-publisher-package-preflight.json
+```
+
+The preflight receipt includes:
+
+- exact candidate identity;
+- ZIP SHA-256 and size;
+- extracted `code.js`, `manifest.json`, and `ui.html` hashes/sizes;
+- validated manifest name/ID/API/editor/document-access/network contract;
+- `packagePreflightComplete: true`;
+- `evidenceBundleComplete: false`;
+- `runtimeEvidenceCollected: false`;
+- `acceptanceAuthority: false`.
+
+Preflight mode rejects runtime screenshot and operator-confirmation arguments. This prevents a package-only receipt from being mistaken for live Figma evidence.
+
+A package preflight PASS grants **zero P12 progress credit**. It only reduces the chance of capturing live screenshots against the wrong package.
+
+## Required screenshots for final intake
 
 Keep three separate regular image files:
 
@@ -43,9 +74,9 @@ Keep three separate regular image files:
 2. `publish` — Publish → Add final details with no `Invalid ID in manifest.json` error, intended Publish-as identity, Community target, support contact, and `No network access` visible.
 3. `twofa` — Figma account/security UI showing the required 2FA state enabled.
 
-The intake tool hashes these files but does not interpret their content. The operator must explicitly confirm the observed facts through command flags. This prevents a hash-only receipt from pretending it proved something that was never visually checked.
+The final intake tool hashes these files but does not interpret their content. The operator must explicitly confirm the observed facts through command flags. This prevents a hash-only receipt from pretending it proved something that was never visually checked.
 
-## Command
+## Step 2 — final evidence intake
 
 From the repository root:
 
@@ -70,27 +101,31 @@ On PowerShell, use one line or PowerShell backticks instead of shell backslashes
 
 ## Fail-closed behavior
 
-The intake fails when any of these conditions is true:
+The package preflight and final intake both fail when any of these package conditions is true:
 
 - the exact publish ZIP is missing, empty, oversized, symlinked, or has the wrong SHA-256;
 - any extracted plugin file is missing, extra, symlinked, empty, or has the wrong SHA-256;
-- manifest name/ID/API/editor/document-access/network contract does not match the pinned release #20 candidate;
+- manifest name/ID/API/editor/document-access/network contract does not match the pinned release #20 candidate.
+
+The final evidence intake additionally fails when:
+
 - any required screenshot is missing, empty, oversized, or symlinked;
 - any required explicit operator confirmation is absent or not `yes`.
 
-A generated receipt contains:
+A generated final evidence receipt contains:
 
 - candidate release identity;
 - exact ZIP and extracted-file hashes;
 - manifest contract;
 - screenshot filenames, sizes and SHA-256 values;
 - explicit operator attestations;
+- `packagePreflightComplete: true`;
 - `acceptanceAuthority: false`;
 - `finalInternalAcceptanceRequiresSeparateReview: true`.
 
-## What the receipt does not prove
+## What neither receipt proves
 
-The receipt deliberately does not claim:
+Neither receipt deliberately claims:
 
 - Figma approved the Community listing;
 - the plugin is currently public;
@@ -99,6 +134,6 @@ The receipt deliberately does not claim:
 - screenshots were machine-interpreted;
 - P12 is automatically 100%.
 
-After a complete receipt exists, #84 still requires a human/internal review of the retained screenshots and receipt before marking `P12 = 100% / INTERNAL RELEASE ACCEPTED`.
+After a complete final evidence receipt exists, #84 still requires a human/internal review of the retained screenshots and receipt before marking `P12 = 100% / INTERNAL RELEASE ACCEPTED`.
 
 Actual Figma Community review/approval remains an external state.
