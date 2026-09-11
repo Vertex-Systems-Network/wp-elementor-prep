@@ -21,7 +21,6 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '20'
-          cache: npm
       - name: Verify exact calibration source
         run: |
           test "$(git rev-parse HEAD^)" = "c27f8d14535eaf362831047623b920bde863cbd9"
