@@ -8,6 +8,7 @@ import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
 import { assessP14ValidationProfileCoverage } from './p14-validation-profile-coverage';
 import { validateP14RescoreEvidence } from './p14-rescore-evidence';
+import { validateP14RuntimeActionEligibilityEvidence } from './p14-runtime-action-eligibility';
 import {
   P14_UNKNOWN_SOURCE_FINGERPRINT,
   validateP14SourceFingerprintEvidence,
@@ -564,6 +565,102 @@ export async function runP14RetainedDuplicateTransaction(
         discardError,
       });
     }
+    const completedRecipeIds = new Set(appliedActions.map((result) => result.recipeId));
+    const missingPrerequisiteRecipeIds = action.prerequisiteRecipeIds.filter(
+      (recipeId) => !completedRecipeIds.has(recipeId),
+    );
+    if (missingPrerequisiteRecipeIds.length > 0) {
+      const discardError = await discardCandidate(adapter, candidate);
+      const firstMissing = missingPrerequisiteRecipeIds[0] ?? 'UNKNOWN';
+      return cleanupOutcome({
+        plan,
+        transactionId: input.transactionId,
+        beforeFingerprint,
+        afterFingerprint: unknownFingerprint,
+        candidate,
+        appliedActions,
+        events,
+        now,
+        primaryError: receiptError(
+          'P14_RECIPE_PREREQUISITE_MISSING',
+          'transform-recheck',
+          `Action ${action.actionId} no longer has completed prerequisite execution evidence (${missingPrerequisiteRecipeIds.length} missing; first: ${firstMissing}).`,
+          'Re-run Build Readiness and Safe Preparation to produce a current deterministic plan.',
+        ),
+        discardError,
+      });
+    }
+
+    if (appliedActions.length > 0) {
+      const assessActionEligibility = adapter.assessActionEligibility;
+      if (typeof assessActionEligibility !== 'function') {
+        const discardError = await discardCandidate(adapter, candidate);
+        return cleanupOutcome({
+          plan,
+          transactionId: input.transactionId,
+          beforeFingerprint,
+          afterFingerprint: unknownFingerprint,
+          candidate,
+          appliedActions,
+          events,
+          now,
+          primaryError: receiptError(
+            'P14_TRANSFORM_FAILED',
+            'transform-recheck',
+            `Adapter cannot re-evaluate runtime eligibility for action ${action.actionId} after a prior recipe.`,
+            'Use an adapter that implements bounded runtime action eligibility reassessment, then re-run the current plan.',
+          ),
+          discardError,
+        });
+      }
+
+      let runtimeEligibility;
+      try {
+        const rawEligibility: unknown = await assessActionEligibility.call(adapter, candidate, action);
+        const evidence = validateP14RuntimeActionEligibilityEvidence(rawEligibility, action);
+        if (!evidence.valid || !evidence.value) {
+          throw new Error(`Runtime action eligibility evidence is invalid: ${evidence.failures.join(' | ')}`);
+        }
+        runtimeEligibility = evidence.value;
+      } catch (error) {
+        const discardError = await discardCandidate(adapter, candidate);
+        return cleanupOutcome({
+          plan,
+          transactionId: input.transactionId,
+          beforeFingerprint,
+          afterFingerprint: unknownFingerprint,
+          candidate,
+          appliedActions,
+          events,
+          now,
+          primaryError: receiptError('P14_TRANSFORM_FAILED', 'transform-recheck', messageOf(error)),
+          discardError,
+        });
+      }
+
+      if (!runtimeEligibility.eligible) {
+        const discardError = await discardCandidate(adapter, candidate);
+        const boundedDetail = runtimeEligibility.detail ? ` ${runtimeEligibility.detail.slice(0, 1024)}` : '';
+        return cleanupOutcome({
+          plan,
+          transactionId: input.transactionId,
+          beforeFingerprint,
+          afterFingerprint: unknownFingerprint,
+          candidate,
+          appliedActions,
+          events,
+          now,
+          primaryError: receiptError(
+            'P14_RECIPE_PREREQUISITE_MISSING',
+            'transform-recheck',
+            `Runtime eligibility changed for action ${action.actionId}; continuing would use stale recipe assumptions.${boundedDetail}`,
+            'Re-run Build Readiness and Safe Preparation to replan against the current candidate/source state.',
+          ),
+          discardError,
+        });
+      }
+    }
+
     try {
       const result = await adapter.applyRecipe(candidate, action);
       if (result.actionId !== action.actionId || result.recipeId !== action.recipeId) {

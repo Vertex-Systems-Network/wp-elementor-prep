@@ -98,6 +98,15 @@ class CountingAdapter implements P14RetainedDuplicateAdapter {
     return { sourceNodeId, candidateNodeId: 'candidate:1' };
   }
 
+  async assessActionEligibility(_candidate: P14CandidateHandle, action: P14PreparationAction): Promise<unknown> {
+    return {
+      actionId: action.actionId,
+      recipeId: action.recipeId,
+      checkedPrerequisiteRecipeIds: [...action.prerequisiteRecipeIds],
+      eligible: true,
+    };
+  }
+
   async applyRecipe(_candidate: P14CandidateHandle, action: P14PreparationAction): Promise<P14RecipeExecutionResult> {
     this.calls.apply += 1;
     return {
