@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url';
 
 const DEFAULT_CONFIG = 'config/p12-publisher-candidate.json';
 const MAX_EVIDENCE_BYTES = 25 * 1024 * 1024;
+const MAX_PACKAGE_BYTES = 100 * 1024 * 1024;
 
 function fail(message) {
   throw new Error(`P12 publisher evidence intake failed: ${message}`);
@@ -68,7 +69,7 @@ async function validatePackageDirectory(packageDir, candidate) {
 
   const files = {};
   for (const name of expectedFiles) {
-    const evidence = await readRegularFile(resolve(root, name), `package file ${name}`, 50 * 1024 * 1024);
+    const evidence = await readRegularFile(resolve(root, name), `package file ${name}`, MAX_PACKAGE_BYTES);
     const expectedSha = candidate.importPackage.files[name];
     if (evidence.sha256 !== expectedSha) {
       fail(`package file hash mismatch for ${name}: expected ${expectedSha}, got ${evidence.sha256}`);
@@ -104,6 +105,7 @@ async function validatePackageDirectory(packageDir, candidate) {
 export async function collectPublisherEvidence({
   candidate,
   packageDir,
+  packageZipPath,
   evidencePaths,
   attestations,
   generatedAt = new Date().toISOString(),
@@ -111,6 +113,12 @@ export async function collectPublisherEvidence({
   if (!candidate || candidate.schemaVersion !== 1) fail('candidate contract schemaVersion must equal 1.');
   if (!/^\d{10,30}$/.test(candidate.pluginId ?? '')) fail('candidate pluginId must be a numeric Figma plugin ID.');
   if (!/^[0-9a-f]{40}$/.test(candidate.sourceSha ?? '')) fail('candidate sourceSha must be a 40-character Git SHA.');
+
+  if (!packageZipPath) fail('missing exact publish ZIP path.');
+  const packageZip = await readRegularFile(resolve(packageZipPath), 'exact publish ZIP', MAX_PACKAGE_BYTES);
+  if (packageZip.sha256 !== candidate.importPackage?.sha256) {
+    fail(`publish ZIP hash mismatch: expected ${candidate.importPackage?.sha256}, got ${packageZip.sha256}`);
+  }
 
   const packageEvidence = await validatePackageDirectory(packageDir, candidate);
   const evidence = {};
@@ -154,6 +162,11 @@ export async function collectPublisherEvidence({
       publishTarget: candidate.community?.publishTarget,
     },
     package: {
+      zip: {
+        filename: basename(packageZipPath),
+        sha256: packageZip.sha256,
+        size: packageZip.size,
+      },
       files: packageEvidence.files,
       manifest: {
         name: packageEvidence.manifest.name,
@@ -187,6 +200,8 @@ export async function runPublisherEvidenceIntake(argv = process.argv.slice(2)) {
 
   const packageDir = args.get('package-dir');
   if (!packageDir) fail('missing --package-dir=...');
+  const packageZipPath = args.get('package-zip');
+  if (!packageZipPath) fail('missing --package-zip=...');
   const outPath = resolve(args.get('out') ?? 'dist-p12/p12-publisher-evidence-receipt.json');
 
   const evidencePaths = {
@@ -204,7 +219,13 @@ export async function runPublisherEvidenceIntake(argv = process.argv.slice(2)) {
     twoFactorEnabledObserved: readYes(args.get('confirm-twofa-enabled')),
   };
 
-  const receipt = await collectPublisherEvidence({ candidate, packageDir, evidencePaths, attestations });
+  const receipt = await collectPublisherEvidence({
+    candidate,
+    packageDir,
+    packageZipPath,
+    evidencePaths,
+    attestations,
+  });
   await mkdir(dirname(outPath), { recursive: true });
   await writeFile(outPath, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
   console.log(`P12 publisher evidence intake PASS: ${candidate.pluginName} ${candidate.packageVersion}`);
