@@ -27,16 +27,22 @@ Current retained publishing candidate:
 - source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`;
 - Final Release Artifact #20;
 - artifact `wp-builders-prepare-final-release-20`, ID `10179286885`;
-- digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`.
+- artifact digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`;
+- exact three-file publish ZIP digest `sha256:1ccfa457d4ae4145cf36b748f7758187ef3092503c270a46f28e03675878a066`.
 
-Immediate required evidence remains:
+PR #129 / issue #126 added deterministic evidence intake support. The exact candidate is pinned in `config/p12-publisher-candidate.json`; use `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md` and `npm run p12:publisher-evidence -- ...`.
 
-1. exact selected exit package used in Figma Desktop;
-2. live final-details screen with valid ID;
-3. intended Publish-as identity/eligibility;
-4. required 2FA state;
-5. network disclosure consistent with accepted release contract;
-6. final internal release-exit review.
+Immediate required evidence/action:
+
+1. use the exact pinned release #20 publish ZIP and extracted three-file directory;
+2. re-import/update that exact package in Figma Desktop and confirm it opens/runs on the known acceptance design/frame;
+3. retain the live Publish → Add final details screen with valid manifest ID, intended Publish-as identity, Community target, support contact and `No network access` visible;
+4. retain the Figma account/security screen showing required 2FA enabled;
+5. run `npm run p12:publisher-evidence -- ...` with all explicit confirmations set to `yes` only for facts actually observed;
+6. retain the generated receipt; it must say `acceptanceAuthority: false` and `evidenceBundleComplete: true`;
+7. perform final internal release-exit review from the receipt + original screenshots.
+
+The evidence intake tool verifies exact bytes and hashes screenshots; it deliberately does not OCR screenshots, infer account state, submit the plugin or self-promote P12.
 
 Community submission/review/approval remains external.
 
