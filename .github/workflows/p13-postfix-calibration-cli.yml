@@ -1,0 +1,50 @@
+name: P13 Post-Fix Calibration CLI
+
+on:
+  push:
+    branches:
+      - p13/real-baseline-calibration
+    paths:
+      - .github/workflows/p13-postfix-calibration-cli.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build-calibration-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: p13/real-baseline-calibration
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+      - name: Verify exact calibrated source tree
+        run: |
+          source="42cab7428e5319a8ed1cade5bdd5176eb954355e"
+          test "$(git merge-base HEAD "$source")" = "$source"
+          test "$(git diff --name-only "$source"...HEAD)" = ".github/workflows/p13-postfix-calibration-cli.yml"
+      - name: Install and build self-contained CLI
+        run: |
+          npm install
+          npm run build:cli
+          sha256sum dist-cli/elementor-prep.mjs > dist-cli/SHA256SUMS.txt
+          printf '%s\n' "calibratedSourceSha=42cab7428e5319a8ed1cade5bdd5176eb954355e" > dist-cli/CALIBRATION-PROVENANCE.txt
+          printf '%s\n' "workflowRun=${GITHUB_RUN_ID}" >> dist-cli/CALIBRATION-PROVENANCE.txt
+          printf '%s\n' "workflowRunNumber=${GITHUB_RUN_NUMBER}" >> dist-cli/CALIBRATION-PROVENANCE.txt
+      - name: Upload calibration CLI
+        uses: actions/upload-artifact@v7
+        with:
+          name: p13-postfix-calibration-cli-42cab7428e53
+          path: dist-cli/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Remove temporary workflow from branch
+        run: |
+          git rm .github/workflows/p13-postfix-calibration-cli.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: remove temporary P13 post-fix calibration workflow"
+          git push origin HEAD:p13/real-baseline-calibration
