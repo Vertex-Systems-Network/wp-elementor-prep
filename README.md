@@ -30,12 +30,14 @@ Canonical planning docs:
 
 > **Progress policy:** implementation, runtime acceptance and external Community review are tracked separately. New future scope does not reduce already-completed historical core progress.
 
-**Open PR/MR:** `planning PR for multi-target roadmap sync`
+**Open PR/MR:** `0 after this post-merge status-sync PR lands`
 
 Open issues:
 
 - `#84` — P12 final validation: active manual/publisher/runtime exit gate.
-- `#119` — P13+ commercial/multi-target expansion owner; implementation blocked by #84 internal exit.
+- `#119` — P13-P26 commercial/multi-target expansion owner; implementation blocked by #84 internal exit.
+
+PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 all passed. This planning merge changed no runtime/plugin behavior and granted no P13-P26 acceptance credit.
 
 ### Module-wise progress
 

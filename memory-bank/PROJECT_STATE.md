@@ -31,7 +31,11 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 ## Current issue queue
 
 - #84 — P12 final integrated validation/release acceptance: **ACTIVE / external-manual-runtime blocked**, retained at 80% until the exact publishing package/account/2FA/final-exit evidence is genuinely retained. Community approval remains external.
-- #119 — post-P12 commercial/multi-target roadmap: **PLANNED / dependency-blocked by #84 internal exit**. Research/planning docs may progress; runtime implementation may not start yet.
+- #119 — post-P12 P13-P26 commercial/multi-target roadmap: **PLANNED / dependency-blocked by #84 internal exit**. Research/planning docs may progress; runtime implementation may not start yet.
+
+## Current PR queue
+
+PR #122 merged the researched P13-P26 planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. The current post-merge status-sync PR is documentation-only and is intended to leave the open PR/MR count at `0` after merge.
 
 ## Current planning baseline
 
