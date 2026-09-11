@@ -5,6 +5,7 @@ import type { AuditNode } from '../src/core/types';
 import {
   P13_RUNTIME_EVIDENCE_STORAGE_KEY,
   buildP13RuntimeEvidenceBundle,
+  isRealP13FigmaContext,
   isTraceableP13BuildIdentity,
   serializeP13RuntimeEvidenceJson,
   validateP13RuntimeEvidence,
@@ -61,13 +62,16 @@ function reports(generatedAt = '2026-09-11T00:00:00.000Z') {
   };
 }
 
-function evidence(buildSourceSha = '0123456789abcdef0123456789abcdef01234567'): P13RuntimeEvidenceBundle {
+function evidence(
+  buildSourceSha = '0123456789abcdef0123456789abcdef01234567',
+  fileKey = 'real-figma-file-key',
+): P13RuntimeEvidenceBundle {
   const { audit, buildReady, root } = reports();
   return buildP13RuntimeEvidenceBundle({
     pluginVersion: '0.1.0-test',
     build: { sourceSha: buildSourceSha, runId: '123456789', runNumber: '42' },
     context: {
-      fileKey: 'file-key',
+      fileKey,
       pageId: '0:1',
       pageName: 'Page 1',
       frameId: root.id,
@@ -91,6 +95,7 @@ describe('P13 plugin runtime evidence', () => {
     expect(bundle.schemaVersion).toBe(1);
     expect(bundle.acceptanceAuthority).toBe(false);
     expect(bundle.traceableBuild).toBe(true);
+    expect(bundle.realFigmaContext).toBe(true);
     expect(bundle.context.frameId).toBe('1:1');
     expect(bundle.buildReady.runId).toMatch(/^p13-/);
     expect(bundle.buildReadyJson).toContain('"buildReadyScoreVersion": 2');
@@ -98,20 +103,35 @@ describe('P13 plugin runtime evidence', () => {
     expect(serializeP13RuntimeEvidenceJson(bundle).endsWith('\n')).toBe(true);
   });
 
-  it('distinguishes traceable CI identities from local/untraceable builds', () => {
+  it('distinguishes traceable CI identities and real Figma file contexts from local evidence', () => {
     expect(isTraceableP13BuildIdentity({
       sourceSha: '0123456789abcdef0123456789abcdef01234567',
       runId: '123',
       runNumber: '9',
     })).toBe(true);
     expect(isTraceableP13BuildIdentity({ sourceSha: 'local', runId: 'local', runNumber: 'local' })).toBe(false);
+    expect(isRealP13FigmaContext({
+      fileKey: 'real-file', pageId: '0:1', pageName: 'Page', frameId: '1:1', frameName: 'Frame',
+    })).toBe(true);
+    expect(isRealP13FigmaContext({
+      fileKey: 'local-file', pageId: '0:1', pageName: 'Page', frameId: '1:1', frameName: 'Frame',
+    })).toBe(false);
     expect(evidence('local').traceableBuild).toBe(false);
+    expect(evidence(undefined, 'local-file').realFigmaContext).toBe(false);
   });
 
-  it('fails closed on contradictory authority, frame identity, serialized report or oversized evidence', () => {
+  it('fails closed on contradictory authority, runtime flags, frame identity, serialized report or oversized evidence', () => {
     const authority = JSON.parse(JSON.stringify(evidence())) as Record<string, unknown>;
     authority.acceptanceAuthority = true;
     expect(validateP13RuntimeEvidence(authority).valid).toBe(false);
+
+    const traceable = JSON.parse(JSON.stringify(evidence())) as any;
+    traceable.traceableBuild = false;
+    expect(validateP13RuntimeEvidence(traceable).reason).toContain('traceableBuild');
+
+    const contextFlag = JSON.parse(JSON.stringify(evidence())) as any;
+    contextFlag.realFigmaContext = false;
+    expect(validateP13RuntimeEvidence(contextFlag).reason).toContain('realFigmaContext');
 
     const frame = JSON.parse(JSON.stringify(evidence())) as any;
     frame.context.frameId = 'wrong-frame';
@@ -139,17 +159,19 @@ describe('P13 plugin runtime evidence', () => {
     expect(await loadLatestP13RuntimeEvidence(storage)).toBeNull();
   });
 
-  it('accepts semantic plugin/CLI parity when only generatedAt differs', () => {
+  it('accepts semantic plugin/CLI parity when only generatedAt differs and runtime provenance is eligible', () => {
     const bundle = evidence();
     const { buildReady: cli } = reports('2026-09-12T12:34:56.000Z');
     const assessment = compareP13PluginEvidenceToCli(bundle, cli);
     expect(assessment.acceptanceAuthority).toBe(false);
     expect(assessment.parityCandidateAccepted).toBe(true);
+    expect(assessment.traceablePluginBuild).toBe(true);
+    expect(assessment.realFigmaContext).toBe(true);
     expect(assessment.sameRunIdentity).toBe(true);
     expect(assessment.mismatches).toEqual([]);
   });
 
-  it('reports field-level semantic mismatches and refuses untraceable parity candidates', () => {
+  it('reports semantic mismatches and refuses untraceable or local-file parity candidates', () => {
     const bundle = evidence();
     const { buildReady } = reports('2026-09-12T12:34:56.000Z');
     const changed = JSON.parse(JSON.stringify(buildReady)) as typeof buildReady;
@@ -158,10 +180,14 @@ describe('P13 plugin runtime evidence', () => {
     expect(mismatch.parityCandidateAccepted).toBe(false);
     expect(mismatch.mismatches.some((item) => item.path === 'buildReady.score.score')).toBe(true);
 
-    const localBundle = evidence('local');
-    const exact = compareP13PluginEvidenceToCli(localBundle, buildReady);
-    expect(exact.mismatchCount).toBe(0);
-    expect(exact.traceablePluginBuild).toBe(false);
-    expect(exact.parityCandidateAccepted).toBe(false);
+    const localBuild = compareP13PluginEvidenceToCli(evidence('local'), buildReady);
+    expect(localBuild.mismatchCount).toBe(0);
+    expect(localBuild.traceablePluginBuild).toBe(false);
+    expect(localBuild.parityCandidateAccepted).toBe(false);
+
+    const localFile = compareP13PluginEvidenceToCli(evidence(undefined, 'local-file'), buildReady);
+    expect(localFile.mismatchCount).toBe(0);
+    expect(localFile.realFigmaContext).toBe(false);
+    expect(localFile.parityCandidateAccepted).toBe(false);
   });
 });
