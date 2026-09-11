@@ -51,7 +51,7 @@ Every P14 receipt explicitly carries:
 - `acceptanceAuthority: false`;
 - `targetCompatibilityClaim: false`.
 
-`validateP14PreparationReceipt(...)` rejects contradictory receipt states, including:
+`validateP14PreparationReceipt(...)` rejects contradictory or malformed receipt evidence, including:
 
 - forged acceptance/target-compatibility authority;
 - PREPARED without retained candidate, passing validation, re-score, retention evidence and proved source immutability;
@@ -60,7 +60,9 @@ Every P14 receipt explicitly carries:
 - BLOCKED/CANCELLED receipts with retained target output;
 - CLEANUP_REQUIRED without candidate identity and `P14_DISCARD_FAILED` evidence;
 - retention transaction/source/candidate identity mismatches;
-- applied recipe entries that are neither applied nor accepted idempotent no-ops;
+- malformed error entries, event entries or validation-check entries;
+- event timestamps/states that do not form valid evidence records;
+- recipe execution entries that are not **exactly one** of applied or accepted idempotent no-op — both true and both false are rejected;
 - event histories whose terminal event contradicts the receipt terminal state.
 
 Receipt serialization is deterministic JSON plus a trailing newline. A valid P14 receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
@@ -77,6 +79,7 @@ Receipt serialization is deterministic JSON plus a trailing newline. A valid P14
 8. Target-neutral preparation does not imply Elementor/Gutenberg/framework readiness.
 9. A malformed or tampered plan is blocked before any runtime adapter operation.
 10. P14 receipts have no acceptance or target-compatibility authority.
+11. A recipe result cannot simultaneously claim a mutation and an idempotent no-op.
 
 ## Deliberately not wired yet
 
