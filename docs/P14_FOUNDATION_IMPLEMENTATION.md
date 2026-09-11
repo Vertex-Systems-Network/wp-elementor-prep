@@ -1,15 +1,15 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181  
 Roadmap: #119  
-Dependencies still open: P13 real-Figma acceptance (#159) and final production release gate (#84)
+Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
 ## What this foundation implements
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, active-recipe validation-profile coverage, mandatory validation/re-score, source-immutability proof, cooperative cancellation, fail-closed cleanup and source-scope transaction coordination.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, active-recipe validation-profile coverage, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, source-immutability proof, cooperative cancellation, fail-closed cleanup and source-scope transaction coordination.
 
 ## Bounded input preflight
 
@@ -71,6 +71,43 @@ Adapter validation output is treated as untrusted runtime evidence even though t
 
 Validation-profile coverage and generic mandatory validation checks are independent gates. Both must pass before Build-Ready re-score can start. Profile coverage proves only that declared validator profiles were represented in execution evidence; it does not prove the validators are externally accepted, prove target compatibility or grant runtime/production acceptance.
 
+## Candidate re-score evidence hardening
+
+`rescoreCandidate(...)` output is also treated as untrusted runtime evidence before any field dereference.
+
+`validateP14RescoreEvidence(...)` is shared by the transaction runtime and receipt-integrity validator. It requires:
+
+- bounded non-empty `runId` and accepted scored P13 status identity;
+- status in the scored P13 domain `READY | REVIEW | NOT_READY`;
+- finite integer score in the accepted P13 range `0..100`;
+- non-negative safe-integer blocker/high-risk/introduced-risk counts;
+- boolean review evidence.
+
+A numeric P14 re-score summary cannot truthfully encode P13 `INSUFFICIENT_EVIDENCE`, because the accepted P13 model represents that status with `score: null`. Such contradictory evidence therefore fails closed rather than being coerced.
+
+Malformed/null/non-finite/out-of-domain re-score evidence causes candidate cleanup with `P14_RESCORE_FAILED` and never reaches retention. By contrast, structurally valid evidence that reports a newly introduced HIGH/BLOCKER finding remains the separate existing `P14_VALIDATION_FAILED` preparation-policy outcome.
+
+This evidence gate does not create a new score target and does not require score-chasing to `READY`. The frozen P14 acceptance rule remains preservation-first: mandatory validators must pass and preparation must not introduce new HIGH/BLOCKER findings.
+
+## Runtime source-fingerprint evidence
+
+P14's central source-safety claim depends on runtime fingerprint equality, so typed adapter return values are not trusted merely because `fingerprintSource(...)` declares `Promise<string>`.
+
+`validateP14SourceFingerprintEvidence(...)` accepts only a bounded, non-empty runtime fingerprint string within the existing P14 identity bound. It deliberately does **not** invent a cryptographic hash format or claim host authenticity.
+
+Every runtime source fingerprint read is validated before comparison or receipt attachment:
+
+- initial preflight source binding;
+- `NO_CHANGES_NEEDED` source recheck;
+- pre-retain source immutability check;
+- post-retain source immutability check.
+
+Malformed, empty, null or oversized runtime fingerprint evidence fails closed. Raw invalid evidence is never copied into a receipt. Where proof could not be retained, the receipt uses the explicit bounded `UNKNOWN` sentinel instead.
+
+A valid bounded fingerprint that differs from the accepted before-fingerprint remains genuine stale/change evidence and follows the existing `SOURCE_STALE`/`P14_SOURCE_CHANGED_DURING_RUN` paths. Invalid fingerprint evidence is not misrepresented as a changed source value.
+
+Receipt integrity applies the same bounded fingerprint shape contract while permitting `UNKNOWN` only as a receipt sentinel for unavailable proof. This validation establishes evidence shape/bounds only; it does not establish cryptographic strength, Figma identity, publisher identity, or external runtime acceptance.
+
 ## Source-scope transaction coordination
 
 `P14SourceTransactionCoordinator` enforces the frozen single-owner rule for executable READY runs:
@@ -89,7 +126,7 @@ Lease acquisition occurs only after integrity, recipe authorization and exact co
 
 Every P14 receipt explicitly carries `acceptanceAuthority: false` and `targetCompatibilityClaim: false`.
 
-Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation and recipe-execution evidence. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; prepared outcomes require non-empty profile execution evidence. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A recipe result must be exactly one of applied or accepted idempotent no-op. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
+Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation, re-score and recipe-execution evidence. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; prepared outcomes require non-empty profile execution evidence. Runtime/receipt re-score evidence uses the same accepted scored-P13 validator. Source fingerprint evidence is bounded and may use the explicit `UNKNOWN` sentinel only as receipt evidence for unavailable proof. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A recipe result must be exactly one of applied or accepted idempotent no-op. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
 
 ## Safety invariants
 
@@ -101,22 +138,26 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 6. Every active eligible recipe's declared validation profile must be represented in bounded validation evidence before re-score or retention.
 7. Generic `validation.passed=true` cannot substitute for missing recipe-specific validator coverage.
 8. Malformed runtime validation evidence fails through candidate cleanup rather than bypassing validation.
-9. The approved source node is never passed to recipe mutation callbacks.
-10. A P14 transaction never swaps, replaces or deletes the approved source.
-11. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
-12. New HIGH/BLOCKER findings caused by preparation reject the candidate.
-13. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
-14. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
-15. A no-op plan completes without cloning and without mutating-plan confirmation.
-16. Target-neutral preparation does not imply target readiness.
-17. Malformed/tampered plans are blocked before adapter access.
-18. Eligible recipes require current registry authorization before adapter access.
-19. P14 receipts have no acceptance/target-compatibility authority.
-20. One executable READY transaction may own a source scope at a time.
-21. Acquired transaction leases are released in a bounded `finally` path.
+9. Candidate re-score output is untrusted evidence and must satisfy the bounded scored-P13 contract before policy evaluation.
+10. Re-score evidence hardening does not create a new score target or override design-preservation rules.
+11. Every runtime source fingerprint read is bounded and validated before equality comparison or receipt attachment.
+12. Invalid source-fingerprint evidence is represented as unavailable proof, never fabricated stale/change proof.
+13. The approved source node is never passed to recipe mutation callbacks.
+14. A P14 transaction never swaps, replaces or deletes the approved source.
+15. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
+16. New HIGH/BLOCKER findings caused by preparation reject the candidate.
+17. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
+18. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
+19. A no-op plan completes without cloning and without mutating-plan confirmation.
+20. Target-neutral preparation does not imply target readiness.
+21. Malformed/tampered plans are blocked before adapter access.
+22. Eligible recipes require current registry authorization before adapter access.
+23. P14 receipts have no acceptance/target-compatibility authority.
+24. One executable READY transaction may own a source scope at a time.
+25. Acquired transaction leases are released in a bounded `finally` path.
 
 ## Deliberately not wired yet
 
 This foundation does **not** add a Figma plugin menu item, UI button, real Figma adapter, real Figma validator, production mutating recipe, target-specific profile, identity/authentication service or target-specific readiness claim.
 
-P13 #159 real-Figma runtime parity remains an open acceptance dependency and P12 #84 remains the final production release gate. P14 must stay implementation-foundation only and the roadmap checkbox must remain unchecked until those acceptance requirements and later real runtime preparation evidence are genuinely satisfied.
+P13 #159 real-Figma runtime parity remains an open P14 acceptance dependency. P12 #84 remains open at its retained state, with the remaining live/manual release evidence deferred to P27 #182. Under the roadmap execution model, these open release gates do **not** block P14 core implementation/testing from reaching implementation-complete or internally-ready state; they do block production acceptance/release claims. P14 runtime mutation exposure and production recipe authority remain deliberately unwired until their own acceptance prerequisites are genuinely satisfied.
