@@ -22,6 +22,22 @@ Run before the first implementation issue of each major post-P12 adapter/capabil
 6. **Roadmap decision** — add/change scope only through `DECISIONS.md`, issue acceptance criteria and roadmap synchronization.
 7. **Post-release observation** — compare user friction/support requests against the research assumptions and feed evidence into the next cycle.
 
+## Required retained research record
+
+Every R0 refresh that materially changes implementation scope should retain a concise dated record containing:
+
+- research date/window;
+- target platform(s) and versions being evaluated;
+- official documentation sources used for format/API claims;
+- competitor/product sources used only as market signals;
+- capability matrix: native / deterministically convertible / manual-review / unsupported;
+- implementation opportunities discovered;
+- privacy, network, licensing and sandbox risks;
+- decisions changed or confirmed;
+- exact issue/phase whose acceptance criteria were updated.
+
+The record belongs in repository docs/issues so future AI agents do not need chat history to reproduce why a product decision was made.
+
 ## September 2026 research snapshot
 
 ### WordPress / Elementor
