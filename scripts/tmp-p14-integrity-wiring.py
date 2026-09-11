@@ -12,10 +12,14 @@ text = text.replace(
     1,
 )
 
-plan_type_anchor = '  plan: P14PreparationPlanV1;\n'
+plan_type_anchor = "export interface P14RetainedDuplicateRunInput {\n  plan: P14PreparationPlanV1;\n"
 if text.count(plan_type_anchor) != 1:
     raise SystemExit('run input plan type anchor drifted')
-text = text.replace(plan_type_anchor, '  plan: unknown;\n', 1)
+text = text.replace(
+    plan_type_anchor,
+    "export interface P14RetainedDuplicateRunInput {\n  plan: unknown;\n",
+    1,
+)
 
 authority_anchor = "    schemaVersion: 1,\n    engineVersion: P14_PREPARATION_ENGINE_VERSION,\n    transactionId: input.transactionId,"
 if text.count(authority_anchor) != 1:
