@@ -1,5 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { buildBuildReadyReport, serializeBuildReadyReportJson } from '../core/build-ready';
+import type { BuildReadyReportV2 } from '../core/build-ready-types';
 import { buildAuditReport } from '../core/scoring';
 import { generateBacklog, serializeBacklogJson, serializeBacklogMarkdown, type BacklogDocument } from '../core/backlog';
 import { serializeAuditReportJson, serializeAuditReportMarkdown } from '../core/report-serialization';
@@ -186,7 +188,11 @@ function thresholdExit(backlog: BacklogDocument, failOn: FailOn): number {
   return 0;
 }
 
-function summaryPayload(report: AuditReport, backlog: BacklogDocument): Record<string, unknown> {
+function summaryPayload(
+  report: AuditReport,
+  backlog: BacklogDocument,
+  buildReady: BuildReadyReportV2,
+): Record<string, unknown> {
   return {
     score: report.score,
     status: report.status,
@@ -199,17 +205,27 @@ function summaryPayload(report: AuditReport, backlog: BacklogDocument): Record<s
       active: backlog.summary.active,
     },
     delta: backlog.summary.byDelta,
+    buildReady: {
+      score: buildReady.score.score,
+      status: buildReady.score.status,
+      buildReadyScoreVersion: buildReady.buildReadyScoreVersion,
+      responsiveRiskVersion: buildReady.responsiveRiskVersion,
+      responsiveRisk: buildReady.responsiveRisk,
+      overallCoverage: buildReady.coverage.overallCoverage,
+      findings: buildReady.findings.length,
+    },
   };
 }
 
 async function writeAuditOutputs(
   report: AuditReport,
   backlog: BacklogDocument,
+  buildReady: BuildReadyReportV2,
   args: ParsedArgs,
   snapshot?: CanonicalSnapshot,
 ): Promise<void> {
   if (args.flags.has('summary-only')) {
-    process.stdout.write(`${JSON.stringify(summaryPayload(report, backlog), null, 2)}\n`);
+    process.stdout.write(`${JSON.stringify(summaryPayload(report, backlog, buildReady), null, 2)}\n`);
     return;
   }
 
@@ -220,22 +236,24 @@ async function writeAuditOutputs(
     writeFile(resolve(outDir, 'audit-report.md'), serializeAuditReportMarkdown(report), 'utf8'),
     writeFile(resolve(outDir, 'backlog.json'), serializeBacklogJson(backlog), 'utf8'),
     writeFile(resolve(outDir, 'backlog.md'), serializeBacklogMarkdown(backlog), 'utf8'),
+    writeFile(resolve(outDir, 'build-ready-report.json'), serializeBuildReadyReportJson(buildReady), 'utf8'),
   ];
   if (snapshot) {
     writes.push(writeFile(resolve(outDir, 'source-snapshot.json'), `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8'));
   }
   await Promise.all(writes);
-  process.stdout.write(`${JSON.stringify({ outDir, ...summaryPayload(report, backlog) }, null, 2)}\n`);
+  process.stdout.write(`${JSON.stringify({ outDir, ...summaryPayload(report, backlog, buildReady) }, null, 2)}\n`);
 }
 
 async function runSnapshotAudit(snapshot: CanonicalSnapshot, args: ParsedArgs, emitSnapshot: boolean): Promise<number> {
   const report = buildAuditReport(snapshot.root, ENGINE_VERSION, snapshot.capturedAt);
+  const buildReady = buildBuildReadyReport(snapshot.root, {}, report.generatedAt);
   const previous = await previousBacklog(args);
   const backlog = generateBacklog(report, {
     context: backlogContext(snapshot),
     ...(previous ? { previous } : {}),
   });
-  await writeAuditOutputs(report, backlog, args, emitSnapshot ? snapshot : undefined);
+  await writeAuditOutputs(report, backlog, buildReady, args, emitSnapshot ? snapshot : undefined);
   return thresholdExit(backlog, parseFailOn(args));
 }
 
@@ -295,7 +313,7 @@ async function generateBacklogCommand(args: ParsedArgs): Promise<number> {
 }
 
 function usage(): string {
-  return `wp-elementor-prep CLI\n\nCommands:\n  audit:figma     --url <figma-url> | --file-key <key> [--node-id <id>]\n  audit:snapshot  --input <canonical-snapshot.json>\n  backlog:generate --input <audit-report.json>\n\nCommon options:\n  --out <dir>                 Output directory (default: ${DEFAULT_OUT_DIR})\n  --previous-backlog <file>   Previous schema-v1 backlog for delta calculation\n  --summary-only              Print machine-readable summary only; write no files\n  --fail-on <none|warning|error>  Return exit 10 when the threshold is met\n\nFigma auth options:\n  --auth <personal|oauth>     Personal token uses FIGMA_TOKEN; OAuth uses FIGMA_OAUTH_TOKEN\n  --token-env <ENV_NAME>      Override the credential environment variable name\n\nRaw .fig files are intentionally unsupported. Use official Figma URL/file-key input or canonical snapshot JSON.\n`;
+  return `wp-elementor-prep CLI\n\nCommands:\n  audit:figma     --url <figma-url> | --file-key <key> [--node-id <id>]\n  audit:snapshot  --input <canonical-snapshot.json>\n  backlog:generate --input <audit-report.json>\n\nCommon options:\n  --out <dir>                 Output directory (default: ${DEFAULT_OUT_DIR})\n  --previous-backlog <file>   Previous schema-v1 backlog for delta calculation\n  --summary-only              Print machine-readable summary only; write no files\n  --fail-on <none|warning|error>  Return exit 10 when the threshold is met\n\nAudit commands retain audit-report/backlog outputs and also write build-ready-report.json (Build-Ready Score v2 / Responsive Risk v1).\n\nFigma auth options:\n  --auth <personal|oauth>     Personal token uses FIGMA_TOKEN; OAuth uses FIGMA_OAUTH_TOKEN\n  --token-env <ENV_NAME>      Override the credential environment variable name\n\nRaw .fig files are intentionally unsupported. Use official Figma URL/file-key input or canonical snapshot JSON.\n`;
 }
 
 async function main(): Promise<void> {
