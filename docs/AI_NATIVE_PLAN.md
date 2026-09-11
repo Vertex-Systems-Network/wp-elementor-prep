@@ -2,7 +2,8 @@
 
 Status: approved foundation plan  
 Date: 2026-09-07  
-Operational workflow updated: 2026-09-08
+Operational workflow updated: 2026-09-08  
+Commercial expansion added: 2026-09-11
 
 ## 1. Product intent
 
@@ -201,3 +202,37 @@ Progress bars use 10 cells where practical:
 - and so on.
 
 Percentages must reflect verified completed scope, not optimistic estimates. Deferred modules must be labeled `DEFERRED` rather than presented as active incomplete work.
+
+## 10. Post-P12 commercial expansion policy
+
+The post-P12 roadmap is owned by issue #119 and detailed in `docs/COMMERCIAL_EXPANSION_PLAN.md`.
+
+The product direction is to become a deterministic **Figma -> build-ready website workflow**, not merely an audit utility.
+
+Planned sequence:
+
+1. P13 — Build-Ready Score 2.0 + responsive-risk analysis, read-only first.
+2. P14 — Advanced Safe Fix + guided `Prepare Frame` flow using only already-detectable patterns.
+3. P15 — Elementor Readiness + deterministic Elementor Build Plan.
+4. P16 — design-system detector + token advisory, read-only first.
+5. P17 — developer handoff + client/QA readiness reporting.
+6. P18 — deterministic complexity/effort estimator with configurable rules.
+7. P19 — agency presets, custom rules, white-label and batch/project workflows.
+8. P20 — Free / Pro / Agency commercial packaging and entitlement boundaries.
+9. P21 — optional AI assistance, isolated from core correctness.
+
+P13 implementation is blocked until the internal P12 release-exit gate in #84 is closed. Planning may proceed without granting implementation or production-acceptance credit.
+
+## 11. Commercial expansion safety rules
+
+All P13+ work inherits the existing engineering rules and adds these boundaries:
+
+- responsive analysis may report risk but must not invent tablet/mobile designs;
+- Elementor guidance must target a neutral build-plan model and versioned adapters;
+- design-system detection is advisory before any token/style mutation is considered;
+- complexity/effort estimation must be transparent and configurable, not opaque AI guessing;
+- monetary pricing rules are user-defined, never universal market claims;
+- entitlements gate product surfaces, not deterministic correctness;
+- any future network requirement for licensing/account/AI must be isolated, explicitly documented and separately accepted before changing the current offline manifest contract;
+- no design content may leave Figma merely to check a license;
+- optional AI may explain, summarize or draft from deterministic outputs, but cannot override confidence, validation, score evidence or mutation safety.
