@@ -4,6 +4,7 @@ import {
   buildP14PreparationConfirmation,
   validateP14PreparationConfirmation,
 } from '../src/core/p14-preparation-confirmation';
+import { computeP14PlanDigest } from '../src/core/p14-plan-integrity';
 import { buildP14PreparationPlan } from '../src/core/p14-preparation-plan';
 import type { P14PreparationRecipeDefinition } from '../src/core/p14-preparation-types';
 
@@ -121,5 +122,23 @@ describe('P14 preparation confirmation contract', () => {
   it('does not create mutation confirmation for a no-op plan or invalid timestamp', () => {
     expect(() => buildP14PreparationConfirmation(noOpPlan(), CONFIRMED_AT)).toThrow(/only valid for READY plans/);
     expect(() => buildP14PreparationConfirmation(readyPlan(), 'not-a-time')).toThrow(/valid bounded timestamp/);
+    expect(() => buildP14PreparationConfirmation(readyPlan(), '2026-09-12')).toThrow(/valid bounded timestamp/);
+  });
+
+  it('bounds the reviewed plan before standalone confirmation integrity processing', () => {
+    const oversized = readyPlan();
+    oversized.p13RunId = 'x'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 1);
+    oversized.planDigest = computeP14PlanDigest({
+      p13RunId: oversized.p13RunId,
+      sourceNodeId: oversized.source.nodeId,
+      sourceFingerprint: oversized.source.fingerprint,
+      actions: oversized.actions,
+    });
+    expect(() => buildP14PreparationConfirmation(oversized, CONFIRMED_AT)).toThrow(/bounded safety limits/);
+
+    const otherwiseValid = buildP14PreparationConfirmation(readyPlan(), CONFIRMED_AT);
+    const validation = validateP14PreparationConfirmation(otherwiseValid, oversized);
+    expect(validation.valid).toBe(false);
+    expect(validation.failures.some((failure) => failure.includes('bounded safety limits'))).toBe(true);
   });
 });

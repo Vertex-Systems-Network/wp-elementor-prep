@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_P14_INPUT_BOUNDS } from '../src/core/p14-input-bounds';
 import { buildP14PreparationConfirmation } from '../src/core/p14-preparation-confirmation';
 import { buildP14PreparationPlan } from '../src/core/p14-preparation-plan';
+import { validateP14PreparationReceipt } from '../src/core/p14-preparation-receipt';
 import { runP14RetainedDuplicateTransaction } from '../src/core/p14-retained-duplicate-transaction';
 import { createP14SafeRecipeRegistry } from '../src/core/p14-safe-recipe-registry';
 import { P14SourceTransactionCoordinator } from '../src/core/p14-transaction-coordinator';
@@ -128,6 +129,7 @@ describe('P14 explicit confirmation execution boundary', () => {
     expect(receipt.status).toBe('BLOCKED');
     expect(receipt.errors[0]?.code).toBe('P14_CONFIRMATION_REQUIRED');
     expect(receipt.source.beforeFingerprint).toBe('UNKNOWN');
+    expect(validateP14PreparationReceipt(receipt).valid).toBe(true);
     expect(coordinator.acquireCalls).toBe(0);
     expect(untouched(adapter)).toBe(true);
   });
@@ -152,6 +154,7 @@ describe('P14 explicit confirmation execution boundary', () => {
     expect(receipt.status).toBe('BLOCKED');
     expect(receipt.errors[0]?.code).toBe('P14_CONFIRMATION_MISMATCH');
     expect(receipt.source.beforeFingerprint).toBe('UNKNOWN');
+    expect(validateP14PreparationReceipt(receipt).valid).toBe(true);
     expect(coordinator.acquireCalls).toBe(0);
     expect(untouched(adapter)).toBe(true);
   });

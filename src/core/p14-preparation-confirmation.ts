@@ -1,4 +1,4 @@
-import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import { DEFAULT_P14_INPUT_BOUNDS, assessP14PreparationInputBounds } from './p14-input-bounds';
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import type { P14PreparationPlanV1 } from './p14-preparation-types';
 
@@ -35,12 +35,17 @@ function boundedIdentity(value: unknown): value is string {
     && value.length <= DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength;
 }
 
+const UTC_ISO_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+
 function validTimestamp(value: unknown): value is string {
-  if (typeof value !== 'string' || value.length === 0 || value.length > DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength) {
+  if (typeof value !== 'string'
+    || value.length === 0
+    || value.length > DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength
+    || !UTC_ISO_TIMESTAMP.test(value)) {
     return false;
   }
   const parsed = Date.parse(value);
-  return Number.isFinite(parsed);
+  return Number.isFinite(parsed) && new Date(parsed).toISOString() === value;
 }
 
 function sameStrings(a: string[], b: string[]): boolean {
@@ -51,6 +56,10 @@ export function buildP14PreparationConfirmation(
   plan: P14PreparationPlanV1,
   confirmedAt: string,
 ): P14PreparationConfirmationV1 {
+  const bounds = assessP14PreparationInputBounds(plan);
+  if (!bounds.allowed) {
+    throw new Error('Cannot confirm a P14 preparation plan that exceeds bounded safety limits.');
+  }
   const integrity = validateP14PreparationPlan(plan);
   if (!integrity.valid) {
     throw new Error(`Cannot confirm an invalid P14 preparation plan: ${integrity.failures.join(' | ')}`);
@@ -121,21 +130,26 @@ export function validateP14PreparationConfirmation(
   }
 
   if (plan) {
-    const planIntegrity = validateP14PreparationPlan(plan);
-    if (!planIntegrity.valid) {
-      failures.push('P14 preparation confirmation cannot bind to an invalid plan.');
-    } else if (plan.status !== 'READY' || plan.eligibleActionIds.length === 0) {
-      failures.push('P14 preparation confirmation can bind only to a READY mutating plan.');
+    const planBounds = assessP14PreparationInputBounds(plan);
+    if (!planBounds.allowed) {
+      failures.push('P14 preparation confirmation cannot bind to a plan that exceeds bounded safety limits.');
     } else {
-      if (value.planDigest !== plan.planDigest) failures.push('P14 preparation confirmation planDigest does not match the reviewed plan.');
-      if (value.p13RunId !== plan.p13RunId) failures.push('P14 preparation confirmation p13RunId does not match the reviewed plan.');
-      if (!isRecord(value.source)
-        || value.source.nodeId !== plan.source.nodeId
-        || value.source.fingerprint !== plan.source.fingerprint) {
-        failures.push('P14 preparation confirmation source identity does not match the reviewed plan.');
-      }
-      if (actionIds && !sameStrings(actionIds, plan.eligibleActionIds)) {
-        failures.push('P14 preparation confirmation eligibleActionIds do not match the reviewed plan.');
+      const planIntegrity = validateP14PreparationPlan(plan);
+      if (!planIntegrity.valid) {
+        failures.push('P14 preparation confirmation cannot bind to an invalid plan.');
+      } else if (plan.status !== 'READY' || plan.eligibleActionIds.length === 0) {
+        failures.push('P14 preparation confirmation can bind only to a READY mutating plan.');
+      } else {
+        if (value.planDigest !== plan.planDigest) failures.push('P14 preparation confirmation planDigest does not match the reviewed plan.');
+        if (value.p13RunId !== plan.p13RunId) failures.push('P14 preparation confirmation p13RunId does not match the reviewed plan.');
+        if (!isRecord(value.source)
+          || value.source.nodeId !== plan.source.nodeId
+          || value.source.fingerprint !== plan.source.fingerprint) {
+          failures.push('P14 preparation confirmation source identity does not match the reviewed plan.');
+        }
+        if (actionIds && !sameStrings(actionIds, plan.eligibleActionIds)) {
+          failures.push('P14 preparation confirmation eligibleActionIds do not match the reviewed plan.');
+        }
       }
     }
   }
