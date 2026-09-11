@@ -55,8 +55,8 @@ function finiteConfidence(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 100;
 }
 
-function stableStrings(values: string[]): string[] {
-  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+function sortedStrings(values: string[]): string[] {
+  return [...values].sort((a, b) => a.localeCompare(b));
 }
 
 function bindingKey(binding: Pick<P14SafeRecipeBinding, 'sourceRuleId' | 'sourceRuleVersion'>): string {
@@ -73,10 +73,10 @@ function bindingSort(a: P14SafeRecipeBinding, b: P14SafeRecipeBinding): number {
 function normalizeRecipe(recipe: P14PreparationRecipeDefinition): P14PreparationRecipeDefinition {
   return {
     ...recipe,
-    sourceRuleIds: stableStrings(recipe.sourceRuleIds),
-    prerequisites: stableStrings(recipe.prerequisites),
-    mutationAllowlist: [...new Set(recipe.mutationAllowlist)].sort(),
-    conflictsWith: stableStrings(recipe.conflictsWith),
+    sourceRuleIds: sortedStrings(recipe.sourceRuleIds),
+    prerequisites: sortedStrings(recipe.prerequisites),
+    mutationAllowlist: [...recipe.mutationAllowlist].sort(),
+    conflictsWith: sortedStrings(recipe.conflictsWith),
   };
 }
 
