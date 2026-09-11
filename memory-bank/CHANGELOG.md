@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-11 — P12 publisher evidence intake hardening
+
+- Corrected issue #84 body so release #20 / plugin ID `1680034649341961379` is the authoritative publishing candidate and old release #17 is retained only as historical runtime evidence.
+- Opened issue #126 to make the final package/publisher/2FA evidence collection deterministic and fail-closed.
+- Added `config/p12-publisher-candidate.json` with the exact release #20 source, plugin ID, artifact identity, exact publish ZIP SHA-256, extracted plugin file hashes, manifest contract and required evidence/attestations.
+- Added `scripts/p12-publisher-evidence-intake.mjs` and `npm run p12:publisher-evidence`.
+- Evidence intake verifies the exact publish ZIP SHA-256 and extracted `code.js`, `manifest.json`, `ui.html` hashes before accepting screenshot evidence.
+- Intake rejects missing/empty/oversized/symlinked evidence, wrong or extra package files, manifest contract drift and missing operator confirmations.
+- Runtime, Publish/Add-final-details and 2FA screenshots are hashed but never OCRed or machine-interpreted; live facts remain explicit operator attestations.
+- Receipt semantics explicitly keep `acceptanceAuthority: false`, `screenshotsAreHashedNotInterpreted: true` and `finalInternalAcceptanceRequiresSeparateReview: true`.
+- Added regression tests for the success path, extracted-file tamper, exact ZIP tamper, missing 2FA attestation and manifest semantic mismatch.
+- Added `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md` with the exact operator command and fail-closed behavior.
+- PR #129 head `6a60ae540fa6fdacca8a30d73edd1ae3c61714e6` passed CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41, had no review/thread blockers, and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7`; issue #126 closed completed.
+- P12 remains `80%`. The next genuine action is live release #20 runtime/publish/2FA screenshots -> deterministic intake receipt -> final internal exit review. P13 remains blocked.
+
 ## 2026-09-11 — Reliability/compatibility audit for P13-P26
 
 - Completed the remaining post-plan housekeeping by merging PR #123 as `d34c026202ae6ecd8f88f71e6056d619578ce56f` after CI #723, Integration Readiness #158, P12 Offline Acceptance #78 and P12 Final Release Artifact #34 passed.
