@@ -15,16 +15,18 @@ It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bou
 
 `assessP14PreparationInputBounds(...)` is the first transaction gate, before canonical plan validation, registry authorization, source coordination or adapter access.
 
-It applies deterministic limits to action/blocker counts, targets per action, total target references, prerequisites/conflicts/mutation fields, action buckets, blocker action references and identity/detail string lengths.
+It applies deterministic limits to action/blocker counts, targets per action, total target references, prerequisites/conflicts/mutation fields, action buckets, blocker action references, plan/source identities and run-level transaction/prepared-name identity lengths.
 
 Important safety behavior:
 
 - oversized top-level arrays are rejected from their `.length` without traversing their contents;
 - oversized nested target/dependency arrays are rejected before iterating their items;
+- `transactionId` and `preparedName` are bounded before the transaction coordinator or adapter is touched;
 - callers may inject only stricter limits — injected values cannot loosen the defaults or hard safety ceilings;
 - oversized input returns `BLOCKED` + `P14_INPUT_TOO_LARGE`;
 - source-before/source-after fingerprints remain `UNKNOWN` because no runtime source proof was attempted;
 - oversized source/run/digest identities are not echoed back into the rejection receipt; bounded placeholders are used instead;
+- an oversized transaction ID is replaced by the bounded receipt fallback `p14-transaction-invalid`;
 - source transaction coordinator and adapter methods remain untouched on a bounded-preflight rejection.
 
 These limits are freeze/resource safety bounds only. They are not estimates of Elementor/Gutenberg conversion effort or target compatibility.
@@ -60,20 +62,21 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 ## Safety invariants
 
 1. Oversized/pathological input is blocked before deep plan processing or adapter access.
-2. Oversized rejection evidence remains bounded and does not echo hostile identity payloads.
-3. The approved source node is never passed to recipe mutation callbacks.
-4. A P14 transaction never swaps, replaces or deletes the approved source.
-5. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
-6. New HIGH/BLOCKER findings caused by preparation reject the candidate.
-7. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
-8. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
-9. A no-op plan completes without cloning.
-10. Target-neutral preparation does not imply target readiness.
-11. Malformed/tampered plans are blocked before adapter access.
-12. Eligible recipes require current registry authorization before adapter access.
-13. P14 receipts have no acceptance/target-compatibility authority.
-14. One executable READY transaction may own a source scope at a time.
-15. Acquired transaction leases are released in a bounded `finally` path.
+2. Run-level transaction/prepared-name identities are bounded by the same first-gate policy.
+3. Oversized rejection evidence remains bounded and does not echo hostile identity payloads.
+4. The approved source node is never passed to recipe mutation callbacks.
+5. A P14 transaction never swaps, replaces or deletes the approved source.
+6. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
+7. New HIGH/BLOCKER findings caused by preparation reject the candidate.
+8. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
+9. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
+10. A no-op plan completes without cloning.
+11. Target-neutral preparation does not imply target readiness.
+12. Malformed/tampered plans are blocked before adapter access.
+13. Eligible recipes require current registry authorization before adapter access.
+14. P14 receipts have no acceptance/target-compatibility authority.
+15. One executable READY transaction may own a source scope at a time.
+16. Acquired transaction leases are released in a bounded `finally` path.
 
 ## Deliberately not wired yet
 
