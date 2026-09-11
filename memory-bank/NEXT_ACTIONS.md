@@ -32,12 +32,19 @@ Current retained publishing candidate:
 
 PR #129 / issue #126 added deterministic evidence intake support. The exact candidate is pinned in `config/p12-publisher-candidate.json`; use `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md` and `npm run p12:publisher-evidence -- ...`.
 
+Current screenshot triage is explicitly **non-accepting** and retained in #84 comment `5633658106`:
+
+- the available final-details screenshot still shows the historical `Invalid ID in manifest.json` state;
+- two available Publish screenshots are Data Security steps, not final-details/identity/2FA proof;
+- the available plugin screenshot is historical P6 closure evidence, not the minimal release #20 package rebind;
+- no currently retained screenshot proves 2FA enabled.
+
 Immediate required evidence/action:
 
 1. use the exact pinned release #20 publish ZIP and extracted three-file directory;
 2. re-import/update that exact package in Figma Desktop and confirm it opens/runs on the known acceptance design/frame;
-3. retain the live Publish → Add final details screen with valid manifest ID, intended Publish-as identity, Community target, support contact and `No network access` visible;
-4. retain the Figma account/security screen showing required 2FA enabled;
+3. retain a **fresh** Publish → Add final details screen where the generated publishing ID is accepted and the intended Publish-as identity, Community target, support contact and `No network access` are visible;
+4. retain a **fresh** Figma account/security screen showing required 2FA enabled;
 5. run `npm run p12:publisher-evidence -- ...` with all explicit confirmations set to `yes` only for facts actually observed;
 6. retain the generated receipt; it must say `acceptanceAuthority: false` and `evidenceBundleComplete: true`;
 7. perform final internal release-exit review from the receipt + original screenshots.
@@ -73,13 +80,19 @@ Canonical future order:
 
 ## R0 research actions already captured
 
-Current September 2026 snapshot records:
+PR #131 retained the current September 2026 snapshot in `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`.
+
+The retained snapshot records:
 
 - official Elementor JSON/ZIP/template/kit import paths and modern container/Atomic data structures;
 - Elementor v4 Atomic architecture and hybrid coexistence with v3 content;
 - official Gutenberg serialization/parse/serialize model;
 - Figma export, original image-byte and font limitations;
-- market competition from native WordPress conversion and Figma-to-code tools.
+- market competition from native WordPress conversion and Figma-to-code tools;
+- current competitive pressure from UiChemy, Anima, Locofy, Builder.io and first-party Figma design-to-code direction;
+- the durable positioning rule that generic conversion alone is not the moat: validated target readiness, environment-aware diagnostics, explicit mapping/fallback states, render/round-trip proof and receipts are the stronger differentiators.
+
+Current-main checks on the retained R0 merge passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46.
 
 Before implementing P15, P16, P17 or P18, refresh official target docs and competitor baseline again rather than assuming this snapshot is still current.
 
