@@ -4,6 +4,7 @@ import {
   RESPONSIVE_RISK_VERSION,
   type BuildReadyFinding,
   type BuildReadyReportV2,
+  type BuildReadyStatus,
 } from './build-ready-types';
 import { buildP14PreparationPlan } from './p14-preparation-plan';
 import type {
@@ -47,6 +48,13 @@ export interface P13P14PlanResult {
   plan: P14PreparationPlanV1 | null;
 }
 
+const BUILD_READY_STATUSES = new Set<BuildReadyStatus>([
+  'READY',
+  'REVIEW',
+  'NOT_READY',
+  'INSUFFICIENT_EVIDENCE',
+]);
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -85,15 +93,25 @@ function validateBuildReadyReportForHandoff(value: unknown): { valid: boolean; f
   if (value.buildReadyScoreVersion !== BUILD_READY_SCORE_VERSION) failures.push('Unsupported Build-Ready score version.');
   if (value.responsiveRiskVersion !== RESPONSIVE_RISK_VERSION) failures.push('Unsupported responsive-risk version.');
   if (!nonEmptyString(value.runId)) failures.push('Build-Ready runId is missing.');
+
+  let expectedRunId: string | null = null;
   if (!isRecord(value.source)
     || !nonEmptyString(value.source.rootId)
     || !nonEmptyString(value.source.structuralHash)
     || !nonEmptyString(value.source.configHash)
     || !nonEmptyString(value.source.analyzerVersion)) {
     failures.push('Build-Ready source fingerprint evidence is incomplete.');
+  } else {
+    expectedRunId = `p13-${value.source.structuralHash}-${value.source.configHash}`;
+    if (value.runId !== expectedRunId) {
+      failures.push('Build-Ready runId does not match the exact source/config fingerprint binding.');
+    }
   }
-  if (!isRecord(value.score) || !nonEmptyString(value.score.status)) {
-    failures.push('Build-Ready score status is missing.');
+
+  if (!isRecord(value.score)
+    || typeof value.score.status !== 'string'
+    || !BUILD_READY_STATUSES.has(value.score.status as BuildReadyStatus)) {
+    failures.push('Build-Ready score status is missing or unsupported.');
   } else if (value.score.status === 'INSUFFICIENT_EVIDENCE') {
     failures.push('Build-Ready evidence is insufficient for P14 preparation handoff.');
   }
@@ -115,8 +133,12 @@ function validateBuildReadyReportForHandoff(value: unknown): { valid: boolean; f
     if (!nonEmptyString(raw.ruleId)) failures.push(`${prefix}.ruleId is missing.`);
     if (!positiveInteger(raw.ruleVersion)) failures.push(`${prefix}.ruleVersion must be a positive integer.`);
     if (!finiteConfidence(raw.confidence)) failures.push(`${prefix}.confidence must be between 0 and 100.`);
-    if (!Array.isArray(raw.nodeIds) || raw.nodeIds.some((nodeId) => !nonEmptyString(nodeId))) {
-      failures.push(`${prefix}.nodeIds must be an array of non-empty strings.`);
+    if (!Array.isArray(raw.nodeIds)
+      || raw.nodeIds.length === 0
+      || raw.nodeIds.some((nodeId) => !nonEmptyString(nodeId))) {
+      failures.push(`${prefix}.nodeIds must be a non-empty array of non-empty strings.`);
+    } else if (new Set(raw.nodeIds).size !== raw.nodeIds.length) {
+      failures.push(`${prefix}.nodeIds must not contain duplicates.`);
     }
     if (raw.remediationClass !== 'P14_SAFE_CANDIDATE'
       && raw.remediationClass !== 'MANUAL_REVIEW'
