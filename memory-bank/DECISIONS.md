@@ -197,3 +197,63 @@ Status: ACCEPTED
 Where a supported target can be rendered in a controlled harness, generated output should be compared back to the Figma source using geometry/content/assets/pixel evidence before production acceptance.
 
 Unsupported or excessive drift produces REVIEW/BLOCKED rather than a false success.
+
+## D-031 — Reliability/compatibility is a mandatory R1 gate
+Date: 2026-09-11  
+Status: ACCEPTED
+
+After R0 research and before implementing a major target adapter, the project must freeze a versioned TargetProfile, capability descriptor, option-state rules, error/retry model, atomic generation contract, validators and target-specific acceptance harness.
+
+Canonical specification: `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md`.
+
+Reason: commercial breadth is not useful if target options can combine into unsupported states or if the UI can present a false success.
+
+## D-032 — Target UI is capability-driven and stale validation is invalidated
+Date: 2026-09-11  
+Status: ACCEPTED
+
+Each adapter exposes machine-readable capabilities. Product UI enables only combinations the active adapter declares as SUPPORTED or explicitly SUPPORTED_WITH_REVIEW.
+
+Changing target, target version, adapter family, output mode or other compatibility-affecting settings invalidates prior validation and clears incompatible dependent options.
+
+No hidden stale UI value may be allowed to submit an otherwise invalid combination.
+
+## D-033 — Artifact validation and real target verification are distinct truths
+Date: 2026-09-11  
+Status: ACCEPTED
+
+A locally generated package may be marked ARTIFACT VALIDATED after deterministic schema/package/reference/assets checks, but it may not be presented as IMPORT VERIFIED, RENDER VERIFIED or ROUND-TRIP VERIFIED unless the corresponding real supported target behavior was actually observed.
+
+In particular, offline Elementor/Gutenberg package validation cannot guarantee a customer's unobserved WordPress server configuration.
+
+## D-034 — Elementor v3 Container and v4 Atomic are separate adapter families
+Date: 2026-09-11  
+Status: ACCEPTED
+
+Elementor export must not assume one timeless schema. Initial accepted Elementor families are planned separately for v3 Container-oriented output and v4 Atomic-oriented output, with Pro capabilities declared as overlays only where documented/tested.
+
+Hybrid sites may choose an intended output family; the generator does not silently mix architectures by default.
+
+## D-035 — Export/package generation is atomic and never silently falls back
+Date: 2026-09-11  
+Status: ACCEPTED
+
+A target artifact is generated into a temporary candidate, validated, finalized and checksummed before Download/Copy becomes available. Failed or cancelled candidates are discarded.
+
+If a native mapping is unavailable, the product must expose the fallback choice (for example native+scoped CSS, visual asset, manual placeholder or unsupported) rather than silently substituting another implementation strategy.
+
+## D-036 — Community core remains offline; WordPress bridge is file/paste first
+Date: 2026-09-11  
+Status: ACCEPTED
+
+The current Community core keeps `allowedDomains: ["none"]`. Arbitrary direct push from Figma to customer WordPress domains is not part of the core contract because target sites use arbitrary domains and would broaden network permissions materially.
+
+The preferred `WP Builders Bridge` path is downloadable/importable file or explicit paste payload inside WordPress admin. Any future direct authenticated push is a separately accepted networked module with its own privacy/security/manifest review.
+
+## D-037 — Figma image export distinguishes stored original bytes from rendered appearance
+Date: 2026-09-11  
+Status: ACCEPTED
+
+For Figma image fills, `getImageByHash(...).getBytesAsync()` may provide the encoded image bytes stored by Figma. That is labeled `Stored Original`, while crop/mask/effects/layout appearance is exported separately as a rendered result.
+
+The product must not claim those stored bytes prove the upstream user-upload provenance when Figma does not expose that provenance.
