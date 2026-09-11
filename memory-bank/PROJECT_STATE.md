@@ -29,7 +29,13 @@ Post-P12 product direction is now approved as a broader deterministic **Figma ->
 
 ## Current repository baseline
 
-Current authoritative main after publishing-ID rebinding:
+PR #120 merged the P13-P21 commercial-planning baseline as:
+
+`03b7ca6cf03229b606325a6719958afae1d4d564`
+
+That merge changed planning/status documentation only. It did not add P13 runtime behavior and does not grant P12 or P13 acceptance credit.
+
+The exact P12 publishing-ID package currently under manual evaluation was produced from source:
 
 `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`
 
@@ -37,27 +43,29 @@ PR #118 replaced the previous publishing-invalid manifest identity with Figma-as
 
 `1680034649341961379`
 
-Fresh main verification passed:
+Verification on that publishing candidate passed:
 
 - CI #709;
 - Integration Readiness #145;
 - P12 Offline Acceptance #64 on Linux/macOS/Windows;
 - P12 Final Release Artifact #20;
-- authoritative artifact `wp-builders-prepare-final-release-20`, ID `10179286885`;
+- artifact `wp-builders-prepare-final-release-20`, ID `10179286885`;
 - artifact digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`.
+
+Subsequent planning-only commits do not by themselves constitute new runtime acceptance. P12 exit review must explicitly identify the exact publishing package whose live evidence is being accepted.
 
 Static/offline verification does not by itself close live publisher/runtime gates.
 
 ## Current issue queue
 
 - #84 — P12 final integrated validation/release acceptance: **ACTIVE / external-manual-runtime blocked**, retained at 80% until the current publish-ID package/account flow and final exit review are genuinely retained. Community review/approval remains external.
-- #119 — P13+ Commercial expansion roadmap: **PLANNED / dependency-blocked by #84 internal exit**. Planning/docs are allowed; implementation is not.
+- #119 — P13+ Commercial expansion roadmap: **PLANNED / dependency-blocked by #84 internal exit**. Planning/docs are approved and merged; implementation is not authorized yet.
 
 All earlier P5/P6/P7 production issues are closed completed. P8 exporter remains deferred.
 
 ## Current PR queue
 
-Before this planning branch there were `0` open PRs. The current documentation branch is `plan/ai-native-commercial-expansion` and exists only to add/synchronize the approved post-P12 roadmap.
+`0` open PR/MR after the P13-P21 planning merge and this post-merge status synchronization.
 
 ## Module state
 
@@ -117,7 +125,7 @@ Do **not** begin P13 implementation yet.
 
 Immediate product/release target remains #84:
 
-1. retain live evidence for the exact current publishing-ID package/account flow;
+1. retain live evidence for the exact publishing-ID package/account flow selected for P12 exit;
 2. confirm intended publisher identity/eligibility and 2FA where Figma requires it;
 3. perform the final P12 release-exit review without conflating submission with approval;
 4. only then unblock P13 implementation through a focused issue/branch/PR.
