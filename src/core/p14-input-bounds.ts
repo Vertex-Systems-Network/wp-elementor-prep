@@ -17,6 +17,7 @@ export interface P14InputBoundsLimits {
 export interface P14InputBoundsContext {
   transactionId?: unknown;
   preparedName?: unknown;
+  confirmation?: unknown;
 }
 
 export type P14InputBoundFailureCode =
@@ -150,6 +151,19 @@ export function assessP14PreparationInputBounds(
 
   checkString(context.transactionId, 'transactionId', limits.maxIdentityLength, 'P14_BOUND_MAX_IDENTITY_LENGTH', failures);
   checkString(context.preparedName, 'preparedName', limits.maxIdentityLength, 'P14_BOUND_MAX_IDENTITY_LENGTH', failures);
+  if (isRecord(context.confirmation)) {
+    checkString(context.confirmation.confirmedAt, 'confirmation.confirmedAt', limits.maxIdentityLength, 'P14_BOUND_MAX_IDENTITY_LENGTH', failures);
+    checkString(context.confirmation.planDigest, 'confirmation.planDigest', limits.maxIdentityLength, 'P14_BOUND_MAX_IDENTITY_LENGTH', failures);
+    checkString(context.confirmation.p13RunId, 'confirmation.p13RunId', limits.maxIdentityLength, 'P14_BOUND_MAX_IDENTITY_LENGTH', failures);
+    if (isRecord(context.confirmation.source)) {
+      checkString(context.confirmation.source.nodeId, 'confirmation.source.nodeId', limits.maxIdentityLength, 'P14_BOUND_MAX_IDENTITY_LENGTH', failures);
+      checkString(context.confirmation.source.fingerprint, 'confirmation.source.fingerprint', limits.maxIdentityLength, 'P14_BOUND_MAX_IDENTITY_LENGTH', failures);
+    }
+    const confirmationActionIds = context.confirmation.eligibleActionIds;
+    if (checkArrayLength(confirmationActionIds, 'confirmation.eligibleActionIds', limits.maxBucketActionIds, 'P14_BOUND_MAX_BUCKET_ACTION_IDS', failures)) {
+      checkIdentityArrayItems(confirmationActionIds, 'confirmation.eligibleActionIds', limits.maxIdentityLength, failures);
+    }
+  }
 
   if (!isRecord(value)) {
     return {
