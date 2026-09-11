@@ -1,4 +1,5 @@
 import {
+  DEFAULT_P14_INPUT_BOUNDS,
   assessP14PreparationInputBounds,
   type P14InputBoundsLimits,
 } from './p14-input-bounds';
@@ -174,11 +175,16 @@ function invalidPlanReceipt(
   const source = typeof record.source === 'object' && record.source !== null && !Array.isArray(record.source)
     ? record.source as Record<string, unknown>
     : {};
-  const nodeId = typeof source.nodeId === 'string' && source.nodeId ? source.nodeId : 'UNKNOWN';
-  const p13RunId = typeof record.p13RunId === 'string' && record.p13RunId ? record.p13RunId : 'UNKNOWN';
-  const planDigest = typeof record.planDigest === 'string' && record.planDigest.startsWith('p14-plan-')
-    ? record.planDigest
-    : 'p14-plan-invalid';
+  const boundedIdentity = (value: unknown, fallback: string): string =>
+    typeof value === 'string'
+      && value.length > 0
+      && value.length <= DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength
+      ? value
+      : fallback;
+  const nodeId = boundedIdentity(source.nodeId, 'UNKNOWN');
+  const p13RunId = boundedIdentity(record.p13RunId, 'UNKNOWN');
+  const rawPlanDigest = boundedIdentity(record.planDigest, 'p14-plan-invalid');
+  const planDigest = rawPlanDigest.startsWith('p14-plan-') ? rawPlanDigest : 'p14-plan-invalid';
   const detail = `${options.detailPrefix ?? 'Invalid P14 preparation plan'}: ${failures.join(' | ')}`;
   return {
     schemaVersion: 1,

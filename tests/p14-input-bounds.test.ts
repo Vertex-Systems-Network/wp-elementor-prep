@@ -153,6 +153,26 @@ describe('P14 bounded input preflight', () => {
     expect(resolved.maxIdentityLength).toBeLessThanOrEqual(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength);
   });
 
+  it('does not echo oversized identities into the rejection receipt', async () => {
+    const value = plan() as any;
+    value.source.nodeId = 'n'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 100);
+    value.p13RunId = 'r'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 100);
+    value.planDigest = `p14-plan-${'d'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 100)}`;
+    const receipt = await runP14RetainedDuplicateTransaction({
+      plan: value,
+      registry,
+      transactionId: 'p14-bounded-receipt',
+      now: () => '2026-09-12T00:00:00.000Z',
+    }, new CountingAdapter());
+
+    expect(receipt.status).toBe('BLOCKED');
+    expect(receipt.errors[0]?.code).toBe('P14_INPUT_TOO_LARGE');
+    expect(receipt.source.nodeId).toBe('UNKNOWN');
+    expect(receipt.p13RunId).toBe('UNKNOWN');
+    expect(receipt.planDigest).toBe('p14-plan-invalid');
+    expect(JSON.stringify(receipt).length).toBeLessThan(10000);
+  });
+
   it('blocks oversized input before coordinator or adapter access', async () => {
     const value = plan() as any;
     value.actions = new Array(DEFAULT_P14_INPUT_BOUNDS.maxActions + 1).fill(null);
