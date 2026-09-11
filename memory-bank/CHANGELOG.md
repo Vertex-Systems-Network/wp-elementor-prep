@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-09-11 — R0 commercial market refresh
+
+- Ran a fresh public-market scan against current UiChemy, Anima, Locofy, Builder.io and first-party Figma product/documentation pages.
+- Retained the dated evidence and source URLs in `docs/R0_MARKET_SNAPSHOT_2026-09-11.md`; competitor claims are explicitly market signals rather than target-schema/API authority.
+- Confirmed that generic `Figma -> code` generation is heavily commoditized and now overlaps with Figma's own code/agent direction.
+- Reinforced the product moat as `Audit -> Target Compatibility -> Target-Ready Duplicate -> declared/native mapping -> artifact/environment validation -> render/round-trip proof -> receipt`.
+- Added P15 planning requirement for Elementor/WordPress environment diagnostics with `DECLARED ENVIRONMENT` vs `OBSERVED ENVIRONMENT`; local JSON/ZIP validity cannot imply an unobserved live import.
+- Promoted the target capability matrix to a user-facing commercial surface with explicit `NATIVE`, `NATIVE + CSS`, `VISUAL ASSET FALLBACK`, `MANUAL REVIEW` and `UNSUPPORTED` strategies and no silent fallback.
+- Reinforced one neutral semantic IR across WordPress/code targets so users are not forced to re-tag/re-prepare the same safe intent for every adapter.
+- Retained section-transfer speed as a product requirement while keeping documented artifacts / the versioned WP Builders Bridge ahead of undocumented private clipboard dependencies.
+- Added durable decisions D-038 through D-042: verified readiness states are user-facing; Elementor environment truth stays evidence-scoped; shared IR should avoid unnecessary re-tagging; failed/refused generation is non-billable if credits are introduced; exact pricing remains evidence-driven rather than copied from competitors.
+- Retained API/MCP/agent access as a later Pro/Agency differentiator after deterministic target contracts are accepted.
+- No P13-P26 runtime implementation or acceptance credit was granted. #84 remains the internal P12 gate before implementation starts.
+
 ## 2026-09-11 — P12 publisher evidence intake hardening
 
 - Corrected issue #84 body so release #20 / plugin ID `1680034649341961379` is the authoritative publishing candidate and old release #17 is retained only as historical runtime evidence.
