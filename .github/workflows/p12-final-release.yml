@@ -14,7 +14,7 @@ jobs:
   build-final-release:
     runs-on: ubuntu-latest
     env:
-      FIGMA_PLUGIN_ID: "1679803102348456572"
+      FIGMA_PLUGIN_ID: "1680034649341961379"
     steps:
       - name: Check out exact source
         uses: actions/checkout@v7
