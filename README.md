@@ -25,12 +25,14 @@ See `docs/COMMERCIAL_EXPANSION_PLAN.md` for the P13-P21 commercial expansion con
 
 > **Progress policy:** implementation progress, runtime acceptance and external Community review are tracked separately. New future scope does not retroactively reduce already-completed historical core progress.
 
-**Open PR/MR:** `#120 — Plan P13-P21 commercial expansion`
+**Open PR/MR:** `0`
 
 Open issue classification:
 
 - `#84` — P12 final validation: active; manual/publisher/runtime exit gates remain.
 - `#119` — P13+ commercial expansion: planned; implementation dependency-blocked by #84 internal exit.
+
+PR #120 merged the P13-P21 planning baseline as `03b7ca6cf03229b606325a6719958afae1d4d564`. It changed planning/status documentation only; it did not add P13 runtime behavior or grant P12/P13 acceptance credit.
 
 ### Module-wise progress
 
@@ -60,17 +62,17 @@ Open issue classification:
 
 > Historical P0-P7 core progress remains 100%. P12 is a separately tracked final validation gate. P13-P21 are approved future scope at 0% and are not implementation-authorized yet.
 
-## Current authoritative release line
+## Current P12 publishing line
 
-Current main after the Figma publishing-ID rebinding is:
+The retained publishing-ID package currently under manual P12 evaluation was produced from source:
 
 `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`
 
-Current Figma-assigned publishing ID:
+Figma-assigned publishing ID:
 
 `1680034649341961379`
 
-Fresh verification on that release identity passed:
+Verification on that publishing candidate passed:
 
 - CI #709;
 - Integration Readiness #145;
@@ -78,6 +80,8 @@ Fresh verification on that release identity passed:
 - P12 Final Release Artifact #20;
 - artifact `wp-builders-prepare-final-release-20`, ID `10179286885`;
 - artifact digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`.
+
+Subsequent PR #120 changed planning/status documentation only. P12 final acceptance still requires explicit live evidence for whichever exact publishing package is designated at exit review; a later docs-only build is not treated as runtime acceptance merely because CI produced it.
 
 These are real static/offline/reproducibility observations. They do **not** substitute for pending live publisher/account/runtime evidence.
 
