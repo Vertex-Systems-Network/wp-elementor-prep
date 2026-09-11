@@ -1,0 +1,48 @@
+name: P14 Runtime Action Eligibility Wiring
+
+on:
+  push:
+    branches:
+      - p14/runtime-action-eligibility
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: p14/runtime-action-eligibility
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Verify exact branch scope
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "p14/runtime-action-eligibility"
+          test -f scripts/p14-runtime-action-eligibility-wiring.py
+          test -f .github/workflows/p14-runtime-action-eligibility-wiring.yml
+      - name: Apply exact runtime eligibility wiring
+        run: python scripts/p14-runtime-action-eligibility-wiring.py
+      - name: Install dependencies
+        run: npm install
+      - name: Verify focused P14 runtime eligibility contracts
+        run: |
+          set -euo pipefail
+          npm run typecheck
+          npx vitest run tests/p14-*.test.ts
+      - name: Commit verified product wiring
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/core/p14-preparation-types.ts \
+            src/core/p14-retained-duplicate-transaction.ts \
+            tests/p14-retained-duplicate.test.ts
+          git diff --cached --quiet && { echo "No product wiring changes staged"; exit 1; }
+          git commit -m "feat: recheck P14 action eligibility between recipes"
+          git push origin HEAD:p14/runtime-action-eligibility
