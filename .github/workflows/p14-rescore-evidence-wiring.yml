@@ -1,0 +1,61 @@
+name: P14 Rescore Evidence Wiring
+
+on:
+  push:
+    branches:
+      - p14/rescore-evidence-hardening
+    paths:
+      - 'scripts/p14-rescore-evidence-wiring.py'
+      - '.github/workflows/p14-rescore-evidence-wiring.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: p14/rescore-evidence-hardening
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+
+      - name: Verify exact branch scope
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "p14/rescore-evidence-hardening"
+          test -f scripts/p14-rescore-evidence-wiring.py
+          test -f .github/workflows/p14-rescore-evidence-wiring.yml
+
+      - name: Apply exact rescore wiring
+        run: python scripts/p14-rescore-evidence-wiring.py
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify focused P14 rescore contracts
+        run: |
+          npm run typecheck
+          npx vitest run \
+            tests/p14-rescore-evidence.test.ts \
+            tests/p14-rescore-transaction.test.ts \
+            tests/p14-retained-duplicate.test.ts \
+            tests/p14-integrity.test.ts \
+            tests/p14-validation-profile-coverage.test.ts
+
+      - name: Commit product wiring
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/core/p14-retained-duplicate-transaction.ts src/core/p14-preparation-receipt.ts
+          if git diff --cached --quiet; then
+            echo "No product changes staged"
+            exit 1
+          fi
+          git commit -m "P14: fail closed on malformed candidate rescore evidence"
+          git push origin HEAD:p14/rescore-evidence-hardening
