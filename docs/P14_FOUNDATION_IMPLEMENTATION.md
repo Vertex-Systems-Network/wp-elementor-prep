@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, active-recipe validation-profile coverage, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, source-immutability proof, cooperative cancellation, fail-closed cleanup and source-scope transaction coordination.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, active-recipe validation-profile coverage, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, source-immutability proof, cooperative cancellation, fail-closed cleanup and source-scope transaction coordination.
 
 ## Bounded input preflight
 
@@ -50,6 +50,25 @@ Confirmation is an intent/correlation artifact only. It is not cryptographic aut
 `NO_CHANGES_NEEDED` is non-mutating, so it does not require this mutating-plan confirmation. Already-BLOCKED plans also do not enter the confirmation gate.
 
 The production safe-recipe registry remains intentionally empty, so a self-consistent mutating READY plan is non-executable by default even if someone fabricates a confirmation. Synthetic positive tests inject explicit test-only registries; those mappings are not production authority.
+
+## Sequential runtime action-eligibility re-evaluation
+
+The frozen P14 sequential-transform contract does not allow one recipe to silently invalidate the assumptions of a later recipe. Static topological planning is therefore necessary but not sufficient once candidate mutation has begun.
+
+The first eligible action is already bound by plan integrity, current safe-recipe authorization, exact reviewed confirmation and the freshly cloned candidate. After any recipe result has been recorded, every subsequent eligible action must pass two additional runtime gates before `applyRecipe(...)` is called:
+
+1. the core verifies that every declared `prerequisiteRecipeId` has a completed earlier execution result in this transaction;
+2. the adapter must provide bounded `assessActionEligibility(...)` evidence for the current candidate, bound to the exact action ID, recipe ID and exact planned prerequisite recipe-ID set.
+
+`validateP14RuntimeActionEligibilityEvidence(...)` rejects malformed, stale, duplicated, oversized or plan-mismatched assessment evidence. The assessment is untrusted runtime evidence even though an adapter is strongly typed.
+
+A later action is reassessed even when it has no explicit prerequisite IDs: any earlier candidate mutation could still invalidate its eligibility. If the adapter cannot perform this reassessment after a prior recipe, the transaction fails closed and discards the candidate rather than silently trusting the old plan.
+
+A valid runtime assessment with `eligible: false` stops the sequence before that action mutates, discards the candidate and returns replan/recovery guidance. A malformed/missing reassessment follows `P14_TRANSFORM_FAILED`; lost prerequisite/eligibility assumptions follow the stable prerequisite/replan safety path. Raw hostile assessment evidence is not copied into receipts.
+
+An accepted idempotent `becameNoOp` recipe result still counts as completed prerequisite execution evidence, because the recipe was re-evaluated and proved already satisfied rather than skipped without proof.
+
+This gate is target-neutral. It does not authorize a production recipe, prove target compatibility or replace the later mandatory validation/re-score/source-immutability gates.
 
 ## Active recipe validation-profile coverage
 
@@ -135,26 +154,29 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 3. Oversized rejection evidence remains bounded and does not echo hostile identity payloads.
 4. A mutating READY plan requires separate integrity, recipe-authorization and exact reviewed-confirmation gates.
 5. Confirmation cannot authorize a recipe, bypass validation or claim target readiness/production acceptance.
-6. Every active eligible recipe's declared validation profile must be represented in bounded validation evidence before re-score or retention.
-7. Generic `validation.passed=true` cannot substitute for missing recipe-specific validator coverage.
-8. Malformed runtime validation evidence fails through candidate cleanup rather than bypassing validation.
-9. Candidate re-score output is untrusted evidence and must satisfy the bounded scored-P13 contract before policy evaluation.
-10. Re-score evidence hardening does not create a new score target or override design-preservation rules.
-11. Every runtime source fingerprint read is bounded and validated before equality comparison or receipt attachment.
-12. Invalid source-fingerprint evidence is represented as unavailable proof, never fabricated stale/change proof.
-13. The approved source node is never passed to recipe mutation callbacks.
-14. A P14 transaction never swaps, replaces or deletes the approved source.
-15. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
-16. New HIGH/BLOCKER findings caused by preparation reject the candidate.
-17. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
-18. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
-19. A no-op plan completes without cloning and without mutating-plan confirmation.
-20. Target-neutral preparation does not imply target readiness.
-21. Malformed/tampered plans are blocked before adapter access.
-22. Eligible recipes require current registry authorization before adapter access.
-23. P14 receipts have no acceptance/target-compatibility authority.
-24. One executable READY transaction may own a source scope at a time.
-25. Acquired transaction leases are released in a bounded `finally` path.
+6. Static topological ordering is rechecked at runtime: every subsequent action must still be eligible against the current candidate before mutation.
+7. Declared prerequisite recipes must have completed earlier in the same transaction before a dependent action can execute.
+8. Missing/malformed runtime reassessment evidence fails closed before the later recipe mutation.
+9. Every active eligible recipe's declared validation profile must be represented in bounded validation evidence before re-score or retention.
+10. Generic `validation.passed=true` cannot substitute for missing recipe-specific validator coverage.
+11. Malformed runtime validation evidence fails through candidate cleanup rather than bypassing validation.
+12. Candidate re-score output is untrusted evidence and must satisfy the bounded scored-P13 contract before policy evaluation.
+13. Re-score evidence hardening does not create a new score target or override design-preservation rules.
+14. Every runtime source fingerprint read is bounded and validated before equality comparison or receipt attachment.
+15. Invalid source-fingerprint evidence is represented as unavailable proof, never fabricated stale/change proof.
+16. The approved source node is never passed to recipe mutation callbacks.
+17. A P14 transaction never swaps, replaces or deletes the approved source.
+18. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
+19. New HIGH/BLOCKER findings caused by preparation reject the candidate.
+20. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
+21. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
+22. A no-op plan completes without cloning and without mutating-plan confirmation.
+23. Target-neutral preparation does not imply target readiness.
+24. Malformed/tampered plans are blocked before adapter access.
+25. Eligible recipes require current registry authorization before adapter access.
+26. P14 receipts have no acceptance/target-compatibility authority.
+27. One executable READY transaction may own a source scope at a time.
+28. Acquired transaction leases are released in a bounded `finally` path.
 
 ## Deliberately not wired yet
 
