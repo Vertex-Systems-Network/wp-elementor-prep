@@ -28,6 +28,7 @@ import {
   type P14RetainedDuplicateAdapter,
   type P14TransactionEvent,
   type P14TransactionState,
+  type P14ValidationSummary,
 } from './p14-preparation-types';
 
 export interface P14RetainedDuplicateRunInput {
@@ -45,6 +46,25 @@ export interface P14RetainedDuplicateRunInput {
 
 function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isP14ValidationSummary(value: unknown): value is P14ValidationSummary {
+  if (!isRecord(value)
+    || typeof value.passed !== 'boolean'
+    || !Array.isArray(value.profileIdsRun)
+    || !Array.isArray(value.checks)) {
+    return false;
+  }
+  return value.checks.every((check) => isRecord(check)
+    && typeof check.id === 'string'
+    && check.id.length > 0
+    && typeof check.passed === 'boolean'
+    && typeof check.required === 'boolean'
+    && (check.detail === undefined || typeof check.detail === 'string'));
 }
 
 function event(now: () => string, state: P14TransactionState, detail?: string): P14TransactionEvent {
@@ -571,9 +591,13 @@ export async function runP14RetainedDuplicateTransaction(
   }
 
   events.push(event(now, 'VALIDATING'));
-  let validation;
+  let validation: P14ValidationSummary;
   try {
-    validation = await adapter.validateCandidate(candidate, plan);
+    const rawValidation: unknown = await adapter.validateCandidate(candidate, plan);
+    if (!isP14ValidationSummary(rawValidation)) {
+      throw new Error('Validation adapter returned malformed evidence.');
+    }
+    validation = rawValidation;
   } catch (error) {
     const discardError = await discardCandidate(adapter, candidate);
     return cleanupOutcome({

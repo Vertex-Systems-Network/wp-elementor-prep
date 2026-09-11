@@ -164,4 +164,21 @@ describe('P14 validation-profile coverage', () => {
     expect(receipt.validation?.profileIdsRun).toEqual(['PROFILE_VALIDATE_GEOMETRY', 'PROFILE_VALIDATE_STRUCTURE']);
     expect(validateP14PreparationReceipt(receipt).valid).toBe(true);
   });
+
+  it('rejects malformed runtime validation evidence through cleanup instead of throwing', async () => {
+    const adapter = new Adapter();
+    (adapter as unknown as { validateCandidate: () => Promise<unknown> }).validateCandidate = async () => {
+      adapter.calls.validate += 1;
+      return null;
+    };
+    const receipt = await run(adapter);
+    expect(receipt.status).toBe('REJECTED');
+    expect(receipt.errors[0]?.code).toBe('P14_VALIDATION_FAILED');
+    expect(receipt.errors[0]?.detail).toContain('malformed evidence');
+    expect(adapter.calls.discard).toBe(1);
+    expect(adapter.calls.rescore).toBe(0);
+    expect(adapter.calls.retain).toBe(0);
+    expect(validateP14PreparationReceipt(receipt).valid).toBe(true);
+  });
+
 });
