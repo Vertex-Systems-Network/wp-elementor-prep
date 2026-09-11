@@ -6,15 +6,15 @@ Date: 2026-09-11
 
 ## 1. Product direction
 
-WP Builders Prepare should evolve from a deterministic Figma audit utility into a **Figma -> build-ready website workflow**.
+WP Builders Prepare should evolve from a deterministic Figma audit utility into a **Figma -> validated target-ready build platform**.
 
 Primary commercial promise:
 
-> Turn approved Figma designs into safer, more structured, developer-ready website builds before implementation begins.
+> Audit an approved design, make a safe target-ready duplicate when needed, validate it, then export/import native website-builder or code output with evidence that the result is structurally and visually ready.
 
-Elementor remains the first reconstruction target, but the analysis engine stays neutral and adapter-based so future Webflow, Shopify or React-oriented outputs do not destabilize the core.
+Elementor + Elementor Pro + WordPress remain the first commercial target, Gutenberg is the second WordPress target, and code/framework outputs are isolated behind adapters so the deterministic Figma core does not become framework-specific.
 
-The product must increase value without weakening the existing guarantees:
+The product must increase sales/client value without weakening the existing guarantees:
 
 - deterministic core behavior;
 - explainable evidence;
@@ -23,379 +23,635 @@ The product must increase value without weakening the existing guarantees:
 - low confidence produces REVIEW, not a guessed transformation;
 - every mutation is candidate -> validate -> commit/rollback;
 - core plugin remains AI-free and network-free;
-- no customer/template-specific node IDs or copy in product logic;
-- modern Elementor nested-container intent, not legacy section/column hard-coding;
+- no customer/template-specific IDs/copy in product logic;
+- no undocumented reverse engineering when a documented adapter/bridge is possible;
 - implementation-complete and production-accepted remain separate states.
 
-## 2. Commercial user outcomes
+## 2. User-requested commercial pillars
 
-The expansion should serve three primary customer groups.
+The roadmap is explicitly aligned to these product outcomes.
+
+### A. Continuous AI-assisted market research
+
+AI research should continuously inspect public product/market changes, official platform docs, competitor capabilities and customer workflow friction. Research is planning input only; it never becomes runtime authority.
+
+Canonical process: `docs/MARKET_RESEARCH_PLAN.md`.
+
+### B. Elementor / Elementor Pro / WordPress native output
+
+Users should be able to:
+
+- validate a selected Frame/page for Elementor compatibility;
+- see alignment/structure/responsive/widget-mapping issues before export;
+- if the source is not target-ready, choose **Create Elementor-Ready Duplicate**;
+- run only proven target-specific preparation on that duplicate;
+- validate the prepared duplicate;
+- download an Elementor template JSON/ZIP or supported website-template/kit package where the documented target format allows it;
+- optionally transfer a selected section through a safe WordPress-side bridge;
+- keep the original Figma design untouched.
+
+### C. HTML + CSS + JS output and code-to-design input
+
+Users should be able to export static/runnable web packages and, in the opposite direction, import supported code into a Figma reconstruction flow.
+
+The reverse direction is **static-first and sandboxed**. Arbitrary untrusted JavaScript must never execute directly inside the deterministic core/plugin context merely to reconstruct a design.
+
+### D. Framework/library output
+
+Users should be able to choose a target adapter and options for modern front-end stacks, beginning with the highest-value documented targets and expanding through an adapter SDK.
+
+Initial likely targets:
+
+- React;
+- Next.js;
+- Vue;
+- Nuxt;
+- Svelte / SvelteKit;
+- Angular;
+- Astro;
+- plain HTML/CSS/JS;
+- Tailwind-based variants where appropriate.
+
+`NestJS` is a server-side Node framework, not a browser UI renderer. The design itself should therefore not be described as "converted to NestJS UI". A future NestJS option may generate an integration scaffold/API/data contract alongside a front-end adapter when the user explicitly chooses a full-stack package.
+
+### E. Asset pack export
+
+Users should be able to export:
+
+- raster images;
+- SVG/vector icons;
+- logos/illustrations;
+- an asset manifest;
+- font family/style/usage manifest;
+- design tokens where available;
+- selectable image sizing policy.
+
+Image sizing options should include:
+
+- **Original/source-oriented** where source bytes or trustworthy source dimensions are available;
+- **Rendered at design display size**;
+- **1x / 2x / custom scale**;
+- **Web optimized** where a separately accepted deterministic encoder is available.
+
+The Figma Plugin API does not provide a general raw-font-file export API. Raw font binaries must therefore never be promised from Figma alone. Font binary packaging is allowed only when a user separately supplies legally usable font files through a future local/companion flow.
+
+### F. Gutenberg native output
+
+Users should be able to validate and export a selected page/section as native Gutenberg-compatible structures using documented block/pattern serialization rather than flattened HTML-only output where native blocks are possible.
+
+### G. Section-level copy/transfer
+
+For Elementor and Gutenberg, a user should be able to select one section and choose a target-specific transfer action.
+
+Preferred implementation order:
+
+1. documented native JSON/pattern/block serialization;
+2. downloadable section artifact;
+3. optional `WP Builders Bridge` WordPress companion plugin that recognizes our own versioned clipboard/import payload and creates native builder structures;
+4. direct site push only in a separately accepted authenticated/networked module.
+
+Do **not** depend on reverse-engineering undocumented Elementor clipboard internals.
+
+## 3. Commercial user outcomes
 
 ### Individual designer/developer
 
-Needs to know whether a design will be painful to build, what will break responsively, and which issues can be safely repaired before handoff.
+- know whether a design is build-ready;
+- repair safe structural issues without redesigning;
+- get native builder/code output;
+- export assets with predictable sizing;
+- compare generated result to Figma before handoff.
 
 ### Freelancer / small studio
 
-Needs faster estimates, stronger handoff, fewer revision cycles, reusable standards and a visible before/after readiness improvement.
+- shorten Figma-to-build time;
+- reduce cleanup after import;
+- create reusable sections/templates;
+- produce defensible effort estimates and client-ready QA reports;
+- support both WordPress and front-end framework clients.
 
 ### Agency / team
 
-Needs batch processing, custom rules, white-label reports, repeatable QA standards, project presets and defensible effort estimates.
+- use presets and component bindings;
+- batch multiple pages;
+- export to multiple targets from one neutral model;
+- enforce client/project standards;
+- white-label reports;
+- compare revisions and regenerate only changed sections.
 
-## 3. Canonical end-user flow
+## 4. Canonical target-ready workflow
 
-The future product flow should remain progressive and safety-gated:
+The future end-user flow should be:
 
-1. **Select scope** — one Frame first; controlled multi-Frame/project mode only where already proven safe.
-2. **Audit** — deterministic scan, normalized model, classifiers and evidence.
-3. **Build-Ready Score** — overall and category scores with exact causes.
-4. **Responsive Risk** — identify probable breakpoint failures without inventing a tablet/mobile design.
-5. **Elementor Readiness** — explain reconstruction risks against modern nested-container intent.
-6. **Backlog** — convert unresolved findings into deterministic prioritized work.
-7. **Prepare Frame** — offer only already-proven Safe Fix actions; every action remains transactional.
-8. **Validate** — geometry, text, image, structure and rendered-pixel checks.
-9. **Re-score** — show before/after change and remaining REVIEW items.
-10. **Build Plan** — emit deterministic implementation guidance for Elementor.
-11. **Handoff / QA report** — export developer/client-ready evidence.
-12. **Agency layer** — optionally apply custom presets, pricing rules, branding and batch policies.
-13. **Optional AI assistance** — only after deterministic results exist; AI may explain/summarize but never authorizes unsafe mutation or replaces core scoring.
+1. **Choose source** — selected Frame, selected section, controlled multi-Frame project, or supported code input.
+2. **Choose target** — Elementor, Gutenberg, HTML, React, Vue, etc.
+3. **Research-aware target contract** — adapter version states exactly which target/platform versions are supported.
+4. **Read-only audit** — deterministic structure/content/asset scan.
+5. **Target Compatibility Check** — target-specific mapping/alignment/unsupported-feature analysis.
+6. **Build-Ready + Target-Ready Score** — evidence by category.
+7. **Responsive Risk** — identify likely breakpoint failures without inventing responsive design.
+8. **Decision:**
+   - already target-ready -> continue;
+   - not ready but safely repairable -> **Create Target-Ready Duplicate**;
+   - ambiguous/unsafe -> REVIEW with exact blockers.
+9. **Prepare duplicate** — only previously proven recipes.
+10. **Validate duplicate** — geometry, text, images, structure, target rules and rendered-pixel checks.
+11. **Generate target output** — versioned adapter.
+12. **Target artifact validation** — schema, references, assets, missing features, package integrity.
+13. **Round-trip preview** — render generated output where feasible and compare against Figma visual evidence.
+14. **Download / Copy / Import** — only after validation gate passes or with explicit REVIEW warnings.
+15. **Handoff / QA report** — exact limitations and unsupported mappings.
 
-## 4. Post-P12 phase sequence
+The approved original never needs to be destructively modified for export.
 
-The sequence below is intentionally ordered around the repository's safety rules. A later phase cannot use a capability that has not first been proven read-only and testable.
+## 5. AI-native market intelligence gate (R0)
+
+R0 is a recurring governance gate, not a runtime feature and not a numbered implementation phase.
+
+Before opening implementation for a major new adapter/capability:
+
+1. refresh official platform docs;
+2. refresh competitor matrix;
+3. record market baseline and gaps;
+4. verify target format/import path is documented enough to support safely;
+5. classify network/licensing/privacy requirements;
+6. update acceptance criteria if the target platform changed;
+7. record durable changes in `DECISIONS.md`.
+
+Research snapshot and procedure: `docs/MARKET_RESEARCH_PLAN.md`.
+
+## 6. Post-P12 phase sequence
 
 ### P13 — Build-Ready Score 2.0 + Responsive Risk
 
 **Mode:** read-only first.
 
-Goals:
-
-- evolve readiness from one aggregate score into a clear production-readiness model;
-- report desktop structural quality plus probable tablet/mobile reconstruction risk;
-- make the score understandable enough to become a product-led acquisition surface.
-
-Proposed score dimensions:
+Add versioned category scoring and evidence for:
 
 - Structure;
 - Responsive Risk;
-- Elementor Readiness;
+- Target Compatibility;
 - Consistency;
 - Accessibility/QA advisories where deterministically measurable;
 - Handoff Readiness.
 
-Responsive risk detectors may inspect:
+Responsive-risk detectors include fixed sizing, text reflow, overflow, dense horizontal groups, absolute normal-content dependencies, media wrappers, minimum viable widths and breakpoint-sensitive spacing.
 
-- fixed widths/heights;
-- inflexible horizontal groups;
-- text clipping/reflow risk;
-- unexpected overflow;
-- minimum viable content width;
-- dense multi-column layouts;
-- image/media wrappers;
-- absolute normal-content dependencies;
-- breakpoint-sensitive gaps/padding;
-- navigation/button clusters.
+No responsive mutation and no invented mobile/tablet composition.
 
-Non-goal: inventing responsive layouts, reordering content or generating a new mobile design.
+### P14 — Target-Ready Duplicate + Guided Prepare
 
-Acceptance gate:
+This phase generalizes the existing Safe Fix model into a user-facing target preparation flow.
 
-- deterministic fixtures and cross-template tests;
-- every risk includes evidence and confidence;
-- no design mutation in P13;
-- score changes are versioned and regression-tested.
+Actions:
 
-### P14 — Advanced Safe Fix + guided `Prepare Frame`
+- `Check Target Readiness`;
+- `Create Target-Ready Duplicate`;
+- proposed-change review;
+- safe Auto Layout/layout-sizing corrections;
+- measured gap/padding fixes;
+- safe text auto-height fixes;
+- repeated-structure normalization where a proven recipe exists;
+- preserve legitimate overlays;
+- validate and re-score the duplicate.
 
-**Mode:** mutation only for patterns already detectable and explainable.
+The original design remains untouched unless the user separately chooses an already-accepted existing Safe Fix workflow.
 
-User experience:
+### P15 — Elementor Native Export + Import Validation
 
-- `Prepare Frame` shows proposed changes first;
-- user can apply all eligible fixes or inspect individually;
-- each fix exposes expected impact, confidence and validation requirements;
-- before/after score is shown only after successful validation.
+Build the first production target adapter around official Elementor structures.
 
-Potential safe-fix families:
+Supported output families should be versioned explicitly:
 
-- proven Auto Layout conversions;
-- gap/padding normalization where measured geometry is unambiguous;
-- Hug/Fill sizing corrections where desktop geometry is preserved;
-- text auto-height fixes with pixel/content validation;
-- repeated-structure normalization where a proven recipe already exists;
-- generic naming cleanup only when it does not alter semantic meaning;
-- normal-flow cleanup around legitimate overlays without removing the overlay.
+- modern Container-based template JSON;
+- Elementor Atomic structures when their documented target contract is stable for the required capability;
+- template JSON;
+- ZIP containing supported template JSON assets where the official library import path supports it;
+- website-template/kit ZIP only when the package can be produced and validated against documented Elementor import requirements;
+- optional Elementor Pro mappings when the target site/user explicitly selects Pro and the widget mapping is documented.
 
-Hard rule: no new auto-fix ships until the same condition is already reported read-only.
+Pre-download checks:
 
-Acceptance gate:
+- target schema version;
+- container hierarchy;
+- widget mapping coverage;
+- responsive setting coverage;
+- IDs/references;
+- global colors/fonts/classes/variables mapping;
+- asset references;
+- unsupported widget/feature list;
+- alignment/layout validation;
+- package integrity.
 
-- candidate clone only;
-- full validator stack;
-- commit or rollback;
-- one logical undo/restore path;
-- rejection tests for ambiguous and image-sensitive examples;
-- real Figma runtime evidence before production acceptance.
+User actions:
 
-### P15 — Elementor Readiness + Elementor Build Plan
+- `Download Elementor Template`;
+- `Download Elementor ZIP/Kit` when supported by the adapter contract;
+- `Copy Section for Elementor` through the documented/bridge path;
+- `Open Export Report`.
 
-**Mode:** read-only deterministic mapping; exporter remains adapter-isolated.
+No export should pretend unsupported Pro widgets or third-party addons are native mappings.
 
-Outputs:
+### P16 — Gutenberg Native Export + Section Transfer
 
-- Elementor Readiness score;
-- section/container reconstruction map;
-- nested-container hierarchy;
-- row/column/flex direction intent;
-- gap/padding intent;
-- Hug/Fill -> content/flexible sizing guidance;
-- legitimate absolute overlays called out explicitly;
-- repeated cards/stats/facts identified as reusable structures;
-- carousel/viewport intent preserved;
-- warnings for layouts likely to require unnecessary custom CSS/JS;
-- heading/text/image/button/icon/navigation mapping suggestions where confidence is high.
+Build a Gutenberg adapter using native serialized block structures and patterns.
 
-`Elementor Build Plan` should be structured data first, with human-readable export as a presentation layer.
+Goals:
 
-It must not hard-code one Elementor JSON version. Versioned adapters remain the compatibility boundary.
+- map compatible design structure to core blocks first;
+- support Group/Columns/Grid-like structures as supported by target WordPress versions;
+- map headings, paragraphs, buttons, images, lists and media to native blocks when possible;
+- export pattern JSON where appropriate;
+- export serialized block markup;
+- section-level copy payload;
+- optional `WP Builders Bridge` receiver for robust paste/import.
 
-### P16 — Design-System Detector + Token Advisory
+Validation:
 
-**Mode:** read-only advisory first.
+- block parse -> serialize round-trip;
+- no invalid block warnings for supported fixtures;
+- semantic heading/media integrity;
+- target WordPress version contract;
+- unsupported/custom-block fallback is explicit REVIEW, not silent flattening.
 
-Detect and summarize:
+### P17 — Universal Web Export + Code-to-Design Import
 
-- repeated colors;
-- typography families/sizes/weights/line heights;
-- spacing patterns;
-- radii;
+#### Design -> code
+
+Output options:
+
+- semantic HTML;
+- CSS;
+- vanilla JS only where interaction exists and is representable;
+- CSS variables/design tokens;
+- optional Tailwind adapter;
+- assets directory + manifest;
+- responsive stylesheet generated only from explicit/deterministic rules.
+
+#### Code -> design
+
+Input options:
+
+- HTML + CSS paste/upload;
+- HTML/CSS folder/ZIP;
+- optional URL capture in a future separately networked module;
+- JS-enabled reconstruction only in a strict sandbox/companion renderer.
+
+Security rules:
+
+- default JS execution is OFF;
+- strip/block network requests, storage, navigation and dangerous APIs in sandbox mode;
+- core parser can reconstruct static layout without executing code;
+- imported result is a **new Figma reconstruction**, never silent mutation of an approved design;
+- unsupported CSS/JS features are reported.
+
+### P18 — Framework Adapter Platform
+
+Create one neutral component/layout intermediate representation and target-specific generators.
+
+Initial adapters should be prioritized by research and demand:
+
+- React;
+- Next.js;
+- Vue;
+- Nuxt;
+- Svelte/SvelteKit;
+- Angular;
+- Astro;
+- optional React Native only after a separate native-layout feasibility specification.
+
+Configurable options may include:
+
+- JavaScript vs TypeScript;
+- CSS Modules / plain CSS / Tailwind / other accepted styling adapter;
+- component granularity;
+- existing component-library bindings;
+- routing scaffold;
+- asset strategy;
+- token strategy;
+- accessibility/semantic output preferences;
+- package-manager/project scaffold.
+
+Add an **Adapter SDK** so later frameworks/libraries can be implemented without changing the core scanner.
+
+Full-stack option:
+
+- if a user chooses NestJS, generate only backend/API/data-contract scaffolding that is actually derivable/configurable, paired with a selected front-end adapter;
+- never claim a visual design itself maps directly to NestJS rendering.
+
+### P19 — Asset Pack + Design-System Export
+
+Combine target-independent asset export and design-system advisory.
+
+Asset export:
+
+- raster images;
+- SVG vectors/icons;
+- PDF where useful;
+- source/display/custom-scale image options;
+- deterministic naming and de-duplication;
+- missing/external asset warnings;
+- asset manifest with node/source usage.
+
+Fonts:
+
+- family/style/weight/usage manifest;
+- missing-font warnings;
+- CSS `font-family` mapping;
+- raw font files only when separately user-supplied and license-permitted.
+
+Design system:
+
+- colors;
+- typography;
+- spacing;
+- radius;
 - shadows/effects;
-- button patterns;
-- card patterns;
-- form-control patterns where recognizable;
-- likely duplicate near-equivalent styles;
-- likely variables/styles/component candidates.
+- button/card/form patterns;
+- token candidates;
+- CSS variables;
+- framework token formats through adapters;
+- Elementor variables/classes and Gutenberg/theme.json mapping only when documented and target-compatible.
 
-Output:
+### P20 — Round-Trip Visual QA + Exact Section Portability
 
-- candidate tokens;
-- frequency/evidence;
-- duplicate/near-duplicate warnings;
-- consistency score contribution;
-- exportable token advisory.
+This is a major differentiator.
 
-Non-goal: automatically merging styles or replacing design tokens until a separate mutation-safety specification is accepted.
+For supported targets:
 
-### P17 — Developer Handoff + Client/QA Readiness
+1. export target artifact;
+2. render/preview in a controlled target harness;
+3. capture comparable output;
+4. compare geometry/content/assets/pixels against the Figma source;
+5. fail or mark REVIEW when drift exceeds calibrated thresholds.
 
-Add deterministic reports for two audiences.
+Also formalize exact section portability:
 
-**Developer Handoff**
+- Elementor section/container artifact;
+- Gutenberg block/pattern artifact;
+- clipboard/bridge payload with schema version;
+- `WP Builders Bridge` WordPress plugin can receive our payload and create native editor data;
+- checksum and source-report linkage so the user knows which validation run produced the pasted section.
 
-- Build-Ready Score and category breakdown;
-- unresolved findings;
-- Elementor Build Plan;
-- typography/color/spacing summary;
-- repeated structures;
-- image/media notes;
-- responsive-risk notes;
-- Safe Fix changes applied and validation result;
-- export to JSON/Markdown first, then presentation formats where appropriate.
-
-**Client / QA Mode**
-
-Read-only checks may include:
-
-- placeholder copy markers;
-- missing/empty CTA labels;
-- inconsistent button patterns;
-- heading hierarchy advisories;
-- incomplete mobile/tablet variants when the file explicitly contains variant Frames;
-- duplicated/inconsistent visual tokens;
-- missing states/components where deterministically observable;
-- unresolved high/medium severity backlog items.
-
-Output state should be something like `READY FOR HANDOFF`, `REVIEW`, or `NOT READY`, with exact reasons.
-
-### P18 — Deterministic Complexity / Effort Estimator
-
-Purpose: turn audit data into a defensible scoping assistant for freelancers and agencies.
-
-Inputs may include:
-
-- unique pages/Frames;
-- unique vs reusable sections;
-- forms;
-- carousels/sliders;
-- complex navigation;
-- repeated cards/grids;
-- overlays/animation placeholders where explicitly represented;
-- responsive-risk burden;
-- design-system consistency;
-- unresolved manual-layout debt;
-- asset/media burden;
-- custom-component count.
+### P21 — Developer Handoff + Client/QA + Accessibility/SEO Advisories
 
 Outputs:
 
-- complexity band: Low / Medium / High / Custom;
-- estimated effort units or hours based on user-configurable rules;
+- Build-Ready/Target-Ready scores;
+- target export limitations;
+- responsive risks;
+- asset/font manifest;
+- token summary;
+- Safe Fix/duplicate preparation history;
+- round-trip QA result;
+- unresolved backlog.
+
+Add deterministic advisory checks where evidence exists:
+
+- heading hierarchy;
+- image alt-text presence/placeholder status;
+- contrast checks where colors are resolvable;
+- button/link naming completeness;
+- landmark/semantic suggestions;
+- obvious oversized media/performance risks;
+- missing interaction states where source variants explicitly exist.
+
+Do not market these as a complete automated legal/accessibility/SEO audit.
+
+### P22 — Complexity / Effort Estimator + Proposal Inputs
+
+Transparent/configurable factors only:
+
+- page/frame count;
+- unique vs reusable sections;
+- target adapter complexity;
+- forms/carousels/navigation;
+- responsive burden;
+- manual-layout debt;
+- custom component count;
+- asset/media burden;
+- dynamic/CMS requirements explicitly selected by user;
+- expected unsupported/manual mappings.
+
+Outputs:
+
+- complexity band;
+- configurable effort units/hours;
 - confidence and contributing factors;
-- reusable vs one-off work split.
+- user-defined monetary pricing rules;
+- structured proposal inputs.
 
-Rules:
+No opaque AI market-price guessing.
 
-- no opaque AI guessing in the base estimator;
-- default estimator ships as transparent configurable weights;
-- monetary pricing is user-configurable and never presented as a universal market price;
-- estimator changes require deterministic test fixtures.
+### P23 — Agency / Project / Existing-Component Layer
 
-### P19 — Agency Presets + Custom Rules + White Label
+Agency capabilities:
 
-Commercial agency layer:
+- audit/export presets;
+- per-client standards;
+- bounded custom rules;
+- white-label reports;
+- sequential batch/project export;
+- baseline/re-audit comparison;
+- only-changed-section detection;
+- export history and target-version history;
+- component binding registry.
 
-- saved audit presets;
-- custom required checks;
-- per-client/project standards;
-- reusable Elementor reconstruction policies;
-- configurable complexity/effort rules;
-- batch processing using the already-proven sequential queue model;
-- white-label handoff/QA reports;
-- company name/logo/report footer fields;
-- reusable report templates;
-- project-level baseline and re-audit comparison.
+Existing-component binding is especially important for professional code teams:
 
-Custom rules must use bounded supported rule primitives. Arbitrary executable user code is out of scope for the plugin runtime.
+- map a Figma component to an existing React/Vue/etc component;
+- map design props to component props;
+- avoid regenerating components the codebase already owns;
+- validate required props/variants.
 
-### P20 — Commercial Packaging / Entitlements
+### P24 — CMS, Dynamic Data, Forms + Interaction Mapping
 
-Define product tiers without coupling correctness to payment availability.
+Only after static/native output is stable.
 
-Suggested commercial packaging:
+Potential supported mappings:
+
+- WordPress posts/custom post types/taxonomies;
+- Elementor dynamic tags where documented and selected;
+- Gutenberg Query/Pattern relationships where supported;
+- form intent and field structures;
+- navigation/menu intent;
+- simple prototype interactions -> supported target interactions;
+- CMS/data placeholders for framework exports.
+
+Dynamic behavior must be explicitly configured; never infer production data sources from a visual mockup alone.
+
+### P25 — Commercial Packaging / Entitlements
+
+Suggested boundaries:
 
 **Free**
 
 - selected-frame audit;
-- basic Build-Ready Score;
-- core findings/backlog preview;
-- limited report/export surface.
+- basic Build-Ready score;
+- limited asset export;
+- limited HTML preview/export;
+- limited report.
 
 **Pro**
 
-- full category scoring;
-- responsive-risk analysis;
-- proven Safe Fix / Prepare Frame;
-- Elementor Readiness + Build Plan;
-- full handoff exports;
-- design-system advisory;
-- complexity/effort estimator.
+- full Target-Ready analysis;
+- target-ready duplicate preparation;
+- Elementor + Gutenberg export;
+- HTML/code/framework exports;
+- full asset pack;
+- round-trip QA;
+- design-system export;
+- handoff/QA;
+- estimator.
 
 **Agency**
 
-- batch/project workflows;
+- project/batch workflows;
 - custom presets/rules;
-- configurable estimator policies;
-- white-label reports;
-- project baselines/comparisons;
-- higher-volume workflow controls.
+- white label;
+- component bindings;
+- baseline/change-only exports;
+- configurable estimator and higher-volume workflow.
 
-Architecture rules:
+Commercial/account code stays outside deterministic correctness. Any networked license/account flow requires a separately accepted architecture and may not upload design content merely to check a license.
 
-- entitlements gate surfaces, not deterministic correctness;
-- audit engine behavior for an enabled feature cannot depend on a remote LLM;
-- payment/account integration must remain outside the neutral analysis core;
-- if network access is ever required for licensing/account functionality, it must be explicitly documented, narrowly scoped and separately accepted before the current `allowedDomains: ["none"]` contract is changed;
-- no design content leaves Figma merely to verify a license.
+### P26 — Optional AI Assistance
 
-### P21 — Optional AI Assistance
+AI remains opt-in and non-authoritative.
 
-AI is an optional assistant layer, never the correctness engine.
+Allowed roles:
 
-Allowed candidate capabilities:
-
-- explain a deterministic finding in simpler language;
-- summarize a long backlog into prioritized actions;
-- generate developer notes from already-computed structured results;
-- explain why an Elementor mapping is recommended;
-- help turn deterministic effort factors into a human-readable proposal narrative.
+- market research synthesis;
+- explain deterministic findings;
+- summarize backlog;
+- suggest which supported target adapter best fits stated requirements;
+- draft developer notes;
+- draft proposal narrative from deterministic estimator inputs;
+- help map user-described component names to already-configured adapter choices.
 
 Forbidden roles:
 
-- deciding whether an unsafe mutation is acceptable;
-- overriding confidence thresholds;
-- replacing geometry/content/image/pixel validation;
-- inventing responsive designs and silently applying them;
-- changing the readiness score without deterministic evidence;
-- sending design screenshots/content externally without an explicit future privacy specification and user consent.
+- authorize mutation;
+- override confidence/validation;
+- silently invent mobile layouts;
+- replace target schema validation;
+- run untrusted code outside the sandbox;
+- claim unsupported adapter compatibility;
+- upload design content without a separately accepted consent/privacy contract.
 
-Any AI module must be separately enabled, separately documented and fail without affecting the deterministic core workflow.
+## 7. Extra high-value options for sales and retention
 
-## 5. Product-led growth surfaces
+These are explicitly included in research/prioritization even if their final phase may move:
 
-Commercial growth should come from useful outputs, not intrusive telemetry.
+### Change-only regeneration
 
-Planned growth mechanics:
+Detect what changed between Figma revisions and regenerate only affected sections/components/assets. High agency-retention value.
 
-- visible before/after Build-Ready Score;
-- shareable handoff/QA summary;
-- `Production Ready` / `Review Required` status with evidence;
-- agency-branded reports;
-- reusable presets that increase retention;
-- project re-audit comparison that shows progress over time;
-- clear free -> Pro -> Agency value boundaries;
-- Elementor-specific positioning as the first strong niche differentiator.
+### Target capability matrix before export
 
-Suggested product message:
+Show something like:
 
-> **Turn Figma designs into build-ready websites.** Audit structure, catch responsive problems, safely fix proven issues, and generate a developer-ready Elementor handoff before development begins.
+- Native: 82%
+- Supported with deterministic conversion: 12%
+- Review/manual: 6%
 
-## 6. Architecture boundaries
+This sets realistic expectations before purchase/export.
 
-The future stack should remain layered:
+### Existing component-library mode
+
+Use a team's real components instead of generating generic replacements. This is a strong differentiation from one-shot code generators.
+
+### Export Preview Lab
+
+Preview desktop/tablet/mobile target rendering before download and show visual drift/risk.
+
+### Design lint / pre-handoff certification
+
+A shareable `READY`, `REVIEW`, `BLOCKED` certificate tied to the exact audit/export run, not a marketing-only badge.
+
+### Target adapter marketplace/SDK
+
+Long-term: documented adapter SDK for external/community target generators, but only after core adapter contracts are stable and security-reviewed.
+
+### Bricks / additional WordPress builders
+
+Research as later adapters. Current market evidence shows demand for multiple native WordPress builders, but Elementor and Gutenberg remain first priority.
+
+## 8. Architecture boundaries
 
 ```text
-Figma / CLI source adapters
+Figma / CLI / supported code source adapters
         |
         v
 Normalized neutral model
         |
         +--> deterministic audit/classifier/scoring
-        +--> responsive-risk engine
-        +--> design-system advisory
+        +--> responsive/target-risk engine
+        +--> design-system + asset model
         +--> complexity estimator
         |
-        +--> recipe planner -> transaction/validation -> safe commit/rollback
+        +--> recipe planner -> candidate duplicate -> validation -> commit/rollback
         |
-        +--> neutral build-plan model
+        +--> neutral build/component model
                  |
                  +--> Elementor adapter
-                 +--> future adapters
+                 +--> Gutenberg adapter
+                 +--> HTML/CSS/JS adapter
+                 +--> framework adapter SDK
+                 +--> future builder adapters
+
+Target validation layer
+        +--> schema/package validator
+        +--> asset/reference validator
+        +--> render harness / round-trip visual diff
 
 Presentation / commercial shell
         +--> reports / white label / presets
         +--> entitlements
-        +--> optional AI explainer (isolated)
+        +--> optional WP Builders Bridge
+        +--> optional AI assistant
 ```
 
-No commercial or AI layer may be imported into the pure core in a way that changes deterministic results for the same enabled feature/input/version.
+No target/commercial/AI module may change deterministic core results for the same enabled feature/input/version.
 
-## 7. Acceptance and release model for P13+
+## 9. Adapter and bridge policy
+
+Every adapter must declare:
+
+- adapter ID/version;
+- supported target/platform versions;
+- required target plan/features (for example Elementor Pro);
+- supported elements/widgets/blocks;
+- unsupported/fallback behavior;
+- responsive capability;
+- asset policy;
+- validation rules;
+- whether network/companion software is required.
+
+Every generated artifact includes an export receipt with adapter version, source audit version, validation state and warnings.
+
+`WP Builders Bridge` is optional companion software for robust WordPress import/copy/direct-transfer workflows. It must not become a hidden requirement for normal downloadable exports.
+
+## 10. Acceptance and release model
 
 Every phase must have:
 
-1. a focused issue with explicit acceptance criteria;
-2. issue-first / PR-second queue processing before implementation;
-3. deterministic fixtures and tests for every classifier/score/recipe/estimator change;
-4. focused branch + PR;
-5. status/typecheck/test/build/release checks as applicable;
-6. memory-bank + README synchronization in the same work cycle;
-7. real Figma Desktop/runtime evidence for behavior that cannot be proven offline;
-8. implementation-complete and production-accepted tracked separately;
-9. no fabricated evidence for external/payment/Community/AI-provider behavior.
+1. R0 research refresh where the target is externally evolving;
+2. focused issue with acceptance criteria;
+3. issue-first / PR-second processing;
+4. deterministic fixtures/tests;
+5. focused branch + PR;
+6. plugin/CLI parity where applicable;
+7. memory-bank + README synchronization;
+8. target-specific schema/import validation;
+9. real runtime evidence for behavior not provable offline;
+10. implementation-complete and production-accepted tracked separately;
+11. no fabricated external/provider behavior.
 
-## 8. Current gate
+Target-export production acceptance additionally requires representative generated artifacts to import/render successfully in the real supported target version.
 
-Planning is approved under issue #119, but **P13 implementation must not begin until the internal P12 release-exit gate in #84 is closed**.
+## 11. Current gate
 
-Actual Figma Community review/approval remains an external action and must never be reported as complete without Figma's real confirmation.
+Planning/research is approved under #119, but **P13 implementation must not begin until the internal P12 release-exit gate in #84 is closed**.
+
+Actual Figma Community review/approval remains external and is not a prerequisite for planning, but it must never be reported complete without Figma confirmation.
