@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177  
 Roadmap: #119  
 Dependencies still open: P13 real-Figma acceptance (#159) and final production release gate (#84)
 
@@ -9,7 +9,7 @@ Dependencies still open: P13 real-Figma acceptance (#159) and final production r
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, mandatory validation/re-score, source-immutability proof, cooperative cancellation, fail-closed cleanup and source-scope transaction coordination.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, active-recipe validation-profile coverage, mandatory validation/re-score, source-immutability proof, cooperative cancellation, fail-closed cleanup and source-scope transaction coordination.
 
 ## Bounded input preflight
 
@@ -51,6 +51,26 @@ Confirmation is an intent/correlation artifact only. It is not cryptographic aut
 
 The production safe-recipe registry remains intentionally empty, so a self-consistent mutating READY plan is non-executable by default even if someone fabricates a confirmation. Synthetic positive tests inject explicit test-only registries; those mappings are not production authority.
 
+## Active recipe validation-profile coverage
+
+The frozen P14 validation stack requires every validator profile declared by the active recipe set to actually run before a candidate may be retained. Generic `validation.passed=true` is therefore not sufficient evidence.
+
+`requiredP14ValidationProfileIds(...)` derives the required profile set only from `ELIGIBLE` actions and de-duplicates it deterministically. `assessP14ValidationProfileCoverage(...)` then evaluates the adapter's explicit `profileIdsRun` evidence.
+
+The coverage gate requires:
+
+- every active eligible recipe to expose a bounded `validationProfileId`;
+- `profileIdsRun` to be an explicit bounded array of bounded non-empty IDs;
+- duplicate reported profile IDs to fail closed;
+- every required profile ID to appear in the observed evidence;
+- extra explicitly reported profiles to be permitted only within the same bounded evidence limit; extras never substitute for a missing required profile.
+
+Observed profile evidence is normalized to a stable bounded representation before it is attached to a rejection receipt. Missing, duplicate, malformed or oversized profile evidence returns `P14_VALIDATION_FAILED`, discards the candidate and prevents re-score/finalization.
+
+Adapter validation output is treated as untrusted runtime evidence even though the TypeScript interface is strongly typed. A null/non-object/malformed validation result fails through the validation cleanup path instead of escaping as an uncaught property-access error.
+
+Validation-profile coverage and generic mandatory validation checks are independent gates. Both must pass before Build-Ready re-score can start. Profile coverage proves only that declared validator profiles were represented in execution evidence; it does not prove the validators are externally accepted, prove target compatibility or grant runtime/production acceptance.
+
 ## Source-scope transaction coordination
 
 `P14SourceTransactionCoordinator` enforces the frozen single-owner rule for executable READY runs:
@@ -69,7 +89,7 @@ Lease acquisition occurs only after integrity, recipe authorization and exact co
 
 Every P14 receipt explicitly carries `acceptanceAuthority: false` and `targetCompatibilityClaim: false`.
 
-Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation and recipe-execution evidence. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A recipe result must be exactly one of applied or accepted idempotent no-op. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
+Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation and recipe-execution evidence. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; prepared outcomes require non-empty profile execution evidence. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A recipe result must be exactly one of applied or accepted idempotent no-op. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
 
 ## Safety invariants
 
@@ -78,22 +98,25 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 3. Oversized rejection evidence remains bounded and does not echo hostile identity payloads.
 4. A mutating READY plan requires separate integrity, recipe-authorization and exact reviewed-confirmation gates.
 5. Confirmation cannot authorize a recipe, bypass validation or claim target readiness/production acceptance.
-6. The approved source node is never passed to recipe mutation callbacks.
-7. A P14 transaction never swaps, replaces or deletes the approved source.
-8. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
-9. New HIGH/BLOCKER findings caused by preparation reject the candidate.
-10. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
-11. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
-12. A no-op plan completes without cloning and without mutating-plan confirmation.
-13. Target-neutral preparation does not imply target readiness.
-14. Malformed/tampered plans are blocked before adapter access.
-15. Eligible recipes require current registry authorization before adapter access.
-16. P14 receipts have no acceptance/target-compatibility authority.
-17. One executable READY transaction may own a source scope at a time.
-18. Acquired transaction leases are released in a bounded `finally` path.
+6. Every active eligible recipe's declared validation profile must be represented in bounded validation evidence before re-score or retention.
+7. Generic `validation.passed=true` cannot substitute for missing recipe-specific validator coverage.
+8. Malformed runtime validation evidence fails through candidate cleanup rather than bypassing validation.
+9. The approved source node is never passed to recipe mutation callbacks.
+10. A P14 transaction never swaps, replaces or deletes the approved source.
+11. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
+12. New HIGH/BLOCKER findings caused by preparation reject the candidate.
+13. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
+14. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
+15. A no-op plan completes without cloning and without mutating-plan confirmation.
+16. Target-neutral preparation does not imply target readiness.
+17. Malformed/tampered plans are blocked before adapter access.
+18. Eligible recipes require current registry authorization before adapter access.
+19. P14 receipts have no acceptance/target-compatibility authority.
+20. One executable READY transaction may own a source scope at a time.
+21. Acquired transaction leases are released in a bounded `finally` path.
 
 ## Deliberately not wired yet
 
-This foundation does **not** add a Figma plugin menu item, UI button, real Figma adapter, production mutating recipe, target-specific profile, identity/authentication service or target-specific readiness claim.
+This foundation does **not** add a Figma plugin menu item, UI button, real Figma adapter, real Figma validator, production mutating recipe, target-specific profile, identity/authentication service or target-specific readiness claim.
 
 P13 #159 real-Figma runtime parity remains an open acceptance dependency and P12 #84 remains the final production release gate. P14 must stay implementation-foundation only and the roadmap checkbox must remain unchecked until those acceptance requirements and later real runtime preparation evidence are genuinely satisfied.
