@@ -66,6 +66,15 @@ class Adapter implements P14RetainedDuplicateAdapter {
   };
   async fingerprintSource(): Promise<string> { this.calls.fingerprint += 1; return SOURCE_FP; }
   async cloneSource(sourceNodeId: string): Promise<P14CandidateHandle> { this.calls.clone += 1; return { sourceNodeId, candidateNodeId: 'profiles:candidate' }; }
+  async assessActionEligibility(_candidate: P14CandidateHandle, action: P14PreparationAction): Promise<unknown> {
+    return {
+      actionId: action.actionId,
+      recipeId: action.recipeId,
+      checkedPrerequisiteRecipeIds: [...action.prerequisiteRecipeIds],
+      eligible: true,
+    };
+  }
+
   async applyRecipe(_candidate: P14CandidateHandle, action: P14PreparationAction): Promise<P14RecipeExecutionResult> {
     this.calls.apply += 1; return { actionId: action.actionId, recipeId: action.recipeId ?? 'missing', applied: true };
   }
