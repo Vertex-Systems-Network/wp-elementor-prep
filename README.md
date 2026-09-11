@@ -22,6 +22,7 @@ Approved post-P12 direction:
 Canonical planning docs:
 
 - `docs/MARKET_RESEARCH_PLAN.md` — R0 market/platform research;
+- `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` — retained September 2026 competitor/platform snapshot;
 - `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md` — R1 adapter/option/system reliability contract;
 - `docs/COMMERCIAL_EXPANSION_PLAN.md` — P13-P26 commercial roadmap;
 - `docs/AI_NATIVE_PLAN.md`;
@@ -31,14 +32,14 @@ Canonical planning docs:
 
 > **Progress policy:** implementation, runtime acceptance and external Community review are tracked separately. New future scope does not reduce already-completed historical core progress.
 
-**Open PR/MR:** `current post-#129 status-sync PR only; expected 0 after merge`
+**Open PR/MR:** `0 baseline before this focused sync branch; expected 0 again after merge`.
 
 Open issues:
 
 - `#84` — P12 final validation: active manual/publisher/runtime exit gate.
 - `#119` — P13-P26 commercial/multi-target expansion owner; implementation blocked by #84 internal exit.
 
-PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f`. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81`. PR #129 added deterministic final publisher-evidence intake tooling and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed. Issue #126 closed completed. None of these later support/planning changes grant P13-P26 runtime acceptance credit.
+PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f`. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81`. PR #129 added deterministic final publisher-evidence intake tooling and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed. PR #130 then synchronized the post-#129 repository status and merged as `c6a4e1df034fbd62077c58227b2c0c4dc4c116d2`. PR #131 retained the current commercial R0 market refresh and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`; its current-main push checks passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46. Issue #126 is closed completed. None of these support/planning changes grant P13-P26 runtime acceptance credit.
 
 ### Module-wise progress
 
@@ -53,8 +54,8 @@ PR #122 merged the market-researched multi-target planning baseline as `ade501fe
 | P9 Backlog generator | COMPLETE / P12 ACCEPTED | 100% | `██████████` | Real plugin export quality retained |
 | P10 npm/Node CLI | COMPLETE / P12 ACCEPTED | 100% | `██████████` | Real REST/auth/plugin parity retained |
 | P11 Normal Figma distribution | IMPLEMENTATION COMPLETE | 100% | `██████████` | Live publisher/install evidence remains in P12 |
-| P12 Final integrated validation | IN PROGRESS | 80% | `████████░░` | Run exact #20 publisher evidence intake, retain 2FA/publisher screenshots, final internal exit review |
-| R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; refresh research per major adapter |
+| P12 Final integrated validation | IN PROGRESS | 80% | `████████░░` | Fresh exact-#20 runtime/final-details/2FA evidence + final internal exit review |
+| R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Current snapshot retained; refresh again per major adapter |
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | P12 internal exit first |
 | P14 Target-Ready Duplicate + Guided Prepare | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Requires P13 read-only contracts |
@@ -87,7 +88,9 @@ Figma-assigned publishing ID:
 
 Verification on that candidate passed CI #709, Integration Readiness #145, P12 Offline #64 and Final Release Artifact #20 (`wp-builders-prepare-final-release-20`, artifact ID `10179286885`, digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`). The exact three-file publish ZIP SHA-256 is `1ccfa457d4ae4145cf36b748f7758187ef3092503c270a46f28e03675878a066`.
 
-The exact candidate is now pinned in `config/p12-publisher-candidate.json`. `npm run p12:publisher-evidence` verifies the exact ZIP and extracted plugin hashes, hashes the runtime/publish/2FA screenshots, requires explicit operator confirmations, and emits a receipt with `acceptanceAuthority: false`. Operator instructions are in `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md`.
+The exact candidate is pinned in `config/p12-publisher-candidate.json`. `npm run p12:publisher-evidence` verifies the exact ZIP and extracted plugin hashes, hashes the runtime/publish/2FA screenshots, requires explicit operator confirmations, and emits a receipt with `acceptanceAuthority: false`. Operator instructions are in `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md`.
+
+The currently available screenshot set has been explicitly triaged in #84 and is **not sufficient** for exit: the retained final-details screenshot still shows the historical `Invalid ID in manifest.json` state, the other Publish screenshots are Data Security steps rather than final-details/2FA proof, and the retained plugin UI screenshot is historical P6 evidence rather than the minimal release #20 rebind. Fresh exact-#20 runtime, valid final-details and 2FA screenshots are still required.
 
 Static/docs/support-tooling changes after source `5f12...` do not automatically replace the runtime candidate or count as live acceptance. P12 exit must name the exact package whose Figma Desktop/publisher evidence is accepted.
 
@@ -96,6 +99,8 @@ Actual Community review/approval remains external.
 ## R0 — AI-native market/platform research
 
 Before major new target-adapter implementation, research must refresh official target docs, competitor capability baseline, product gaps, format/API stability and network/privacy/licensing risks.
+
+The current retained market snapshot is `docs/R0_MARKET_SNAPSHOT_2026-09-11.md`, merged by PR #131. It records current competitive pressure from native WordPress conversion and Figma-to-code products and reinforces that WP Builders Prepare must compete on **validated target readiness**, not generic conversion alone.
 
 Research is planning input only and does not count as runtime acceptance.
 
@@ -211,13 +216,16 @@ Stored image bytes are not described as proven upstream-upload provenance when F
 
 ## Current execution order
 
-1. run the exact release #20 publisher-evidence intake with fresh Figma Desktop/runtime, final-details and 2FA screenshots;
-2. perform the final P12 internal exit review from the receipt + retained screenshots;
-3. close P12 internal exit only on retained evidence;
-4. open focused P13 implementation issue from #119;
-5. run R0 before each major external adapter;
-6. run R1 before implementing/accepting each major adapter;
-7. continue P13-P26 in dependency order with one focused issue/branch/PR per phase.
+1. capture fresh exact release #20 Figma Desktop runtime evidence;
+2. capture fresh Publish → Add final details evidence with the generated publishing ID accepted and intended publisher/Community/support/network facts visible;
+3. capture fresh Figma 2FA-enabled account/security evidence;
+4. run the exact release #20 publisher-evidence intake and retain the receipt;
+5. perform the final P12 internal exit review from the receipt + retained screenshots;
+6. close P12 internal exit only on retained evidence;
+7. open focused P13 implementation issue from #119;
+8. run R0 before each major external adapter;
+9. run R1 before implementing/accepting each major adapter;
+10. continue P13-P26 in dependency order with one focused issue/branch/PR per phase.
 
 ## Development and validation commands
 
