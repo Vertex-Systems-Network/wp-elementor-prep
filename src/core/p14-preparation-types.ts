@@ -191,6 +191,10 @@ export interface P14ReceiptError {
 export interface P14PreparationReceiptV1 {
   schemaVersion: 1;
   engineVersion: typeof P14_PREPARATION_ENGINE_VERSION;
+  /** P14 receipts are evidence only; they never authorize production acceptance or mutation. */
+  acceptanceAuthority: false;
+  /** Target-neutral preparation is not an Elementor/Gutenberg/framework compatibility claim. */
+  targetCompatibilityClaim: false;
   transactionId: string;
   status: P14PreparationStatus;
   terminalState: Extract<
