@@ -37,6 +37,7 @@ export interface P13RuntimeEvidenceBundle {
   pluginVersion: string;
   build: P7RuntimeBuildIdentity;
   traceableBuild: boolean;
+  realFigmaContext: boolean;
   context: P13RuntimeEvidenceContext;
   audit: P13RuntimeAuditSummary;
   buildReady: BuildReadyReportV2;
@@ -51,6 +52,27 @@ export function isTraceableP13BuildIdentity(build: P7RuntimeBuildIdentity): bool
   return /^[0-9a-f]{40}$/i.test(build.sourceSha)
     && /^\d+$/.test(build.runId)
     && /^\d+$/.test(build.runNumber);
+}
+
+export function isRealP13FigmaContext(context: P13RuntimeEvidenceContext): boolean {
+  return context.fileKey.length > 0 && context.fileKey !== 'local-file';
+}
+
+export function utf8ByteLength(value: string): number {
+  let bytes = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code <= 0x7f) bytes += 1;
+    else if (code <= 0x7ff) bytes += 2;
+    else if (code >= 0xd800 && code <= 0xdbff && index + 1 < value.length) {
+      const next = value.charCodeAt(index + 1);
+      if (next >= 0xdc00 && next <= 0xdfff) {
+        bytes += 4;
+        index += 1;
+      } else bytes += 3;
+    } else bytes += 3;
+  }
+  return bytes;
 }
 
 function auditSummary(report: AuditReport): P13RuntimeAuditSummary {
@@ -91,6 +113,7 @@ export function buildP13RuntimeEvidenceBundle(input: {
     pluginVersion: input.pluginVersion,
     build: { ...input.build },
     traceableBuild: isTraceableP13BuildIdentity(input.build),
+    realFigmaContext: isRealP13FigmaContext(input.context),
     context: { ...input.context },
     audit: auditSummary(input.audit),
     buildReady: input.buildReady,
@@ -140,6 +163,10 @@ export function validateP13RuntimeEvidence(value: unknown): { valid: boolean; re
       return { valid: false, reason: `Runtime context field ${field} is missing.` };
     }
   }
+  const computedRealContext = isRealP13FigmaContext(context as unknown as P13RuntimeEvidenceContext);
+  if (value.realFigmaContext !== computedRealContext) {
+    return { valid: false, reason: 'realFigmaContext contradicts the captured runtime context.' };
+  }
 
   const audit = value.audit;
   if (!isRecord(audit)
@@ -177,7 +204,7 @@ export function validateP13RuntimeEvidence(value: unknown): { valid: boolean; re
     return { valid: false, reason: 'Serialized Build-Ready JSON contradicts the captured report.' };
   }
 
-  const bytes = new TextEncoder().encode(JSON.stringify(value)).byteLength;
+  const bytes = utf8ByteLength(JSON.stringify(value));
   if (bytes > P13_RUNTIME_EVIDENCE_MAX_BYTES) {
     return { valid: false, reason: `Evidence exceeds the ${P13_RUNTIME_EVIDENCE_MAX_BYTES}-byte bound.` };
   }
