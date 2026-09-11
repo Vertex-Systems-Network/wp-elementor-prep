@@ -116,8 +116,7 @@ function validateStringArray(
 }
 
 function canonicalRecipe(value: P14PreparationRecipeDefinition): string {
-  const normalized = normalizeRecipe(value);
-  return JSON.stringify(normalized);
+  return JSON.stringify(normalizeRecipe(value));
 }
 
 export function validateP14SafeRecipeRegistry(value: unknown): P14SafeRecipeRegistryValidation {
@@ -158,16 +157,18 @@ export function validateP14SafeRecipeRegistry(value: unknown): P14SafeRecipeRegi
     const prerequisites = validateStringArray(recipe.prerequisites, `${prefix}.recipe.prerequisites`, failures);
     const conflicts = validateStringArray(recipe.conflictsWith, `${prefix}.recipe.conflictsWith`, failures);
 
+    let mutationAllowlistValid = false;
     if (!Array.isArray(recipe.mutationAllowlist) || recipe.mutationAllowlist.length === 0) {
       failures.push(`${prefix}.recipe.mutationAllowlist must contain at least one accepted mutation field.`);
     } else {
       const fields = recipe.mutationAllowlist as unknown[];
-      if (fields.some((field) => typeof field !== 'string' || !MUTATION_FIELDS.has(field as P14MutationField))) {
-        failures.push(`${prefix}.recipe.mutationAllowlist contains an unsupported field.`);
-      }
-      if (new Set(fields).size !== fields.length) {
-        failures.push(`${prefix}.recipe.mutationAllowlist must not contain duplicates.`);
-      }
+      const hasUnsupported = fields.some(
+        (field) => typeof field !== 'string' || !MUTATION_FIELDS.has(field as P14MutationField),
+      );
+      const hasDuplicates = new Set(fields).size !== fields.length;
+      if (hasUnsupported) failures.push(`${prefix}.recipe.mutationAllowlist contains an unsupported field.`);
+      if (hasDuplicates) failures.push(`${prefix}.recipe.mutationAllowlist must not contain duplicates.`);
+      mutationAllowlistValid = !hasUnsupported && !hasDuplicates;
     }
 
     if (nonEmptyString(rawBinding.sourceRuleId) && sourceRuleIds && !sourceRuleIds.includes(rawBinding.sourceRuleId)) {
@@ -186,10 +187,18 @@ export function validateP14SafeRecipeRegistry(value: unknown): P14SafeRecipeRegi
       seenBindings.add(key);
     }
 
-    if (nonEmptyString(recipe.id) && integerVersion(recipe.version)) {
+    const canonicalizable = nonEmptyString(recipe.id)
+      && integerVersion(recipe.version)
+      && finiteConfidence(recipe.minConfidence)
+      && nonEmptyString(recipe.validationProfileId)
+      && nonEmptyString(recipe.orderClass)
+      && sourceRuleIds !== null
+      && prerequisites !== null
+      && conflicts !== null
+      && mutationAllowlistValid;
+    if (canonicalizable) {
       const identity = `${recipe.id}@${recipe.version}`;
-      const typedRecipe = recipe as unknown as P14PreparationRecipeDefinition;
-      const canonical = canonicalRecipe(typedRecipe);
+      const canonical = canonicalRecipe(recipe as unknown as P14PreparationRecipeDefinition);
       const previous = recipeContracts.get(identity);
       if (previous !== undefined && previous !== canonical) {
         failures.push(`Recipe ${identity} is reused with contradictory contracts.`);
