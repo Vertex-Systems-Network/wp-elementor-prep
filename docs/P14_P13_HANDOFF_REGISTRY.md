@@ -1,38 +1,32 @@
 # P14 P13 → P14 Handoff and Safe-Recipe Registry
 
 Status: IMPLEMENTATION FOUNDATION ONLY — PRODUCTION REGISTRY EMPTY / RUNTIME UNWIRED  
-Issue: #167  
+Issues: #167, #169  
 Roadmap: #119  
 Dependencies still open: P13 real-Figma acceptance (#159) and final production release gate (#84)
 
 ## Purpose
 
-This slice creates the deterministic authority boundary between Build-Ready Score 2.0 findings and the P14 retained-duplicate preparation engine.
+This foundation creates the deterministic authority boundary between Build-Ready Score 2.0 findings and the P14 retained-duplicate preparation engine.
 
-A P13 finding does **not** gain mutation authority merely because it sounds fixable. P14 may attach a mutating recipe only when both conditions are true:
-
-1. the finding itself explicitly declares `P14_SAFE_CANDIDATE`; and
-2. the versioned safe-recipe registry contains an exact `ruleId + ruleVersion` binding to an accepted versioned recipe contract.
-
-Anything else remains read-only.
+A P13 finding does **not** gain mutation authority merely because it sounds fixable. P14 may attach and execute a mutating recipe only when all required authority gates pass.
 
 ## Current production truth
 
-At main source `7812071ff8f5afeca7d64a07707375b8a748d7ec`, current P13 core and responsive-risk production rule definitions emit only `MANUAL_REVIEW` or `ADVISORY` remediation classes.
+Current P13 core and responsive-risk production rule definitions emit only `MANUAL_REVIEW` or `ADVISORY` remediation classes. There are no accepted production `P14_SAFE_CANDIDATE` rules.
 
-Therefore `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` is intentionally empty in this slice.
+Therefore `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` is intentionally empty.
 
-An empty registry is **valid but non-authorizing**. This is different from an invalid registry:
+An empty registry is **valid but non-authorizing**. This differs from an invalid registry:
 
-- empty valid registry → handoff can be inspected, but no mutating recipe can be attached;
-- malformed/ambiguous registry → handoff itself fails closed and no P14 plan is produced.
+- empty valid registry → handoff/no-op inspection may proceed, but no mutating recipe is authorized;
+- malformed/ambiguous registry → handoff or execution authorization fails closed.
 
 ## Registry contract
 
 Each mutating binding contains:
 
-- exact source P13 rule ID;
-- exact source P13 rule version;
+- exact source P13 rule ID and version;
 - accepted P14 recipe ID/version;
 - recipe source-rule allowlist;
 - minimum confidence;
@@ -41,54 +35,68 @@ Each mutating binding contains:
 - required validation profile;
 - deterministic order class.
 
-Registry validation rejects at least:
+Registry validation rejects duplicate or contradictory bindings, invalid versions/confidence, missing validation profiles/order classes, unauthorized source-rule bindings, unsupported/duplicate mutation fields, self-dependencies and self-conflicts.
 
-- duplicate rule/version bindings;
-- contradictory contracts under one recipe ID/version;
-- invalid rule/recipe versions;
-- missing validation profile/order class;
-- recipe bindings not authorized by the recipe source-rule allowlist;
-- unsupported or duplicate mutation fields;
-- self-dependency or self-conflict;
-- invalid confidence gates.
+## P13 → P14 handoff contract
 
-## Handoff contract
-
-`buildP13P14Handoff(...)` validates the Build-Ready version/source identity and the safe-recipe registry before deriving P14 inputs.
+`buildP13P14Handoff(...)` validates the Build-Ready version/source identity and registry before deriving P14 inputs.
 
 For an exact accepted candidate:
 
 - P13 run ID becomes the P14 plan run binding;
 - P13 root ID becomes the P14 source node ID;
 - P13 structural hash becomes the P14 source fingerprint;
+- P13 run ID is re-checked against the exact `structuralHash + configHash` binding;
 - exact finding node IDs become the P14 target context;
 - exact accepted recipe ID/version is attached.
 
 Fail-closed behavior:
 
-- `MANUAL_REVIEW` never escalates because a matching recipe exists;
-- `ADVISORY` never escalates because a matching recipe exists;
-- a `P14_SAFE_CANDIDATE` with no exact rule/version binding becomes `MANUAL_REVIEW` with `P14_SAFE_BINDING_REQUIRED`;
-- a below-confidence candidate becomes `MANUAL_REVIEW` with `P14_BELOW_CONFIDENCE_GATE`;
-- an invalid registry blocks the handoff completely;
-- insufficient/unsupported P13 report evidence blocks the handoff completely.
+- `MANUAL_REVIEW` and `ADVISORY` never escalate merely because a recipe exists;
+- `P14_SAFE_CANDIDATE` without an exact rule/version binding becomes review-only;
+- below-confidence candidates remain review-only;
+- invalid registry, insufficient evidence, forged run/source/config binding, invalid score status or invalid target context blocks handoff.
 
 The handoff always carries `acceptanceAuthority: false` and `targetCompatibilityClaim: false`.
 
+## Execution-boundary authorization
+
+Plan integrity and recipe authorization are separate gates.
+
+`validateP14PreparationPlan(...)` proves a plan is internally coherent. It does **not** prove that the plan's recipes are currently authorized.
+
+Before the retained-duplicate transaction touches any adapter operation, `authorizeP14PreparationPlan(...)` re-checks every `ELIGIBLE` action against the current safe-recipe registry. For each action it requires an exact match for:
+
+- source rule ID/version;
+- recipe ID/version;
+- validation profile;
+- mutation allowlist;
+- prerequisite recipe IDs;
+- conflict recipe IDs;
+- order class;
+- minimum confidence;
+- recipe source-rule authorization.
+
+If any check fails, the transaction returns `BLOCKED` with `P14_RECIPE_UNAUTHORIZED` and leaves source fingerprints as `UNKNOWN` because no runtime fingerprint/clone/mutation/validation/re-score/retain/discard adapter operation was allowed to run.
+
+The transaction defaults to `PRODUCTION_P14_SAFE_RECIPE_REGISTRY`. Because that registry is intentionally empty today, a self-consistent mutating READY plan is still non-executable by default. Synthetic tests must provide an explicit synthetic registry; that test registry is not production authority.
+
+`NO_CHANGES_NEEDED` plans contain no eligible mutating actions and remain valid with the empty production registry; they still perform source-fingerprint proof before reporting completion.
+
 ## Determinism
 
-Registry bindings are normalized into stable rule/version order. P13 findings are processed in stable rule/version/finding order. Matched recipes are de-duplicated and emitted in stable recipe/version order.
+Registry bindings are normalized into stable rule/version order. P13 findings are processed in stable rule/version/finding order. Matched recipes and authorization failures are emitted deterministically.
 
-Equivalent report and registry content must produce byte-equivalent JSON handoff output regardless of insertion order.
+Equivalent report, plan and registry content must produce stable handoff/authorization semantics regardless of insertion order.
 
 ## Synthetic positive tests are not production authorization
 
-The test suite injects synthetic `P14_SAFE_CANDIDATE` findings and synthetic safe recipes to prove the positive contract path. These test-only mappings are not exported in the production registry and do not authorize any live Figma mutation.
+The test suite injects synthetic `P14_SAFE_CANDIDATE` findings and synthetic safe recipes to prove positive contract paths. These mappings are not exported in the production registry and do not authorize live Figma mutation.
 
 A future production recipe requires its own accepted rule/recipe/validator/runtime-evidence issue before a binding may be added to `PRODUCTION_P14_SAFE_RECIPE_REGISTRY`.
 
 ## Still deliberately unwired
 
-This slice adds no Figma plugin menu item, no UI action, no real Figma mutation adapter, no target profile and no Elementor/Gutenberg/framework readiness claim.
+This foundation adds no Figma plugin menu item, no UI action, no real Figma mutation adapter, no target profile and no Elementor/Gutenberg/framework readiness claim.
 
 P14 remains implementation-foundation only. P13 #159 real runtime acceptance and P12 #84 final release-exit gates remain separate and open.

@@ -4,6 +4,7 @@ import {
   validateP14PreparationPlan,
 } from '../src/core/p14-plan-integrity';
 import { buildP14PreparationPlan } from '../src/core/p14-preparation-plan';
+import { createP14SafeRecipeRegistry } from '../src/core/p14-safe-recipe-registry';
 import {
   serializeP14PreparationReceiptJson,
   validateP14PreparationReceipt,
@@ -46,6 +47,11 @@ const childRecipe: P14PreparationRecipeDefinition = {
   conflictsWith: [],
   orderClass: '01-label-early',
 };
+
+const testRegistry = createP14SafeRecipeRegistry([
+  { sourceRuleId: 'RULE_PARENT', sourceRuleVersion: 1, recipe: parentRecipe },
+  { sourceRuleId: 'RULE_CHILD', sourceRuleVersion: 1, recipe: childRecipe },
+]);
 
 function plan(): P14PreparationPlanV1 {
   return buildP14PreparationPlan({
@@ -231,6 +237,7 @@ describe('P14 receipt integrity', () => {
     const adapter = new CountingAdapter();
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      registry: testRegistry,
       transactionId: 'p14-valid',
       preparedName: 'Desktop — Prepared',
       now: fixedNow,
@@ -248,6 +255,7 @@ describe('P14 receipt integrity', () => {
     adapter.becomeNoOp = true;
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      registry: testRegistry,
       transactionId: 'p14-idempotent-noop',
       now: fixedNow,
     }, adapter);
@@ -263,6 +271,7 @@ describe('P14 receipt integrity', () => {
     adapter.bothOutcomes = true;
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      registry: testRegistry,
       transactionId: 'p14-dual-outcome',
       now: fixedNow,
     }, adapter);
@@ -276,6 +285,7 @@ describe('P14 receipt integrity', () => {
   it('rejects malformed error, event and validation-check evidence', async () => {
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      registry: testRegistry,
       transactionId: 'p14-shape-source',
       now: fixedNow,
     }, new CountingAdapter());
@@ -301,6 +311,7 @@ describe('P14 receipt integrity', () => {
   it('fails closed on forged authority, target compatibility and retention identity', async () => {
     const receipt = await runP14RetainedDuplicateTransaction({
       plan: plan(),
+      registry: testRegistry,
       transactionId: 'p14-forgery-source',
       now: fixedNow,
     }, new CountingAdapter());

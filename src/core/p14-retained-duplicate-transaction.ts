@@ -1,4 +1,9 @@
 import { validateP14PreparationPlan } from './p14-plan-integrity';
+import { authorizeP14PreparationPlan } from './p14-plan-authorization';
+import {
+  PRODUCTION_P14_SAFE_RECIPE_REGISTRY,
+  type P14SafeRecipeRegistryV1,
+} from './p14-safe-recipe-registry';
 import {
   P14_PREPARATION_ENGINE_VERSION,
   type P14CandidateHandle,
@@ -15,6 +20,7 @@ import {
 
 export interface P14RetainedDuplicateRunInput {
   plan: unknown;
+  registry?: P14SafeRecipeRegistryV1;
   transactionId: string;
   preparedName?: string;
   allowPreparedWithReview?: boolean;
@@ -228,6 +234,28 @@ export async function runP14RetainedDuplicateTransaction(
       afterFingerprint: plan.source.fingerprint,
       errors,
       events: [...events, event(now, 'BLOCKED', 'plan is blocked')],
+    });
+  }
+
+  const authorization = authorizeP14PreparationPlan(
+    plan,
+    input.registry ?? PRODUCTION_P14_SAFE_RECIPE_REGISTRY,
+  );
+  if (!authorization.authorized) {
+    return baseReceipt({
+      plan,
+      transactionId: input.transactionId,
+      status: 'BLOCKED',
+      terminalState: 'BLOCKED',
+      beforeFingerprint: unknownFingerprint,
+      afterFingerprint: unknownFingerprint,
+      errors: [receiptError(
+        'P14_RECIPE_UNAUTHORIZED',
+        'authorization',
+        `Preparation plan is not authorized by the current safe-recipe registry: ${authorization.failures.join(' | ')}`,
+        'Re-run Build Readiness and Safe Preparation with the current accepted recipe registry.',
+      )],
+      events: [...events, event(now, 'BLOCKED', 'safe-recipe authorization failed')],
     });
   }
 
