@@ -71,6 +71,7 @@
       <button id="export-audit-md">Export audit-report.md</button>
       <button id="export-backlog-json">Export backlog.json</button>
       <button id="export-backlog-md">Export backlog.md</button>
+      <button id="export-build-ready-json">Export build-ready-report.json</button>
     </div>
   </div>
 
@@ -81,6 +82,7 @@
     let latestAuditMarkdown = '';
     let latestBacklogJson = '';
     let latestBacklogMarkdown = '';
+    let latestBuildReadyJson = '';
 
     function post(type, extra = {}) {
       parent.postMessage({ pluginMessage: { type, ...extra } }, '*');
@@ -136,6 +138,9 @@
     });
     document.getElementById('export-backlog-md').addEventListener('click', () => {
       downloadText('backlog.md', latestBacklogMarkdown, 'text/markdown;charset=utf-8');
+    });
+    document.getElementById('export-build-ready-json').addEventListener('click', () => {
+      downloadText('build-ready-report.json', latestBuildReadyJson, 'application/json;charset=utf-8');
     });
 
     function escapeHtml(value) {
@@ -287,7 +292,7 @@
       });
     }
 
-    function renderAudit(report, backlog) {
+    function renderAudit(report, backlog, buildReady) {
       const sections = report.sections.map((section) => {
         const first = section.findings[0];
         const detections = Array.isArray(section.detections)
@@ -337,6 +342,14 @@
           <div class="meta">${escapeHtml(report.root.name)} · ${Math.round(report.root.width)} × ${Math.round(report.root.height)} · ${report.stats.nodes} nodes</div>
           <div class="meta">Auto Layout coverage ${report.stats.autoLayoutCoveragePct}% · ${report.sections.length} sections discovered</div>
         </div>
+        ${buildReady ? `
+          <div class="sectionTitle">Build-Ready Score 2.0</div>
+          <div class="hero">
+            <div class="score">${buildReady.score.score === null ? '—' : buildReady.score.score}</div>
+            <div class="status">${escapeHtml(buildReady.score.status)} · P13 IMPLEMENTATION CANDIDATE</div>
+            <div class="meta">Responsive risk ${escapeHtml(buildReady.responsiveRisk.level)} · evidence coverage ${Math.round(buildReady.coverage.overallCoverage * 100)}%</div>
+            <div class="meta">${buildReady.findings.length} findings · ${buildReady.limitations.length} explicit limitations · target-agnostic read-only analysis</div>
+          </div>` : ''}
         <div>${sections || '<div class="empty">No sections discovered yet.</div>'}</div>
         ${renderBacklog(backlog)}`;
     }
@@ -556,8 +569,9 @@
         latestAuditMarkdown = typeof message.auditMarkdown === 'string' ? message.auditMarkdown : '';
         latestBacklogJson = typeof message.backlogJson === 'string' ? message.backlogJson : '';
         latestBacklogMarkdown = typeof message.backlogMarkdown === 'string' ? message.backlogMarkdown : '';
-        exportPanel.hidden = !(latestAuditJson && latestAuditMarkdown && latestBacklogJson && latestBacklogMarkdown);
-        renderAudit(message.report, message.backlog);
+        latestBuildReadyJson = typeof message.buildReadyJson === 'string' ? message.buildReadyJson : '';
+        exportPanel.hidden = !(latestAuditJson && latestAuditMarkdown && latestBacklogJson && latestBacklogMarkdown && latestBuildReadyJson);
+        renderAudit(message.report, message.backlog, message.buildReady);
         return;
       }
 

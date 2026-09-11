@@ -14,6 +14,7 @@ import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
 import type { SafeRecipeKind } from '../core/safe-recipe-types';
 import { scanSceneNode } from '../core/scanner';
+import { buildBuildReadyReport, serializeBuildReadyReportJson } from '../core/build-ready';
 import { buildAuditReport } from '../core/scoring';
 import {
   generateBacklog,
@@ -167,6 +168,7 @@ async function runAudit(sequence: number): Promise<void> {
   try {
     const root = scanSceneNode(selected);
     const report = buildAuditReport(root, PLUGIN_VERSION);
+    const buildReady = buildBuildReadyReport(root, {}, report.generatedAt);
     const stored = await figma.clientStorage.getAsync(storageKey) as unknown;
 
     if (sequence !== auditSequence) return;
@@ -189,6 +191,8 @@ async function runAudit(sequence: number): Promise<void> {
       type: 'audit-result',
       report,
       backlog,
+      buildReady,
+      buildReadyJson: serializeBuildReadyReportJson(buildReady),
       auditJson: serializeAuditReportJson(report),
       auditMarkdown: serializeAuditReportMarkdown(report),
       backlogJson: serializeBacklogJson(backlog),
