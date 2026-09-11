@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "releaseLabel": "P12 Final Release Artifact #20",
+  "pluginName": "WP Builders Prepare",
+  "packageVersion": "0.1.0-alpha.1",
+  "pluginId": "1680034649341961379",
+  "sourceSha": "5f12b1d28146d5c2af815cc9f83eb30431dce4b5",
+  "artifact": {
+    "name": "wp-builders-prepare-final-release-20",
+    "id": 10179286885,
+    "sha256": "698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f"
+  },
+  "importPackage": {
+    "sha256": "1ccfa457d4ae4145cf36b748f7758187ef3092503c270a46f28e03675878a066",
+    "files": {
+      "code.js": "fc2393a17d64e806d0acadaeedb48092b7a1c5fadd331da6d0399a5f07b78605",
+      "manifest.json": "1d0b6862ded790f0a2c6862d4024debe8164f15d2900f2d2d0e7233488f9d0b1",
+      "ui.html": "ef7bf40ff3b206f81fcfd4060804fb87dcf6e8151222d56d27cb510df4eda99c"
+    }
+  },
+  "expectedManifest": {
+    "name": "WP Builders Prepare",
+    "id": "1680034649341961379",
+    "api": "1.0.0",
+    "editorType": ["figma"],
+    "documentAccess": "dynamic-page",
+    "allowedDomains": ["none"]
+  },
+  "community": {
+    "publishTarget": "Community",
+    "supportContact": "info@vertexsystemsnetwork.com"
+  },
+  "requiredEvidence": [
+    "runtimeScreenshot",
+    "publishDetailsScreenshot",
+    "twoFactorScreenshot"
+  ],
+  "requiredAttestations": [
+    "exactPackageOpened",
+    "validManifestIdObserved",
+    "publisherIdentityObserved",
+    "communityTargetObserved",
+    "supportContactObserved",
+    "noNetworkAccessObserved",
+    "twoFactorEnabledObserved"
+  ]
+}
