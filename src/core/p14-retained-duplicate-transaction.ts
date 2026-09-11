@@ -1,3 +1,4 @@
+import { validateP14PreparationPlan } from './p14-plan-integrity';
 import {
   P14_PREPARATION_ENGINE_VERSION,
   type P14CandidateHandle,
@@ -13,7 +14,7 @@ import {
 } from './p14-preparation-types';
 
 export interface P14RetainedDuplicateRunInput {
-  plan: P14PreparationPlanV1;
+  plan: unknown;
   transactionId: string;
   preparedName?: string;
   allowPreparedWithReview?: boolean;
@@ -64,6 +65,8 @@ function baseReceipt(input: {
   return {
     schemaVersion: 1,
     engineVersion: P14_PREPARATION_ENGINE_VERSION,
+    acceptanceAuthority: false,
+    targetCompatibilityClaim: false,
     transactionId: input.transactionId,
     status: input.status,
     terminalState: input.terminalState,
@@ -136,6 +139,49 @@ function eligibleActions(plan: P14PreparationPlanV1): P14PreparationAction[] {
   return plan.actions.filter((action) => action.decision === 'ELIGIBLE');
 }
 
+function invalidPlanReceipt(
+  value: unknown,
+  transactionId: string,
+  now: () => string,
+  failures: string[],
+): P14PreparationReceiptV1 {
+  const record = typeof value === 'object' && value !== null && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+  const source = typeof record.source === 'object' && record.source !== null && !Array.isArray(record.source)
+    ? record.source as Record<string, unknown>
+    : {};
+  const nodeId = typeof source.nodeId === 'string' && source.nodeId ? source.nodeId : 'UNKNOWN';
+  const p13RunId = typeof record.p13RunId === 'string' && record.p13RunId ? record.p13RunId : 'UNKNOWN';
+  const planDigest = typeof record.planDigest === 'string' && record.planDigest.startsWith('p14-plan-')
+    ? record.planDigest
+    : 'p14-plan-invalid';
+  const detail = `Invalid P14 preparation plan: ${failures.join(' | ')}`;
+  return {
+    schemaVersion: 1,
+    engineVersion: P14_PREPARATION_ENGINE_VERSION,
+    acceptanceAuthority: false,
+    targetCompatibilityClaim: false,
+    transactionId,
+    status: 'BLOCKED',
+    terminalState: 'BLOCKED',
+    source: {
+      nodeId,
+      beforeFingerprint: 'UNKNOWN',
+      afterFingerprint: 'UNKNOWN',
+    },
+    p13RunId,
+    planDigest,
+    appliedActions: [],
+    errors: [receiptError('P14_INTERNAL_INVARIANT_FAILED', 'preflight', detail)],
+    events: [
+      event(now, 'IDLE'),
+      event(now, 'PREFLIGHT'),
+      event(now, 'BLOCKED', 'plan integrity validation failed'),
+    ],
+  };
+}
+
 /**
  * Target-neutral P14 transaction core.
  *
@@ -149,7 +195,11 @@ export async function runP14RetainedDuplicateTransaction(
 ): Promise<P14PreparationReceiptV1> {
   const now = input.now ?? (() => new Date().toISOString());
   const events: P14TransactionEvent[] = [event(now, 'IDLE'), event(now, 'PREFLIGHT')];
-  const plan = input.plan;
+  const planIntegrity = validateP14PreparationPlan(input.plan);
+  if (!planIntegrity.valid) {
+    return invalidPlanReceipt(input.plan, input.transactionId, now, planIntegrity.failures);
+  }
+  const plan = input.plan as P14PreparationPlanV1;
   const unknownFingerprint = 'UNKNOWN';
 
   if (plan.schemaVersion !== 1 || plan.engineVersion !== P14_PREPARATION_ENGINE_VERSION) {
