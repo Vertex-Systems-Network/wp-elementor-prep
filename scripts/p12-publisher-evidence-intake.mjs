@@ -29,6 +29,12 @@ function readYes(value) {
   return String(value ?? '').trim().toLowerCase() === 'yes';
 }
 
+function validateCandidate(candidate) {
+  if (!candidate || candidate.schemaVersion !== 1) fail('candidate contract schemaVersion must equal 1.');
+  if (!/^\d{10,30}$/.test(candidate.pluginId ?? '')) fail('candidate pluginId must be a numeric Figma plugin ID.');
+  if (!/^[0-9a-f]{40}$/.test(candidate.sourceSha ?? '')) fail('candidate sourceSha must be a 40-character Git SHA.');
+}
+
 async function readRegularFile(path, label, maxBytes = MAX_EVIDENCE_BYTES) {
   let stat;
   try {
@@ -102,6 +108,66 @@ async function validatePackageDirectory(packageDir, candidate) {
   return { root, files, manifest };
 }
 
+export async function collectPublisherPackagePreflight({
+  candidate,
+  packageDir,
+  packageZipPath,
+  generatedAt = new Date().toISOString(),
+}) {
+  validateCandidate(candidate);
+  if (!packageZipPath) fail('missing exact publish ZIP path.');
+  const packageZip = await readRegularFile(resolve(packageZipPath), 'exact publish ZIP', MAX_PACKAGE_BYTES);
+  if (packageZip.sha256 !== candidate.importPackage?.sha256) {
+    fail(`publish ZIP hash mismatch: expected ${candidate.importPackage?.sha256}, got ${packageZip.sha256}`);
+  }
+
+  const packageEvidence = await validatePackageDirectory(packageDir, candidate);
+  return {
+    schemaVersion: 1,
+    generatedAt,
+    gate: 'p12-publisher-package-preflight',
+    acceptanceAuthority: false,
+    packagePreflightComplete: true,
+    evidenceBundleComplete: false,
+    runtimeEvidenceCollected: false,
+    candidate: {
+      releaseLabel: candidate.releaseLabel,
+      pluginName: candidate.pluginName,
+      packageVersion: candidate.packageVersion,
+      pluginId: candidate.pluginId,
+      sourceSha: candidate.sourceSha,
+      artifact: candidate.artifact,
+      importPackageSha256: candidate.importPackage?.sha256,
+      supportContact: candidate.community?.supportContact,
+      publishTarget: candidate.community?.publishTarget,
+    },
+    package: {
+      zip: {
+        filename: basename(packageZipPath),
+        sha256: packageZip.sha256,
+        size: packageZip.size,
+      },
+      files: packageEvidence.files,
+      manifest: {
+        name: packageEvidence.manifest.name,
+        id: packageEvidence.manifest.id,
+        api: packageEvidence.manifest.api,
+        editorType: packageEvidence.manifest.editorType,
+        documentAccess: packageEvidence.manifest.documentAccess,
+        allowedDomains: packageEvidence.manifest.networkAccess?.allowedDomains ?? [],
+      },
+    },
+    semantics: {
+      packageBytesAndManifestValidatedOnly: true,
+      noRuntimeObservationClaimed: true,
+      noPublisherIdentityClaimed: true,
+      noTwoFactorStateClaimed: true,
+      noCommunitySubmissionOrApprovalClaimed: true,
+      finalEvidenceIntakeStillRequired: true,
+    },
+  };
+}
+
 export async function collectPublisherEvidence({
   candidate,
   packageDir,
@@ -110,17 +176,13 @@ export async function collectPublisherEvidence({
   attestations,
   generatedAt = new Date().toISOString(),
 }) {
-  if (!candidate || candidate.schemaVersion !== 1) fail('candidate contract schemaVersion must equal 1.');
-  if (!/^\d{10,30}$/.test(candidate.pluginId ?? '')) fail('candidate pluginId must be a numeric Figma plugin ID.');
-  if (!/^[0-9a-f]{40}$/.test(candidate.sourceSha ?? '')) fail('candidate sourceSha must be a 40-character Git SHA.');
+  const packagePreflight = await collectPublisherPackagePreflight({
+    candidate,
+    packageDir,
+    packageZipPath,
+    generatedAt,
+  });
 
-  if (!packageZipPath) fail('missing exact publish ZIP path.');
-  const packageZip = await readRegularFile(resolve(packageZipPath), 'exact publish ZIP', MAX_PACKAGE_BYTES);
-  if (packageZip.sha256 !== candidate.importPackage?.sha256) {
-    fail(`publish ZIP hash mismatch: expected ${candidate.importPackage?.sha256}, got ${packageZip.sha256}`);
-  }
-
-  const packageEvidence = await validatePackageDirectory(packageDir, candidate);
   const evidence = {};
   for (const key of candidate.requiredEvidence ?? []) {
     const path = evidencePaths?.[key];
@@ -149,34 +211,10 @@ export async function collectPublisherEvidence({
     generatedAt,
     gate: 'p12-publisher-evidence-intake',
     acceptanceAuthority: false,
+    packagePreflightComplete: true,
     evidenceBundleComplete: true,
-    candidate: {
-      releaseLabel: candidate.releaseLabel,
-      pluginName: candidate.pluginName,
-      packageVersion: candidate.packageVersion,
-      pluginId: candidate.pluginId,
-      sourceSha: candidate.sourceSha,
-      artifact: candidate.artifact,
-      importPackageSha256: candidate.importPackage?.sha256,
-      supportContact: candidate.community?.supportContact,
-      publishTarget: candidate.community?.publishTarget,
-    },
-    package: {
-      zip: {
-        filename: basename(packageZipPath),
-        sha256: packageZip.sha256,
-        size: packageZip.size,
-      },
-      files: packageEvidence.files,
-      manifest: {
-        name: packageEvidence.manifest.name,
-        id: packageEvidence.manifest.id,
-        api: packageEvidence.manifest.api,
-        editorType: packageEvidence.manifest.editorType,
-        documentAccess: packageEvidence.manifest.documentAccess,
-        allowedDomains: packageEvidence.manifest.networkAccess?.allowedDomains ?? [],
-      },
-    },
+    candidate: packagePreflight.candidate,
+    package: packagePreflight.package,
     evidence,
     operatorAttestations: normalizedAttestations,
     semantics: {
@@ -202,8 +240,39 @@ export async function runPublisherEvidenceIntake(argv = process.argv.slice(2)) {
   if (!packageDir) fail('missing --package-dir=...');
   const packageZipPath = args.get('package-zip');
   if (!packageZipPath) fail('missing --package-zip=...');
-  const outPath = resolve(args.get('out') ?? 'dist-p12/p12-publisher-evidence-receipt.json');
+  const preflightOnly = readYes(args.get('preflight-only'));
 
+  if (preflightOnly) {
+    const authorityBearingKeys = [
+      'runtime-screenshot',
+      'publish-screenshot',
+      'twofa-screenshot',
+      'confirm-exact-package-opened',
+      'confirm-valid-manifest-id',
+      'confirm-publisher-identity',
+      'confirm-community-target',
+      'confirm-support-contact',
+      'confirm-no-network-access',
+      'confirm-twofa-enabled',
+    ];
+    const suppliedAuthorityArgs = authorityBearingKeys.filter((key) => args.has(key));
+    if (suppliedAuthorityArgs.length > 0) {
+      fail(`preflight-only mode does not accept runtime/publisher evidence arguments: ${suppliedAuthorityArgs.join(', ')}`);
+    }
+
+    const outPath = resolve(args.get('out') ?? 'dist-p12/p12-publisher-package-preflight.json');
+    const receipt = await collectPublisherPackagePreflight({ candidate, packageDir, packageZipPath });
+    await mkdir(dirname(outPath), { recursive: true });
+    await writeFile(outPath, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
+    console.log(`P12 publisher package preflight PASS: ${candidate.pluginName} ${candidate.packageVersion}`);
+    console.log(`Plugin ID: ${candidate.pluginId}`);
+    console.log(`Source SHA: ${candidate.sourceSha}`);
+    console.log(`Receipt: ${outPath}`);
+    console.log('Acceptance authority: false (live Figma evidence has not been collected)');
+    return receipt;
+  }
+
+  const outPath = resolve(args.get('out') ?? 'dist-p12/p12-publisher-evidence-receipt.json');
   const evidencePaths = {
     runtimeScreenshot: args.get('runtime-screenshot'),
     publishDetailsScreenshot: args.get('publish-screenshot'),
