@@ -13,7 +13,10 @@
 - Added round-trip target rendering/visual diff, target capability matrix, existing-component bindings, change-only regeneration, optional `WP Builders Bridge`, CMS/dynamic mappings and stronger agency/project workflows.
 - Added durable decisions D-023 through D-030 for research, target-ready duplication, versioned adapter validation, documented WordPress transfer, code-import sandboxing, honest asset/font export, framework adapter isolation and round-trip QA.
 - Updated issue #119 as the P13-P26 owner. No runtime/plugin feature or acceptance percentage was granted; P13 implementation remains blocked until #84 internal P12 exit genuinely closes.
-- The prior detailed changelog history was rolled into `memory-bank/CHANGELOG_ARCHIVE_PRE_MULTI_TARGET.md` without changing those historical bytes.
+- Retained the previous detailed history byte-for-byte in `memory-bank/CHANGELOG_ARCHIVE_PRE_MULTI_TARGET.md`.
+- PR #122 head `40831f61a07036d233dbf7cad8a5396c0010641f` passed CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 with no review/thread blockers.
+- PR #122 squash-merged the researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565`.
+- Planning changes do not replace the retained P12 publishing candidate or grant P13-P26 implementation/runtime acceptance.
 
 ## Historical archive
 
