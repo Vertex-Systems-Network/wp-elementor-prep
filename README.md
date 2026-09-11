@@ -32,7 +32,7 @@ Canonical planning docs:
 
 > **Progress policy:** implementation, runtime acceptance and external Community review are tracked separately. New future scope does not reduce already-completed historical core progress.
 
-**Open PR/MR baseline before this focused sync branch:** `0`.
+**Open PR/MR:** `0 baseline before this focused sync branch; expected 0 again after merge`.
 
 Open issues:
 
