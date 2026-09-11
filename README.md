@@ -31,14 +31,14 @@ Canonical planning docs:
 
 > **Progress policy:** implementation, runtime acceptance and external Community review are tracked separately. New future scope does not reduce already-completed historical core progress.
 
-**Open PR/MR:** `0 after this status-sync PR lands`
+**Open PR/MR:** `current post-#129 status-sync PR only; expected 0 after merge`
 
 Open issues:
 
 - `#84` — P12 final validation: active manual/publisher/runtime exit gate.
 - `#119` — P13-P26 commercial/multi-target expansion owner; implementation blocked by #84 internal exit.
 
-PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 then synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f` after CI #723, Integration Readiness #158, P12 Offline Acceptance #78 and P12 Final Release Artifact #34 passed. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81` after CI #726, Integration Readiness #161, P12 Offline Acceptance #81 and P12 Final Release Artifact #37 passed. These changes were planning/docs only and granted no P13-P26 runtime acceptance credit.
+PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f`. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81`. PR #129 added deterministic final publisher-evidence intake tooling and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed. Issue #126 closed completed. None of these later support/planning changes grant P13-P26 runtime acceptance credit.
 
 ### Module-wise progress
 
@@ -53,7 +53,7 @@ PR #122 merged the market-researched multi-target planning baseline as `ade501fe
 | P9 Backlog generator | COMPLETE / P12 ACCEPTED | 100% | `██████████` | Real plugin export quality retained |
 | P10 npm/Node CLI | COMPLETE / P12 ACCEPTED | 100% | `██████████` | Real REST/auth/plugin parity retained |
 | P11 Normal Figma distribution | IMPLEMENTATION COMPLETE | 100% | `██████████` | Live publisher/install evidence remains in P12 |
-| P12 Final integrated validation | IN PROGRESS | 80% | `████████░░` | Exact publish-ID package/account/2FA/final exit review |
+| P12 Final integrated validation | IN PROGRESS | 80% | `████████░░` | Run exact #20 publisher evidence intake, retain 2FA/publisher screenshots, final internal exit review |
 | R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; refresh research per major adapter |
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | P12 internal exit first |
@@ -85,9 +85,11 @@ Figma-assigned publishing ID:
 
 `1680034649341961379`
 
-Verification on that candidate passed CI #709, Integration Readiness #145, P12 Offline #64 and Final Release Artifact #20 (`wp-builders-prepare-final-release-20`, artifact ID `10179286885`, digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`).
+Verification on that candidate passed CI #709, Integration Readiness #145, P12 Offline #64 and Final Release Artifact #20 (`wp-builders-prepare-final-release-20`, artifact ID `10179286885`, digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`). The exact three-file publish ZIP SHA-256 is `1ccfa457d4ae4145cf36b748f7758187ef3092503c270a46f28e03675878a066`.
 
-Static/docs changes after that source are not automatically new live acceptance. P12 exit must name the exact package whose Figma Desktop/publisher evidence is accepted.
+The exact candidate is now pinned in `config/p12-publisher-candidate.json`. `npm run p12:publisher-evidence` verifies the exact ZIP and extracted plugin hashes, hashes the runtime/publish/2FA screenshots, requires explicit operator confirmations, and emits a receipt with `acceptanceAuthority: false`. Operator instructions are in `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md`.
+
+Static/docs/support-tooling changes after source `5f12...` do not automatically replace the runtime candidate or count as live acceptance. P12 exit must name the exact package whose Figma Desktop/publisher evidence is accepted.
 
 Actual Community review/approval remains external.
 
@@ -209,12 +211,13 @@ Stored image bytes are not described as proven upstream-upload provenance when F
 
 ## Current execution order
 
-1. finish genuine P12 exact-package/publisher/2FA/final-exit evidence in #84;
-2. close P12 internal exit only on retained evidence;
-3. open focused P13 implementation issue from #119;
-4. run R0 before each major external adapter;
-5. run R1 before implementing/accepting each major adapter;
-6. continue P13-P26 in dependency order with one focused issue/branch/PR per phase.
+1. run the exact release #20 publisher-evidence intake with fresh Figma Desktop/runtime, final-details and 2FA screenshots;
+2. perform the final P12 internal exit review from the receipt + retained screenshots;
+3. close P12 internal exit only on retained evidence;
+4. open focused P13 implementation issue from #119;
+5. run R0 before each major external adapter;
+6. run R1 before implementing/accepting each major adapter;
+7. continue P13-P26 in dependency order with one focused issue/branch/PR per phase.
 
 ## Development and validation commands
 
@@ -231,6 +234,8 @@ npm run community:verify
 npm run p12:offline
 npm run integration:readiness
 ```
+
+For the manual final publisher gate, use `npm run p12:publisher-evidence -- ...` exactly as documented in `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md`.
 
 Automated checks are evidence only for the properties they exercise. Target phases add capability-matrix, option-state, package/schema, malformed-input, import/build/render and round-trip harness checks.
 
