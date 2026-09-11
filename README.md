@@ -25,6 +25,7 @@ Canonical planning docs:
 - `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` — retained September 2026 competitor/platform snapshot;
 - `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md` — R1 adapter/option/system reliability contract;
 - `docs/COMMERCIAL_EXPANSION_PLAN.md` — P13-P26 commercial roadmap;
+- `docs/P13_P26_PREFLIGHT_COMPLETION_2026-09-11.md` — retained P13-P26 planning/preflight completion index;
 - `docs/AI_NATIVE_PLAN.md`;
 - `docs/FEATURE_PLAN.md`.
 
@@ -37,9 +38,11 @@ Canonical planning docs:
 Open issues:
 
 - `#84` — P12 final validation: active manual/publisher/runtime exit gate.
-- `#119` — P13-P26 commercial/multi-target expansion owner; implementation blocked by #84 internal exit.
+- `#119` — P13-P26 commercial/multi-target expansion owner; planning/preflight complete, runtime implementation blocked by #84 internal exit.
 
-PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f`. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81`. PR #129 added deterministic final publisher-evidence intake tooling and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed. PR #130 then synchronized the post-#129 repository status and merged as `c6a4e1df034fbd62077c58227b2c0c4dc4c116d2`. PR #131 retained the current commercial R0 market refresh and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`; its current-main push checks passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46. Issue #126 is closed completed. None of these support/planning changes grant P13-P26 runtime acceptance credit.
+PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f`. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81`. PR #129 added deterministic final publisher-evidence intake tooling and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed. PR #130 then synchronized the post-#129 repository status and merged as `c6a4e1df034fbd62077c58227b2c0c4dc4c116d2`. PR #131 retained the current commercial R0 market refresh and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`; its current-main push checks passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46. Issue #126 is closed completed.
+
+The P13-P26 planning/preflight sequence is now retained end-to-end. P13-P16 froze the initial readiness/duplicate/Elementor/Gutenberg contracts, P17-P20 froze universal web/framework/assets/round-trip QA, and PRs #141-#146 froze P21-P26 handoff, estimation, agency/project state, dynamic data, commercial entitlements and optional AI. The final P26 planning merge is `451656e7907803f75a715d7cbd93390a3931bea8`. This planning completion grants **no P13-P26 runtime acceptance credit**: every phase remains at `0%` implementation until #84 internal exit genuinely passes.
 
 ### Module-wise progress
 
@@ -57,24 +60,24 @@ PR #122 merged the market-researched multi-target planning baseline as `ade501fe
 | P12 Final integrated validation | IN PROGRESS | 80% | `████████░░` | Fresh exact-#20 runtime/final-details/2FA evidence + final internal exit review |
 | R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Current snapshot retained; refresh again per major adapter |
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; execute profile/capability/validator/harness gate per adapter |
-| P13 Build-Ready Score 2.0 + Responsive Risk | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | P12 internal exit first |
-| P14 Target-Ready Duplicate + Guided Prepare | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Requires P13 read-only contracts |
-| P15 Elementor native export + validation | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | R0+R1; versioned v3/v4 adapter + real import proof |
-| P16 Gutenberg native export + transfer | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | R0+R1; native block/pattern/editor validation |
-| P17 HTML/CSS/JS + code-to-design | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | R0+R1; static-first; JS sandbox spec required |
-| P18 Framework adapter platform | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | R0+R1; neutral component IR + adapter SDK/build matrix |
-| P19 Assets/fonts/design-system export | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Stored-original vs rendered policy; font/API constraints |
-| P20 Round-trip QA + section portability | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Render harness + optional offline-first WP Builders Bridge |
-| P21 Handoff/client QA/a11y-SEO advisories | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Build from accepted target outputs |
-| P22 Complexity / effort estimator | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Transparent/configurable factors only |
-| P23 Agency/project/component bindings | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Stable target adapters first |
-| P24 CMS/dynamic/forms/interactions | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Static output stability first |
-| P25 Free / Pro / Agency packaging | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Commercial shell outside deterministic core |
-| P26 Optional AI assistance | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Non-authoritative research/explainer/drafting only |
+| P13 Build-Ready Score 2.0 + Responsive Risk | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | #84 internal P12 exit first; then focused implementation issue |
+| P14 Target-Ready Duplicate + Guided Prepare | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | P13 accepted implementation evidence first |
+| P15 Elementor native export + validation | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; versioned v3/v4 adapter + real import proof |
+| P16 Gutenberg native export + transfer | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; native block/pattern/editor validation |
+| P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
+| P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Neutral Web IR + versioned adapter/build matrix retained |
+| P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
+| P20 Round-trip QA + section portability | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Controlled render harness + calibrated QA required in implementation |
+| P21 Handoff/client QA/a11y-SEO advisories | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Build from accepted target outputs; bounded claim rules retained |
+| P22 Complexity / effort estimator | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Transparent effort-unit/calibration contract retained |
+| P23 Agency/project/component bindings | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Stable implemented adapters first; semantic invalidation contract retained |
+| P24 CMS/dynamic/forms/interactions | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Typed data/form/provider mappings retained; production writes remain out of first slice |
+| P25 Free / Pro / Agency packaging | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Capability-based entitlement contract retained; publisher eligibility remains external/account-specific |
+| P26 Optional AI assistance | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Non-authoritative AI authority firewall retained; provider/network choice still unselected |
 
 **Overall active project progress:** `██████████ 100%`
 
-Historical P0-P7 core remains 100%. P12 is tracked separately at 80%. R0/R1 gate definitions are complete but must be re-executed per applicable adapter. P13-P26 are approved future scope at 0% and are not implementation-authorized yet.
+Historical P0-P7 core remains 100%. P12 is tracked separately at 80%. R0/R1 gate definitions are complete but must be re-executed per applicable adapter. **P13-P26 planning/preflight is complete, while P13-P26 runtime implementation remains 0% and is not implementation-authorized until #84 internal exit.**
 
 ## Current P12 publishing line
 
@@ -222,10 +225,10 @@ Stored image bytes are not described as proven upstream-upload provenance when F
 4. run the exact release #20 publisher-evidence intake and retain the receipt;
 5. perform the final P12 internal exit review from the receipt + retained screenshots;
 6. close P12 internal exit only on retained evidence;
-7. open focused P13 implementation issue from #119;
-8. run R0 before each major external adapter;
-9. run R1 before implementing/accepting each major adapter;
-10. continue P13-P26 in dependency order with one focused issue/branch/PR per phase.
+7. open focused P13 implementation issue from #119 using `docs/P13_BUILD_READY_SCORE_SPEC.md` as the frozen preflight contract;
+8. refresh R0 before each major external adapter if platform facts materially changed;
+9. execute R1 before implementing/accepting each major adapter;
+10. implement P13-P26 in dependency order with one focused issue/branch/PR per slice; planning/preflight is already retained and must not be confused with implementation acceptance.
 
 ## Development and validation commands
 
