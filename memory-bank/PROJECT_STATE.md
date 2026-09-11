@@ -94,7 +94,7 @@ Planning/docs changes after that source do not automatically replace the runtime
 
 ## Runtime artifact registry
 
-`config/runtime-artifacts.json` remains schema v3 and authoritative for exact-build runtime provenance.
+`config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains authoritative for exact-build runtime provenance.
 
 ## Immediate target
 
