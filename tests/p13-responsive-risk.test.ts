@@ -131,7 +131,7 @@ describe('P13 responsive-risk foundation', () => {
   });
 
 
-  it('caps strong sibling overlap inside a manual layered parent at MEDIUM', () => {
+  it('keeps strong sibling overlap inside a manual layered parent as a zero-penalty advisory', () => {
     const a = node({ id: 'manual-a', geometry: { x: 0, y: 0, width: 500, height: 200 }, children: [] });
     const b = node({ id: 'manual-b', geometry: { x: 0, y: 0, width: 500, height: 200 }, children: [] });
     const parent = node({
@@ -143,7 +143,8 @@ describe('P13 responsive-risk foundation', () => {
     });
     const report = buildBuildReadyReport(node({ id: 'root', children: [parent] }), {}, '2026-09-11T00:00:00.000Z');
     const finding = report.findings.find((item) => item.ruleId === 'RR_OVERLAP_COLLISION');
-    expect(finding?.severity).toBe('MEDIUM');
+    expect(finding?.severity).toBe('LOW');
+    expect(finding?.penalty).toBe(0);
     expect(finding?.evidence.parentLayoutMode).toBe('NONE');
   });
 
@@ -213,6 +214,49 @@ describe('P13 responsive-risk foundation', () => {
     const overflow = report.findings.filter((item) => item.ruleId === 'RR_OVERFLOW_CLIP_DEPENDENCY');
     expect(overflow.find((item) => item.nodeIds.includes('portrait'))?.severity).toBe('MEDIUM');
     expect(overflow.find((item) => item.nodeIds.includes('slight'))?.severity).toBe('MEDIUM');
+  });
+
+
+
+  it('does not report a tight small row when no reference-width probe applies', () => {
+    const children = [0, 1].map((index) => node({
+      id: `small:${index}`,
+      isContainer: false,
+      layoutMode: 'NONE',
+      isAutoLayout: false,
+      geometry: { x: index * 70, y: 0, width: 70, height: 30 },
+      children: [],
+    }));
+    const row = node({
+      id: 'small-row',
+      layoutMode: 'HORIZONTAL',
+      geometry: { x: 0, y: 0, width: 140, height: 40 },
+      children,
+    });
+    const report = buildBuildReadyReport(node({ id: 'root', children: [row] }), {}, '2026-09-11T00:00:00.000Z');
+    expect(report.findings.some((item) =>
+      item.ruleId === 'RR_HORIZONTAL_DENSITY' && item.nodeIds.includes('small-row'))).toBe(false);
+  });
+
+  it('retains direct current-width overflow as HIGH even when no reference-width probe applies', () => {
+    const children = [0, 1].map((index) => node({
+      id: `overfull:${index}`,
+      isContainer: false,
+      layoutMode: 'NONE',
+      isAutoLayout: false,
+      geometry: { x: index * 90, y: 0, width: 90, height: 30 },
+      children: [],
+    }));
+    const row = node({
+      id: 'overfull-row',
+      layoutMode: 'HORIZONTAL',
+      geometry: { x: 0, y: 0, width: 140, height: 40 },
+      children,
+    });
+    const report = buildBuildReadyReport(node({ id: 'root', children: [row] }), {}, '2026-09-11T00:00:00.000Z');
+    const finding = report.findings.find((item) =>
+      item.ruleId === 'RR_HORIZONTAL_DENSITY' && item.nodeIds.includes('overfull-row'));
+    expect(finding?.severity).toBe('HIGH');
   });
 
 });

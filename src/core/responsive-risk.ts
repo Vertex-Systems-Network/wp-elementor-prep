@@ -12,7 +12,7 @@ import type {
 export const RESPONSIVE_RISK_RULES: Record<string, BuildReadyRuleDefinition> = {
   RR_HORIZONTAL_DENSITY: {
     id: 'RR_HORIZONTAL_DENSITY',
-    version: 1,
+    version: 2,
     category: 'RESPONSIVE_RISK',
     severity: 'MEDIUM',
     confidencePolicy: 'MEDIUM_PLUS',
@@ -32,7 +32,7 @@ export const RESPONSIVE_RISK_RULES: Record<string, BuildReadyRuleDefinition> = {
   },
   RR_OVERLAP_COLLISION: {
     id: 'RR_OVERLAP_COLLISION',
-    version: 2,
+    version: 3,
     category: 'RESPONSIVE_RISK',
     severity: 'MEDIUM',
     confidencePolicy: 'MEDIUM_PLUS',
@@ -148,7 +148,9 @@ function densityFindings(context: BuildReadyAnalysisContext): BuildReadyFinding[
     const triggered = context.config.referenceWidths.filter(
       (width) => width > 0 && width <= container.geometry.width && combinedWidth / width >= 0.92,
     );
-    if (currentRatio < 0.92 && triggered.length === 0) continue;
+    // A tight row is not responsive-risk evidence by itself when no configured reference-width
+    // probe applies. Preserve direct current-width overflow (> 1.02) as HIGH evidence.
+    if (currentRatio <= 1.02 && triggered.length === 0) continue;
 
     const severity: BuildReadySeverity = currentRatio > 1.02 ? 'HIGH' : 'MEDIUM';
     results.push(finding('RR_HORIZONTAL_DENSITY', [container.id], {
@@ -268,15 +270,17 @@ function overlapFindings(context: BuildReadyAnalysisContext): BuildReadyFinding[
 
         // In a manual/layered parent, overlap can be intentional composition. Geometry alone cannot
         // justify a HIGH collision claim. Flow parents retain the stronger collision signal.
-        const severity: BuildReadySeverity = !manualLayerParent && overlapRatio >= 0.35 ? 'HIGH' : 'MEDIUM';
-        const confidence = manualLayerParent ? 68 : severity === 'HIGH' ? 88 : 74;
+        const severity: BuildReadySeverity = manualLayerParent
+          ? 'LOW'
+          : overlapRatio >= 0.35 ? 'HIGH' : 'MEDIUM';
+        const confidence = manualLayerParent ? 60 : severity === 'HIGH' ? 88 : 74;
         const detail = manualLayerParent
-          ? 'Sibling geometry overlaps inside a manual/layered parent. The overlap may be intentional composition, so this is capped at review-level evidence.'
+          ? 'Sibling geometry overlaps inside a manual/layered parent. Geometry alone cannot distinguish intended composition from collision, so this is an advisory only; manual-flow structural debt is scored separately.'
           : 'Sibling geometry overlaps inside a retained flow parent without a special-overlay role. The current source should be reviewed before treating this as normal responsive flow.';
         results.push(finding('RR_OVERLAP_COLLISION', [parent.id, a.id, b.id], {
           severity,
           confidence,
-          title: manualLayerParent ? 'Manual-layer siblings overlap' : 'Flow siblings materially overlap',
+          title: manualLayerParent ? 'Manual-layer overlap is advisory' : 'Flow siblings materially overlap',
           detail,
           evidence: {
             overlapRatio: round(overlapRatio),
@@ -284,7 +288,7 @@ function overlapFindings(context: BuildReadyAnalysisContext): BuildReadyFinding[
             parentWidth: round(parent.geometry.width),
             parentLayoutMode: parent.layoutMode,
           },
-          penalty: manualLayerParent ? 2 : severity === 'HIGH' ? 6 : 3,
+          penalty: manualLayerParent ? 0 : severity === 'HIGH' ? 6 : 3,
         }));
       }
     }
