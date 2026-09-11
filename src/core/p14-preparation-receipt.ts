@@ -1,4 +1,9 @@
 import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import {
+  isP14BoundedIdentity,
+  validateP14RecipeExecutionResultEvidence,
+  validateP14RetentionEvidence,
+} from './p14-adapter-evidence';
 import { validateP14RescoreEvidence } from './p14-rescore-evidence';
 import {
   P14_UNKNOWN_SOURCE_FINGERPRINT,
@@ -150,21 +155,12 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   if (Array.isArray(value.appliedActions)) {
     const ids: string[] = [];
     for (const [index, action] of value.appliedActions.entries()) {
-      if (!isRecord(action)
-        || !nonEmptyString(action.actionId)
-        || !nonEmptyString(action.recipeId)
-        || typeof action.applied !== 'boolean') {
-        failures.push(`appliedActions[${index}] is malformed.`);
+      const evidence = validateP14RecipeExecutionResultEvidence(action);
+      if (!evidence.valid || !evidence.value) {
+        failures.push(`appliedActions[${index}] is malformed or oversized.`);
         continue;
       }
-      if (action.becameNoOp !== undefined && typeof action.becameNoOp !== 'boolean') {
-        failures.push(`appliedActions[${index}].becameNoOp must be boolean when present.`);
-      }
-      const outcomeCount = (action.applied ? 1 : 0) + (action.becameNoOp === true ? 1 : 0);
-      if (outcomeCount !== 1) {
-        failures.push(`appliedActions[${index}] must be exactly one of applied or accepted idempotent no-op.`);
-      }
-      ids.push(action.actionId);
+      ids.push(evidence.value.actionId);
     }
     if (new Set(ids).size !== ids.length) failures.push('appliedActions contains duplicate action IDs.');
   }
@@ -212,17 +208,19 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   }
 
   const candidate = isRecord(value.candidate) ? value.candidate : null;
-  if (value.candidate !== undefined && (!candidate || !nonEmptyString(candidate.nodeId) || typeof candidate.retained !== 'boolean')) {
-    failures.push('candidate is malformed.');
+  if (value.candidate !== undefined
+    && (!candidate || !isP14BoundedIdentity(candidate.nodeId) || typeof candidate.retained !== 'boolean')) {
+    failures.push('candidate is malformed or oversized.');
   }
-  const retention = isRecord(value.retention) ? value.retention : null;
+  const retentionValidation = value.retention === undefined
+    ? null
+    : validateP14RetentionEvidence(value.retention);
+  const retention = retentionValidation?.valid && retentionValidation.value
+    ? retentionValidation.value
+    : null;
   if (value.retention !== undefined) {
-    if (!retention
-      || !nonEmptyString(retention.transactionId)
-      || !nonEmptyString(retention.sourceNodeId)
-      || !nonEmptyString(retention.retainedNodeId)
-      || !nonEmptyString(retention.preparedName)) {
-      failures.push('retention is malformed.');
+    if (!retention) {
+      failures.push('retention is malformed or oversized.');
     } else {
       if (retention.transactionId !== value.transactionId) failures.push('Retention transactionId contradicts the receipt.');
       if (isRecord(value.source) && retention.sourceNodeId !== value.source.nodeId) failures.push('Retention sourceNodeId contradicts the receipt source.');

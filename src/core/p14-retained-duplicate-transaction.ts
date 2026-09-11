@@ -3,6 +3,11 @@ import {
   assessP14PreparationInputBounds,
   type P14InputBoundsLimits,
 } from './p14-input-bounds';
+import {
+  validateP14CandidateHandleEvidence,
+  validateP14RecipeExecutionResultEvidence,
+  validateP14RetentionEvidence,
+} from './p14-adapter-evidence';
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
@@ -514,10 +519,12 @@ export async function runP14RetainedDuplicateTransaction(
   let candidate: P14CandidateHandle;
   events.push(event(now, 'CLONING'));
   try {
-    candidate = await adapter.cloneSource(plan.source.nodeId, input.transactionId);
-    if (candidate.sourceNodeId !== plan.source.nodeId || !candidate.candidateNodeId || candidate.candidateNodeId === plan.source.nodeId) {
-      throw new Error('Candidate adapter returned an invalid source/candidate identity binding.');
+    const rawCandidate: unknown = await adapter.cloneSource(plan.source.nodeId, input.transactionId);
+    const candidateEvidence = validateP14CandidateHandleEvidence(rawCandidate, plan.source.nodeId);
+    if (!candidateEvidence.valid || !candidateEvidence.value) {
+      throw new Error(`Candidate adapter returned invalid evidence: ${candidateEvidence.failures.join(' | ')}`);
     }
+    candidate = candidateEvidence.value;
   } catch (error) {
     return baseReceipt({
       plan,
@@ -662,15 +669,12 @@ export async function runP14RetainedDuplicateTransaction(
     }
 
     try {
-      const result = await adapter.applyRecipe(candidate, action);
-      if (result.actionId !== action.actionId || result.recipeId !== action.recipeId) {
-        throw new Error('Recipe execution result does not match the planned action identity.');
+      const rawResult: unknown = await adapter.applyRecipe(candidate, action);
+      const executionEvidence = validateP14RecipeExecutionResultEvidence(rawResult, action);
+      if (!executionEvidence.valid || !executionEvidence.value) {
+        throw new Error(`Recipe execution evidence is invalid: ${executionEvidence.failures.join(' | ')}`);
       }
-      const outcomeCount = (result.applied ? 1 : 0) + (result.becameNoOp === true ? 1 : 0);
-      if (outcomeCount !== 1) {
-        throw new Error(result.detail ?? 'Recipe result must be exactly one of applied or accepted idempotent no-op.');
-      }
-      appliedActions.push(result);
+      appliedActions.push(executionEvidence.value);
     } catch (error) {
       const discardError = await discardCandidate(adapter, candidate);
       return cleanupOutcome({
@@ -875,18 +879,24 @@ export async function runP14RetainedDuplicateTransaction(
   }
 
   events.push(event(now, 'FINALIZING'));
+  const preparedName = input.preparedName?.trim() || 'Prepared Duplicate';
   let retention;
   try {
-    retention = await adapter.retainCandidate(
+    const rawRetention: unknown = await adapter.retainCandidate(
       candidate,
       input.transactionId,
-      input.preparedName?.trim() || 'Prepared Duplicate',
+      preparedName,
     );
-    if (retention.transactionId !== input.transactionId
-      || retention.sourceNodeId !== plan.source.nodeId
-      || retention.retainedNodeId !== candidate.candidateNodeId) {
-      throw new Error('Retention evidence does not match the transaction/source/candidate identity.');
+    const retentionEvidence = validateP14RetentionEvidence(rawRetention, {
+      transactionId: input.transactionId,
+      sourceNodeId: plan.source.nodeId,
+      retainedNodeId: candidate.candidateNodeId,
+      preparedName,
+    });
+    if (!retentionEvidence.valid || !retentionEvidence.value) {
+      throw new Error(`Retention adapter returned invalid evidence: ${retentionEvidence.failures.join(' | ')}`);
     }
+    retention = retentionEvidence.value;
   } catch (error) {
     const discardError = await discardCandidate(adapter, candidate);
     const result = cleanupOutcome({
