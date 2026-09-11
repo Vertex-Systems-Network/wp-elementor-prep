@@ -79,6 +79,7 @@ class CountingAdapter implements P14RetainedDuplicateAdapter {
     discard: 0,
   };
   becomeNoOp = false;
+  bothOutcomes = false;
 
   async fingerprintSource(): Promise<string> {
     this.calls.fingerprint += 1;
@@ -95,8 +96,8 @@ class CountingAdapter implements P14RetainedDuplicateAdapter {
     return {
       actionId: action.actionId,
       recipeId: action.recipeId ?? 'missing',
-      applied: !this.becomeNoOp,
-      ...(this.becomeNoOp ? { becameNoOp: true } : {}),
+      applied: this.bothOutcomes || !this.becomeNoOp,
+      ...((this.becomeNoOp || this.bothOutcomes) ? { becameNoOp: true } : {}),
     };
   }
 
@@ -255,6 +256,46 @@ describe('P14 receipt integrity', () => {
     expect(receipt.appliedActions).toHaveLength(2);
     expect(receipt.appliedActions.every((action) => action.applied === false && action.becameNoOp === true)).toBe(true);
     expect(validateP14PreparationReceipt(receipt).valid).toBe(true);
+  });
+
+  it('rejects contradictory dual recipe outcomes and discards the candidate', async () => {
+    const adapter = new CountingAdapter();
+    adapter.bothOutcomes = true;
+    const receipt = await runP14RetainedDuplicateTransaction({
+      plan: plan(),
+      transactionId: 'p14-dual-outcome',
+      now: fixedNow,
+    }, adapter);
+
+    expect(receipt.status).toBe('REJECTED');
+    expect(receipt.errors[0]?.code).toBe('P14_TRANSFORM_FAILED');
+    expect(adapter.calls.discard).toBe(1);
+    expect(validateP14PreparationReceipt(receipt).valid).toBe(true);
+  });
+
+  it('rejects malformed error, event and validation-check evidence', async () => {
+    const receipt = await runP14RetainedDuplicateTransaction({
+      plan: plan(),
+      transactionId: 'p14-shape-source',
+      now: fixedNow,
+    }, new CountingAdapter());
+
+    const badError = JSON.parse(JSON.stringify(receipt)) as any;
+    badError.status = 'REJECTED';
+    badError.terminalState = 'REJECTED';
+    badError.candidate.retained = false;
+    delete badError.retention;
+    badError.errors = ['not-an-error-object'];
+    badError.events[badError.events.length - 1] = { state: 'REJECTED', at: fixedNow() };
+    expect(validateP14PreparationReceipt(badError).failures.some((failure) => failure.includes('errors[0]'))).toBe(true);
+
+    const badEvent = JSON.parse(JSON.stringify(receipt)) as any;
+    badEvent.events[1].at = 'not-a-timestamp';
+    expect(validateP14PreparationReceipt(badEvent).failures.some((failure) => failure.includes('events[1]'))).toBe(true);
+
+    const badCheck = JSON.parse(JSON.stringify(receipt)) as any;
+    badCheck.validation.checks[0] = { id: 'required', passed: true };
+    expect(validateP14PreparationReceipt(badCheck).failures.some((failure) => failure.includes('validation.checks[0]'))).toBe(true);
   });
 
   it('fails closed on forged authority, target compatibility and retention identity', async () => {

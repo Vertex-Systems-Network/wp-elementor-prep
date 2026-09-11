@@ -29,6 +29,43 @@ const TERMINAL_STATES = new Set<P14TransactionState>([
   'CLEANUP_REQUIRED',
 ]);
 
+const EVENT_STATES = new Set<P14TransactionState>([
+  'IDLE',
+  'PREFLIGHT',
+  'PLAN_READY',
+  'AWAITING_CONFIRMATION',
+  'CLONING',
+  'TRANSFORMING',
+  'VALIDATING',
+  'RESCORING',
+  'FINALIZING',
+  'COMPLETE',
+  'CANCELLED',
+  'REJECTED',
+  'BLOCKED',
+  'SOURCE_STALE',
+  'CLEANUP_REQUIRED',
+]);
+
+const ERROR_CODES = new Set([
+  'P14_P13_REPORT_REQUIRED',
+  'P14_P13_REPORT_STALE',
+  'P14_NO_ELIGIBLE_RECIPES',
+  'P14_RECIPE_VERSION_MISMATCH',
+  'P14_RECIPE_PREREQUISITE_MISSING',
+  'P14_RECIPE_CONFLICT',
+  'P14_CLONE_FAILED',
+  'P14_SOURCE_CHANGED_DURING_RUN',
+  'P14_TRANSFORM_FAILED',
+  'P14_VALIDATION_FAILED',
+  'P14_RESCORE_FAILED',
+  'P14_FINALIZE_FAILED',
+  'P14_DISCARD_FAILED',
+  'P14_CANCELLED',
+  'P14_INPUT_TOO_LARGE',
+  'P14_INTERNAL_INVARIANT_FAILED',
+]);
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -70,7 +107,30 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   if (!Array.isArray(value.errors)) failures.push('errors must be an array.');
   if (!Array.isArray(value.events) || value.events.length === 0) failures.push('events must be a non-empty array.');
 
+  if (Array.isArray(value.errors)) {
+    for (const [index, error] of value.errors.entries()) {
+      if (!isRecord(error)
+        || typeof error.code !== 'string'
+        || !ERROR_CODES.has(error.code)
+        || !nonEmptyString(error.stage)
+        || !nonEmptyString(error.detail)
+        || (error.recovery !== undefined && typeof error.recovery !== 'string')) {
+        failures.push(`errors[${index}] is malformed or uses an unsupported code.`);
+      }
+    }
+  }
+
   if (Array.isArray(value.events) && value.events.length > 0) {
+    for (const [index, item] of value.events.entries()) {
+      if (!isRecord(item)
+        || typeof item.state !== 'string'
+        || !EVENT_STATES.has(item.state as P14TransactionState)
+        || !nonEmptyString(item.at)
+        || Number.isNaN(Date.parse(item.at))
+        || (item.detail !== undefined && typeof item.detail !== 'string')) {
+        failures.push(`events[${index}] is malformed.`);
+      }
+    }
     const first = value.events[0];
     const last = value.events[value.events.length - 1];
     if (!isRecord(first) || first.state !== 'IDLE') failures.push('Receipt event history must start at IDLE.');
@@ -87,8 +147,12 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
         failures.push(`appliedActions[${index}] is malformed.`);
         continue;
       }
-      if (!action.applied && action.becameNoOp !== true) {
-        failures.push(`appliedActions[${index}] must be applied or an accepted idempotent no-op.`);
+      if (action.becameNoOp !== undefined && typeof action.becameNoOp !== 'boolean') {
+        failures.push(`appliedActions[${index}].becameNoOp must be boolean when present.`);
+      }
+      const outcomeCount = (action.applied ? 1 : 0) + (action.becameNoOp === true ? 1 : 0);
+      if (outcomeCount !== 1) {
+        failures.push(`appliedActions[${index}] must be exactly one of applied or accepted idempotent no-op.`);
       }
       ids.push(action.actionId);
     }
@@ -98,9 +162,20 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   if (value.validation !== undefined) {
     if (!isRecord(value.validation) || typeof value.validation.passed !== 'boolean' || !Array.isArray(value.validation.checks)) {
       failures.push('validation is malformed.');
-    } else if (value.validation.passed) {
-      const failedRequired = value.validation.checks.some((check) => isRecord(check) && check.required === true && check.passed !== true);
-      if (failedRequired) failures.push('validation.passed contradicts a failed required check.');
+    } else {
+      for (const [index, check] of value.validation.checks.entries()) {
+        if (!isRecord(check)
+          || !nonEmptyString(check.id)
+          || typeof check.passed !== 'boolean'
+          || typeof check.required !== 'boolean'
+          || (check.detail !== undefined && typeof check.detail !== 'string')) {
+          failures.push(`validation.checks[${index}] is malformed.`);
+        }
+      }
+      if (value.validation.passed) {
+        const failedRequired = value.validation.checks.some((check) => isRecord(check) && check.required === true && check.passed !== true);
+        if (failedRequired) failures.push('validation.passed contradicts a failed required check.');
+      }
     }
   }
 

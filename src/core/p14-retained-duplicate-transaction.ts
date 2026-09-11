@@ -393,8 +393,9 @@ export async function runP14RetainedDuplicateTransaction(
       if (result.actionId !== action.actionId || result.recipeId !== action.recipeId) {
         throw new Error('Recipe execution result does not match the planned action identity.');
       }
-      if (!result.applied && !result.becameNoOp) {
-        throw new Error(result.detail ?? 'Recipe did not apply and did not resolve to an accepted no-op.');
+      const outcomeCount = (result.applied ? 1 : 0) + (result.becameNoOp === true ? 1 : 0);
+      if (outcomeCount !== 1) {
+        throw new Error(result.detail ?? 'Recipe result must be exactly one of applied or accepted idempotent no-op.');
       }
       appliedActions.push(result);
     } catch (error) {
