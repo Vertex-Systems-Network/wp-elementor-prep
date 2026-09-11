@@ -92,6 +92,12 @@ Product implication:
 9. Existing-component binding so teams can map Figma components to their own React/Vue/WordPress component libraries.
 10. Agency presets, client QA, white-label evidence and reproducible estimates.
 
+## Retained R0 snapshots
+
+- `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` — current WordPress/code-tool pricing and workflow pressure, Figma platform direction, sales/retention implications, and roadmap refinements including Elementor environment diagnostics, explicit fallback classes, non-billable failed generation, neutral semantic IR, component binding and later API/MCP positioning.
+
+The dated snapshot is the retained evidence record for the 2026-09-11 refresh. Vendor pricing and capability claims are point-in-time market signals and must be refreshed before implementation decisions that depend on them.
+
 ## Research evidence policy
 
 - Prefer official docs for platform-format claims.
