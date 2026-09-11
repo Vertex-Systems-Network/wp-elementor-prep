@@ -3,7 +3,10 @@ import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { collectPublisherEvidence } from '../scripts/p12-publisher-evidence-intake.mjs';
+import {
+  collectPublisherEvidence,
+  collectPublisherPackagePreflight,
+} from '../scripts/p12-publisher-evidence-intake.mjs';
 
 const roots = [];
 
@@ -101,6 +104,28 @@ afterEach(async () => {
 });
 
 describe('P12 publisher evidence intake', () => {
+  it('validates the exact package independently before any live evidence is collected', async () => {
+    const fixture = await makeFixture();
+    const receipt = await collectPublisherPackagePreflight({
+      candidate: fixture.candidate,
+      packageDir: fixture.packageDir,
+      packageZipPath: fixture.packageZipPath,
+      generatedAt: '2026-09-11T09:59:00.000Z',
+    });
+
+    expect(receipt.gate).toBe('p12-publisher-package-preflight');
+    expect(receipt.packagePreflightComplete).toBe(true);
+    expect(receipt.evidenceBundleComplete).toBe(false);
+    expect(receipt.runtimeEvidenceCollected).toBe(false);
+    expect(receipt.acceptanceAuthority).toBe(false);
+    expect(receipt.package.zip.sha256).toBe(fixture.candidate.importPackage.sha256);
+    expect(receipt.package.manifest.id).toBe(fixture.candidate.pluginId);
+    expect(receipt).not.toHaveProperty('evidence');
+    expect(receipt).not.toHaveProperty('operatorAttestations');
+    expect(receipt.semantics.finalEvidenceIntakeStillRequired).toBe(true);
+    expect(receipt.semantics.noTwoFactorStateClaimed).toBe(true);
+  });
+
   it('binds exact package bytes and hashed manual evidence without granting acceptance authority', async () => {
     const fixture = await makeFixture();
     const receipt = await collectPublisherEvidence({
@@ -108,6 +133,7 @@ describe('P12 publisher evidence intake', () => {
       generatedAt: '2026-09-11T10:00:00.000Z',
     });
 
+    expect(receipt.packagePreflightComplete).toBe(true);
     expect(receipt.evidenceBundleComplete).toBe(true);
     expect(receipt.acceptanceAuthority).toBe(false);
     expect(receipt.package.zip.sha256).toBe(fixture.candidate.importPackage.sha256);
@@ -125,11 +151,17 @@ describe('P12 publisher evidence intake', () => {
     await expect(collectPublisherEvidence(fixture)).rejects.toThrow(/package file hash mismatch for code\.js/);
   });
 
-  it('fails closed when the exact publish ZIP does not match the pinned candidate', async () => {
+  it('fails package preflight closed when the exact publish ZIP does not match the pinned candidate', async () => {
     const fixture = await makeFixture();
     await writeFile(fixture.packageZipPath, 'different zip bytes');
 
-    await expect(collectPublisherEvidence(fixture)).rejects.toThrow(/publish ZIP hash mismatch/);
+    await expect(
+      collectPublisherPackagePreflight({
+        candidate: fixture.candidate,
+        packageDir: fixture.packageDir,
+        packageZipPath: fixture.packageZipPath,
+      }),
+    ).rejects.toThrow(/publish ZIP hash mismatch/);
   });
 
   it('fails closed when a required operator attestation is missing', async () => {
