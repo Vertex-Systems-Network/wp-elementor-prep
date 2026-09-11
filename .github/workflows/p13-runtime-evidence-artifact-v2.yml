@@ -1,0 +1,120 @@
+name: P13 Runtime Evidence Artifact v2
+
+on:
+  push:
+    branches:
+      - p13/runtime-evidence-artifact-v2
+
+permissions:
+  contents: write
+
+jobs:
+  build-runtime-evidence-artifact:
+    runs-on: ubuntu-latest
+    env:
+      ACCEPTED_SOURCE_SHA: 917ae0ce690aa5445cfb1affe3db904e31f9e0f4
+      FIGMA_PLUGIN_ID: '1680034649341961379'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: p13/runtime-evidence-artifact-v2
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Verify artifact branch provenance
+        shell: bash
+        run: |
+          git fetch origin main
+          test "$(git merge-base HEAD "$ACCEPTED_SOURCE_SHA")" = "$ACCEPTED_SOURCE_SHA"
+          changed="$(git diff --name-only "$ACCEPTED_SOURCE_SHA"..HEAD)"
+          test "$changed" = ".github/workflows/p13-runtime-evidence-artifact-v2.yml"
+      - name: Install dependencies
+        run: npm install
+      - name: Validate accepted source
+        run: |
+          npm run typecheck
+          npx vitest run tests/p13-runtime-evidence.test.ts tests/p13-runtime-parity-intake.test.mjs tests/p13-runtime-integration-contract.test.mjs
+      - name: Build traceable development plugin
+        env:
+          SOURCE_SHA: 917ae0ce690aa5445cfb1affe3db904e31f9e0f4
+        run: npm run build
+      - name: Assemble bounded runtime artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist-p13-runtime
+          mkdir -p dist-p13-runtime
+          cp dist/code.js dist/ui.html dist/manifest.json dist-p13-runtime/
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile, writeFile } from 'node:fs/promises';
+
+          const dir = 'dist-p13-runtime';
+          const files = ['code.js', 'ui.html', 'manifest.json'];
+          const hashes = {};
+          for (const file of files) {
+            const bytes = await readFile(`${dir}/${file}`);
+            hashes[file] = createHash('sha256').update(bytes).digest('hex');
+          }
+          const manifest = JSON.parse(await readFile(`${dir}/manifest.json`, 'utf8'));
+          if (manifest.id !== process.env.FIGMA_PLUGIN_ID) throw new Error('Unexpected plugin id in runtime artifact');
+          if (!Array.isArray(manifest.menu) || !manifest.menu.some((item) => item?.command === 'p13-runtime-evidence')) {
+            throw new Error('P13 runtime evidence developer command missing from manifest');
+          }
+          if (JSON.stringify(manifest.networkAccess?.allowedDomains) !== JSON.stringify(['none'])) {
+            throw new Error('Runtime artifact must remain network-free');
+          }
+          const provenance = {
+            schemaVersion: 1,
+            purpose: 'p13-real-figma-runtime-evidence',
+            acceptanceAuthority: false,
+            productionReleaseArtifact: false,
+            doNotPublish: true,
+            acceptedSourceSha: process.env.ACCEPTED_SOURCE_SHA,
+            githubActionsRunId: process.env.GITHUB_RUN_ID,
+            githubActionsRunNumber: process.env.GITHUB_RUN_NUMBER,
+            pluginId: process.env.FIGMA_PLUGIN_ID,
+            networkAccessAllowedDomains: manifest.networkAccess.allowedDomains,
+            p13RuntimeEvidenceCommandPresent: true,
+            staleEvidenceQuarantineHardened: true,
+            files: hashes,
+          };
+          await writeFile(`${dir}/P13_RUNTIME_ARTIFACT_PROVENANCE.json`, `${JSON.stringify(provenance, null, 2)}\n`);
+          await writeFile(`${dir}/README-P13-RUNTIME-EVIDENCE.txt`, [
+            'P13 REAL FIGMA RUNTIME EVIDENCE ARTIFACT v2',
+            '',
+            'This is a development evidence artifact, NOT the P12 release #20 package and NOT a Community publish package.',
+            'Do not publish this artifact.',
+            '',
+            `Accepted source SHA: ${process.env.ACCEPTED_SOURCE_SHA}`,
+            `GitHub Actions run: ${process.env.GITHUB_RUN_NUMBER} (${process.env.GITHUB_RUN_ID})`,
+            `Plugin ID: ${process.env.FIGMA_PLUGIN_ID}`,
+            'Stale runtime evidence quarantine hardening: included',
+            '',
+            'Use in Figma Desktop:',
+            '1. Extract this artifact to a local folder.',
+            '2. Import manifest.json as a development plugin.',
+            '3. Open the intended Pella Nova file/frame used for P13 calibration.',
+            '4. Run Audit on exactly that Frame.',
+            '5. Run Developer: P13 Runtime Evidence.',
+            '6. Copy the evidence JSON exactly; do not edit it.',
+            '',
+            'The evidence remains non-authorizing until offline parity intake and separate internal review pass.',
+          ].join('\n') + '\n');
+          NODE
+      - name: Upload traceable runtime artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: p13-runtime-evidence-917ae0ce690a
+          path: dist-p13-runtime/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Remove temporary workflow from branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/p13-runtime-evidence-artifact-v2.yml
+          git commit -m "chore: remove temporary P13 runtime artifact v2 workflow"
+          git push origin HEAD:p13/runtime-evidence-artifact-v2
