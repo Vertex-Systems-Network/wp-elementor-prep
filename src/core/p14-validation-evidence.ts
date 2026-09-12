@@ -1,4 +1,8 @@
 import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import {
+  snapshotP14AdapterOutputArray,
+  snapshotP14AdapterOutputRecord,
+} from './p14-adapter-output-snapshot';
 import type { P14ValidationCheck } from './p14-preparation-types';
 
 export const P14_VALIDATION_EVIDENCE_VERSION = 1 as const;
@@ -17,10 +21,6 @@ export interface P14ValidationEvidenceResult {
   value: P14BoundedValidationEvidence | null;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 /**
  * Bounded shape/resource validation for adapter-provided validation evidence.
  *
@@ -28,69 +28,94 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * validation profile ran. Those policy/coverage decisions remain separate transaction gates.
  */
 export function validateP14ValidationEvidence(value: unknown): P14ValidationEvidenceResult {
+  const captured = snapshotP14AdapterOutputRecord(
+    value,
+    ['passed', 'profileIdsRun', 'checks'] as const,
+    'validation',
+  );
+  if (!captured.valid || !captured.value) {
+    return { valid: false, failures: captured.failures, value: null };
+  }
+
   const failures: string[] = [];
-  if (!isRecord(value)) {
-    return { valid: false, failures: ['validation must be an object.'], value: null };
+  const passed = captured.value.passed;
+  if (typeof passed !== 'boolean') failures.push('validation.passed must be boolean.');
+
+  const profileIdsSnapshot = snapshotP14AdapterOutputArray(
+    captured.value.profileIdsRun,
+    DEFAULT_P14_INPUT_BOUNDS.maxActions,
+    'validation.profileIdsRun',
+    'profile count',
+  );
+  if (!profileIdsSnapshot.valid || !profileIdsSnapshot.value) {
+    failures.push(...profileIdsSnapshot.failures);
   }
 
-  if (typeof value.passed !== 'boolean') failures.push('validation.passed must be boolean.');
-  if (!Array.isArray(value.profileIdsRun)) {
-    failures.push('validation.profileIdsRun must be an array.');
-  } else if (value.profileIdsRun.length > DEFAULT_P14_INPUT_BOUNDS.maxActions) {
-    failures.push(`validation.profileIdsRun exceeds bounded profile count ${DEFAULT_P14_INPUT_BOUNDS.maxActions}.`);
-  }
-
-  if (!Array.isArray(value.checks)) {
-    failures.push('validation.checks must be an array.');
-    return { valid: false, failures, value: null };
-  }
-  if (value.checks.length > DEFAULT_P14_INPUT_BOUNDS.maxActions) {
-    failures.push(`validation.checks exceeds bounded check count ${DEFAULT_P14_INPUT_BOUNDS.maxActions}.`);
+  const checksSnapshot = snapshotP14AdapterOutputArray(
+    captured.value.checks,
+    DEFAULT_P14_INPUT_BOUNDS.maxActions,
+    'validation.checks',
+    'check count',
+  );
+  if (!checksSnapshot.valid || !checksSnapshot.value) {
+    failures.push(...checksSnapshot.failures);
     return { valid: false, failures, value: null };
   }
 
   const checks: P14ValidationCheck[] = [];
-  for (const [index, check] of value.checks.entries()) {
+  for (const [index, check] of checksSnapshot.value.entries()) {
     const path = `validation.checks[${index}]`;
-    if (!isRecord(check)) {
-      failures.push(`${path} must be an object.`);
+    const checkSnapshot = snapshotP14AdapterOutputRecord(
+      check,
+      ['id', 'passed', 'required', 'detail'] as const,
+      path,
+    );
+    if (!checkSnapshot.valid || !checkSnapshot.value) {
+      failures.push(...checkSnapshot.failures);
       continue;
     }
-    if (typeof check.id !== 'string') {
+
+    const id = checkSnapshot.value.id;
+    const checkPassed = checkSnapshot.value.passed;
+    const required = checkSnapshot.value.required;
+    const detail = checkSnapshot.value.detail;
+
+    if (typeof id !== 'string') {
       failures.push(`${path}.id must be a string.`);
       continue;
     }
-    if (check.id.length === 0) {
+    if (id.length === 0) {
       failures.push(`${path}.id must not be empty.`);
       continue;
     }
-    if (check.id.length > DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength) {
+    if (id.length > DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength) {
       failures.push(`${path} has oversized id evidence (max ${DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength}).`);
       continue;
     }
-    if (typeof check.passed !== 'boolean' || typeof check.required !== 'boolean') {
+    if (typeof checkPassed !== 'boolean' || typeof required !== 'boolean') {
       failures.push(`${path} must include boolean passed and required fields.`);
       continue;
     }
-    if (check.detail !== undefined) {
-      if (typeof check.detail !== 'string') {
+    if (detail !== undefined) {
+      if (typeof detail !== 'string') {
         failures.push(`${path}.detail must be a string when present.`);
         continue;
       }
-      if (check.detail.length > DEFAULT_P14_INPUT_BOUNDS.maxDetailLength) {
+      if (detail.length > DEFAULT_P14_INPUT_BOUNDS.maxDetailLength) {
         failures.push(`${path} has oversized detail evidence (max ${DEFAULT_P14_INPUT_BOUNDS.maxDetailLength}).`);
         continue;
       }
     }
     checks.push({
-      id: check.id,
-      passed: check.passed,
-      required: check.required,
-      ...(check.detail !== undefined ? { detail: check.detail } : {}),
+      id,
+      passed: checkPassed,
+      required,
+      ...(detail !== undefined ? { detail } : {}),
     });
   }
 
-  if (failures.length > 0 || typeof value.passed !== 'boolean' || !Array.isArray(value.profileIdsRun)) {
+  const profileIdsRun = profileIdsSnapshot.value;
+  if (failures.length > 0 || typeof passed !== 'boolean' || !profileIdsRun) {
     return { valid: false, failures, value: null };
   }
 
@@ -99,8 +124,8 @@ export function validateP14ValidationEvidence(value: unknown): P14ValidationEvid
     failures: [],
     value: {
       version: P14_VALIDATION_EVIDENCE_VERSION,
-      passed: value.passed,
-      profileIdsRun: value.profileIdsRun,
+      passed,
+      profileIdsRun: [...profileIdsRun],
       checks,
     },
   };
