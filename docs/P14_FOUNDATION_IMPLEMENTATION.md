@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope and runtime-diagnostic evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup and source-scope transaction coordination.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup and source-scope transaction coordination.
 
 ## Bounded input preflight
 
@@ -190,17 +190,29 @@ P14 receipt integrity treats the receipt envelope itself as untrusted evidence, 
 
 `assessP14ReceiptCollection(...)` applies the existing P14 action-count safety limit to `appliedActions`, `errors` and `events`. An oversized collection is rejected from its `.length` before any item access, iteration, duplicate scan or status-specific `.some(...)` check. This preserves a bounded receipt-integrity traversal even for proxy-backed or otherwise hostile forged arrays.
 
-Top-level receipt correlation identities — `transactionId`, `p13RunId`, `planDigest` and `source.nodeId` — use the existing P14 identity bound. Error `stage` also uses the identity bound, while error `detail`, optional `recovery` and optional event `detail` use the existing P14 detail bound. The plan digest keeps its existing `p14-plan-` correlation prefix requirement; no host-specific node-ID, timestamp or authentication format is invented.
+Top-level receipt correlation identities — `transactionId`, `p13RunId`, `planDigest` and `source.nodeId` — use the existing P14 identity bound. Error `stage` also uses the identity bound, while error `detail`, optional `recovery` and optional event `detail` use the existing P14 detail bound. The plan digest keeps its existing `p14-plan-` correlation prefix requirement; no host-specific node-ID or authentication format is invented.
 
 Transaction diagnostic constructors use the same shared bounds. `receiptError(...)` and event construction therefore emit bounded stage/detail/recovery evidence by construction, including details assembled from planner/authorization/runtime failures. Runtime adapter/discard exceptions are rendered through `safeP14RuntimeErrorMessage(...)`, which bounds long messages and falls back deterministically when hostile exception stringification itself throws.
 
 These envelope/resource limits do not make a receipt authoritative. They bound traversal and evidence size only; `acceptanceAuthority` and `targetCompatibilityClaim` remain false.
 
+## Runtime clock and event timestamp evidence
+
+Runtime wall-clock callbacks are evidence providers, not transaction authority. A caller-supplied `now()` callback therefore cannot be trusted merely because the TypeScript surface historically returned `string`.
+
+`isP14NormalizedUtcTimestamp(...)` centralizes the strict P14 timestamp shape already used by reviewed-plan confirmations: normalized UTC ISO with millisecond precision (`YYYY-MM-DDTHH:mm:ss.sssZ`), bounded before parsing, and round-tripped through `Date` to reject impossible calendar values. Preparation confirmations continue to require this strict observed timestamp and do not accept an unavailable-time sentinel.
+
+Receipt event timestamps use the same bounded normalized form when runtime clock evidence is valid. If the runtime clock callback throws, returns a non-string, exceeds the existing identity bound, or returns a non-canonical/invalid timestamp, `readP14RuntimeEventTimestamp(...)` records the explicit `UNKNOWN` sentinel instead of throwing or inventing an observed time.
+
+Receipt integrity accepts only normalized UTC event evidence or the explicit `UNKNOWN` sentinel. Oversized/malformed event timestamp strings are rejected before `Date.parse(...)`, so forged receipt evidence cannot force unbounded timestamp parsing.
+
+`UNKNOWN` means only that the event's wall-clock timestamp was unavailable or invalid. It is not a real time, does not weaken event state ordering, does not authenticate the host clock, and does not claim monotonicity, cross-machine synchronization, publisher identity or production acceptance. Transaction state/detail/cleanup semantics remain unchanged when clock evidence is unavailable.
+
 ## Receipt integrity gate
 
 Every P14 receipt explicitly carries `acceptanceAuthority: false` and `targetCompatibilityClaim: false`.
 
-Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation, re-score and recipe-execution evidence. Receipt collection counts are bounded before traversal; top-level correlation identities and error/event diagnostics are bounded with the existing P14 identity/detail limits. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; validation-check count, IDs, boolean fields and optional detail are bounded through the same shared validator used at runtime; prepared outcomes require non-empty profile execution evidence. Runtime/receipt re-score evidence uses the same accepted scored-P13 validator. Source fingerprint evidence is bounded and may use the explicit `UNKNOWN` sentinel only as receipt evidence for unavailable proof. Candidate identities, recipe execution results and retention identities are bounded through the same adapter-evidence contracts used at runtime. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
+Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation, re-score and recipe-execution evidence. Receipt collection counts are bounded before traversal; top-level correlation identities and error/event diagnostics are bounded with the existing P14 identity/detail limits. Event time evidence must be normalized bounded UTC or the explicit unavailable sentinel. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; validation-check count, IDs, boolean fields and optional detail are bounded through the same shared validator used at runtime; prepared outcomes require non-empty profile execution evidence. Runtime/receipt re-score evidence uses the same accepted scored-P13 validator. Source fingerprint evidence is bounded and may use the explicit `UNKNOWN` sentinel only as receipt evidence for unavailable proof. Candidate identities, recipe execution results and retention identities are bounded through the same adapter-evidence contracts used at runtime. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
 
 ## Safety invariants
 
@@ -242,7 +254,12 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 36. Receipt `appliedActions`, `errors` and `events` counts are bounded from `.length` before their contents are traversed.
 37. Receipt correlation identities and error/event diagnostics are bounded by the existing P14 identity/detail limits.
 38. Runtime adapter/discard exception rendering cannot emit unbounded receipt error or event detail.
-39. Receipt-envelope hardening introduces no new host identifier, timestamp, authentication or acceptance semantics.
+39. Receipt-envelope hardening introduces no new host identifier, authentication or acceptance semantics.
+40. Event timestamp strings are length/shape checked before parsing and must be normalized UTC or the explicit `UNKNOWN` sentinel.
+41. A throwing, non-string, oversized or non-canonical runtime clock callback cannot escape the transaction or inject raw timestamp evidence.
+42. `UNKNOWN` event time represents unavailable evidence; it never fabricates an observed wall-clock timestamp or changes transaction state semantics.
+43. Reviewed-plan confirmation timestamps remain strict normalized UTC evidence and cannot use the event-time `UNKNOWN` sentinel.
+44. P14 does not claim host-clock accuracy, monotonicity or cross-machine time synchronization.
 
 ## Deliberately not wired yet
 

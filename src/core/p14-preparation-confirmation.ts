@@ -1,5 +1,6 @@
 import { DEFAULT_P14_INPUT_BOUNDS, assessP14PreparationInputBounds } from './p14-input-bounds';
 import { validateP14PreparationPlan } from './p14-plan-integrity';
+import { isP14NormalizedUtcTimestamp } from './p14-timestamp-evidence';
 import type { P14PreparationPlanV1 } from './p14-preparation-types';
 
 export const P14_PREPARATION_CONFIRMATION_SCHEMA_VERSION = 1 as const;
@@ -35,19 +36,6 @@ function boundedIdentity(value: unknown): value is string {
     && value.length <= DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength;
 }
 
-const UTC_ISO_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
-
-function validTimestamp(value: unknown): value is string {
-  if (typeof value !== 'string'
-    || value.length === 0
-    || value.length > DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength
-    || !UTC_ISO_TIMESTAMP.test(value)) {
-    return false;
-  }
-  const parsed = Date.parse(value);
-  return Number.isFinite(parsed) && new Date(parsed).toISOString() === value;
-}
-
 function sameStrings(a: string[], b: string[]): boolean {
   return a.length === b.length && a.every((value, index) => value === b[index]);
 }
@@ -67,7 +55,7 @@ export function buildP14PreparationConfirmation(
   if (plan.status !== 'READY' || plan.eligibleActionIds.length === 0) {
     throw new Error('P14 preparation confirmation is only valid for READY plans with eligible mutating actions.');
   }
-  if (!validTimestamp(confirmedAt)) {
+  if (!isP14NormalizedUtcTimestamp(confirmedAt)) {
     throw new Error('P14 preparation confirmation requires a valid bounded timestamp.');
   }
   return {
@@ -102,7 +90,7 @@ export function validateP14PreparationConfirmation(
   if (value.targetCompatibilityClaim !== false) {
     failures.push('P14 preparation confirmation must carry targetCompatibilityClaim=false.');
   }
-  if (!validTimestamp(value.confirmedAt)) {
+  if (!isP14NormalizedUtcTimestamp(value.confirmedAt)) {
     failures.push('P14 preparation confirmation confirmedAt must be a valid bounded timestamp.');
   }
   if (!boundedIdentity(value.planDigest)) failures.push('P14 preparation confirmation planDigest is missing or oversized.');
