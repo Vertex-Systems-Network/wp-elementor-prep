@@ -45,16 +45,57 @@ export function validateP14RuntimeActionEligibilityEvidence(
     return { valid: false, failures: captured.failures, value: null };
   }
 
+  const plannedActionSnapshot = snapshotP14AdapterOutputRecord(
+    action,
+    ['actionId', 'recipeId', 'prerequisiteRecipeIds'] as const,
+    'P14 planned runtime action binding',
+  );
+  if (!plannedActionSnapshot.valid || !plannedActionSnapshot.value) {
+    return { valid: false, failures: plannedActionSnapshot.failures, value: null };
+  }
+
+  const plannedPrerequisiteSnapshot = snapshotP14AdapterOutputArray(
+    plannedActionSnapshot.value.prerequisiteRecipeIds,
+    DEFAULT_P14_INPUT_BOUNDS.maxPrerequisitesPerAction,
+    'Planned runtime action prerequisiteRecipeIds',
+    'prerequisite count',
+  );
+  if (!plannedPrerequisiteSnapshot.valid || !plannedPrerequisiteSnapshot.value) {
+    return { valid: false, failures: plannedPrerequisiteSnapshot.failures, value: null };
+  }
+
+  const plannedActionId = plannedActionSnapshot.value.actionId;
+  const plannedRecipeId = plannedActionSnapshot.value.recipeId;
+  const plannedPrerequisiteRecipeIds = plannedPrerequisiteSnapshot.value;
+  if (!boundedIdentity(plannedActionId)
+    || !boundedIdentity(plannedRecipeId)
+    || plannedPrerequisiteRecipeIds.some((id) => !boundedIdentity(id))) {
+    return {
+      valid: false,
+      failures: ['P14 planned runtime action binding is missing, malformed or oversized.'],
+      value: null,
+    };
+  }
+
+  const stablePlannedPrerequisiteRecipeIds = plannedPrerequisiteRecipeIds as string[];
+  if (new Set(stablePlannedPrerequisiteRecipeIds).size !== stablePlannedPrerequisiteRecipeIds.length) {
+    return {
+      valid: false,
+      failures: ['P14 planned runtime action prerequisite binding contains duplicate recipe IDs.'],
+      value: null,
+    };
+  }
+
   const failures: string[] = [];
   const actionId = captured.value.actionId;
   const recipeId = captured.value.recipeId;
   const eligible = captured.value.eligible;
   const detail = captured.value.detail;
 
-  if (!boundedIdentity(actionId) || actionId !== action.actionId) {
+  if (!boundedIdentity(actionId) || actionId !== plannedActionId) {
     failures.push('Runtime action eligibility actionId is missing, oversized or does not match the planned action.');
   }
-  if (!boundedIdentity(recipeId) || recipeId !== action.recipeId) {
+  if (!boundedIdentity(recipeId) || recipeId !== plannedRecipeId) {
     failures.push('Runtime action eligibility recipeId is missing, oversized or does not match the planned recipe.');
   }
   if (typeof eligible !== 'boolean') {
@@ -79,7 +120,7 @@ export function validateP14RuntimeActionEligibilityEvidence(
       if (new Set(checkedPrerequisiteRecipeIds).size !== checkedPrerequisiteRecipeIds.length) {
         failures.push('Runtime action eligibility prerequisite evidence contains duplicate recipe IDs.');
       }
-      if (!sameCanonicalIds(checkedPrerequisiteRecipeIds, action.prerequisiteRecipeIds)) {
+      if (!sameCanonicalIds(checkedPrerequisiteRecipeIds, stablePlannedPrerequisiteRecipeIds)) {
         failures.push('Runtime action eligibility prerequisite evidence does not match the exact planned prerequisite set.');
       }
     }
