@@ -90,7 +90,8 @@ export function compareP13PluginEvidenceToCli(
 
   const sameRunIdentity = evidence.buildReady.runId === cliReport.runId
     && evidence.buildReady.source.structuralHash === cliReport.source.structuralHash
-    && evidence.buildReady.source.configHash === cliReport.source.configHash;
+    && evidence.buildReady.source.configHash === cliReport.source.configHash
+    && evidence.buildReady.source.analyzerVersion === cliReport.source.analyzerVersion;
   if (!sameRunIdentity && mismatches.length < maxMismatches) {
     mismatches.unshift({
       path: 'buildReady.runIdentity',
@@ -98,11 +99,13 @@ export function compareP13PluginEvidenceToCli(
         runId: evidence.buildReady.runId,
         structuralHash: evidence.buildReady.source.structuralHash,
         configHash: evidence.buildReady.source.configHash,
+        analyzerVersion: evidence.buildReady.source.analyzerVersion,
       },
       cli: {
         runId: cliReport.runId,
         structuralHash: cliReport.source.structuralHash,
         configHash: cliReport.source.configHash,
+        analyzerVersion: cliReport.source.analyzerVersion,
       },
     });
   }
