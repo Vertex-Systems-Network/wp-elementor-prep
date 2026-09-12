@@ -52,7 +52,7 @@ export function snapshotP14AdapterOutputRecord<K extends string>(
   const snapshot = {} as Record<K, unknown>;
   for (const key of keys) {
     try {
-      snapshot[key] = value[key];
+      snapshot[key] = (value as Record<string, unknown>)[key];
     } catch {
       failures.push(`${label}.${key} could not be read safely.`);
     }
@@ -83,9 +83,10 @@ export function snapshotP14AdapterOutputArray(
     };
   }
 
+  const arrayValue = value as unknown[];
   let length: number;
   try {
-    length = value.length;
+    length = arrayValue.length;
   } catch {
     return {
       valid: false,
@@ -113,7 +114,7 @@ export function snapshotP14AdapterOutputArray(
   const failures: string[] = [];
   for (let index = 0; index < length; index += 1) {
     try {
-      snapshot.push(value[index]);
+      snapshot.push(arrayValue[index]);
     } catch {
       failures.push(`${label}[${index}] could not be read safely.`);
     }
