@@ -369,6 +369,36 @@
         && preview.targetCompatibilityClaim === false
         && preview.mutationEnabled === false
         && preview.confirmationEnabled === false;
+      const reviewManifest = preview.reviewManifest || null;
+      const reviewActionRows = reviewManifest && Array.isArray(reviewManifest.actions)
+        ? reviewManifest.actions.map((action) => `
+            <div class="row">
+              <div class="rowHead">
+                <div class="name">${escapeHtml(action.recipeId)}@${escapeHtml(action.recipeVersion)}</div>
+                <div class="badge">${escapeHtml(action.actionId)}</div>
+              </div>
+              <div class="recipe">${escapeHtml(action.sourceRuleId)}@${escapeHtml(action.sourceRuleVersion)} · validation ${escapeHtml(action.validationProfileId)}</div>
+              <div class="finding">Targets: ${escapeHtml(action.targetNodeIds.join(', '))}</div>
+              <div class="finding">Prerequisites: ${escapeHtml(action.prerequisiteRecipeIds.length ? action.prerequisiteRecipeIds.join(', ') : 'none')}</div>
+              <div class="finding">Allowed fields: ${escapeHtml(action.mutationAllowlist.length ? action.mutationAllowlist.join(', ') : 'none')}</div>
+            </div>`).join('')
+        : '';
+      const reviewBinding = reviewManifest
+        ? `
+          <div class="sectionTitle">Proposed Change Review Binding</div>
+          <div class="hero">
+            <div class="status">READ-ONLY REVIEW ARTIFACT · schema v${escapeHtml(reviewManifest.schemaVersion)} · review v${escapeHtml(reviewManifest.reviewVersion)}</div>
+            <div class="meta">P13 run: ${escapeHtml(reviewManifest.binding.p13RunId)}</div>
+            <div class="meta">Source node: ${escapeHtml(reviewManifest.binding.source.nodeId)}</div>
+            <div class="meta">Source fingerprint: ${escapeHtml(reviewManifest.binding.source.fingerprint)}</div>
+            <div class="meta">Plan digest: ${escapeHtml(reviewManifest.binding.planDigest)}</div>
+            <div class="meta">Eligible action IDs: ${escapeHtml(reviewManifest.binding.eligibleActionIds.length ? reviewManifest.binding.eligibleActionIds.join(', ') : 'none')}</div>
+            <div class="meta">acceptanceAuthority=false · targetCompatibilityClaim=false · mutationEnabled=false · confirmationEnabled=false</div>
+          </div>
+          ${reviewActionRows
+            ? `<div class="sectionTitle">Eligible reviewed actions · ${reviewManifest.actions.length}</div>${reviewActionRows}`
+            : '<div class="empty">No eligible action bindings are authorized by the current production P14 recipe registry. This review artifact does not create confirmation or mutation authority.</div>'}`
+        : '';
       const groups = [
         ['ELIGIBLE', 'Eligible changes'],
         ['NOOP', 'Already correct / no-op'],
@@ -423,6 +453,7 @@
           <div class="meta">Plan digest: ${escapeHtml(plan ? plan.planDigest : '—')}</div>
         </div>
         ${unavailable}
+        ${reviewBinding}
         ${rows}
         ${blockers}
         <details><summary>Read-only P14 preview JSON</summary><pre>${escapeHtml(message.previewJson || JSON.stringify(preview, null, 2))}</pre></details>`;
