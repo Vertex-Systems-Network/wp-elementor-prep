@@ -1,4 +1,8 @@
 import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import {
+  snapshotP14AdapterOutputArray,
+  snapshotP14AdapterOutputRecord,
+} from './p14-adapter-output-snapshot';
 import type { P14PreparationAction } from './p14-preparation-types';
 
 export interface P14RuntimeActionEligibilityEvidenceV1 {
@@ -13,10 +17,6 @@ export interface P14RuntimeActionEligibilityValidation {
   valid: boolean;
   failures: string[];
   value: P14RuntimeActionEligibilityEvidenceV1 | null;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function boundedIdentity(value: unknown): value is string {
@@ -36,32 +36,41 @@ export function validateP14RuntimeActionEligibilityEvidence(
   value: unknown,
   action: P14PreparationAction,
 ): P14RuntimeActionEligibilityValidation {
-  const failures: string[] = [];
-  if (!isRecord(value)) {
-    return {
-      valid: false,
-      failures: ['P14 runtime action eligibility evidence must be an object.'],
-      value: null,
-    };
+  const captured = snapshotP14AdapterOutputRecord(
+    value,
+    ['actionId', 'recipeId', 'checkedPrerequisiteRecipeIds', 'eligible', 'detail'] as const,
+    'P14 runtime action eligibility evidence',
+  );
+  if (!captured.valid || !captured.value) {
+    return { valid: false, failures: captured.failures, value: null };
   }
 
-  if (!boundedIdentity(value.actionId) || value.actionId !== action.actionId) {
+  const failures: string[] = [];
+  const actionId = captured.value.actionId;
+  const recipeId = captured.value.recipeId;
+  const eligible = captured.value.eligible;
+  const detail = captured.value.detail;
+
+  if (!boundedIdentity(actionId) || actionId !== action.actionId) {
     failures.push('Runtime action eligibility actionId is missing, oversized or does not match the planned action.');
   }
-  if (!boundedIdentity(value.recipeId) || value.recipeId !== action.recipeId) {
+  if (!boundedIdentity(recipeId) || recipeId !== action.recipeId) {
     failures.push('Runtime action eligibility recipeId is missing, oversized or does not match the planned recipe.');
   }
-  if (typeof value.eligible !== 'boolean') {
+  if (typeof eligible !== 'boolean') {
     failures.push('Runtime action eligibility eligible flag must be boolean.');
   }
 
   let checkedPrerequisiteRecipeIds: string[] = [];
-  if (!Array.isArray(value.checkedPrerequisiteRecipeIds)) {
-    failures.push('Runtime action eligibility checkedPrerequisiteRecipeIds must be an array.');
-  } else if (value.checkedPrerequisiteRecipeIds.length > DEFAULT_P14_INPUT_BOUNDS.maxPrerequisitesPerAction) {
-    failures.push('Runtime action eligibility prerequisite evidence exceeds the bounded prerequisite count.');
+  const prerequisiteSnapshot = snapshotP14AdapterOutputArray(
+    captured.value.checkedPrerequisiteRecipeIds,
+    DEFAULT_P14_INPUT_BOUNDS.maxPrerequisitesPerAction,
+    'Runtime action eligibility checkedPrerequisiteRecipeIds',
+  );
+  if (!prerequisiteSnapshot.valid || !prerequisiteSnapshot.value) {
+    failures.push(...prerequisiteSnapshot.failures);
   } else {
-    const rawIds = value.checkedPrerequisiteRecipeIds as unknown[];
+    const rawIds = prerequisiteSnapshot.value;
     if (rawIds.some((id) => !boundedIdentity(id))) {
       failures.push('Runtime action eligibility prerequisite evidence contains an invalid or oversized recipe ID.');
     } else {
@@ -75,8 +84,8 @@ export function validateP14RuntimeActionEligibilityEvidence(
     }
   }
 
-  if (value.detail !== undefined
-    && (typeof value.detail !== 'string' || value.detail.length > DEFAULT_P14_INPUT_BOUNDS.maxDetailLength)) {
+  if (detail !== undefined
+    && (typeof detail !== 'string' || detail.length > DEFAULT_P14_INPUT_BOUNDS.maxDetailLength)) {
     failures.push('Runtime action eligibility detail must be a bounded string when present.');
   }
 
@@ -86,11 +95,11 @@ export function validateP14RuntimeActionEligibilityEvidence(
     valid: true,
     failures: [],
     value: {
-      actionId: value.actionId as string,
-      recipeId: value.recipeId as string,
+      actionId: actionId as string,
+      recipeId: recipeId as string,
       checkedPrerequisiteRecipeIds: [...checkedPrerequisiteRecipeIds].sort(),
-      eligible: value.eligible as boolean,
-      ...(typeof value.detail === 'string' && value.detail.length > 0 ? { detail: value.detail } : {}),
+      eligible: eligible as boolean,
+      ...(typeof detail === 'string' && detail.length > 0 ? { detail } : {}),
     },
   };
 }
