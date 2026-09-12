@@ -1,0 +1,17 @@
+name: P14 post-240 status sync
+
+on: push
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.ref == 'refs/heads/docs/p14-post-240-status-241'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply canonical status synchronization
+        run: python .github/scripts/p14-status-sync-241.py
