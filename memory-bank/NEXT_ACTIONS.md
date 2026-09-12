@@ -79,6 +79,24 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
+### #207 — P14 caller run-control runtime evidence
+
+Classification: **ACTIVE / PR #208 under synchronized-head verification**.
+
+PR #208 (`fix/p14-run-control-evidence-207`) hardens the remaining caller run-control trust boundary without changing mutation or target authority:
+
+1. `assessP14RunControlEvidence(...)` validates runtime control types before confirmation, source coordination or adapter access;
+2. `transactionId` must be a string with a non-whitespace identity and is normalized once before coordinator/adapter/receipt use;
+3. supplied `preparedName` must be a string, is normalized once, and preserves the established empty/whitespace fallback to `Prepared Duplicate`;
+4. supplied `allowPreparedWithReview` must be a literal boolean, so truthy non-boolean values cannot authorize review retention;
+5. known `inputBounds` override fields are snapshotted through guarded property reads and present values must be positive integers;
+6. unreadable proxy-backed bounds or malformed present overrides fail closed as `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` at stage `run-control` before coordinator/adapter access;
+7. valid typed but oversized raw identities preserve the established `P14_INPUT_TOO_LARGE` outcome;
+8. the previous retained-duplicate engine is preserved as an internal core while the original public module path is the hardened boundary;
+9. no production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
+
+Initial implementation head `9e4b0ca8c7abf69d2c7052bcf26f48526e0587dc` passed CI #876 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #187 passed; P12 Offline Acceptance #231 passed on Ubuntu/macOS/Windows. Final merge authority requires fresh CI, Integration Readiness, Final Release Artifact and cross-platform Offline Acceptance on the synchronized documentation head plus a clean/current/mergeable PR gate.
+
 ### #201 — P14 transaction coordinator runtime evidence and lease cleanup
 
 Classification: **COMPLETED / merged through PR #205**.
@@ -196,7 +214,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. start the next focused safety-gap audit from main `e80bf4c...` now that #201 / PR #205 is completed;
+1. complete #207 / PR #208 on its final synchronized head, then begin the next focused safety-gap audit from the resulting main;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
