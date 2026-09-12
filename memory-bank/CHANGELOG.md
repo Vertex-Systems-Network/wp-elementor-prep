@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-12 — P14 adapter callback input isolation
+
+- Opened authoritative issue #229 and focused PR #230 (`fix/p14-adapter-input-isolation-229`) after a fresh post-#226 P14 adapter-boundary audit.
+- Confirmed a distinct mutable-reference gap: caller run/plan/confirmation/registry evidence was already stabilized, but accepted candidate/action/plan objects were still passed by reference into runtime adapter callbacks and then reused by later core semantics.
+- Added `src/core/p14-adapter-input-snapshot.ts` with known-schema candidate/action/plan copy helpers. Action/plan collections are copied from the already-accepted bounded P14 contract; this does not enumerate arbitrary properties or perform a generic recursive deep clone.
+- Hardened the public retained-duplicate adapter boundary so `assessActionEligibility`, `applyRecipe`, `validateCandidate`, `rescoreCandidate`, `retainCandidate` and `discardCandidate` receive fresh detached candidate/action/plan copies as applicable. Scalar source/transaction/prepared-name arguments remain unchanged.
+- Callback-side mutation can no longer rewrite later core action expectations, source/candidate correlation, validation/re-score inputs, retention evidence expectations or cleanup receipt identity. Existing adapter-output validation and source-immutability proof remain authoritative.
+- Added `tests/p14-adapter-input-isolation.test.ts` covering a two-action successful run where every object-bearing callback mutates its arguments, plus a transform/discard failure path proving cleanup receipt candidate identity remains stable even when callback copies are poisoned.
+- Initial implementation/test head `651d4c5f9d8d3e7776eb23b9eafeecb1727498d0` passed CI #952 including typecheck/full tests/builds/contracts, P12 Final Release Artifact #263 and P12 Offline Acceptance #307 on Ubuntu/macOS/Windows.
+- README, P14 foundation, PROJECT_STATE and NEXT_ACTIONS are synchronized in the same cycle; final exact-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable verification remain required before PR #230 may merge.
+- Input isolation does not sandbox an adapter's actual candidate-side effects and introduces no production safe recipe, real Figma adapter/UI/mutation command, target-compatibility claim or production acceptance.
+
 ## 2026-09-12 — P14 safe-recipe registry semantic snapshot hardening
 
 - Opened authoritative issue #226 and focused PR #227 (`fix/p14-registry-semantic-snapshot-226`) after a fresh post-#223 P14 authorization-boundary audit.
@@ -110,7 +122,7 @@
 - Added `tests/p14-registry-bounds.test.ts` covering exact boundaries, oversized identities, top-level/nested proxy arrays that permit only `.length`, bounded malformed registries, empty production registry preservation, and zero coordinator/adapter access on transaction rejection.
 - Initial code/test head `4ebf8328159f6d0d94ba8b606987cb8c0599a66a` passed CI #858, P12 Final Release Artifact #169 and P12 Offline Acceptance #213 on Ubuntu/macOS/Windows.
 - Final synchronized PR head `e782a08090a4e158f99da22bf25d8fff60c8c529` passed CI #863, Integration Readiness #231, P12 Final Release Artifact #174 and P12 Offline Acceptance #218 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main and was reported mergeable by GitHub.
-- PR #199 squash-merged as `80cefcb8b90a85b5e5a8b5ad4e6a0f65ddf6d12b`; issue #198 closed completed. P14 remains runtime-unwired and production recipe authority remains empty.
+- PR #199 squash-merged as `80cefcb8b90a85b5e5a8b5ad4e6a0f65ddf6d12b`; issue #198 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
 - Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS without enabling real Figma mutation, registering a production recipe, or creating target-compatibility/production-acceptance authority.
 
 ## 2026-09-12 — P14 runtime clock and event-timestamp evidence hardening
@@ -124,7 +136,7 @@
 - Initial PR head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` passed P12 Offline Acceptance #203 but exposed a test-only TypeScript inference failure in CI #848 / P12 Final Release Artifact #159. The heterogeneous test callbacks were explicitly typed in follow-up commit `4d2b56497d90c58c71293ec9f473260fb9c8cef8`; no production clock logic change was required for that failure.
 - Updated `docs/P14_FOUNDATION_IMPLEMENTATION.md`, README, PROJECT_STATE and NEXT_ACTIONS with the timestamp evidence contract. No real Figma mutation command, production recipe authority, target-compatibility claim or acceptance authority was introduced.
 - Final synchronized PR head `47cb0b4d2d3c53f7f818af760131cc78737cb5c4` passed CI #854, Integration Readiness #224, P12 Final Release Artifact #165 and P12 Offline Acceptance #209 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main and was reported mergeable by GitHub.
-- PR #196 squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf`; issue #195 closed completed. P14 remains runtime-unwired and production recipe authority remains empty.
+- PR #196 squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf`; issue #195 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
 
 ## 2026-09-12 — P14 receipt envelope and runtime-diagnostic hardening
 
