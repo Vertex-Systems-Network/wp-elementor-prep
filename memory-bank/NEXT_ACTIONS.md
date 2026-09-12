@@ -138,7 +138,7 @@ PR #214 (`fix/p14-run-input-snapshot-213`) closed the narrow public caller-objec
 1. `plan`, `registry`, `coordinator`, `inputBounds`, `confirmation`, `transactionId`, `preparedName`, `allowPreparedWithReview` and `shouldCancel` are read through guarded one-shot access before bounds/core semantics;
 2. accepted values are copied into a plain snapshot and delegated explicitly; the wrapper no longer uses `...input`, so caller getters are not re-entered after validation;
 3. non-object input or a throwing known top-level getter returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `run-input` before coordinator or adapter access;
-4. runtime `now` property/callback handling remains on the existing fail-soft `UNKNOWN` event-time contract rather than becoming transaction authority failure;
+4. runtime `now` property/callback handling remains on the existing fail-soft `UNKNOWN` event-time contract rather than becoming transaction authority;
 5. existing run-control normalization, raw-size `P14_INPUT_TOO_LARGE`, confirmation, registry authorization, coordinator, cancellation and adapter evidence semantics are preserved;
 6. no new status/error code, production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
 
