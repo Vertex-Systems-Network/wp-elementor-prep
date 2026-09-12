@@ -81,9 +81,9 @@ Canonical future order:
 
 ### #192 — P14 bounded receipt envelope and runtime diagnostics
 
-Classification: **active focused implementation slice / PR #193**.
+Classification: **COMPLETED / merged through PR #193**.
 
-The branch `fix/p14-receipt-envelope-bounds-192` now implements the issue scope without adding any real Figma mutation surface or production recipe authority:
+PR #193 (`fix/p14-receipt-envelope-bounds-192`) completed the issue scope without adding any real Figma mutation surface or production recipe authority:
 
 1. `appliedActions`, `errors` and `events` are count-bounded before item traversal using the existing P14 action-count safety limit;
 2. receipt `transactionId`, `p13RunId`, `planDigest`, source-node identity and error stages use the existing identity bound;
@@ -93,7 +93,7 @@ The branch `fix/p14-receipt-envelope-bounds-192` now implements the issue scope 
 6. regression coverage includes proxy-backed no-traversal arrays, exact-boundary acceptance, forged oversized evidence and oversized/hostile runtime exceptions;
 7. `docs/P14_FOUNDATION_IMPLEMENTATION.md` records the invariant without changing runtime/acceptance authority.
 
-Pre-memory-sync PR head `7a031c2f8e2b405e084ae2fbdd677205d9e9c7e7` passed CI #840, P12 Final Release Artifact #151 and P12 Offline Acceptance #195 on Ubuntu/macOS/Windows. Before #192 may close, the **final synchronized PR head** must independently satisfy the same three gates, have zero unresolved review threads, remain current with `main`, and be mergeable.
+Exact synchronized PR head `5b9a02ce3b15ab49a1f281b51494e51bc5eb0e57` passed CI #844, Integration Readiness #217, P12 Final Release Artifact #155 and P12 Offline Acceptance #199 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/comments, was current with main (`behind_by=0`) and `mergeable=true`, then squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd`. Issue #192 closed completed.
 
 ## R0 research actions already captured
 
@@ -142,12 +142,12 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. finish #192 / PR #193 only after final-head CI, P12 Final Release Artifact and P12 Offline Acceptance pass and the PR is current/mergeable with no unresolved review threads;
+1. start the next focused safety-gap audit from main `e54cb44...` now that #192 / PR #193 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt evidence and preserve cleanup;
 5. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
-6. after #192 closes, continue focused safety-gap audits until core implementation is internally ready;
+6. continue focused safety-gap audits until core implementation is internally ready;
 7. require #159 before real Figma mutation exposure;
 8. require genuine real-Figma acceptance before any production mutation/readiness claim.
 
