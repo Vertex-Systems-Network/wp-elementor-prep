@@ -181,10 +181,19 @@ function boundaryBlockedReceipt(
   transactionId: string,
   now: () => unknown,
   failures: string[],
-  stage: 'run-input' | 'run-control',
+  stage: 'run-input' | 'run-control' | 'bounds-evidence',
 ): P14PreparationReceiptV1 {
   const metadata = safePlanMetadata(plan);
-  const isRunInput = stage === 'run-input';
+  const evidenceLabel = stage === 'run-input'
+    ? 'Invalid P14 run-input evidence'
+    : stage === 'run-control'
+      ? 'Invalid P14 run-control evidence'
+      : 'Unreadable P14 bounded-input evidence';
+  const recovery = stage === 'run-input'
+    ? 'Provide a readable P14 run input object and retry the current reviewed plan.'
+    : stage === 'run-control'
+      ? 'Provide typed, bounded P14 run controls and retry the current reviewed plan.'
+      : 'Provide readable nested plan/confirmation bounds evidence and retry the current reviewed plan.';
   return {
     schemaVersion: 1,
     engineVersion: P14_PREPARATION_ENGINE_VERSION,
@@ -204,12 +213,8 @@ function boundaryBlockedReceipt(
     errors: [{
       code: 'P14_INTERNAL_INVARIANT_FAILED',
       stage,
-      detail: boundP14ReceiptDetail(
-        `${isRunInput ? 'Invalid P14 run-input evidence' : 'Invalid P14 run-control evidence'}: ${failures.join(' | ')}`,
-      ),
-      recovery: isRunInput
-        ? 'Provide a readable P14 run input object and retry the current reviewed plan.'
-        : 'Provide typed, bounded P14 run controls and retry the current reviewed plan.',
+      detail: boundP14ReceiptDetail(`${evidenceLabel}: ${failures.join(' | ')}`),
+      recovery,
     }],
     events: [
       boundaryEvent(now, 'IDLE'),
@@ -292,11 +297,22 @@ export async function runP14RetainedDuplicateTransaction(
 
   const controlSnapshot = controls.value;
   const rawPreparedName = controlSnapshot.rawPreparedName ?? controlSnapshot.preparedName;
-  const boundedPreflight = assessP14PreparationInputBounds(inputSnapshot.plan, controlSnapshot.inputBounds, {
-    transactionId: controlSnapshot.rawTransactionId,
-    preparedName: rawPreparedName,
-    confirmation: inputSnapshot.confirmation,
-  });
+  let boundedPreflight;
+  try {
+    boundedPreflight = assessP14PreparationInputBounds(inputSnapshot.plan, controlSnapshot.inputBounds, {
+      transactionId: controlSnapshot.rawTransactionId,
+      preparedName: rawPreparedName,
+      confirmation: inputSnapshot.confirmation,
+    });
+  } catch (error) {
+    return boundaryBlockedReceipt(
+      inputSnapshot.plan,
+      controls.safeTransactionId,
+      now,
+      [`P14 bounded-input evidence could not be read safely: ${safeP14RuntimeErrorMessage(error)}`],
+      'bounds-evidence',
+    );
+  }
   const guardedAdapter = guardP14RuntimeEligibilityHook(adapter);
 
   // Preserve the established P14_INPUT_TOO_LARGE path for valid typed controls whose raw resource
