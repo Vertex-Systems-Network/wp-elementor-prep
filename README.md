@@ -42,11 +42,10 @@ Open roadmap / acceptance issues:
 - `#119` — P13-P27 commercial/multi-target roadmap owner; P13-P26 implementation/testing may proceed before final production release.
 - `#159` — P13 real-plugin Build-Ready runtime/parity evidence and internal runtime-acceptance dependency.
 - `#182` — P27 final production-release gate coordinating the remaining external/manual release evidence and final release decision.
-- `#195` — current P14 runtime clock/event-timestamp evidence hardening slice, implemented in PR #196 and pending final synchronized-head verification before closure.
 
-PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f`. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81`. PR #129 added deterministic final publisher-evidence intake tooling and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed. PR #130 then synchronized the post-#129 repository status and merged as `c6a4e1df034fbd62077c58227b2c0c4dc4c116d2`. PR #131 retained the current commercial R0 market refresh and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`; its current-main push checks passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46. PR #193 completed P14 receipt-envelope/runtime-diagnostic hardening and squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd` after exact head `5b9a02ce3b15ab49a1f281b51494e51bc5eb0e57` passed CI #844, Integration Readiness #217, P12 Final Release Artifact #155 and P12 Offline Acceptance #199 on Ubuntu/macOS/Windows; issue #192 closed completed. PR #194 synchronized post-#193 repository status and squash-merged as `b7c00aefa8b85112bcc5968144786da5351e0202`. Issue #126 is also closed completed.
+PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f`. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81`. PR #129 added deterministic final publisher-evidence intake tooling and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7`. PR #131 retained the current commercial R0 market refresh and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`. PR #193 completed P14 receipt-envelope/runtime-diagnostic hardening and squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd`. PR #196 completed runtime clock/event-timestamp evidence hardening and squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf` after exact head `47cb0b4d2d3c53f7f818af760131cc78737cb5c4` passed CI #854, Integration Readiness #224, P12 Final Release Artifact #165 and P12 Offline Acceptance #209 on Ubuntu/macOS/Windows; issue #195 closed completed.
 
-The retained P13-P26 planning/preflight sequence remains the implementation contract. Since that freeze, P13 Build-Ready Score/Responsive Risk core plus plugin/CLI integration and real-source calibration have been implemented; real-plugin runtime/parity acceptance remains open in #159. P14 target-neutral retained-duplicate preparation remains under active pure-core hardening with production recipe authority and real Figma mutation exposure intentionally unwired. The merged #192 / PR #193 slice bounds receipt collections, correlation identities, diagnostics and runtime exception evidence without changing P14 authority. The current #195 / PR #196 slice hardens runtime event-clock evidence so invalid clock callbacks cannot escape the transaction or inject unbounded/non-canonical timestamps; unavailable event time is represented explicitly as `UNKNOWN`. P15-P26 remain preflight-frozen and implementation-not-started. Under roadmap #119, those implementation/test slices are no longer blocked by #84; production acceptance/release remains a separate P27/#182 decision and #84 retains the P12 release-exit truth.
+The retained P13-P26 planning/preflight sequence remains the implementation contract. P13 Build-Ready Score/Responsive Risk implementation is complete while real-plugin runtime/parity acceptance remains open in #159. P14 target-neutral retained-duplicate preparation remains under active pure-core hardening with production recipe authority and real Figma mutation exposure intentionally unwired. The merged #192/#193 and #195/#196 slices now bound receipt envelope/diagnostic evidence and runtime clock/timestamp evidence without changing P14 authority. P15-P26 remain preflight-frozen and implementation-not-started. Production acceptance/release remains a separate P27/#182 decision and #84 retains the P12 release-exit truth.
 
 ### Module-wise progress
 
@@ -65,7 +64,7 @@ The retained P13-P26 planning/preflight sequence remains the implementation cont
 | R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Current snapshot retained; refresh again per major adapter |
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains; production release is later P27 |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Finish #195 / PR #196 exact-head gates, then continue focused pure-core fail-closed audit; production registry remains empty; #159 required before real Figma mutation exposure |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Continue next focused pure-core fail-closed audit after #195; production registry remains empty; #159 required before real Figma mutation exposure |
 | P15 Elementor native export + validation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; versioned v3/v4 adapter + real import proof |
 | P16 Gutenberg native export + transfer | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; native block/pattern/editor validation |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
@@ -86,151 +85,29 @@ R0/R1 gate definitions remain complete but are re-executed where applicable. Imp
 
 ## Current P12 publishing line
 
-The retained publishing candidate under manual evaluation was produced from source:
+The retained publishing candidate under manual evaluation was produced from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`, Figma-assigned publishing ID `1680034649341961379`. The exact candidate remains pinned in `config/p12-publisher-candidate.json`; planning/core-hardening commits do not replace that live publishing candidate or count as P12 live acceptance.
 
-`5f12b1d28146d5c2af815cc9f83eb30431dce4b5`
-
-Figma-assigned publishing ID:
-
-`1680034649341961379`
-
-Verification on that candidate passed CI #709, Integration Readiness #145, P12 Offline #64 and Final Release Artifact #20 (`wp-builders-prepare-final-release-20`, artifact ID `10179286885`, digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`). The exact three-file publish ZIP SHA-256 is `1ccfa457d4ae4145cf36b748f7758187ef3092503c270a46f28e03675878a066`.
-
-The exact candidate is pinned in `config/p12-publisher-candidate.json`. `npm run p12:publisher-evidence` verifies the exact ZIP and extracted plugin hashes, hashes the runtime/publish/2FA screenshots, requires explicit operator confirmations, and emits a receipt with `acceptanceAuthority: false`. Operator instructions are in `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md`.
-
-The currently available screenshot set has been explicitly triaged in #84 and is **not sufficient** for exit: the retained final-details screenshot still shows the historical `Invalid ID in manifest.json` state, the other Publish screenshots are Data Security steps rather than final-details/2FA proof, and the retained plugin UI screenshot is historical P6 evidence rather than the minimal release #20 rebind. Fresh exact-#20 runtime, valid final-details and 2FA screenshots are still required.
-
-Static/docs/support-tooling changes after source `5f12...` do not automatically replace the runtime candidate or count as live acceptance. P12 exit must name the exact package whose Figma Desktop/publisher evidence is accepted.
-
-Actual Community review/approval remains external.
+The currently available screenshot set remains insufficient for exit; fresh exact-#20 runtime, valid final-details and 2FA evidence is still required during the P27 release sequence. Actual Community review/approval remains external.
 
 ## R0 — AI-native market/platform research
 
-Before major new target-adapter implementation, research must refresh official target docs, competitor capability baseline, product gaps, format/API stability and network/privacy/licensing risks.
-
-The current retained market snapshot is `docs/R0_MARKET_SNAPSHOT_2026-09-11.md`, merged by PR #131. It records current competitive pressure from native WordPress conversion and Figma-to-code products and reinforces that WP Builders Prepare must compete on **validated target readiness**, not generic conversion alone.
-
-Research is planning input only and does not count as runtime acceptance.
+Before major new target-adapter implementation, research must refresh official target docs, competitor capability baseline, product gaps, format/API stability and network/privacy/licensing risks. Research remains planning input only and does not count as runtime acceptance.
 
 ## R1 — reliability and compatibility gate
 
-Every major adapter must define these before implementation:
-
-- immutable versioned `TargetProfile`;
-- machine-readable capability descriptor that drives valid UI options;
-- stale-result invalidation when target/source/options change;
-- strict job state machine and cooperative cancel/retry behavior;
-- structured error codes with actionable next steps;
-- atomic generation: no partial download/copy artifacts;
-- schema/package/reference/assets validators;
-- real import/build/render harness where applicable;
-- exact readiness labels separating local artifact validation from observed live-target verification.
+Every major adapter must define an immutable versioned target profile, capability descriptor, stale-result invalidation, strict job state machine, structured errors, atomic generation, artifact validators, real import/build/render harness where applicable, and evidence-scoped readiness labels.
 
 A package can be `ARTIFACT VALIDATED` without being `IMPORT VERIFIED`. We do not claim an unobserved WordPress server will import successfully merely because local JSON/ZIP validation passed.
 
-## Planned WordPress workflow
-
-### Elementor / Elementor Pro
-
-1. select Frame or section;
-2. choose explicit Elementor adapter family/version and Core/Pro capability profile;
-3. run compatibility/alignment/widget/responsive checks;
-4. if needed, `Create Elementor-Ready Duplicate`;
-5. validate duplicate;
-6. generate versioned native Elementor artifact atomically;
-7. validate JSON/ZIP/package/references/assets;
-8. real target import/render proof where the acceptance harness supports it;
-9. round-trip preview/diff where supported;
-10. download template/ZIP/kit only for an output family the adapter actually supports;
-11. selected-section transfer through documented artifact/optional WP Builders Bridge.
-
-Initial Elementor adapter families are planned separately for v3 Container output and v4 Atomic output. A hybrid site chooses the intended output family rather than receiving an ambiguous mixed schema.
-
-No dependency on undocumented Elementor clipboard internals. Third-party add-ons are not silently represented as native Elementor widgets.
-
-### Gutenberg
-
-- native core-block mapping first;
-- serialized block markup;
-- pattern JSON;
-- parse -> serialize -> parse stability;
-- real editor-open validation for supported fixtures;
-- selected-section block/pattern transfer;
-- optional WP Builders Bridge receiver.
-
-## Planned code/framework workflow
-
-### Design -> code
-
-- HTML/CSS/JS;
-- React, Next.js, Vue, Nuxt, Svelte/SvelteKit, Angular, Astro via adapters;
-- JS/TS and styling options only when declared by the adapter capability matrix;
-- generated dependency versions pinned in accepted artifacts, never `latest`;
-- generated fixture projects must install/typecheck/build before production acceptance;
-- existing component-library bindings;
-- assets/tokens included.
-
-### Code -> design
-
-- HTML/CSS static-first reconstruction;
-- folder/ZIP input;
-- path traversal/zip-bomb/file-count/oversize protections;
-- arbitrary JS disabled by default;
-- JS-enabled rendering only through a separately accepted sandbox/companion design;
-- result becomes a new Figma reconstruction.
-
-NestJS is considered a backend/API scaffold option paired with a front-end target, not a visual renderer.
-
-## Planned asset export
-
-- images/icons/SVGs;
-- **Stored Original** image bytes where Figma image-fill bytes are accessible;
-- **Rendered Appearance** for crop/mask/effects/layout appearance;
-- rendered display-size vs 1x/2x/custom export options;
-- deterministic naming/de-duplication;
-- asset manifest;
-- font family/style/weight/usage manifest;
-- raw font files only when user-supplied and license-permitted because the Figma Plugin API does not provide a general raw-font-file export path.
-
-Stored image bytes are not described as proven upstream-upload provenance when Figma cannot prove that provenance.
-
-## Key differentiators queued
-
-- round-trip rendered visual diff before export acceptance;
-- target capability matrix with explicit Native / Review / Unsupported states;
-- change-only regeneration between Figma revisions;
-- exact-run readiness certificate;
-- existing component-library binding;
-- Export Preview Lab;
-- optional WordPress companion bridge using file/paste first;
-- later Bricks/other builders through the same adapter model.
-
-## Safety and reliability invariants
-
-- source visual design remains authoritative;
-- unsupported/ambiguous structures are REVIEW/BLOCKED, never guessed;
-- target preparation occurs on candidate/duplicate with validation;
-- low confidence does not mutate;
-- plugin/CLI share one deterministic core;
-- raw `.fig` reverse engineering remains refused;
-- responsive analysis does not invent mobile/tablet design;
-- target adapters are versioned and declare support limits;
-- invalid option combinations are prevented by capability-driven state, not discovered only after export;
-- no silent fallback changes the implementation strategy;
-- code-to-design untrusted JS is not executed in the core;
-- current Community core remains `allowedDomains: ["none"]`; arbitrary customer-domain push is separate future scope;
-- commercial entitlements gate surfaces, not correctness;
-- optional AI cannot authorize mutation, alter score evidence or replace validators.
-
 ## Current execution order
 
-1. finish #195 / PR #196 on the final synchronized head, then continue P14 pure-core implementation/hardening with focused issue/branch/PR slices while real Figma mutation remains unwired;
+1. continue the next focused P14 pure-core implementation/hardening slice while real Figma mutation remains unwired;
 2. complete P13 #159 real-plugin runtime/parity acceptance when genuine real-Figma evidence is available; #159 is required before P14 real mutation exposure, not before pure-core development;
 3. refresh R0 before each major external adapter if platform facts materially changed;
 4. execute R1 before implementing/accepting each major adapter;
-5. implement P15-P26 in dependency order with one focused issue/branch/PR per slice, preserving the distinction between implementation, internal readiness and production acceptance;
+5. implement P15-P26 in dependency order, preserving the distinction between implementation, internal readiness and production acceptance;
 6. use P27 #182 as the final production-release sequence only after the implementation/internal-readiness program is ready;
-7. during P27, capture the remaining exact release runtime, Publish final-details and 2FA evidence, run the retained P12 publisher-evidence intake, and perform the genuine #84 release-exit decision;
+7. during P27, capture remaining exact release runtime, Publish final-details and 2FA evidence and perform the genuine #84 release-exit decision;
 8. treat Community submission/review/approval as external to internal production acceptance.
 
 ## Development and validation commands
@@ -249,9 +126,7 @@ npm run p12:offline
 npm run integration:readiness
 ```
 
-For the manual final publisher gate, use `npm run p12:publisher-evidence -- ...` exactly as documented in `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md`.
-
-Automated checks are evidence only for the properties they exercise. Target phases add capability-matrix, option-state, package/schema, malformed-input, import/build/render and round-trip harness checks.
+Automated checks are evidence only for the properties they exercise.
 
 ## Runtime artifact registry
 
