@@ -81,11 +81,9 @@ Canonical future order:
 
 ### #229 — P14 adapter callback input isolation
 
-Classification: **ACTIVE / PR #230**.
+Classification: **COMPLETED / merged through PR #230**.
 
-The fresh post-#226 audit confirmed a distinct adapter-input mutation boundary: caller-owned plan/confirmation/registry evidence is already snapshotted, but the accepted mutable candidate/action/plan objects were then passed by reference into runtime adapter callbacks and reused by later core semantics.
-
-PR #230 (`fix/p14-adapter-input-isolation-229`) narrows that boundary without changing recipe or target authority:
+PR #230 (`fix/p14-adapter-input-isolation-229`) closed the adapter-input mutation boundary without changing recipe or target authority:
 
 1. known P14 candidate/action/plan values are copied into fresh plain adapter-facing objects;
 2. action and plan collections are copied only from the already-accepted bounded P14 contract — this is not an arbitrary recursive deep clone;
@@ -95,7 +93,7 @@ PR #230 (`fix/p14-adapter-input-isolation-229`) narrows that boundary without ch
 6. the boundary does not sandbox or validate an adapter's actual candidate-side mutation behavior;
 7. the production safe-recipe registry remains empty and no real Figma adapter/UI/mutation command, target compatibility or production acceptance is introduced.
 
-Initial implementation/test head `651d4c5f9d8d3e7776eb23b9eafeecb1727498d0` passed CI #952, P12 Final Release Artifact #263 and P12 Offline Acceptance #307 on Ubuntu/macOS/Windows. Same-cycle docs synchronization is in progress; fresh exact-head CI, Integration Readiness, Final Release Artifact, Offline Acceptance and final review/current-main/mergeable gates remain required before merge.
+Initial implementation/test head `651d4c5f9d8d3e7776eb23b9eafeecb1727498d0` passed CI #952, P12 Final Release Artifact #263 and P12 Offline Acceptance #307 on Ubuntu/macOS/Windows. Exact synchronized head `7466a230344c8a85a10c4a68fb05216ac7d5d4cf` then passed CI #958, Integration Readiness #310, P12 Final Release Artifact #269 and P12 Offline Acceptance #313 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `bad83a48ab58dfa8b956e7b6bf02c74a079a4665`. Issue #229 closed completed.
 
 ### #226 — P14 safe-recipe registry semantic snapshot
 
@@ -313,7 +311,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #229 / PR #230 adapter callback input-isolation hardening on the final synchronized head;
+1. start the next focused safety-gap audit from core main `bad83a48...` now that #229 / PR #230 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
