@@ -2,7 +2,7 @@ import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
 
 export const P14_RECEIPT_COLLECTION_LIMIT = DEFAULT_P14_INPUT_BOUNDS.maxActions;
 
-export type P14ReceiptCollectionFailure = 'NOT_ARRAY' | 'TOO_LARGE';
+export type P14ReceiptCollectionFailure = 'NOT_ARRAY' | 'TOO_LARGE' | 'UNREADABLE';
 
 export interface P14ReceiptCollectionAssessment {
   value: unknown[] | null;
@@ -12,7 +12,19 @@ export interface P14ReceiptCollectionAssessment {
 }
 
 export function assessP14ReceiptCollection(value: unknown): P14ReceiptCollectionAssessment {
-  if (!Array.isArray(value)) {
+  let isArray: boolean;
+  try {
+    isArray = Array.isArray(value);
+  } catch {
+    return {
+      value: null,
+      failure: 'UNREADABLE',
+      actualLength: null,
+      limit: P14_RECEIPT_COLLECTION_LIMIT,
+    };
+  }
+
+  if (!isArray) {
     return {
       value: null,
       failure: 'NOT_ARRAY',
@@ -21,7 +33,28 @@ export function assessP14ReceiptCollection(value: unknown): P14ReceiptCollection
     };
   }
 
-  const actualLength = value.length;
+  const arrayValue = value as unknown[];
+  let actualLength: number;
+  try {
+    actualLength = arrayValue.length;
+  } catch {
+    return {
+      value: null,
+      failure: 'UNREADABLE',
+      actualLength: null,
+      limit: P14_RECEIPT_COLLECTION_LIMIT,
+    };
+  }
+
+  if (!Number.isSafeInteger(actualLength) || actualLength < 0) {
+    return {
+      value: null,
+      failure: 'UNREADABLE',
+      actualLength: null,
+      limit: P14_RECEIPT_COLLECTION_LIMIT,
+    };
+  }
+
   if (actualLength > P14_RECEIPT_COLLECTION_LIMIT) {
     return {
       value: null,
@@ -31,8 +64,22 @@ export function assessP14ReceiptCollection(value: unknown): P14ReceiptCollection
     };
   }
 
+  const snapshot: unknown[] = [];
+  for (let index = 0; index < actualLength; index += 1) {
+    try {
+      snapshot.push(arrayValue[index]);
+    } catch {
+      return {
+        value: null,
+        failure: 'UNREADABLE',
+        actualLength,
+        limit: P14_RECEIPT_COLLECTION_LIMIT,
+      };
+    }
+  }
+
   return {
-    value,
+    value: snapshot,
     failure: null,
     actualLength,
     limit: P14_RECEIPT_COLLECTION_LIMIT,
