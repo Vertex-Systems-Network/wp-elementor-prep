@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
 
 ## Bounded input preflight
 
@@ -95,6 +95,8 @@ The first eligible action is already bound by plan integrity, current safe-recip
 2. the adapter must provide bounded `assessActionEligibility(...)` evidence for the current candidate, bound to the exact action ID, recipe ID and exact planned prerequisite recipe-ID set.
 
 `validateP14RuntimeActionEligibilityEvidence(...)` rejects malformed, stale, duplicated, oversized or plan-mismatched assessment evidence. The assessment is untrusted runtime evidence even though an adapter is strongly typed.
+
+The optional `assessActionEligibility` property lookup is itself treated as untrusted runtime behavior. The public adapter boundary exposes a guarded getter: readable missing/non-function values preserve the established structured refusal, while a throwing/proxy-backed getter is converted into a callable failure. Because the core invokes that callable inside the existing `transform-recheck` guard, a getter failure after a prior recipe cannot escape the transaction; candidate discard is attempted and a discard failure still becomes `CLEANUP_REQUIRED` through the existing cleanup contract. A valid hook is invoked with the original adapter as `this`.
 
 A later action is reassessed even when it has no explicit prerequisite IDs: any earlier candidate mutation could still invalidate its eligibility. If the adapter cannot perform this reassessment after a prior recipe, the transaction fails closed and discards the candidate rather than silently trusting the old plan.
 
@@ -240,7 +242,7 @@ P14 receipt integrity treats the receipt envelope itself as untrusted evidence, 
 
 Top-level receipt correlation identities — `transactionId`, `p13RunId`, `planDigest` and `source.nodeId` — use the existing P14 identity bound. Error `stage` also uses the identity bound, while error `detail`, optional `recovery` and optional event `detail` use the existing P14 detail bound. The plan digest keeps its existing `p14-plan-` correlation prefix requirement; no host-specific node-ID or authentication format is invented.
 
-Transaction diagnostic constructors use the same shared bounds. `receiptError(...)` and event construction therefore emit bounded diagnostics by construction, including details assembled from planner/authorization/runtime failures. Runtime adapter/discard/coordinator exceptions are rendered through `safeP14RuntimeErrorMessage(...)`, which bounds long messages and falls back deterministically when hostile exception stringification itself throws.
+Transaction diagnostic constructors use the same shared bounds. `receiptError(...)` and event construction therefore emit bounded stage/detail/recovery evidence by construction, including details assembled from planner/authorization/runtime failures. Runtime adapter/discard/coordinator exceptions are rendered through `safeP14RuntimeErrorMessage(...)`, which bounds long messages and falls back deterministically when hostile exception stringification itself throws.
 
 These envelope/resource limits do not make a receipt authoritative. They bound traversal and evidence size only; `acceptanceAuthority` and `targetCompatibilityClaim` remain false.
 
@@ -322,6 +324,9 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 56. Known input-bound override fields are snapshotted safely before the core reuses them; throwing getters cannot escape the first gate.
 57. Present input-bound override values must be positive integers and remain stricter-only through the existing clamp/default/hard-limit policy.
 58. Run-control hardening adds no recipe, target, authentication, compatibility or production-acceptance authority.
+59. Runtime action-eligibility hook property access is untrusted; a throwing/proxy-backed getter cannot escape after prior candidate mutation.
+60. Unreadable runtime-eligibility hook access reuses the existing `P14_TRANSFORM_FAILED` / `transform-recheck` cleanup path, and discard failure still becomes `CLEANUP_REQUIRED`.
+61. Guarding the optional eligibility hook preserves readable missing/non-function refusal and invokes valid hooks with the original adapter as `this`; it adds no target or mutation authority.
 
 ## Deliberately not wired yet
 
