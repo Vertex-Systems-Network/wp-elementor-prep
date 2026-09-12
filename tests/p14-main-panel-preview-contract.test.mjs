@@ -25,7 +25,13 @@ describe('P14 main-panel Guided Prepare preview contract', () => {
 
   it('routes the main-panel request through persisted P13 evidence and the existing P14 preview model', () => {
     expect(main).toContain("from './p14-plan-preview'");
+    expect(main).toContain("from './p14-preview-context'");
     expect(main).toContain('loadLatestP13RuntimeEvidence(figma.clientStorage)');
+    expect(main).toContain('assessP14PreviewContextBinding(evidence.context');
+    expect(main).toContain('fileKey: currentFileKey');
+    expect(main).toContain('pageId: currentPageId');
+    expect(main).toContain('frameId: currentFrame.id');
+    expect(main).toContain('Run Audit on this selected Frame first.');
     expect(main).toContain('buildP14PlanPreview(evidence.buildReady)');
     expect(main).toContain('serializeP14PlanPreviewJson(preview)');
     expect(main).toContain("type === 'p14-plan-preview-request'");
