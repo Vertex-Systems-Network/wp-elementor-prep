@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-12 — P14 safe-recipe registry semantic snapshot hardening
+
+- Opened authoritative issue #226 and focused PR #227 (`fix/p14-registry-semantic-snapshot-226`) after a fresh post-#223 P14 authorization-boundary audit.
+- Confirmed a readable-but-stateful registry TOCTOU gap distinct from #198: resource bounds, semantic validation and later recipe authorization/resolution could re-read the same caller-owned registry evidence at different times, allowing bounded readable getters/proxies to change bindings or nested recipe semantics after validation.
+- Added `src/core/p14-registry-semantic-snapshot.ts` to capture only the known safe-recipe registry contract into bounded plain evidence through guarded property/index reads after the first registry resource preflight. It does not enumerate arbitrary properties or perform a generic deep clone.
+- `assessP14SafeRecipeRegistryEvidence(...)` now performs first resource bounds, semantic capture, a second bounds pass over the plain snapshot, then semantic validation. Evidence that grows oversized after first preflight stays invalid rather than entering authorization semantics; unreadable capture fails closed with bounded diagnostics.
+- `validateP14SafeRecipeRegistry(...)`, exact safe-recipe resolution and `authorizeP14PreparationPlan(...)` consume stable plain registry evidence, so caller-owned `bindings`/recipe getters are not re-entered after the registry evidence boundary.
+- Existing transaction authority remains unchanged: invalid/unreadable/oversized registry evidence still yields `BLOCKED` + `P14_RECIPE_UNAUTHORIZED` before confirmation, source coordination or adapter access; the production safe-recipe registry remains empty.
+- Added `tests/p14-registry-semantic-snapshot.test.ts` covering top-level binding re-entry, nested recipe re-entry, evidence that grows oversized after the first bounds pass, capture-time unreadability and normal exact authorization behavior.
+- Initial implementation/test head `4bd44da760d0dc0558b4d7c710bd779d1dd1e534` passed CI #939 including status verification, typecheck, full tests, plugin/CLI builds, release/package/community verification and local Figma import preparation; P12 Final Release Artifact #250 passed; P12 Offline Acceptance #294 passed on Ubuntu/macOS/Windows.
+- README, P14 foundation, PROJECT_STATE and NEXT_ACTIONS are synchronized in the same cycle; final exact-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable verification remain required before PR #227 may merge.
+- No production safe recipe, real Figma adapter/UI/mutation command, target-compatibility claim or production acceptance was introduced.
+
 ## 2026-09-12 — P14 nested plan/confirmation semantic snapshot hardening
 
 - Opened authoritative issue #223 and focused PR #224 (`fix/p14-semantic-snapshot-223`) after a fresh post-#216 P14 trust-boundary audit.
