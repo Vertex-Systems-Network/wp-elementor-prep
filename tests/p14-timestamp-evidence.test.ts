@@ -118,6 +118,13 @@ async function runNoOp(now: () => unknown) {
   }, new NoOpAdapter());
 }
 
+const hostileRuntimeClocks: ReadonlyArray<readonly [string, () => unknown]> = [
+  ['throwing clock', (): never => { throw new Error('clock failure'); }],
+  ['non-string clock', (): unknown => 123],
+  ['oversized clock', (): unknown => 'x'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 1)],
+  ['non-canonical clock', (): unknown => '2026-09-12T00:00:00Z'],
+];
+
 afterEach(() => {
   vi.restoreAllMocks();
 });
@@ -144,10 +151,10 @@ describe('P14 bounded timestamp evidence', () => {
 
   it('maps hostile runtime clock evidence to UNKNOWN without throwing', () => {
     const hostileValues: Array<() => unknown> = [
-      () => { throw new Error('clock failure'); },
-      () => 123,
-      () => 'x'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 1),
-      () => '2026-09-12T00:00:00Z',
+      (): never => { throw new Error('clock failure'); },
+      (): unknown => 123,
+      (): unknown => 'x'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 1),
+      (): unknown => '2026-09-12T00:00:00Z',
     ];
 
     for (const now of hostileValues) {
@@ -169,20 +176,18 @@ describe('P14 confirmation timestamp compatibility', () => {
 });
 
 describe('P14 runtime event clock hardening', () => {
-  it.each([
-    ['throwing clock', () => { throw new Error('clock failure'); }],
-    ['non-string clock', () => 123],
-    ['oversized clock', () => 'x'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 1)],
-    ['non-canonical clock', () => '2026-09-12T00:00:00Z'],
-  ] as const)('keeps a valid receipt when %s evidence is unavailable', async (_label, now) => {
-    const receipt = await runNoOp(now);
+  it.each(hostileRuntimeClocks)(
+    'keeps a valid receipt when %s evidence is unavailable',
+    async (_label, now) => {
+      const receipt = await runNoOp(now);
 
-    expect(receipt.status).toBe('NO_CHANGES_NEEDED');
-    expect(receipt.terminalState).toBe('COMPLETE');
-    expect(receipt.events.length).toBeGreaterThan(0);
-    expect(receipt.events.every((item) => item.at === P14_UNKNOWN_EVENT_TIMESTAMP)).toBe(true);
-    expect(validateP14PreparationReceipt(receipt)).toEqual({ valid: true, failures: [] });
-  });
+      expect(receipt.status).toBe('NO_CHANGES_NEEDED');
+      expect(receipt.terminalState).toBe('COMPLETE');
+      expect(receipt.events.length).toBeGreaterThan(0);
+      expect(receipt.events.every((item) => item.at === P14_UNKNOWN_EVENT_TIMESTAMP)).toBe(true);
+      expect(validateP14PreparationReceipt(receipt)).toEqual({ valid: true, failures: [] });
+    },
+  );
 
   it('preserves canonical runtime event timestamps when the clock is valid', async () => {
     const receipt = await runNoOp(() => CANONICAL_TIMESTAMP);
