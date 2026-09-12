@@ -1,436 +1,224 @@
 # P14 Retained-Duplicate Foundation
 
-Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223, #226, #229, #231, #235, #239  
+Status: CORE IMPLEMENTATION + READ-ONLY GUIDED PREPARE RUNTIME PREVIEW — CONFIRMATION/MUTATION UNWIRED  
 Roadmap: #119  
+Current status synchronization: #264  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
-## What this foundation implements
+## Purpose
 
-This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
+P14 implements the target-neutral safety foundation for `Target-Ready Duplicate + Guided Prepare` without granting production mutation authority. The approved source remains authoritative. Any future preparation mutation must operate on a retained duplicate/candidate, validate and re-score that candidate, prove the source remained unchanged, and fail closed when evidence is stale, malformed, unreadable or unauthorized.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded bounded semantic snapshots for known nested plan/confirmation evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry resource and semantic-snapshot evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, detached known-schema adapter callback input snapshots, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded one-shot adapter-output semantic snapshots, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination, bounded injected-coordinator runtime evidence/lease cleanup, one-shot coordinator acquisition/refusal semantic snapshots, and fail-closed receipt-integrity semantic snapshots with detached bounded receipt collections.
+The current implementation has two distinct surfaces:
 
-## Receipt-integrity semantic snapshot
+1. a deterministic retained-duplicate core with bounded plan, confirmation, authorization, transaction, adapter-evidence, validation/re-score, cleanup and receipt contracts;
+2. a development-only **read-only Guided Prepare preview** driven by retained P13 Build-Ready evidence.
 
-P14 preparation receipts are evidence, not authority, and their validator must not assume that a typed receipt is a stable plain object. The #239/#240 hardening slice captures the known receipt-integrity top-level fields through guarded one-shot reads before semantic validation. Readable stateful getters therefore cannot present one status, terminal state, source reference or optional evidence object during an early check and a different value later in the same validation.
+The second surface does **not** wire confirmation or retained-duplicate mutation into Figma.
 
-Receipt-owned `appliedActions`, `errors` and `events` collections are inspected through fail-closed array checks, a one-shot bounded length read and guarded index reads into a plain array. Oversized collections still fail from length before item traversal, while revoked/unreadable arrays fail closed rather than throwing through the integrity API. Source, candidate, error and event fields that integrity logic itself reuses are also captured into plain known-schema records before later correlation/status checks.
+## Authority model
 
-Validation and re-score evidence retain their dedicated validators. Once those validators accept and detach their known schemas, PREPARED/PREPARED_WITH_REVIEW invariants consume those accepted values directly instead of re-reading the original validation/re-score objects. This preserves ordinary valid receipt semantics while closing readable-stateful and revoked-proxy ambiguity. It adds no recipe, mutation, target-compatibility, host-identity or production-acceptance authority.
+P14 keeps these authorities separate:
 
-## Bounded input preflight
+- **plan integrity** — the plan is internally coherent and digest-bound;
+- **recipe authorization** — every eligible action matches an exact current safe-recipe registry binding;
+- **reviewed confirmation** — explicit reviewed intent is bound to the exact plan/run/source/action set;
+- **runtime eligibility** — candidate assumptions are re-evaluated before later sequential actions;
+- **validation/re-score** — candidate outcome is independently checked after mutation;
+- **source immutability** — source fingerprint must remain unchanged;
+- **production acceptance** — not granted by any P14 core or preview artifact.
 
-`assessP14PreparationInputBounds(...)` remains the resource-size gate before canonical plan validation, registry authorization, confirmation validation, source coordination or adapter access.
+`P14PreparationConfirmationV1`, P14 plan previews and P14 receipts all remain non-authorizing evidence. They do not establish user identity, authentication, target compatibility or production acceptance.
 
-It applies deterministic limits to action/blocker counts, targets per action, total target references, prerequisites/conflicts/mutation fields, action buckets, blocker action references, plan/source identities, run-level transaction/prepared-name identity lengths and supplied confirmation identities/action lists.
+The production safe-recipe registry remains intentionally empty. Synthetic tests may inject explicit test-only recipes, but those mappings are not production authority.
 
-Important safety behavior:
+## Core retained-duplicate contract
 
-- oversized top-level arrays are rejected from their `.length` without traversing their contents;
-- oversized nested target/dependency/confirmation action arrays are rejected before iterating their items;
-- `transactionId`, `preparedName` and confirmation evidence are bounded before the transaction coordinator or adapter is touched;
-- callers may inject only stricter limits — injected values cannot loosen the defaults or hard safety ceilings;
-- oversized input returns `BLOCKED` + `P14_INPUT_TOO_LARGE`;
-- source-before/source-after fingerprints remain `UNKNOWN` because no runtime source proof was attempted;
-- oversized source/run/digest identities are not echoed back into the rejection receipt; bounded placeholders are used instead;
-- an oversized transaction ID is replaced by the bounded receipt fallback `p14-transaction-invalid`;
-- source transaction coordinator and adapter methods remain untouched on a bounded-preflight rejection.
+The implemented core includes:
 
-Nested plan/confirmation evidence traversed by the bounds gate is also untrusted runtime data. Both the public preflight and the internal retained-duplicate core guard their bounds traversal. A throwing getter/proxy on either traversal therefore cannot reject the transaction promise: it returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `bounds-evidence` before source coordination or adapter access. The internal second-pass rejection uses `UNKNOWN` / `p14-plan-invalid` correlation sentinels rather than dereferencing the hostile plan again. Readable oversized evidence remains on the existing `P14_INPUT_TOO_LARGE` / `bounds` path.
+- explicit P13 -> P14 handoff and deterministic preparation planning;
+- versioned plan schema, canonical action ordering and digest integrity;
+- bounded input/resource preflight;
+- one-shot known-schema semantic snapshots for caller-owned plan/confirmation evidence;
+- standalone plan-integrity snapshotting (#243/#244);
+- standalone confirmation validation snapshotting (#245/#246);
+- confirmation construction from one captured reviewed-plan state (#247/#248);
+- safe-recipe registry bounds, semantic snapshots and exact binding authorization;
+- execution authorization from captured plan evidence (#249/#250);
+- explicit reviewed-plan confirmation for mutating READY plans;
+- retained-duplicate transaction semantics with candidate-only recipe callbacks;
+- detached adapter callback inputs and bounded adapter-output evidence;
+- sequential runtime action-eligibility reassessment;
+- captured planned-action identity/prerequisite binding for runtime eligibility (#251/#252);
+- validation-profile coverage from captured plan and observed profile evidence (#253/#254);
+- bounded validation checks and re-score evidence;
+- source fingerprint validation and post-run source immutability proof;
+- cooperative cancellation and bounded cancellation-failure evidence;
+- source-scope transaction coordination and bounded coordinator evidence;
+- fail-closed candidate cleanup and explicit `CLEANUP_REQUIRED` outcomes;
+- bounded event/diagnostic/timestamp evidence;
+- bounded receipt-integrity snapshots and detached receipt collections.
 
-These limits are freeze/resource safety bounds only. They do not establish Elementor/Gutenberg conversion effort or target compatibility.
+## Bounded evidence rule
 
-## Nested plan/confirmation semantic snapshot
+Typed JavaScript/TypeScript values are not trusted merely because their static type looks correct. P14 treats caller-, adapter-, coordinator- and receipt-owned objects as runtime evidence.
 
-The first bounded traversal proves resource limits at one point in time, but readable caller-owned proxies/getters can still be stateful. P14 therefore does not delegate those live nested objects into semantic validation/execution after preflight.
+The general rule is:
 
-After the first bounds pass allows the input, `snapshotP14SemanticInputEvidence(...)` captures only the known P14 plan and optional confirmation contract into plain runtime values through guarded property/index reads. Collection reads are constrained by the already-effective P14 action/blocker/target/dependency/mutation/bucket limits, including the total target-reference budget. The snapshot routine does not enumerate arbitrary properties and is not a generic recursive deep clone.
+1. preflight resource size where the contract supports it;
+2. capture only the known schema through guarded property/index reads;
+3. copy bounded arrays into plain values rather than retaining caller-owned collections;
+4. validate semantics against the captured value;
+5. never re-enter a hostile/stateful getter after acceptance;
+6. on unreadable/revoked evidence, fail closed with bounded diagnostics rather than throwing through the public boundary.
 
-The known copied plan evidence includes plan version/run/source/status/digest fields, action fields and bounded nested action collections, blockers and action-ID buckets. The known copied confirmation evidence includes version/authority flags, timestamp, plan/run/source correlation and eligible-action IDs. Malformed object-valued scalar fields are reduced to non-authoritative plain markers so caller-owned objects are not promoted into core semantics.
+This is intentionally **not** a generic recursive deep clone. Each evidence boundary copies only the fields the contract actually consumes.
 
-The existing bounded-input contract is run again against the plain semantic snapshot before delegation. This second public proof is important for readable stateful evidence: if an array or identity grows beyond the accepted resource contract between the first preflight and snapshot capture, execution still reaches the existing `P14_INPUT_TOO_LARGE` / `bounds` refusal rather than semantic traversal or adapter access. Oversized arrays are represented with bounded sentinel size and their items are not traversed beyond the accepted budget.
+Oversized arrays retain length-first short-circuit behavior so item getters are not traversed when the count is already outside the accepted bound.
 
-If semantic capture itself encounters unreadable evidence, the transaction reuses the existing bounded `P14_INTERNAL_INVARIANT_FAILED` / `bounds-evidence` path before coordination or adapter access. For the #216 second-pass unreadable contract, correlation remains `UNKNOWN` / `p14-plan-invalid` rather than re-reading hostile plan metadata.
+## Plan integrity, authorization and confirmation
 
-Once capture succeeds, plan integrity, authorization, confirmation validation and retained-duplicate transaction semantics operate on the plain snapshot. Readable stateful caller getters/proxies therefore cannot change source/action/confirmation semantics after the public evidence boundary. This adds no new recipe, target, authentication, compatibility or production-acceptance authority, and the production safe-recipe registry remains empty.
+For a mutating READY plan, these gates remain distinct:
 
-## Top-level run-input runtime evidence
+1. `validateP14PreparationPlan(...)` — internal plan coherence;
+2. `authorizeP14PreparationPlan(...)` — exact current registry authorization;
+3. `validateP14PreparationConfirmation(...)` — reviewed intent bound to exact plan/source/run/action evidence.
 
-The public P14 transaction input object is itself runtime evidence. Strong TypeScript declarations do not make its top-level properties safe to read, and a proxy/getter must not be able to reject the transaction promise before structured P14 evidence exists.
+Standalone plan validation now snapshots caller-owned plan evidence before integrity semantics. Standalone confirmation validation captures both confirmation and optional reviewed-plan evidence before binding semantics. Confirmation construction also captures the reviewed plan once before bounds/integrity/READY checks and field copying.
 
-Before bounds or retained-duplicate core semantics, the public boundary snapshots the known transaction properties through guarded one-shot reads: `plan`, `registry`, `coordinator`, `inputBounds`, `confirmation`, `transactionId`, `preparedName`, `allowPreparedWithReview` and `shouldCancel`. The accepted values are copied into a plain snapshot and the core is later called with an explicitly constructed plain object rather than `...input`, so already-read caller properties cannot be re-entered or change value after the boundary.
+Execution authorization snapshots the plan before filtering eligible actions or comparing action fields with the stable safe-recipe registry. This prevents readable stateful action getters from changing recipe authority during one authorization pass.
 
-If the top-level input is not a runtime object, or any known transaction property getter throws, the boundary returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `run-input` before coordinator or adapter access. Safely readable plan metadata is used only for bounded rejection correlation; unreadable metadata falls back to existing `UNKNOWN` / `p14-plan-invalid` sentinels.
+Missing mutating-plan confirmation remains `P14_CONFIRMATION_REQUIRED`; malformed/stale/mismatched confirmation remains `P14_CONFIRMATION_MISMATCH`. These outcomes occur before source coordination or runtime adapter access.
 
-Runtime clock metadata remains intentionally separate: reading `now` still uses the existing fail-soft clock contract. A missing, malformed or throwing `now` property/callback becomes `UNKNOWN` event-time evidence rather than transaction authority failure.
+## Sequential runtime eligibility and validation coverage
 
-The top-level snapshot stabilizes caller references; it does not itself replace nested plan, confirmation, registry, bounds, coordinator or cancellation validators. Nested plan/confirmation references are subsequently captured through the bounded semantic-snapshot contract above, while a supplied registry reference is subsequently captured through the dedicated bounded safe-recipe registry semantic-snapshot contract below before authorization consumes it. Valid oversized controls therefore retain the established `P14_INPUT_TOO_LARGE` path, and no recipe, target, authentication, compatibility or production-acceptance authority is added.
+A later action cannot rely only on the original static plan after earlier candidate mutation.
 
-## Run-control runtime evidence
+Before later `applyRecipe(...)` calls, the core verifies completed prerequisites and requires bounded runtime eligibility evidence. The planned action binding used by that validator — action ID, recipe ID and planned prerequisite IDs — is captured once before comparison. Revoked/unreadable or changed binding evidence therefore fails closed.
 
-Caller-supplied transaction controls are runtime evidence, not authority granted by TypeScript declarations. The public `runP14RetainedDuplicateTransaction(...)` boundary therefore validates and snapshots control values before delegating to the retained-duplicate transaction core.
+Validation-profile coverage likewise captures the reviewed plan before deriving required profiles and captures observed `profileIdsRun` before canonicalization. Required/observed profile ordering, duplicate detection, optional extras and missing-profile semantics remain deterministic.
 
-`assessP14RunControlEvidence(...)` requires:
+These gates do not authorize new recipes or targets; they only ensure the candidate is still being validated against the exact reviewed preparation contract.
 
-- `transactionId` to be a string with a non-whitespace identity; the accepted value is normalized once before coordinator, adapter and receipt use;
-- supplied `preparedName` to be a string; it is normalized once and preserves the established empty/whitespace fallback to `Prepared Duplicate`;
-- supplied `allowPreparedWithReview` to be a literal boolean; only literal `true` can authorize the existing `PREPARED_WITH_REVIEW` policy path;
-- supplied `inputBounds` to be an object whose known override fields can be read safely and whose present values are positive integers.
+## Read-only Guided Prepare runtime preview
 
-Known `inputBounds` properties are snapshotted into a plain object before the transaction core reuses them. A proxy/getter that throws therefore cannot escape the first bounds gate by being re-read later. Malformed run-control evidence returns a bounded `BLOCKED` receipt with `P14_INTERNAL_INVARIANT_FAILED` at stage `run-control`, before confirmation, coordination or adapter access.
+P14 now has a development-only runtime preview surface, but it is deliberately non-mutating.
 
-Resource-size authority remains separate from run-control type/shape authority. Valid typed but oversized transaction/prepared-name strings are still measured from their raw values and retain the established `P14_INPUT_TOO_LARGE` outcome. Stricter caller-supplied positive-integer bounds still use the existing clamp/default/hard-limit policy and cannot loosen defaults.
+The sequence is:
 
-The prior transaction engine is retained as the internal deterministic core; the original public module path is now the hardened caller-evidence boundary. This split adds no recipe, target, host-identity or production-acceptance authority.
+1. P13 Audit produces and persists validated Build-Ready runtime evidence;
+2. the user selects exactly one current Figma Frame;
+3. the P14 preview loader validates the persisted P13 evidence;
+4. the loader proves that persisted evidence belongs to the exact current file/page/frame;
+5. the current Frame is freshly scanned through the existing deterministic scanner and Build-Ready analyzer;
+6. persisted P13 fingerprint/build identity must match the fresh current state;
+7. only then is the P14 plan preview rendered.
 
-## Bounded safe-recipe registry evidence and semantic snapshot
+The preview is available in development surfaces added through:
 
-The safe-recipe registry is authorization evidence and is therefore treated as an untrusted runtime structure even though production currently registers no mutating recipes.
+- #255/#256 — read-only P14 plan preview model from persisted P13 evidence;
+- #257/#258 — developer-menu discoverability;
+- #260/#261 — normal development main-panel preview;
+- #262/#263 — exact current Figma context binding;
+- #265/#266 — fresh current-Frame fingerprint and exact compiled-build binding.
 
-`assessP14SafeRecipeRegistryBounds(...)` reuses the existing P14 safety limits as the first resource gate. It does not define a parallel registry-specific limit system.
+The generated publishable release UI strips this development-only P14 preview surface.
 
-The bounds gate requires:
+## Exact current-context binding
 
-- top-level `bindings` count to remain within the existing action-count limit before any binding item is traversed;
-- each recipe's `sourceRuleIds`, `prerequisites`, `conflictsWith` and `mutationAllowlist` collection to remain within the corresponding existing P14 count limit before item traversal;
-- binding source-rule identity, recipe ID, validation-profile ID, order class and nested rule/dependency/conflict identities to remain within the existing P14 identity limit;
-- oversized proxy-backed arrays to fail from `.length` without property/item traversal.
+PR #263 prevents a valid but unrelated persisted P13 bundle from being shown for another current selection.
 
-A successful first bounds pass is only a time-local resource proof. A readable caller-owned registry proxy/getter could otherwise return one bounded contract during that pass and different readable bindings or nested recipe evidence during later semantic validation or authorization.
+Before the preview is rendered:
 
-After the first registry bounds pass allows the evidence, `snapshotP14SafeRecipeRegistryEvidence(...)` captures only the known registry contract into plain values through guarded, bounded property/index reads: schema version, bindings, binding rule identity/version, and the known recipe identity/version/source-rule/min-confidence/prerequisite/mutation/profile/conflict/order fields. It does not enumerate arbitrary caller properties or perform a generic recursive deep clone. Collection traversal is constrained by the already-effective P14 registry limits; an array observed oversized during capture is represented by bounded sentinel size without traversing its items. Malformed object-valued scalar evidence is reduced to non-authoritative plain markers rather than delegating caller-owned objects into authorization semantics.
+- exactly one Frame must be selected;
+- persisted `fileKey` must equal the current file key;
+- persisted `pageId` must equal the current page ID;
+- persisted `frameId` must equal the current selected Frame ID;
+- file/page/frame identity is rechecked after asynchronous evidence loading so a selection/context change during the request fails closed.
 
-`assessP14SafeRecipeRegistryEvidence(...)` then re-runs the existing registry bounds contract against that plain snapshot before semantic validation. Evidence that grows oversized between first resource preflight and semantic capture therefore remains invalid and cannot enter recipe authorization. If capture itself encounters unreadable evidence, the assessment fails closed with bounded diagnostics.
+Human-readable page/frame names are intentionally non-authoritative because names may change without changing identity.
 
-`validateP14SafeRecipeRegistry(...)`, `resolveP14SafeRecipe(...)` and `authorizeP14PreparationPlan(...)` consume the stable plain registry evidence produced by this assessment for their own operation. Caller-owned `bindings` or nested recipe getters are therefore not re-entered after the registry evidence boundary and cannot change the recipe contract after validation.
+A mismatch returns clear `Run Audit on this selected Frame first` guidance rather than rendering stale evidence.
 
-Bounded-but-malformed, unreadable or oversized registry evidence preserves the established transaction authority outcome: `BLOCKED` + `P14_RECIPE_UNAUTHORIZED`, before confirmation, source coordination or adapter access. No new transaction status/error authority is created by registry snapshotting.
+PR #263 exact head `da9c59091f3142dade4a444aface5b6e6d5577b9` passed CI #1004, P12 Final Release Artifact #315 and P12 Offline Acceptance #359 on Windows/macOS/Ubuntu before guarded squash merge `196b4d2ed5c9cc46d96b6c613e20733365264d93`.
 
-The production safe-recipe registry remains intentionally empty. Registry bounding/snapshotting does not register a recipe, prove a recipe safe, grant mutation authority or establish target compatibility/production acceptance.
+## Fresh selected-Frame and exact-build binding
 
-## Plan integrity, execution authority and reviewed confirmation
+Identity alone is insufficient because a Frame can be edited in place while keeping the same file/page/frame IDs. PR #266 closes that freshness gap.
 
-A persisted or copied plan is not trusted merely because it is typed as `P14PreparationPlanV1`.
+The selected Frame is freshly scanned with the existing `scanSceneNode(...)` + `buildBuildReadyReport(...)` path. Persisted P13 evidence must then match the fresh current Build-Ready evidence for:
 
-For a mutating `READY` plan, three separate gates must pass before source coordination or adapter access:
+- `runId`;
+- source `rootId`;
+- source `structuralHash`;
+- source `configHash`;
+- source `analyzerVersion`.
 
-1. `validateP14PreparationPlan(...)` proves internal plan coherence;
-2. `authorizeP14PreparationPlan(...)` proves every `ELIGIBLE` action is still authorized by the current exact safe-recipe registry;
-3. `validateP14PreparationConfirmation(...)` proves the caller supplied explicit reviewed intent bound to the exact plan digest, P13 run, source node/fingerprint and canonical eligible action set.
+Persisted runtime evidence must also match the current plugin for:
 
-`P14PreparationConfirmationV1` is versioned and always carries `acceptanceAuthority: false` and `targetCompatibilityClaim: false`. Its timestamp is strict normalized UTC ISO evidence. Standalone confirmation build/validation is bounds-first before plan-integrity processing.
+- plugin version;
+- compiled build `sourceSha`;
+- compiled build `runId`;
+- compiled build `runNumber`.
 
-Missing confirmation returns `P14_CONFIRMATION_REQUIRED`. Malformed, stale or plan-mismatched confirmation returns `P14_CONFIRMATION_MISMATCH`. Both outcomes are `BLOCKED`, keep source fingerprints `UNKNOWN` and occur before the source lease or runtime adapter is touched.
+If the selected Frame changed structurally, the analyzer/config/run identity changed, or the retained evidence belongs to another compiled build, the preview fails closed and requires a fresh Audit on the selected Frame.
 
-Confirmation is an intent/correlation artifact only. It is not cryptographic authentication, user identity proof, recipe authority, target-readiness evidence or production acceptance. A future UI may create it only after showing the proposed changes for the exact current plan.
+PR #266 exact head `240d82c108c182c52d81edc058e94b0f64fcce4a` passed CI #1007, P12 Final Release Artifact #318 and P12 Offline Acceptance #362 on Windows/macOS/Ubuntu before guarded squash merge `b944dc0ceea1c0c3a531fe4e9b88a66dacf3b92f`.
 
-`NO_CHANGES_NEEDED` is non-mutating, so it does not require this mutating-plan confirmation. Already-BLOCKED plans also do not enter the confirmation gate.
+## Preview authority locks
 
-The production safe-recipe registry remains intentionally empty, so a self-consistent mutating READY plan is non-executable by default even if someone fabricates a confirmation. Synthetic positive tests inject explicit test-only registries; those mappings are not production authority.
+The Guided Prepare preview remains explicitly locked:
 
-## Sequential runtime action-eligibility re-evaluation
+- `acceptanceAuthority=false`;
+- `targetCompatibilityClaim=false`;
+- `mutationEnabled=false`;
+- `confirmationEnabled=false`.
 
-The frozen P14 sequential-transform contract does not allow one recipe to silently invalidate the assumptions of a later recipe. Static topological planning is therefore necessary but not sufficient once candidate mutation has begun.
+The preview does not call `buildP14PreparationConfirmation(...)`, does not call `runP14RetainedDuplicateTransaction(...)`, does not clone or mutate Figma nodes, and does not register a production safe recipe.
 
-The first eligible action is already bound by plan integrity, current safe-recipe authorization, exact reviewed confirmation and the freshly cloned candidate. After any recipe result has been recorded, every subsequent eligible action must pass two additional runtime gates before `applyRecipe(...)` is called:
+It is a review/inspection surface only.
 
-1. the core verifies that every declared `prerequisiteRecipeId` has a completed earlier execution result in this transaction;
-2. the adapter must provide bounded `assessActionEligibility(...)` evidence for the current candidate, bound to the exact action ID, recipe ID and exact planned prerequisite recipe-ID set.
+## Source immutability and cleanup
 
-`validateP14RuntimeActionEligibilityEvidence(...)` rejects malformed, stale, duplicated, oversized or plan-mismatched assessment evidence. The assessment is untrusted runtime evidence even though an adapter is strongly typed.
+When the retained-duplicate transaction core is exercised in deterministic tests/synthetic adapters, the approved source node ID is used only for identity/fingerprinting and cloning. Recipe callbacks receive candidate evidence, not authority to replace/delete the source.
 
-The optional `assessActionEligibility` property lookup is itself treated as untrusted runtime behavior. The public adapter boundary exposes a guarded getter: readable missing/non-function values preserve the established structured refusal, while a throwing/proxy-backed getter is converted into a callable failure. Because the core invokes that callable inside the existing `transform-recheck` guard, a getter failure after a prior recipe cannot escape the transaction; candidate discard is attempted and a discard failure still becomes `CLEANUP_REQUIRED` through the existing cleanup contract. A valid hook is invoked with the original adapter as `this`.
+A successful preparation path still requires source-after fingerprint equality with source-before evidence. Candidate failures attempt discard. A failed discard or transaction-coordinator release remains explicit cleanup evidence rather than being silently treated as success.
 
-A later action is reassessed even when it has no explicit prerequisite IDs: any earlier candidate mutation could still invalidate its eligibility. If the adapter cannot perform this reassessment after a prior recipe, the transaction fails closed and discards the candidate rather than silently trusting the old plan.
+No current development preview bypasses these contracts because no real P14 retained-duplicate mutation path is wired into the plugin UI.
 
-A valid runtime assessment with `eligible: false` stops the sequence before that action mutates, discards the candidate and returns replan/recovery guidance. A malformed/missing reassessment follows `P14_TRANSFORM_FAILED`; lost prerequisite/eligibility assumptions follow the stable prerequisite/replan safety path. Raw hostile assessment evidence is not copied into receipts.
+## Current boundaries / non-goals
 
-An accepted idempotent `becameNoOp` recipe result still counts as completed prerequisite execution evidence, because the recipe was re-evaluated and proved already satisfied rather than skipped without proof.
+Still intentionally absent:
 
-This gate is target-neutral. It does not authorize a production recipe, prove target compatibility or replace the later mandatory validation/re-score/source-immutability gates.
+- production safe-recipe registrations;
+- P14 confirmation creation from the development preview;
+- a real Figma retained-duplicate mutation adapter/command;
+- target-specific Elementor/Gutenberg preparation recipes;
+- distributed cross-process lock claims;
+- cryptographic user authentication claims;
+- target compatibility claims from target-neutral P14 evidence;
+- production acceptance from automated CI or preview evidence.
 
-## Adapter callback input isolation
+P13 real-plugin runtime/parity acceptance #159 remains required before real P14 Figma mutation exposure. It does not block target-neutral core work or read-only preview hardening.
 
-The accepted P14 plan, action and candidate objects are transaction state. Even after caller evidence has been snapshotted, passing those same mutable objects by reference into an adapter would let callback-side JavaScript rewrite values that later core checks and receipts still rely on.
+## Current repository state
 
-`src/core/p14-adapter-input-snapshot.ts` therefore creates fresh plain copies of only the known adapter-facing P14 schemas:
+Current main after the latest P14 runtime-preview safety slice is:
 
-- candidate handle: source and candidate node identities;
-- action: scalar planning fields plus copied target/prerequisite/conflict/mutation arrays;
-- plan: version/run/source/status/digest fields, copied actions/blockers and copied action-ID buckets.
+`b944dc0ceea1c0c3a531fe4e9b88a66dacf3b92f`
 
-The public adapter boundary supplies a fresh detached candidate/action/plan copy to every object-bearing callback invocation: `assessActionEligibility(...)`, `applyRecipe(...)`, `validateCandidate(...)`, `rescoreCandidate(...)`, `retainCandidate(...)` and `discardCandidate(...)`. A callback may mutate its own argument object, but that mutation cannot rewrite the internal accepted action, plan or candidate handle used by later runtime validation, source-fingerprint checks, retention correlation, cleanup or receipt construction. Separate callback invocations receive separate object identities, so mutation is not intentionally shared between callbacks.
+Canonical status synchronization is tracked by #264 on `docs/p14-post-266-status-264`.
 
-This copy boundary reuses the resource contract already proven before adapter access; it does not perform arbitrary property enumeration or an unbounded generic recursive deep clone. Scalar source-node, transaction-ID and prepared-name arguments remain ordinary immutable string values, and existing adapter-output validators remain authoritative for returned evidence.
+P12 remains at its retained 80% release-exit state. P15-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.
 
-Input isolation is not an adapter sandbox. It cannot prevent a real adapter from mutating the candidate node that its candidate identity refers to, cannot prove host authenticity, and does not make adapter behavior trusted. It only prevents by-reference mutation of the transaction core's semantic bookkeeping objects. No production recipe, target compatibility or production-acceptance authority is added.
+## Next P14 step
 
-## Bounded adapter-output evidence
+After #264 status synchronization closes, continue with the next focused P14 implementation/safety slice. Do not infer that read-only preview availability authorizes confirmation or mutation. A future confirmation/mutation surface requires an explicit separate issue/contract and must preserve:
 
-TypeScript adapter return types are not treated as runtime trust. Clone, recipe execution, runtime action-eligibility, validation, re-score and retention outputs are captured and validated as unknown evidence before their fields can affect transaction state or be copied into receipts.
-
-`src/core/p14-adapter-output-snapshot.ts` captures only each validator's declared known schema. Every declared top-level adapter-output property is read once through a guarded access and copied into a plain record before semantic comparisons or accepted-value construction. This is a shallow schema-driven evidence boundary, not arbitrary property enumeration and not a generic recursive deep clone.
-
-Adapter-owned collections that can affect later semantics are also detached before use. Runtime eligibility prerequisite IDs, validation profile IDs and validation checks are copied through guarded bounded `.length`/index reads into plain arrays. Each nested validation check then has its known `id`, `passed`, `required` and optional `detail` fields captured once before shape/resource validation. Accepted evidence therefore does not retain mutable adapter-owned array/object references.
-
-Readable stateful getters/proxies cannot present one value during shape validation and another during exact plan/transaction comparison or final accepted-copy construction. Throwing property/length/index access and revoked proxies, including a revoked proxy that makes `Array.isArray(...)` throw, fail closed as invalid adapter evidence rather than escaping the transaction. Existing failure stages/error codes and existing bounded count diagnostics remain authoritative.
-
-`validateP14CandidateHandleEvidence(...)` requires bounded non-empty source/candidate identities, exact approved-source binding and a candidate identity distinct from the source. Malformed clone evidence returns the existing clone-failure path before any recipe mutation starts.
-
-`validateP14RecipeExecutionResultEvidence(...)` requires bounded exact action/recipe identities, boolean outcome fields, exactly one of applied or accepted idempotent no-op, and bounded optional detail. The runtime transaction binds each result to the exact planned action before it is added to `appliedActions`. Malformed evidence triggers candidate cleanup and `P14_TRANSFORM_FAILED`; raw oversized result detail is not promoted into the receipt error.
-
-`validateP14RuntimeActionEligibilityEvidence(...)` binds the accepted plain eligibility evidence to the exact planned action/recipe and exact bounded prerequisite set before a later recipe can execute. `validateP14ValidationEvidence(...)` accepts only detached bounded profile/check evidence, and `validateP14RescoreEvidence(...)` consumes a plain one-shot re-score field snapshot before scored-P13 policy evaluation.
-
-`validateP14RetentionEvidence(...)` requires bounded transaction/source/retained-node/prepared-name identities and, during execution, exact equality with the current transaction, approved source, candidate and requested prepared name. Malformed or mismatched retention evidence cannot produce `PREPARED`; it follows the finalization cleanup path.
-
-Receipt integrity reuses the same bounded execution-result/retention shape validators and requires bounded candidate identity evidence. A copied or forged receipt therefore cannot become valid merely because an oversized runtime identity is non-empty.
-
-These validators and snapshots do not invent a Figma node-ID format, authenticate a host, prove that an adapter really performed the claimed external operation, authorize a production recipe, or establish target compatibility/production acceptance. They establish stable bounded runtime evidence shape and exact transaction identity binding only.
-
-## Active recipe validation-profile coverage
-
-The frozen P14 validation stack requires every validator profile declared by the active recipe set to actually run before a candidate may be retained. Generic `validation.passed=true` is therefore not sufficient evidence.
-
-`requiredP14ValidationProfileIds(...)` derives the required profile set only from `ELIGIBLE` actions and de-duplicates it deterministically. `assessP14ValidationProfileCoverage(...)` then evaluates the adapter's explicit `profileIdsRun` evidence.
-
-The coverage gate requires:
-
-- every active eligible recipe to expose a bounded `validationProfileId`;
-- `profileIdsRun` to be an explicit bounded array of bounded non-empty IDs;
-- duplicate reported profile IDs to fail closed;
-- every required profile ID to appear in the observed evidence;
-- extra explicitly reported profiles to be permitted only within the same bounded evidence limit; extras never substitute for a missing required profile.
-
-Observed profile evidence is normalized to a stable bounded representation before it is attached to a rejection receipt. Missing, duplicate, malformed or oversized profile evidence returns `P14_VALIDATION_FAILED`, discards the candidate and prevents re-score/finalization.
-
-Adapter validation output is treated as untrusted runtime evidence even though the TypeScript interface is strongly typed. A null/non-object/malformed validation result fails through the validation cleanup path instead of escaping as an uncaught property-access error.
-
-Validation-profile coverage and generic mandatory validation checks are independent gates. Both must pass before Build-Ready re-score can start. Profile coverage proves only that declared validator profiles were represented in execution evidence; it does not prove the validators are externally accepted, prove target compatibility or grant runtime/production acceptance.
-
-## Bounded validation-check evidence
-
-`validateP14ValidationEvidence(...)` treats the adapter-provided validation summary and its `checks` array as untrusted runtime evidence before policy evaluation or receipt attachment. Strong TypeScript return types are not runtime authority.
-
-The validator enforces resource and evidence bounds before the transaction can trust check data:
-
-- `checks` must be an explicit array and its count is bounded by the existing P14 action-count safety limit;
-- an oversized check array is rejected from `.length` before any item traversal;
-- every check ID must be a non-empty string within the existing P14 identity bound;
-- optional check detail must be a string within the existing P14 detail bound;
-- `passed` and `required` must be booleans;
-- only accepted bounded checks are normalized into transaction evidence.
-
-Malformed or oversized validation-check evidence follows `P14_VALIDATION_FAILED`, discards the candidate and stops before re-score or retention. Raw hostile oversized check detail is not copied into the receipt. Receipt integrity reuses the same bounded check validator, so copied/forged receipts cannot bypass the runtime resource contract.
-
-This shape/resource gate remains separate from validation-profile coverage and from the generic mandatory-check policy. It does not decide whether a required check should exist, does not authorize a validator, and does not create target-readiness or production-acceptance evidence.
-
-## Candidate re-score evidence hardening
-
-`rescoreCandidate(...)` output is also treated as untrusted runtime evidence before any field dereference.
-
-`validateP14RescoreEvidence(...)` is shared by the transaction runtime and receipt-integrity validator. It requires:
-
-- bounded non-empty `runId` and accepted scored P13 status identity;
-- status in the scored P13 domain `READY | REVIEW | NOT_READY`;
-- finite integer score in the accepted P13 range `0..100`;
-- non-negative safe-integer blocker/high-risk/introduced-risk counts;
-- boolean review evidence.
-
-A numeric P14 re-score summary cannot truthfully encode P13 `INSUFFICIENT_EVIDENCE`, because the accepted P13 model represents that status with `score: null`. Such contradictory evidence therefore fails closed rather than being coerced.
-
-Malformed/null/non-finite/out-of-domain re-score evidence causes candidate cleanup with `P14_RESCORE_FAILED` and never reaches retention. By contrast, structurally valid evidence that reports a newly introduced HIGH/BLOCKER finding remains the separate existing `P14_VALIDATION_FAILED` preparation-policy outcome.
-
-This evidence gate does not create a new score target and does not require score-chasing to `READY`. The frozen P14 acceptance rule remains preservation-first: mandatory validators must pass and preparation must not introduce new HIGH/BLOCKER findings.
-
-## Runtime source-fingerprint evidence
-
-P14's central source-safety claim depends on runtime fingerprint equality, so typed adapter return values are not trusted merely because `fingerprintSource(...)` declares `Promise<string>`.
-
-`validateP14SourceFingerprintEvidence(...)` accepts only a bounded, non-empty runtime fingerprint string within the existing P14 identity bound. It deliberately does **not** invent a cryptographic hash format or claim host authenticity.
-
-Every runtime source fingerprint read is validated before comparison or receipt attachment:
-
-- initial preflight source binding;
-- `NO_CHANGES_NEEDED` source recheck;
-- pre-retain source immutability check;
-- post-retain source immutability check.
-
-Malformed, empty, null or oversized runtime fingerprint evidence fails closed. Raw invalid evidence is never copied into a receipt. Where proof could not be retained, the receipt uses the explicit bounded `UNKNOWN` sentinel instead.
-
-A valid bounded fingerprint that differs from the accepted before-fingerprint remains genuine stale/change evidence and follows the existing `SOURCE_STALE`/`P14_SOURCE_CHANGED_DURING_RUN` paths. Invalid fingerprint evidence is not misrepresented as a changed source value.
-
-Receipt integrity applies the same bounded fingerprint shape contract while permitting `UNKNOWN` only as a receipt sentinel for unavailable proof. This validation establishes evidence shape/bounds only; it does not establish cryptographic strength, Figma identity, publisher identity, or external runtime acceptance.
-
-## Cancellation control hardening
-
-`shouldCancel()` is runtime control evidence, not a trusted boolean merely because its TypeScript signature says so. `assessP14CancellationCheck(...)` therefore distinguishes three outcomes: explicit `true`, explicit `false`, and callback failure.
-
-A callback failure includes synchronous throw, rejected promise, or a non-boolean runtime return. Failure is never relabeled as user-requested cancellation. Failure detail is bounded before it can enter receipt/event evidence.
-
-The transaction applies this rule at every cooperative cancellation checkpoint: before clone, before each recipe execution checkpoint, before validation, and before finalization. A pre-clone callback failure returns a structured fail-closed receipt without cloning or mutating. Once a candidate exists, callback failure first attempts candidate discard and returns the normal rejection path; if discard itself fails, the result becomes `CLEANUP_REQUIRED`.
-
-Normal `true` cancellation semantics remain unchanged: pre-clone cancellation performs no clone, while post-clone cancellation discards the candidate before returning `CANCELLED`. Callback failure and user cancellation remain separate evidence states.
-
-An acquired source-scope transaction lease is always passed through the bounded release-evidence step before the transaction returns. Cancellation-check failure therefore cannot silently skip lease cleanup; a failed release becomes explicit `CLEANUP_REQUIRED` evidence. This is process-local transaction safety only; it is not host cancellation proof, user identity evidence or production acceptance.
-
-## Source-scope transaction coordination
-
-`P14SourceTransactionCoordinator` enforces the frozen single-owner rule for executable READY runs:
-
-- one active transaction may own a source scope at a time;
-- one active transaction ID may own only one source scope;
-- same-source overlap fails before adapter access with `P14_TRANSACTION_CONFLICT`;
-- stale/non-owner release cannot clear the current owner;
-- independent source scopes may run concurrently;
-- NO_CHANGES_NEEDED and already-BLOCKED plans do not consume mutation leases;
-- acquired READY leases must produce explicit successful release evidence before the transaction can return a clean terminal outcome.
-
-Lease acquisition occurs only after integrity, recipe authorization and exact confirmation succeed. The default coordinator is process-local only; no distributed/cross-plugin-instance locking is claimed.
-
-## Coordinator runtime evidence and lease cleanup
-
-An injected coordinator is a runtime boundary, not authority granted by the `P14SourceTransactionCoordinator` TypeScript type.
-
-`assessP14TransactionLeaseResultEvidence(...)` validates acquisition results before transaction code may branch on them. It requires a boolean acquisition flag, a supported refusal reason, bounded optional owner identities, and—when acquisition is claimed—bounded lease identities exactly equal to the normalized requested source scope and transaction ID. Unreadable/proxy-backed evidence fails closed instead of escaping through property access.
-
-The #235/#236 hardening slice also makes readable stateful coordinator evidence stable: the top-level `acquired` flag is captured once before branching; an acquired `lease` reference and its `sourceScope` / `transactionId` fields are each captured once before exact binding; refusal `reason`, `ownerTransactionId` and `ownerSourceScope` are captured once before validation and accepted-value construction. Accepted coordinator evidence is rebuilt as plain detached data, so later transaction semantics do not retain coordinator-owned getter/proxy references. If nested lease capture becomes unreadable after acquisition was claimed, the existing `claimedAcquired` signal still drives the bounded best-effort exact-lease cleanup contract.
-
-A throwing `tryAcquire(...)` or malformed refusal/acquisition result returns a structured pre-adapter `BLOCKED` receipt. If malformed evidence nevertheless claims `acquired: true`, the core makes one best-effort release attempt using the exact expected source/transaction lease identity so an injected coordinator cannot intentionally hide an acquired lease behind malformed evidence.
-
-Lease release is also runtime evidence. Only the literal result `true` is accepted as successful cleanup. A `false`, non-boolean runtime value or thrown release call cannot override the transaction promise or be silently ignored. Instead, the already-produced outcome is converted to `CLEANUP_REQUIRED` and receives bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `coordination-release` plus explicit lease-recovery guidance.
-
-If candidate retention already succeeded before coordinator release failed, the receipt keeps truthful candidate/retention/validation/re-score evidence and marks the retained candidate as retained while the transaction itself becomes `CLEANUP_REQUIRED`. If the run failed before a candidate existed, coordinator cleanup may likewise produce `CLEANUP_REQUIRED` without inventing candidate evidence. Receipt integrity recognizes both cases only when the exact coordinator-release failure stage is present.
-
-These checks do not prove distributed locking, host authenticity, persistence, cross-plugin coordination or external ownership recovery. They only make the injected process-local coordination boundary bounded and fail-closed.
-
-## Bounded receipt envelope and runtime diagnostics
-
-P14 receipt integrity treats the receipt envelope itself as untrusted evidence, not just its nested validation/re-score payloads.
-
-`assessP14ReceiptCollection(...)` applies the existing P14 action-count safety limit to `appliedActions`, `errors` and `events`. An oversized collection is rejected from its `.length` before any item access, iteration, duplicate scan or status-specific `.some(...)` check. This preserves a bounded receipt-integrity traversal even for proxy-backed or otherwise hostile forged arrays.
-
-Top-level receipt correlation identities — `transactionId`, `p13RunId`, `planDigest` and `source.nodeId` — use the existing P14 identity bound. Error `stage` also uses the identity bound, while error `detail`, optional `recovery` and optional event `detail` use the existing P14 detail bound. The plan digest keeps its existing `p14-plan-` correlation prefix requirement; no host-specific node-ID or authentication format is invented.
-
-Transaction diagnostic constructors use the same shared bounds. `receiptError(...)` and event construction therefore emit bounded stage/detail/recovery evidence by construction, including details assembled from planner/authorization/runtime failures. Runtime adapter/discard/coordinator exceptions are rendered through `safeP14RuntimeErrorMessage(...)`, which bounds long messages and falls back deterministically when hostile exception stringification itself throws.
-
-These envelope/resource limits do not make a receipt authoritative. They bound traversal and evidence size only; `acceptanceAuthority` and `targetCompatibilityClaim` remain false.
-
-## Runtime clock and event timestamp evidence
-
-Runtime wall-clock callbacks are evidence providers, not transaction authority. A caller-supplied `now()` callback therefore cannot be trusted merely because the TypeScript surface historically returned `string`.
-
-`isP14NormalizedUtcTimestamp(...)` centralizes the strict P14 timestamp shape already used by reviewed-plan confirmations: normalized UTC ISO with millisecond precision (`YYYY-MM-DDTHH:mm:ss.sssZ`), bounded before parsing, and round-tripped through `Date` to reject impossible calendar values. Preparation confirmations continue to require this strict observed timestamp and do not accept an unavailable-time sentinel.
-
-Receipt event timestamps use the same bounded normalized form when runtime clock evidence is valid. If the runtime clock callback throws, returns a non-string, exceeds the existing identity bound, or returns a non-canonical/invalid timestamp, `readP14RuntimeEventTimestamp(...)` records the explicit `UNKNOWN` sentinel instead of throwing or inventing an observed time.
-
-Receipt integrity accepts only normalized UTC event evidence or the explicit `UNKNOWN` sentinel. Oversized/malformed event timestamp strings are rejected before `Date.parse(...)`, so forged receipt evidence cannot force unbounded timestamp parsing.
-
-`UNKNOWN` means only that the event's wall-clock timestamp was unavailable or invalid. It is not a real time, does not weaken event state ordering, does not authenticate the host clock, and does not claim monotonicity, cross-machine synchronization, publisher identity or production acceptance. Transaction state/detail/cleanup semantics remain unchanged when clock evidence is unavailable.
-
-## Receipt integrity gate
-
-Every P14 receipt explicitly carries `acceptanceAuthority: false` and `targetCompatibilityClaim: false`.
-
-Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation, re-score and recipe-execution evidence. Receipt collection counts are bounded before traversal; top-level correlation identities and error/event diagnostics are bounded with the existing P14 identity/detail limits. Event time evidence must be normalized bounded UTC or the explicit unavailable sentinel. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; validation-check count, IDs, boolean fields and optional detail are bounded through the same shared validator used at runtime; prepared outcomes require non-empty profile execution evidence. Runtime/receipt re-score evidence uses the same accepted scored-P13 validator. Source fingerprint evidence is bounded and may use the explicit `UNKNOWN` sentinel only as receipt evidence for unavailable proof. Candidate identities, recipe execution results and retention identities are bounded through the same adapter-evidence contracts used at runtime. Coordinator-release cleanup is recognized only through bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at the exact `coordination-release` stage. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
-
-## Safety invariants
-
-1. Oversized/pathological input is blocked before deep plan processing or adapter access.
-2. Run-level and confirmation identities are bounded by the same first-gate policy.
-3. Oversized rejection evidence remains bounded and does not echo hostile identity payloads.
-4. A mutating READY plan requires separate integrity, recipe-authorization and exact reviewed-confirmation gates.
-5. Confirmation cannot authorize a recipe, bypass validation or claim target readiness/production acceptance.
-6. Static topological ordering is rechecked at runtime: every subsequent action must still be eligible against the current candidate before mutation.
-7. Declared prerequisite recipes must have completed earlier in the same transaction before a dependent action can execute.
-8. Missing/malformed runtime reassessment evidence fails closed before the later recipe mutation.
-9. Candidate clone evidence is bounded and source-bound before recipe mutation begins.
-10. Recipe execution evidence is bounded and action-bound before it enters `appliedActions`.
-11. Retention evidence is bounded and exactly transaction/source/candidate/prepared-name bound before `PREPARED` can be emitted.
-12. Every active eligible recipe's declared validation profile must be represented in bounded validation evidence before re-score or retention.
-13. Generic `validation.passed=true` cannot substitute for missing recipe-specific validator coverage.
-14. Malformed runtime validation evidence fails through candidate cleanup rather than bypassing validation.
-15. Candidate re-score output is untrusted evidence and must satisfy the bounded scored-P13 contract before policy evaluation.
-16. Re-score evidence hardening does not create a new score target or override design-preservation rules.
-17. Every runtime source fingerprint read is bounded and validated before equality comparison or receipt attachment.
-18. Invalid source-fingerprint evidence is represented as unavailable proof, never fabricated stale/change proof.
-19. The approved source node is never passed to recipe mutation callbacks.
-20. A P14 transaction never swaps, replaces or deletes the approved source.
-21. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
-22. New HIGH/BLOCKER findings caused by preparation reject the candidate.
-23. `PREPARED_WITH_REVIEW` requires explicit literal-boolean review authorization; truthy non-boolean runtime values cannot grant it.
-24. Explicit cancellation and cancellation-check failure are distinct; callback failure is never emitted as `P14_CANCELLED`.
-25. Cancellation-check throw/reject/non-boolean results fail closed; after clone they require candidate cleanup before return.
-26. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
-27. A no-op plan completes without cloning and without mutating-plan confirmation.
-28. Target-neutral preparation does not imply target readiness.
-29. Malformed/tampered plans are blocked before adapter access.
-30. Eligible recipes require current registry authorization before adapter access.
-31. P14 receipts have no acceptance/target-compatibility authority.
-32. One executable READY transaction may own a source scope at a time.
-33. An acquired transaction lease requires explicit successful release evidence; failed release becomes `CLEANUP_REQUIRED` rather than escaping or being ignored.
-34. Validation-check arrays are count-bounded before traversal, and check IDs/details are bounded before policy evaluation or receipt attachment.
-35. Validation-check shape/resource validation remains separate from profile coverage and required-check policy; bounded evidence alone never proves target readiness.
-36. Receipt `appliedActions`, `errors` and `events` counts are bounded from `.length` before their contents are traversed.
-37. Receipt correlation identities and error/event diagnostics are bounded by the existing P14 identity/detail limits.
-38. Runtime adapter/discard/coordinator exception rendering cannot emit unbounded receipt error or event detail.
-39. Receipt-envelope hardening introduces no new host identifier, authentication or acceptance semantics.
-40. Event timestamp strings are length/shape checked before parsing and must be normalized UTC or the explicit `UNKNOWN` sentinel.
-41. A throwing, non-string, oversized or non-canonical runtime clock callback cannot escape the transaction or inject raw timestamp evidence.
-42. `UNKNOWN` event time represents unavailable evidence; it never fabricates an observed wall-clock timestamp or changes transaction state semantics.
-43. Reviewed-plan confirmation timestamps remain strict normalized UTC evidence and cannot use the event-time `UNKNOWN` sentinel.
-44. P14 does not claim host-clock accuracy, monotonicity or cross-machine time synchronization.
-45. Safe-recipe registry top-level and nested collections are count-bounded before semantic traversal using existing P14 limits.
-46. Safe-recipe registry rule/recipe/profile/order/dependency identities are bounded before semantic authorization validation.
-47. Oversized registry evidence remains fail-closed on the existing `P14_RECIPE_UNAUTHORIZED` path before confirmation, source coordination or adapter access.
-48. Registry resource bounding never registers a production recipe or grants mutation, compatibility or acceptance authority.
-49. Injected coordinator acquisition/refusal results are untrusted evidence; each known semantic property is captured once into plain accepted evidence and must remain readable, bounded and contract-valid before adapter access.
-50. Acquired lease evidence is bound to the exact normalized requested source scope and transaction ID before execution may continue.
-51. Malformed evidence that claims acquisition triggers one bounded best-effort exact-lease cleanup attempt before return.
-52. Only literal `true` release evidence proves coordinator cleanup; false/non-boolean/throwing release cannot silently produce a clean terminal outcome.
-53. Coordinator cleanup failure preserves truthful candidate/retention state while changing the transaction outcome to `CLEANUP_REQUIRED`; it does not imply distributed lock recovery or host authenticity.
-54. Caller run-control type/shape evidence is validated before confirmation, coordinator or adapter access.
-55. Transaction and prepared-name identities are normalized once before runtime semantics; their raw typed values still drive resource-size rejection.
-56. Known input-bound override fields are snapshotted safely before the core reuses them; throwing getters cannot escape the first gate.
-57. Present input-bound override values must be positive integers and remain stricter-only through the existing clamp/default/hard-limit policy.
-58. Run-control hardening adds no recipe, target, authentication, compatibility or production-acceptance authority.
-59. Runtime action-eligibility hook property access is untrusted; a throwing/proxy-backed getter cannot escape after prior candidate mutation.
-60. Unreadable runtime-eligibility hook access reuses the existing `P14_TRANSFORM_FAILED` / `transform-recheck` cleanup path, and discard failure still becomes `CLEANUP_REQUIRED`.
-61. Guarding the optional eligibility hook preserves readable missing/non-function refusal and invokes valid hooks with the original adapter as `this`; it adds no target or mutation authority.
-62. The public run-input object and each known top-level transaction property are read as untrusted runtime evidence before bounds/core semantics.
-63. Accepted top-level run-input properties are snapshotted once into a plain delegated object; caller getters are not re-entered through object spread or later wrapper reads.
-64. Unreadable/non-object top-level run input fails closed as bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `run-input` before coordinator or adapter access, while clock metadata retains its separate fail-soft `UNKNOWN` contract.
-65. Top-level run-input snapshotting does not replace nested validators or add recipe, target, authentication, compatibility or production-acceptance authority.
-66. Nested plan/confirmation properties traversed by the bounded-input gate are untrusted; throwing getters/proxies cannot escape either the public or internal bounds pass.
-67. Unreadable nested bounds evidence fails before coordination/adapter access as bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `bounds-evidence`.
-68. Internal second-pass bounds failure uses bounded `UNKNOWN` / `p14-plan-invalid` correlation sentinels instead of re-reading hostile plan metadata.
-69. Readable oversized bounds evidence remains on `P14_INPUT_TOO_LARGE` / `bounds`; unreadable-evidence hardening adds no recipe, target, compatibility or acceptance authority.
-70. After an allowed first bounds pass, known plan/confirmation semantics are captured through bounded guarded reads into plain evidence before plan integrity, confirmation or execution semantics.
-71. The semantic snapshot copies only the known P14 contract and never enumerates arbitrary caller properties or performs an unbounded generic deep clone.
-72. Caller-owned nested plan/confirmation getters are not delegated into core semantics after snapshot capture; readable state changes after the boundary cannot alter source/action/confirmation authority.
-73. The existing bounds contract is re-run on the plain semantic snapshot; evidence that grows oversized between first preflight and capture preserves `P14_INPUT_TOO_LARGE` / `bounds` rather than entering semantic traversal.
-74. Unreadable semantic capture remains bounded `P14_INTERNAL_INVARIANT_FAILED` / `bounds-evidence`; the established #216 `UNKNOWN` / `p14-plan-invalid` fallback remains authoritative where correlation cannot be trusted.
-75. Nested semantic snapshotting adds no production recipe, real Figma mutation surface, target compatibility or production-acceptance authority.
-76. Safe-recipe registry resource bounds run before registry semantic capture; a first allowed pass does not by itself make caller-owned registry evidence authoritative.
-77. After an allowed first registry bounds pass, only the known safe-recipe registry contract is captured through bounded guarded reads into plain evidence.
-78. Registry semantic capture never enumerates arbitrary caller properties or performs an unbounded generic deep clone, and collection reads remain constrained by the existing P14 registry limits.
-79. The existing registry bounds contract is re-run on the plain registry snapshot; evidence that grows oversized between first preflight and capture remains invalid and cannot enter recipe authorization.
-80. Registry validation, exact recipe resolution and plan authorization consume stable plain evidence for their own operation and do not re-enter caller-owned registry getters after the evidence boundary.
-81. Unreadable registry semantic capture fails as invalid registry evidence before confirmation, coordination or adapter access; transaction execution preserves the existing `P14_RECIPE_UNAUTHORIZED` refusal path.
-82. Registry semantic snapshotting adds no production recipe, real Figma mutation surface, target compatibility or production-acceptance authority.
-83. Internal accepted candidate/action/plan objects are transaction state and are not delegated by reference into object-bearing runtime adapter callbacks.
-84. Every eligibility/apply/validate/re-score/retain/discard callback invocation receives fresh known-schema plain candidate/action/plan copies as applicable.
-85. Adapter-facing action and plan collections are copied only from the already-bounded accepted P14 contract; adapter input isolation does not enumerate arbitrary properties or perform an unbounded generic deep clone.
-86. Callback-side mutation of adapter argument objects cannot alter later core action authorization, source/candidate correlation, validation/re-score inputs, retention evidence expectations or cleanup receipt identity.
-87. Adapter input isolation does not sandbox the adapter's real candidate-side effects and does not replace existing adapter-output validation or source-immutability proof.
-88. Adapter callback input isolation adds no production recipe, real Figma mutation surface, target compatibility or production-acceptance authority.
-89. Known adapter-output schema fields are captured through guarded one-shot reads before semantic validation or accepted-copy construction; readable stateful getters cannot change meaning between checks.
-90. Adapter-owned prerequisite/profile/check arrays are copied through bounded guarded length/index reads into plain evidence before later coverage, policy or receipt semantics, and accepted nested validation checks do not retain adapter-owned object references.
-91. Throwing or revoked adapter-output proxies fail closed as invalid evidence, including revoked array proxies whose array inspection itself throws; they cannot escape the transaction promise.
-92. Adapter-output semantic snapshotting is shallow and schema-driven, preserves existing failure/diagnostic authority, and adds no production recipe, real Figma mutation surface, host-authentication proof, target compatibility or production-acceptance authority.
-
-## Deliberately not wired yet
-
-This foundation does **not** add a Figma plugin menu item, UI button, real Figma adapter, real Figma validator, production mutating recipe, target-specific profile, identity/authentication service or target-specific readiness claim.
-
-P13 #159 real-Figma runtime parity remains an open P14 acceptance dependency. P12 #84 remains open at its retained state, with the remaining live/manual release evidence deferred to P27 #182. Under the roadmap execution model, these open release gates do **not** block P14 core implementation/testing from reaching implementation-complete or internally-ready state; they do block production acceptance/release claims. P14 runtime mutation exposure and production recipe authority remain deliberately unwired until their own acceptance prerequisites are genuinely satisfied.
+- exact current evidence freshness;
+- production recipe authorization;
+- explicit reviewed confirmation;
+- candidate-only mutation;
+- validation/re-score/source-immutability gates;
+- fail-closed cleanup;
+- #159 real-Figma runtime evidence before real mutation exposure.
