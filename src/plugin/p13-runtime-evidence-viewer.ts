@@ -2,6 +2,7 @@ import {
   serializeP13RuntimeEvidenceJson,
   type P13RuntimeEvidenceBundle,
 } from './p13-runtime-evidence';
+import type { P13RuntimeEvidenceInspection } from './p13-runtime-evidence-storage';
 import {
   buildP14PlanPreview,
   serializeP14PlanPreviewJson,
@@ -97,7 +98,25 @@ function renderP14Preview(bundle: P13RuntimeEvidenceBundle): string {
     <pre id="p14-preview-json">${escapeHtml(serializeP14PlanPreviewJson(preview))}</pre>`;
 }
 
-export function buildP13RuntimeEvidenceViewerHtml(bundle: P13RuntimeEvidenceBundle | null): string {
+function emptyEvidenceContent(inspection?: P13RuntimeEvidenceInspection): string {
+  if (!inspection || inspection.status === 'EMPTY') {
+    return '<div class="empty">No persisted P13 runtime evidence is available yet. Run Audit on exactly one Frame first.</div>';
+  }
+
+  const reason = inspection.reason ?? 'Persisted P13 runtime evidence is unavailable.';
+  return `
+    <div class="empty">
+      <div class="title">P13 Runtime Evidence Unavailable</div>
+      <div class="status">${escapeHtml(inspection.status)}</div>
+      <div class="warning">${escapeHtml(reason)}</div>
+      <div class="meta">Run Audit on exactly one current Frame to replace stale or rejected evidence before using Guided Prepare.</div>
+    </div>`;
+}
+
+export function buildP13RuntimeEvidenceViewerHtml(
+  bundle: P13RuntimeEvidenceBundle | null,
+  inspection?: P13RuntimeEvidenceInspection,
+): string {
   const content = bundle
     ? `
       <div class="hero">
@@ -127,7 +146,7 @@ export function buildP13RuntimeEvidenceViewerHtml(bundle: P13RuntimeEvidenceBund
       <pre id="evidence-json">${escapeHtml(serializeP13RuntimeEvidenceJson(bundle))}</pre>
       <div class="divider"></div>
       ${renderP14Preview(bundle)}`
-    : `<div class="empty">No valid persisted P13 runtime evidence is available yet. Run Audit on exactly one Frame first.</div>`;
+    : emptyEvidenceContent(inspection);
 
   return `<!doctype html>
 <html>
