@@ -81,9 +81,9 @@ Canonical future order:
 
 ### #198 — P14 safe-recipe registry evidence bounds
 
-Classification: **ACTIVE / PR #199 under final synchronized-head verification**.
+Classification: **COMPLETED / merged through PR #199**.
 
-PR #199 (`fix/p14-registry-bounds-198`) keeps the established authorization semantics while closing the remaining registry resource-bound gap:
+PR #199 (`fix/p14-registry-bounds-198`) closed the registry resource-bound gap without changing authorization authority:
 
 1. `assessP14SafeRecipeRegistryBounds(...)` reuses existing P14 safety limits rather than defining new registry-specific limits;
 2. top-level `bindings` is count-bounded before binding traversal;
@@ -94,7 +94,7 @@ PR #199 (`fix/p14-registry-bounds-198`) keeps the established authorization sema
 7. oversized and bounded-malformed registries preserve the existing execution outcome `BLOCKED` + `P14_RECIPE_UNAUTHORIZED` before confirmation/coordinator/adapter access;
 8. the production safe-recipe registry remains empty and no mutating recipe authority is introduced.
 
-Initial code/test head `4ebf8328159f6d0d94ba8b606987cb8c0599a66a` passed CI #858, P12 Final Release Artifact #169 and P12 Offline Acceptance #213 on Ubuntu/macOS/Windows. These are implementation checks only; final merge authority requires the fresh synchronized-head workflows after README/memory/foundation updates, Integration Readiness, zero unresolved review threads, branch current with main and `mergeable=true`.
+Initial code/test head `4ebf8328159f6d0d94ba8b606987cb8c0599a66a` passed CI #858, P12 Final Release Artifact #169 and P12 Offline Acceptance #213 on Ubuntu/macOS/Windows. Exact synchronized head `e782a08090a4e158f99da22bf25d8fff60c8c529` then passed CI #863, Integration Readiness #231, P12 Final Release Artifact #174 and P12 Offline Acceptance #218 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then squash-merged as `80cefcb8b90a85b5e5a8b5ad4e6a0f65ddf6d12b`. Issue #198 closed completed.
 
 ### #195 — P14 runtime clock and event timestamp evidence
 
@@ -175,7 +175,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #198 / PR #199 registry collection/identity resource bounding and exact-head verification;
+1. start the next focused safety-gap audit from main `80cefcb...` now that #198 / PR #199 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry evidence while preserving existing status semantics;
