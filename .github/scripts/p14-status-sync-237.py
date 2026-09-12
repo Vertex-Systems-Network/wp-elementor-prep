@@ -1,0 +1,192 @@
+from pathlib import Path
+import re
+import subprocess
+
+BASE = '804ffc6a143c2cf6ab4ca100d7b021289a060be2'
+
+
+def read(path: str) -> str:
+    return Path(path).read_text(encoding='utf-8')
+
+
+def write(path: str, text: str) -> None:
+    Path(path).write_text(text, encoding='utf-8')
+
+
+def replace_once(text: str, old: str, new: str, label: str) -> str:
+    count = text.count(old)
+    if count != 1:
+        raise SystemExit(f'{label}: expected exactly 1 match, found {count}')
+    return text.replace(old, new, 1)
+
+
+def replace_line_prefix(text: str, prefix: str, replacement: str, label: str) -> str:
+    lines = text.splitlines()
+    matches = [i for i, line in enumerate(lines) if line.startswith(prefix)]
+    if len(matches) != 1:
+        raise SystemExit(f'{label}: expected exactly 1 line prefix match, found {len(matches)}')
+    i = matches[0]
+    lines[i:i + 1] = replacement.splitlines()
+    return '\n'.join(lines) + ('\n' if text.endswith('\n') else '')
+
+
+# README.md
+path = 'README.md'
+text = read(path)
+text = replace_once(
+    text,
+    '- `#233` — post-#232 P14 repository-status synchronization before the next focused pure-core safety audit.',
+    '- `#237` — post-#236 P14 repository-status synchronization before the next focused pure-core safety audit.',
+    'README open issue',
+)
+text = replace_once(
+    text,
+    'Integration Readiness is path-filtered for code-only diffs and will run on the post-merge README synchronization tracked by #233. Issue #231 closed completed. Issue #126 is also closed completed.',
+    'Integration Readiness was path-filtered for that code-only diff; post-merge status synchronization #233 / PR #234 passed CI #970, Integration Readiness #316, P12 Final Release Artifact #281 and P12 Offline Acceptance #325 at exact head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998`, then guarded squash-merged as `27144161082ce3cff9c9a0ca1e0364cd19b727ad`. Issues #231 and #233 closed completed. PR #236 then completed #235 coordinator acquisition/refusal evidence snapshot hardening and guarded squash-merged as `804ffc6a143c2cf6ab4ca100d7b021289a060be2` after exact head `497b1385b55ca8343d82be04da02de0595228efd` passed CI #972, P12 Final Release Artifact #283 and P12 Offline Acceptance #327; Integration Readiness is path-filtered for the code-only diff and will run on the #237 status synchronization branch. Issue #235 closed completed. Issue #126 is also closed completed.',
+    'README merge history',
+)
+text = replace_once(
+    text,
+    'None of these slices changes P14 authority. Post-#232 repository status synchronization is tracked by #233 before the next focused P14 pure-core safety audit.',
+    'The post-#232 #233 / PR #234 synchronization records those merges on the canonical status surfaces; the merged #235 / PR #236 slice snapshots coordinator acquisition/refusal semantic fields once before exact lease/refusal validation and returns detached accepted evidence so readable stateful coordinator getters cannot change meaning after validation. None of these slices changes P14 authority. Post-#236 repository status synchronization is tracked by #237 before the next focused P14 pure-core safety audit.',
+    'README P14 narrative',
+)
+text = replace_once(
+    text,
+    'Complete #233 post-#232 status synchronization, then run the next focused P14 pure-core safety-gap audit; production registry remains empty; #159 required before real Figma mutation exposure',
+    'Complete #237 post-#236 status synchronization, then run the next focused P14 pure-core safety-gap audit; production registry remains empty; #159 required before real Figma mutation exposure',
+    'README P14 table',
+)
+text = replace_once(
+    text,
+    '1. complete #233 post-#232 repository-status synchronization, then run the next focused P14 pure-core safety-gap audit while real Figma mutation remains unwired and the production recipe registry remains empty;',
+    '1. complete #237 post-#236 repository-status synchronization, then run the next focused P14 pure-core safety-gap audit while real Figma mutation remains unwired and the production recipe registry remains empty;',
+    'README execution order',
+)
+write(path, text)
+
+# docs/P14_FOUNDATION_IMPLEMENTATION.md
+path = 'docs/P14_FOUNDATION_IMPLEMENTATION.md'
+text = read(path)
+text = replace_once(
+    text,
+    'Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223, #226, #229, #231  ',
+    'Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223, #226, #229, #231, #235  ',
+    'P14 foundation issue list',
+)
+text = replace_once(
+    text,
+    'source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.',
+    'source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination, bounded injected-coordinator runtime evidence/lease cleanup, and one-shot coordinator acquisition/refusal semantic snapshots.',
+    'P14 foundation summary',
+)
+anchor = '`assessP14TransactionLeaseResultEvidence(...)` validates acquisition results before transaction code may branch on them. It requires a boolean acquisition flag, a supported refusal reason, bounded optional owner identities, and—when acquisition is claimed—bounded lease identities exactly equal to the normalized requested source scope and transaction ID. Unreadable/proxy-backed evidence fails closed instead of escaping through property access.\n'
+addition = anchor + '\nThe #235/#236 hardening slice also makes readable stateful coordinator evidence stable: the top-level `acquired` flag is captured once before branching; an acquired `lease` reference and its `sourceScope` / `transactionId` fields are each captured once before exact binding; refusal `reason`, `ownerTransactionId` and `ownerSourceScope` are captured once before validation and accepted-value construction. Accepted coordinator evidence is rebuilt as plain detached data, so later transaction semantics do not retain coordinator-owned getter/proxy references. If nested lease capture becomes unreadable after acquisition was claimed, the existing `claimedAcquired` signal still drives the bounded best-effort exact-lease cleanup contract.\n'
+text = replace_once(text, anchor, addition, 'P14 coordinator semantic snapshot paragraph')
+text = replace_once(
+    text,
+    '49. Injected coordinator acquisition results are untrusted evidence and must be readable, bounded and contract-valid before adapter access.',
+    '49. Injected coordinator acquisition/refusal results are untrusted evidence; each known semantic property is captured once into plain accepted evidence and must remain readable, bounded and contract-valid before adapter access.',
+    'P14 invariant 49',
+)
+write(path, text)
+
+# memory-bank/PROJECT_STATE.md
+path = 'memory-bank/PROJECT_STATE.md'
+text = read(path)
+text = replace_once(text, 'Last updated: 2026-09-12', 'Last updated: 2026-09-13', 'PROJECT_STATE date')
+text = replace_line_prefix(
+    text,
+    '- #233 — post-#232 P14 repository-status synchronization:',
+    '- #237 — post-#236 P14 repository-status synchronization: **ACTIVE** on branch `docs/p14-post-236-status-237`. Canonical README, P14 foundation and memory-bank state are being aligned to the verified #234/#236 merges before the next focused pure-core safety audit.\n- #235 — P14 coordinator acquisition/refusal semantic snapshot hardening: **COMPLETED** through PR #236; issue closed automatically by guarded squash merge `804ffc6a143c2cf6ab4ca100d7b021289a060be2`.\n- #233 — post-#232 P14 repository-status synchronization: **COMPLETED** through PR #234; guarded squash-merged as `27144161082ce3cff9c9a0ca1e0364cd19b727ad` after exact synchronized head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998` passed all required gates.',
+    'PROJECT_STATE issue queue',
+)
+text = replace_line_prefix(
+    text,
+    '- Current repository main is `',
+    '- Current repository main is `804ffc6a143c2cf6ab4ca100d7b021289a060be2`, the guarded squash merge of PR #236.',
+    'PROJECT_STATE main',
+)
+text = replace_line_prefix(
+    text,
+    '- Draft PR #234 (`docs/p14-post-232-status-233`)',
+    '- Branch `docs/p14-post-236-status-237` is the active canonical status synchronization tracked by #237; it must trigger and pass CI, Integration Readiness, P12 Final Release Artifact and P12 Offline Acceptance before guarded merge.\n- PR #234 (`docs/p14-post-232-status-233`) completed the post-#232 canonical status synchronization and guarded squash-merged as `27144161082ce3cff9c9a0ca1e0364cd19b727ad`. Exact head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998` passed CI #970, Integration Readiness #316, P12 Final Release Artifact #281 and P12 Offline Acceptance #325.',
+    'PROJECT_STATE active sync',
+)
+marker = '- PR #232 exact head `b06240a02cc8fc14c0c94e23ba9e554a62eae319` passed CI #965'
+if marker not in text:
+    raise SystemExit('PROJECT_STATE PR232 insertion marker missing')
+insert = (
+    '- PR #236 exact head `497b1385b55ca8343d82be04da02de0595228efd` passed CI #972, P12 Final Release Artifact #283 and P12 Offline Acceptance #327; it had zero review threads, was current with main and mergeable before guarded squash merge `804ffc6a143c2cf6ab4ca100d7b021289a060be2`. Integration Readiness did not run on this code-only PR because its pull-request trigger is path-filtered.\n'
+    '- PR #236 captures coordinator `acquired`, acquired lease identity fields, refusal reason and optional owner identities once before semantic validation, and rebuilds accepted evidence as plain detached data. Throwing/revoked evidence still fails closed and malformed evidence that claims acquisition retains the existing bounded best-effort exact-lease cleanup contract. No distributed-lock, host-authentication, production-recipe, real Figma mutation, target-compatibility or production-acceptance authority was added.\n'
+)
+text = text.replace(marker, insert + marker, 1)
+write(path, text)
+
+# memory-bank/NEXT_ACTIONS.md
+path = 'memory-bank/NEXT_ACTIONS.md'
+text = read(path)
+text = replace_once(text, 'Last updated: 2026-09-12', 'Last updated: 2026-09-13', 'NEXT_ACTIONS date')
+pattern = re.compile(r'### #233 — post-#232 P14 repository status synchronization\n.*?(?=### #231 — P14 adapter-output semantic snapshot)', re.S)
+matches = list(pattern.finditer(text))
+if len(matches) != 1:
+    raise SystemExit(f'NEXT_ACTIONS #233 section: expected 1 match, found {len(matches)}')
+replacement = '''### #237 — post-#236 P14 repository status synchronization
+
+Classification: **ACTIVE / branch prepared**.
+
+Branch `docs/p14-post-236-status-237` synchronizes canonical repository truth after the verified #233/#234 and #235/#236 cycles without expanding runtime scope:
+
+1. record #233 / PR #234 as completed at guarded merge `27144161082ce3cff9c9a0ca1e0364cd19b727ad`, exact head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998`, CI #970, Integration Readiness #316, P12 Final Release Artifact #281 and P12 Offline Acceptance #325;
+2. record #235 / PR #236 as completed at guarded merge `804ffc6a143c2cf6ab4ca100d7b021289a060be2`, exact head `497b1385b55ca8343d82be04da02de0595228efd`, CI #972, P12 Final Release Artifact #283 and P12 Offline Acceptance #327;
+3. explicitly preserve the truth that Integration Readiness did not run on code-only PR #236 because its pull-request trigger is path-filtered;
+4. record the one-shot coordinator acquisition/refusal semantic snapshot boundary and detached accepted evidence while preserving the existing claimed-acquired cleanup contract;
+5. synchronize README, `docs/P14_FOUNDATION_IMPLEMENTATION.md`, `memory-bank/PROJECT_STATE.md` and this queue only;
+6. keep production safe-recipe authority empty and real Figma mutation/runtime wiring absent;
+7. after this sync closes, run a fresh focused P14 pure-core safety-gap audit rather than exposing real Figma mutation.
+
+The synchronization branch must remain current with main, review-clean and gate-clean before guarded merge.
+
+### #235 — P14 coordinator acquisition/refusal semantic snapshot
+
+Classification: **COMPLETED / merged through PR #236**.
+
+PR #236 (`fix/p14-coordinator-evidence-snapshot-235`) closed the readable-but-stateful coordinator-result boundary without changing coordination authority:
+
+1. the top-level `acquired` flag is read once before branching;
+2. acquired lease evidence and its source-scope / transaction-ID fields are read once before bounded exact binding;
+3. refusal reason and optional owner identities are read once before validation and accepted-value construction;
+4. accepted coordinator results are rebuilt as plain detached data;
+5. throwing/revoked nested evidence fails closed, while evidence that first claims acquisition preserves the existing best-effort exact-lease cleanup contract;
+6. no distributed-lock, host/authentication, production recipe, real Figma mutation, target-compatibility or production-acceptance claim is introduced.
+
+Exact head `497b1385b55ca8343d82be04da02de0595228efd` passed CI #972, P12 Final Release Artifact #283 and P12 Offline Acceptance #327. The PR had zero review threads, was current with main and mergeable, then guarded squash-merged as `804ffc6a143c2cf6ab4ca100d7b021289a060be2`; issue #235 closed completed. Integration Readiness was correctly absent from the code-only PR and is delegated to #237 status synchronization.
+
+### #233 — post-#232 P14 repository status synchronization
+
+Classification: **COMPLETED / merged through PR #234**.
+
+PR #234 (`docs/p14-post-232-status-233`) synchronized canonical repository truth after #230/#232, explicitly recorded the code-only Integration Readiness path-filter behavior, and advanced the immediate P14 action to the next focused pure-core safety-gap audit. Exact head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998` passed CI #970, Integration Readiness #316, P12 Final Release Artifact #281 and P12 Offline Acceptance #325, then guarded squash-merged as `27144161082ce3cff9c9a0ca1e0364cd19b727ad`; issue #233 closed completed.
+
+'''
+text = text[:matches[0].start()] + replacement + text[matches[0].end():]
+write(path, text)
+
+# Remove one-shot helpers. Their addition/removal must net to zero against BASE.
+subprocess.run(['git', 'rm', '-f', '.github/workflows/p14-status-sync-237.yml', '.github/scripts/p14-status-sync-237.py'], check=True)
+
+changed = subprocess.check_output(['git', 'diff', '--name-only', BASE], text=True).splitlines()
+expected = sorted([
+    'README.md',
+    'docs/P14_FOUNDATION_IMPLEMENTATION.md',
+    'memory-bank/NEXT_ACTIONS.md',
+    'memory-bank/PROJECT_STATE.md',
+])
+if sorted(changed) != expected:
+    raise SystemExit(f'Unexpected net changed-file set: {changed!r}; expected {expected!r}')
+
+subprocess.run(['git', 'config', 'user.name', 'github-actions[bot]'], check=True)
+subprocess.run(['git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], check=True)
+subprocess.run(['git', 'add', 'README.md', 'docs/P14_FOUNDATION_IMPLEMENTATION.md', 'memory-bank/PROJECT_STATE.md', 'memory-bank/NEXT_ACTIONS.md'], check=True)
+subprocess.run(['git', 'commit', '-m', 'Docs: synchronize P14 status after coordinator evidence hardening'], check=True)
+subprocess.run(['git', 'push', 'origin', 'HEAD:docs/p14-post-236-status-237'], check=True)
