@@ -79,37 +79,35 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
+### #195 — P14 runtime clock and event timestamp evidence
+
+Classification: **active focused implementation slice / PR #196**.
+
+The branch `fix/p14-runtime-clock-evidence-195` hardens runtime wall-clock evidence without changing transaction authority:
+
+1. shared `isP14NormalizedUtcTimestamp(...)` reuses the strict normalized UTC millisecond timestamp contract already used by P14 confirmations;
+2. P14 confirmation build/validation now uses that shared helper and still refuses unavailable-time evidence;
+3. receipt event timestamps accept only normalized UTC evidence or explicit `UNKNOWN`;
+4. timestamp strings are bounded/shape-checked before `Date.parse(...)`;
+5. runtime `now()` throw/non-string/oversized/non-canonical results become explicit `UNKNOWN` rather than escaping the transaction or being copied raw;
+6. `UNKNOWN` means unavailable wall-clock evidence only and does not alter event state/detail, cleanup or terminal-status semantics;
+7. tests cover hostile callbacks, pre-parse length rejection, canonical confirmation compatibility and forged receipt timestamps.
+
+Initial PR head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` passed P12 Offline Acceptance #203 but exposed a test-only TypeScript inference error in CI #848 and P12 Final Release Artifact #159. The heterogeneous test callbacks were explicitly typed in follow-up commit `4d2b56497d90c58c71293ec9f473260fb9c8cef8`; final acceptance depends only on the final synchronized PR head passing every required gate.
+
+Before #195 may close, the final synchronized head must pass CI, Integration Readiness, P12 Final Release Artifact and P12 Offline Acceptance, have zero unresolved review threads/comments, remain current with main and be mergeable.
+
 ### #192 — P14 bounded receipt envelope and runtime diagnostics
 
 Classification: **COMPLETED / merged through PR #193**.
 
-PR #193 (`fix/p14-receipt-envelope-bounds-192`) completed the issue scope without adding any real Figma mutation surface or production recipe authority:
-
-1. `appliedActions`, `errors` and `events` are count-bounded before item traversal using the existing P14 action-count safety limit;
-2. receipt `transactionId`, `p13RunId`, `planDigest`, source-node identity and error stages use the existing identity bound;
-3. error detail/recovery and event detail use the existing detail bound;
-4. transaction error/event constructors emit bounded diagnostics by construction;
-5. adapter/discard exception text is rendered fail-closed, including hostile `toString()` behavior;
-6. regression coverage includes proxy-backed no-traversal arrays, exact-boundary acceptance, forged oversized evidence and oversized/hostile runtime exceptions;
-7. `docs/P14_FOUNDATION_IMPLEMENTATION.md` records the invariant without changing runtime/acceptance authority.
-
-Exact synchronized PR head `5b9a02ce3b15ab49a1f281b51494e51bc5eb0e57` passed CI #844, Integration Readiness #217, P12 Final Release Artifact #155 and P12 Offline Acceptance #199 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/comments, was current with main (`behind_by=0`) and `mergeable=true`, then squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd`. Issue #192 closed completed.
+PR #193 completed bounded receipt collections, identities, diagnostics and runtime exception rendering and squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd` after exact synchronized-head verification. Issue #192 is closed completed.
 
 ## R0 research actions already captured
 
 PR #131 retained the current September 2026 snapshot in `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`.
 
-The retained snapshot records:
-
-- official Elementor JSON/ZIP/template/kit import paths and modern container/Atomic data structures;
-- Elementor v4 Atomic architecture and hybrid coexistence with v3 content;
-- official Gutenberg serialization/parse/serialize model;
-- Figma export, original image-byte and font limitations;
-- market competition from native WordPress conversion and Figma-to-code tools;
-- current competitive pressure from UiChemy, Anima, Locofy, Builder.io and first-party Figma design-to-code direction;
-- the durable positioning rule that generic conversion alone is not the moat: validated target readiness, environment-aware diagnostics, explicit mapping/fallback states, render/round-trip proof and receipts are the stronger differentiators.
-
-Current-main checks on the retained R0 merge passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46.
+The retained snapshot records official Elementor/Gutenberg/Figma constraints, current competitor pressure and the durable positioning rule that generic conversion alone is not the moat: validated target readiness, environment-aware diagnostics, explicit mapping/fallback states, render/round-trip proof and receipts are the stronger differentiators.
 
 Before implementing P15, P16, P17 or P18, refresh official target docs and competitor baseline again rather than assuming this snapshot is still current.
 
@@ -142,12 +140,12 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. start the next focused safety-gap audit from main `e54cb44...` now that #192 / PR #193 is completed;
+1. finish #195 / PR #196 only after final-head CI, Integration Readiness, P12 Final Release Artifact and P12 Offline Acceptance pass and the PR is current/mergeable with no unresolved review threads;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
-4. fail closed on malformed/stale adapter/control/receipt evidence and preserve cleanup;
+4. fail closed on malformed/stale adapter/control/receipt evidence while representing non-authoritative unavailable metadata explicitly;
 5. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
-6. continue focused safety-gap audits until core implementation is internally ready;
+6. after #195 closes, continue focused safety-gap audits until core implementation is internally ready;
 7. require #159 before real Figma mutation exposure;
 8. require genuine real-Figma acceptance before any production mutation/readiness claim.
 
