@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-12 — P14 top-level run-input runtime-evidence snapshot
+
+- Opened issue #213 and focused PR #214 (`fix/p14-run-input-snapshot-213`) for the remaining public caller-object property-access trust boundary before P14 transaction semantics.
+- Confirmed that the public wrapper still read `input.plan` / `input.confirmation` directly and delegated with `...input`, allowing hostile or one-shot top-level getters to reject the transaction promise or change evidence after run-control validation.
+- Added a guarded one-shot snapshot for `plan`, `registry`, `coordinator`, `inputBounds`, `confirmation`, `transactionId`, `preparedName`, `allowPreparedWithReview` and `shouldCancel`; the internal core now receives an explicitly constructed plain object rather than re-entering caller getters through object spread.
+- Non-object input or an unreadable known top-level property now returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `run-input` before coordinator or adapter access. Safely readable plan correlation metadata is retained where possible; unreadable values use bounded fallbacks.
+- Kept runtime clock metadata on the separate fail-soft contract: a throwing/malformed `now` property or callback still produces `UNKNOWN` event time rather than becoming transaction authority failure.
+- Preserved existing run-control normalization, raw-size `P14_INPUT_TOO_LARGE`, confirmation, registry authorization, coordinator, cancellation and adapter evidence semantics.
+- Added `tests/p14-run-input-snapshot.test.ts` covering non-object input, throwing getters across all known top-level properties, hostile `now`, exact one-shot getter reads and normal `PREPARED` regression. Existing run-control tests continue to prove oversized-control behavior.
+- Initial code/test head `3d558f9ac58bde1cfebd82b7e3a11d0a1d94c93e` passed CI #901 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #212 passed; P12 Offline Acceptance #256 passed on Ubuntu/macOS/Windows.
+- Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #213. No real Figma mutation command, production recipe authority, target-compatibility claim or production acceptance was introduced.
+- Final synchronized-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #214 may merge.
+
 ## 2026-09-12 — P14 runtime eligibility hook property hardening
 
 - Opened issue #210 and focused PR #211 (`fix/p14-runtime-eligibility-hook-210`) for the remaining unreadable optional runtime action-eligibility hook property boundary.
