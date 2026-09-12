@@ -38,6 +38,7 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
 - #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
 - #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
+- #229 — P14 adapter callback input isolation: **ACTIVE / PR #230**. Object-bearing adapter callbacks receive detached known-schema candidate/action/plan copies so callback-side mutation cannot rewrite the transaction core's already-accepted semantic state.
 - #226 — P14 safe-recipe registry semantic snapshot: **COMPLETED** through PR #227; issue closed automatically by the verified guarded squash merge.
 - #223 — P14 nested plan/confirmation semantic snapshot: **COMPLETED** through PR #224; issue closed automatically by the verified guarded squash merge.
 - #216 — P14 unreadable nested bounded-input evidence: **COMPLETED** through PR #221; issue closed automatically by the verified guarded squash merge.
@@ -54,7 +55,10 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 
 ## Current PR / main queue
 
-- Current P14 core main baseline is `e5e22a4c556856a7c2ab11dbb94025ee838e0bb4`, the guarded squash merge of PR #227 / issue #226.
+- Current repository main is `7b99ee31e712f028e61d77a53277a644a968550a`, the guarded squash merge of post-#227 status PR #228.
+- PR #230 (`fix/p14-adapter-input-isolation-229`) is the active P14 adapter callback input-isolation slice.
+- Initial PR #230 implementation/test head `651d4c5f9d8d3e7776eb23b9eafeecb1727498d0` passed CI #952 including typecheck/full tests/builds/contracts, P12 Final Release Artifact #263 and P12 Offline Acceptance #307 on Ubuntu/macOS/Windows before same-cycle docs synchronization.
+- PR #230 adds known-schema adapter-input snapshots for candidate/action/plan values and routes every object-bearing runtime adapter callback through fresh detached copies. Mutating `assessActionEligibility`, `applyRecipe`, `validateCandidate`, `rescoreCandidate`, `retainCandidate` or `discardCandidate` arguments therefore cannot poison later core authorization, source/candidate correlation, validation/re-score inputs, retention or cleanup receipt identity. Scalar source/transaction/name arguments and existing output validators remain unchanged. This does not sandbox an adapter's real candidate-side effects, perform a generic recursive deep clone, add a production safe recipe, expose real Figma mutation or grant target/production acceptance authority.
 - PR #227 exact synchronized head `6446c49a6cf5da5d039600f96a0ac3bd03e2b904` passed CI #945, Integration Readiness #299, P12 Final Release Artifact #256 and P12 Offline Acceptance #300 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and GitHub reported `mergeable=true` before the guarded squash merge.
 - PR #227 performs the existing registry resource preflight, captures only the known safe-recipe registry schema into bounded plain evidence, re-runs the existing registry bounds contract on that snapshot, validates the snapshot and then uses that same stable evidence for exact recipe resolution/plan authorization. Readable stateful registry getters/proxies therefore cannot change bindings or nested recipe semantics after the evidence boundary. Evidence that grows oversized or becomes unreadable between first preflight and capture remains invalid and follows the existing `P14_RECIPE_UNAUTHORIZED` transaction path before confirmation, coordination or adapter access. No generic deep clone, production recipe registration, real Figma mutation surface, target compatibility claim or production acceptance was introduced.
 - Initial PR #227 implementation/test head `4bd44da760d0dc0558b4d7c710bd779d1dd1e534` passed CI #939 including status verification, typecheck, full tests, plugin/CLI builds, release/package/community verification and local Figma import preparation; P12 Final Release Artifact #250 passed; P12 Offline Acceptance #294 passed on Ubuntu/macOS/Windows before same-cycle docs synchronization.
@@ -135,7 +139,7 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13 Build-Ready Score + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | #159 real-plugin parity/internal runtime acceptance |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Continue the next focused pure-core safety-gap audit after #226; production registry remains empty |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Complete #229 / PR #230 adapter callback input isolation; production registry remains empty |
 | P15-P26 multi-target commercial implementation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | Implement in dependency order with R0/R1 where applicable |
 | P27 final production release | GATE DEFINED / EXECUTION DEFERRED | 0% exec | Coordinate final live runtime/publisher/2FA evidence + #84 release-exit truth |
 
@@ -171,7 +175,7 @@ R0 research remains advisory and must be refreshed again when a major adapter im
 
 Continue the implementation/internal-readiness program without making production-release claims:
 
-1. start the next focused P14 target-neutral safety-gap audit from core main `e5e22a4...` while real Figma mutation remains unwired and the production recipe registry remains empty;
+1. complete #229 / PR #230 adapter callback input-isolation hardening on the final synchronized head;
 2. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
 3. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
 4. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;

@@ -1,5 +1,10 @@
 import { assessP14PreparationInputBounds, DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
 import {
+  snapshotP14AdapterAction,
+  snapshotP14AdapterCandidate,
+  snapshotP14AdapterPlan,
+} from './p14-adapter-input-snapshot';
+import {
   boundP14ReceiptDetail,
   boundP14ReceiptIdentity,
   safeP14RuntimeErrorMessage,
@@ -156,7 +161,7 @@ function semanticRunInputSnapshot(
   };
 }
 
-function guardP14RuntimeEligibilityHook(
+function guardP14RuntimeAdapterBoundary(
   adapter: P14RetainedDuplicateAdapter,
 ): P14RetainedDuplicateAdapter {
   return {
@@ -168,7 +173,11 @@ function guardP14RuntimeEligibilityHook(
         if (hook === undefined || typeof hook !== 'function') {
           return hook as P14RetainedDuplicateAdapter['assessActionEligibility'];
         }
-        return (candidate, action) => hook.call(adapter, candidate, action);
+        return (candidate, action) => hook.call(
+          adapter,
+          snapshotP14AdapterCandidate(candidate),
+          snapshotP14AdapterAction(action),
+        );
       } catch (error) {
         const detail = safeP14RuntimeErrorMessage(error);
         return async () => {
@@ -177,14 +186,28 @@ function guardP14RuntimeEligibilityHook(
       }
     },
     applyRecipe: (candidate: P14CandidateHandle, action: P14PreparationAction) =>
-      adapter.applyRecipe(candidate, action),
+      adapter.applyRecipe(
+        snapshotP14AdapterCandidate(candidate),
+        snapshotP14AdapterAction(action),
+      ),
     validateCandidate: (candidate: P14CandidateHandle, plan: P14PreparationPlanV1) =>
-      adapter.validateCandidate(candidate, plan),
+      adapter.validateCandidate(
+        snapshotP14AdapterCandidate(candidate),
+        snapshotP14AdapterPlan(plan),
+      ),
     rescoreCandidate: (candidate: P14CandidateHandle, plan: P14PreparationPlanV1) =>
-      adapter.rescoreCandidate(candidate, plan),
+      adapter.rescoreCandidate(
+        snapshotP14AdapterCandidate(candidate),
+        snapshotP14AdapterPlan(plan),
+      ),
     retainCandidate: (candidate: P14CandidateHandle, transactionId: string, preparedName: string) =>
-      adapter.retainCandidate(candidate, transactionId, preparedName),
-    discardCandidate: (candidate: P14CandidateHandle) => adapter.discardCandidate(candidate),
+      adapter.retainCandidate(
+        snapshotP14AdapterCandidate(candidate),
+        transactionId,
+        preparedName,
+      ),
+    discardCandidate: (candidate: P14CandidateHandle) =>
+      adapter.discardCandidate(snapshotP14AdapterCandidate(candidate)),
   } as unknown as P14RetainedDuplicateAdapter;
 }
 
@@ -338,7 +361,7 @@ export async function runP14RetainedDuplicateTransaction(
   // Preserve the established P14_INPUT_TOO_LARGE path for caller evidence already proven oversized
   // by the first bounded traversal. No semantic snapshot is required to reject that input safely.
   if (!boundedPreflight.allowed) {
-    const guardedAdapter = guardP14RuntimeEligibilityHook(adapter);
+    const guardedAdapter = guardP14RuntimeAdapterBoundary(adapter);
     return runP14RetainedDuplicateTransactionCore(delegatedRunInput(inputSnapshot, {
       transactionId: controlSnapshot.rawTransactionId,
       preparedName: rawPreparedName,
@@ -385,7 +408,7 @@ export async function runP14RetainedDuplicateTransaction(
     );
   }
 
-  const guardedAdapter = guardP14RuntimeEligibilityHook(adapter);
+  const guardedAdapter = guardP14RuntimeAdapterBoundary(adapter);
   const delegated = delegatedRunInput(semanticSnapshot, {
     transactionId: controlSnapshot.transactionId,
     preparedName: controlSnapshot.preparedName,

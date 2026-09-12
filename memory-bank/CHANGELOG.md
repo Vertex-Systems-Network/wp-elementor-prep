@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-12 — P14 adapter callback input isolation
+
+- Opened authoritative issue #229 and focused PR #230 (`fix/p14-adapter-input-isolation-229`) after a fresh post-#226 P14 adapter-boundary audit.
+- Confirmed a distinct mutable-reference gap: caller run/plan/confirmation/registry evidence was already stabilized, but accepted candidate/action/plan objects were still passed by reference into runtime adapter callbacks and then reused by later core semantics.
+- Added `src/core/p14-adapter-input-snapshot.ts` with known-schema candidate/action/plan copy helpers. Action/plan collections are copied from the already-accepted bounded P14 contract; this does not enumerate arbitrary properties or perform a generic recursive deep clone.
+- Hardened the public retained-duplicate adapter boundary so `assessActionEligibility`, `applyRecipe`, `validateCandidate`, `rescoreCandidate`, `retainCandidate` and `discardCandidate` receive fresh detached candidate/action/plan copies as applicable. Scalar source/transaction/prepared-name arguments remain unchanged.
+- Callback-side mutation can no longer rewrite later core action expectations, source/candidate correlation, validation/re-score inputs, retention evidence expectations or cleanup receipt identity. Existing adapter-output validation and source-immutability proof remain authoritative.
+- Added `tests/p14-adapter-input-isolation.test.ts` covering a two-action successful run where every object-bearing callback mutates its arguments, plus a transform/discard failure path proving cleanup receipt candidate identity remains stable even when callback copies are poisoned.
+- Initial implementation/test head `651d4c5f9d8d3e7776eb23b9eafeecb1727498d0` passed CI #952 including typecheck/full tests/builds/contracts, P12 Final Release Artifact #263 and P12 Offline Acceptance #307 on Ubuntu/macOS/Windows.
+- README, P14 foundation, PROJECT_STATE and NEXT_ACTIONS are synchronized in the same cycle; final exact-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable verification remain required before PR #230 may merge.
+- Input isolation does not sandbox an adapter's actual candidate-side effects and introduces no production safe recipe, real Figma adapter/UI/mutation command, target-compatibility claim or production acceptance.
+
 ## 2026-09-12 — P14 safe-recipe registry semantic snapshot hardening
 
 - Opened authoritative issue #226 and focused PR #227 (`fix/p14-registry-semantic-snapshot-226`) after a fresh post-#223 P14 authorization-boundary audit.
