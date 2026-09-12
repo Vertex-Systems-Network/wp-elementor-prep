@@ -51,6 +51,7 @@ import {
 import { buildP13RuntimeEvidenceViewerHtml } from './p13-runtime-evidence-viewer';
 import { buildP14PlanPreview, serializeP14PlanPreviewJson } from './p14-plan-preview';
 import { assessP14PreviewContextBinding } from './p14-preview-context';
+import { assessP14PreviewFreshness } from './p14-preview-freshness';
 import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
@@ -449,6 +450,21 @@ async function runP14GuidedPreparePreview(): Promise<void> {
       figma.ui.postMessage({
         type: 'p14-plan-preview-unavailable',
         message: `${contextBinding.failures.join(' ')} Run Audit on this selected Frame first.`,
+      });
+      return;
+    }
+
+    const currentBuildReady = buildBuildReadyReport(scanSceneNode(currentFrame));
+    const freshness = assessP14PreviewFreshness(
+      evidence,
+      currentBuildReady,
+      PLUGIN_VERSION,
+      P7_BUILD_IDENTITY,
+    );
+    if (!freshness.valid) {
+      figma.ui.postMessage({
+        type: 'p14-plan-preview-unavailable',
+        message: `${freshness.failures.join(' ')} Run Audit on this selected Frame first.`,
       });
       return;
     }
