@@ -94,7 +94,7 @@ function guardP14RuntimeEligibilityHook(
     retainCandidate: (candidate, transactionId, preparedName) =>
       adapter.retainCandidate(candidate, transactionId, preparedName),
     discardCandidate: (candidate) => adapter.discardCandidate(candidate),
-  };
+  } as unknown as P14RetainedDuplicateAdapter;
 }
 
 function runControlEvent(now: () => unknown, state: 'IDLE' | 'PREFLIGHT' | 'BLOCKED', detail?: string): P14TransactionEvent {
