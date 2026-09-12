@@ -15,6 +15,7 @@ import {
   P14_UNKNOWN_SOURCE_FINGERPRINT,
   isP14ReceiptSourceFingerprintEvidence,
 } from './p14-source-fingerprint-evidence';
+import { isP14ReceiptEventTimestampEvidence } from './p14-timestamp-evidence';
 import {
   P14_PREPARATION_ENGINE_VERSION,
   type P14PreparationReceiptV1,
@@ -95,10 +96,6 @@ function nonEmptyString(value: unknown): value is string {
   return typeof value === 'string' && value.length > 0;
 }
 
-function finiteNonNegative(value: unknown): value is number {
-  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
-}
-
 function boundedReceiptCollection(
   value: unknown,
   label: string,
@@ -171,8 +168,7 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
       if (!isRecord(item)
         || typeof item.state !== 'string'
         || !EVENT_STATES.has(item.state as P14TransactionState)
-        || !nonEmptyString(item.at)
-        || Number.isNaN(Date.parse(item.at))
+        || !isP14ReceiptEventTimestampEvidence(item.at)
         || (item.detail !== undefined && !isP14BoundedReceiptDetail(item.detail))) {
         failures.push(`events[${index}] is malformed or oversized.`);
       }
