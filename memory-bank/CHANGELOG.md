@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-12 — P14 nested plan/confirmation semantic snapshot hardening
+
+- Opened authoritative issue #223 and focused PR #224 (`fix/p14-semantic-snapshot-223`) after a fresh post-#216 P14 trust-boundary audit.
+- Confirmed a readable-but-stateful TOCTOU gap: first bounds traversal, plan integrity, confirmation validation and later transaction semantics could read the same caller-owned nested plan/confirmation objects at different times, so bounded readable proxy/getter evidence could change after preflight without throwing.
+- Added `src/core/p14-semantic-input-snapshot.ts` to capture only the known P14 plan/confirmation contract into plain evidence through guarded, bounded property/index reads after the first resource preflight. It does not enumerate arbitrary properties or perform a generic recursive deep clone.
+- Re-runs the existing P14 bounds contract on the plain semantic snapshot before delegation. Evidence that becomes oversized after first preflight preserves the established `P14_INPUT_TOO_LARGE` / `bounds` path; collection capture remains bounded by the existing action/blocker/target/dependency/mutation/bucket limits and total-target budget.
+- Core semantics now receive the plain nested plan/confirmation snapshot, so readable stateful caller getters/proxies are not re-entered after the semantic boundary. Unreadable capture continues to use bounded `P14_INTERNAL_INVARIANT_FAILED` / `bounds-evidence` evidence before coordination/adapter access.
+- Added `tests/p14-semantic-input-snapshot.test.ts` covering stateful nested action getter re-entry, stateful confirmation getter re-entry, evidence that grows oversized after the first bounds pass, and normal preparation regression.
+- Initial head `64168dea7b5c6aea126cc89404221da79973b5bd` passed typecheck and the new focused tests, but Final Release #237 surfaced one existing #216 receipt-correlation regression in `tests/p14-bounds-evidence-boundary.test.ts`: semantic capture failure retained readable source metadata instead of the established `UNKNOWN` / `p14-plan-invalid` second-pass fallback.
+- Corrected implementation head `8ec0c14c6301d16b8b9564a5b0d01423147629b5` restored the #216 correlation contract and passed CI #927 including full tests/builds/contracts, P12 Final Release Artifact #238 and P12 Offline Acceptance #282 on Ubuntu/macOS/Windows.
+- Updated README, P14 foundation, PROJECT_STATE and NEXT_ACTIONS for #223. Same-cycle docs synchronization is now complete on the branch; fresh exact-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #224 may merge.
+- No production safe recipe, real Figma adapter/UI/mutation command, target-compatibility claim or production acceptance was introduced. P14 remains runtime-unwired and production recipe authority remains empty.
+
 ## 2026-09-12 — P14 unreadable nested bounded-input evidence hardening
 
 - Opened authoritative issue #216 and focused PR #221 (`fix/p14-bounds-evidence-216`) for unreadable nested plan/confirmation evidence encountered by the P14 bounded-input preflight.
