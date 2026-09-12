@@ -62,7 +62,7 @@ export function assertReleaseUiCapabilities(source) {
 }
 
 export function buildReleaseUi(developmentUi) {
-  let releaseUi = developmentUi;
+  let releaseUi = developmentUi.replace(/\r\n/g, '\n');
 
   releaseUi = requireReplacement(
     releaseUi,
@@ -72,7 +72,7 @@ export function buildReleaseUi(developmentUi) {
   );
   releaseUi = requireRegexReplacement(
     releaseUi,
-    /      <button id="p14-preview">Preview Guided Prepare<\/button>\r?\n/,
+    /      <button id="p14-preview">Preview Guided Prepare<\/button>\n/,
     '',
     'development-only P14 preview button',
   );
