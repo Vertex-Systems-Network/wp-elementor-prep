@@ -38,16 +38,15 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
 - #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
 - #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
-- #195 — P14 runtime clock/event timestamp evidence: **ACTIVE / IMPLEMENTED IN PR #196, final synchronized-head verification pending**. No runtime/UI exposure or production recipe authority is included.
+- #195 — P14 runtime clock/event timestamp evidence: **COMPLETED** through PR #196; issue closed automatically by the verified squash merge.
 - #192 — P14 bounded receipt envelope/diagnostics/runtime exception evidence: **COMPLETED** through PR #193.
 - #126 — exact release #20 publisher evidence intake hardening: **COMPLETED** through PR #129.
 
 ## Current PR / main queue
 
-- Current main baseline is `b7c00aefa8b85112bcc5968144786da5351e0202`, the post-#193 documentation/status synchronization merge from PR #194.
-- PR #196 (`fix/p14-runtime-clock-evidence-195`) is the current focused P14 implementation PR. Initial head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` exposed a test-only TypeScript inference failure in CI #848; the clock implementation itself was not implicated, and the test callbacks were explicitly typed in follow-up commit `4d2b56497d90c58c71293ec9f473260fb9c8cef8`.
-- PR #196 centralizes normalized UTC timestamp validation, prevents hostile runtime `now()` callbacks from escaping the transaction, records unavailable event time explicitly as `UNKNOWN`, and rejects forged oversized/non-canonical event timestamps before parsing.
-- Initial P12 Offline Acceptance #203 passed on the first PR head; CI/Final Release are being re-run on the synchronized implementation/docs head before merge.
+- Current main P14 baseline is `8021874323f5bad6ebf648b0891bc9f6358dd1bf`, the squash merge of PR #196 / issue #195.
+- PR #196 exact synchronized head `47cb0b4d2d3c53f7f818af760131cc78737cb5c4` passed CI #854, Integration Readiness #224, P12 Final Release Artifact #165 and P12 Offline Acceptance #209 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, was `behind_by=0`, and GitHub reported `mergeable=true` before the guarded squash merge.
+- PR #196 centralizes strict normalized UTC timestamp evidence, prevents hostile runtime `now()` callbacks from escaping the transaction, records unavailable event time explicitly as `UNKNOWN`, and rejects forged oversized/non-canonical event timestamps before parsing. It adds no runtime/UI exposure or production recipe authority.
 - PR #193 completed receipt-envelope/runtime-diagnostic hardening and merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd`; its exact head passed CI #844, Integration Readiness #217, P12 Final Release Artifact #155 and P12 Offline Acceptance #199 on Ubuntu/macOS/Windows.
 - PR #194 synchronized post-#193 status and merged as `b7c00aefa8b85112bcc5968144786da5351e0202`.
 - PR #129 merged P12 publisher evidence intake tooling as `cc466367fa0c6fee119d4fb183371af5fb3f04c7`.
@@ -109,7 +108,7 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13 Build-Ready Score + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | #159 real-plugin parity/internal runtime acceptance |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Finish #195 / PR #196 exact-head gates, then continue focused pure-core fail-closed audit; production registry remains empty |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Continue the next focused pure-core fail-closed audit after #195; production registry remains empty |
 | P15-P26 multi-target commercial implementation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | Implement in dependency order with R0/R1 where applicable |
 | P27 final production release | GATE DEFINED / EXECUTION DEFERRED | 0% exec | Coordinate final live runtime/publisher/2FA evidence + #84 release-exit truth |
 
@@ -145,11 +144,10 @@ R0 research remains advisory and must be refreshed again when a major adapter im
 
 Continue the implementation/internal-readiness program without making production-release claims:
 
-1. finish #195 / PR #196 only after the final synchronized PR head passes CI, Integration Readiness, P12 Final Release Artifact and P12 Offline Acceptance, has no unresolved review threads, is current with main and is mergeable;
-2. after #195 closes, continue the next focused P14 target-neutral safety-gap audit while real Figma mutation remains unwired and the production recipe registry remains empty;
-3. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
-4. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
-5. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;
-6. use P27 #182 only after implementation/internal-readiness is ready;
-7. during P27, capture the remaining exact runtime, Publish final-details and 2FA evidence, run the retained P12 publisher-evidence intake, and perform the genuine #84 release-exit decision;
-8. keep Community submission/review/approval external to internal production acceptance.
+1. start the next focused P14 target-neutral safety-gap audit from main `8021874...` while real Figma mutation remains unwired and the production recipe registry remains empty;
+2. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
+3. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
+4. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;
+5. use P27 #182 only after implementation/internal-readiness is ready;
+6. during P27, capture the remaining exact runtime, Publish final-details and 2FA evidence, run the retained P12 publisher-evidence intake, and perform the genuine #84 release-exit decision;
+7. keep Community submission/review/approval external to internal production acceptance.
