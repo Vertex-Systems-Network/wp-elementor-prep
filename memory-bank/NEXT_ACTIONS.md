@@ -1,6 +1,6 @@
 # Next Actions
 
-Last updated: 2026-09-11
+Last updated: 2026-09-12
 
 ## Mandatory cycle
 
@@ -17,9 +17,9 @@ Last updated: 2026-09-11
 
 ### #84 — P12 final integrated validation/release acceptance
 
-Classification: **active external/manual runtime + publisher gate**.
+Classification: **active retained release-exit truth / live evidence deferred to P27**.
 
-P12 remains `80%` until live evidence closes the exact publishing-package/account/2FA/final-exit path.
+P12 remains `80%` until genuine live evidence closes the exact publishing-package/account/2FA/final-exit path. Development through P13-P26 is no longer blocked by this manual gate.
 
 Current retained publishing candidate:
 
@@ -39,7 +39,7 @@ Current screenshot triage is explicitly **non-accepting** and retained in #84 co
 - the available plugin screenshot is historical P6 closure evidence, not the minimal release #20 package rebind;
 - no currently retained screenshot proves 2FA enabled.
 
-Immediate required evidence/action:
+Deferred P27 release evidence/action:
 
 1. use the exact pinned release #20 publish ZIP and extracted three-file directory;
 2. re-import/update that exact package in Figma Desktop and confirm it opens/runs on the known acceptance design/frame;
@@ -55,9 +55,9 @@ Community submission/review/approval remains external.
 
 ### #119 — Multi-target commercial expansion roadmap
 
-Classification: **planning active / implementation dependency-blocked by #84 internal exit**.
+Classification: **P13-P27 active roadmap; implementation/testing through P26 is authorized independently of final production release**.
 
-Research/reliability planning may proceed; P13 runtime code may not.
+P13 implementation is complete, P14 pure-core implementation is active, P15-P26 remain preflight-frozen/not-started, and P27 #182 is the deferred final production-release gate.
 
 Canonical future order:
 
@@ -76,7 +76,8 @@ Canonical future order:
 - P23 — agency/project + existing-component bindings + change-only regeneration;
 - P24 — CMS/dynamic data/forms/interactions;
 - P25 — Free/Pro/Agency packaging + entitlements;
-- P26 — optional AI assistance.
+- P26 — optional AI assistance;
+- P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
 ## R0 research actions already captured
 
@@ -115,28 +116,23 @@ Before implementation of a target adapter, freeze and test:
 
 No adapter may claim live target compatibility from local package validation alone.
 
-## First implementation sequence after P12 internal exit
+## Current implementation sequence under the P13-P27 model
 
 ### P13
 
-1. open a focused P13 implementation issue from #119;
-2. freeze Build-Ready v2 categories and target-compatibility evidence schema;
-3. add responsive-risk fixtures;
-4. implement read-only only;
-5. add deterministic plugin/CLI parity tests;
-6. calibrate on real Figma where offline fixtures cannot prove behavior;
-7. production acceptance before P14 new mutation scope.
+Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI integration and retained real-source calibration. Remaining work is #159 genuine real-plugin runtime/parity evidence and separate internal runtime acceptance. This is not a production-release claim.
 
 ### P14
 
-After P13 acceptance:
+Current work is target-neutral pure-core hardening only:
 
-1. define `Create Target-Ready Duplicate` transaction contract;
-2. ensure original remains untouched;
-3. prepare only already-explainable patterns;
-4. validate/re-score duplicate;
-5. add cancellation/retry/source-staleness coverage;
-6. real Figma acceptance.
+1. keep the approved source immutable and mutate only retained candidates;
+2. keep production safe-recipe authority empty until explicit acceptance;
+3. fail closed on malformed/stale adapter/control evidence and preserve cleanup;
+4. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
+5. continue focused safety-gap audits until core implementation is internally ready;
+6. require #159 before real Figma mutation exposure;
+7. require genuine real-Figma acceptance before any production mutation/readiness claim.
 
 ### P15 Elementor
 

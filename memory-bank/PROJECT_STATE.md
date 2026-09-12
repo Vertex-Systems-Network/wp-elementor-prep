@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-11
+Last updated: 2026-09-12
 
 ## Product
 
@@ -34,8 +34,10 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 
 ## Current issue queue
 
-- #84 — P12 final integrated validation/release acceptance: **ACTIVE / external-manual-runtime blocked**, retained at 80% until the exact publishing package/account/2FA/final-exit evidence is genuinely retained. Community approval remains external.
-- #119 — post-P12 P13-P26 commercial/multi-target roadmap: **PLANNED / dependency-blocked by #84 internal exit**. Research/reliability planning may progress; runtime implementation may not start yet.
+- #84 — P12 final integrated validation/release acceptance: **ACTIVE / retained at 80%**. Remaining exact runtime/publisher/2FA evidence and the final internal release-exit decision are deferred to the P27 final-release sequence. Community approval remains external.
+- #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
+- #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
+- #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
 - #126 — exact release #20 publisher evidence intake hardening: **COMPLETED** through PR #129.
 
 ## Current PR / main queue
@@ -51,7 +53,7 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 
 ## Current planning baseline
 
-The commercial plan has two recurring pre-implementation gates plus phases P13-P26:
+The commercial plan has two recurring pre-implementation gates, implementation phases P13-P26, and the final production-release gate P27:
 
 - **R0 — Market/Platform Research:** AI-assisted public research + official-platform verification before major externally evolving adapters.
 - **R1 — Reliability/Compatibility Gate:** explicit target profile, capability matrix, option-state contract, structured errors, atomic export, target validator and acceptance harness before implementation.
@@ -103,9 +105,12 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | P12 final validation | IN PROGRESS | 80% | Fresh exact-#20 runtime/final-details/2FA evidence, then receipt + final internal exit review |
 | R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
-| P13-P26 multi-target commercial expansion | PLANNED / BLOCKED | 0% | Do not implement before #84 internal exit |
+| P13 Build-Ready Score + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | #159 real-plugin parity/internal runtime acceptance |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Continue pure-core fail-closed hardening; production registry remains empty |
+| P15-P26 multi-target commercial implementation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | Implement in dependency order with R0/R1 where applicable |
+| P27 final production release | GATE DEFINED / EXECUTION DEFERRED | 0% exec | Coordinate final live runtime/publisher/2FA evidence + #84 release-exit truth |
 
-Historical P0-P7 core progress remains 100%.
+Historical P0-P7 core progress remains 100%. Implementation completion, runtime acceptance and production release are tracked separately.
 
 ## Approved user-facing future flow
 
@@ -135,16 +140,12 @@ R0 research remains advisory and must be refreshed again when a major adapter im
 
 ## Immediate target
 
-Do **not** start P13 runtime implementation.
+Continue the implementation/internal-readiness program without making production-release claims:
 
-Immediate executable product path remains #84:
-
-1. use the exact release #20 ZIP + extracted three-file directory;
-2. retain a fresh live Figma Desktop runtime screenshot from that exact package;
-3. retain a fresh Publish/Add-final-details screenshot where the generated publishing ID is accepted and the intended publisher identity, Community target, support contact and No network access are visible;
-4. retain a fresh Figma account/security screenshot showing 2FA enabled;
-5. run `npm run p12:publisher-evidence -- ...` and retain the receipt;
-6. perform final P12 internal exit review against receipt + screenshots;
-7. only then open the focused P13 implementation issue;
-8. run R0 + R1 before each major external target adapter;
-9. implement only after target profile, capability matrix, error model, validator and acceptance harness are frozen.
+1. continue P14 target-neutral pure-core hardening with focused issues/branches/PRs while real Figma mutation remains unwired;
+2. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
+3. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
+4. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;
+5. use P27 #182 only after implementation/internal-readiness is ready;
+6. during P27, capture the remaining exact runtime, Publish final-details and 2FA evidence, run the retained P12 publisher-evidence intake, and perform the genuine #84 release-exit decision;
+7. keep Community submission/review/approval external to internal production acceptance.
