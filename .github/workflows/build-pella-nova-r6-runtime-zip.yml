@@ -1,0 +1,40 @@
+name: Build Pella Nova R6 Runtime ZIP
+
+on:
+  push:
+    branches:
+      - pella-nova-template-1-runtime-kit
+    paths:
+      - 'runtime-kit/chunks/**'
+      - '.github/workflows/build-pella-nova-r6-runtime-zip.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Rebuild exact R6 ZIP
+        shell: bash
+        run: |
+          cat runtime-kit/chunks/r6.part*.b64 | tr -d '\n\r' | base64 -d > runtime-kit/Pella-Nova-Elementor-Web-Template-1-PASS4-R6-RUNTIME-CANDIDATE.zip
+          echo "f27dd864bf9ce19b189b7cb686a92b5b05125f0dfad17605d8748f20cad8bccd  runtime-kit/Pella-Nova-Elementor-Web-Template-1-PASS4-R6-RUNTIME-CANDIDATE.zip" | sha256sum -c -
+          unzip -t runtime-kit/Pella-Nova-Elementor-Web-Template-1-PASS4-R6-RUNTIME-CANDIDATE.zip
+
+      - name: Commit generated ZIP
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add runtime-kit/Pella-Nova-Elementor-Web-Template-1-PASS4-R6-RUNTIME-CANDIDATE.zip
+          if git diff --cached --quiet; then
+            echo "Exact ZIP already committed."
+          else
+            git commit -m "Build exact Pella Nova R6 runtime ZIP"
+            git push
+          fi
