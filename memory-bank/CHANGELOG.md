@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-12 — P14 unreadable nested bounded-input evidence hardening
+
+- Opened authoritative issue #216 and focused PR #221 (`fix/p14-bounds-evidence-216`) for unreadable nested plan/confirmation evidence encountered by the P14 bounded-input preflight.
+- Confirmed that top-level run-input snapshotting did not protect nested bounds traversal: throwing getters/proxies inside confirmation, plan source/actions or nested action collections could still reject the public transaction promise during the public preflight or the internal core's second bounds pass.
+- Guarded the public `assessP14PreparationInputBounds(...)` traversal and added the existing `P14_INTERNAL_INVARIANT_FAILED` structured refusal at stage `bounds-evidence` with bounded runtime diagnostics.
+- Guarded the internal retained-duplicate core bounds traversal independently so evidence that becomes unreadable only on the second pass also fails closed; that internal refusal uses `UNKNOWN` source/run correlation and `p14-plan-invalid` instead of dereferencing hostile plan metadata again.
+- Preserved ordinary readable oversized evidence on the existing `P14_INPUT_TOO_LARGE` / `bounds` path and preserved normal readable `PREPARED` behavior. No deep canonical snapshot of readable nested semantics, new status/error code, production recipe authority, real Figma mutation surface, target compatibility or production acceptance was introduced.
+- Added `tests/p14-bounds-evidence-boundary.test.ts` covering first-pass hostile confirmation evidence, second-pass plan evidence that becomes unreadable, readable oversized-input regression and normal preparation regression. The core full-file replacement was diff-audited and contained only the intended bounds helper/preflight changes.
+- Initial code/test head `7ef0a2b43262024ee1f1df59e658143e4dac2681` passed CI #913 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #224 passed; P12 Offline Acceptance #268 passed on Ubuntu/macOS/Windows.
+- Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #216. Final synchronized-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #221 may merge.
+- Accidental duplicate/placeholder issues #217, #218, #219 and #220 were created during tool routing, immediately closed `not_planned`, and carry no implementation scope. #216 is authoritative.
+
 ## 2026-09-12 — P14 top-level run-input runtime-evidence snapshot
 
 - Opened issue #213 and focused PR #214 (`fix/p14-run-input-snapshot-213`) for the remaining public caller-object property-access trust boundary before P14 transaction semantics.
@@ -82,7 +94,7 @@
 - Initial PR head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` passed P12 Offline Acceptance #203 but exposed a test-only TypeScript inference failure in CI #848 / P12 Final Release Artifact #159. The heterogeneous test callbacks were explicitly typed in follow-up commit `4d2b56497d90c58c71293ec9f473260fb9c8cef8`; no production clock logic change was required for that failure.
 - Updated `docs/P14_FOUNDATION_IMPLEMENTATION.md`, README, PROJECT_STATE and NEXT_ACTIONS with the timestamp evidence contract. No real Figma mutation command, production recipe authority, target-compatibility claim or acceptance authority was introduced.
 - Final synchronized PR head `47cb0b4d2d3c53f7f818af760131cc78737cb5c4` passed CI #854, Integration Readiness #224, P12 Final Release Artifact #165 and P12 Offline Acceptance #209 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main and was reported mergeable by GitHub.
-- PR #196 squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf`; issue #195 closed completed. P14 remains runtime-unwired and production recipe authority remains empty.
+- PR #196 squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf`; issue #195 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
 
 ## 2026-09-12 — P14 receipt envelope and runtime-diagnostic hardening
 
@@ -105,7 +117,7 @@
 - Reinforced the product moat as `Audit -> Target Compatibility -> Target-Ready Duplicate -> declared/native mapping -> artifact/environment validation -> render/round-trip proof -> receipt`.
 - Added P15 planning requirement for Elementor/WordPress environment diagnostics with `DECLARED ENVIRONMENT` vs `OBSERVED ENVIRONMENT`; local JSON/ZIP validity cannot imply an unobserved live import.
 - Promoted the target capability matrix to a user-facing commercial surface with explicit `NATIVE`, `NATIVE + CSS`, `VISUAL ASSET FALLBACK`, `MANUAL REVIEW` and `UNSUPPORTED` strategies and no silent fallback.
-- Reinforced one neutral semantic IR across WordPress/code targets so users are not forced to re-tag/re-prepare the same safe intent for every adapter.
+- Reinforced one neutral semantic IR across WordPress/code targets so users are not forced to re-tag/re-prepare the same safe intent for every target adapter.
 - Retained section-transfer speed as a product requirement while keeping documented artifacts / the versioned WP Builders Bridge ahead of undocumented private clipboard dependencies.
 - Added durable decisions D-038 through D-042: verified readiness states are user-facing; Elementor environment truth stays evidence-scoped; shared IR should avoid unnecessary re-tagging; failed/refused generation is non-billable if credits are introduced; exact pricing remains evidence-driven rather than copied from competitors.
 - Retained API/MCP/agent access as a later Pro/Agency differentiator after deterministic target contracts are accepted.
