@@ -38,6 +38,7 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
 - #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
 - #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
+- #226 — P14 safe-recipe registry semantic snapshot: **ACTIVE / PR #227**. Registry authorization evidence is captured into one bounded plain snapshot so readable stateful caller getters/proxies cannot change the recipe contract after validation.
 - #223 — P14 nested plan/confirmation semantic snapshot: **COMPLETED** through PR #224; issue closed automatically by the verified guarded squash merge.
 - #216 — P14 unreadable nested bounded-input evidence: **COMPLETED** through PR #221; issue closed automatically by the verified guarded squash merge.
 - #213 — P14 top-level run-input runtime evidence snapshot: **COMPLETED** through PR #214; issue closed automatically by the verified guarded squash merge.
@@ -53,7 +54,10 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 
 ## Current PR / main queue
 
-- Current P14 core main baseline is `a84104b459d38b90368e0ef21ec1ac32788cd438`, the guarded squash merge of PR #224 / issue #223.
+- Current repository main is `cc964b20fa679171aec73e672c14f983c27074ba`. Immediately before #226 branch creation, tool routing briefly added an empty `noop` file directly to main and the repair commit `cc964b20...` deleted it; comparing the previous clean main `5a65798ac9ba6e7ddfc7bf0fa354b754ee5cca72` to `cc964b20...` reports zero changed files.
+- PR #227 (`fix/p14-registry-semantic-snapshot-226`) is the active P14 safe-recipe registry semantic-evidence slice.
+- Initial PR #227 implementation/test head `4bd44da760d0dc0558b4d7c710bd779d1dd1e534` passed CI #939 including status verification, typecheck, full tests, plugin/CLI builds, release/package/community verification and local Figma import preparation; P12 Final Release Artifact #250 passed; P12 Offline Acceptance #294 passed on Ubuntu/macOS/Windows. Same-cycle docs synchronization and final exact-head verification remain required before merge.
+- PR #227 performs the existing registry resource preflight, captures only the known safe-recipe registry schema into bounded plain evidence, re-runs the existing registry bounds contract on that snapshot, validates the snapshot and then uses that same stable evidence for exact recipe resolution/plan authorization. Readable stateful registry getters/proxies therefore cannot change bindings or nested recipe semantics after the evidence boundary. Evidence that grows oversized or becomes unreadable between first preflight and capture remains invalid and follows the existing `P14_RECIPE_UNAUTHORIZED` transaction path before confirmation, coordination or adapter access. No generic deep clone, production recipe registration, real Figma mutation surface, target compatibility claim or production acceptance is introduced.
 - PR #224 exact synchronized head `483e4b3f655ee8c99e844fbc9395313db22812f1` passed CI #932, Integration Readiness #289, P12 Final Release Artifact #243 and P12 Offline Acceptance #287 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and GitHub reported `mergeable=true` before the guarded squash merge.
 - PR #224 captures the known bounded P14 plan/confirmation schema into plain semantic values after first resource preflight, re-runs the existing bounds contract on that snapshot, and delegates only the plain snapshot into core semantics. Readable stateful getters/proxies therefore cannot change action, source, confirmation or collection evidence after the public boundary. Evidence that grows oversized between first preflight and capture retains the established `P14_INPUT_TOO_LARGE` / `bounds` outcome. No generic deep clone, new status/error authority, production recipe registration, real Figma mutation surface, target compatibility claim or production acceptance was introduced.
 - Initial PR #224 head `64168dea7b5c6aea126cc89404221da79973b5bd` exposed one existing #216 receipt-correlation regression in Final Release #237. Corrected implementation head `8ec0c14c6301d16b8b9564a5b0d01423147629b5` restored the established `UNKNOWN` / `p14-plan-invalid` fallback and passed CI #927, P12 Final Release Artifact #238 and P12 Offline Acceptance #282 on Ubuntu/macOS/Windows before same-cycle docs synchronization.
@@ -130,7 +134,7 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13 Build-Ready Score + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | #159 real-plugin parity/internal runtime acceptance |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Continue the next focused pure-core safety-gap audit after #223; production registry remains empty |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Complete #226 / PR #227 registry semantic snapshot hardening; production registry remains empty |
 | P15-P26 multi-target commercial implementation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | Implement in dependency order with R0/R1 where applicable |
 | P27 final production release | GATE DEFINED / EXECUTION DEFERRED | 0% exec | Coordinate final live runtime/publisher/2FA evidence + #84 release-exit truth |
 
@@ -166,7 +170,7 @@ R0 research remains advisory and must be refreshed again when a major adapter im
 
 Continue the implementation/internal-readiness program without making production-release claims:
 
-1. start the next focused P14 target-neutral safety-gap audit from core main `a84104b...` while real Figma mutation remains unwired and the production recipe registry remains empty;
+1. complete #226 / PR #227 registry semantic snapshot hardening on the final synchronized head;
 2. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
 3. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
 4. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;

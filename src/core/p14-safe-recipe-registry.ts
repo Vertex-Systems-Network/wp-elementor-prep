@@ -1,4 +1,6 @@
 import { assessP14SafeRecipeRegistryBounds } from './p14-registry-bounds';
+import { snapshotP14SafeRecipeRegistryEvidence } from './p14-registry-semantic-snapshot';
+import { safeP14RuntimeErrorMessage } from './p14-receipt-evidence';
 import type {
   P14MutationField,
   P14PreparationRecipeDefinition,
@@ -20,6 +22,10 @@ export interface P14SafeRecipeRegistryV1 {
 export interface P14SafeRecipeRegistryValidation {
   valid: boolean;
   failures: string[];
+}
+
+export interface P14SafeRecipeRegistryEvidenceAssessment extends P14SafeRecipeRegistryValidation {
+  value?: P14SafeRecipeRegistryV1;
 }
 
 export type P14SafeRecipeResolution =
@@ -120,17 +126,15 @@ function canonicalRecipe(value: P14PreparationRecipeDefinition): string {
   return JSON.stringify(normalizeRecipe(value));
 }
 
-export function validateP14SafeRecipeRegistry(value: unknown): P14SafeRecipeRegistryValidation {
-  const bounds = assessP14SafeRecipeRegistryBounds(value);
-  if (!bounds.allowed) {
-    return {
-      valid: false,
-      failures: bounds.failures.map(
-        (failure) => `P14 safe-recipe registry exceeds bounded safety limits: ${failure.code} at ${failure.path}: ${failure.actual} > ${failure.limit}`,
-      ),
-    };
-  }
+function formatBoundFailures(
+  failures: ReturnType<typeof assessP14SafeRecipeRegistryBounds>['failures'],
+): string[] {
+  return failures.map(
+    (failure) => `P14 safe-recipe registry exceeds bounded safety limits: ${failure.code} at ${failure.path}: ${failure.actual} > ${failure.limit}`,
+  );
+}
 
+function validateP14SafeRecipeRegistrySnapshot(value: unknown): P14SafeRecipeRegistryValidation {
   const failures: string[] = [];
   if (!isRecord(value)) return { valid: false, failures: ['P14 safe-recipe registry must be an object.'] };
   if (value.schemaVersion !== P14_SAFE_RECIPE_REGISTRY_SCHEMA_VERSION) {
@@ -222,15 +226,66 @@ export function validateP14SafeRecipeRegistry(value: unknown): P14SafeRecipeRegi
   return { valid: failures.length === 0, failures };
 }
 
+/**
+ * Converts untrusted registry evidence into one bounded plain semantic snapshot, then validates that
+ * exact snapshot. Callers that need authorization/resolution must consume `value`, not the original
+ * caller-owned registry object.
+ */
+export function assessP14SafeRecipeRegistryEvidence(value: unknown): P14SafeRecipeRegistryEvidenceAssessment {
+  let firstBounds: ReturnType<typeof assessP14SafeRecipeRegistryBounds>;
+  try {
+    firstBounds = assessP14SafeRecipeRegistryBounds(value);
+  } catch (error) {
+    return {
+      valid: false,
+      failures: [`P14 safe-recipe registry evidence could not be read safely: ${safeP14RuntimeErrorMessage(error)}`],
+    };
+  }
+  if (!firstBounds.allowed) {
+    return { valid: false, failures: formatBoundFailures(firstBounds.failures) };
+  }
+
+  const semantic = snapshotP14SafeRecipeRegistryEvidence(value, firstBounds.effectiveLimits);
+  if (!semantic.valid) {
+    return {
+      valid: false,
+      failures: semantic.failures.map(
+        (failure) => `P14 safe-recipe registry evidence could not be read safely: ${failure}`,
+      ),
+    };
+  }
+
+  const snapshot = semantic.value;
+  const snapshotBounds = assessP14SafeRecipeRegistryBounds(snapshot);
+  if (!snapshotBounds.allowed) {
+    return { valid: false, failures: formatBoundFailures(snapshotBounds.failures) };
+  }
+
+  const validation = validateP14SafeRecipeRegistrySnapshot(snapshot);
+  if (!validation.valid) return validation;
+  return {
+    valid: true,
+    failures: [],
+    value: snapshot as P14SafeRecipeRegistryV1,
+  };
+}
+
+export function validateP14SafeRecipeRegistry(value: unknown): P14SafeRecipeRegistryValidation {
+  const evidence = assessP14SafeRecipeRegistryEvidence(value);
+  return { valid: evidence.valid, failures: evidence.failures };
+}
+
 export function resolveP14SafeRecipe(
   registry: P14SafeRecipeRegistryV1,
   sourceRuleId: string,
   sourceRuleVersion: number,
 ): P14SafeRecipeResolution {
-  const validation = validateP14SafeRecipeRegistry(registry);
-  if (!validation.valid) return { status: 'INVALID_REGISTRY', failures: validation.failures };
+  const evidence = assessP14SafeRecipeRegistryEvidence(registry);
+  if (!evidence.valid || !evidence.value) {
+    return { status: 'INVALID_REGISTRY', failures: evidence.failures };
+  }
   const key = `${sourceRuleId}@${sourceRuleVersion}`;
-  const binding = registry.bindings.find((candidate) => bindingKey(candidate) === key);
+  const binding = evidence.value.bindings.find((candidate) => bindingKey(candidate) === key);
   return binding ? { status: 'MATCH', binding } : { status: 'NO_MATCH' };
 }
 

@@ -1,7 +1,7 @@
 import type { P14PreparationAction, P14PreparationPlanV1 } from './p14-preparation-types';
 import {
   PRODUCTION_P14_SAFE_RECIPE_REGISTRY,
-  validateP14SafeRecipeRegistry,
+  assessP14SafeRecipeRegistryEvidence,
   type P14SafeRecipeRegistryV1,
 } from './p14-safe-recipe-registry';
 
@@ -38,14 +38,15 @@ export function authorizeP14PreparationPlan(
   plan: P14PreparationPlanV1,
   registry: P14SafeRecipeRegistryV1 = PRODUCTION_P14_SAFE_RECIPE_REGISTRY,
 ): P14PlanAuthorizationResult {
-  const registryValidation = validateP14SafeRecipeRegistry(registry);
-  if (!registryValidation.valid) {
+  const registryEvidence = assessP14SafeRecipeRegistryEvidence(registry);
+  if (!registryEvidence.valid || !registryEvidence.value) {
     return {
       authorized: false,
-      failures: registryValidation.failures.map((failure) => `Invalid P14 safe-recipe registry: ${failure}`).sort(),
+      failures: registryEvidence.failures.map((failure) => `Invalid P14 safe-recipe registry: ${failure}`).sort(),
       authorizedActionIds: [],
     };
   }
+  const stableRegistry = registryEvidence.value;
 
   const actions = eligibleActions(plan);
   if (actions.length === 0) {
@@ -53,7 +54,7 @@ export function authorizeP14PreparationPlan(
   }
 
   const byRule = new Map(
-    registry.bindings.map((binding) => [exactBindingKey(binding.sourceRuleId, binding.sourceRuleVersion), binding]),
+    stableRegistry.bindings.map((binding) => [exactBindingKey(binding.sourceRuleId, binding.sourceRuleVersion), binding]),
   );
   const failures: string[] = [];
   const authorizedActionIds: string[] = [];
