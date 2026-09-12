@@ -1,4 +1,5 @@
 import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import { snapshotP14AdapterOutputRecord } from './p14-adapter-output-snapshot';
 import type { BuildReadyStatus } from './build-ready-types';
 import type { P14RescoreSummary } from './p14-preparation-types';
 
@@ -14,10 +15,6 @@ export interface P14RescoreEvidenceValidation {
   value: P14RescoreSummary | null;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 function boundedIdentity(value: unknown): value is string {
   return typeof value === 'string'
     && value.length > 0
@@ -31,45 +28,62 @@ function nonNegativeSafeInteger(value: unknown): value is number {
 }
 
 export function validateP14RescoreEvidence(value: unknown): P14RescoreEvidenceValidation {
-  const failures: string[] = [];
-  if (!isRecord(value)) {
-    return {
-      valid: false,
-      failures: ['P14 candidate re-score evidence must be an object.'],
-      value: null,
-    };
+  const captured = snapshotP14AdapterOutputRecord(
+    value,
+    [
+      'runId',
+      'status',
+      'score',
+      'blockerCount',
+      'highRiskCount',
+      'introducedBlockerOrHighCount',
+      'reviewRequired',
+    ] as const,
+    'P14 candidate re-score evidence',
+  );
+  if (!captured.valid || !captured.value) {
+    return { valid: false, failures: captured.failures, value: null };
   }
 
-  if (!boundedIdentity(value.runId)) {
+  const failures: string[] = [];
+  const runId = captured.value.runId;
+  const status = captured.value.status;
+  const score = captured.value.score;
+  const blockerCount = captured.value.blockerCount;
+  const highRiskCount = captured.value.highRiskCount;
+  const introducedBlockerOrHighCount = captured.value.introducedBlockerOrHighCount;
+  const reviewRequired = captured.value.reviewRequired;
+
+  if (!boundedIdentity(runId)) {
     failures.push('P14 candidate re-score runId is missing or oversized.');
   }
 
-  if (!boundedIdentity(value.status)) {
+  if (!boundedIdentity(status)) {
     failures.push('P14 candidate re-score status is missing or oversized.');
-  } else if (value.status === 'INSUFFICIENT_EVIDENCE') {
+  } else if (status === 'INSUFFICIENT_EVIDENCE') {
     failures.push('P14 numeric re-score evidence cannot represent P13 INSUFFICIENT_EVIDENCE because the accepted P13 model uses score=null for that status.');
-  } else if (!SCORED_BUILD_READY_STATUSES.has(value.status as BuildReadyStatus)) {
+  } else if (!SCORED_BUILD_READY_STATUSES.has(status as BuildReadyStatus)) {
     failures.push('P14 candidate re-score status is outside the accepted scored P13 status domain.');
   }
 
-  if (typeof value.score !== 'number'
-    || !Number.isFinite(value.score)
-    || !Number.isInteger(value.score)
-    || value.score < 0
-    || value.score > 100) {
+  if (typeof score !== 'number'
+    || !Number.isFinite(score)
+    || !Number.isInteger(score)
+    || score < 0
+    || score > 100) {
     failures.push('P14 candidate re-score score must be a finite integer from 0 through 100.');
   }
 
-  if (!nonNegativeSafeInteger(value.blockerCount)) {
+  if (!nonNegativeSafeInteger(blockerCount)) {
     failures.push('P14 candidate re-score blockerCount must be a non-negative safe integer.');
   }
-  if (!nonNegativeSafeInteger(value.highRiskCount)) {
+  if (!nonNegativeSafeInteger(highRiskCount)) {
     failures.push('P14 candidate re-score highRiskCount must be a non-negative safe integer.');
   }
-  if (!nonNegativeSafeInteger(value.introducedBlockerOrHighCount)) {
+  if (!nonNegativeSafeInteger(introducedBlockerOrHighCount)) {
     failures.push('P14 candidate re-score introducedBlockerOrHighCount must be a non-negative safe integer.');
   }
-  if (typeof value.reviewRequired !== 'boolean') {
+  if (typeof reviewRequired !== 'boolean') {
     failures.push('P14 candidate re-score reviewRequired must be boolean.');
   }
 
@@ -79,13 +93,13 @@ export function validateP14RescoreEvidence(value: unknown): P14RescoreEvidenceVa
     valid: true,
     failures: [],
     value: {
-      runId: value.runId as string,
-      score: value.score as number,
-      status: value.status as string,
-      blockerCount: value.blockerCount as number,
-      highRiskCount: value.highRiskCount as number,
-      introducedBlockerOrHighCount: value.introducedBlockerOrHighCount as number,
-      reviewRequired: value.reviewRequired as boolean,
+      runId: runId as string,
+      score: score as number,
+      status: status as string,
+      blockerCount: blockerCount as number,
+      highRiskCount: highRiskCount as number,
+      introducedBlockerOrHighCount: introducedBlockerOrHighCount as number,
+      reviewRequired: reviewRequired as boolean,
     },
   };
 }
