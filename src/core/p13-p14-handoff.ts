@@ -1,4 +1,8 @@
 import {
+  BUILD_READY_ANALYZER_VERSION,
+  matchesCurrentBuildReadyRunIdentity,
+} from './build-ready-identity';
+import {
   BUILD_READY_SCHEMA_VERSION,
   BUILD_READY_SCORE_VERSION,
   RESPONSIVE_RISK_VERSION,
@@ -94,7 +98,6 @@ function validateBuildReadyReportForHandoff(value: unknown): { valid: boolean; f
   if (value.responsiveRiskVersion !== RESPONSIVE_RISK_VERSION) failures.push('Unsupported responsive-risk version.');
   if (!nonEmptyString(value.runId)) failures.push('Build-Ready runId is missing.');
 
-  let expectedRunId: string | null = null;
   if (!isRecord(value.source)
     || !nonEmptyString(value.source.rootId)
     || !nonEmptyString(value.source.structuralHash)
@@ -102,9 +105,16 @@ function validateBuildReadyReportForHandoff(value: unknown): { valid: boolean; f
     || !nonEmptyString(value.source.analyzerVersion)) {
     failures.push('Build-Ready source fingerprint evidence is incomplete.');
   } else {
-    expectedRunId = `p13-${value.source.structuralHash}-${value.source.configHash}`;
-    if (value.runId !== expectedRunId) {
-      failures.push('Build-Ready runId does not match the exact source/config fingerprint binding.');
+    if (value.source.analyzerVersion !== BUILD_READY_ANALYZER_VERSION) {
+      failures.push(`Unsupported Build-Ready analyzer version; expected ${BUILD_READY_ANALYZER_VERSION}.`);
+    }
+    if (!matchesCurrentBuildReadyRunIdentity({
+      runId: value.runId,
+      structuralHash: value.source.structuralHash,
+      configHash: value.source.configHash,
+      analyzerVersion: value.source.analyzerVersion,
+    })) {
+      failures.push('Build-Ready runId does not match the exact source/config/analyzer fingerprint binding.');
     }
   }
 

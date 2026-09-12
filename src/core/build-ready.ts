@@ -6,6 +6,10 @@ import {
   SAFE_PREPARATION_CANDIDATE_RULES,
 } from './safe-preparation-candidates';
 import {
+  BUILD_READY_ANALYZER_VERSION,
+  buildBuildReadyRunId,
+} from './build-ready-identity';
+import {
   BUILD_READY_SCHEMA_VERSION,
   BUILD_READY_SCORE_VERSION,
   RESPONSIVE_RISK_VERSION,
@@ -24,7 +28,6 @@ import type {
   ResponsiveRiskSummary,
 } from './build-ready-types';
 
-const ANALYZER_VERSION = 'p13-core-v1';
 const DEFAULT_CONFIG: BuildReadyRunConfig = {
   referenceWidths: [1440, 1024, 768, 390],
   minOverallCoverage: 0.8,
@@ -537,14 +540,18 @@ function insufficientReport(
     schemaVersion: BUILD_READY_SCHEMA_VERSION,
     buildReadyScoreVersion: BUILD_READY_SCORE_VERSION,
     responsiveRiskVersion: RESPONSIVE_RISK_VERSION,
-    runId: `p13-${sourceHash}-${cfgHash}`,
+    runId: buildBuildReadyRunId({
+      structuralHash: sourceHash,
+      configHash: cfgHash,
+      analyzerVersion: BUILD_READY_ANALYZER_VERSION,
+    }),
     generatedAt,
     source: {
       rootId: root.id,
       rootName: root.name,
       structuralHash: sourceHash,
       configHash: cfgHash,
-      analyzerVersion: ANALYZER_VERSION,
+      analyzerVersion: BUILD_READY_ANALYZER_VERSION,
     },
     config,
     score: { score: null, status: 'INSUFFICIENT_EVIDENCE', hasHighRisk: false, blockerCount: 0 },
@@ -608,14 +615,18 @@ export function buildBuildReadyReport(
     schemaVersion: BUILD_READY_SCHEMA_VERSION,
     buildReadyScoreVersion: BUILD_READY_SCORE_VERSION,
     responsiveRiskVersion: RESPONSIVE_RISK_VERSION,
-    runId: `p13-${sourceHash}-${cfgHash}`,
+    runId: buildBuildReadyRunId({
+      structuralHash: sourceHash,
+      configHash: cfgHash,
+      analyzerVersion: BUILD_READY_ANALYZER_VERSION,
+    }),
     generatedAt,
     source: {
       rootId: root.id,
       rootName: root.name,
       structuralHash: sourceHash,
       configHash: cfgHash,
-      analyzerVersion: ANALYZER_VERSION,
+      analyzerVersion: BUILD_READY_ANALYZER_VERSION,
     },
     config,
     score,

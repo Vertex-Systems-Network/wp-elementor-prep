@@ -124,12 +124,12 @@ describe('P13 → P14 handoff integrity hardening', () => {
     expect(validation.failures.some((failure) => failure.includes('mutationAllowlist must not contain duplicates'))).toBe(true);
   });
 
-  it('rejects a forged P13 runId that no longer binds exact structural/config hashes', () => {
+  it('rejects a forged P13 runId that no longer binds exact structural/config/analyzer identity', () => {
     const forged = { ...report(), runId: 'p13-forged-run-id' };
     const result = buildP14PreparationPlanFromBuildReady(forged, registry());
 
     expect(result.handoff.valid).toBe(false);
-    expect(result.handoff.failures.some((failure) => failure.includes('exact source/config fingerprint binding'))).toBe(true);
+    expect(result.handoff.failures.some((failure) => failure.includes('exact source/config/analyzer fingerprint binding'))).toBe(true);
     expect(result.plan).toBeNull();
   });
 
