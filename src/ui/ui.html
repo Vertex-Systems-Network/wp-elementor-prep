@@ -57,10 +57,11 @@
 <body>
   <div class="app">
     <h1>WP Builders Prepare</h1>
-    <div class="sub">Audit + actionable backlog + P3 validator + compiled-runtime-gated P5 Safe Fix + P7 batch queue</div>
+    <div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare preview + P3 validator + P5 Safe Fix + P7 batch queue</div>
     <div id="root" class="empty">Select one Frame to audit/preview, two Frames to compare, or multiple Frames for P7 batch processing.</div>
     <div class="actions">
       <button id="audit">Run audit</button>
+      <button id="p14-preview">Preview Guided Prepare</button>
       <button id="plan">Preview safe fixes</button>
       <button id="validate">Compare 2 frames</button>
       <button id="selftest">Runtime self-test</button>
@@ -89,6 +90,12 @@
     }
 
     document.getElementById('audit').addEventListener('click', () => post('audit-request'));
+    document.getElementById('p14-preview').addEventListener('click', () => {
+      root.className = 'empty';
+      root.textContent = 'Loading the read-only P14 Guided Prepare preview from persisted P13 Build-Ready evidence…';
+      exportPanel.hidden = true;
+      post('p14-plan-preview-request');
+    });
     document.getElementById('plan').addEventListener('click', () => {
       root.className = 'empty';
       root.textContent = 'Classifying conservative P5 Safe Fix eligibility…';
@@ -354,6 +361,73 @@
         ${renderBacklog(backlog)}`;
     }
 
+    function renderP14PlanPreview(message) {
+      const preview = message.preview;
+      const plan = preview.plan;
+      const context = message.context || {};
+      const locked = preview.acceptanceAuthority === false
+        && preview.targetCompatibilityClaim === false
+        && preview.mutationEnabled === false
+        && preview.confirmationEnabled === false;
+      const groups = [
+        ['ELIGIBLE', 'Eligible changes'],
+        ['NOOP', 'Already correct / no-op'],
+        ['REVIEW', 'Review only'],
+        ['REFUSED', 'Unsupported / refused'],
+      ];
+      const rows = plan ? groups.map(([decision, label]) => {
+        const actions = plan.actions.filter((action) => action.decision === decision);
+        if (!actions.length) return '';
+        return `
+          <div class="sectionTitle">${escapeHtml(label)} · ${actions.length}</div>
+          ${actions.map((action) => `
+            <div class="row">
+              <div class="rowHead">
+                <div class="name">${escapeHtml(action.recipeId || action.sourceRuleId)}</div>
+                <div class="badge">${escapeHtml(action.decision)} · ${action.confidence}%</div>
+              </div>
+              <div class="recipe">${escapeHtml(action.sourceRuleId)}@${action.sourceRuleVersion} · ${action.targetNodeIds.length} target node(s)</div>
+              ${action.mutationAllowlist.length ? `<div class="finding">Allowed fields: ${escapeHtml(action.mutationAllowlist.join(', '))}</div>` : ''}
+              ${action.refusalCode ? `<div class="finding error">${escapeHtml(action.refusalCode)}</div>` : ''}
+            </div>`).join('')}`;
+      }).join('') : '';
+      const blockers = plan && plan.blockers.length
+        ? `<div class="sectionTitle">Blockers · ${plan.blockers.length}</div>${plan.blockers.map((blocker) => `
+            <div class="row">
+              <div class="rowHead"><div class="name">${escapeHtml(blocker.code)}</div><div class="badge">BLOCKED</div></div>
+              <div class="finding error">${escapeHtml(blocker.detail)}</div>
+            </div>`).join('')}`
+        : '';
+      const unavailable = !plan
+        ? `<div class="empty">${preview.handoff.failures.length
+            ? preview.handoff.failures.map((failure) => escapeHtml(failure)).join('<br>')
+            : 'Persisted P13 evidence could not produce a P14 preparation plan.'}</div>`
+        : '';
+
+      root.className = '';
+      root.innerHTML = `
+        <div class="hero">
+          <div class="score">${escapeHtml(preview.summary.status)}</div>
+          <div class="status">P14 GUIDED PREPARE PREVIEW · ${locked ? 'READ-ONLY / LOCKED' : 'UNEXPECTED AUTHORITY'}</div>
+          <div class="meta">${escapeHtml(context.frameName || 'Persisted frame')} · ${escapeHtml(context.pageName || 'unknown page')}</div>
+          <div class="meta">Derived from exact persisted P13 Build-Ready evidence${message.capturedAt ? ` · ${escapeHtml(message.capturedAt)}` : ''}.</div>
+          <div class="meta">acceptanceAuthority=false · targetCompatibilityClaim=false · mutationEnabled=false · confirmationEnabled=false</div>
+          <div class="metricGrid">
+            <div class="metric"><strong>${preview.summary.totalActions}</strong>total actions</div>
+            <div class="metric"><strong>${preview.summary.eligible}</strong>eligible</div>
+            <div class="metric"><strong>${preview.summary.noOp}</strong>no-op</div>
+            <div class="metric"><strong>${preview.summary.review}</strong>review</div>
+            <div class="metric"><strong>${preview.summary.refused}</strong>refused</div>
+            <div class="metric"><strong>${preview.summary.blockers}</strong>blockers</div>
+          </div>
+          <div class="meta">Plan digest: ${escapeHtml(plan ? plan.planDigest : '—')}</div>
+        </div>
+        ${unavailable}
+        ${rows}
+        ${blockers}
+        <details><summary>Read-only P14 preview JSON</summary><pre>${escapeHtml(message.previewJson || JSON.stringify(preview, null, 2))}</pre></details>`;
+    }
+
     function renderSafePlan(message) {
       const counts = { ELIGIBLE: 0, REVIEW: 0, NOOP: 0, UNSUPPORTED: 0 };
       for (const plan of message.plans) counts[plan.decision] = (counts[plan.decision] || 0) + 1;
@@ -572,6 +646,19 @@
         latestBuildReadyJson = typeof message.buildReadyJson === 'string' ? message.buildReadyJson : '';
         exportPanel.hidden = !(latestAuditJson && latestAuditMarkdown && latestBacklogJson && latestBacklogMarkdown && latestBuildReadyJson);
         renderAudit(message.report, message.backlog, message.buildReady);
+        return;
+      }
+
+      if (message.type === 'p14-plan-preview-result') {
+        exportPanel.hidden = true;
+        renderP14PlanPreview(message);
+        return;
+      }
+
+      if (message.type === 'p14-plan-preview-unavailable') {
+        exportPanel.hidden = true;
+        root.className = 'empty';
+        root.textContent = message.message || 'P14 Guided Prepare preview is unavailable. Run Audit on exactly one Frame first.';
         return;
       }
 
