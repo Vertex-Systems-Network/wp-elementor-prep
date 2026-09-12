@@ -1,4 +1,5 @@
 import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import { snapshotP14AdapterOutputRecord } from './p14-adapter-output-snapshot';
 import type {
   P14CandidateHandle,
   P14PreparationAction,
@@ -10,10 +11,6 @@ export interface P14AdapterEvidenceValidation<T> {
   valid: boolean;
   failures: string[];
   value: T | null;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 export function isP14BoundedIdentity(value: unknown): value is string {
@@ -31,20 +28,28 @@ export function validateP14CandidateHandleEvidence(
   value: unknown,
   expectedSourceNodeId?: string,
 ): P14AdapterEvidenceValidation<P14CandidateHandle> {
-  const failures: string[] = [];
-  if (!isRecord(value)) {
-    return { valid: false, failures: ['P14 candidate handle must be an object.'], value: null };
+  const captured = snapshotP14AdapterOutputRecord(
+    value,
+    ['sourceNodeId', 'candidateNodeId'] as const,
+    'P14 candidate handle',
+  );
+  if (!captured.valid || !captured.value) {
+    return { valid: false, failures: captured.failures, value: null };
   }
 
-  if (!isP14BoundedIdentity(value.sourceNodeId)) {
+  const failures: string[] = [];
+  const sourceNodeId = captured.value.sourceNodeId;
+  const candidateNodeId = captured.value.candidateNodeId;
+
+  if (!isP14BoundedIdentity(sourceNodeId)) {
     failures.push('P14 candidate sourceNodeId is missing or oversized.');
-  } else if (expectedSourceNodeId !== undefined && value.sourceNodeId !== expectedSourceNodeId) {
+  } else if (expectedSourceNodeId !== undefined && sourceNodeId !== expectedSourceNodeId) {
     failures.push('P14 candidate sourceNodeId does not match the approved source.');
   }
 
-  if (!isP14BoundedIdentity(value.candidateNodeId)) {
+  if (!isP14BoundedIdentity(candidateNodeId)) {
     failures.push('P14 candidate candidateNodeId is missing or oversized.');
-  } else if (isP14BoundedIdentity(value.sourceNodeId) && value.candidateNodeId === value.sourceNodeId) {
+  } else if (isP14BoundedIdentity(sourceNodeId) && candidateNodeId === sourceNodeId) {
     failures.push('P14 candidate candidateNodeId must differ from sourceNodeId.');
   }
 
@@ -53,8 +58,8 @@ export function validateP14CandidateHandleEvidence(
     valid: true,
     failures: [],
     value: {
-      sourceNodeId: value.sourceNodeId as string,
-      candidateNodeId: value.candidateNodeId as string,
+      sourceNodeId: sourceNodeId as string,
+      candidateNodeId: candidateNodeId as string,
     },
   };
 }
@@ -63,39 +68,50 @@ export function validateP14RecipeExecutionResultEvidence(
   value: unknown,
   expectedAction?: P14PreparationAction,
 ): P14AdapterEvidenceValidation<P14RecipeExecutionResult> {
-  const failures: string[] = [];
-  if (!isRecord(value)) {
-    return { valid: false, failures: ['P14 recipe execution result must be an object.'], value: null };
+  const captured = snapshotP14AdapterOutputRecord(
+    value,
+    ['actionId', 'recipeId', 'applied', 'becameNoOp', 'detail'] as const,
+    'P14 recipe execution result',
+  );
+  if (!captured.valid || !captured.value) {
+    return { valid: false, failures: captured.failures, value: null };
   }
 
-  if (!isP14BoundedIdentity(value.actionId)) {
+  const failures: string[] = [];
+  const actionId = captured.value.actionId;
+  const recipeId = captured.value.recipeId;
+  const applied = captured.value.applied;
+  const becameNoOp = captured.value.becameNoOp;
+  const detail = captured.value.detail;
+
+  if (!isP14BoundedIdentity(actionId)) {
     failures.push('P14 recipe result actionId is missing or oversized.');
-  } else if (expectedAction && value.actionId !== expectedAction.actionId) {
+  } else if (expectedAction && actionId !== expectedAction.actionId) {
     failures.push('P14 recipe result actionId does not match the planned action.');
   }
 
-  if (!isP14BoundedIdentity(value.recipeId)) {
+  if (!isP14BoundedIdentity(recipeId)) {
     failures.push('P14 recipe result recipeId is missing or oversized.');
-  } else if (expectedAction && value.recipeId !== expectedAction.recipeId) {
+  } else if (expectedAction && recipeId !== expectedAction.recipeId) {
     failures.push('P14 recipe result recipeId does not match the planned recipe.');
   }
 
-  if (typeof value.applied !== 'boolean') {
+  if (typeof applied !== 'boolean') {
     failures.push('P14 recipe result applied must be boolean.');
   }
-  if (value.becameNoOp !== undefined && typeof value.becameNoOp !== 'boolean') {
+  if (becameNoOp !== undefined && typeof becameNoOp !== 'boolean') {
     failures.push('P14 recipe result becameNoOp must be boolean when present.');
   }
 
-  if (typeof value.applied === 'boolean'
-    && (value.becameNoOp === undefined || typeof value.becameNoOp === 'boolean')) {
-    const outcomeCount = (value.applied ? 1 : 0) + (value.becameNoOp === true ? 1 : 0);
+  if (typeof applied === 'boolean'
+    && (becameNoOp === undefined || typeof becameNoOp === 'boolean')) {
+    const outcomeCount = (applied ? 1 : 0) + (becameNoOp === true ? 1 : 0);
     if (outcomeCount !== 1) {
       failures.push('P14 recipe result must be exactly one of applied or accepted idempotent no-op.');
     }
   }
 
-  if (value.detail !== undefined && !boundedDetail(value.detail)) {
+  if (detail !== undefined && !boundedDetail(detail)) {
     failures.push('P14 recipe result detail must be a bounded string when present.');
   }
 
@@ -104,11 +120,11 @@ export function validateP14RecipeExecutionResultEvidence(
     valid: true,
     failures: [],
     value: {
-      actionId: value.actionId as string,
-      recipeId: value.recipeId as string,
-      applied: value.applied as boolean,
-      ...(value.becameNoOp === true ? { becameNoOp: true } : {}),
-      ...(typeof value.detail === 'string' && value.detail.length > 0 ? { detail: value.detail } : {}),
+      actionId: actionId as string,
+      recipeId: recipeId as string,
+      applied: applied as boolean,
+      ...(becameNoOp === true ? { becameNoOp: true } : {}),
+      ...(typeof detail === 'string' && detail.length > 0 ? { detail } : {}),
     },
   };
 }
@@ -124,16 +140,26 @@ export function validateP14RetentionEvidence(
   value: unknown,
   expected?: P14ExpectedRetentionEvidence,
 ): P14AdapterEvidenceValidation<P14RetentionEvidence> {
-  const failures: string[] = [];
-  if (!isRecord(value)) {
-    return { valid: false, failures: ['P14 retention evidence must be an object.'], value: null };
+  const captured = snapshotP14AdapterOutputRecord(
+    value,
+    ['transactionId', 'sourceNodeId', 'retainedNodeId', 'preparedName'] as const,
+    'P14 retention evidence',
+  );
+  if (!captured.valid || !captured.value) {
+    return { valid: false, failures: captured.failures, value: null };
   }
 
+  const failures: string[] = [];
+  const transactionId = captured.value.transactionId;
+  const sourceNodeId = captured.value.sourceNodeId;
+  const retainedNodeId = captured.value.retainedNodeId;
+  const preparedName = captured.value.preparedName;
+
   const identities: Array<[keyof P14RetentionEvidence, unknown]> = [
-    ['transactionId', value.transactionId],
-    ['sourceNodeId', value.sourceNodeId],
-    ['retainedNodeId', value.retainedNodeId],
-    ['preparedName', value.preparedName],
+    ['transactionId', transactionId],
+    ['sourceNodeId', sourceNodeId],
+    ['retainedNodeId', retainedNodeId],
+    ['preparedName', preparedName],
   ];
   for (const [field, fieldValue] of identities) {
     if (!isP14BoundedIdentity(fieldValue)) {
@@ -142,10 +168,10 @@ export function validateP14RetentionEvidence(
   }
 
   if (expected) {
-    if (value.transactionId !== expected.transactionId) failures.push('P14 retention transactionId does not match the current transaction.');
-    if (value.sourceNodeId !== expected.sourceNodeId) failures.push('P14 retention sourceNodeId does not match the approved source.');
-    if (value.retainedNodeId !== expected.retainedNodeId) failures.push('P14 retention retainedNodeId does not match the candidate.');
-    if (value.preparedName !== expected.preparedName) failures.push('P14 retention preparedName does not match the requested prepared name.');
+    if (transactionId !== expected.transactionId) failures.push('P14 retention transactionId does not match the current transaction.');
+    if (sourceNodeId !== expected.sourceNodeId) failures.push('P14 retention sourceNodeId does not match the approved source.');
+    if (retainedNodeId !== expected.retainedNodeId) failures.push('P14 retention retainedNodeId does not match the candidate.');
+    if (preparedName !== expected.preparedName) failures.push('P14 retention preparedName does not match the requested prepared name.');
   }
 
   if (failures.length > 0) return { valid: false, failures, value: null };
@@ -153,10 +179,10 @@ export function validateP14RetentionEvidence(
     valid: true,
     failures: [],
     value: {
-      transactionId: value.transactionId as string,
-      sourceNodeId: value.sourceNodeId as string,
-      retainedNodeId: value.retainedNodeId as string,
-      preparedName: value.preparedName as string,
+      transactionId: transactionId as string,
+      sourceNodeId: sourceNodeId as string,
+      retainedNodeId: retainedNodeId as string,
+      preparedName: preparedName as string,
     },
   };
 }
