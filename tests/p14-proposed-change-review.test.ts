@@ -137,6 +137,34 @@ describe('P14 proposed-change review manifest', () => {
     expect(manifest?.actions[0]?.mutationAllowlist).toEqual(['layoutMode', 'itemSpacing']);
   });
 
+  it('uses one bounded semantic snapshot instead of re-reading stateful plan getters', () => {
+    const stable = validPlan();
+    let runReads = 0;
+    const stateful = new Proxy(stable, {
+      get(target, property, receiver) {
+        if (property === 'p13RunId') {
+          runReads += 1;
+          return runReads === 1 ? 'p13-current-run' : 'p13-changed-after-validation';
+        }
+        return Reflect.get(target, property, receiver);
+      },
+    });
+
+    const manifest = buildP14ProposedChangeReviewManifest(stateful);
+
+    expect(manifest).not.toBeNull();
+    expect(manifest?.binding.p13RunId).toBe('p13-current-run');
+    expect(runReads).toBe(1);
+  });
+
+  it('fails closed for revoked plan evidence', () => {
+    const revoked = Proxy.revocable(validPlan(), {});
+    revoked.revoke();
+
+    expect(() => buildP14ProposedChangeReviewManifest(revoked.proxy)).not.toThrow();
+    expect(buildP14ProposedChangeReviewManifest(revoked.proxy)).toBeNull();
+  });
+
   it('fails closed for null or integrity-invalid plans', () => {
     expect(buildP14ProposedChangeReviewManifest(null)).toBeNull();
 
