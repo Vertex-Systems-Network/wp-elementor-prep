@@ -9,7 +9,8 @@
 - Callback-side mutation can no longer rewrite later core action expectations, source/candidate correlation, validation/re-score inputs, retention evidence expectations or cleanup receipt identity. Existing adapter-output validation and source-immutability proof remain authoritative.
 - Added `tests/p14-adapter-input-isolation.test.ts` covering a two-action successful run where every object-bearing callback mutates its arguments, plus a transform/discard failure path proving cleanup receipt candidate identity remains stable even when callback copies are poisoned.
 - Initial implementation/test head `651d4c5f9d8d3e7776eb23b9eafeecb1727498d0` passed CI #952 including typecheck/full tests/builds/contracts, P12 Final Release Artifact #263 and P12 Offline Acceptance #307 on Ubuntu/macOS/Windows.
-- README, P14 foundation, PROJECT_STATE and NEXT_ACTIONS are synchronized in the same cycle; final exact-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable verification remain required before PR #230 may merge.
+- Exact synchronized PR head `7466a230344c8a85a10c4a68fb05216ac7d5d4cf` passed CI #958, Integration Readiness #310, P12 Final Release Artifact #269 and P12 Offline Acceptance #313 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main (`behind_by=0`) and was reported `mergeable=true` by GitHub.
+- PR #230 guarded squash-merged as `bad83a48ab58dfa8b956e7b6bf02c74a079a4665`; issue #229 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
 - Input isolation does not sandbox an adapter's actual candidate-side effects and introduces no production safe recipe, real Figma adapter/UI/mutation command, target-compatibility claim or production acceptance.
 
 ## 2026-09-12 — P14 safe-recipe registry semantic snapshot hardening
