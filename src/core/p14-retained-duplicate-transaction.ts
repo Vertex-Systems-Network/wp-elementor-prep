@@ -17,6 +17,7 @@ import {
   boundP14ReceiptIdentity,
   safeP14RuntimeErrorMessage,
 } from './p14-receipt-evidence';
+import { readP14RuntimeEventTimestamp } from './p14-timestamp-evidence';
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
@@ -64,7 +65,7 @@ export interface P14RetainedDuplicateRunInput {
   transactionId: string;
   preparedName?: string;
   allowPreparedWithReview?: boolean;
-  now?: () => string;
+  now?: () => unknown;
   shouldCancel?: () => boolean | Promise<boolean>;
 }
 
@@ -80,9 +81,13 @@ async function readP14SourceFingerprint(
   return evidence.value;
 }
 
-function event(now: () => string, state: P14TransactionState, detail?: string): P14TransactionEvent {
+function event(now: () => unknown, state: P14TransactionState, detail?: string): P14TransactionEvent {
   const safeDetail = detail ? boundP14ReceiptDetail(detail) : undefined;
-  return { state, at: now(), ...(safeDetail ? { detail: safeDetail } : {}) };
+  return {
+    state,
+    at: readP14RuntimeEventTimestamp(now),
+    ...(safeDetail ? { detail: safeDetail } : {}),
+  };
 }
 
 function receiptError(code: P14ErrorCode, stage: string, detail: string, recovery?: string): P14ReceiptError {
@@ -151,7 +156,7 @@ function cleanupOutcome(input: {
   candidate: P14CandidateHandle;
   appliedActions: P14RecipeExecutionResult[];
   events: P14TransactionEvent[];
-  now: () => string;
+  now: () => unknown;
   primaryError: P14ReceiptError;
   discardError: string | null;
   rejectedState?: 'REJECTED' | 'SOURCE_STALE' | 'CANCELLED';
@@ -201,7 +206,7 @@ function eligibleActions(plan: P14PreparationPlanV1): P14PreparationAction[] {
 function invalidPlanReceipt(
   value: unknown,
   transactionId: string,
-  now: () => string,
+  now: () => unknown,
   failures: string[],
   options: {
     code?: P14ErrorCode;
