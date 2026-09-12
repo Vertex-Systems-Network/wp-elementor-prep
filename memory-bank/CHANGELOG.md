@@ -10,8 +10,9 @@
 - Added `tests/p14-semantic-input-snapshot.test.ts` covering stateful nested action getter re-entry, stateful confirmation getter re-entry, evidence that grows oversized after the first bounds pass, and normal preparation regression.
 - Initial head `64168dea7b5c6aea126cc89404221da79973b5bd` passed typecheck and the new focused tests, but Final Release #237 surfaced one existing #216 receipt-correlation regression in `tests/p14-bounds-evidence-boundary.test.ts`: semantic capture failure retained readable source metadata instead of the established `UNKNOWN` / `p14-plan-invalid` second-pass fallback.
 - Corrected implementation head `8ec0c14c6301d16b8b9564a5b0d01423147629b5` restored the #216 correlation contract and passed CI #927 including full tests/builds/contracts, P12 Final Release Artifact #238 and P12 Offline Acceptance #282 on Ubuntu/macOS/Windows.
-- Updated README, P14 foundation, PROJECT_STATE and NEXT_ACTIONS for #223. Same-cycle docs synchronization is now complete on the branch; fresh exact-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #224 may merge.
-- No production safe recipe, real Figma adapter/UI/mutation command, target-compatibility claim or production acceptance was introduced. P14 remains runtime-unwired and production recipe authority remains empty.
+- Exact synchronized PR head `483e4b3f655ee8c99e844fbc9395313db22812f1` passed CI #932, Integration Readiness #289, P12 Final Release Artifact #243 and P12 Offline Acceptance #287 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main (`behind_by=0`) and was reported `mergeable=true` by GitHub.
+- PR #224 guarded squash-merged as `a84104b459d38b90368e0ef21ec1ac32788cd438`; issue #223 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
+- No production safe recipe, real Figma adapter/UI/mutation command, target-compatibility claim or production acceptance was introduced.
 
 ## 2026-09-12 — P14 unreadable nested bounded-input evidence hardening
 
