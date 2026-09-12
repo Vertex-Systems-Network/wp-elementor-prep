@@ -1,4 +1,6 @@
 import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import { snapshotP14AdapterOutputArray } from './p14-adapter-output-snapshot';
+import { snapshotP14SemanticInputEvidence } from './p14-semantic-input-snapshot';
 import type { P14PreparationPlanV1 } from './p14-preparation-types';
 
 export const P14_VALIDATION_PROFILE_COVERAGE_VERSION = 1 as const;
@@ -21,7 +23,7 @@ function stableUnique(values: string[]): string[] {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b));
 }
 
-export function requiredP14ValidationProfileIds(plan: P14PreparationPlanV1): string[] {
+function requiredP14ValidationProfileIdsFromStablePlan(plan: P14PreparationPlanV1): string[] {
   return stableUnique(
     plan.actions
       .filter((action) => action.decision === 'ELIGIBLE')
@@ -30,15 +32,41 @@ export function requiredP14ValidationProfileIds(plan: P14PreparationPlanV1): str
   );
 }
 
+export function requiredP14ValidationProfileIds(plan: P14PreparationPlanV1): string[] {
+  const planSnapshot = snapshotP14SemanticInputEvidence(
+    plan,
+    undefined,
+    DEFAULT_P14_INPUT_BOUNDS,
+  );
+  if (!planSnapshot.valid) return [];
+  return requiredP14ValidationProfileIdsFromStablePlan(planSnapshot.plan as P14PreparationPlanV1);
+}
+
 export function assessP14ValidationProfileCoverage(
   plan: P14PreparationPlanV1,
   profileIdsRun: unknown,
 ): P14ValidationProfileCoverageResult {
   const failures: string[] = [];
-  const requiredProfileIds = requiredP14ValidationProfileIds(plan);
+  const planSnapshot = snapshotP14SemanticInputEvidence(
+    plan,
+    undefined,
+    DEFAULT_P14_INPUT_BOUNDS,
+  );
+  if (!planSnapshot.valid) {
+    return {
+      version: P14_VALIDATION_PROFILE_COVERAGE_VERSION,
+      valid: false,
+      failures: planSnapshot.failures.map((failure) => `Invalid P14 validation coverage plan evidence: ${failure}`),
+      requiredProfileIds: [],
+      observedProfileIds: [],
+    };
+  }
+
+  const stablePlan = planSnapshot.plan as P14PreparationPlanV1;
+  const requiredProfileIds = requiredP14ValidationProfileIdsFromStablePlan(stablePlan);
   let observedProfileIds: string[] = [];
 
-  const eligibleActions = plan.actions.filter((action) => action.decision === 'ELIGIBLE');
+  const eligibleActions = stablePlan.actions.filter((action) => action.decision === 'ELIGIBLE');
   if (eligibleActions.length > 0 && requiredProfileIds.length === 0) {
     failures.push('Eligible P14 actions do not expose any bounded validation profile IDs.');
   }
@@ -46,14 +74,18 @@ export function assessP14ValidationProfileCoverage(
     failures.push('One or more eligible P14 actions has a missing or oversized validation profile ID.');
   }
 
-  if (!Array.isArray(profileIdsRun)) {
-    failures.push('Validation evidence must include profileIdsRun as an array.');
-  } else if (profileIdsRun.length > DEFAULT_P14_INPUT_BOUNDS.maxActions) {
-    failures.push(`Validation profile evidence exceeds bounded profile count ${DEFAULT_P14_INPUT_BOUNDS.maxActions}.`);
+  const observedSnapshot = snapshotP14AdapterOutputArray(
+    profileIdsRun,
+    DEFAULT_P14_INPUT_BOUNDS.maxActions,
+    'Validation profile evidence',
+    'profile count',
+  );
+  if (!observedSnapshot.valid || !observedSnapshot.value) {
+    failures.push(...observedSnapshot.failures);
   } else {
     const validIds: string[] = [];
     let malformed = false;
-    for (const value of profileIdsRun) {
+    for (const value of observedSnapshot.value) {
       if (!boundedId(value)) {
         malformed = true;
         continue;
