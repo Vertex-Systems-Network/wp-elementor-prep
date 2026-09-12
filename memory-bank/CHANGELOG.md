@@ -52,136 +52,218 @@
 - Added `tests/p14-run-control-evidence.test.ts` covering throwing bounds getters, malformed control types/values, truthy non-boolean review authorization, normalized runtime identities, explicit boolean review authorization and oversized-control regression semantics.
 - Initial implementation head `9e4b0ca8c7abf69d2c7052bcf26f48526e0587dc` passed CI #876 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #187 passed; P12 Offline Acceptance #231 passed on Ubuntu/macOS/Windows.
 - Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #207. No real Figma mutation command, production recipe authority, target-compatibility claim or production acceptance was introduced.
-- Final synchronized PR head `c3b577bcf09e3f97060cfcba7b76d202e9119019` passed CI #882, Integration Readiness #247, P12 Final Release Artifact #193 and P12 Offline Acceptance #237 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main (`behind_by=0`) and was reported `mergeable=true` by GitHub.
-- PR #208 guarded squash-merged as `df1e8f33394f13a371c2ff0b97bb6eceb321fd91`; issue #207 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
+- Final synchronized PR head `c3b577bcf09e3f97060cfcba7b76d202e9119019` passed CI #882, Integration Readiness #247, P12 Final Release Artifact #193 and P12 Offline Acceptance #237 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main (`behind_by=0`) and was reported `mergeable=true`, then guarded squash-merged as `df1e8f33394f13a371c2ff0b97bb6eceb321fd91`. Issue #207 closed completed.
 
-## 2026-09-12 — P14 coordinator runtime-evidence and lease-cleanup hardening
+### #201 — P14 transaction coordinator runtime evidence and lease cleanup
 
-- Opened issue #201 and focused PR #205 (`fix/p14-coordinator-runtime-evidence-201`) for the remaining injected source-transaction coordinator trust-boundary gap.
-- Added runtime validation for coordinator acquisition evidence: acquisition flag, refusal reason, optional owner identities and acquired lease identities are treated as unknown evidence and bounded before transaction semantics use them.
-- Acquired lease evidence must match the exact normalized requested source scope and transaction ID; unreadable/proxy-backed or malformed evidence fails closed before adapter access.
-- If malformed evidence still claims `acquired: true`, the transaction makes one bounded best-effort release attempt using the exact expected source/transaction lease identity.
-- Coordinator release now succeeds only on literal `true`; `false`, non-boolean runtime evidence or throw is converted to bounded `CLEANUP_REQUIRED` evidence at stage `coordination-release` instead of escaping or being silently ignored.
-- Receipt integrity now permits coordinator-release cleanup with truthful retained-candidate/retention evidence when finalization already succeeded, or without candidate evidence when the release problem occurs before a candidate exists.
-- Added `tests/p14-coordinator-runtime-evidence.test.ts` covering throwing/unreadable/malformed acquisition, oversized owner identity, claimed-acquired recovery, release false/throw, pre-clone release cleanup, default coordinator success and NO_CHANGES_NEEDED no-lease behavior.
-- Initial code/test head `511bf68adbe1859695d7dbe2dea12e974afa024f` passed CI #867 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #178 passed; P12 Offline Acceptance #222 passed on Ubuntu/macOS/Windows.
-- Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #201. No distributed lock, real Figma mutation command, production recipe authority, target-compatibility claim or production acceptance was introduced.
-- Accidental empty issues #202, #203 and #204 were immediately closed as `not_planned`; they carry no implementation scope and #201 remains authoritative.
-- Final synchronized PR head `1f76443e652f5d7c2c3dd9498b33463c1c2e7e03` passed CI #872, Integration Readiness #239, P12 Final Release Artifact #183 and P12 Offline Acceptance #227 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main and was reported mergeable by GitHub.
-- PR #205 guarded squash-merged as `e80bf4c21b64d6b72714965f4e954759e1c4159d`; issue #201 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
+Classification: **COMPLETED / merged through PR #205**.
 
-## 2026-09-12 — P14 safe-recipe registry resource bounding
+PR #205 (`fix/p14-coordinator-runtime-evidence-201`) closed the injected-coordinator trust-boundary gap without changing recipe or target authority:
 
-- Opened issue #198 and focused PR #199 (`fix/p14-registry-bounds-198`) for the remaining safe-recipe registry resource-bound gap before semantic authorization.
-- Added `src/core/p14-registry-bounds.ts` with a resource-only `assessP14SafeRecipeRegistryBounds(...)` gate that reuses the existing P14 action/dependency/conflict/mutation/identity limits.
-- Safe-recipe registry `bindings`, recipe `sourceRuleIds`, `prerequisites`, `conflictsWith` and `mutationAllowlist` are now count-bounded before semantic item traversal; binding/recipe/profile/order and nested rule/dependency/conflict identities are bounded before authorization validation.
-- `validateP14SafeRecipeRegistry(...)` applies the bounds gate first, so direct validation, P13→P14 resolution and runtime plan authorization inherit the same resource contract.
-- Oversized registry evidence preserves the existing execution result `BLOCKED` + `P14_RECIPE_UNAUTHORIZED`; no new transaction status/error code or mutation authority was introduced.
-- Added `tests/p14-registry-bounds.test.ts` covering exact boundaries, oversized identities, top-level/nested proxy arrays that permit only `.length`, bounded malformed registries, empty production registry preservation, and zero coordinator/adapter access on transaction rejection.
-- Initial code/test head `4ebf8328159f6d0d94ba8b606987cb8c0599a66a` passed CI #858, P12 Final Release Artifact #169 and P12 Offline Acceptance #213 on Ubuntu/macOS/Windows.
-- Final synchronized PR head `e782a08090a4e158f99da22bf25d8fff60c8c529` passed CI #863, Integration Readiness #231, P12 Final Release Artifact #174 and P12 Offline Acceptance #218 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main and was reported mergeable by GitHub.
-- PR #199 squash-merged as `80cefcb8b90a85b5e5a8b5ad4e6a0f65ddf6d12b`; issue #198 closed completed. P14 remains runtime-unwired and production recipe authority remains empty.
-- Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS without enabling real Figma mutation, registering a production recipe, or creating target-compatibility/production-acceptance authority.
+1. `assessP14TransactionLeaseResultEvidence(...)` validates acquisition results as runtime evidence before any adapter access;
+2. acquired lease source scope and transaction ID must be bounded and exactly match the normalized requested identities;
+3. refusal reasons are restricted to the coordinator contract and optional owner identities are bounded before receipt use;
+4. throwing, unreadable proxy-backed or malformed acquisition evidence fails closed as structured coordination evidence;
+5. malformed evidence that still claims acquisition triggers a one-shot best-effort release using the exact expected lease identity;
+6. coordinator release is considered successful only when it returns literal `true`;
+7. release false/non-boolean/throw cannot escape or be silently ignored and instead converts the terminal transaction outcome to `CLEANUP_REQUIRED` with bounded `coordination-release` evidence;
+8. if retention already succeeded, truthful retained candidate/retention/validation/re-score evidence is preserved while lease recovery remains required; pre-clone cleanup failure does not invent a candidate;
+9. default coordinator conflict/concurrency behavior and NO_CHANGES_NEEDED no-lease behavior remain unchanged;
+10. no distributed locking, host authentication, real Figma mutation surface or production recipe authority is introduced.
 
-## 2026-09-12 — P14 runtime clock and event-timestamp evidence hardening
+Initial code/test head `511bf68adbe1859695d7dbe2dea12e974afa024f` passed CI #867, P12 Final Release Artifact #178 and P12 Offline Acceptance #222 on Ubuntu/macOS/Windows. Exact synchronized head `1f76443e652f5d7c2c3dd9498b33463c1c2e7e03` then passed CI #872, Integration Readiness #239, P12 Final Release Artifact #183 and P12 Offline Acceptance #227 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `e80bf4c21b64d6b72714965f4e954759e1c4159d`. Issue #201 closed completed.
 
-- Opened issue #195 and focused PR #196 (`fix/p14-runtime-clock-evidence-195`) for the remaining untrusted runtime-clock/event-timestamp evidence gap.
-- Added `src/core/p14-timestamp-evidence.ts` with a shared strict normalized UTC millisecond timestamp validator, explicit `UNKNOWN` event-time sentinel and fail-safe runtime clock reader.
-- P14 preparation confirmation build/validation now reuses the shared normalized UTC validator; confirmation timestamps remain strict reviewed-intent evidence and do not accept `UNKNOWN`.
-- Receipt event integrity now accepts only normalized UTC event time or explicit `UNKNOWN`, and rejects oversized/non-canonical/impossible timestamp evidence before `Date.parse(...)`.
-- Transaction event construction now treats `now()` as untrusted metadata evidence: throw, non-string, oversized and non-canonical values cannot escape the transaction and are represented as unavailable time rather than fabricated wall-clock evidence.
-- Added `tests/p14-timestamp-evidence.test.ts` covering pre-parse length rejection, strict timestamp shapes, hostile clock callbacks, confirmation compatibility, valid-clock preservation and forged receipt timestamps.
-- Initial PR head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` passed P12 Offline Acceptance #203 but exposed a test-only TypeScript inference failure in CI #848 / P12 Final Release Artifact #159. The heterogeneous test callbacks were explicitly typed in follow-up commit `4d2b56497d90c58c71293ec9f473260fb9c8cef8`; no production clock logic change was required for that failure.
-- Updated `docs/P14_FOUNDATION_IMPLEMENTATION.md`, README, PROJECT_STATE and NEXT_ACTIONS with the timestamp evidence contract. No real Figma mutation command, production recipe authority, target-compatibility claim or acceptance authority was introduced.
-- Final synchronized PR head `47cb0b4d2d3c53f7f818af760131cc78737cb5c4` passed CI #854, Integration Readiness #224, P12 Final Release Artifact #165 and P12 Offline Acceptance #209 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main and was reported mergeable by GitHub.
-- PR #196 squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf`; issue #195 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
+Accidental issues #202, #203 and #204 were created empty during tool invocation, immediately marked **CLOSED / NOT PLANNED**, and carry no work; #201 is the only authoritative implementation issue for this slice.
 
-## 2026-09-12 — P14 receipt envelope and runtime-diagnostic hardening
+### #198 — P14 safe-recipe registry evidence bounds
 
-- Opened issue #192 and focused PR #193 (`fix/p14-receipt-envelope-bounds-192`) for the remaining P14 receipt-envelope/resource-safety gap.
-- Added `src/core/p14-receipt-evidence.ts` with shared receipt collection, identity/detail bounding and hostile runtime-error rendering helpers based on the existing P14 safety limits.
-- Receipt integrity now count-bounds `appliedActions`, `errors` and `events` from `.length` before item traversal, preventing forged oversized collections from triggering unbounded iteration or status-specific scans.
-- Receipt `transactionId`, `p13RunId`, `planDigest`, source node identity and error stage now use the existing P14 identity bound; error detail/recovery and event detail use the existing detail bound.
-- Transaction `receiptError(...)` and event construction now emit bounded diagnostics by construction. Adapter and discard exception text is bounded before entering receipt state; hostile exception stringification falls back deterministically instead of escaping the transaction.
-- Added `tests/p14-receipt-envelope-bounds.test.ts` covering exact limits, forged oversized top-level evidence, proxy-backed no-traversal collection checks, long adapter/discard exceptions and exception objects whose `toString()` throws.
-- Updated `docs/P14_FOUNDATION_IMPLEMENTATION.md` with the bounded receipt-envelope/runtime-diagnostic contract and new safety invariants. No real Figma mutation command, production recipe authority, target-compatibility claim or acceptance authority was introduced.
-- Pre-memory-sync PR head `7a031c2f8e2b405e084ae2fbdd677205d9e9c7e7` passed CI #840 including typecheck/full tests/builds/contracts, P12 Final Release Artifact #151, and P12 Offline Acceptance #195 on Ubuntu/macOS/Windows.
-- Final synchronized PR head `5b9a02ce3b15ab49a1f281b51494e51bc5eb0e57` passed CI #844, Integration Readiness #217, P12 Final Release Artifact #155 and P12 Offline Acceptance #199 on Ubuntu/macOS/Windows; it had zero unresolved review threads/comments, remained current with main and was reported mergeable by GitHub.
-- PR #193 squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd`; issue #192 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
+Classification: **COMPLETED / merged through PR #199**.
 
-## 2026-09-11 — R0 commercial market refresh
+PR #199 (`fix/p14-registry-bounds-198`) closed the registry resource-bound gap without changing authorization authority:
 
-- Ran a fresh public-market scan against current UiChemy, Anima, Locofy, Builder.io and first-party Figma product/documentation pages.
-- Retained the dated evidence and source URLs in `docs/R0_MARKET_SNAPSHOT_2026-09-11.md`; competitor claims are explicitly market signals rather than target-schema/API authority.
-- Confirmed that generic `Figma -> code` generation is heavily commoditized and now overlaps with Figma's own code/agent direction.
-- Reinforced the product moat as `Audit -> Target Compatibility -> Target-Ready Duplicate -> declared/native mapping -> artifact/environment validation -> render/round-trip proof -> receipt`.
-- Added P15 planning requirement for Elementor/WordPress environment diagnostics with `DECLARED ENVIRONMENT` vs `OBSERVED ENVIRONMENT`; local JSON/ZIP validity cannot imply an unobserved live import.
-- Promoted the target capability matrix to a user-facing commercial surface with explicit `NATIVE`, `NATIVE + CSS`, `VISUAL ASSET FALLBACK`, `MANUAL REVIEW` and `UNSUPPORTED` strategies and no silent fallback.
-- Reinforced one neutral semantic IR across WordPress/code targets so users are not forced to re-tag/re-prepare the same safe intent for every target adapter.
-- Retained section-transfer speed as a product requirement while keeping documented artifacts / the versioned WP Builders Bridge ahead of undocumented private clipboard dependencies.
-- Added durable decisions D-038 through D-042: verified readiness states are user-facing; Elementor environment truth stays evidence-scoped; shared IR should avoid unnecessary re-tagging; failed/refused generation is non-billable if credits are introduced; exact pricing remains evidence-driven rather than copied from competitors.
-- Retained API/MCP/agent access as a later Pro/Agency differentiator after deterministic target contracts are accepted.
-- No P13-P26 runtime implementation or acceptance credit was granted. #84 remains the internal P12 gate before implementation starts.
+1. `assessP14SafeRecipeRegistryBounds(...)` reuses existing P14 safety limits rather than defining new registry-specific limits;
+2. top-level `bindings` is count-bounded before binding traversal;
+3. recipe `sourceRuleIds`, `prerequisites`, `conflictsWith` and `mutationAllowlist` are count-bounded before item traversal;
+4. binding/rule/recipe/profile/order/dependency/conflict identities are bounded before semantic validation;
+5. `validateP14SafeRecipeRegistry(...)` applies the resource gate before its existing semantic traversal, so handoff resolution and runtime authorization inherit it;
+6. oversized proxy-backed arrays are rejected from `.length` without item/property traversal;
+7. oversized and bounded-malformed registries preserve the existing execution outcome `BLOCKED` + `P14_RECIPE_UNAUTHORIZED` before confirmation/coordinator/adapter access;
+8. the production safe-recipe registry remains empty and no mutating recipe authority is introduced.
 
-## 2026-09-11 — P12 publisher evidence intake hardening
+Initial code/test head `4ebf8328159f6d0d94ba8b606987cb8c0599a66a` passed CI #858, P12 Final Release Artifact #169 and P12 Offline Acceptance #213 on Ubuntu/macOS/Windows. Exact synchronized head `e782a08090a4e158f99da22bf25d8fff60c8c529` then passed CI #863, Integration Readiness #231, P12 Final Release Artifact #174 and P12 Offline Acceptance #218 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then squash-merged as `80cefcb8b90a85b5e5a8b5ad4e6a0f65ddf6d12b`. Issue #198 closed completed.
 
-- Corrected issue #84 body so release #20 / plugin ID `1680034649341961379` is the authoritative publishing candidate and old release #17 is retained only as historical runtime evidence.
-- Opened issue #126 to make the final package/publisher/2FA evidence collection deterministic and fail-closed.
-- Added `config/p12-publisher-candidate.json` with the exact release #20 source, plugin ID, artifact identity, exact publish ZIP SHA-256, extracted plugin file hashes, manifest contract and required evidence/attestations.
-- Added `scripts/p12-publisher-evidence-intake.mjs` and `npm run p12:publisher-evidence`.
-- Evidence intake verifies the exact publish ZIP SHA-256 and extracted `code.js`, `manifest.json`, `ui.html` hashes before accepting screenshot evidence.
-- Intake rejects missing/empty/oversized/symlinked evidence, wrong or extra package files, manifest contract drift and missing operator confirmations.
-- Runtime, Publish/Add-final-details and 2FA screenshots are hashed but never OCRed or machine-interpreted; live facts remain explicit operator attestations.
-- Receipt semantics explicitly keep `acceptanceAuthority: false`, `screenshotsAreHashedNotInterpreted: true` and `finalInternalAcceptanceRequiresSeparateReview: true`.
-- Added regression tests for the success path, extracted-file tamper, exact ZIP tamper, missing 2FA attestation and manifest semantic mismatch.
-- Added `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md` with the exact operator command and fail-closed behavior.
-- PR #129 head `6a60ae540fa6fdacca8a30d73edd1ae3c61714e6` passed CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41, had no review/thread blockers, and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7`; issue #126 closed completed.
-- P12 remains `80%`. The next genuine action is live release #20 runtime/publish/2FA screenshots -> deterministic intake receipt -> final internal exit review. P13 remains blocked.
+### #195 — P14 runtime clock and event timestamp evidence
 
-## 2026-09-11 — Reliability/compatibility audit for P13-P26
+Classification: **COMPLETED / merged through PR #196**.
 
-- Completed the remaining post-plan housekeeping by merging PR #123 as `d34c026202ae6ecd8f88f71e6056d619578ce56f` after CI #723, Integration Readiness #158, P12 Offline Acceptance #78 and P12 Final Release Artifact #34 passed.
-- Re-audited the post-P12 commercial plan against current official Figma, Elementor and WordPress/Gutenberg documentation.
-- Added `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md` as a new recurring **R1** gate after R0 market/platform research and before major adapter implementation.
-- Added the requirement that every adapter use an immutable versioned TargetProfile plus a machine-readable capability descriptor so the UI cannot submit stale/invalid target-option combinations.
-- Added strict separation between SOURCE READY, ARTIFACT VALIDATED, IMPORT VERIFIED, RENDER VERIFIED and ROUND-TRIP VERIFIED so local package validation cannot be misrepresented as a real live-site guarantee.
-- Hardened Elementor planning around separate v3 Container and v4 Atomic adapter families, explicit Core/Pro overlays, template-vs-ZIP-vs-kit separation, global-reference closure and real target import acceptance.
-- Hardened Gutenberg planning around target-version contracts, parse/serialize stability and real editor-open validity checks.
-- Added atomic target-package generation: temporary candidate -> validate -> finalize/checksum -> Download/Copy. Failed/cancelled partial artifacts are discarded.
-- Added no-silent-fallback policy: native+CSS, visual asset, manual placeholder or unsupported fallbacks must be visible and recorded rather than substituted silently.
-- Added a canonical target-export state machine, source staleness fingerprints, deterministic run/receipt identity, cooperative cancel/retry and bounded sequential job orchestration.
-- Added structured target error codes and explicit FAILED_RECOVERABLE vs FAILED_BLOCKED outcomes instead of generic-only errors.
-- Added generated-framework build matrices with pinned dependency versions; accepted artifacts may not use unbounded `latest` versions.
-- Added code-import archive defenses for path traversal, zip bombs, excessive files/nesting and arbitrary JavaScript execution.
-- Corrected asset semantics using official Figma APIs: image-fill stored bytes may be exported as `Stored Original`, while crop/mask/effects/layout appearance is a distinct rendered export. Stored bytes are not claimed as upstream-upload provenance.
-- Retained raw-font policy: font identity/usage manifest from Figma; raw binaries only when separately user-supplied and license-permitted.
-- Kept the Community core offline under `allowedDomains: ["none"]`; the preferred WP Builders Bridge is file/paste import first. Arbitrary direct customer-domain push remains a separately accepted future networked module.
-- Added durable decisions D-031 through D-037 and synchronized AGENTS, README, PROJECT_STATE, NEXT_ACTIONS, ROADMAP, AI_NATIVE_PLAN and FEATURE_PLAN.
-- First PR #124 attempt exposed a real status-contract failure because R0/R1 used `N/A` while only DEFERRED modules may use `N/A`; corrected the README to mark the gate definitions `100% / DEFINED-RECURRING` while preserving the requirement to execute each gate per adapter.
-- PR #124 final head `10b025f62679191ec43dd5afd50e6e69e8e3fcc4` passed CI #726, Integration Readiness #161, P12 Offline Acceptance #81 and P12 Final Release Artifact #37 with no review/thread blockers.
-- PR #124 squash-merged the R1 reliability/compatibility plan as `4d38c46c359bd030bf36100f4424760b1380db81`.
-- No P13-P26 runtime implementation or acceptance percentage was granted; #84 remains the internal gate before P13 starts.
+PR #196 (`fix/p14-runtime-clock-evidence-195`) completed the clock-evidence scope without adding any real Figma mutation surface or production recipe authority:
 
-## 2026-09-11 — Market-researched multi-target commercial alignment
+1. shared normalized UTC millisecond timestamp validation is used by confirmation and event evidence;
+2. confirmations remain strict and reject unavailable-time evidence;
+3. receipt event timestamps accept only normalized UTC or explicit `UNKNOWN`;
+4. oversized/non-canonical event timestamps are rejected before parsing;
+5. runtime `now()` throw/non-string/oversized/non-canonical output cannot escape the transaction and becomes `UNKNOWN`;
+6. `UNKNOWN` represents unavailable wall-clock evidence only and does not alter event state/detail, cleanup or terminal-status semantics;
+7. tests cover hostile callbacks, pre-parse length rejection, strict confirmation compatibility and forged receipt timestamps.
 
-- Expanded the post-P12 roadmap from P13-P21 to P13-P26 around the user-requested sales/client-growth direction.
-- Added recurring R0 AI-assisted market/platform research before major evolving target adapters; official platform documentation is preferred for technical format/API claims and competitor claims remain market signals only.
-- Added target-ready duplicate preparation so incompatible source designs can be safely prepared for a selected target without destructively rewriting the approved original.
-- Added planned native Elementor / Elementor Pro export with compatibility, alignment, widget, responsive, asset and package validation before JSON/ZIP/kit download where the documented target contract supports it.
-- Added planned Gutenberg native block/pattern export and selected-section transfer.
-- Added HTML/CSS/JS export and static-first code-to-design reconstruction; untrusted JavaScript execution remains disabled by default pending a separately accepted sandbox/companion specification.
-- Added a neutral framework adapter platform for React, Next.js, Vue, Nuxt, Svelte/SvelteKit, Angular, Astro and later adapters. NestJS is explicitly treated as optional backend/API scaffolding paired with a front-end adapter rather than a visual renderer.
-- Added asset pack planning for raster images, SVG/icons, source-oriented vs rendered/display-size/custom-scale image choices, font family/style/usage manifests and user-supplied licensed raw-font packaging only where technically/legal available.
-- Added round-trip target rendering/visual diff, target capability matrix, existing-component bindings, change-only regeneration, optional `WP Builders Bridge`, CMS/dynamic mappings and stronger agency/project workflows.
-- Added durable decisions D-023 through D-030 for research, target-ready duplication, versioned adapter validation, documented WordPress transfer, code-import sandboxing, honest asset/font export, framework adapter isolation and round-trip QA.
-- Updated issue #119 as the P13-P26 owner. No runtime/plugin feature or acceptance percentage was granted; P13 implementation remains blocked until #84 internal P12 exit genuinely closes.
-- Retained the previous detailed history byte-for-byte in `memory-bank/CHANGELOG_ARCHIVE_PRE_MULTI_TARGET.md`.
-- PR #122 head `40831f61a07036d233dbf7cad8a5396c0010641f` passed CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 with no review/thread blockers.
-- PR #122 squash-merged the researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565`.
-- Planning changes do not replace the retained P12 publishing candidate or grant P13-P26 implementation/runtime acceptance.
+Initial head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` passed P12 Offline Acceptance #203 but exposed a test-only TypeScript inference error in CI #848 / P12 Final Release Artifact #159. After explicit callback typing, exact synchronized head `47cb0b4d2d3c53f7f818af760131cc78737cb5c4` passed CI #854, Integration Readiness #224, P12 Final Release Artifact #165 and P12 Offline Acceptance #209 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf`. Issue #195 closed completed.
 
-## Historical archive
+### #192 — P14 bounded receipt envelope and runtime diagnostics
 
-Detailed history before this roadmap alignment is retained byte-for-byte in:
+Classification: **COMPLETED / merged through PR #193**.
 
-`memory-bank/CHANGELOG_ARCHIVE_PRE_MULTI_TARGET.md`
+PR #193 (`fix/p14-receipt-envelope-bounds-192`) completed the issue scope without adding any real Figma mutation surface or production recipe authority:
+
+1. `appliedActions`, `errors` and `events` are count-bounded before item traversal using the existing P14 action-count safety limit;
+2. receipt `transactionId`, `p13RunId`, `planDigest`, source-node identity and error stages use the existing identity bound;
+3. error detail/recovery and event detail use the existing detail bound;
+4. transaction error/event constructors emit bounded diagnostics by construction;
+5. adapter/discard exception text is rendered fail-closed, including hostile `toString()` behavior;
+6. regression coverage includes proxy-backed no-traversal arrays, exact-boundary acceptance, forged oversized evidence and oversized/hostile runtime exceptions;
+7. `docs/P14_FOUNDATION_IMPLEMENTATION.md` records the invariant without changing runtime/acceptance authority.
+
+Exact synchronized PR head `5b9a02ce3b15ab49a1f281b51494e51bc5eb0e57` passed CI #844, Integration Readiness #217, P12 Final Release Artifact #155 and P12 Offline Acceptance #199 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/comments, was current with main (`behind_by=0`) and `mergeable=true`, then squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd`. Issue #192 closed completed.
+
+## R0 research actions already captured
+
+PR #131 retained the current September 2026 snapshot in `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`.
+
+The retained snapshot records:
+
+- official Elementor JSON/ZIP/template/kit import paths and modern container/Atomic data structures;
+- Elementor v4 Atomic architecture and hybrid coexistence with v3 content;
+- official Gutenberg serialization/parse/serialize model;
+- Figma export, original image-byte and font limitations;
+- market competition from native WordPress conversion and Figma-to-code tools;
+- current competitive pressure from UiChemy, Anima, Locofy, Builder.io and first-party Figma design-to-code direction;
+- the durable positioning rule that generic conversion alone is not the moat: validated target readiness, environment-aware diagnostics, explicit mapping/fallback states, render/round-trip proof and receipts are the stronger differentiators.
+
+Current-main checks on the retained R0 merge passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46.
+
+Before implementing P15, P16, P17 or P18, refresh official target docs and competitor baseline again rather than assuming this snapshot is still current.
+
+## R1 reliability actions now mandatory
+
+Canonical contract: `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md`.
+
+Before implementation of a target adapter, freeze and test:
+
+1. immutable versioned `TargetProfile` schema;
+2. adapter capability descriptor (`SUPPORTED`, `SUPPORTED_WITH_REVIEW`, `UNSUPPORTED`, `REQUIRES`);
+3. UI dependency/reset rules so stale incompatible options cannot survive target/version changes;
+4. target-specific structured error codes and recovery paths;
+5. source fingerprint/staleness policy;
+6. atomic generation/download policy;
+7. artifact schema/reference/assets validator;
+8. real target import/build/render harness where applicable;
+9. round-trip QA policy where feasible;
+10. acceptance labels: SOURCE READY / ARTIFACT VALIDATED / IMPORT VERIFIED / RENDER VERIFIED / ROUND-TRIP VERIFIED / REVIEW / BLOCKED.
+
+No adapter may claim live target compatibility from local package validation alone.
+
+## Current implementation sequence under the P13-P27 model
+
+### P13
+
+Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI integration and retained real-source calibration. Remaining work is #159 genuine real-plugin runtime/parity evidence and separate internal runtime acceptance. This is not a production-release claim.
+
+### P14
+
+Current work is target-neutral pure-core hardening only:
+
+1. complete #216 / PR #221 on its final synchronized head, then begin the next focused safety-gap audit from the resulting main;
+2. keep the approved source immutable and mutate only retained candidates;
+3. keep production safe-recipe authority empty until explicit acceptance;
+4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
+5. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
+6. continue focused safety-gap audits until core implementation is internally ready;
+7. require #159 before real Figma mutation exposure;
+8. require genuine real-Figma acceptance before any production mutation/readiness claim.
+
+### P15 Elementor
+
+Before implementation:
+
+1. R0 refresh official Elementor docs;
+2. R1 freeze separate initial adapter families (`elementor-v3-container`, `elementor-v4-atomic`);
+3. define Core/Pro capability overlays explicitly;
+4. distinguish template JSON, template ZIP and website-kit ZIP contracts;
+5. define global-style/variable/reference closure rules;
+6. define DECLARED vs OBSERVED WordPress environment profiles;
+7. add schema/package/asset validators;
+8. add real import tests into supported Elementor versions;
+9. add server/import failure diagnostics for ZIP support/upload/memory/third-party requirements where observable;
+10. prove section artifact/bridge flow without undocumented clipboard internals.
+
+### P16 Gutenberg
+
+Before implementation:
+
+1. R0 refresh target WordPress/block docs;
+2. R1 freeze WordPress version/block capability profile;
+3. native core-block mapping matrix;
+4. parse -> serialize -> parse stability tests;
+5. editor-open tests without invalid-block recovery prompts;
+6. explicit theme/custom-block dependency reporting;
+7. section/pattern transfer proof.
+
+### P17/P18 web/framework
+
+Before implementation:
+
+1. R0 demand/version research;
+2. R1 target profile and option capability matrix;
+3. generated project dependency versions pinned, never `latest`;
+4. generated fixture install/typecheck/build matrix;
+5. invalid option combinations impossible in UI and rejected by core contracts;
+6. static-first code import only;
+7. ZIP path traversal/zip-bomb/file-count/remote-resource tests;
+8. arbitrary JS remains OFF until separate sandbox acceptance.
+
+## Important implementation guardrails
+
+- Do not reverse-engineer undocumented Elementor clipboard internals; prefer template artifacts and optional WP Builders Bridge.
+- Keep the Community core offline; arbitrary direct push to customer WordPress domains is not part of the current `allowedDomains: ["none"]` contract.
+- Do not claim "NestJS design export"; NestJS is backend/API scaffold only and must pair with a front-end adapter.
+- Code-to-design JavaScript execution stays OFF by default until a separate sandbox specification is accepted.
+- Figma image-fill bytes may be exported as `Stored Original` when `getImageByHash(...).getBytesAsync()` succeeds; cropped/effected appearance is a separate rendered export.
+- Do not call stored image bytes the upstream upload source when provenance is unknown.
+- Raw font binaries are not exported from Figma merely because font names are accessible. Default is a font manifest; package raw fonts only when user-supplied and license-permitted.
+- Every downloadable target artifact requires target validation and an export receipt.
+- Offline-valid package != observed live-site import success.
+- Round-trip visual QA must never auto-pass unsupported target rendering.
+- Optional AI cannot authorize mutations, change score evidence or replace target validators.
+
+## Verification baseline
+
+For future implementation batches run the relevant subset of:
+
+```bash
+npm install
+npm run status:verify
+npm run typecheck
+npm test
+npm run build
+npm run build:cli
+npm run verify:release-contract
+npm run test:release-package
+npm run community:verify
+npm run p12:offline
+npm run integration:readiness
+```
+
+Target phases will add adapter capability, option-state, schema/package, malformed-input, import/build/render and round-trip harness tests.
+
+Runtime artifact preflight requires exact-build provenance, immutable/manifest checks and the active schema-v3 registry contract.
+
+## Progress tracking
+
+- historical P0-P7 core: `100%`;
+- P9/P10 accepted technical slices: `100%`;
+- P11 implementation: `100%`;
+- P12 final validation: `80%`;
+- R0/R1: planning gates, no runtime completion percentage;
+- P13 implementation: `100%` with runtime acceptance pending #159;
+- P14: pure-core implementation/hardening active, runtime unwired;
+- P15-P26: `0%`, preflight-frozen / implementation not started;
+- P27: final production-release gate defined, execution deferred.
