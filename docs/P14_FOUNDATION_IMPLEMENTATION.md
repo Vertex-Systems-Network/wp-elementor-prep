@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223, #226, #229  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223, #226, #229, #231  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded bounded semantic snapshots for known nested plan/confirmation evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry resource and semantic-snapshot evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, detached known-schema adapter callback input snapshots, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded bounded semantic snapshots for known nested plan/confirmation evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry resource and semantic-snapshot evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, detached known-schema adapter callback input snapshots, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded one-shot adapter-output semantic snapshots, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
 
 ## Bounded input preflight
 
@@ -160,17 +160,25 @@ Input isolation is not an adapter sandbox. It cannot prevent a real adapter from
 
 ## Bounded adapter-output evidence
 
-TypeScript adapter return types are not treated as runtime trust. Clone, recipe execution and retention outputs are validated as unknown evidence before their fields can affect transaction state or be copied into receipts.
+TypeScript adapter return types are not treated as runtime trust. Clone, recipe execution, runtime action-eligibility, validation, re-score and retention outputs are captured and validated as unknown evidence before their fields can affect transaction state or be copied into receipts.
+
+`src/core/p14-adapter-output-snapshot.ts` captures only each validator's declared known schema. Every declared top-level adapter-output property is read once through a guarded access and copied into a plain record before semantic comparisons or accepted-value construction. This is a shallow schema-driven evidence boundary, not arbitrary property enumeration and not a generic recursive deep clone.
+
+Adapter-owned collections that can affect later semantics are also detached before use. Runtime eligibility prerequisite IDs, validation profile IDs and validation checks are copied through guarded bounded `.length`/index reads into plain arrays. Each nested validation check then has its known `id`, `passed`, `required` and optional `detail` fields captured once before shape/resource validation. Accepted evidence therefore does not retain mutable adapter-owned array/object references.
+
+Readable stateful getters/proxies cannot present one value during shape validation and another during exact plan/transaction comparison or final accepted-copy construction. Throwing property/length/index access and revoked proxies, including a revoked proxy that makes `Array.isArray(...)` throw, fail closed as invalid adapter evidence rather than escaping the transaction. Existing failure stages/error codes and existing bounded count diagnostics remain authoritative.
 
 `validateP14CandidateHandleEvidence(...)` requires bounded non-empty source/candidate identities, exact approved-source binding and a candidate identity distinct from the source. Malformed clone evidence returns the existing clone-failure path before any recipe mutation starts.
 
 `validateP14RecipeExecutionResultEvidence(...)` requires bounded exact action/recipe identities, boolean outcome fields, exactly one of applied or accepted idempotent no-op, and bounded optional detail. The runtime transaction binds each result to the exact planned action before it is added to `appliedActions`. Malformed evidence triggers candidate cleanup and `P14_TRANSFORM_FAILED`; raw oversized result detail is not promoted into the receipt error.
 
+`validateP14RuntimeActionEligibilityEvidence(...)` binds the accepted plain eligibility evidence to the exact planned action/recipe and exact bounded prerequisite set before a later recipe can execute. `validateP14ValidationEvidence(...)` accepts only detached bounded profile/check evidence, and `validateP14RescoreEvidence(...)` consumes a plain one-shot re-score field snapshot before scored-P13 policy evaluation.
+
 `validateP14RetentionEvidence(...)` requires bounded transaction/source/retained-node/prepared-name identities and, during execution, exact equality with the current transaction, approved source, candidate and requested prepared name. Malformed or mismatched retention evidence cannot produce `PREPARED`; it follows the finalization cleanup path.
 
 Receipt integrity reuses the same bounded execution-result/retention shape validators and requires bounded candidate identity evidence. A copied or forged receipt therefore cannot become valid merely because an oversized runtime identity is non-empty.
 
-These validators do not invent a Figma node-ID format, authenticate a host, or prove that an adapter really performed the claimed external operation. They establish bounded shape and exact transaction identity binding only.
+These validators and snapshots do not invent a Figma node-ID format, authenticate a host, prove that an adapter really performed the claimed external operation, authorize a production recipe, or establish target compatibility/production acceptance. They establish stable bounded runtime evidence shape and exact transaction identity binding only.
 
 ## Active recipe validation-profile coverage
 
@@ -406,6 +414,10 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 86. Callback-side mutation of adapter argument objects cannot alter later core action authorization, source/candidate correlation, validation/re-score inputs, retention evidence expectations or cleanup receipt identity.
 87. Adapter input isolation does not sandbox the adapter's real candidate-side effects and does not replace existing adapter-output validation or source-immutability proof.
 88. Adapter callback input isolation adds no production recipe, real Figma mutation surface, target compatibility or production-acceptance authority.
+89. Known adapter-output schema fields are captured through guarded one-shot reads before semantic validation or accepted-copy construction; readable stateful getters cannot change meaning between checks.
+90. Adapter-owned prerequisite/profile/check arrays are copied through bounded guarded length/index reads into plain evidence before later coverage, policy or receipt semantics, and accepted nested validation checks do not retain adapter-owned object references.
+91. Throwing or revoked adapter-output proxies fail closed as invalid evidence, including revoked array proxies whose array inspection itself throws; they cannot escape the transaction promise.
+92. Adapter-output semantic snapshotting is shallow and schema-driven, preserves existing failure/diagnostic authority, and adds no production recipe, real Figma mutation surface, host-authentication proof, target compatibility or production-acceptance authority.
 
 ## Deliberately not wired yet
 
