@@ -1,0 +1,16 @@
+-rw-r--r-- 1 1001 1001 237554 Sep 12 17:15 about-left.png
+-rw-r--r-- 1 1001 1001 216422 Sep 12 17:15 about-right.png
+-rw-r--r-- 1 1001 1001 861306 Sep 12 17:15 hero-base.png
+-rw-r--r-- 1 1001 1001 861306 Sep 12 17:15 hero-foreground.png
+-rw-r--r-- 1 1001 1001 391505 Sep 12 17:15 journey-early.png
+-rw-r--r-- 1 1001 1001 344895 Sep 12 17:15 journey-formation.png
+-rw-r--r-- 1 1001 1001 262496 Sep 12 17:15 journey-growth.png
+-rw-r--r-- 1 1001 1001 168085 Sep 12 17:15 media-black-suit.png
+-rw-r--r-- 1 1001 1001 690372 Sep 12 17:15 media-coffee.png
+-rw-r--r-- 1 1001 1001 215630 Sep 12 17:15 media-cream-blouse.png
+-rw-r--r-- 1 1001 1001 170355 Sep 12 17:15 media-dark-portrait.png
+-rw-r--r-- 1 1001 1001 289025 Sep 12 17:15 media-desk.png
+-rw-r--r-- 1 1001 1001 166876 Sep 12 17:15 media-walking.png
+-rw-r--r-- 1 1001 1001 347525 Sep 12 17:15 sector-book.png
+-rw-r--r-- 1 1001 1001 219802 Sep 12 17:15 sector-editorial.png
+-rw-r--r-- 1 1001 1001 295339 Sep 12 17:15 sector-venture.png
