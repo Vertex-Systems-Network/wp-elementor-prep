@@ -10,7 +10,8 @@
 - Existing transaction authority remains unchanged: invalid/unreadable/oversized registry evidence still yields `BLOCKED` + `P14_RECIPE_UNAUTHORIZED` before confirmation, source coordination or adapter access; the production safe-recipe registry remains empty.
 - Added `tests/p14-registry-semantic-snapshot.test.ts` covering top-level binding re-entry, nested recipe re-entry, evidence that grows oversized after the first bounds pass, capture-time unreadability and normal exact authorization behavior.
 - Initial implementation/test head `4bd44da760d0dc0558b4d7c710bd779d1dd1e534` passed CI #939 including status verification, typecheck, full tests, plugin/CLI builds, release/package/community verification and local Figma import preparation; P12 Final Release Artifact #250 passed; P12 Offline Acceptance #294 passed on Ubuntu/macOS/Windows.
-- README, P14 foundation, PROJECT_STATE and NEXT_ACTIONS are synchronized in the same cycle; final exact-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable verification remain required before PR #227 may merge.
+- Exact synchronized PR head `6446c49a6cf5da5d039600f96a0ac3bd03e2b904` passed CI #945, Integration Readiness #299, P12 Final Release Artifact #256 and P12 Offline Acceptance #300 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main (`behind_by=0`) and was reported `mergeable=true` by GitHub.
+- PR #227 guarded squash-merged as `e5e22a4c556856a7c2ab11dbb94025ee838e0bb4`; issue #226 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
 - No production safe recipe, real Figma adapter/UI/mutation command, target-compatibility claim or production acceptance was introduced.
 
 ## 2026-09-12 — P14 nested plan/confirmation semantic snapshot hardening
@@ -104,7 +105,7 @@
 - Opened issue #198 and focused PR #199 (`fix/p14-registry-bounds-198`) for the remaining safe-recipe registry resource-bound gap before semantic authorization.
 - Added `src/core/p14-registry-bounds.ts` with a resource-only `assessP14SafeRecipeRegistryBounds(...)` gate that reuses the existing P14 action/dependency/conflict/mutation/identity limits.
 - Safe-recipe registry `bindings`, recipe `sourceRuleIds`, `prerequisites`, `conflictsWith` and `mutationAllowlist` are now count-bounded before semantic item traversal; binding/recipe/profile/order and nested rule/dependency/conflict identities are bounded before authorization validation.
-- `validateP14SafeRecipeRegistry(...)` applies the bounds gate first, so direct validation, P13→P14 resolution and runtime plan authorization inherit the same resource contract.
+- `validateP14SafeRecipeRegistry(...)` applies the resource gate first, so direct validation, P13→P14 resolution and runtime plan authorization inherit the same resource contract.
 - Oversized registry evidence preserves the existing execution result `BLOCKED` + `P14_RECIPE_UNAUTHORIZED`; no new transaction status/error code or mutation authority was introduced.
 - Added `tests/p14-registry-bounds.test.ts` covering exact boundaries, oversized identities, top-level/nested proxy arrays that permit only `.length`, bounded malformed registries, empty production registry preservation, and zero coordinator/adapter access on transaction rejection.
 - Initial code/test head `4ebf8328159f6d0d94ba8b606987cb8c0599a66a` passed CI #858, P12 Final Release Artifact #169 and P12 Offline Acceptance #213 on Ubuntu/macOS/Windows.
