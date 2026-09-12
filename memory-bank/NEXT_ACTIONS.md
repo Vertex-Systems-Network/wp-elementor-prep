@@ -81,11 +81,9 @@ Canonical future order:
 
 ### #223 — P14 nested plan/confirmation semantic snapshot
 
-Classification: **ACTIVE / PR #224**.
+Classification: **COMPLETED / merged through PR #224**.
 
-The fresh post-#216 audit confirmed a readable-but-stateful nested runtime-evidence gap: top-level references were stable and throwing bounds getters failed closed, but the same caller-owned plan/confirmation objects were still read by bounds, semantic validators and later transaction execution at different times.
-
-PR #224 (`fix/p14-semantic-snapshot-223`) narrows that boundary without changing mutation or target authority:
+PR #224 (`fix/p14-semantic-snapshot-223`) closed the readable-but-stateful nested semantic-evidence boundary without changing mutation or target authority:
 
 1. after the first bounded resource preflight, the known P14 plan and optional confirmation schema are copied through guarded, bounded property/index reads into plain semantic snapshots;
 2. only known P14 semantic fields are copied — this is not an arbitrary generic deep clone;
@@ -95,7 +93,7 @@ PR #224 (`fix/p14-semantic-snapshot-223`) narrows that boundary without changing
 6. the #216 second-pass unreadable-evidence correlation contract remains `UNKNOWN` / `p14-plan-invalid`;
 7. production safe-recipe authority remains empty and no real Figma adapter/UI/mutation command, target compatibility or production acceptance is introduced.
 
-Initial head `64168dea7b5c6aea126cc89404221da79973b5bd` passed typecheck and the new focused tests, but Final Release #237 exposed one existing #216 receipt-correlation regression. Corrected implementation head `8ec0c14c6301d16b8b9564a5b0d01423147629b5` restored that fallback and passed CI #927, P12 Final Release Artifact #238 and P12 Offline Acceptance #282 on Ubuntu/macOS/Windows. Same-cycle docs synchronization is in progress; fresh exact-head CI, Integration Readiness, Final Release Artifact, Offline Acceptance and final review/current-main/mergeable gates remain required before merge.
+Initial head `64168dea7b5c6aea126cc89404221da79973b5bd` exposed one existing #216 receipt-correlation regression in Final Release #237. Corrected implementation head `8ec0c14c6301d16b8b9564a5b0d01423147629b5` restored that fallback and passed CI #927, P12 Final Release Artifact #238 and P12 Offline Acceptance #282 on Ubuntu/macOS/Windows. Exact synchronized head `483e4b3f655ee8c99e844fbc9395313db22812f1` then passed CI #932, Integration Readiness #289, P12 Final Release Artifact #243 and P12 Offline Acceptance #287 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `a84104b459d38b90368e0ef21ec1ac32788cd438`. Issue #223 closed completed.
 
 ### #216 — P14 unreadable nested bounded-input evidence
 
@@ -281,7 +279,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #223 / PR #224 semantic snapshot hardening on the final synchronized head;
+1. start the next focused safety-gap audit from core main `a84104b...` now that #223 / PR #224 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
