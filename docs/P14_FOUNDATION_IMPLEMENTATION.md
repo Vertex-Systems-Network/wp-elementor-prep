@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION + READ-ONLY GUIDED PREPARE RUNTIME PREVIEW — CONFIRMATION/MUTATION UNWIRED  
 Roadmap: #119  
-Current status synchronization: #273  
+Current status synchronization: #282  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
 ## Purpose
@@ -12,7 +12,7 @@ P14 implements the target-neutral safety foundation for `Target-Ready Duplicate 
 The implementation currently has two distinct surfaces:
 
 1. a deterministic retained-duplicate core with bounded plan, confirmation, authorization, transaction, adapter-evidence, validation/re-score, cleanup and receipt contracts;
-2. a development-only **read-only Guided Prepare preview** driven by exact current P13 Build-Ready evidence, including a non-authorizing proposed-change review artifact.
+2. a development-only **read-only Guided Prepare preview** driven by exact current P13 Build-Ready evidence, including a non-authorizing proposed-change review artifact and precise persisted-evidence rejection diagnostics.
 
 The second surface does **not** create confirmation evidence or wire retained-duplicate mutation into Figma.
 
@@ -84,17 +84,53 @@ Missing mutating-plan confirmation remains `P14_CONFIRMATION_REQUIRED`; malforme
 
 The current development preview does not create `P14PreparationConfirmationV1`.
 
+## P13 analyzer/run provenance required by P14
+
+PR #279 closes a provenance gap exposed after real analyzer semantics changed in PR #270.
+
+Current P13 Build-Ready provenance is:
+
+- analyzer semantic version `p13-core-v2`;
+- deterministic `runId` bound to exact `structuralHash + configHash + analyzerVersion`;
+- one shared identity helper for normal and insufficient-evidence reports;
+- stale/unsupported analyzer versions rejected by persisted runtime-evidence validation;
+- contradictory run IDs rejected even when other report fields look valid;
+- P13 -> P14 handoff requires the current analyzer-bound identity;
+- plugin/CLI `sameRunIdentity` includes analyzer version;
+- `generatedAt` remains non-semantic runtime metadata.
+
+This matters to P14 because a persisted report from an older analyzer must never look equivalent to a current report merely because source/config hashes match.
+
+## Persisted P13 evidence diagnostics
+
+PR #281 adds a read-only inspection layer for persisted P13 evidence without weakening the compatibility loader or returning rejected evidence.
+
+Inspection states are:
+
+- `VALID`;
+- `EMPTY`;
+- `INVALID`;
+- `READ_FAILED`;
+- `QUARANTINED`.
+
+Validation, storage-read and quarantine reasons are bounded. The development P13 evidence viewer now distinguishes genuinely empty storage from stale/malformed/unreadable evidence. The P14 Guided Prepare preview uses the same inspection result and shows the exact rejection reason plus fresh-Audit guidance.
+
+A stale `p13-core-v1` bundle therefore fails closed as `INVALID` rather than silently appearing current. A clientStorage read failure or quarantined session likewise remains explicit diagnostic evidence.
+
+The existing `loadLatestP13RuntimeEvidence(): bundle | null` helper remains compatible; valid-evidence semantics do not change.
+
 ## Read-only Guided Prepare runtime preview
 
 The development preview sequence is:
 
 1. P13 Audit produces/persists validated Build-Ready runtime evidence;
 2. exactly one current Figma Frame is selected;
-3. persisted P13 evidence is validated;
-4. evidence must belong to the exact current file/page/frame;
-5. the current Frame is freshly scanned with the existing deterministic scanner/Build-Ready analyzer;
-6. persisted P13 fingerprint and exact compiled-build identity must match that fresh state;
-7. only then is the P14 plan/review preview rendered.
+3. persisted P13 evidence is inspected and validated against current analyzer/run identity;
+4. rejected evidence surfaces its bounded reason and requires a fresh Audit;
+5. accepted evidence must belong to the exact current file/page/frame;
+6. the current Frame is freshly scanned with the deterministic scanner/Build-Ready analyzer;
+7. persisted P13 fingerprint and exact compiled-build identity must match that fresh state;
+8. only then is the P14 plan/review preview rendered.
 
 Development surfaces were added through:
 
@@ -104,7 +140,9 @@ Development surfaces were added through:
 - #262/#263 — exact file/page/frame binding;
 - #265/#266 — fresh selected-Frame and exact compiled-build binding;
 - #268/#269 — versioned snapshot-first proposed-change review manifest;
-- #271/#272 — human-readable Proposed Change Review Binding panel.
+- #271/#272 — human-readable Proposed Change Review Binding panel;
+- #275/#279 — analyzer-bound P13 identity required by persisted evidence and P13 -> P14 handoff;
+- #280/#281 — persisted-evidence rejection diagnostics and precise fresh-Audit guidance.
 
 The generated publishable release UI strips the development-only P14 preview/review-binding surface.
 
@@ -122,7 +160,7 @@ PR #266 additionally requires a fresh selected-Frame scan to match persisted:
 - plugin version;
 - compiled build `sourceSha`, `runId`, and `runNumber`.
 
-A mismatch fails closed with fresh-Audit guidance.
+After PR #279 the P13 `runId` itself is also analyzer-semantic-bound. A mismatch fails closed with fresh-Audit guidance.
 
 ## Proposed-change review manifest
 
@@ -142,16 +180,7 @@ Its exact review binding includes:
 - P14 plan digest;
 - canonical eligible action IDs.
 
-When eligible actions exist, the manifest detaches their:
-
-- action ID;
-- source rule/version;
-- recipe/version;
-- confidence;
-- target node IDs;
-- prerequisite recipe IDs;
-- mutation allowlist;
-- validation profile ID.
+When eligible actions exist, the manifest detaches action ID, source rule/version, recipe/version, confidence, target IDs, prerequisites, mutation allowlist and validation profile ID.
 
 Revoked, unreadable or integrity-invalid plan evidence fails closed instead of becoming review authority.
 
@@ -173,7 +202,7 @@ Properties:
 - derived exclusively from existing `detectPatterns -> detectSpecialRoles -> planSafeRecipes` semantics;
 - emitted only when existing P5 planning returns `ELIGIBLE` for `vertical-stack` at the existing 90% gate.
 
-Therefore existing P5 NOOP, role-preservation, absolute-child and confidence/refusal rules stay authoritative; P13 does not implement parallel eligibility logic.
+Existing P5 NOOP, role-preservation, absolute-child and confidence/refusal rules stay authoritative; P13 does not implement parallel eligibility logic.
 
 The production P14 registry is still empty. The production P13->P14 handoff therefore converts this real candidate to REVIEW with `P14_SAFE_BINDING_REQUIRED`, leaves `eligibleActionIds=[]`, and produces a BLOCKED P14 plan. This is intentional: a real opportunity signal is not production mutation authority.
 
@@ -211,28 +240,26 @@ P13 real-plugin runtime/parity acceptance #159 remains required before real P14 
 
 ## Retained verification
 
-### PR #269
+### PR #279 — analyzer-bound P13 identity
 
-Exact head `234eda81ab5c49c3325c7fd9231d3d66841c0013` passed CI #1014, P12 Final Release Artifact #325 and P12 Offline Acceptance #369 on Windows/macOS/Ubuntu before guarded squash merge `6514959cbfd9a71c241b204f371a330a6be462e2`.
+Exact corrected head `b590d0c1652d153525f6fd1a6c8db95dba7e9d54` passed CI #1026, P12 Final Release Artifact #337 and P12 Offline Acceptance #381 on Windows/macOS/Ubuntu before guarded squash merge `31c2ddcee932592a9f7357b1bba07c4009cac684`. Integration Readiness did not trigger for the code-only diff.
 
-### PR #270
+### PR #281 — persisted-evidence diagnostics
 
-Exact corrected head `5d739cde842cefe6ff640aeba74da4900eddb831` passed CI #1017, P12 Final Release Artifact #328 and P12 Offline Acceptance #372 on Windows/macOS/Ubuntu before guarded squash merge `a70b003bd533cbf42d1aaaabf722639852ba48db`.
+Exact head `e201f43a7b11355daa2b73c957f82ce397bb6003` passed CI #1028, P12 Final Release Artifact #339 and P12 Offline Acceptance #383 on Windows/macOS/Ubuntu before guarded squash merge `801075561f22a1738219e58e9f39096705dc80ac`. Integration Readiness did not trigger for the code-only diff.
 
-### PR #272
-
-Exact head `e59058a7de174b18d8377d8052610efc9a12b4c2` passed CI #1019, P12 Final Release Artifact #330 and P12 Offline Acceptance #374 on Windows/macOS/Ubuntu before guarded squash merge `f06858ce384ce7d01510813b34b0ff803912e944`.
+Earlier retained review-manifest / real-candidate / human-review-binding proof remains recorded in PRs #269, #270 and #272.
 
 ## Current repository state
 
 Current main is:
 
-`f06858ce384ce7d01510813b34b0ff803912e944`
+`801075561f22a1738219e58e9f39096705dc80ac`
 
-Canonical status synchronization is tracked by #273 on `docs/p13-p14-post-272-status-273`.
+Canonical status synchronization is tracked by #282 on `docs/p13-v2-evidence-diagnostics-282`.
 
 P12 remains at its retained 80% release-exit state. P15-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.
 
-## Next P14 step
+## Next P13/P14 step
 
-After #273 status synchronization closes, run the next focused P14 implementation-gap audit. Do not infer that a real P13 candidate or review manifest authorizes confirmation or mutation. Any future confirmation/mutation surface requires an explicit separate contract preserving exact evidence freshness, production recipe authorization, candidate-only mutation, validation/re-score/source-immutability gates, fail-closed cleanup, and #159 real-Figma runtime evidence before real mutation exposure.
+After #282 status synchronization closes, run the next focused P13/P14 implementation-gap audit. Do not infer that current analyzer provenance, persisted-evidence diagnostics, a real P13 candidate or a review manifest authorizes confirmation or mutation. Any future confirmation/mutation surface requires an explicit separate contract preserving exact evidence freshness, production recipe authorization, candidate-only mutation, validation/re-score/source-immutability gates, fail-closed cleanup, and #159 real-Figma runtime evidence before real mutation exposure.
