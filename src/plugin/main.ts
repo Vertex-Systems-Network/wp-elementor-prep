@@ -50,6 +50,7 @@ import {
 } from './p13-runtime-evidence-storage';
 import { buildP13RuntimeEvidenceViewerHtml } from './p13-runtime-evidence-viewer';
 import { buildP14PlanPreview, serializeP14PlanPreviewJson } from './p14-plan-preview';
+import { assessP14PreviewContextBinding } from './p14-preview-context';
 import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
@@ -404,12 +405,50 @@ async function runP13RuntimeEvidenceViewer(): Promise<void> {
 }
 
 async function runP14GuidedPreparePreview(): Promise<void> {
+  const requestedFrame = selectedFrame();
+  if (!requestedFrame) {
+    figma.ui.postMessage({
+      type: 'p14-plan-preview-unavailable',
+      message: 'Select exactly one Frame, then run Audit on that Frame before previewing Guided Prepare.',
+    });
+    return;
+  }
+  const requestedFileKey = typeof figma.fileKey === 'string' && figma.fileKey ? figma.fileKey : 'local-file';
+  const requestedPageId = figma.currentPage.id;
+
   try {
     const evidence = await loadLatestP13RuntimeEvidence(figma.clientStorage);
     if (!evidence) {
       figma.ui.postMessage({
         type: 'p14-plan-preview-unavailable',
         message: 'No valid persisted P13 Build-Ready evidence is available yet. Run Audit on exactly one Frame first.',
+      });
+      return;
+    }
+
+    const currentFrame = selectedFrame();
+    const currentFileKey = typeof figma.fileKey === 'string' && figma.fileKey ? figma.fileKey : 'local-file';
+    const currentPageId = figma.currentPage.id;
+    if (!currentFrame
+      || currentFrame.id !== requestedFrame.id
+      || currentFileKey !== requestedFileKey
+      || currentPageId !== requestedPageId) {
+      figma.ui.postMessage({
+        type: 'p14-plan-preview-unavailable',
+        message: 'The Figma selection changed while Guided Prepare evidence was loading. Run Audit on the currently selected Frame and retry.',
+      });
+      return;
+    }
+
+    const contextBinding = assessP14PreviewContextBinding(evidence.context, {
+      fileKey: currentFileKey,
+      pageId: currentPageId,
+      frameId: currentFrame.id,
+    });
+    if (!contextBinding.valid) {
+      figma.ui.postMessage({
+        type: 'p14-plan-preview-unavailable',
+        message: `${contextBinding.failures.join(' ')} Run Audit on this selected Frame first.`,
       });
       return;
     }
