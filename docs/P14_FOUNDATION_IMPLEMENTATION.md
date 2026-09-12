@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup and source-scope transaction coordination.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup and source-scope transaction coordination.
 
 ## Bounded input preflight
 
@@ -30,6 +30,23 @@ Important safety behavior:
 - source transaction coordinator and adapter methods remain untouched on a bounded-preflight rejection.
 
 These limits are freeze/resource safety bounds only. They are not estimates of Elementor/Gutenberg conversion effort or target compatibility.
+
+## Bounded safe-recipe registry evidence
+
+The safe-recipe registry is authorization evidence and is therefore treated as an untrusted runtime structure even though production currently registers no mutating recipes.
+
+`assessP14SafeRecipeRegistryBounds(...)` reuses the existing P14 safety limits before `validateP14SafeRecipeRegistry(...)` performs semantic validation. It does not define a parallel registry-specific limit system.
+
+The bounds gate requires:
+
+- top-level `bindings` count to remain within the existing action-count limit before any binding item is traversed;
+- each recipe's `sourceRuleIds`, `prerequisites`, `conflictsWith` and `mutationAllowlist` collection to remain within the corresponding existing P14 count limit before item traversal;
+- binding source-rule identity, recipe ID, validation-profile ID, order class and nested rule/dependency/conflict identities to remain within the existing P14 identity limit;
+- oversized proxy-backed arrays to fail from `.length` without property/item traversal.
+
+The bounds assessment runs inside `validateP14SafeRecipeRegistry(...)`, so handoff resolution and execution authorization inherit the same resource guard. Bounded-but-malformed registries still use the established semantic validation failures. Oversized registry evidence also stays on the existing execution authorization outcome: `BLOCKED` + `P14_RECIPE_UNAUTHORIZED`, before confirmation, source coordination or adapter access. No new transaction status/error authority is created by this resource gate.
+
+The production safe-recipe registry remains intentionally empty. Registry bounding does not register a recipe, prove a recipe safe, grant mutation authority or establish target compatibility/production acceptance.
 
 ## Plan integrity, execution authority and reviewed confirmation
 
@@ -260,6 +277,10 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 42. `UNKNOWN` event time represents unavailable evidence; it never fabricates an observed wall-clock timestamp or changes transaction state semantics.
 43. Reviewed-plan confirmation timestamps remain strict normalized UTC evidence and cannot use the event-time `UNKNOWN` sentinel.
 44. P14 does not claim host-clock accuracy, monotonicity or cross-machine time synchronization.
+45. Safe-recipe registry top-level and nested collections are count-bounded before semantic traversal using existing P14 limits.
+46. Safe-recipe registry rule/recipe/profile/order/dependency identities are bounded before semantic authorization validation.
+47. Oversized registry evidence remains fail-closed on the existing `P14_RECIPE_UNAUTHORIZED` path before confirmation, source coordination or adapter access.
+48. Registry resource bounding never registers a production recipe or grants mutation, compatibility or acceptance authority.
 
 ## Deliberately not wired yet
 
