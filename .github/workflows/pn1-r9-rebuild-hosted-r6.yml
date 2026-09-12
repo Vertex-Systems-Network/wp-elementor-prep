@@ -126,3 +126,5 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m 'R9: repair hosted R6 with canonical bytes [skip ci]'
           git push origin HEAD:pella-nova-template-1-media
+
+# R9 retry after exact part-02 transport repair
