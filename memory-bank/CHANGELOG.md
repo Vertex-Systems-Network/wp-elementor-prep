@@ -10,7 +10,8 @@
 - Existing transaction authority remains unchanged: invalid/unreadable/oversized registry evidence still yields `BLOCKED` + `P14_RECIPE_UNAUTHORIZED` before confirmation, source coordination or adapter access; the production safe-recipe registry remains empty.
 - Added `tests/p14-registry-semantic-snapshot.test.ts` covering top-level binding re-entry, nested recipe re-entry, evidence that grows oversized after the first bounds pass, capture-time unreadability and normal exact authorization behavior.
 - Initial implementation/test head `4bd44da760d0dc0558b4d7c710bd779d1dd1e534` passed CI #939 including status verification, typecheck, full tests, plugin/CLI builds, release/package/community verification and local Figma import preparation; P12 Final Release Artifact #250 passed; P12 Offline Acceptance #294 passed on Ubuntu/macOS/Windows.
-- README, P14 foundation, PROJECT_STATE and NEXT_ACTIONS are synchronized in the same cycle; final exact-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable verification remain required before PR #227 may merge.
+- Exact synchronized PR head `6446c49a6cf5da5d039600f96a0ac3bd03e2b904` passed CI #945, Integration Readiness #299, P12 Final Release Artifact #256 and P12 Offline Acceptance #300 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main (`behind_by=0`) and was reported `mergeable=true` by GitHub.
+- PR #227 guarded squash-merged as `e5e22a4c556856a7c2ab11dbb94025ee838e0bb4`; issue #226 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
 - No production safe recipe, real Figma adapter/UI/mutation command, target-compatibility claim or production acceptance was introduced.
 
 ## 2026-09-12 — P14 nested plan/confirmation semantic snapshot hardening

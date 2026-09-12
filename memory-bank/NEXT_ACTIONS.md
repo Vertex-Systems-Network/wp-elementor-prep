@@ -81,11 +81,9 @@ Canonical future order:
 
 ### #226 — P14 safe-recipe registry semantic snapshot
 
-Classification: **ACTIVE / PR #227**.
+Classification: **COMPLETED / merged through PR #227**.
 
-The fresh post-#223 audit confirmed a distinct readable-but-stateful registry authorization boundary: #198 bounded registry traversal, but registry bounds, semantic validation and later authorization/resolution could still re-read the same caller-owned registry object at different times.
-
-PR #227 (`fix/p14-registry-semantic-snapshot-226`) narrows that boundary without changing recipe or target authority:
+PR #227 (`fix/p14-registry-semantic-snapshot-226`) closed the readable-but-stateful registry authorization boundary without changing recipe or target authority:
 
 1. the existing registry resource bounds run first against caller evidence;
 2. after an allowed first pass, only the known safe-recipe registry schema is copied through guarded, bounded property/index reads into plain semantic evidence;
@@ -95,7 +93,7 @@ PR #227 (`fix/p14-registry-semantic-snapshot-226`) narrows that boundary without
 6. unreadable capture fails closed before confirmation, source coordination or adapter access;
 7. the production safe-recipe registry remains empty and no real Figma adapter/UI/mutation command, target compatibility or production acceptance is introduced.
 
-Initial implementation/test head `4bd44da760d0dc0558b4d7c710bd779d1dd1e534` passed CI #939 including status verification, typecheck, full tests, plugin/CLI builds, release/package/community verification and local Figma import preparation; P12 Final Release Artifact #250 passed; P12 Offline Acceptance #294 passed on Ubuntu/macOS/Windows. Same-cycle docs synchronization is in progress; fresh exact-head CI, Integration Readiness, Final Release Artifact, Offline Acceptance and final review/current-main/mergeable gates remain required before merge.
+Initial implementation/test head `4bd44da760d0dc0558b4d7c710bd779d1dd1e534` passed CI #939, P12 Final Release Artifact #250 and P12 Offline Acceptance #294 on Ubuntu/macOS/Windows. Exact synchronized head `6446c49a6cf5da5d039600f96a0ac3bd03e2b904` then passed CI #945, Integration Readiness #299, P12 Final Release Artifact #256 and P12 Offline Acceptance #300 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `e5e22a4c556856a7c2ab11dbb94025ee838e0bb4`. Issue #226 closed completed.
 
 ### #223 — P14 nested plan/confirmation semantic snapshot
 
@@ -297,7 +295,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #226 / PR #227 registry semantic snapshot hardening on the final synchronized head;
+1. start the next focused safety-gap audit from core main `e5e22a4...` now that #226 / PR #227 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
