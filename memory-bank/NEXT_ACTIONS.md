@@ -79,6 +79,21 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
+### #213 — P14 top-level run-input runtime evidence snapshot
+
+Classification: **ACTIVE / PR #214 under same-cycle documentation and final exact-head verification**.
+
+PR #214 (`fix/p14-run-input-snapshot-213`) closes the narrow public caller-object property-access boundary without changing mutation or target authority:
+
+1. `plan`, `registry`, `coordinator`, `inputBounds`, `confirmation`, `transactionId`, `preparedName`, `allowPreparedWithReview` and `shouldCancel` are read through guarded one-shot access before bounds/core semantics;
+2. accepted values are copied into a plain snapshot and delegated explicitly; the wrapper no longer uses `...input`, so caller getters are not re-entered after validation;
+3. non-object input or a throwing known top-level getter returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `run-input` before coordinator or adapter access;
+4. runtime `now` property/callback handling remains on the existing fail-soft `UNKNOWN` event-time contract rather than becoming transaction authority;
+5. existing run-control normalization, raw-size `P14_INPUT_TOO_LARGE`, confirmation, registry authorization, coordinator, cancellation and adapter evidence semantics are preserved;
+6. no new status/error code, production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
+
+Initial code/test head `3d558f9ac58bde1cfebd82b7e3a11d0a1d94c93e` passed CI #901, P12 Final Release Artifact #212 and P12 Offline Acceptance #256 on Ubuntu/macOS/Windows. Same-cycle documentation synchronization follows on the same branch; fresh CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review evidence are required on the final synchronized head.
+
 ### #210 — P14 runtime action-eligibility hook property boundary
 
 Classification: **COMPLETED / merged through PR #211**.
@@ -230,7 +245,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. start the next focused safety-gap audit from main `7f24e57a...` now that #210 / PR #211 is completed;
+1. complete #213 / PR #214 on its final synchronized head, then begin the next focused safety-gap audit from the resulting main;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
