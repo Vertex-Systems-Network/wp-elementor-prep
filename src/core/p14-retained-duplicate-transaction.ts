@@ -26,6 +26,28 @@ import {
 
 export type { P14RetainedDuplicateRunInput } from './p14-retained-duplicate-transaction-core';
 
+type P14RunInputSnapshot = Omit<P14RetainedDuplicateRunInput, 'now'>;
+
+interface P14RunInputSnapshotAssessment {
+  valid: boolean;
+  failures: string[];
+  safeTransactionId: string;
+  plan?: unknown;
+  value?: P14RunInputSnapshot;
+}
+
+const RUN_INPUT_KEYS = [
+  'plan',
+  'registry',
+  'coordinator',
+  'inputBounds',
+  'confirmation',
+  'transactionId',
+  'preparedName',
+  'allowPreparedWithReview',
+  'shouldCancel',
+] as const satisfies readonly (keyof P14RunInputSnapshot)[];
+
 function boundedIdentity(value: unknown, fallback: string): string {
   if (typeof value !== 'string'
     || value.length === 0
@@ -60,15 +82,57 @@ function safePlanMetadata(value: unknown): {
   }
 }
 
-function safeNow(input: P14RetainedDuplicateRunInput): () => unknown {
+function safeNow(input: unknown): () => unknown {
   try {
-    const supplied: unknown = input.now;
+    if (typeof input !== 'object' || input === null || Array.isArray(input)) {
+      return () => P14_UNKNOWN_EVENT_TIMESTAMP;
+    }
+    const supplied: unknown = (input as Record<string, unknown>).now;
     if (supplied === undefined) return () => new Date().toISOString();
     if (typeof supplied === 'function') return supplied as () => unknown;
     return () => P14_UNKNOWN_EVENT_TIMESTAMP;
   } catch {
     return () => P14_UNKNOWN_EVENT_TIMESTAMP;
   }
+}
+
+function snapshotP14RunInput(input: unknown): P14RunInputSnapshotAssessment {
+  const failures: string[] = [];
+  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
+    return {
+      valid: false,
+      failures: ['P14 run input must be an object runtime value.'],
+      safeTransactionId: 'p14-transaction-invalid',
+    };
+  }
+
+  const source = input as Record<string, unknown>;
+  const snapshot: Record<string, unknown> = {};
+  for (const key of RUN_INPUT_KEYS) {
+    try {
+      snapshot[key] = source[key];
+    } catch {
+      failures.push(`${key} could not be read safely from the P14 run input.`);
+    }
+  }
+
+  const safeTransactionId = boundedIdentity(snapshot.transactionId, 'p14-transaction-invalid');
+  if (failures.length > 0) {
+    return {
+      valid: false,
+      failures,
+      safeTransactionId,
+      ...(Object.prototype.hasOwnProperty.call(snapshot, 'plan') ? { plan: snapshot.plan } : {}),
+    };
+  }
+
+  return {
+    valid: true,
+    failures,
+    safeTransactionId,
+    plan: snapshot.plan,
+    value: snapshot as unknown as P14RunInputSnapshot,
+  };
 }
 
 function guardP14RuntimeEligibilityHook(
@@ -103,7 +167,7 @@ function guardP14RuntimeEligibilityHook(
   } as unknown as P14RetainedDuplicateAdapter;
 }
 
-function runControlEvent(now: () => unknown, state: 'IDLE' | 'PREFLIGHT' | 'BLOCKED', detail?: string): P14TransactionEvent {
+function boundaryEvent(now: () => unknown, state: 'IDLE' | 'PREFLIGHT' | 'BLOCKED', detail?: string): P14TransactionEvent {
   const safeDetail = detail ? boundP14ReceiptDetail(detail) : undefined;
   return {
     state,
@@ -112,13 +176,15 @@ function runControlEvent(now: () => unknown, state: 'IDLE' | 'PREFLIGHT' | 'BLOC
   };
 }
 
-function runControlBlockedReceipt(
+function boundaryBlockedReceipt(
   plan: unknown,
   transactionId: string,
   now: () => unknown,
   failures: string[],
+  stage: 'run-input' | 'run-control',
 ): P14PreparationReceiptV1 {
   const metadata = safePlanMetadata(plan);
+  const isRunInput = stage === 'run-input';
   return {
     schemaVersion: 1,
     engineVersion: P14_PREPARATION_ENGINE_VERSION,
@@ -137,34 +203,74 @@ function runControlBlockedReceipt(
     appliedActions: [],
     errors: [{
       code: 'P14_INTERNAL_INVARIANT_FAILED',
-      stage: 'run-control',
-      detail: boundP14ReceiptDetail(`Invalid P14 run-control evidence: ${failures.join(' | ')}`),
-      recovery: 'Provide typed, bounded P14 run controls and retry the current reviewed plan.',
+      stage,
+      detail: boundP14ReceiptDetail(
+        `${isRunInput ? 'Invalid P14 run-input evidence' : 'Invalid P14 run-control evidence'}: ${failures.join(' | ')}`,
+      ),
+      recovery: isRunInput
+        ? 'Provide a readable P14 run input object and retry the current reviewed plan.'
+        : 'Provide typed, bounded P14 run controls and retry the current reviewed plan.',
     }],
     events: [
-      runControlEvent(now, 'IDLE'),
-      runControlEvent(now, 'PREFLIGHT'),
-      runControlEvent(now, 'BLOCKED', 'run-control evidence validation failed'),
+      boundaryEvent(now, 'IDLE'),
+      boundaryEvent(now, 'PREFLIGHT'),
+      boundaryEvent(now, 'BLOCKED', `${stage} evidence validation failed`),
     ],
   };
 }
 
+function delegatedRunInput(
+  snapshot: P14RunInputSnapshot,
+  controls: {
+    transactionId: string;
+    preparedName: string;
+    allowPreparedWithReview: boolean;
+    inputBounds: NonNullable<P14RetainedDuplicateRunInput['inputBounds']>;
+  },
+  now: () => unknown,
+): P14RetainedDuplicateRunInput {
+  return {
+    plan: snapshot.plan,
+    ...(snapshot.registry !== undefined ? { registry: snapshot.registry } : {}),
+    ...(snapshot.coordinator !== undefined ? { coordinator: snapshot.coordinator } : {}),
+    inputBounds: controls.inputBounds,
+    ...(snapshot.confirmation !== undefined ? { confirmation: snapshot.confirmation } : {}),
+    transactionId: controls.transactionId,
+    preparedName: controls.preparedName,
+    allowPreparedWithReview: controls.allowPreparedWithReview,
+    now,
+    ...(snapshot.shouldCancel !== undefined ? { shouldCancel: snapshot.shouldCancel } : {}),
+  };
+}
+
 /**
- * Public P14 transaction boundary. Caller controls are validated and normalized before the retained-
- * duplicate transaction core may use them as policy, coordinator identity or adapter input.
+ * Public P14 transaction boundary. The caller object is snapshotted once before transaction
+ * semantics, then caller controls are validated and normalized before the retained-duplicate core.
  */
 export async function runP14RetainedDuplicateTransaction(
   input: P14RetainedDuplicateRunInput,
   adapter: P14RetainedDuplicateAdapter,
 ): Promise<P14PreparationReceiptV1> {
   const now = safeNow(input);
+  const runInput = snapshotP14RunInput(input);
+  if (!runInput.valid || !runInput.value) {
+    return boundaryBlockedReceipt(
+      runInput.plan,
+      runInput.safeTransactionId,
+      now,
+      runInput.failures,
+      'run-input',
+    );
+  }
+
+  const inputSnapshot = runInput.value;
   let controls;
   try {
     controls = assessP14RunControlEvidence({
-      transactionId: input.transactionId,
-      preparedName: input.preparedName,
-      allowPreparedWithReview: input.allowPreparedWithReview,
-      inputBounds: input.inputBounds,
+      transactionId: inputSnapshot.transactionId,
+      preparedName: inputSnapshot.preparedName,
+      allowPreparedWithReview: inputSnapshot.allowPreparedWithReview,
+      inputBounds: inputSnapshot.inputBounds,
     });
   } catch {
     controls = {
@@ -175,15 +281,21 @@ export async function runP14RetainedDuplicateTransaction(
   }
 
   if (!controls.valid || !controls.value) {
-    return runControlBlockedReceipt(input.plan, controls.safeTransactionId, now, controls.failures);
+    return boundaryBlockedReceipt(
+      inputSnapshot.plan,
+      controls.safeTransactionId,
+      now,
+      controls.failures,
+      'run-control',
+    );
   }
 
-  const snapshot = controls.value;
-  const rawPreparedName = snapshot.rawPreparedName ?? snapshot.preparedName;
-  const boundedPreflight = assessP14PreparationInputBounds(input.plan, snapshot.inputBounds, {
-    transactionId: snapshot.rawTransactionId,
+  const controlSnapshot = controls.value;
+  const rawPreparedName = controlSnapshot.rawPreparedName ?? controlSnapshot.preparedName;
+  const boundedPreflight = assessP14PreparationInputBounds(inputSnapshot.plan, controlSnapshot.inputBounds, {
+    transactionId: controlSnapshot.rawTransactionId,
     preparedName: rawPreparedName,
-    confirmation: input.confirmation,
+    confirmation: inputSnapshot.confirmation,
   });
   const guardedAdapter = guardP14RuntimeEligibilityHook(adapter);
 
@@ -191,20 +303,18 @@ export async function runP14RetainedDuplicateTransaction(
   // size exceeds the current/default or caller-supplied stricter limit. The core receives only the
   // already-snapshotted inputBounds object, so hostile getters cannot be re-entered.
   if (!boundedPreflight.allowed) {
-    return runP14RetainedDuplicateTransactionCore({
-      ...input,
-      transactionId: snapshot.rawTransactionId,
+    return runP14RetainedDuplicateTransactionCore(delegatedRunInput(inputSnapshot, {
+      transactionId: controlSnapshot.rawTransactionId,
       preparedName: rawPreparedName,
-      allowPreparedWithReview: snapshot.allowPreparedWithReview,
-      inputBounds: snapshot.inputBounds,
-    }, guardedAdapter);
+      allowPreparedWithReview: controlSnapshot.allowPreparedWithReview,
+      inputBounds: controlSnapshot.inputBounds,
+    }, now), guardedAdapter);
   }
 
-  return runP14RetainedDuplicateTransactionCore({
-    ...input,
-    transactionId: snapshot.transactionId,
-    preparedName: snapshot.preparedName,
-    allowPreparedWithReview: snapshot.allowPreparedWithReview,
-    inputBounds: snapshot.inputBounds,
-  }, guardedAdapter);
+  return runP14RetainedDuplicateTransactionCore(delegatedRunInput(inputSnapshot, {
+    transactionId: controlSnapshot.transactionId,
+    preparedName: controlSnapshot.preparedName,
+    allowPreparedWithReview: controlSnapshot.allowPreparedWithReview,
+    inputBounds: controlSnapshot.inputBounds,
+  }, now), guardedAdapter);
 }
