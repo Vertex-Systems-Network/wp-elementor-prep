@@ -100,7 +100,7 @@ describe('P14 standalone plan-integrity semantic snapshot', () => {
     let indexReads = 0;
     plan.actions = new Proxy(sourceActions, {
       get(target, property, receiver) {
-        if (typeof property === 'string' && /^\\d+$/.test(property)) {
+        if (typeof property === 'string' && /^\d+$/.test(property)) {
           indexReads += 1;
           if (indexReads > target.length) throw new Error('actions were re-read after semantic capture');
         }
