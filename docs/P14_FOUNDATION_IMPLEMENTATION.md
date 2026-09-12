@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
 
 ## Bounded input preflight
 
@@ -29,7 +29,9 @@ Important safety behavior:
 - an oversized transaction ID is replaced by the bounded receipt fallback `p14-transaction-invalid`;
 - source transaction coordinator and adapter methods remain untouched on a bounded-preflight rejection.
 
-These limits are freeze/resource safety bounds only. They are not estimates of Elementor/Gutenberg conversion effort or target compatibility.
+Nested plan/confirmation evidence traversed by the bounds gate is also untrusted runtime data. Both the public preflight and the internal retained-duplicate core guard their bounds traversal. A throwing getter/proxy on either traversal therefore cannot reject the transaction promise: it returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `bounds-evidence` before source coordination or adapter access. The internal second-pass rejection uses `UNKNOWN` / `p14-plan-invalid` correlation sentinels rather than dereferencing the hostile plan again. Readable oversized evidence remains on the existing `P14_INPUT_TOO_LARGE` / `bounds` path.
+
+These limits are freeze/resource safety bounds only. Unreadable-evidence hardening does not deep-snapshot readable nested semantics, add a new limit, or establish Elementor/Gutenberg conversion effort or target compatibility.
 
 ## Top-level run-input runtime evidence
 
@@ -343,6 +345,10 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 63. Accepted top-level run-input properties are snapshotted once into a plain delegated object; caller getters are not re-entered through object spread or later wrapper reads.
 64. Unreadable/non-object top-level run input fails closed as bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `run-input` before coordinator or adapter access, while clock metadata retains its separate fail-soft `UNKNOWN` contract.
 65. Top-level run-input snapshotting does not replace nested validators or add recipe, target, authentication, compatibility or production-acceptance authority.
+66. Nested plan/confirmation properties traversed by the bounded-input gate are untrusted; throwing getters/proxies cannot escape either the public or internal bounds pass.
+67. Unreadable nested bounds evidence fails before coordination/adapter access as bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `bounds-evidence`.
+68. Internal second-pass bounds failure uses bounded `UNKNOWN` / `p14-plan-invalid` correlation sentinels instead of re-reading hostile plan metadata.
+69. Readable oversized bounds evidence remains on `P14_INPUT_TOO_LARGE` / `bounds`; unreadable-evidence hardening adds no recipe, target, compatibility or acceptance authority.
 
 ## Deliberately not wired yet
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-12 — P14 unreadable nested bounded-input evidence hardening
+
+- Opened authoritative issue #216 and focused PR #221 (`fix/p14-bounds-evidence-216`) for unreadable nested plan/confirmation evidence encountered by the P14 bounded-input preflight.
+- Confirmed that top-level run-input snapshotting did not protect nested bounds traversal: throwing getters/proxies inside confirmation, plan source/actions or nested action collections could still reject the public transaction promise during the public preflight or the internal core's second bounds pass.
+- Guarded the public `assessP14PreparationInputBounds(...)` traversal and added the existing `P14_INTERNAL_INVARIANT_FAILED` structured refusal at stage `bounds-evidence` with bounded runtime diagnostics.
+- Guarded the internal retained-duplicate core bounds traversal independently so evidence that becomes unreadable only on the second pass also fails closed; that internal refusal uses `UNKNOWN` source/run correlation and `p14-plan-invalid` instead of dereferencing hostile plan metadata again.
+- Preserved ordinary readable oversized evidence on the existing `P14_INPUT_TOO_LARGE` / `bounds` path and preserved normal readable `PREPARED` behavior. No deep canonical snapshot of readable nested semantics, new status/error code, production recipe authority, real Figma mutation surface, target compatibility or production acceptance was introduced.
+- Added `tests/p14-bounds-evidence-boundary.test.ts` covering first-pass hostile confirmation evidence, second-pass plan evidence that becomes unreadable, readable oversized-input regression and normal preparation regression. The core full-file replacement was diff-audited and contained only the intended bounds helper/preflight changes.
+- Initial code/test head `7ef0a2b43262024ee1f1df59e658143e4dac2681` passed CI #913 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #224 passed; P12 Offline Acceptance #268 passed on Ubuntu/macOS/Windows.
+- Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #216. Final synchronized-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #221 may merge.
+- Accidental duplicate/placeholder issues #217, #218, #219 and #220 were created during tool routing, immediately closed `not_planned`, and carry no implementation scope. #216 is authoritative.
+
 ## 2026-09-12 — P14 top-level run-input runtime-evidence snapshot
 
 - Opened issue #213 and focused PR #214 (`fix/p14-run-input-snapshot-213`) for the remaining public caller-object property-access trust boundary before P14 transaction semantics.

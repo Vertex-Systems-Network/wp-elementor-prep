@@ -79,6 +79,24 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
+### #216 — P14 unreadable nested bounded-input evidence
+
+Classification: **ACTIVE / PR #221 under same-cycle documentation and final exact-head verification**.
+
+PR #221 (`fix/p14-bounds-evidence-216`) closes the narrow unreadable nested bounds-traversal gap without changing mutation or target authority:
+
+1. the public bounded-input preflight catches throwing nested plan/confirmation getters and returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` at stage `bounds-evidence`;
+2. the internal retained-duplicate core guards its second bounded-input traversal too, so evidence that becomes unreadable only on the second pass cannot escape;
+3. internal second-pass rejection uses `UNKNOWN` source/run correlation and `p14-plan-invalid` instead of dereferencing hostile plan metadata again;
+4. failures occur before source coordination or adapter access;
+5. readable oversized evidence preserves the established `P14_INPUT_TOO_LARGE` / `bounds` path;
+6. readable normal preparation remains unchanged;
+7. no deep canonical snapshot of readable nested semantics, new status/error code, production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
+
+Initial code/test head `7ef0a2b43262024ee1f1df59e658143e4dac2681` passed CI #913, P12 Final Release Artifact #224 and P12 Offline Acceptance #268 on Ubuntu/macOS/Windows. Same-cycle documentation synchronization follows on the same branch; fresh CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review evidence are required on the final synchronized head.
+
+Accidental duplicate/placeholder issues #217, #218, #219 and #220 were created during the #216 tool-routing cycle, immediately marked **CLOSED / NOT PLANNED**, and carry no implementation scope. #216 is authoritative.
+
 ### #213 — P14 top-level run-input runtime evidence snapshot
 
 Classification: **COMPLETED / merged through PR #214**.
@@ -245,7 +263,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. start the next focused safety-gap audit from core main `f8a983a1...` now that #213 / PR #214 is completed;
+1. complete #216 / PR #221 on its final synchronized head, then begin the next focused safety-gap audit from the resulting main;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;

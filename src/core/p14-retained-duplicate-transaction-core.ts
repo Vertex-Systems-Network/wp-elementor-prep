@@ -302,6 +302,41 @@ function invalidPlanReceipt(
   };
 }
 
+function unreadableBoundsReceipt(
+  transactionId: string,
+  now: () => unknown,
+  error: unknown,
+): P14PreparationReceiptV1 {
+  return {
+    schemaVersion: 1,
+    engineVersion: P14_PREPARATION_ENGINE_VERSION,
+    acceptanceAuthority: false,
+    targetCompatibilityClaim: false,
+    transactionId: boundP14ReceiptIdentity(transactionId, 'p14-transaction-invalid'),
+    status: 'BLOCKED',
+    terminalState: 'BLOCKED',
+    source: {
+      nodeId: 'UNKNOWN',
+      beforeFingerprint: P14_UNKNOWN_SOURCE_FINGERPRINT,
+      afterFingerprint: P14_UNKNOWN_SOURCE_FINGERPRINT,
+    },
+    p13RunId: 'UNKNOWN',
+    planDigest: 'p14-plan-invalid',
+    appliedActions: [],
+    errors: [receiptError(
+      'P14_INTERNAL_INVARIANT_FAILED',
+      'bounds-evidence',
+      `P14 bounded-input evidence could not be read safely: ${safeP14RuntimeErrorMessage(error)}`,
+      'Provide readable nested plan/confirmation bounds evidence and retry the current reviewed plan.',
+    )],
+    events: [
+      event(now, 'IDLE'),
+      event(now, 'PREFLIGHT'),
+      event(now, 'BLOCKED', 'bounded input evidence could not be read safely'),
+    ],
+  };
+}
+
 /**
  * Target-neutral P14 transaction core.
  *
@@ -315,11 +350,16 @@ export async function runP14RetainedDuplicateTransaction(
 ): Promise<P14PreparationReceiptV1> {
   const now = input.now ?? (() => new Date().toISOString());
   const events: P14TransactionEvent[] = [event(now, 'IDLE'), event(now, 'PREFLIGHT')];
-  const inputBounds = assessP14PreparationInputBounds(input.plan, input.inputBounds, {
-    transactionId: input.transactionId,
-    preparedName: input.preparedName,
-    confirmation: input.confirmation,
-  });
+  let inputBounds: ReturnType<typeof assessP14PreparationInputBounds>;
+  try {
+    inputBounds = assessP14PreparationInputBounds(input.plan, input.inputBounds, {
+      transactionId: input.transactionId,
+      preparedName: input.preparedName,
+      confirmation: input.confirmation,
+    });
+  } catch (error) {
+    return unreadableBoundsReceipt(input.transactionId, now, error);
+  }
   if (!inputBounds.allowed) {
     const failures = inputBounds.failures.map(
       (failure) => `${failure.code} at ${failure.path}: ${failure.actual} > ${failure.limit}`,
