@@ -45,15 +45,26 @@ export function buildP14PreparationConfirmation(
   plan: P14PreparationPlanV1,
   confirmedAt: string,
 ): P14PreparationConfirmationV1 {
-  const bounds = assessP14PreparationInputBounds(plan);
+  const snapshot = snapshotP14SemanticInputEvidence(
+    plan,
+    undefined,
+    DEFAULT_P14_INPUT_BOUNDS,
+  );
+  if (!snapshot.valid) {
+    throw new Error(
+      `Cannot confirm a P14 preparation plan that exceeds bounded safety limits or cannot be captured safely: ${snapshot.failures.join(' | ')}`,
+    );
+  }
+  const reviewedPlan = snapshot.plan as P14PreparationPlanV1;
+  const bounds = assessP14PreparationInputBounds(reviewedPlan);
   if (!bounds.allowed) {
     throw new Error('Cannot confirm a P14 preparation plan that exceeds bounded safety limits.');
   }
-  const integrity = validateP14PreparationPlan(plan);
+  const integrity = validateP14PreparationPlan(reviewedPlan);
   if (!integrity.valid) {
     throw new Error(`Cannot confirm an invalid P14 preparation plan: ${integrity.failures.join(' | ')}`);
   }
-  if (plan.status !== 'READY' || plan.eligibleActionIds.length === 0) {
+  if (reviewedPlan.status !== 'READY' || reviewedPlan.eligibleActionIds.length === 0) {
     throw new Error('P14 preparation confirmation is only valid for READY plans with eligible mutating actions.');
   }
   if (!isP14NormalizedUtcTimestamp(confirmedAt)) {
@@ -64,13 +75,13 @@ export function buildP14PreparationConfirmation(
     acceptanceAuthority: false,
     targetCompatibilityClaim: false,
     confirmedAt,
-    planDigest: plan.planDigest,
-    p13RunId: plan.p13RunId,
+    planDigest: reviewedPlan.planDigest,
+    p13RunId: reviewedPlan.p13RunId,
     source: {
-      nodeId: plan.source.nodeId,
-      fingerprint: plan.source.fingerprint,
+      nodeId: reviewedPlan.source.nodeId,
+      fingerprint: reviewedPlan.source.fingerprint,
     },
-    eligibleActionIds: [...plan.eligibleActionIds],
+    eligibleActionIds: [...reviewedPlan.eligibleActionIds],
   };
 }
 
