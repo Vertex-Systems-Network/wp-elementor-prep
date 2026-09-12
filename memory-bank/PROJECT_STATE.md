@@ -12,9 +12,10 @@ Current implemented surfaces:
 2. npm/Node CLI for supported Figma inputs;
 3. deterministic audit, scoring, backlog and Build-Ready outputs;
 4. validated P5/P6/P7 safe-prep/runtime foundations;
-5. P14 target-neutral retained-duplicate core;
-6. development-only read-only P14 Guided Prepare preview with exact evidence freshness and proposed-change review binding;
-7. exact-build release/provenance and fail-closed P12 publisher-evidence tooling.
+5. P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
+6. P14 target-neutral retained-duplicate core;
+7. development-only read-only P14 Guided Prepare preview with exact evidence freshness, proposed-change review binding and persisted-evidence rejection diagnostics;
+8. exact-build release/provenance and fail-closed P12 publisher-evidence tooling.
 
 Approved direction remains:
 
@@ -40,16 +41,16 @@ Elementor is first target family, Gutenberg second, followed by generic web/fram
 
 ## Current repository main
 
-Current verified main after the read-only review-binding panel slice:
+Current verified main after P13 persisted-evidence diagnostic hardening:
 
-`f06858ce384ce7d01510813b34b0ff803912e944`
+`801075561f22a1738219e58e9f39096705dc80ac`
 
-That is the guarded squash merge of PR #272.
+That is the guarded squash merge of PR #281.
 
 Current docs-only synchronization:
 
-- issue #273;
-- branch `docs/p13-p14-post-272-status-273`;
+- issue #282;
+- branch `docs/p13-v2-evidence-diagnostics-282`;
 - scope limited to README, P14 foundation and memory-bank state/next-actions.
 
 ## Current issue queue
@@ -58,13 +59,39 @@ Current docs-only synchronization:
 - #119 — **P13-P27 commercial/multi-target roadmap: ACTIVE**. P13-P26 implementation/testing may progress independently of final production release.
 - #159 — **P13 real-plugin Build-Ready runtime/parity evidence: OPEN runtime-acceptance dependency**. Genuine real-Figma runtime acceptance remains pending.
 - #182 — **P27 final production-release gate: DEFINED / execution deferred**.
-- #273 — **ACTIVE docs-only synchronization** through PR #272.
+- #282 — **ACTIVE docs-only synchronization** through PR #281.
 
-Issues #259, #268 and #271 are completed through PRs #270, #269 and #272 respectively.
+Focused issues #275 and #280 are completed through PRs #279 and #281.
 
 ## P13 state
 
 P13 Build-Ready Score 2.0 + Responsive Risk implementation remains complete in core/plugin/CLI, with genuine runtime acceptance still pending under #159.
+
+Current analyzer/provenance contract after PR #279:
+
+- analyzer semantic version is `p13-core-v2`;
+- Build-Ready `runId` binds exact `structuralHash + configHash + analyzerVersion`;
+- normal and insufficient-evidence reports use the same identity helper;
+- persisted runtime evidence rejects stale/unsupported analyzer versions and contradictory run IDs;
+- P13 -> P14 handoff requires the current analyzer-bound identity;
+- plugin/CLI parity includes analyzer version in `sameRunIdentity`;
+- `generatedAt` remains runtime metadata and does not change deterministic semantic identity.
+
+This v2 identity was required because PR #270 materially changed analyzer semantics by adding the real target-neutral `BR_SAFE_VERTICAL_STACK_CANDIDATE`.
+
+PR #281 then preserved why persisted evidence cannot be used. Read-only inspection distinguishes:
+
+- `VALID`;
+- `EMPTY`;
+- `INVALID`;
+- `READ_FAILED`;
+- `QUARANTINED`.
+
+Validation/read/quarantine diagnostics are bounded. The development P13 evidence viewer and P14 Guided Prepare preview now show the rejection reason and fresh-Audit guidance instead of collapsing all unusable evidence to a generic null state.
+
+The compatibility helper `loadLatestP13RuntimeEvidence(): bundle | null` remains available; accepted evidence semantics are unchanged.
+
+## P13 safe-preparation opportunity
 
 PR #270 added the first real target-neutral safe-preparation opportunity without changing score authority:
 
@@ -88,7 +115,7 @@ The production safe-recipe registry remains intentionally empty.
 
 ## P14 read-only Guided Prepare runtime preview
 
-Development-only Guided Prepare now includes:
+Development-only Guided Prepare includes:
 
 - #255/#256 — persisted P13 evidence -> P14 plan preview;
 - #257/#258 — developer-menu route;
@@ -96,17 +123,13 @@ Development-only Guided Prepare now includes:
 - #262/#263 — exact current file/page/frame binding;
 - #265/#266 — fresh current Frame fingerprint + exact compiled-build binding;
 - #268/#269 — versioned snapshot-first proposed-change review manifest;
-- #271/#272 — human-readable Proposed Change Review Binding in the development panel.
+- #271/#272 — human-readable Proposed Change Review Binding;
+- #275/#279 — current `p13-core-v2` analyzer/run provenance required by retained evidence and P13 -> P14 handoff;
+- #280/#281 — precise persisted-evidence rejection diagnostics and fresh-Audit guidance.
 
-The preview requires exact current context and fresh current-build P13 evidence. The review manifest is bound to:
+The preview requires exact current context and fresh current-build P13 evidence. The review manifest is bound to P13 run ID, source node/fingerprint, plan digest, canonical eligible action IDs and exact eligible action rule/recipe/target/prerequisite/mutation/validation evidence.
 
-- P13 run ID;
-- source node ID and structural fingerprint;
-- plan digest;
-- canonical eligible action IDs;
-- exact eligible action rule/recipe versions, targets, prerequisites, mutation allowlists and validation profile when any eligible actions exist.
-
-The normal production registry is still empty. Therefore the real `BR_SAFE_VERTICAL_STACK_CANDIDATE` from PR #270 is downgraded by production handoff to REVIEW with `P14_SAFE_BINDING_REQUIRED`; the plan remains BLOCKED with zero production-eligible actions.
+The normal production registry is still empty. Therefore the real `BR_SAFE_VERTICAL_STACK_CANDIDATE` remains REVIEW with `P14_SAFE_BINDING_REQUIRED`; the plan stays BLOCKED with zero production-eligible actions.
 
 The generated publishable release UI strips the development-only P14 preview and review-binding surfaces.
 
@@ -131,29 +154,25 @@ Not wired into the Figma plugin:
 
 ## Latest retained verification
 
-### PR #269 — proposed-change review manifest
+### PR #279 — analyzer-bound P13 identity
 
-- exact head `234eda81ab5c49c3325c7fd9231d3d66841c0013`;
-- CI #1014 — PASS;
-- P12 Final Release Artifact #325 — PASS;
-- P12 Offline Acceptance #369 — PASS Windows/macOS/Ubuntu;
-- guarded squash merge `6514959cbfd9a71c241b204f371a330a6be462e2`.
+- corrected exact head `b590d0c1652d153525f6fd1a6c8db95dba7e9d54`;
+- CI #1026 — PASS;
+- P12 Final Release Artifact #337 — PASS;
+- P12 Offline Acceptance #381 — PASS Windows/macOS/Ubuntu;
+- Integration Readiness did not trigger for this code-only diff;
+- guarded squash merge `31c2ddcee932592a9f7357b1bba07c4009cac684`.
 
-### PR #270 — first real P13 vertical-stack candidate
+### PR #281 — persisted-evidence rejection diagnostics
 
-- exact corrected head `5d739cde842cefe6ff640aeba74da4900eddb831`;
-- CI #1017 — PASS;
-- P12 Final Release Artifact #328 — PASS;
-- P12 Offline Acceptance #372 — PASS Windows/macOS/Ubuntu;
-- guarded squash merge `a70b003bd533cbf42d1aaaabf722639852ba48db`.
+- exact head `e201f43a7b11355daa2b73c957f82ce397bb6003`;
+- CI #1028 — PASS;
+- P12 Final Release Artifact #339 — PASS;
+- P12 Offline Acceptance #383 — PASS Windows/macOS/Ubuntu;
+- Integration Readiness did not trigger for this code-only diff;
+- guarded squash merge `801075561f22a1738219e58e9f39096705dc80ac`.
 
-### PR #272 — human-readable review binding
-
-- exact head `e59058a7de174b18d8377d8052610efc9a12b4c2`;
-- CI #1019 — PASS;
-- P12 Final Release Artifact #330 — PASS;
-- P12 Offline Acceptance #374 — PASS Windows/macOS/Ubuntu;
-- guarded squash merge `f06858ce384ce7d01510813b34b0ff803912e944`.
+Earlier retained review-manifest / real-candidate / review-binding proof remains recorded in PRs #269, #270 and #272.
 
 ## P12 release truth
 
@@ -184,6 +203,6 @@ P27 #182 remains the final production-release gate and owns deferred exact P12 r
 
 ## Immediate project action
 
-Complete #273 docs-only synchronization and exact-head gates. After merge, audit the next P14 implementation gap without treating the review manifest or real P13 candidate as confirmation/mutation authority.
+Complete #282 docs-only synchronization and exact-head gates. After merge, audit the next P13/P14 implementation gap without treating analyzer provenance, evidence diagnostics, the review manifest or the real P13 candidate as confirmation/mutation authority.
 
 No synthetic overall project percentage is used. Historical module progress and current implementation/runtime/release states remain separate.
