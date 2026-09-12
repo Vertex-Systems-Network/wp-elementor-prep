@@ -39,10 +39,17 @@ function evidence(overrides: {
   runId?: string;
   source?: Partial<BuildReadyReportV2['source']>;
 } = {}): P14PreviewFreshnessEvidence {
+  const buildReadyOverrides: {
+    runId?: string;
+    source?: Partial<BuildReadyReportV2['source']>;
+  } = {
+    ...(overrides.runId !== undefined ? { runId: overrides.runId } : {}),
+    ...(overrides.source !== undefined ? { source: overrides.source } : {}),
+  };
   return {
     pluginVersion: overrides.pluginVersion ?? '0.1.0-alpha.1',
     build: { ...currentBuild, ...overrides.build },
-    buildReady: report({ runId: overrides.runId, source: overrides.source }),
+    buildReady: report(buildReadyOverrides),
   };
 }
 
