@@ -5,6 +5,13 @@ function requireReplacement(source, from, to, label) {
   return source.replace(from, to);
 }
 
+function requireRegexReplacement(source, pattern, to, label) {
+  if (!pattern.test(source)) {
+    throw new Error(`Release UI contract drifted: missing ${label}.`);
+  }
+  return source.replace(pattern, to);
+}
+
 const REQUIRED_PRODUCTION_TOKENS = [
   'id="audit"',
   'id="plan"',
@@ -33,6 +40,9 @@ const FORBIDDEN_DEVELOPER_TOKENS = [
   'p6-page-flow-calibration',
   'p6-runtime-evidence',
   'p7-runtime-evidence',
+  'p14-plan-preview-request',
+  'Preview Guided Prepare',
+  'P14 GUIDED PREPARE PREVIEW',
   'P5 COMPILED RUNTIME SELF-TEST',
   '>Runtime self-test<',
 ];
@@ -52,13 +62,37 @@ export function assertReleaseUiCapabilities(source) {
 }
 
 export function buildReleaseUi(developmentUi) {
-  let releaseUi = developmentUi;
+  let releaseUi = developmentUi.replace(/\r\n/g, '\n');
 
   releaseUi = requireReplacement(
     releaseUi,
-    '<div class="sub">Audit + actionable backlog + P3 validator + compiled-runtime-gated P5 Safe Fix + P7 batch queue</div>',
+    '<div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare preview + P3 validator + P5 Safe Fix + P7 batch queue</div>',
     '<div class="sub">Audit + actionable backlog + visual validation + safety-gated Safe Fix + sequential batch preparation</div>',
     'development UI subtitle',
+  );
+  releaseUi = requireRegexReplacement(
+    releaseUi,
+    /      <button id="p14-preview">Preview Guided Prepare<\/button>\n/,
+    '',
+    'development-only P14 preview button',
+  );
+  releaseUi = requireRegexReplacement(
+    releaseUi,
+    /\n    document\.getElementById\('p14-preview'\)\.addEventListener\('click', \(\) => \{[\s\S]*?\n    \}\);\n    document\.getElementById\('plan'\)/,
+    "\n    document.getElementById('plan')",
+    'development-only P14 preview click handler',
+  );
+  releaseUi = requireRegexReplacement(
+    releaseUi,
+    /\n    function renderP14PlanPreview\(message\) \{[\s\S]*?\n    \}\n\n    function renderSafePlan\(message\) \{/,
+    '\n    function renderSafePlan(message) {',
+    'development-only P14 preview renderer',
+  );
+  releaseUi = requireRegexReplacement(
+    releaseUi,
+    /\n      if \(message\.type === 'p14-plan-preview-result'\) \{[\s\S]*?\n      if \(message\.type === 'safe-plan-result'\) \{/,
+    "\n      if (message.type === 'safe-plan-result') {",
+    'development-only P14 preview message handlers',
   );
   releaseUi = requireReplacement(
     releaseUi,

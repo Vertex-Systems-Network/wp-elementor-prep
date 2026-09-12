@@ -49,6 +49,7 @@ import {
   persistP13RuntimeEvidenceBestEffort,
 } from './p13-runtime-evidence-storage';
 import { buildP13RuntimeEvidenceViewerHtml } from './p13-runtime-evidence-viewer';
+import { buildP14PlanPreview, serializeP14PlanPreviewJson } from './p14-plan-preview';
 import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
@@ -400,6 +401,39 @@ async function runP13RuntimeEvidenceViewer(): Promise<void> {
     ? 'parity candidate ready'
     : 'inspection only';
   figma.notify(`P13 runtime evidence loaded: ${evidence.buildReady.score.score ?? '—'} / ${evidence.buildReady.score.status} · ${eligibility}.`);
+}
+
+async function runP14GuidedPreparePreview(): Promise<void> {
+  try {
+    const evidence = await loadLatestP13RuntimeEvidence(figma.clientStorage);
+    if (!evidence) {
+      figma.ui.postMessage({
+        type: 'p14-plan-preview-unavailable',
+        message: 'No valid persisted P13 Build-Ready evidence is available yet. Run Audit on exactly one Frame first.',
+      });
+      return;
+    }
+
+    const preview = buildP14PlanPreview(evidence.buildReady);
+    figma.ui.postMessage({
+      type: 'p14-plan-preview-result',
+      preview,
+      previewJson: serializeP14PlanPreviewJson(preview),
+      context: {
+        fileKey: evidence.context.fileKey,
+        pageName: evidence.context.pageName,
+        frameName: evidence.context.frameName,
+      },
+      capturedAt: evidence.capturedAt,
+    });
+    figma.notify(`P14 Guided Prepare preview loaded: ${preview.summary.status} · read-only.`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    figma.ui.postMessage({
+      type: 'p14-plan-preview-unavailable',
+      message: `P14 Guided Prepare preview could not be loaded safely: ${message}`,
+    });
+  }
 }
 
 async function runRuntimeEvidenceViewer(): Promise<void> {
@@ -808,6 +842,11 @@ figma.ui.onmessage = async (message: unknown) => {
   if (type === 'audit-request') {
     const sequence = ++auditSequence;
     await runAudit(sequence);
+    return;
+  }
+
+  if (type === 'p14-plan-preview-request') {
+    await runP14GuidedPreparePreview();
     return;
   }
 
