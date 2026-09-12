@@ -8,6 +8,10 @@ import {
   validateP14RecipeExecutionResultEvidence,
   validateP14RetentionEvidence,
 } from './p14-adapter-evidence';
+import {
+  assessP14CancellationCheck,
+  boundedP14CancellationFailureDetail,
+} from './p14-cancellation-check';
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
@@ -97,10 +101,6 @@ function event(now: () => string, state: P14TransactionState, detail?: string): 
 
 function receiptError(code: P14ErrorCode, stage: string, detail: string, recovery?: string): P14ReceiptError {
   return { code, stage, detail, ...(recovery ? { recovery } : {}) };
-}
-
-async function cancelled(check?: () => boolean | Promise<boolean>): Promise<boolean> {
-  return check ? Boolean(await check()) : false;
 }
 
 async function discardCandidate(
@@ -503,7 +503,25 @@ export async function runP14RetainedDuplicateTransaction(
     });
   }
 
-  if (await cancelled(input.shouldCancel)) {
+  const preCloneCancellation = await assessP14CancellationCheck(input.shouldCancel);
+  if (preCloneCancellation.failure) {
+    return baseReceipt({
+      plan,
+      transactionId: input.transactionId,
+      status: 'BLOCKED',
+      terminalState: 'BLOCKED',
+      beforeFingerprint,
+      afterFingerprint: beforeFingerprint,
+      errors: [receiptError(
+        'P14_INTERNAL_INVARIANT_FAILED',
+        'pre-clone-cancellation-check',
+        boundedP14CancellationFailureDetail('Cancellation check failed before cloning', preCloneCancellation.failure),
+        'Fix the cancellation/control callback and retry the current preparation plan.',
+      )],
+      events: [...events, event(now, 'BLOCKED', 'pre-clone cancellation check failed')],
+    });
+  }
+  if (preCloneCancellation.cancelled) {
     return baseReceipt({
       plan,
       transactionId: input.transactionId,
@@ -541,7 +559,28 @@ export async function runP14RetainedDuplicateTransaction(
   const appliedActions: P14RecipeExecutionResult[] = [];
   events.push(event(now, 'TRANSFORMING'));
   for (const action of actions) {
-    if (await cancelled(input.shouldCancel)) {
+    const transformCancellation = await assessP14CancellationCheck(input.shouldCancel);
+    if (transformCancellation.failure) {
+      const discardError = await discardCandidate(adapter, candidate);
+      return cleanupOutcome({
+        plan,
+        transactionId: input.transactionId,
+        beforeFingerprint,
+        afterFingerprint: unknownFingerprint,
+        candidate,
+        appliedActions,
+        events,
+        now,
+        primaryError: receiptError(
+          'P14_INTERNAL_INVARIANT_FAILED',
+          'transform-cancellation-check',
+          boundedP14CancellationFailureDetail('Cancellation check failed between recipe checkpoints', transformCancellation.failure),
+          'Fix the cancellation/control callback and re-run preparation from a fresh plan.',
+        ),
+        discardError,
+      });
+    }
+    if (transformCancellation.cancelled) {
       const discardError = await discardCandidate(adapter, candidate);
       return cleanupOutcome({
         plan,
@@ -692,7 +731,28 @@ export async function runP14RetainedDuplicateTransaction(
     }
   }
 
-  if (await cancelled(input.shouldCancel)) {
+  const preValidationCancellation = await assessP14CancellationCheck(input.shouldCancel);
+  if (preValidationCancellation.failure) {
+    const discardError = await discardCandidate(adapter, candidate);
+    return cleanupOutcome({
+      plan,
+      transactionId: input.transactionId,
+      beforeFingerprint,
+      afterFingerprint: unknownFingerprint,
+      candidate,
+      appliedActions,
+      events,
+      now,
+      primaryError: receiptError(
+        'P14_INTERNAL_INVARIANT_FAILED',
+        'pre-validation-cancellation-check',
+        boundedP14CancellationFailureDetail('Cancellation check failed before validation', preValidationCancellation.failure),
+        'Fix the cancellation/control callback and re-run preparation from a fresh plan.',
+      ),
+      discardError,
+    });
+  }
+  if (preValidationCancellation.cancelled) {
     const discardError = await discardCandidate(adapter, candidate);
     return cleanupOutcome({
       plan,
@@ -821,7 +881,29 @@ export async function runP14RetainedDuplicateTransaction(
     return { ...result, validation, rescore };
   }
 
-  if (await cancelled(input.shouldCancel)) {
+  const preFinalizeCancellation = await assessP14CancellationCheck(input.shouldCancel);
+  if (preFinalizeCancellation.failure) {
+    const discardError = await discardCandidate(adapter, candidate);
+    const result = cleanupOutcome({
+      plan,
+      transactionId: input.transactionId,
+      beforeFingerprint,
+      afterFingerprint: unknownFingerprint,
+      candidate,
+      appliedActions,
+      events,
+      now,
+      primaryError: receiptError(
+        'P14_INTERNAL_INVARIANT_FAILED',
+        'pre-finalize-cancellation-check',
+        boundedP14CancellationFailureDetail('Cancellation check failed before finalization', preFinalizeCancellation.failure),
+        'Fix the cancellation/control callback and re-run preparation from a fresh plan.',
+      ),
+      discardError,
+    });
+    return { ...result, validation, rescore };
+  }
+  if (preFinalizeCancellation.cancelled) {
     const discardError = await discardCandidate(adapter, candidate);
     const result = cleanupOutcome({
       plan,

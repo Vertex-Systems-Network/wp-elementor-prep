@@ -24,7 +24,7 @@ Canonical planning docs:
 - `docs/MARKET_RESEARCH_PLAN.md` — R0 market/platform research;
 - `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` — retained September 2026 competitor/platform snapshot;
 - `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md` — R1 adapter/option/system reliability contract;
-- `docs/COMMERCIAL_EXPANSION_PLAN.md` — P13-P26 commercial roadmap;
+- `docs/COMMERCIAL_EXPANSION_PLAN.md` — retained P13-P26 commercial implementation roadmap; P27 final production-release gate is tracked by #182;
 - `docs/P13_P26_PREFLIGHT_COMPLETION_2026-09-11.md` — retained P13-P26 planning/preflight completion index;
 - `docs/AI_NATIVE_PLAN.md`;
 - `docs/FEATURE_PLAN.md`.
@@ -33,16 +33,18 @@ Canonical planning docs:
 
 > **Progress policy:** implementation, runtime acceptance and external Community review are tracked separately. New future scope does not reduce already-completed historical core progress.
 
-**Open PR/MR:** `0 baseline before this focused sync branch; expected 0 again after merge`.
+**Open PR/MR:** see the repository's current pull-request list; this README intentionally does not hardcode a count.
 
-Open issues:
+Open roadmap / acceptance issues:
 
-- `#84` — P12 final validation: active manual/publisher/runtime exit gate.
-- `#119` — P13-P26 commercial/multi-target expansion owner; planning/preflight complete, runtime implementation blocked by #84 internal exit.
+- `#84` — P12 retained final validation/release-exit truth; remaining live runtime/publisher/2FA evidence is intentionally deferred to the final release sequence.
+- `#119` — P13-P27 commercial/multi-target roadmap owner; P13-P26 implementation/testing may proceed before final production release.
+- `#159` — P13 real-plugin Build-Ready runtime/parity evidence and internal runtime-acceptance dependency.
+- `#182` — P27 final production-release gate coordinating the remaining external/manual release evidence and final release decision.
 
 PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f`. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81`. PR #129 added deterministic final publisher-evidence intake tooling and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed. PR #130 then synchronized the post-#129 repository status and merged as `c6a4e1df034fbd62077c58227b2c0c4dc4c116d2`. PR #131 retained the current commercial R0 market refresh and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`; its current-main push checks passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46. Issue #126 is closed completed.
 
-The P13-P26 planning/preflight sequence is now retained end-to-end. P13-P16 froze the initial readiness/duplicate/Elementor/Gutenberg contracts, P17-P20 froze universal web/framework/assets/round-trip QA, and PRs #141-#146 froze P21-P26 handoff, estimation, agency/project state, dynamic data, commercial entitlements and optional AI. The final P26 planning merge is `451656e7907803f75a715d7cbd93390a3931bea8`. This planning completion grants **no P13-P26 runtime acceptance credit**: every phase remains at `0%` implementation until #84 internal exit genuinely passes.
+The retained P13-P26 planning/preflight sequence remains the implementation contract. Since that freeze, P13 Build-Ready Score/Responsive Risk core plus plugin/CLI integration and real-source calibration have been implemented; real-plugin runtime/parity acceptance remains open in #159. P14 target-neutral retained-duplicate preparation is under active pure-core hardening with production recipe authority and real Figma mutation exposure intentionally unwired. P15-P26 remain preflight-frozen and implementation-not-started. Under roadmap #119, those implementation/test slices are no longer blocked by #84; production acceptance/release remains a separate P27/#182 decision and #84 retains the P12 release-exit truth.
 
 ### Module-wise progress
 
@@ -60,24 +62,25 @@ The P13-P26 planning/preflight sequence is now retained end-to-end. P13-P16 froz
 | P12 Final integrated validation | IN PROGRESS | 80% | `████████░░` | Fresh exact-#20 runtime/final-details/2FA evidence + final internal exit review |
 | R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Current snapshot retained; refresh again per major adapter |
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; execute profile/capability/validator/harness gate per adapter |
-| P13 Build-Ready Score 2.0 + Responsive Risk | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | #84 internal P12 exit first; then focused implementation issue |
-| P14 Target-Ready Duplicate + Guided Prepare | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | P13 accepted implementation evidence first |
-| P15 Elementor native export + validation | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; versioned v3/v4 adapter + real import proof |
-| P16 Gutenberg native export + transfer | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; native block/pattern/editor validation |
-| P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
-| P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Neutral Web IR + versioned adapter/build matrix retained |
-| P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
-| P20 Round-trip QA + section portability | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Controlled render harness + calibrated QA required in implementation |
-| P21 Handoff/client QA/a11y-SEO advisories | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Build from accepted target outputs; bounded claim rules retained |
-| P22 Complexity / effort estimator | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Transparent effort-unit/calibration contract retained |
-| P23 Agency/project/component bindings | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Stable implemented adapters first; semantic invalidation contract retained |
-| P24 CMS/dynamic/forms/interactions | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Typed data/form/provider mappings retained; production writes remain out of first slice |
-| P25 Free / Pro / Agency packaging | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Capability-based entitlement contract retained; publisher eligibility remains external/account-specific |
-| P26 Optional AI assistance | PREFLIGHT FROZEN / IMPLEMENTATION BLOCKED | 0% | `░░░░░░░░░░` | Non-authoritative AI authority firewall retained; provider/network choice still unselected |
+| P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains; production release is later P27 |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Continue pure-core fail-closed hardening; production registry remains empty; #159 required before real Figma mutation exposure |
+| P15 Elementor native export + validation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; versioned v3/v4 adapter + real import proof |
+| P16 Gutenberg native export + transfer | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; native block/pattern/editor validation |
+| P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
+| P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + versioned adapter/build matrix retained |
+| P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
+| P20 Round-trip QA + section portability | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Controlled render harness + calibrated QA required in implementation |
+| P21 Handoff/client QA/a11y-SEO advisories | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Build from accepted target outputs; bounded claim rules retained |
+| P22 Complexity / effort estimator | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Transparent effort-unit/calibration contract retained |
+| P23 Agency/project/component bindings | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Stable implemented adapters first; semantic invalidation contract retained |
+| P24 CMS/dynamic/forms/interactions | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Typed data/form/provider mappings retained; production writes remain out of first slice |
+| P25 Free / Pro / Agency packaging | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Capability-based entitlement contract retained; publisher eligibility remains external/account-specific |
+| P26 Optional AI assistance | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Non-authoritative AI authority firewall retained; provider/network choice still unselected |
+| P27 Final production release + publisher/runtime evidence | GATE DEFINED / EXECUTION DEFERRED | 0% exec | `░░░░░░░░░░` | Run after implementation/internal-readiness sequence; coordinate retained #84 truth + final live runtime/publisher/2FA evidence |
 
-**Overall active project progress:** `██████████ 100%`
+**Overall progress is intentionally not collapsed into one synthetic percentage.** Historical P0-P7 core remains 100%; P12 remains 80%; P13 implementation is complete with runtime acceptance pending; P14 core implementation is active and runtime-unwired; P15-P26 implementation is not started; P27 release execution is not started.
 
-Historical P0-P7 core remains 100%. P12 is tracked separately at 80%. R0/R1 gate definitions are complete but must be re-executed per applicable adapter. **P13-P26 planning/preflight is complete, while P13-P26 runtime implementation remains 0% and is not implementation-authorized until #84 internal exit.**
+R0/R1 gate definitions remain complete but are re-executed where applicable. Implementation completion, real-runtime acceptance and production release are separate evidence states; one does not imply another.
 
 ## Current P12 publishing line
 
@@ -219,16 +222,14 @@ Stored image bytes are not described as proven upstream-upload provenance when F
 
 ## Current execution order
 
-1. capture fresh exact release #20 Figma Desktop runtime evidence;
-2. capture fresh Publish → Add final details evidence with the generated publishing ID accepted and intended publisher/Community/support/network facts visible;
-3. capture fresh Figma 2FA-enabled account/security evidence;
-4. run the exact release #20 publisher-evidence intake and retain the receipt;
-5. perform the final P12 internal exit review from the receipt + retained screenshots;
-6. close P12 internal exit only on retained evidence;
-7. open focused P13 implementation issue from #119 using `docs/P13_BUILD_READY_SCORE_SPEC.md` as the frozen preflight contract;
-8. refresh R0 before each major external adapter if platform facts materially changed;
-9. execute R1 before implementing/accepting each major adapter;
-10. implement P13-P26 in dependency order with one focused issue/branch/PR per slice; planning/preflight is already retained and must not be confused with implementation acceptance.
+1. continue P14 pure-core implementation/hardening with focused issue/branch/PR slices while real Figma mutation remains unwired;
+2. complete P13 #159 real-plugin runtime/parity acceptance when genuine real-Figma evidence is available; #159 is required before P14 real mutation exposure, not before pure-core development;
+3. refresh R0 before each major external adapter if platform facts materially changed;
+4. execute R1 before implementing/accepting each major adapter;
+5. implement P15-P26 in dependency order with one focused issue/branch/PR per slice, preserving the distinction between implementation, internal readiness and production acceptance;
+6. use P27 #182 as the final production-release sequence only after the implementation/internal-readiness program is ready;
+7. during P27, capture the remaining exact release runtime, Publish final-details and 2FA evidence, run the retained P12 publisher-evidence intake, and perform the genuine #84 release-exit decision;
+8. treat Community submission/review/approval as external to internal production acceptance.
 
 ## Development and validation commands
 
