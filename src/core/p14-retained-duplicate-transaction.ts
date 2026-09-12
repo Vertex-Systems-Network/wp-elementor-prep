@@ -5,6 +5,7 @@ import {
   safeP14RuntimeErrorMessage,
 } from './p14-receipt-evidence';
 import { assessP14RunControlEvidence } from './p14-run-control-evidence';
+import { snapshotP14SemanticInputEvidence } from './p14-semantic-input-snapshot';
 import { P14_UNKNOWN_SOURCE_FINGERPRINT } from './p14-source-fingerprint-evidence';
 import {
   P14_UNKNOWN_EVENT_TIMESTAMP,
@@ -135,6 +136,26 @@ function snapshotP14RunInput(input: unknown): P14RunInputSnapshotAssessment {
   };
 }
 
+function semanticRunInputSnapshot(
+  snapshot: P14RunInputSnapshot,
+  plan: unknown,
+  confirmation: unknown,
+): P14RunInputSnapshot {
+  return {
+    plan,
+    ...(snapshot.registry !== undefined ? { registry: snapshot.registry } : {}),
+    ...(snapshot.coordinator !== undefined ? { coordinator: snapshot.coordinator } : {}),
+    ...(snapshot.inputBounds !== undefined ? { inputBounds: snapshot.inputBounds } : {}),
+    ...(confirmation !== undefined ? { confirmation } : {}),
+    transactionId: snapshot.transactionId,
+    ...(snapshot.preparedName !== undefined ? { preparedName: snapshot.preparedName } : {}),
+    ...(snapshot.allowPreparedWithReview !== undefined
+      ? { allowPreparedWithReview: snapshot.allowPreparedWithReview }
+      : {}),
+    ...(snapshot.shouldCancel !== undefined ? { shouldCancel: snapshot.shouldCancel } : {}),
+  };
+}
+
 function guardP14RuntimeEligibilityHook(
   adapter: P14RetainedDuplicateAdapter,
 ): P14RetainedDuplicateAdapter {
@@ -249,8 +270,8 @@ function delegatedRunInput(
 }
 
 /**
- * Public P14 transaction boundary. The caller object is snapshotted once before transaction
- * semantics, then caller controls are validated and normalized before the retained-duplicate core.
+ * Public P14 transaction boundary. Caller controls and the known nested plan/confirmation contract
+ * are snapshotted before retained-duplicate semantics so caller-owned getters are not re-entered.
  */
 export async function runP14RetainedDuplicateTransaction(
   input: P14RetainedDuplicateRunInput,
@@ -313,12 +334,11 @@ export async function runP14RetainedDuplicateTransaction(
       'bounds-evidence',
     );
   }
-  const guardedAdapter = guardP14RuntimeEligibilityHook(adapter);
 
-  // Preserve the established P14_INPUT_TOO_LARGE path for valid typed controls whose raw resource
-  // size exceeds the current/default or caller-supplied stricter limit. The core receives only the
-  // already-snapshotted inputBounds object, so hostile getters cannot be re-entered.
+  // Preserve the established P14_INPUT_TOO_LARGE path for caller evidence already proven oversized
+  // by the first bounded traversal. No semantic snapshot is required to reject that input safely.
   if (!boundedPreflight.allowed) {
+    const guardedAdapter = guardP14RuntimeEligibilityHook(adapter);
     return runP14RetainedDuplicateTransactionCore(delegatedRunInput(inputSnapshot, {
       transactionId: controlSnapshot.rawTransactionId,
       preparedName: rawPreparedName,
@@ -327,10 +347,57 @@ export async function runP14RetainedDuplicateTransaction(
     }, now), guardedAdapter);
   }
 
-  return runP14RetainedDuplicateTransactionCore(delegatedRunInput(inputSnapshot, {
+  const semanticEvidence = snapshotP14SemanticInputEvidence(
+    inputSnapshot.plan,
+    inputSnapshot.confirmation,
+    boundedPreflight.effectiveLimits,
+  );
+  if (!semanticEvidence.valid) {
+    return boundaryBlockedReceipt(
+      undefined,
+      controls.safeTransactionId,
+      now,
+      semanticEvidence.failures,
+      'bounds-evidence',
+    );
+  }
+
+  const semanticSnapshot = semanticRunInputSnapshot(
+    inputSnapshot,
+    semanticEvidence.plan,
+    semanticEvidence.confirmation,
+  );
+
+  let semanticPreflight;
+  try {
+    semanticPreflight = assessP14PreparationInputBounds(semanticSnapshot.plan, controlSnapshot.inputBounds, {
+      transactionId: controlSnapshot.transactionId,
+      preparedName: controlSnapshot.preparedName,
+      confirmation: semanticSnapshot.confirmation,
+    });
+  } catch (error) {
+    return boundaryBlockedReceipt(
+      semanticSnapshot.plan,
+      controls.safeTransactionId,
+      now,
+      [`P14 semantic snapshot bounds could not be read safely: ${safeP14RuntimeErrorMessage(error)}`],
+      'bounds-evidence',
+    );
+  }
+
+  const guardedAdapter = guardP14RuntimeEligibilityHook(adapter);
+  const delegated = delegatedRunInput(semanticSnapshot, {
     transactionId: controlSnapshot.transactionId,
     preparedName: controlSnapshot.preparedName,
     allowPreparedWithReview: controlSnapshot.allowPreparedWithReview,
     inputBounds: controlSnapshot.inputBounds,
-  }, now), guardedAdapter);
+  }, now);
+
+  // Stateful-but-readable evidence may grow between the first bounds pass and semantic capture.
+  // Delegate the bounded plain snapshot so the core preserves the existing P14_INPUT_TOO_LARGE path.
+  if (!semanticPreflight.allowed) {
+    return runP14RetainedDuplicateTransactionCore(delegated, guardedAdapter);
+  }
+
+  return runP14RetainedDuplicateTransactionCore(delegated, guardedAdapter);
 }

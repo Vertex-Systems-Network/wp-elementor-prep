@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded bounded semantic snapshots for known nested plan/confirmation evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
 
 ## Bounded input preflight
 
@@ -31,7 +31,21 @@ Important safety behavior:
 
 Nested plan/confirmation evidence traversed by the bounds gate is also untrusted runtime data. Both the public preflight and the internal retained-duplicate core guard their bounds traversal. A throwing getter/proxy on either traversal therefore cannot reject the transaction promise: it returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `bounds-evidence` before source coordination or adapter access. The internal second-pass rejection uses `UNKNOWN` / `p14-plan-invalid` correlation sentinels rather than dereferencing the hostile plan again. Readable oversized evidence remains on the existing `P14_INPUT_TOO_LARGE` / `bounds` path.
 
-These limits are freeze/resource safety bounds only. Unreadable-evidence hardening does not deep-snapshot readable nested semantics, add a new limit, or establish Elementor/Gutenberg conversion effort or target compatibility.
+These limits are freeze/resource safety bounds only. They do not establish Elementor/Gutenberg conversion effort or target compatibility.
+
+## Nested plan/confirmation semantic snapshot
+
+The first bounded traversal proves resource limits at one point in time, but readable caller-owned proxies/getters can still be stateful. P14 therefore does not delegate those live nested objects into semantic validation/execution after preflight.
+
+After the first bounds pass allows the input, `snapshotP14SemanticInputEvidence(...)` captures only the known P14 plan and optional confirmation contract into plain runtime values through guarded property/index reads. Collection reads are constrained by the already-effective P14 action/blocker/target/dependency/mutation/bucket limits, including the total target-reference budget. The snapshot routine does not enumerate arbitrary properties and is not a generic recursive deep clone.
+
+The known copied plan evidence includes plan version/run/source/status/digest fields, action fields and bounded nested action collections, blockers and action-ID buckets. The known copied confirmation evidence includes version/authority flags, timestamp, plan/run/source correlation and eligible-action IDs. Malformed object-valued scalar fields are reduced to non-authoritative plain markers so caller-owned objects are not promoted into core semantics.
+
+The existing bounded-input contract is run again against the plain semantic snapshot before delegation. This second public proof is important for readable stateful evidence: if an array or identity grows beyond the accepted resource contract between the first preflight and snapshot capture, execution still reaches the existing `P14_INPUT_TOO_LARGE` / `bounds` refusal rather than semantic traversal or adapter access. Oversized arrays are represented with bounded sentinel size and their items are not traversed beyond the accepted budget.
+
+If semantic capture itself encounters unreadable evidence, the transaction reuses the existing bounded `P14_INTERNAL_INVARIANT_FAILED` / `bounds-evidence` path before coordination or adapter access. For the #216 second-pass unreadable contract, correlation remains `UNKNOWN` / `p14-plan-invalid` rather than re-reading hostile plan metadata.
+
+Once capture succeeds, plan integrity, authorization, confirmation validation and retained-duplicate transaction semantics operate on the plain snapshot. Readable stateful caller getters/proxies therefore cannot change source/action/confirmation semantics after the public evidence boundary. This adds no new recipe, target, authentication, compatibility or production-acceptance authority, and the production safe-recipe registry remains empty.
 
 ## Top-level run-input runtime evidence
 
@@ -43,7 +57,7 @@ If the top-level input is not a runtime object, or any known transaction propert
 
 Runtime clock metadata remains intentionally separate: reading `now` still uses the existing fail-soft clock contract. A missing, malformed or throwing `now` property/callback becomes `UNKNOWN` event-time evidence rather than transaction authority failure.
 
-This top-level snapshot does not replace nested plan, confirmation, registry, bounds, coordinator or cancellation validators. It only makes their caller-provided references stable/readable before those existing contracts run. Valid oversized controls therefore retain the established `P14_INPUT_TOO_LARGE` path, and no recipe, target, authentication, compatibility or production-acceptance authority is added.
+The top-level snapshot stabilizes caller references; it does not itself replace nested plan, confirmation, registry, bounds, coordinator or cancellation validators. Nested plan/confirmation references are subsequently captured through the bounded semantic-snapshot contract above. Valid oversized controls therefore retain the established `P14_INPUT_TOO_LARGE` path, and no recipe, target, authentication, compatibility or production-acceptance authority is added.
 
 ## Run-control runtime evidence
 
@@ -349,6 +363,12 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 67. Unreadable nested bounds evidence fails before coordination/adapter access as bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `bounds-evidence`.
 68. Internal second-pass bounds failure uses bounded `UNKNOWN` / `p14-plan-invalid` correlation sentinels instead of re-reading hostile plan metadata.
 69. Readable oversized bounds evidence remains on `P14_INPUT_TOO_LARGE` / `bounds`; unreadable-evidence hardening adds no recipe, target, compatibility or acceptance authority.
+70. After an allowed first bounds pass, known plan/confirmation semantics are captured through bounded guarded reads into plain evidence before plan integrity, confirmation or execution semantics.
+71. The semantic snapshot copies only the known P14 contract and never enumerates arbitrary caller properties or performs an unbounded generic deep clone.
+72. Caller-owned nested plan/confirmation getters are not delegated into core semantics after snapshot capture; readable state changes after the boundary cannot alter source/action/confirmation authority.
+73. The existing bounds contract is re-run on the plain semantic snapshot; evidence that grows oversized between first preflight and capture preserves `P14_INPUT_TOO_LARGE` / `bounds` rather than entering semantic traversal.
+74. Unreadable semantic capture remains bounded `P14_INTERNAL_INVARIANT_FAILED` / `bounds-evidence`; the established #216 `UNKNOWN` / `p14-plan-invalid` fallback remains authoritative where correlation cannot be trusted.
+75. Nested semantic snapshotting adds no production recipe, real Figma mutation surface, target compatibility or production-acceptance authority.
 
 ## Deliberately not wired yet
 
