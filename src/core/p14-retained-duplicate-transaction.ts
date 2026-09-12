@@ -20,6 +20,11 @@ import {
   validateP14ValidationEvidence,
   type P14BoundedValidationEvidence,
 } from './p14-validation-evidence';
+import {
+  boundedP14DiagnosticDetail,
+  boundedP14DiagnosticIdentity,
+  boundedP14RuntimeErrorMessage,
+} from './p14-receipt-evidence';
 import { validateP14RescoreEvidence } from './p14-rescore-evidence';
 import { validateP14RuntimeActionEligibilityEvidence } from './p14-runtime-action-eligibility';
 import {
@@ -64,7 +69,7 @@ export interface P14RetainedDuplicateRunInput {
 }
 
 function messageOf(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
+  return boundedP14RuntimeErrorMessage(error);
 }
 
 async function readP14SourceFingerprint(
@@ -80,11 +85,20 @@ async function readP14SourceFingerprint(
 }
 
 function event(now: () => string, state: P14TransactionState, detail?: string): P14TransactionEvent {
-  return { state, at: now(), ...(detail ? { detail } : {}) };
+  return {
+    state,
+    at: now(),
+    ...(detail ? { detail: boundedP14DiagnosticDetail(detail) } : {}),
+  };
 }
 
 function receiptError(code: P14ErrorCode, stage: string, detail: string, recovery?: string): P14ReceiptError {
-  return { code, stage, detail, ...(recovery ? { recovery } : {}) };
+  return {
+    code,
+    stage: boundedP14DiagnosticIdentity(stage, 'unknown-stage'),
+    detail: boundedP14DiagnosticDetail(detail),
+    ...(recovery ? { recovery: boundedP14DiagnosticDetail(recovery) } : {}),
+  };
 }
 
 async function discardCandidate(
