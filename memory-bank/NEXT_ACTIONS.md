@@ -81,9 +81,9 @@ Canonical future order:
 
 ### #201 — P14 transaction coordinator runtime evidence and lease cleanup
 
-Classification: **ACTIVE / PR #205 under synchronized-head verification**.
+Classification: **COMPLETED / merged through PR #205**.
 
-PR #205 (`fix/p14-coordinator-runtime-evidence-201`) hardens the remaining injected-coordinator trust boundary without changing recipe or target authority:
+PR #205 (`fix/p14-coordinator-runtime-evidence-201`) closed the injected-coordinator trust-boundary gap without changing recipe or target authority:
 
 1. `assessP14TransactionLeaseResultEvidence(...)` validates acquisition results as runtime evidence before any adapter access;
 2. acquired lease source scope and transaction ID must be bounded and exactly match the normalized requested identities;
@@ -96,9 +96,9 @@ PR #205 (`fix/p14-coordinator-runtime-evidence-201`) hardens the remaining injec
 9. default coordinator conflict/concurrency behavior and NO_CHANGES_NEEDED no-lease behavior remain unchanged;
 10. no distributed locking, host authentication, real Figma mutation surface or production recipe authority is introduced.
 
-Initial code/test head `511bf68adbe1859695d7dbe2dea12e974afa024f` passed CI #867 including status verification, typecheck, full tests, builds and release/package/community contracts; P12 Final Release Artifact #178 passed; P12 Offline Acceptance #222 passed on Ubuntu/macOS/Windows. These checks validate the implementation slice only. Final merge authority requires fresh CI, Integration Readiness, Final Release Artifact and cross-platform Offline Acceptance on the synchronized documentation head plus a clean/current/mergeable PR gate.
+Initial code/test head `511bf68adbe1859695d7dbe2dea12e974afa024f` passed CI #867, P12 Final Release Artifact #178 and P12 Offline Acceptance #222 on Ubuntu/macOS/Windows. Exact synchronized head `1f76443e652f5d7c2c3dd9498b33463c1c2e7e03` then passed CI #872, Integration Readiness #239, P12 Final Release Artifact #183 and P12 Offline Acceptance #227 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `e80bf4c21b64d6b72714965f4e954759e1c4159d`. Issue #201 closed completed.
 
-Accidental issues #202, #203 and #204 were created empty during tool invocation, immediately marked **CLOSED / NOT PLANNED**, and carry no work; #201 is the only authoritative issue for this slice.
+Accidental issues #202, #203 and #204 were created empty during tool invocation, immediately marked **CLOSED / NOT PLANNED**, and carry no work; #201 is the only authoritative implementation issue for this slice.
 
 ### #198 — P14 safe-recipe registry evidence bounds
 
@@ -196,12 +196,12 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #201 / PR #205 coordinator runtime-evidence and lease-cleanup hardening on its final synchronized head;
+1. start the next focused safety-gap audit from main `e80bf4c...` now that #201 / PR #205 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
 5. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
-6. after #201 merges, continue focused safety-gap audits until core implementation is internally ready;
+6. continue focused safety-gap audits until core implementation is internally ready;
 7. require #159 before real Figma mutation exposure;
 8. require genuine real-Figma acceptance before any production mutation/readiness claim.
 
