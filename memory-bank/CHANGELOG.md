@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-12 — P14 receipt envelope and runtime-diagnostic hardening
+
+- Opened issue #192 and focused PR #193 (`fix/p14-receipt-envelope-bounds-192`) for the remaining P14 receipt-envelope/resource-safety gap.
+- Added `src/core/p14-receipt-evidence.ts` with shared receipt collection, identity/detail bounding and hostile runtime-error rendering helpers based on the existing P14 safety limits.
+- Receipt integrity now count-bounds `appliedActions`, `errors` and `events` from `.length` before item traversal, preventing forged oversized collections from triggering unbounded iteration or status-specific scans.
+- Receipt `transactionId`, `p13RunId`, `planDigest`, source node identity and error stage now use the existing P14 identity bound; error detail/recovery and event detail use the existing detail bound.
+- Transaction `receiptError(...)` and event construction now emit bounded diagnostics by construction. Adapter and discard exception text is bounded before entering receipt state; hostile exception stringification falls back deterministically instead of escaping the transaction.
+- Added `tests/p14-receipt-envelope-bounds.test.ts` covering exact limits, forged oversized top-level evidence, proxy-backed no-traversal collection checks, long adapter/discard exceptions and exception objects whose `toString()` throws.
+- Updated `docs/P14_FOUNDATION_IMPLEMENTATION.md` with the bounded receipt-envelope/runtime-diagnostic contract and new safety invariants. No real Figma mutation command, production recipe authority, target-compatibility claim or acceptance authority was introduced.
+- Pre-memory-sync PR head `7a031c2f8e2b405e084ae2fbdd677205d9e9c7e7` passed CI #840 including typecheck/full tests/builds/contracts, P12 Final Release Artifact #151, and P12 Offline Acceptance #195 on Ubuntu/macOS/Windows.
+- The final synchronized PR head must still independently pass the same required gates and satisfy zero unresolved review threads, current-with-main and mergeable checks before #192 is closed.
+
 ## 2026-09-11 — R0 commercial market refresh
 
 - Ran a fresh public-market scan against current UiChemy, Anima, Locofy, Builder.io and first-party Figma product/documentation pages.

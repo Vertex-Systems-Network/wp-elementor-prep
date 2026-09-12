@@ -26,6 +26,7 @@ Canonical planning docs:
 - `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md` — R1 adapter/option/system reliability contract;
 - `docs/COMMERCIAL_EXPANSION_PLAN.md` — retained P13-P26 commercial implementation roadmap; P27 final production-release gate is tracked by #182;
 - `docs/P13_P26_PREFLIGHT_COMPLETION_2026-09-11.md` — retained P13-P26 planning/preflight completion index;
+- `docs/P14_FOUNDATION_IMPLEMENTATION.md` — current target-neutral retained-duplicate core safety contract;
 - `docs/AI_NATIVE_PLAN.md`;
 - `docs/FEATURE_PLAN.md`.
 
@@ -41,10 +42,11 @@ Open roadmap / acceptance issues:
 - `#119` — P13-P27 commercial/multi-target roadmap owner; P13-P26 implementation/testing may proceed before final production release.
 - `#159` — P13 real-plugin Build-Ready runtime/parity evidence and internal runtime-acceptance dependency.
 - `#182` — P27 final production-release gate coordinating the remaining external/manual release evidence and final release decision.
+- `#192` — current P14 bounded receipt-envelope/runtime-diagnostic hardening slice, implemented in PR #193 and pending final synchronized-head verification before closure.
 
 PR #122 merged the market-researched multi-target planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565` after CI #721, Integration Readiness #156, P12 Offline Acceptance #76 and P12 Final Release Artifact #32 passed. PR #123 synchronized post-plan status and merged as `d34c026202ae6ecd8f88f71e6056d619578ce56f`. PR #124 added the R1 reliability/compatibility audit and merged as `4d38c46c359bd030bf36100f4424760b1380db81`. PR #129 added deterministic final publisher-evidence intake tooling and squash-merged as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed. PR #130 then synchronized the post-#129 repository status and merged as `c6a4e1df034fbd62077c58227b2c0c4dc4c116d2`. PR #131 retained the current commercial R0 market refresh and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`; its current-main push checks passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46. Issue #126 is closed completed.
 
-The retained P13-P26 planning/preflight sequence remains the implementation contract. Since that freeze, P13 Build-Ready Score/Responsive Risk core plus plugin/CLI integration and real-source calibration have been implemented; real-plugin runtime/parity acceptance remains open in #159. P14 target-neutral retained-duplicate preparation is under active pure-core hardening with production recipe authority and real Figma mutation exposure intentionally unwired. P15-P26 remain preflight-frozen and implementation-not-started. Under roadmap #119, those implementation/test slices are no longer blocked by #84; production acceptance/release remains a separate P27/#182 decision and #84 retains the P12 release-exit truth.
+The retained P13-P26 planning/preflight sequence remains the implementation contract. Since that freeze, P13 Build-Ready Score/Responsive Risk core plus plugin/CLI integration and real-source calibration have been implemented; real-plugin runtime/parity acceptance remains open in #159. P14 target-neutral retained-duplicate preparation is under active pure-core hardening with production recipe authority and real Figma mutation exposure intentionally unwired. The current #192 / PR #193 slice closes the remaining receipt-envelope/resource-safety gap by bounding receipt collections, correlation identities, diagnostics and runtime exception evidence without changing P14 authority. P15-P26 remain preflight-frozen and implementation-not-started. Under roadmap #119, those implementation/test slices are no longer blocked by #84; production acceptance/release remains a separate P27/#182 decision and #84 retains the P12 release-exit truth.
 
 ### Module-wise progress
 
@@ -63,7 +65,7 @@ The retained P13-P26 planning/preflight sequence remains the implementation cont
 | R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Current snapshot retained; refresh again per major adapter |
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Contract complete; execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains; production release is later P27 |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Continue pure-core fail-closed hardening; production registry remains empty; #159 required before real Figma mutation exposure |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Finish #192 / PR #193 final-head gates, then continue focused pure-core fail-closed audit; production registry remains empty; #159 required before real Figma mutation exposure |
 | P15 Elementor native export + validation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; versioned v3/v4 adapter + real import proof |
 | P16 Gutenberg native export + transfer | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; native block/pattern/editor validation |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
@@ -222,7 +224,7 @@ Stored image bytes are not described as proven upstream-upload provenance when F
 
 ## Current execution order
 
-1. continue P14 pure-core implementation/hardening with focused issue/branch/PR slices while real Figma mutation remains unwired;
+1. finish #192 / PR #193 on the final synchronized head, then continue P14 pure-core implementation/hardening with focused issue/branch/PR slices while real Figma mutation remains unwired;
 2. complete P13 #159 real-plugin runtime/parity acceptance when genuine real-Figma evidence is available; #159 is required before P14 real mutation exposure, not before pure-core development;
 3. refresh R0 before each major external adapter if platform facts materially changed;
 4. execute R1 before implementing/accepting each major adapter;

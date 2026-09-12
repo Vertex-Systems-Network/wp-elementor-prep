@@ -38,18 +38,20 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
 - #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
 - #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
+- #192 — P14 bounded receipt envelope/diagnostics/runtime exception evidence: **ACTIVE / IMPLEMENTED IN PR #193, verification in progress on the final synchronized head**. No runtime/UI exposure or production recipe authority is included.
 - #126 — exact release #20 publisher evidence intake hardening: **COMPLETED** through PR #129.
 
 ## Current PR / main queue
 
+- Main baseline for the current P14 slice is `9e8d34507b3b7832e80b989d729fd042a0b970fa`, which merged the preceding bounded validation-check evidence work from PR #191 / issue #190.
+- PR #193 (`fix/p14-receipt-envelope-bounds-192`) is the only current focused implementation PR. Its pre-memory-sync head `7a031c2f8e2b405e084ae2fbdd677205d9e9c7e7` passed CI #840, P12 Final Release Artifact #151 and P12 Offline Acceptance #195 on Ubuntu/macOS/Windows.
+- PR #193 bounds `appliedActions`, `errors` and `events` before traversal, bounds receipt identities/diagnostics, safely renders hostile runtime exception text, and adds proxy/no-traversal plus exact-boundary regression coverage.
 - PR #122 merged the researched P13-P26 planning baseline as `ade501fedb8c810b4964eb3dda414c58450e8565`.
 - PR #123 merged post-plan status synchronization as `d34c026202ae6ecd8f88f71e6056d619578ce56f`.
 - PR #124 merged the R1 reliability/compatibility audit as `4d38c46c359bd030bf36100f4424760b1380db81`.
 - PR #129 merged P12 publisher evidence intake tooling as `cc466367fa0c6fee119d4fb183371af5fb3f04c7` after CI #730, P12 Offline Acceptance #85 and P12 Final Release Artifact #41 passed.
 - PR #130 synchronized the post-#129 repository state and merged as `c6a4e1df034fbd62077c58227b2c0c4dc4c116d2`.
 - PR #131 retained the current R0 commercial market snapshot and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`.
-- Current-main checks on `a22b312...` passed CI #735, Integration Readiness #168, P12 Offline Acceptance #90 and P12 Final Release Artifact #46.
-- Open PR/MR baseline before the present focused documentation sync was `0`.
 
 ## Current planning baseline
 
@@ -66,6 +68,7 @@ Canonical docs:
 - `docs/R0_MARKET_SNAPSHOT_2026-09-11.md`;
 - `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md`;
 - `docs/COMMERCIAL_EXPANSION_PLAN.md`;
+- `docs/P14_FOUNDATION_IMPLEMENTATION.md`;
 - `docs/AI_NATIVE_PLAN.md`;
 - `docs/FEATURE_PLAN.md`;
 - `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md`.
@@ -106,7 +109,7 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13 Build-Ready Score + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | #159 real-plugin parity/internal runtime acceptance |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Continue pure-core fail-closed hardening; production registry remains empty |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Finish #192 / PR #193 final-head gates, then continue focused pure-core fail-closed audit; production registry remains empty |
 | P15-P26 multi-target commercial implementation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | Implement in dependency order with R0/R1 where applicable |
 | P27 final production release | GATE DEFINED / EXECUTION DEFERRED | 0% exec | Coordinate final live runtime/publisher/2FA evidence + #84 release-exit truth |
 
@@ -142,10 +145,11 @@ R0 research remains advisory and must be refreshed again when a major adapter im
 
 Continue the implementation/internal-readiness program without making production-release claims:
 
-1. continue P14 target-neutral pure-core hardening with focused issues/branches/PRs while real Figma mutation remains unwired;
-2. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
-3. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
-4. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;
-5. use P27 #182 only after implementation/internal-readiness is ready;
-6. during P27, capture the remaining exact runtime, Publish final-details and 2FA evidence, run the retained P12 publisher-evidence intake, and perform the genuine #84 release-exit decision;
-7. keep Community submission/review/approval external to internal production acceptance.
+1. finish #192 / PR #193 only after the final synchronized PR head passes CI, P12 Final Release Artifact and P12 Offline Acceptance, has no unresolved review threads, is current with main and is mergeable;
+2. after #192 closes, continue the next focused P14 target-neutral safety-gap audit while real Figma mutation remains unwired and the production recipe registry remains empty;
+3. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
+4. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
+5. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;
+6. use P27 #182 only after implementation/internal-readiness is ready;
+7. during P27, capture the remaining exact runtime, Publish final-details and 2FA evidence, run the retained P12 publisher-evidence intake, and perform the genuine #84 release-exit decision;
+8. keep Community submission/review/approval external to internal production acceptance.

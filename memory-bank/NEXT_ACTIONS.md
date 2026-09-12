@@ -79,6 +79,22 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
+### #192 — P14 bounded receipt envelope and runtime diagnostics
+
+Classification: **active focused implementation slice / PR #193**.
+
+The branch `fix/p14-receipt-envelope-bounds-192` now implements the issue scope without adding any real Figma mutation surface or production recipe authority:
+
+1. `appliedActions`, `errors` and `events` are count-bounded before item traversal using the existing P14 action-count safety limit;
+2. receipt `transactionId`, `p13RunId`, `planDigest`, source-node identity and error stages use the existing identity bound;
+3. error detail/recovery and event detail use the existing detail bound;
+4. transaction error/event constructors emit bounded diagnostics by construction;
+5. adapter/discard exception text is rendered fail-closed, including hostile `toString()` behavior;
+6. regression coverage includes proxy-backed no-traversal arrays, exact-boundary acceptance, forged oversized evidence and oversized/hostile runtime exceptions;
+7. `docs/P14_FOUNDATION_IMPLEMENTATION.md` records the invariant without changing runtime/acceptance authority.
+
+Pre-memory-sync PR head `7a031c2f8e2b405e084ae2fbdd677205d9e9c7e7` passed CI #840, P12 Final Release Artifact #151 and P12 Offline Acceptance #195 on Ubuntu/macOS/Windows. Before #192 may close, the **final synchronized PR head** must independently satisfy the same three gates, have zero unresolved review threads, remain current with `main`, and be mergeable.
+
 ## R0 research actions already captured
 
 PR #131 retained the current September 2026 snapshot in `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`.
@@ -126,13 +142,14 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. keep the approved source immutable and mutate only retained candidates;
-2. keep production safe-recipe authority empty until explicit acceptance;
-3. fail closed on malformed/stale adapter/control evidence and preserve cleanup;
-4. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
-5. continue focused safety-gap audits until core implementation is internally ready;
-6. require #159 before real Figma mutation exposure;
-7. require genuine real-Figma acceptance before any production mutation/readiness claim.
+1. finish #192 / PR #193 only after final-head CI, P12 Final Release Artifact and P12 Offline Acceptance pass and the PR is current/mergeable with no unresolved review threads;
+2. keep the approved source immutable and mutate only retained candidates;
+3. keep production safe-recipe authority empty until explicit acceptance;
+4. fail closed on malformed/stale adapter/control/receipt evidence and preserve cleanup;
+5. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
+6. after #192 closes, continue focused safety-gap audits until core implementation is internally ready;
+7. require #159 before real Figma mutation exposure;
+8. require genuine real-Figma acceptance before any production mutation/readiness claim.
 
 ### P15 Elementor
 
@@ -217,4 +234,7 @@ Runtime artifact preflight requires exact-build provenance, immutable/manifest c
 - P11 implementation: `100%`;
 - P12 final validation: `80%`;
 - R0/R1: planning gates, no runtime completion percentage;
-- P13-P26: `0%`, planned/dependency-blocked.
+- P13 implementation: `100%` with runtime acceptance pending #159;
+- P14: pure-core implementation/hardening active, runtime unwired;
+- P15-P26: `0%`, preflight-frozen / implementation not started;
+- P27: final production-release gate defined, execution deferred.
