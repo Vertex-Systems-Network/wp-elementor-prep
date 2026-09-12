@@ -23,6 +23,22 @@ describe('P14 main-panel Guided Prepare preview contract', () => {
     expect(ui).toContain('confirmationEnabled=false');
   });
 
+  it('renders the exact proposed-change review binding without adding confirmation controls', () => {
+    expect(ui).toContain('const reviewManifest = preview.reviewManifest || null');
+    expect(ui).toContain('Proposed Change Review Binding');
+    expect(ui).toContain('READ-ONLY REVIEW ARTIFACT');
+    expect(ui).toContain('P13 run:');
+    expect(ui).toContain('Source node:');
+    expect(ui).toContain('Source fingerprint:');
+    expect(ui).toContain('Eligible action IDs:');
+    expect(ui).toContain('Eligible reviewed actions');
+    expect(ui).toContain('validation ${escapeHtml(action.validationProfileId)}');
+    expect(ui).toContain('No eligible action bindings are authorized by the current production P14 recipe registry.');
+    expect(ui).not.toContain("post('p14-confirmation-request')");
+    expect(ui).not.toContain('Approve Guided Prepare');
+    expect(ui).not.toContain('Confirm Guided Prepare');
+  });
+
   it('routes the main-panel request through exact current P13 evidence and the existing P14 preview model', () => {
     expect(main).toContain("from './p14-plan-preview'");
     expect(main).toContain("from './p14-preview-context'");
@@ -46,10 +62,13 @@ describe('P14 main-panel Guided Prepare preview contract', () => {
     expect(main).not.toContain('buildP14PreparationConfirmation');
   });
 
-  it('strips the development-only preview surface from the generated release UI', () => {
+  it('strips the development-only preview and review-binding surfaces from the generated release UI', () => {
     expect(generatedReleaseUi).not.toContain('p14-plan-preview-request');
     expect(generatedReleaseUi).not.toContain('Preview Guided Prepare');
     expect(generatedReleaseUi).not.toContain('P14 GUIDED PREPARE PREVIEW');
     expect(generatedReleaseUi).not.toContain('renderP14PlanPreview');
+    expect(generatedReleaseUi).not.toContain('Proposed Change Review Binding');
+    expect(generatedReleaseUi).not.toContain('READ-ONLY REVIEW ARTIFACT');
+    expect(generatedReleaseUi).not.toContain('Eligible reviewed actions');
   });
 });
