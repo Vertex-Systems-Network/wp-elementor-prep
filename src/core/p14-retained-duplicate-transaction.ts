@@ -12,6 +12,9 @@ import {
 } from './p14-timestamp-evidence';
 import {
   P14_PREPARATION_ENGINE_VERSION,
+  type P14CandidateHandle,
+  type P14PreparationAction,
+  type P14PreparationPlanV1,
   type P14PreparationReceiptV1,
   type P14RetainedDuplicateAdapter,
   type P14TransactionEvent,
@@ -72,8 +75,8 @@ function guardP14RuntimeEligibilityHook(
   adapter: P14RetainedDuplicateAdapter,
 ): P14RetainedDuplicateAdapter {
   return {
-    fingerprintSource: (sourceNodeId) => adapter.fingerprintSource(sourceNodeId),
-    cloneSource: (sourceNodeId, transactionId) => adapter.cloneSource(sourceNodeId, transactionId),
+    fingerprintSource: (sourceNodeId: string) => adapter.fingerprintSource(sourceNodeId),
+    cloneSource: (sourceNodeId: string, transactionId: string) => adapter.cloneSource(sourceNodeId, transactionId),
     get assessActionEligibility(): P14RetainedDuplicateAdapter['assessActionEligibility'] {
       try {
         const hook: unknown = adapter.assessActionEligibility;
@@ -88,12 +91,15 @@ function guardP14RuntimeEligibilityHook(
         };
       }
     },
-    applyRecipe: (candidate, action) => adapter.applyRecipe(candidate, action),
-    validateCandidate: (candidate, plan) => adapter.validateCandidate(candidate, plan),
-    rescoreCandidate: (candidate, plan) => adapter.rescoreCandidate(candidate, plan),
-    retainCandidate: (candidate, transactionId, preparedName) =>
+    applyRecipe: (candidate: P14CandidateHandle, action: P14PreparationAction) =>
+      adapter.applyRecipe(candidate, action),
+    validateCandidate: (candidate: P14CandidateHandle, plan: P14PreparationPlanV1) =>
+      adapter.validateCandidate(candidate, plan),
+    rescoreCandidate: (candidate: P14CandidateHandle, plan: P14PreparationPlanV1) =>
+      adapter.rescoreCandidate(candidate, plan),
+    retainCandidate: (candidate: P14CandidateHandle, transactionId: string, preparedName: string) =>
       adapter.retainCandidate(candidate, transactionId, preparedName),
-    discardCandidate: (candidate) => adapter.discardCandidate(candidate),
+    discardCandidate: (candidate: P14CandidateHandle) => adapter.discardCandidate(candidate),
   } as unknown as P14RetainedDuplicateAdapter;
 }
 
