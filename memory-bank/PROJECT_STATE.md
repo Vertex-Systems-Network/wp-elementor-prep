@@ -38,15 +38,15 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
 - #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
 - #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
-- #198 — P14 safe-recipe registry evidence bounds: **ACTIVE / PR #199**. The pure-core slice bounds registry collections/identities before semantic authorization traversal while preserving the existing unauthorized outcome and empty production registry.
+- #198 — P14 safe-recipe registry evidence bounds: **COMPLETED** through PR #199; issue closed automatically by the verified squash merge.
 - #195 — P14 runtime clock/event timestamp evidence: **COMPLETED** through PR #196.
 - #192 — P14 bounded receipt envelope/diagnostics/runtime exception evidence: **COMPLETED** through PR #193.
 - #126 — exact release #20 publisher evidence intake hardening: **COMPLETED** through PR #129.
 
 ## Current PR / main queue
 
-- Current main baseline is `758e2932770ab52a3a07c4c50c9a5b0e68031f53`, the docs/status synchronization after PR #196.
-- PR #199 (`fix/p14-registry-bounds-198`) is the active P14 registry-resource hardening slice. Its initial code/test head `4ebf8328159f6d0d94ba8b606987cb8c0599a66a` passed CI #858, P12 Final Release Artifact #169 and P12 Offline Acceptance #213; final synchronized-head verification is still required after documentation commits.
+- Current main P14 baseline is `80cefcb8b90a85b5e5a8b5ad4e6a0f65ddf6d12b`, the squash merge of PR #199 / issue #198.
+- PR #199 exact synchronized head `e782a08090a4e158f99da22bf25d8fff60c8c529` passed CI #863, Integration Readiness #231, P12 Final Release Artifact #174 and P12 Offline Acceptance #218 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, was `behind_by=0`, and GitHub reported `mergeable=true` before the guarded squash merge.
 - PR #199 adds `assessP14SafeRecipeRegistryBounds(...)`, applies it before registry semantic validation, reuses existing P14 limits, rejects oversized proxy-backed arrays from `.length`, bounds registry/recipe identities, and preserves `BLOCKED` + `P14_RECIPE_UNAUTHORIZED` before coordinator/adapter access. It adds no production recipe authority or runtime/UI exposure.
 - PR #196 exact synchronized head `47cb0b4d2d3c53f7f818af760131cc78737cb5c4` passed CI #854, Integration Readiness #224, P12 Final Release Artifact #165 and P12 Offline Acceptance #209 on Ubuntu/macOS/Windows; it squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf`.
 - PR #196 centralizes strict normalized UTC timestamp evidence, prevents hostile runtime `now()` callbacks from escaping the transaction, records unavailable event time explicitly as `UNKNOWN`, and rejects forged oversized/non-canonical event timestamps before parsing.
@@ -111,7 +111,7 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13 Build-Ready Score + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | #159 real-plugin parity/internal runtime acceptance |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Complete #198 / PR #199 registry-evidence bounds; production registry remains empty |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Continue the next focused pure-core fail-closed audit after #198; production registry remains empty |
 | P15-P26 multi-target commercial implementation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | Implement in dependency order with R0/R1 where applicable |
 | P27 final production release | GATE DEFINED / EXECUTION DEFERRED | 0% exec | Coordinate final live runtime/publisher/2FA evidence + #84 release-exit truth |
 
@@ -147,7 +147,7 @@ R0 research remains advisory and must be refreshed again when a major adapter im
 
 Continue the implementation/internal-readiness program without making production-release claims:
 
-1. finish #198 / PR #199 safe-recipe registry resource bounding and exact-head verification, then start the next focused P14 target-neutral safety-gap audit while real Figma mutation remains unwired and the production recipe registry remains empty;
+1. start the next focused P14 target-neutral safety-gap audit from main `80cefcb...` while real Figma mutation remains unwired and the production recipe registry remains empty;
 2. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
 3. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
 4. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;
