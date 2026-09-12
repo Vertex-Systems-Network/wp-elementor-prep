@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup and source-scope transaction coordination.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
 
 ## Bounded input preflight
 
@@ -185,7 +185,7 @@ The transaction applies this rule at every cooperative cancellation checkpoint: 
 
 Normal `true` cancellation semantics remain unchanged: pre-clone cancellation performs no clone, while post-clone cancellation discards the candidate before returning `CANCELLED`. Callback failure and user cancellation remain separate evidence states.
 
-The source-scope transaction lease remains covered by the outer bounded `finally` release path, so cancellation-check failure cannot intentionally retain coordinator ownership after the run returns. This is process-local transaction safety only; it is not host cancellation proof, user identity evidence or production acceptance.
+An acquired source-scope transaction lease is always passed through the bounded release-evidence step before the transaction returns. Cancellation-check failure therefore cannot silently skip lease cleanup; a failed release becomes explicit `CLEANUP_REQUIRED` evidence. This is process-local transaction safety only; it is not host cancellation proof, user identity evidence or production acceptance.
 
 ## Source-scope transaction coordination
 
@@ -197,9 +197,23 @@ The source-scope transaction lease remains covered by the outer bounded `finally
 - stale/non-owner release cannot clear the current owner;
 - independent source scopes may run concurrently;
 - NO_CHANGES_NEEDED and already-BLOCKED plans do not consume mutation leases;
-- acquired READY leases release through `finally` on every terminal path.
+- acquired READY leases must produce explicit successful release evidence before the transaction can return a clean terminal outcome.
 
 Lease acquisition occurs only after integrity, recipe authorization and exact confirmation succeed. The default coordinator is process-local only; no distributed/cross-plugin-instance locking is claimed.
+
+## Coordinator runtime evidence and lease cleanup
+
+An injected coordinator is a runtime boundary, not authority granted by the `P14SourceTransactionCoordinator` TypeScript type.
+
+`assessP14TransactionLeaseResultEvidence(...)` validates acquisition results before transaction code may branch on them. It requires a boolean acquisition flag, a supported refusal reason, bounded optional owner identities, and—when acquisition is claimed—bounded lease identities exactly equal to the normalized requested source scope and transaction ID. Unreadable/proxy-backed evidence fails closed instead of escaping through property access.
+
+A throwing `tryAcquire(...)` or malformed refusal/acquisition result returns a structured pre-adapter `BLOCKED` receipt. If malformed evidence nevertheless claims `acquired: true`, the core makes one best-effort release attempt using the exact expected source/transaction lease identity so an injected coordinator cannot intentionally hide an acquired lease behind malformed evidence.
+
+Lease release is also runtime evidence. Only the literal result `true` is accepted as successful cleanup. A `false`, non-boolean runtime value or thrown release call cannot override the transaction promise or be silently ignored. Instead, the already-produced outcome is converted to `CLEANUP_REQUIRED` and receives bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `coordination-release` plus explicit lease-recovery guidance.
+
+If candidate retention already succeeded before coordinator release failed, the receipt keeps truthful candidate/retention/validation/re-score evidence and marks the retained candidate as retained while the transaction itself becomes `CLEANUP_REQUIRED`. If the run failed before a candidate existed, coordinator cleanup may likewise produce `CLEANUP_REQUIRED` without inventing candidate evidence. Receipt integrity recognizes both cases only when the exact coordinator-release failure stage is present.
+
+These checks do not prove distributed locking, host authenticity, persistence, cross-plugin coordination or external ownership recovery. They only make the injected process-local coordination boundary bounded and fail-closed.
 
 ## Bounded receipt envelope and runtime diagnostics
 
@@ -209,7 +223,7 @@ P14 receipt integrity treats the receipt envelope itself as untrusted evidence, 
 
 Top-level receipt correlation identities — `transactionId`, `p13RunId`, `planDigest` and `source.nodeId` — use the existing P14 identity bound. Error `stage` also uses the identity bound, while error `detail`, optional `recovery` and optional event `detail` use the existing P14 detail bound. The plan digest keeps its existing `p14-plan-` correlation prefix requirement; no host-specific node-ID or authentication format is invented.
 
-Transaction diagnostic constructors use the same shared bounds. `receiptError(...)` and event construction therefore emit bounded stage/detail/recovery evidence by construction, including details assembled from planner/authorization/runtime failures. Runtime adapter/discard exceptions are rendered through `safeP14RuntimeErrorMessage(...)`, which bounds long messages and falls back deterministically when hostile exception stringification itself throws.
+Transaction diagnostic constructors use the same shared bounds. `receiptError(...)` and event construction therefore emit bounded stage/detail/recovery evidence by construction, including details assembled from planner/authorization/runtime failures. Runtime adapter/discard/coordinator exceptions are rendered through `safeP14RuntimeErrorMessage(...)`, which bounds long messages and falls back deterministically when hostile exception stringification itself throws.
 
 These envelope/resource limits do not make a receipt authoritative. They bound traversal and evidence size only; `acceptanceAuthority` and `targetCompatibilityClaim` remain false.
 
@@ -229,7 +243,7 @@ Receipt integrity accepts only normalized UTC event evidence or the explicit `UN
 
 Every P14 receipt explicitly carries `acceptanceAuthority: false` and `targetCompatibilityClaim: false`.
 
-Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation, re-score and recipe-execution evidence. Receipt collection counts are bounded before traversal; top-level correlation identities and error/event diagnostics are bounded with the existing P14 identity/detail limits. Event time evidence must be normalized bounded UTC or the explicit unavailable sentinel. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; validation-check count, IDs, boolean fields and optional detail are bounded through the same shared validator used at runtime; prepared outcomes require non-empty profile execution evidence. Runtime/receipt re-score evidence uses the same accepted scored-P13 validator. Source fingerprint evidence is bounded and may use the explicit `UNKNOWN` sentinel only as receipt evidence for unavailable proof. Candidate identities, recipe execution results and retention identities are bounded through the same adapter-evidence contracts used at runtime. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
+Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation, re-score and recipe-execution evidence. Receipt collection counts are bounded before traversal; top-level correlation identities and error/event diagnostics are bounded with the existing P14 identity/detail limits. Event time evidence must be normalized bounded UTC or the explicit unavailable sentinel. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; validation-check count, IDs, boolean fields and optional detail are bounded through the same shared validator used at runtime; prepared outcomes require non-empty profile execution evidence. Runtime/receipt re-score evidence uses the same accepted scored-P13 validator. Source fingerprint evidence is bounded and may use the explicit `UNKNOWN` sentinel only as receipt evidence for unavailable proof. Candidate identities, recipe execution results and retention identities are bounded through the same adapter-evidence contracts used at runtime. Coordinator-release cleanup is recognized only through bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at the exact `coordination-release` stage. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
 
 ## Safety invariants
 
@@ -265,12 +279,12 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 30. Eligible recipes require current registry authorization before adapter access.
 31. P14 receipts have no acceptance/target-compatibility authority.
 32. One executable READY transaction may own a source scope at a time.
-33. Acquired transaction leases are released in a bounded `finally` path, including cancellation-check failure paths.
+33. An acquired transaction lease requires explicit successful release evidence; failed release becomes `CLEANUP_REQUIRED` rather than escaping or being ignored.
 34. Validation-check arrays are count-bounded before traversal, and check IDs/details are bounded before policy evaluation or receipt attachment.
 35. Validation-check shape/resource validation remains separate from profile coverage and required-check policy; bounded evidence alone never proves target readiness.
 36. Receipt `appliedActions`, `errors` and `events` counts are bounded from `.length` before their contents are traversed.
 37. Receipt correlation identities and error/event diagnostics are bounded by the existing P14 identity/detail limits.
-38. Runtime adapter/discard exception rendering cannot emit unbounded receipt error or event detail.
+38. Runtime adapter/discard/coordinator exception rendering cannot emit unbounded receipt error or event detail.
 39. Receipt-envelope hardening introduces no new host identifier, authentication or acceptance semantics.
 40. Event timestamp strings are length/shape checked before parsing and must be normalized UTC or the explicit `UNKNOWN` sentinel.
 41. A throwing, non-string, oversized or non-canonical runtime clock callback cannot escape the transaction or inject raw timestamp evidence.
@@ -281,6 +295,11 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 46. Safe-recipe registry rule/recipe/profile/order/dependency identities are bounded before semantic authorization validation.
 47. Oversized registry evidence remains fail-closed on the existing `P14_RECIPE_UNAUTHORIZED` path before confirmation, source coordination or adapter access.
 48. Registry resource bounding never registers a production recipe or grants mutation, compatibility or acceptance authority.
+49. Injected coordinator acquisition results are untrusted evidence and must be readable, bounded and contract-valid before adapter access.
+50. Acquired lease evidence is bound to the exact normalized requested source scope and transaction ID before execution may continue.
+51. Malformed evidence that claims acquisition triggers one bounded best-effort exact-lease cleanup attempt before return.
+52. Only literal `true` release evidence proves coordinator cleanup; false/non-boolean/throwing release cannot silently produce a clean terminal outcome.
+53. Coordinator cleanup failure preserves truthful candidate/retention state while changing the transaction outcome to `CLEANUP_REQUIRED`; it does not imply distributed lock recovery or host authenticity.
 
 ## Deliberately not wired yet
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-09-12 — P14 coordinator runtime-evidence and lease-cleanup hardening
+
+- Opened issue #201 and focused PR #205 (`fix/p14-coordinator-runtime-evidence-201`) for the remaining injected source-transaction coordinator trust-boundary gap.
+- Added runtime validation for coordinator acquisition evidence: acquisition flag, refusal reason, optional owner identities and acquired lease identities are treated as unknown evidence and bounded before transaction semantics use them.
+- Acquired lease evidence must match the exact normalized requested source scope and transaction ID; unreadable/proxy-backed or malformed evidence fails closed before adapter access.
+- If malformed evidence still claims `acquired: true`, the transaction makes one bounded best-effort release attempt using the exact expected source/transaction lease identity.
+- Coordinator release now succeeds only on literal `true`; `false`, non-boolean runtime evidence or throw is converted to bounded `CLEANUP_REQUIRED` evidence at stage `coordination-release` instead of escaping or being silently ignored.
+- Receipt integrity now permits coordinator-release cleanup with truthful retained-candidate/retention evidence when finalization already succeeded, or without candidate evidence when the release problem occurs before a candidate exists.
+- Added `tests/p14-coordinator-runtime-evidence.test.ts` covering throwing/unreadable/malformed acquisition, oversized owner identity, claimed-acquired recovery, release false/throw, pre-clone release cleanup, default coordinator success and NO_CHANGES_NEEDED no-lease behavior.
+- Initial code/test head `511bf68adbe1859695d7dbe2dea12e974afa024f` passed CI #867 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #178 passed; P12 Offline Acceptance #222 passed on Ubuntu/macOS/Windows.
+- Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #201. No distributed lock, real Figma mutation command, production recipe authority, target-compatibility claim or production acceptance was introduced.
+- Accidental empty issues #202, #203 and #204 were immediately closed as `not_planned`; they carry no implementation scope and #201 remains authoritative.
+- Final synchronized-head CI/evidence/review verification remains required before PR #205 may merge.
+
 ## 2026-09-12 — P14 safe-recipe registry resource bounding
 
 - Opened issue #198 and focused PR #199 (`fix/p14-registry-bounds-198`) for the remaining safe-recipe registry resource-bound gap before semantic authorization.
