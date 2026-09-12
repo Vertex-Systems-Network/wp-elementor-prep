@@ -1,3 +1,4 @@
+import { assessP14SafeRecipeRegistryBounds } from './p14-registry-bounds';
 import type {
   P14MutationField,
   P14PreparationRecipeDefinition,
@@ -120,6 +121,16 @@ function canonicalRecipe(value: P14PreparationRecipeDefinition): string {
 }
 
 export function validateP14SafeRecipeRegistry(value: unknown): P14SafeRecipeRegistryValidation {
+  const bounds = assessP14SafeRecipeRegistryBounds(value);
+  if (!bounds.allowed) {
+    return {
+      valid: false,
+      failures: bounds.failures.map(
+        (failure) => `P14 safe-recipe registry exceeds bounded safety limits: ${failure.code} at ${failure.path}: ${failure.actual} > ${failure.limit}`,
+      ),
+    };
+  }
+
   const failures: string[] = [];
   if (!isRecord(value)) return { valid: false, failures: ['P14 safe-recipe registry must be an object.'] };
   if (value.schemaVersion !== P14_SAFE_RECIPE_REGISTRY_SCHEMA_VERSION) {
