@@ -81,9 +81,9 @@ Canonical future order:
 
 ### #207 — P14 caller run-control runtime evidence
 
-Classification: **ACTIVE / PR #208 under synchronized-head verification**.
+Classification: **COMPLETED / merged through PR #208**.
 
-PR #208 (`fix/p14-run-control-evidence-207`) hardens the remaining caller run-control trust boundary without changing mutation or target authority:
+PR #208 (`fix/p14-run-control-evidence-207`) closed the caller run-control trust boundary without changing mutation or target authority:
 
 1. `assessP14RunControlEvidence(...)` validates runtime control types before confirmation, source coordination or adapter access;
 2. `transactionId` must be a string with a non-whitespace identity and is normalized once before coordinator/adapter/receipt use;
@@ -95,7 +95,7 @@ PR #208 (`fix/p14-run-control-evidence-207`) hardens the remaining caller run-co
 8. the previous retained-duplicate engine is preserved as an internal core while the original public module path is the hardened boundary;
 9. no production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
 
-Initial implementation head `9e4b0ca8c7abf69d2c7052bcf26f48526e0587dc` passed CI #876 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #187 passed; P12 Offline Acceptance #231 passed on Ubuntu/macOS/Windows. Final merge authority requires fresh CI, Integration Readiness, Final Release Artifact and cross-platform Offline Acceptance on the synchronized documentation head plus a clean/current/mergeable PR gate.
+Initial implementation head `9e4b0ca8c7abf69d2c7052bcf26f48526e0587dc` passed CI #876, P12 Final Release Artifact #187 and P12 Offline Acceptance #231 on Ubuntu/macOS/Windows. Exact synchronized head `c3b577bcf09e3f97060cfcba7b76d202e9119019` then passed CI #882, Integration Readiness #247, P12 Final Release Artifact #193 and P12 Offline Acceptance #237 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `df1e8f33394f13a371c2ff0b97bb6eceb321fd91`. Issue #207 closed completed.
 
 ### #201 — P14 transaction coordinator runtime evidence and lease cleanup
 
@@ -214,7 +214,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #207 / PR #208 on its final synchronized head, then begin the next focused safety-gap audit from the resulting main;
+1. start the next focused safety-gap audit from main `df1e8f3...` now that #207 / PR #208 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
