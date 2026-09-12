@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223, #226, #229, #231  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223, #226, #229, #231, #235  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded bounded semantic snapshots for known nested plan/confirmation evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry resource and semantic-snapshot evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, detached known-schema adapter callback input snapshots, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded one-shot adapter-output semantic snapshots, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded bounded semantic snapshots for known nested plan/confirmation evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry resource and semantic-snapshot evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, detached known-schema adapter callback input snapshots, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded one-shot adapter-output semantic snapshots, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination, bounded injected-coordinator runtime evidence/lease cleanup, and one-shot coordinator acquisition/refusal semantic snapshots.
 
 ## Bounded input preflight
 
@@ -286,6 +286,8 @@ An injected coordinator is a runtime boundary, not authority granted by the `P14
 
 `assessP14TransactionLeaseResultEvidence(...)` validates acquisition results before transaction code may branch on them. It requires a boolean acquisition flag, a supported refusal reason, bounded optional owner identities, and—when acquisition is claimed—bounded lease identities exactly equal to the normalized requested source scope and transaction ID. Unreadable/proxy-backed evidence fails closed instead of escaping through property access.
 
+The #235/#236 hardening slice also makes readable stateful coordinator evidence stable: the top-level `acquired` flag is captured once before branching; an acquired `lease` reference and its `sourceScope` / `transactionId` fields are each captured once before exact binding; refusal `reason`, `ownerTransactionId` and `ownerSourceScope` are captured once before validation and accepted-value construction. Accepted coordinator evidence is rebuilt as plain detached data, so later transaction semantics do not retain coordinator-owned getter/proxy references. If nested lease capture becomes unreadable after acquisition was claimed, the existing `claimedAcquired` signal still drives the bounded best-effort exact-lease cleanup contract.
+
 A throwing `tryAcquire(...)` or malformed refusal/acquisition result returns a structured pre-adapter `BLOCKED` receipt. If malformed evidence nevertheless claims `acquired: true`, the core makes one best-effort release attempt using the exact expected source/transaction lease identity so an injected coordinator cannot intentionally hide an acquired lease behind malformed evidence.
 
 Lease release is also runtime evidence. Only the literal result `true` is accepted as successful cleanup. A `false`, non-boolean runtime value or thrown release call cannot override the transaction promise or be silently ignored. Instead, the already-produced outcome is converted to `CLEANUP_REQUIRED` and receives bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `coordination-release` plus explicit lease-recovery guidance.
@@ -374,7 +376,7 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 46. Safe-recipe registry rule/recipe/profile/order/dependency identities are bounded before semantic authorization validation.
 47. Oversized registry evidence remains fail-closed on the existing `P14_RECIPE_UNAUTHORIZED` path before confirmation, source coordination or adapter access.
 48. Registry resource bounding never registers a production recipe or grants mutation, compatibility or acceptance authority.
-49. Injected coordinator acquisition results are untrusted evidence and must be readable, bounded and contract-valid before adapter access.
+49. Injected coordinator acquisition/refusal results are untrusted evidence; each known semantic property is captured once into plain accepted evidence and must remain readable, bounded and contract-valid before adapter access.
 50. Acquired lease evidence is bound to the exact normalized requested source scope and transaction ID before execution may continue.
 51. Malformed evidence that claims acquisition triggers one bounded best-effort exact-lease cleanup attempt before return.
 52. Only literal `true` release evidence proves coordinator cleanup; false/non-boolean/throwing release cannot silently produce a clean terminal outcome.

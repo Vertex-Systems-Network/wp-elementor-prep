@@ -1,6 +1,6 @@
 # Next Actions
 
-Last updated: 2026-09-12
+Last updated: 2026-09-13
 
 ## Mandatory cycle
 
@@ -79,21 +79,42 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
+### #237 — post-#236 P14 repository status synchronization
+
+Classification: **ACTIVE / branch prepared**.
+
+Branch `docs/p14-post-236-status-237` synchronizes canonical repository truth after the verified #233/#234 and #235/#236 cycles without expanding runtime scope:
+
+1. record #233 / PR #234 as completed at guarded merge `27144161082ce3cff9c9a0ca1e0364cd19b727ad`, exact head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998`, CI #970, Integration Readiness #316, P12 Final Release Artifact #281 and P12 Offline Acceptance #325;
+2. record #235 / PR #236 as completed at guarded merge `804ffc6a143c2cf6ab4ca100d7b021289a060be2`, exact head `497b1385b55ca8343d82be04da02de0595228efd`, CI #972, P12 Final Release Artifact #283 and P12 Offline Acceptance #327;
+3. explicitly preserve the truth that Integration Readiness did not run on code-only PR #236 because its pull-request trigger is path-filtered;
+4. record the one-shot coordinator acquisition/refusal semantic snapshot boundary and detached accepted evidence while preserving the existing claimed-acquired cleanup contract;
+5. synchronize README, `docs/P14_FOUNDATION_IMPLEMENTATION.md`, `memory-bank/PROJECT_STATE.md` and this queue only;
+6. keep production safe-recipe authority empty and real Figma mutation/runtime wiring absent;
+7. after this sync closes, run a fresh focused P14 pure-core safety-gap audit rather than exposing real Figma mutation.
+
+The synchronization branch must remain current with main, review-clean and gate-clean before guarded merge.
+
+### #235 — P14 coordinator acquisition/refusal semantic snapshot
+
+Classification: **COMPLETED / merged through PR #236**.
+
+PR #236 (`fix/p14-coordinator-evidence-snapshot-235`) closed the readable-but-stateful coordinator-result boundary without changing coordination authority:
+
+1. the top-level `acquired` flag is read once before branching;
+2. acquired lease evidence and its source-scope / transaction-ID fields are read once before bounded exact binding;
+3. refusal reason and optional owner identities are read once before validation and accepted-value construction;
+4. accepted coordinator results are rebuilt as plain detached data;
+5. throwing/revoked nested evidence fails closed, while evidence that first claims acquisition preserves the existing best-effort exact-lease cleanup contract;
+6. no distributed-lock, host/authentication, production recipe, real Figma mutation, target-compatibility or production-acceptance claim is introduced.
+
+Exact head `497b1385b55ca8343d82be04da02de0595228efd` passed CI #972, P12 Final Release Artifact #283 and P12 Offline Acceptance #327. The PR had zero review threads, was current with main and mergeable, then guarded squash-merged as `804ffc6a143c2cf6ab4ca100d7b021289a060be2`; issue #235 closed completed. Integration Readiness was correctly absent from the code-only PR and is delegated to #237 status synchronization.
+
 ### #233 — post-#232 P14 repository status synchronization
 
-Classification: **ACTIVE / draft PR #234**.
+Classification: **COMPLETED / merged through PR #234**.
 
-PR #234 (`docs/p14-post-232-status-233`) synchronizes canonical repository truth after the guarded #230 and #232 merges without expanding runtime scope:
-
-1. README records #229 / PR #230 as completed at merge `bad83a48ab58dfa8b956e7b6bf02c74a079a4665` with exact synchronized-head CI #958, Integration Readiness #310, P12 Final Release Artifact #269 and P12 Offline Acceptance #313;
-2. README records #231 / PR #232 as completed at merge `2bbc24fb8afa3ccb9cc202fd816dfc8d69888941` with exact head `b06240a02cc8fc14c0c94e23ba9e554a62eae319`, CI #965, P12 Final Release Artifact #276 and P12 Offline Acceptance #320;
-3. the status truth explicitly records that Integration Readiness did not run on code-only PR #232 because its pull-request trigger is path-filtered;
-4. `docs/P14_FOUNDATION_IMPLEMENTATION.md` now records the #231 one-shot adapter-output semantic snapshot boundary and invariants while preserving production recipe authority as empty and real Figma mutation as unwired;
-5. `memory-bank/PROJECT_STATE.md` and this queue are synchronized to the actual merges and current draft PR;
-6. the first README synchronization head `4711425b2e5e2e510745ffd1fe196a9bc18dfe35` triggered Integration Readiness #313, which passed; the final exact head still requires the complete CI/Integration/Final Release/Offline gate set before merge;
-7. after this sync closes, the next action is a fresh focused P14 pure-core safety-gap audit rather than real Figma mutation exposure.
-
-PR #234 remains draft until the final exact head is gate-clean, current with main, mergeable and review-clean.
+PR #234 (`docs/p14-post-232-status-233`) synchronized canonical repository truth after #230/#232, explicitly recorded the code-only Integration Readiness path-filter behavior, and advanced the immediate P14 action to the next focused pure-core safety-gap audit. Exact head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998` passed CI #970, Integration Readiness #316, P12 Final Release Artifact #281 and P12 Offline Acceptance #325, then guarded squash-merged as `27144161082ce3cff9c9a0ca1e0364cd19b727ad`; issue #233 closed completed.
 
 ### #231 — P14 adapter-output semantic snapshot
 
