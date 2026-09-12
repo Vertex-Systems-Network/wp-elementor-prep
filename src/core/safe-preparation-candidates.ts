@@ -7,20 +7,20 @@ import type {
 } from './build-ready-types';
 import type { AuditNode } from './types';
 
-export const SAFE_PREPARATION_CANDIDATE_RULES: Record<string, BuildReadyRuleDefinition> = {
-  BR_SAFE_VERTICAL_STACK_CANDIDATE: {
-    id: 'BR_SAFE_VERTICAL_STACK_CANDIDATE',
-    version: 1,
-    category: 'STRUCTURE',
-    severity: 'LOW',
-    confidencePolicy: 'HIGH_ONLY',
-    maxPenalty: 0,
-    dedupeKeyStrategy: 'target-node',
-    remediationClass: 'P14_SAFE_CANDIDATE',
-  },
+const VERTICAL_STACK_RULE: BuildReadyRuleDefinition = {
+  id: 'BR_SAFE_VERTICAL_STACK_CANDIDATE',
+  version: 1,
+  category: 'STRUCTURE',
+  severity: 'LOW',
+  confidencePolicy: 'HIGH_ONLY',
+  maxPenalty: 0,
+  dedupeKeyStrategy: 'target-node',
+  remediationClass: 'P14_SAFE_CANDIDATE',
 };
 
-const VERTICAL_STACK_RULE = SAFE_PREPARATION_CANDIDATE_RULES.BR_SAFE_VERTICAL_STACK_CANDIDATE;
+export const SAFE_PREPARATION_CANDIDATE_RULES: Record<string, BuildReadyRuleDefinition> = {
+  [VERTICAL_STACK_RULE.id]: VERTICAL_STACK_RULE,
+};
 
 /**
  * Projects an already-accepted P5 vertical-stack plan into target-neutral P13 evidence.
