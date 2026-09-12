@@ -61,7 +61,7 @@
 - Opened issue #195 and focused PR #196 (`fix/p14-runtime-clock-evidence-195`) for the remaining untrusted runtime-clock/event-timestamp evidence gap.
 - Added `src/core/p14-timestamp-evidence.ts` with a shared strict normalized UTC millisecond timestamp validator, explicit `UNKNOWN` event-time sentinel and fail-safe runtime clock reader.
 - P14 preparation confirmation build/validation now reuses the shared normalized UTC validator; confirmation timestamps remain strict reviewed-intent evidence and do not accept `UNKNOWN`.
-- Receipt event integrity now accepts only normalized UTC or explicit `UNKNOWN`, and rejects oversized/non-canonical/impossible timestamp evidence before `Date.parse(...)`.
+- Receipt event integrity now accepts only normalized UTC event time or explicit `UNKNOWN`, and rejects oversized/non-canonical/impossible timestamp evidence before `Date.parse(...)`.
 - Transaction event construction now treats `now()` as untrusted metadata evidence: throw, non-string, oversized and non-canonical values cannot escape the transaction and are represented as unavailable time rather than fabricated wall-clock evidence.
 - Added `tests/p14-timestamp-evidence.test.ts` covering pre-parse length rejection, strict timestamp shapes, hostile clock callbacks, confirmation compatibility, valid-clock preservation and forged receipt timestamps.
 - Initial PR head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` passed P12 Offline Acceptance #203 but exposed a test-only TypeScript inference failure in CI #848 / P12 Final Release Artifact #159. The heterogeneous test callbacks were explicitly typed in follow-up commit `4d2b56497d90c58c71293ec9f473260fb9c8cef8`; no production clock logic change was required for that failure.
@@ -123,7 +123,7 @@
 - Added atomic target-package generation: temporary candidate -> validate -> finalize/checksum -> Download/Copy. Failed/cancelled partial artifacts are discarded.
 - Added no-silent-fallback policy: native+CSS, visual asset, manual placeholder or unsupported fallbacks must be visible and recorded rather than substituted silently.
 - Added a canonical target-export state machine, source staleness fingerprints, deterministic run/receipt identity, cooperative cancel/retry and bounded sequential job orchestration.
-- Added structured target error codes and explicit FAILED_RECOVERABLE vs FAILED_BLOCKED outcomes instead of generic-only errors.
+- Added structured target error codes and explicit FAILED_RECOVERABLE vs FAILED_BLOCKED outcomes instead of generic-only failures.
 - Added generated-framework build matrices with pinned dependency versions; accepted artifacts may not use unbounded `latest` versions.
 - Added code-import archive defenses for path traversal, zip bombs, excessive files/nesting and arbitrary JavaScript execution.
 - Corrected asset semantics using official Figma APIs: image-fill stored bytes may be exported as `Stored Original`, while crop/mask/effects/layout appearance is a distinct rendered export. Stored bytes are not claimed as upstream-upload provenance.
