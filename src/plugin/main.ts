@@ -45,7 +45,7 @@ import { inspectLatestP7RuntimeEvidence } from './p7-runtime-evidence-inspector'
 import { buildP7RuntimeEvidenceViewerHtml } from './p7-runtime-evidence-viewer';
 import { buildP13RuntimeEvidenceBundle } from './p13-runtime-evidence';
 import {
-  loadLatestP13RuntimeEvidence,
+  inspectLatestP13RuntimeEvidence,
   persistP13RuntimeEvidenceBestEffort,
 } from './p13-runtime-evidence-storage';
 import { buildP13RuntimeEvidenceViewerHtml } from './p13-runtime-evidence-viewer';
@@ -388,15 +388,20 @@ async function runP7RuntimeEvidenceInspector(): Promise<void> {
 
 
 async function runP13RuntimeEvidenceViewer(): Promise<void> {
-  const evidence = await loadLatestP13RuntimeEvidence(figma.clientStorage);
-  figma.showUI(buildP13RuntimeEvidenceViewerHtml(evidence), {
+  const inspection = await inspectLatestP13RuntimeEvidence(figma.clientStorage);
+  const evidence = inspection.evidence;
+  figma.showUI(buildP13RuntimeEvidenceViewerHtml(evidence, inspection), {
     width: 540,
     height: 720,
     themeColors: true,
   });
 
   if (!evidence) {
-    figma.notify('No valid persisted P13 runtime evidence is available yet. Run Audit on one Frame first.');
+    if (inspection.status === 'EMPTY') {
+      figma.notify('No persisted P13 runtime evidence is available yet. Run Audit on one Frame first.');
+    } else {
+      figma.notify(`P13 runtime evidence ${inspection.status.toLowerCase()}: ${inspection.reason ?? 'evidence is unavailable.'} Run Audit on one Frame to refresh it.`);
+    }
     return;
   }
   const eligibility = evidence.traceableBuild && evidence.realFigmaContext
@@ -418,11 +423,15 @@ async function runP14GuidedPreparePreview(): Promise<void> {
   const requestedPageId = figma.currentPage.id;
 
   try {
-    const evidence = await loadLatestP13RuntimeEvidence(figma.clientStorage);
+    const inspection = await inspectLatestP13RuntimeEvidence(figma.clientStorage);
+    const evidence = inspection.evidence;
     if (!evidence) {
+      const reason = inspection.status === 'EMPTY'
+        ? 'No persisted P13 Build-Ready evidence is available yet.'
+        : `Persisted P13 Build-Ready evidence was rejected (${inspection.status}): ${inspection.reason ?? 'unknown reason.'}`;
       figma.ui.postMessage({
         type: 'p14-plan-preview-unavailable',
-        message: 'No valid persisted P13 Build-Ready evidence is available yet. Run Audit on exactly one Frame first.',
+        message: `${reason} Run Audit on exactly one current Frame first.`,
       });
       return;
     }
