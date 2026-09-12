@@ -13,6 +13,8 @@ Last updated: 2026-09-13
 7. README + canonical docs + memory-bank synchronization after coherent implementation batches.
 8. Never fabricate runtime, account, publisher or marketplace evidence.
 
+Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 before artifact-dependent operations.
+
 ## Immediate action — #264 P14 canonical status synchronization
 
 Classification: **ACTIVE / DOCS ONLY**.
