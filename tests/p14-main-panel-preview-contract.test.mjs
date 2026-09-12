@@ -1,11 +1,12 @@
 import { readFile } from 'node:fs/promises';
 import { describe, expect, it } from 'vitest';
+import { buildReleaseUi } from '../scripts/release-ui-contract.mjs';
 
-const [ui, main, releaseUi] = await Promise.all([
+const [ui, main] = await Promise.all([
   readFile(new URL('../src/ui/ui.html', import.meta.url), 'utf8'),
   readFile(new URL('../src/plugin/main.ts', import.meta.url), 'utf8'),
-  readFile(new URL('../src/ui/release-ui.html', import.meta.url), 'utf8'),
 ]);
+const generatedReleaseUi = buildReleaseUi(ui);
 
 describe('P14 main-panel Guided Prepare preview contract', () => {
   it('exposes a dedicated read-only Guided Prepare preview control in the normal plugin panel', () => {
@@ -34,8 +35,10 @@ describe('P14 main-panel Guided Prepare preview contract', () => {
     expect(main).not.toContain('buildP14PreparationConfirmation');
   });
 
-  it('does not leak the development-only preview control into the release UI surface', () => {
-    expect(releaseUi).not.toContain('p14-plan-preview-request');
-    expect(releaseUi).not.toContain('Preview Guided Prepare');
+  it('strips the development-only preview surface from the generated release UI', () => {
+    expect(generatedReleaseUi).not.toContain('p14-plan-preview-request');
+    expect(generatedReleaseUi).not.toContain('Preview Guided Prepare');
+    expect(generatedReleaseUi).not.toContain('P14 GUIDED PREPARE PREVIEW');
+    expect(generatedReleaseUi).not.toContain('renderP14PlanPreview');
   });
 });
