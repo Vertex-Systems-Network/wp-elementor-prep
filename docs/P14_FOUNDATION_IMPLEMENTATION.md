@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
 
 ## Bounded input preflight
 
@@ -31,6 +31,18 @@ Important safety behavior:
 
 These limits are freeze/resource safety bounds only. They are not estimates of Elementor/Gutenberg conversion effort or target compatibility.
 
+## Top-level run-input runtime evidence
+
+The public P14 transaction input object is itself runtime evidence. Strong TypeScript declarations do not make its top-level properties safe to read, and a proxy/getter must not be able to reject the transaction promise before structured P14 evidence exists.
+
+Before bounds or retained-duplicate core semantics, the public boundary snapshots the known transaction properties through guarded one-shot reads: `plan`, `registry`, `coordinator`, `inputBounds`, `confirmation`, `transactionId`, `preparedName`, `allowPreparedWithReview` and `shouldCancel`. The accepted values are copied into a plain snapshot and the core is later called with an explicitly constructed plain object rather than `...input`, so already-read caller properties cannot be re-entered or change value after the boundary.
+
+If the top-level input is not a runtime object, or any known transaction property getter throws, the boundary returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `run-input` before coordinator or adapter access. Safely readable plan metadata is used only for bounded rejection correlation; unreadable metadata falls back to existing `UNKNOWN` / `p14-plan-invalid` sentinels.
+
+Runtime clock metadata remains intentionally separate: reading `now` still uses the existing fail-soft clock contract. A missing, malformed or throwing `now` property/callback becomes `UNKNOWN` event-time evidence rather than transaction authority failure.
+
+This top-level snapshot does not replace nested plan, confirmation, registry, bounds, coordinator or cancellation validators. It only makes their caller-provided references stable/readable before those existing contracts run. Valid oversized controls therefore retain the established `P14_INPUT_TOO_LARGE` path, and no recipe, target, authentication, compatibility or production-acceptance authority is added.
+
 ## Run-control runtime evidence
 
 Caller-supplied transaction controls are runtime evidence, not authority granted by TypeScript declarations. The public `runP14RetainedDuplicateTransaction(...)` boundary therefore validates and snapshots control values before delegating to the retained-duplicate transaction core.
@@ -46,7 +58,7 @@ Known `inputBounds` properties are snapshotted into a plain object before the tr
 
 Resource-size authority remains separate from run-control type/shape authority. Valid typed but oversized transaction/prepared-name strings are still measured from their raw values and retain the established `P14_INPUT_TOO_LARGE` outcome. Stricter caller-supplied positive-integer bounds still use the existing clamp/default/hard-limit policy and cannot loosen defaults.
 
-The prior transaction engine is retained as the internal deterministic core; the original public module path is now the hardened run-control boundary. This split adds no recipe, target, host-identity or production-acceptance authority.
+The prior transaction engine is retained as the internal deterministic core; the original public module path is now the hardened caller-evidence boundary. This split adds no recipe, target, host-identity or production-acceptance authority.
 
 ## Bounded safe-recipe registry evidence
 
@@ -327,6 +339,10 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 59. Runtime action-eligibility hook property access is untrusted; a throwing/proxy-backed getter cannot escape after prior candidate mutation.
 60. Unreadable runtime-eligibility hook access reuses the existing `P14_TRANSFORM_FAILED` / `transform-recheck` cleanup path, and discard failure still becomes `CLEANUP_REQUIRED`.
 61. Guarding the optional eligibility hook preserves readable missing/non-function refusal and invokes valid hooks with the original adapter as `this`; it adds no target or mutation authority.
+62. The public run-input object and each known top-level transaction property are read as untrusted runtime evidence before bounds/core semantics.
+63. Accepted top-level run-input properties are snapshotted once into a plain delegated object; caller getters are not re-entered through object spread or later wrapper reads.
+64. Unreadable/non-object top-level run input fails closed as bounded `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `run-input` before coordinator or adapter access, while clock metadata retains its separate fail-soft `UNKNOWN` contract.
+65. Top-level run-input snapshotting does not replace nested validators or add recipe, target, authentication, compatibility or production-acceptance authority.
 
 ## Deliberately not wired yet
 
