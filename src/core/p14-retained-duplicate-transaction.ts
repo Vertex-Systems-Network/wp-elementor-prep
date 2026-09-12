@@ -34,6 +34,7 @@ import {
 } from './p14-source-fingerprint-evidence';
 import {
   DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR,
+  assessP14TransactionLeaseResultEvidence,
   type P14SourceTransactionCoordinator,
   type P14TransactionLease,
 } from './p14-transaction-coordinator';
@@ -197,6 +198,49 @@ function cleanupOutcome(input: {
     errors: [input.primaryError],
     events: [...input.events, event(input.now, terminal, input.primaryError.detail)],
   });
+}
+
+function coordinatorReleaseCleanupOutcome(
+  receipt: P14PreparationReceiptV1,
+  now: () => unknown,
+  detail: string,
+): P14PreparationReceiptV1 {
+  return {
+    ...receipt,
+    status: 'CLEANUP_REQUIRED',
+    terminalState: 'CLEANUP_REQUIRED',
+    errors: [
+      ...receipt.errors,
+      receiptError(
+        'P14_INTERNAL_INVARIANT_FAILED',
+        'coordination-release',
+        detail,
+        'Recover or reset the source transaction coordinator lease before retrying preparation.',
+      ),
+    ],
+    events: [...receipt.events, event(now, 'CLEANUP_REQUIRED', 'source transaction lease cleanup failed')],
+  };
+}
+
+function releaseCoordinatorLease(
+  coordinator: P14SourceTransactionCoordinator,
+  lease: P14TransactionLease,
+): { released: boolean; detail: string } {
+  try {
+    const releaseResult: unknown = coordinator.release(lease);
+    if (releaseResult === true) return { released: true, detail: '' };
+    return {
+      released: false,
+      detail: releaseResult === false
+        ? 'P14 source transaction coordinator refused to release the acquired lease.'
+        : `P14 source transaction coordinator returned non-boolean release evidence (${typeof releaseResult}).`,
+    };
+  } catch (error) {
+    return {
+      released: false,
+      detail: `P14 source transaction coordinator release failed: ${safeP14RuntimeErrorMessage(error)}`,
+    };
+  }
 }
 
 function eligibleActions(plan: P14PreparationPlanV1): P14PreparationAction[] {
@@ -388,7 +432,58 @@ export async function runP14RetainedDuplicateTransaction(
   const coordinator = input.coordinator ?? DEFAULT_P14_SOURCE_TRANSACTION_COORDINATOR;
   let lease: P14TransactionLease | null = null;
   if (plan.status === 'READY') {
-    const leaseResult = coordinator.tryAcquire(plan.source.nodeId, input.transactionId);
+    let rawLeaseResult: unknown;
+    try {
+      rawLeaseResult = coordinator.tryAcquire(plan.source.nodeId, input.transactionId);
+    } catch (error) {
+      return baseReceipt({
+        plan,
+        transactionId: input.transactionId,
+        status: 'BLOCKED',
+        terminalState: 'BLOCKED',
+        beforeFingerprint: unknownFingerprint,
+        afterFingerprint: unknownFingerprint,
+        errors: [receiptError(
+          'P14_INTERNAL_INVARIANT_FAILED',
+          'coordination',
+          `P14 source transaction coordinator acquisition failed: ${safeP14RuntimeErrorMessage(error)}`,
+          'Fix or replace the source transaction coordinator before retrying preparation.',
+        )],
+        events: [...events, event(now, 'BLOCKED', 'source transaction lease acquisition failed')],
+      });
+    }
+
+    const leaseEvidence = assessP14TransactionLeaseResultEvidence(
+      rawLeaseResult,
+      plan.source.nodeId,
+      input.transactionId,
+    );
+    if (!leaseEvidence.valid || !leaseEvidence.value) {
+      const invalidReceipt = baseReceipt({
+        plan,
+        transactionId: input.transactionId,
+        status: 'BLOCKED',
+        terminalState: 'BLOCKED',
+        beforeFingerprint: unknownFingerprint,
+        afterFingerprint: unknownFingerprint,
+        errors: [receiptError(
+          'P14_INTERNAL_INVARIANT_FAILED',
+          'coordination',
+          `P14 source transaction coordinator returned invalid acquisition evidence: ${leaseEvidence.failures.join(' | ')}`,
+          'Fix or replace the source transaction coordinator before retrying preparation.',
+        )],
+        events: [...events, event(now, 'BLOCKED', 'source transaction lease evidence invalid')],
+      });
+      if (leaseEvidence.claimedAcquired) {
+        const releaseAttempt = releaseCoordinatorLease(coordinator, leaseEvidence.expectedLease);
+        if (!releaseAttempt.released) {
+          return coordinatorReleaseCleanupOutcome(invalidReceipt, now, releaseAttempt.detail);
+        }
+      }
+      return invalidReceipt;
+    }
+
+    const leaseResult = leaseEvidence.value;
     if (!leaseResult.acquired) {
       const isConflict = leaseResult.reason === 'SOURCE_BUSY' || leaseResult.reason === 'TRANSACTION_ID_BUSY';
       const owner = leaseResult.ownerTransactionId
@@ -413,7 +508,7 @@ export async function runP14RetainedDuplicateTransaction(
     lease = leaseResult.lease;
   }
 
-  try {
+  const executeWithLease = async (): Promise<P14PreparationReceiptV1> => {
   let beforeFingerprint: string;
   try {
     beforeFingerprint = await readP14SourceFingerprint(adapter, plan.source.nodeId);
@@ -1056,7 +1151,40 @@ export async function runP14RetainedDuplicateTransaction(
     rescore,
     retention,
   };
-  } finally {
-    if (lease) coordinator.release(lease);
+  };
+
+  let executionOutcome: P14PreparationReceiptV1 | undefined;
+  let executionFailure: unknown;
+  let executionFailed = false;
+  try {
+    executionOutcome = await executeWithLease();
+  } catch (error) {
+    executionFailed = true;
+    executionFailure = error;
   }
+
+  if (lease) {
+    const releaseAttempt = releaseCoordinatorLease(coordinator, lease);
+    if (!releaseAttempt.released) {
+      const cleanupBase = executionOutcome ?? baseReceipt({
+        plan,
+        transactionId: input.transactionId,
+        status: 'BLOCKED',
+        terminalState: 'BLOCKED',
+        beforeFingerprint: unknownFingerprint,
+        afterFingerprint: unknownFingerprint,
+        errors: [receiptError(
+          'P14_INTERNAL_INVARIANT_FAILED',
+          'transaction',
+          `P14 transaction failed unexpectedly before a terminal receipt was produced: ${safeP14RuntimeErrorMessage(executionFailure)}`,
+        )],
+        events: [...events, event(now, 'BLOCKED', 'unexpected transaction failure')],
+      });
+      return coordinatorReleaseCleanupOutcome(cleanupBase, now, releaseAttempt.detail);
+    }
+  }
+
+  if (executionFailed) throw executionFailure;
+  if (!executionOutcome) throw new Error('P14 transaction completed without a terminal receipt.');
+  return executionOutcome;
 }
