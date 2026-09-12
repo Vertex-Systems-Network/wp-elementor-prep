@@ -79,21 +79,43 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
-### #237 — post-#236 P14 repository status synchronization
+### #241 — post-#240 P14 repository status synchronization
 
 Classification: **ACTIVE / branch prepared**.
 
-Branch `docs/p14-post-236-status-237` synchronizes canonical repository truth after the verified #233/#234 and #235/#236 cycles without expanding runtime scope:
+Branch `docs/p14-post-240-status-241` synchronizes canonical repository truth after the verified #237/#238 and #239/#240 cycles without expanding runtime scope:
 
-1. record #233 / PR #234 as completed at guarded merge `27144161082ce3cff9c9a0ca1e0364cd19b727ad`, exact head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998`, CI #970, Integration Readiness #316, P12 Final Release Artifact #281 and P12 Offline Acceptance #325;
-2. record #235 / PR #236 as completed at guarded merge `804ffc6a143c2cf6ab4ca100d7b021289a060be2`, exact head `497b1385b55ca8343d82be04da02de0595228efd`, CI #972, P12 Final Release Artifact #283 and P12 Offline Acceptance #327;
-3. explicitly preserve the truth that Integration Readiness did not run on code-only PR #236 because its pull-request trigger is path-filtered;
-4. record the one-shot coordinator acquisition/refusal semantic snapshot boundary and detached accepted evidence while preserving the existing claimed-acquired cleanup contract;
+1. record #237 / PR #238 as completed at guarded merge `2966bae643cd7d9ac972bc60da1688b8fed575e2`, exact head `48804348e6244b043c7c76ceca5181d15704592f`, CI #974, Integration Readiness #319, P12 Final Release Artifact #284 and P12 Offline Acceptance #328;
+2. record #239 / PR #240 as completed at guarded merge `9e86dd4e10dd282758bcdbb177841a0117b179ae`, exact head `9a01555ab95b595151c47d401a0ba3e771c240d9`, CI #976, P12 Final Release Artifact #287 and P12 Offline Acceptance #331;
+3. explicitly preserve the truth that Integration Readiness did not run on code-only PR #240 because its pull-request trigger is path-filtered;
+4. record the receipt-integrity one-shot top-level/nested semantic snapshot boundary, detached bounded receipt collections and accepted validation/re-score reuse;
 5. synchronize README, `docs/P14_FOUNDATION_IMPLEMENTATION.md`, `memory-bank/PROJECT_STATE.md` and this queue only;
 6. keep production safe-recipe authority empty and real Figma mutation/runtime wiring absent;
 7. after this sync closes, run a fresh focused P14 pure-core safety-gap audit rather than exposing real Figma mutation.
 
 The synchronization branch must remain current with main, review-clean and gate-clean before guarded merge.
+
+### #239 — P14 receipt-integrity semantic snapshot
+
+Classification: **COMPLETED / merged through PR #240**.
+
+PR #240 (`fix/p14-receipt-semantic-snapshot-239`) closes a distinct integrity-validation boundary without changing recipe or target authority:
+
+1. known receipt-integrity top-level fields are captured through guarded one-shot reads before semantic validation;
+2. `appliedActions`, `errors` and `events` are bounded and copied through safe array inspection, a one-shot length read and guarded index reads rather than retaining the original source array/proxy;
+3. source, candidate, error and event fields that receipt integrity reuses are detached into plain known-schema records;
+4. accepted validation and re-score evidence is reused by PREPARED/PREPARED_WITH_REVIEW invariants instead of re-reading original nested stateful objects;
+5. revoked/unreadable top-level, collection and nested receipt evidence fails closed rather than throwing through the integrity API;
+6. ordinary valid receipt semantics and existing oversized-envelope behavior remain intact;
+7. no production recipe, real Figma mutation, target compatibility or production acceptance authority is introduced.
+
+Exact head `9a01555ab95b595151c47d401a0ba3e771c240d9` passed CI #976, P12 Final Release Artifact #287 and P12 Offline Acceptance #331. The PR had zero review threads, was current with main and mergeable, then guarded squash-merged as `9e86dd4e10dd282758bcdbb177841a0117b179ae`; issue #239 closed completed. Integration Readiness was correctly absent from the code-only PR and is delegated to #241 status synchronization.
+
+### #237 — post-#236 P14 repository status synchronization
+
+Classification: **COMPLETED / merged through PR #238**.
+
+PR #238 (`docs/p14-post-236-status-237`) synchronized canonical repository truth after #234/#236, exercised the path-filtered Integration Readiness gate, and advanced the immediate P14 action to the next focused pure-core safety-gap audit. Exact head `48804348e6244b043c7c76ceca5181d15704592f` passed CI #974, Integration Readiness #319, P12 Final Release Artifact #284 and P12 Offline Acceptance #328, then guarded squash-merged as `2966bae643cd7d9ac972bc60da1688b8fed575e2`; issue #237 closed completed.
 
 ### #235 — P14 coordinator acquisition/refusal semantic snapshot
 
