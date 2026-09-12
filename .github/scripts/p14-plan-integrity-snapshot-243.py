@@ -178,16 +178,16 @@ subprocess.run([
     '.github/scripts/p14-plan-integrity-snapshot-243.py',
 ], check=True)
 
-changed = subprocess.check_output(['git', 'diff', '--name-only', BASE], text=True).splitlines()
 expected = sorted([
     'src/core/p14-plan-integrity.ts',
     'tests/p14-plan-integrity-semantic-snapshot.test.ts',
 ])
+subprocess.run(['git', 'add', *expected], check=True)
+changed = subprocess.check_output(['git', 'diff', '--cached', '--name-only', BASE], text=True).splitlines()
 if sorted(changed) != expected:
-    raise SystemExit(f'Unexpected net changed-file set: {changed!r}; expected {expected!r}')
+    raise SystemExit(f'Unexpected staged net changed-file set: {changed!r}; expected {expected!r}')
 
 subprocess.run(['git', 'config', 'user.name', 'github-actions[bot]'], check=True)
 subprocess.run(['git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], check=True)
-subprocess.run(['git', 'add', *expected], check=True)
 subprocess.run(['git', 'commit', '-m', 'P14: snapshot standalone plan integrity evidence'], check=True)
 subprocess.run(['git', 'push', 'origin', 'HEAD:fix/p14-plan-integrity-snapshot-243'], check=True)
