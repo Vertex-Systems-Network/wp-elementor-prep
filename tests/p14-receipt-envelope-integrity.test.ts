@@ -59,7 +59,7 @@ describe('P14 receipt envelope and diagnostic integrity', () => {
   it.each(['appliedActions', 'errors', 'events'] as const)(
     'rejects oversized %s from length without traversing contents',
     (field) => {
-      const value = noChangeReceipt() as ReturnType<typeof noChangeReceipt> & Record<typeof field, unknown[]>;
+      const value: any = noChangeReceipt();
       value[field] = oversizedArrayProxy(field);
       expect(() => validateP14PreparationReceipt(value)).not.toThrow();
       const result = validateP14PreparationReceipt(value);
@@ -69,11 +69,7 @@ describe('P14 receipt envelope and diagnostic integrity', () => {
   );
 
   it('rejects oversized error diagnostic fields', () => {
-    const value = noChangeReceipt() as ReturnType<typeof noChangeReceipt> & {
-      status: string;
-      terminalState: string;
-      errors: Array<Record<string, unknown>>;
-    };
+    const value: any = noChangeReceipt();
     value.status = 'BLOCKED';
     value.terminalState = 'BLOCKED';
     value.events = [
@@ -90,12 +86,12 @@ describe('P14 receipt envelope and diagnostic integrity', () => {
   });
 
   it('rejects oversized event timestamp/detail evidence', () => {
-    const value = noChangeReceipt();
+    const value: any = noChangeReceipt();
     value.events[0] = {
       state: 'IDLE',
       at: '2'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength + 1),
       detail: 'd'.repeat(DEFAULT_P14_INPUT_BOUNDS.maxDetailLength + 1),
-    } as (typeof value.events)[number];
+    };
     expect(validateP14PreparationReceipt(value).valid).toBe(false);
   });
 });
