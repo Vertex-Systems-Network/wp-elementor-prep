@@ -38,7 +38,7 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
 - #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
 - #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
-- #223 — P14 nested plan/confirmation semantic snapshot: **ACTIVE / PR #224**. Known bounded plan/confirmation semantics are captured into plain evidence after first preflight so readable stateful caller getters/proxies cannot change later transaction authority.
+- #223 — P14 nested plan/confirmation semantic snapshot: **COMPLETED** through PR #224; issue closed automatically by the verified guarded squash merge.
 - #216 — P14 unreadable nested bounded-input evidence: **COMPLETED** through PR #221; issue closed automatically by the verified guarded squash merge.
 - #213 — P14 top-level run-input runtime evidence snapshot: **COMPLETED** through PR #214; issue closed automatically by the verified guarded squash merge.
 - #210 — P14 unreadable runtime action-eligibility hook access: **COMPLETED** through PR #211; issue closed automatically by the verified guarded squash merge.
@@ -53,11 +53,11 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 
 ## Current PR / main queue
 
-- Current repository main baseline is `4a18b548e37544ff49d2f590289de33d6d513138`, the post-#221 docs/status synchronization from PR #222.
-- PR #224 (`fix/p14-semantic-snapshot-223`) is the active P14 readable-but-stateful nested semantic-evidence slice.
-- Initial PR #224 head `64168dea7b5c6aea126cc89404221da79973b5bd` passed typecheck and the new semantic-snapshot tests but Final Release #237 surfaced one existing #216 receipt-correlation regression: second-pass unreadable nested evidence retained source metadata instead of `UNKNOWN` / `p14-plan-invalid`.
-- Corrected implementation head `8ec0c14c6301d16b8b9564a5b0d01423147629b5` restores the existing #216 fallback, passes CI #927 including the full test/build/release/community suite, P12 Final Release Artifact #238, and P12 Offline Acceptance #282 on Ubuntu/macOS/Windows. Same-cycle docs synchronization is now in progress, so fresh exact-head CI/evidence gates remain required before merge.
-- PR #224 captures the known bounded P14 plan/confirmation schema into plain semantic values after first resource preflight, re-runs the existing bounds contract on that snapshot, and delegates only the plain snapshot into core semantics. Readable stateful getters/proxies therefore cannot change action, source, confirmation or collection evidence after the public boundary. Evidence that grows oversized between first preflight and capture retains the established `P14_INPUT_TOO_LARGE` / `bounds` outcome. No generic deep clone, new status/error authority, production recipe registration, real Figma mutation surface, target compatibility claim or production acceptance is introduced.
+- Current P14 core main baseline is `a84104b459d38b90368e0ef21ec1ac32788cd438`, the guarded squash merge of PR #224 / issue #223.
+- PR #224 exact synchronized head `483e4b3f655ee8c99e844fbc9395313db22812f1` passed CI #932, Integration Readiness #289, P12 Final Release Artifact #243 and P12 Offline Acceptance #287 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and GitHub reported `mergeable=true` before the guarded squash merge.
+- PR #224 captures the known bounded P14 plan/confirmation schema into plain semantic values after first resource preflight, re-runs the existing bounds contract on that snapshot, and delegates only the plain snapshot into core semantics. Readable stateful getters/proxies therefore cannot change action, source, confirmation or collection evidence after the public boundary. Evidence that grows oversized between first preflight and capture retains the established `P14_INPUT_TOO_LARGE` / `bounds` outcome. No generic deep clone, new status/error authority, production recipe registration, real Figma mutation surface, target compatibility claim or production acceptance was introduced.
+- Initial PR #224 head `64168dea7b5c6aea126cc89404221da79973b5bd` exposed one existing #216 receipt-correlation regression in Final Release #237. Corrected implementation head `8ec0c14c6301d16b8b9564a5b0d01423147629b5` restored the established `UNKNOWN` / `p14-plan-invalid` fallback and passed CI #927, P12 Final Release Artifact #238 and P12 Offline Acceptance #282 on Ubuntu/macOS/Windows before same-cycle docs synchronization.
+- PR #224 guarded squash-merged as `a84104b459d38b90368e0ef21ec1ac32788cd438`; issue #223 closed completed.
 - PR #221 exact synchronized head `33e9a956b1c63aec9623e9c3187449a8569f6236` passed CI #921, Integration Readiness #280, P12 Final Release Artifact #232 and P12 Offline Acceptance #276 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and GitHub reported `mergeable=true` before the guarded squash merge.
 - PR #221 guards the public bounded-input traversal and the internal retained-duplicate core's second bounds traversal. Throwing nested plan/confirmation getters now produce bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` at stage `bounds-evidence` before source coordination or adapter access. Internal second-pass failure uses `UNKNOWN` / `p14-plan-invalid` receipt correlation instead of re-reading hostile plan metadata. Readable oversized evidence keeps the established `P14_INPUT_TOO_LARGE` / `bounds` outcome. No new status/error code, production recipe authority or real Figma mutation exposure was introduced.
 - Initial #221 code/test head `7ef0a2b43262024ee1f1df59e658143e4dac2681` passed CI #913, P12 Final Release Artifact #224 and P12 Offline Acceptance #268 on Ubuntu/macOS/Windows before same-cycle docs synchronization.
@@ -130,7 +130,7 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13 Build-Ready Score + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | #159 real-plugin parity/internal runtime acceptance |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Complete #223 / PR #224 semantic snapshot hardening; production registry remains empty |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Continue the next focused pure-core safety-gap audit after #223; production registry remains empty |
 | P15-P26 multi-target commercial implementation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | Implement in dependency order with R0/R1 where applicable |
 | P27 final production release | GATE DEFINED / EXECUTION DEFERRED | 0% exec | Coordinate final live runtime/publisher/2FA evidence + #84 release-exit truth |
 
@@ -166,7 +166,7 @@ R0 research remains advisory and must be refreshed again when a major adapter im
 
 Continue the implementation/internal-readiness program without making production-release claims:
 
-1. complete #223 / PR #224 on its final synchronized head; after merge, start the next focused P14 target-neutral safety-gap audit while real Figma mutation remains unwired and the production recipe registry remains empty;
+1. start the next focused P14 target-neutral safety-gap audit from core main `a84104b...` while real Figma mutation remains unwired and the production recipe registry remains empty;
 2. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
 3. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
 4. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;
