@@ -138,7 +138,12 @@ describe('P14 adapter output semantic snapshots', () => {
       required: true,
       detail: 'ok',
     };
-    const checksTarget = [check];
+    const checksTarget: Array<{
+      readonly id: string;
+      passed: boolean;
+      required: boolean;
+      detail: string;
+    }> = [check];
     const checks = new Proxy(checksTarget, {
       get(target, property, receiver) {
         return Reflect.get(target, property, receiver);
