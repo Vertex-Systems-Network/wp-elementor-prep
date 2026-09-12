@@ -1,0 +1,94 @@
+name: Pella Nova Template 1 R8 Hosted R6 Integrity
+
+on:
+  push:
+    branches:
+      - pella-nova-template-1-media
+    paths:
+      - .github/workflows/pn1-r8-host-integrity.yml
+
+permissions:
+  contents: write
+
+jobs:
+  verify-hosted-r6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: pella-nova-template-1-media
+
+      - name: Audit hosted R6 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/pella-nova-template-1'
+          ZIP="$ROOT/Pella-Nova-Elementor-Web-Template-1-PASS4-R6-RUNTIME-CANDIDATE.zip"
+          REPORT="$ROOT/R8-HOSTED-R6-INTEGRITY.txt"
+          EXPECTED_SHA='f27dd864bf9ce19b189b7cb686a92b5b05125f0dfad17605d8748f20cad8bccd'
+          {
+            echo 'PELLA NOVA TEMPLATE 1 — R8 HOSTED R6 INTEGRITY'
+            echo
+            echo "EXPECTED_CANONICAL_SHA256=$EXPECTED_SHA"
+            echo "HOSTED_BYTES=$(stat -c %s "$ZIP")"
+            echo "HOSTED_SHA256=$(sha256sum "$ZIP" | awk '{print $1}')"
+            echo
+            echo '[ZIP TEST]'
+            unzip -t "$ZIP"
+            echo
+            echo '[ZIP LIST]'
+            unzip -l "$ZIP"
+            echo
+            echo '[REQUIRED FILES]'
+            for f in manifest.json site-settings.json content/page/100.json templates/101.json templates/102.json templates/103.json templates/104.json templates/105.json templates/106.json templates/107.json templates/108.json templates/109.json templates/110.json taxonomies/nav_menu.json taxonomies/category.json wp-content/nav_menu_item/nav_menu_item.xml; do
+              if unzip -Z1 "$ZIP" | grep -Fxq "$f"; then
+                echo "PASS $f"
+              else
+                echo "MISSING $f"
+              fi
+            done
+            echo
+            echo '[MANIFEST SHA256]'
+            unzip -p "$ZIP" manifest.json | sha256sum
+            echo '[HOME SHA256]'
+            unzip -p "$ZIP" content/page/100.json | sha256sum
+            echo '[TEMPLATE SHA256S]'
+            for n in 101 102 103 104 105 106 107 108 109 110; do
+              printf '%s ' "$n"
+              unzip -p "$ZIP" "templates/$n.json" | sha256sum | awk '{print $1}'
+            done
+            echo
+            echo '[CONTENT SENTINELS]'
+            for s in 'VALENTINA' 'MOREAU' 'PROJECTS &' 'Companies.' 'HOW SHE' 'works.' 'Media & Recognition' 'JOURNAL' 'On form, and the sentences that survive it.'; do
+              if unzip -p "$ZIP" '*.json' 2>/dev/null | grep -Fq "$s"; then
+                echo "PASS $s"
+              else
+                echo "MISSING $s"
+              fi
+            done
+            echo
+            echo '[FORBIDDEN COUNTS]'
+            TMP=$(mktemp -d)
+            unzip -qq "$ZIP" -d "$TMP"
+            echo "FIGMA_TEMP_URLS=$(grep -Rho 'figma.com/api/mcp/asset' "$TMP" 2>/dev/null | wc -l || true)"
+            echo "INTERNAL_PN_KEYS=$(grep -Rho '"'_pn_' "$TMP" 2>/dev/null | wc -l || true)"
+            echo "CUSTOM_CSS_KEYS=$(grep -Rho '"'custom_css'"' "$TMP" 2>/dev/null | wc -l || true)"
+            echo "CUSTOM_JS_KEYS=$(grep -Rho '"'custom_js'"' "$TMP" 2>/dev/null | wc -l || true)"
+            echo
+            if [ "$(sha256sum "$ZIP" | awk '{print $1}')" = "$EXPECTED_SHA" ]; then
+              echo 'CANONICAL_BYTE_MATCH=PASS'
+            else
+              echo 'CANONICAL_BYTE_MATCH=FAIL'
+            fi
+          } > "$REPORT" 2>&1
+
+      - name: Commit integrity report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Pella Nova Build Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add public/pella-nova-template-1/R8-HOSTED-R6-INTEGRITY.txt
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add R8 hosted R6 integrity report'
+          git push origin HEAD:pella-nova-template-1-media
