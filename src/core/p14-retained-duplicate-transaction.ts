@@ -16,6 +16,10 @@ import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
 import { assessP14ValidationProfileCoverage } from './p14-validation-profile-coverage';
+import {
+  validateP14ValidationEvidence,
+  type P14BoundedValidationEvidence,
+} from './p14-validation-evidence';
 import { validateP14RescoreEvidence } from './p14-rescore-evidence';
 import { validateP14RuntimeActionEligibilityEvidence } from './p14-runtime-action-eligibility';
 import {
@@ -62,26 +66,6 @@ export interface P14RetainedDuplicateRunInput {
 function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function isP14ValidationSummary(value: unknown): value is P14ValidationSummary {
-  if (!isRecord(value)
-    || typeof value.passed !== 'boolean'
-    || !Array.isArray(value.profileIdsRun)
-    || !Array.isArray(value.checks)) {
-    return false;
-  }
-  return value.checks.every((check) => isRecord(check)
-    && typeof check.id === 'string'
-    && check.id.length > 0
-    && typeof check.passed === 'boolean'
-    && typeof check.required === 'boolean'
-    && (check.detail === undefined || typeof check.detail === 'string'));
-}
-
 
 async function readP14SourceFingerprint(
   adapter: P14RetainedDuplicateAdapter,
@@ -770,13 +754,14 @@ export async function runP14RetainedDuplicateTransaction(
   }
 
   events.push(event(now, 'VALIDATING'));
-  let validation: P14ValidationSummary;
+  let validationEvidence: P14BoundedValidationEvidence;
   try {
     const rawValidation: unknown = await adapter.validateCandidate(candidate, plan);
-    if (!isP14ValidationSummary(rawValidation)) {
-      throw new Error('Validation adapter returned malformed evidence.');
+    const evidence = validateP14ValidationEvidence(rawValidation);
+    if (!evidence.valid || !evidence.value) {
+      throw new Error(`Validation adapter returned malformed evidence: ${evidence.failures.join(' | ')}`);
     }
-    validation = rawValidation;
+    validationEvidence = evidence.value;
   } catch (error) {
     const discardError = await discardCandidate(adapter, candidate);
     return cleanupOutcome({
@@ -793,8 +778,12 @@ export async function runP14RetainedDuplicateTransaction(
     });
   }
 
-  const profileCoverage = assessP14ValidationProfileCoverage(plan, validation.profileIdsRun);
-  validation = { ...validation, profileIdsRun: profileCoverage.observedProfileIds };
+  const profileCoverage = assessP14ValidationProfileCoverage(plan, validationEvidence.profileIdsRun);
+  const validation: P14ValidationSummary = {
+    passed: validationEvidence.passed,
+    profileIdsRun: profileCoverage.observedProfileIds,
+    checks: validationEvidence.checks,
+  };
   const requiredChecksPass = Array.isArray(validation.checks)
     && validation.checks.filter((check) => check.required).every((check) => check.passed);
   if (!profileCoverage.valid || !validation.passed || !requiredChecksPass) {
