@@ -1,29 +1,4 @@
-from pathlib import Path
-import subprocess
-
-BASE = 'a2246d564c63912d1f74014a87d9181796eb2386'
-SOURCE = Path('src/core/p14-plan-integrity.ts')
-TEST = Path('tests/p14-plan-integrity-semantic-snapshot.test.ts')
-
-text = SOURCE.read_text(encoding='utf-8')
-imports = "import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';\nimport { snapshotP14SemanticInputEvidence } from './p14-semantic-input-snapshot';\n"
-if imports.strip() in text:
-    raise SystemExit('snapshot imports already present')
-text = imports + text
-
-old_signature = 'export function validateP14PreparationPlan(value: unknown): P14PlanIntegrityResult {'
-new_signature = 'function validateP14PreparationPlanSnapshot(value: unknown): P14PlanIntegrityResult {'
-if text.count(old_signature) != 1:
-    raise SystemExit(f'expected one public validator signature, found {text.count(old_signature)}')
-text = text.replace(old_signature, new_signature, 1)
-
-wrapper = '''\n\n/**\n * Treats standalone plan-integrity input as untrusted runtime evidence. The known plan schema is\n * captured once into bounded plain values before any integrity semantics are evaluated.\n */\nexport function validateP14PreparationPlan(value: unknown): P14PlanIntegrityResult {\n  const snapshot = snapshotP14SemanticInputEvidence(\n    value,\n    undefined,\n    DEFAULT_P14_INPUT_BOUNDS,\n  );\n  if (!snapshot.valid) {\n    return {\n      valid: false,\n      failures: snapshot.failures.length > 0\n        ? snapshot.failures\n        : ['P14 plan semantic evidence could not be captured safely.'],\n    };\n  }\n  return validateP14PreparationPlanSnapshot(snapshot.plan);\n}\n'''
-if wrapper.strip() in text:
-    raise SystemExit('validator wrapper already present')
-text = text.rstrip() + wrapper
-SOURCE.write_text(text, encoding='utf-8')
-
-TEST.write_text(r'''import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { validateP14PreparationPlan } from '../src/core/p14-plan-integrity';
 import { buildP14PreparationPlan } from '../src/core/p14-preparation-plan';
 import type {
@@ -169,25 +144,3 @@ describe('P14 standalone plan-integrity semantic snapshot', () => {
     expect(validateP14PreparationPlan(validPlan())).toEqual({ valid: true, failures: [] });
   });
 });
-''', encoding='utf-8')
-
-# The helper files must net to zero against main.
-subprocess.run([
-    'git', 'rm', '-f',
-    '.github/workflows/p14-plan-integrity-snapshot-243.yml',
-    '.github/scripts/p14-plan-integrity-snapshot-243.py',
-], check=True)
-
-expected = sorted([
-    'src/core/p14-plan-integrity.ts',
-    'tests/p14-plan-integrity-semantic-snapshot.test.ts',
-])
-subprocess.run(['git', 'add', *expected], check=True)
-changed = subprocess.check_output(['git', 'diff', '--cached', '--name-only', BASE], text=True).splitlines()
-if sorted(changed) != expected:
-    raise SystemExit(f'Unexpected staged net changed-file set: {changed!r}; expected {expected!r}')
-
-subprocess.run(['git', 'config', 'user.name', 'github-actions[bot]'], check=True)
-subprocess.run(['git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], check=True)
-subprocess.run(['git', 'commit', '-m', 'P14: snapshot standalone plan integrity evidence'], check=True)
-subprocess.run(['git', 'push', 'origin', 'HEAD:fix/p14-plan-integrity-snapshot-243'], check=True)

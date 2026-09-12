@@ -1,3 +1,5 @@
+import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import { snapshotP14SemanticInputEvidence } from './p14-semantic-input-snapshot';
 import {
   P14_PREPARATION_ENGINE_VERSION,
   P14_PREPARATION_SCHEMA_VERSION,
@@ -301,7 +303,7 @@ function normalizeBlockers(blockers: P14PlanBlocker[]): P14PlanBlocker[] {
   }));
 }
 
-export function validateP14PreparationPlan(value: unknown): P14PlanIntegrityResult {
+function validateP14PreparationPlanSnapshot(value: unknown): P14PlanIntegrityResult {
   const failures: string[] = [];
   if (!isRecord(value)) return { valid: false, failures: ['P14 plan must be an object.'] };
   if (value.schemaVersion !== P14_PREPARATION_SCHEMA_VERSION) failures.push('Unsupported P14 plan schema version.');
@@ -360,4 +362,25 @@ export function validateP14PreparationPlan(value: unknown): P14PlanIntegrityResu
   if (value.planDigest !== expectedDigest) failures.push('planDigest does not match the canonical P14 plan content.');
 
   return { valid: failures.length === 0, failures };
+}
+
+/**
+ * Treats standalone plan-integrity input as untrusted runtime evidence. The known plan schema is
+ * captured once into bounded plain values before any integrity semantics are evaluated.
+ */
+export function validateP14PreparationPlan(value: unknown): P14PlanIntegrityResult {
+  const snapshot = snapshotP14SemanticInputEvidence(
+    value,
+    undefined,
+    DEFAULT_P14_INPUT_BOUNDS,
+  );
+  if (!snapshot.valid) {
+    return {
+      valid: false,
+      failures: snapshot.failures.length > 0
+        ? snapshot.failures
+        : ['P14 plan semantic evidence could not be captured safely.'],
+    };
+  }
+  return validateP14PreparationPlanSnapshot(snapshot.plan);
 }
