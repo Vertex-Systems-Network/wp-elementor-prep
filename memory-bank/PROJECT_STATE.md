@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-12
+Last updated: 2026-09-13
 
 ## Product
 
@@ -38,7 +38,9 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
 - #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
 - #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
-- #233 — post-#232 P14 repository-status synchronization: **ACTIVE / draft PR #234**. Canonical README, P14 foundation and memory-bank state are being aligned to the actual #230/#232 guarded merges before the next focused pure-core safety audit.
+- #237 — post-#236 P14 repository-status synchronization: **ACTIVE** on branch `docs/p14-post-236-status-237`. Canonical README, P14 foundation and memory-bank state are being aligned to the verified #234/#236 merges before the next focused pure-core safety audit.
+- #235 — P14 coordinator acquisition/refusal semantic snapshot hardening: **COMPLETED** through PR #236; issue closed automatically by guarded squash merge `804ffc6a143c2cf6ab4ca100d7b021289a060be2`.
+- #233 — post-#232 P14 repository-status synchronization: **COMPLETED** through PR #234; guarded squash-merged as `27144161082ce3cff9c9a0ca1e0364cd19b727ad` after exact synchronized head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998` passed all required gates.
 - #231 — P14 adapter-output semantic snapshot hardening: **COMPLETED** through PR #232; issue closed automatically by guarded squash merge `2bbc24fb8afa3ccb9cc202fd816dfc8d69888941`.
 - #229 — P14 adapter callback input isolation: **COMPLETED** through PR #230; issue closed automatically by guarded squash merge `bad83a48ab58dfa8b956e7b6bf02c74a079a4665`.
 - #226 — P14 safe-recipe registry semantic snapshot: **COMPLETED** through PR #227; issue closed automatically by the verified guarded squash merge.
@@ -57,8 +59,11 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 
 ## Current PR / main queue
 
-- Current repository main is `2bbc24fb8afa3ccb9cc202fd816dfc8d69888941`, the guarded squash merge of PR #232.
-- Draft PR #234 (`docs/p14-post-232-status-233`) is the active post-#232 canonical status synchronization tracked by #233. Its first README head `4711425b2e5e2e510745ffd1fe196a9bc18dfe35` triggered Integration Readiness #313 because README is inside that workflow's PR path filter; Integration Readiness #313 passed. The final exact PR head must be re-verified through all required gates after the remaining canonical status files are synchronized.
+- Current repository main is `804ffc6a143c2cf6ab4ca100d7b021289a060be2`, the guarded squash merge of PR #236.
+- Branch `docs/p14-post-236-status-237` is the active canonical status synchronization tracked by #237; it must trigger and pass CI, Integration Readiness, P12 Final Release Artifact and P12 Offline Acceptance before guarded merge.
+- PR #234 (`docs/p14-post-232-status-233`) completed the post-#232 canonical status synchronization and guarded squash-merged as `27144161082ce3cff9c9a0ca1e0364cd19b727ad`. Exact head `7bbfa45eaa5047c7b3a0230d43f4bfda5ce51998` passed CI #970, Integration Readiness #316, P12 Final Release Artifact #281 and P12 Offline Acceptance #325.
+- PR #236 exact head `497b1385b55ca8343d82be04da02de0595228efd` passed CI #972, P12 Final Release Artifact #283 and P12 Offline Acceptance #327; it had zero review threads, was current with main and mergeable before guarded squash merge `804ffc6a143c2cf6ab4ca100d7b021289a060be2`. Integration Readiness did not run on this code-only PR because its pull-request trigger is path-filtered.
+- PR #236 captures coordinator `acquired`, acquired lease identity fields, refusal reason and optional owner identities once before semantic validation, and rebuilds accepted evidence as plain detached data. Throwing/revoked evidence still fails closed and malformed evidence that claims acquisition retains the existing bounded best-effort exact-lease cleanup contract. No distributed-lock, host-authentication, production-recipe, real Figma mutation, target-compatibility or production-acceptance authority was added.
 - PR #232 exact head `b06240a02cc8fc14c0c94e23ba9e554a62eae319` passed CI #965 including status verification, TypeScript, full tests, builds, release contract/package, Community verification and local Figma preparation; P12 Final Release Artifact #276 passed; P12 Offline Acceptance #320 passed on Ubuntu/macOS/Windows. PR #232 had zero review threads/reviews/comments, was current with main (`behind_by=0`) and mergeable before guarded squash merge `2bbc24fb8afa3ccb9cc202fd816dfc8d69888941`; issue #231 closed completed. Integration Readiness did not run on the code-only PR because its pull-request trigger is path-filtered.
 - PR #232 adds shallow known-schema one-shot snapshots for candidate-handle, recipe-execution, runtime-eligibility, validation, re-score and retention adapter outputs. Adapter-owned prerequisite/profile/check arrays are copied through guarded bounded reads, nested validation checks are copied into plain accepted evidence, and throwing or revoked proxies fail closed. Existing error/stage/count semantics and P14 authority remain unchanged; no production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
 - PR #230 exact synchronized head `7466a230344c8a85a10c4a68fb05216ac7d5d4cf` passed CI #958, Integration Readiness #310, P12 Final Release Artifact #269 and P12 Offline Acceptance #313 on Ubuntu/macOS/Windows; it guarded squash-merged as `bad83a48ab58dfa8b956e7b6bf02c74a079a4665` and issue #229 closed completed.
