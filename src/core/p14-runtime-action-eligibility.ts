@@ -66,6 +66,7 @@ export function validateP14RuntimeActionEligibilityEvidence(
     captured.value.checkedPrerequisiteRecipeIds,
     DEFAULT_P14_INPUT_BOUNDS.maxPrerequisitesPerAction,
     'Runtime action eligibility checkedPrerequisiteRecipeIds',
+    'prerequisite count',
   );
   if (!prerequisiteSnapshot.valid || !prerequisiteSnapshot.value) {
     failures.push(...prerequisiteSnapshot.failures);
