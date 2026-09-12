@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-12 — P14 runtime eligibility hook property hardening
+
+- Opened issue #210 and focused PR #211 (`fix/p14-runtime-eligibility-hook-210`) for the remaining unreadable optional runtime action-eligibility hook property boundary.
+- Audited the sequential transform path and confirmed that `adapter.assessActionEligibility` was read outside the guarded invocation after a prior recipe could already have mutated the candidate; a throwing/proxy-backed getter could therefore escape before structured candidate cleanup.
+- Hardened the public retained-duplicate adapter boundary with a guarded optional-hook property: a throwing getter becomes a deferred callable failure consumed by the existing `P14_TRANSFORM_FAILED` / `transform-recheck` catch path, so candidate discard is attempted instead of letting the transaction escape.
+- Readable missing/non-function hook values preserve the existing deterministic structured refusal, while valid hooks are invoked with the original adapter as `this` so adapter state/private expectations remain intact.
+- Existing cleanup semantics remain authoritative: if candidate discard also fails after unreadable hook access, the receipt becomes `CLEANUP_REQUIRED` with `P14_DISCARD_FAILED`; no new status or error code was added.
+- Added `tests/p14-runtime-eligibility-hook-boundary.test.ts` covering throwing getter cleanup, throwing getter plus discard failure, readable non-function behavior and valid-hook regression.
+- Initial head `647a390028d0bee294448d96072a3515cf39f14a` exposed an exact-optional adapter-facade type mismatch in CI #886 before tests ran. Follow-up head `4a4cd0c818a4e5a334c80a2edfe175b6cbccb0c3` exposed implicit-any delegate parameters in CI #887, also before tests; both were TypeScript-only boundary corrections with no runtime-scope expansion.
+- Corrected implementation head `a85e0d80a2421f126a74cafe7b581abbb5d897a1` passed CI #888 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #199 passed; P12 Offline Acceptance #243 passed on Ubuntu/macOS/Windows.
+- Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #210. No real Figma mutation command, production recipe authority, target-compatibility claim or production acceptance was introduced.
+- Final synchronized-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #211 may merge.
+
 ## 2026-09-12 — P14 caller run-control runtime-evidence hardening
 
 - Opened issue #207 and focused PR #208 (`fix/p14-run-control-evidence-207`) for the remaining caller-supplied transaction control trust boundary.

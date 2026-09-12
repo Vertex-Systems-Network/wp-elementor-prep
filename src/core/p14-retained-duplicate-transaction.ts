@@ -1,5 +1,9 @@
 import { assessP14PreparationInputBounds, DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
-import { boundP14ReceiptDetail, boundP14ReceiptIdentity } from './p14-receipt-evidence';
+import {
+  boundP14ReceiptDetail,
+  boundP14ReceiptIdentity,
+  safeP14RuntimeErrorMessage,
+} from './p14-receipt-evidence';
 import { assessP14RunControlEvidence } from './p14-run-control-evidence';
 import { P14_UNKNOWN_SOURCE_FINGERPRINT } from './p14-source-fingerprint-evidence';
 import {
@@ -8,6 +12,9 @@ import {
 } from './p14-timestamp-evidence';
 import {
   P14_PREPARATION_ENGINE_VERSION,
+  type P14CandidateHandle,
+  type P14PreparationAction,
+  type P14PreparationPlanV1,
   type P14PreparationReceiptV1,
   type P14RetainedDuplicateAdapter,
   type P14TransactionEvent,
@@ -62,6 +69,38 @@ function safeNow(input: P14RetainedDuplicateRunInput): () => unknown {
   } catch {
     return () => P14_UNKNOWN_EVENT_TIMESTAMP;
   }
+}
+
+function guardP14RuntimeEligibilityHook(
+  adapter: P14RetainedDuplicateAdapter,
+): P14RetainedDuplicateAdapter {
+  return {
+    fingerprintSource: (sourceNodeId: string) => adapter.fingerprintSource(sourceNodeId),
+    cloneSource: (sourceNodeId: string, transactionId: string) => adapter.cloneSource(sourceNodeId, transactionId),
+    get assessActionEligibility(): P14RetainedDuplicateAdapter['assessActionEligibility'] {
+      try {
+        const hook: unknown = adapter.assessActionEligibility;
+        if (hook === undefined || typeof hook !== 'function') {
+          return hook as P14RetainedDuplicateAdapter['assessActionEligibility'];
+        }
+        return (candidate, action) => hook.call(adapter, candidate, action);
+      } catch (error) {
+        const detail = safeP14RuntimeErrorMessage(error);
+        return async () => {
+          throw new Error(`Unable to read runtime action eligibility adapter hook: ${detail}`);
+        };
+      }
+    },
+    applyRecipe: (candidate: P14CandidateHandle, action: P14PreparationAction) =>
+      adapter.applyRecipe(candidate, action),
+    validateCandidate: (candidate: P14CandidateHandle, plan: P14PreparationPlanV1) =>
+      adapter.validateCandidate(candidate, plan),
+    rescoreCandidate: (candidate: P14CandidateHandle, plan: P14PreparationPlanV1) =>
+      adapter.rescoreCandidate(candidate, plan),
+    retainCandidate: (candidate: P14CandidateHandle, transactionId: string, preparedName: string) =>
+      adapter.retainCandidate(candidate, transactionId, preparedName),
+    discardCandidate: (candidate: P14CandidateHandle) => adapter.discardCandidate(candidate),
+  } as unknown as P14RetainedDuplicateAdapter;
 }
 
 function runControlEvent(now: () => unknown, state: 'IDLE' | 'PREFLIGHT' | 'BLOCKED', detail?: string): P14TransactionEvent {
@@ -146,6 +185,7 @@ export async function runP14RetainedDuplicateTransaction(
     preparedName: rawPreparedName,
     confirmation: input.confirmation,
   });
+  const guardedAdapter = guardP14RuntimeEligibilityHook(adapter);
 
   // Preserve the established P14_INPUT_TOO_LARGE path for valid typed controls whose raw resource
   // size exceeds the current/default or caller-supplied stricter limit. The core receives only the
@@ -157,7 +197,7 @@ export async function runP14RetainedDuplicateTransaction(
       preparedName: rawPreparedName,
       allowPreparedWithReview: snapshot.allowPreparedWithReview,
       inputBounds: snapshot.inputBounds,
-    }, adapter);
+    }, guardedAdapter);
   }
 
   return runP14RetainedDuplicateTransactionCore({
@@ -166,5 +206,5 @@ export async function runP14RetainedDuplicateTransaction(
     preparedName: snapshot.preparedName,
     allowPreparedWithReview: snapshot.allowPreparedWithReview,
     inputBounds: snapshot.inputBounds,
-  }, adapter);
+  }, guardedAdapter);
 }
