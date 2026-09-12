@@ -4,8 +4,17 @@ export interface P14AdapterOutputSnapshot<T> {
   value: T | null;
 }
 
+function safeArrayCheck(value: unknown): boolean | null {
+  try {
+    return Array.isArray(value);
+  } catch {
+    return null;
+  }
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  if (typeof value !== 'object' || value === null) return false;
+  return safeArrayCheck(value) === false;
 }
 
 /**
@@ -23,7 +32,7 @@ export function snapshotP14AdapterOutputRecord<K extends string>(
   if (!isRecord(value)) {
     return {
       valid: false,
-      failures: [`${label} must be an object.`],
+      failures: [`${label} must be a safely readable object.`],
       value: null,
     };
   }
@@ -52,10 +61,13 @@ export function snapshotP14AdapterOutputArray(
   label: string,
   countLabel = 'item count',
 ): P14AdapterOutputSnapshot<unknown[]> {
-  if (!Array.isArray(value)) {
+  const isArray = safeArrayCheck(value);
+  if (isArray !== true) {
     return {
       valid: false,
-      failures: [`${label} must be an array.`],
+      failures: [isArray === null
+        ? `${label} could not be inspected safely as an array.`
+        : `${label} must be an array.`],
       value: null,
     };
   }
