@@ -1,5 +1,6 @@
 import { DEFAULT_P14_INPUT_BOUNDS, assessP14PreparationInputBounds } from './p14-input-bounds';
 import { validateP14PreparationPlan } from './p14-plan-integrity';
+import { snapshotP14SemanticInputEvidence } from './p14-semantic-input-snapshot';
 import { isP14NormalizedUtcTimestamp } from './p14-timestamp-evidence';
 import type { P14PreparationPlanV1 } from './p14-preparation-types';
 
@@ -73,7 +74,7 @@ export function buildP14PreparationConfirmation(
   };
 }
 
-export function validateP14PreparationConfirmation(
+function validateP14PreparationConfirmationSnapshot(
   value: unknown,
   plan?: P14PreparationPlanV1,
 ): P14PreparationConfirmationValidation {
@@ -143,4 +144,32 @@ export function validateP14PreparationConfirmation(
   }
 
   return { valid: failures.length === 0, failures };
+}
+
+/**
+ * Treats standalone confirmation-integrity input as untrusted runtime evidence. The known
+ * confirmation schema, together with an optional reviewed plan, is captured once into bounded
+ * plain values before any confirmation or binding semantics are evaluated.
+ */
+export function validateP14PreparationConfirmation(
+  value: unknown,
+  plan?: P14PreparationPlanV1,
+): P14PreparationConfirmationValidation {
+  const snapshot = snapshotP14SemanticInputEvidence(
+    plan,
+    value,
+    DEFAULT_P14_INPUT_BOUNDS,
+  );
+  if (!snapshot.valid) {
+    return {
+      valid: false,
+      failures: snapshot.failures.length > 0
+        ? snapshot.failures
+        : ['P14 preparation confirmation semantic evidence could not be captured safely.'],
+    };
+  }
+  return validateP14PreparationConfirmationSnapshot(
+    snapshot.confirmation,
+    plan ? snapshot.plan as P14PreparationPlanV1 : undefined,
+  );
 }
