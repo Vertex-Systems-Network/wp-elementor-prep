@@ -65,7 +65,8 @@
 - Added `tests/p14-receipt-envelope-bounds.test.ts` covering exact limits, forged oversized top-level evidence, proxy-backed no-traversal collection checks, long adapter/discard exceptions and exception objects whose `toString()` throws.
 - Updated `docs/P14_FOUNDATION_IMPLEMENTATION.md` with the bounded receipt-envelope/runtime-diagnostic contract and new safety invariants. No real Figma mutation command, production recipe authority, target-compatibility claim or acceptance authority was introduced.
 - Pre-memory-sync PR head `7a031c2f8e2b405e084ae2fbdd677205d9e9c7e7` passed CI #840 including typecheck/full tests/builds/contracts, P12 Final Release Artifact #151, and P12 Offline Acceptance #195 on Ubuntu/macOS/Windows.
-- Final synchronized PR head `5b9a02ce3b15ab49a1f281b51494e51bc5eb0e57` passed CI #844, Integration Readiness #217, P12 Final Release Artifact #155 and P12 Offline Acceptance #199 on Ubuntu/macOS/Windows; it had zero unresolved review threads/comments, remained current with main (`behind_by=0`) and `mergeable=true`, then squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd`. Issue #192 closed completed.
+- Final synchronized PR head `5b9a02ce3b15ab49a1f281b51494e51bc5eb0e57` passed CI #844, Integration Readiness #217, P12 Final Release Artifact #155 and P12 Offline Acceptance #199 on Ubuntu/macOS/Windows; it had zero unresolved review threads/comments, remained current with main and was reported mergeable by GitHub.
+- PR #193 squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd`; issue #192 closed completed. P14 remains runtime-unwired and production recipe authority remains empty.
 
 ## 2026-09-11 — R0 commercial market refresh
 
