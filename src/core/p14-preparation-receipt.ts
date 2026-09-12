@@ -4,6 +4,11 @@ import {
   validateP14RecipeExecutionResultEvidence,
   validateP14RetentionEvidence,
 } from './p14-adapter-evidence';
+import {
+  assessP14ReceiptCollection,
+  isP14BoundedReceiptDetail,
+  isP14BoundedReceiptIdentity,
+} from './p14-receipt-evidence';
 import { validateP14RescoreEvidence } from './p14-rescore-evidence';
 import { validateP14ValidationEvidence } from './p14-validation-evidence';
 import {
@@ -94,6 +99,28 @@ function finiteNonNegative(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0;
 }
 
+function boundedReceiptCollection(
+  value: unknown,
+  label: string,
+  failures: string[],
+  requireNonEmpty = false,
+): unknown[] | null {
+  const assessment = assessP14ReceiptCollection(value);
+  if (assessment.failure === 'NOT_ARRAY') {
+    failures.push(`${label} must be an array.`);
+    return null;
+  }
+  if (assessment.failure === 'TOO_LARGE') {
+    failures.push(`${label} exceeds the bounded receipt collection limit (${assessment.actualLength} > ${assessment.limit}).`);
+    return null;
+  }
+  if (!assessment.value) return null;
+  if (requireNonEmpty && assessment.value.length === 0) {
+    failures.push(`${label} must be a non-empty array.`);
+  }
+  return assessment.value;
+}
+
 export function serializeP14PreparationReceiptJson(receipt: P14PreparationReceiptV1): string {
   return `${JSON.stringify(receipt, null, 2)}\n`;
 }
@@ -106,56 +133,59 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   if (value.engineVersion !== P14_PREPARATION_ENGINE_VERSION) failures.push('Unsupported P14 receipt engine version.');
   if (value.acceptanceAuthority !== false) failures.push('P14 receipt must carry acceptanceAuthority=false.');
   if (value.targetCompatibilityClaim !== false) failures.push('P14 receipt must carry targetCompatibilityClaim=false.');
-  if (!nonEmptyString(value.transactionId)) failures.push('transactionId is missing.');
+  if (!isP14BoundedReceiptIdentity(value.transactionId)) failures.push('transactionId is missing or oversized.');
   if (typeof value.status !== 'string' || !STATUSES.has(value.status as P14PreparationStatus)) failures.push('Receipt status is unsupported.');
   if (typeof value.terminalState !== 'string' || !TERMINAL_STATES.has(value.terminalState as P14TransactionState)) {
     failures.push('Receipt terminalState is unsupported.');
   }
-  if (!nonEmptyString(value.p13RunId)) failures.push('p13RunId is missing.');
-  if (!nonEmptyString(value.planDigest) || !String(value.planDigest).startsWith('p14-plan-')) failures.push('planDigest is missing or malformed.');
+  if (!isP14BoundedReceiptIdentity(value.p13RunId)) failures.push('p13RunId is missing or oversized.');
+  if (!isP14BoundedReceiptIdentity(value.planDigest) || !value.planDigest.startsWith('p14-plan-')) {
+    failures.push('planDigest is missing, malformed or oversized.');
+  }
   if (!isRecord(value.source)
-    || !nonEmptyString(value.source.nodeId)
+    || !isP14BoundedReceiptIdentity(value.source.nodeId)
     || !isP14ReceiptSourceFingerprintEvidence(value.source.beforeFingerprint)
     || !isP14ReceiptSourceFingerprintEvidence(value.source.afterFingerprint)) {
     failures.push('Receipt source fingerprint evidence is missing, malformed or oversized.');
   }
-  if (!Array.isArray(value.appliedActions)) failures.push('appliedActions must be an array.');
-  if (!Array.isArray(value.errors)) failures.push('errors must be an array.');
-  if (!Array.isArray(value.events) || value.events.length === 0) failures.push('events must be a non-empty array.');
 
-  if (Array.isArray(value.errors)) {
-    for (const [index, error] of value.errors.entries()) {
+  const appliedActions = boundedReceiptCollection(value.appliedActions, 'appliedActions', failures);
+  const errors = boundedReceiptCollection(value.errors, 'errors', failures);
+  const events = boundedReceiptCollection(value.events, 'events', failures, true);
+
+  if (errors) {
+    for (const [index, error] of errors.entries()) {
       if (!isRecord(error)
         || typeof error.code !== 'string'
         || !ERROR_CODES.has(error.code)
-        || !nonEmptyString(error.stage)
-        || !nonEmptyString(error.detail)
-        || (error.recovery !== undefined && typeof error.recovery !== 'string')) {
-        failures.push(`errors[${index}] is malformed or uses an unsupported code.`);
+        || !isP14BoundedReceiptIdentity(error.stage)
+        || !isP14BoundedReceiptDetail(error.detail, true)
+        || (error.recovery !== undefined && !isP14BoundedReceiptDetail(error.recovery))) {
+        failures.push(`errors[${index}] is malformed, oversized or uses an unsupported code.`);
       }
     }
   }
 
-  if (Array.isArray(value.events) && value.events.length > 0) {
-    for (const [index, item] of value.events.entries()) {
+  if (events && events.length > 0) {
+    for (const [index, item] of events.entries()) {
       if (!isRecord(item)
         || typeof item.state !== 'string'
         || !EVENT_STATES.has(item.state as P14TransactionState)
         || !nonEmptyString(item.at)
         || Number.isNaN(Date.parse(item.at))
-        || (item.detail !== undefined && typeof item.detail !== 'string')) {
-        failures.push(`events[${index}] is malformed.`);
+        || (item.detail !== undefined && !isP14BoundedReceiptDetail(item.detail))) {
+        failures.push(`events[${index}] is malformed or oversized.`);
       }
     }
-    const first = value.events[0];
-    const last = value.events[value.events.length - 1];
+    const first = events[0];
+    const last = events[events.length - 1];
     if (!isRecord(first) || first.state !== 'IDLE') failures.push('Receipt event history must start at IDLE.');
     if (!isRecord(last) || last.state !== value.terminalState) failures.push('Receipt event history must end at terminalState.');
   }
 
-  if (Array.isArray(value.appliedActions)) {
+  if (appliedActions) {
     const ids: string[] = [];
-    for (const [index, action] of value.appliedActions.entries()) {
+    for (const [index, action] of appliedActions.entries()) {
       const evidence = validateP14RecipeExecutionResultEvidence(action);
       if (!evidence.valid || !evidence.value) {
         failures.push(`appliedActions[${index}] is malformed or oversized.`);
@@ -226,7 +256,7 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
     && source.beforeFingerprint !== P14_UNKNOWN_SOURCE_FINGERPRINT
     && source.afterFingerprint !== P14_UNKNOWN_SOURCE_FINGERPRINT
     && source.beforeFingerprint === source.afterFingerprint;
-  const errors = Array.isArray(value.errors) ? value.errors : [];
+  const boundedErrors = errors ?? [];
 
   if (status === 'PREPARED' || status === 'PREPARED_WITH_REVIEW') {
     if (terminal !== 'COMPLETE') failures.push(`${status} must terminate at COMPLETE.`);
@@ -243,40 +273,40 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
       if (status === 'PREPARED_WITH_REVIEW' && value.rescore.reviewRequired !== true) failures.push('PREPARED_WITH_REVIEW requires reviewRequired=true.');
     }
     if (!sourceProvenEqual) failures.push(`${status} requires proved source immutability.`);
-    if (errors.length !== 0) failures.push(`${status} cannot carry terminal errors.`);
+    if (boundedErrors.length !== 0) failures.push(`${status} cannot carry terminal errors.`);
   }
 
   if (status === 'NO_CHANGES_NEEDED') {
     if (terminal !== 'COMPLETE') failures.push('NO_CHANGES_NEEDED must terminate at COMPLETE.');
     if (candidate || retention) failures.push('NO_CHANGES_NEEDED cannot carry candidate/retention evidence.');
-    if (Array.isArray(value.appliedActions) && value.appliedActions.length > 0) failures.push('NO_CHANGES_NEEDED cannot carry applied actions.');
+    if (appliedActions && appliedActions.length > 0) failures.push('NO_CHANGES_NEEDED cannot carry applied actions.');
     if (!sourceProvenEqual) failures.push('NO_CHANGES_NEEDED requires proved source immutability.');
-    if (errors.length !== 0) failures.push('NO_CHANGES_NEEDED cannot carry terminal errors.');
+    if (boundedErrors.length !== 0) failures.push('NO_CHANGES_NEEDED cannot carry terminal errors.');
   }
 
   if (status === 'BLOCKED') {
     if (terminal !== 'BLOCKED' && terminal !== 'SOURCE_STALE') failures.push('BLOCKED must terminate at BLOCKED or SOURCE_STALE.');
     if (candidate?.retained === true || retention) failures.push('BLOCKED cannot carry retained candidate evidence.');
-    if (errors.length === 0) failures.push('BLOCKED requires at least one error/reason.');
+    if (boundedErrors.length === 0) failures.push('BLOCKED requires at least one error/reason.');
   }
 
   if (status === 'REJECTED') {
     if (terminal !== 'REJECTED' && terminal !== 'SOURCE_STALE') failures.push('REJECTED must terminate at REJECTED or SOURCE_STALE.');
     if (candidate?.retained === true) failures.push('REJECTED cannot mark its candidate retained.');
-    if (errors.length === 0) failures.push('REJECTED requires at least one error/reason.');
+    if (boundedErrors.length === 0) failures.push('REJECTED requires at least one error/reason.');
   }
 
   if (status === 'CANCELLED') {
     if (terminal !== 'CANCELLED') failures.push('CANCELLED must terminate at CANCELLED.');
     if (candidate?.retained === true || retention) failures.push('CANCELLED cannot carry retained candidate evidence.');
-    const hasCancellation = errors.some((error) => isRecord(error) && error.code === 'P14_CANCELLED');
+    const hasCancellation = boundedErrors.some((error) => isRecord(error) && error.code === 'P14_CANCELLED');
     if (!hasCancellation) failures.push('CANCELLED requires P14_CANCELLED evidence.');
   }
 
   if (status === 'CLEANUP_REQUIRED') {
     if (terminal !== 'CLEANUP_REQUIRED') failures.push('CLEANUP_REQUIRED must terminate at CLEANUP_REQUIRED.');
     if (!candidate) failures.push('CLEANUP_REQUIRED must identify the candidate requiring recovery.');
-    const hasDiscardFailure = errors.some((error) => isRecord(error) && error.code === 'P14_DISCARD_FAILED');
+    const hasDiscardFailure = boundedErrors.some((error) => isRecord(error) && error.code === 'P14_DISCARD_FAILED');
     if (!hasDiscardFailure) failures.push('CLEANUP_REQUIRED requires P14_DISCARD_FAILED evidence.');
   }
 
