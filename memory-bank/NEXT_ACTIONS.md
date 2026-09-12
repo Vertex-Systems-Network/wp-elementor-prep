@@ -79,6 +79,23 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
+### #198 — P14 safe-recipe registry evidence bounds
+
+Classification: **ACTIVE / PR #199 under final synchronized-head verification**.
+
+PR #199 (`fix/p14-registry-bounds-198`) keeps the established authorization semantics while closing the remaining registry resource-bound gap:
+
+1. `assessP14SafeRecipeRegistryBounds(...)` reuses existing P14 safety limits rather than defining new registry-specific limits;
+2. top-level `bindings` is count-bounded before binding traversal;
+3. recipe `sourceRuleIds`, `prerequisites`, `conflictsWith` and `mutationAllowlist` are count-bounded before item traversal;
+4. binding/rule/recipe/profile/order/dependency/conflict identities are bounded before semantic validation;
+5. `validateP14SafeRecipeRegistry(...)` applies the resource gate before its existing semantic traversal, so handoff resolution and runtime authorization inherit it;
+6. oversized proxy-backed arrays are rejected from `.length` without item/property traversal;
+7. oversized and bounded-malformed registries preserve the existing execution outcome `BLOCKED` + `P14_RECIPE_UNAUTHORIZED` before confirmation/coordinator/adapter access;
+8. the production safe-recipe registry remains empty and no mutating recipe authority is introduced.
+
+Initial code/test head `4ebf8328159f6d0d94ba8b606987cb8c0599a66a` passed CI #858, P12 Final Release Artifact #169 and P12 Offline Acceptance #213 on Ubuntu/macOS/Windows. These are implementation checks only; final merge authority requires the fresh synchronized-head workflows after README/memory/foundation updates, Integration Readiness, zero unresolved review threads, branch current with main and `mergeable=true`.
+
 ### #195 — P14 runtime clock and event timestamp evidence
 
 Classification: **COMPLETED / merged through PR #196**.
@@ -158,10 +175,10 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. start the next focused safety-gap audit from main `8021874...` now that #195 / PR #196 is completed;
+1. complete #198 / PR #199 registry collection/identity resource bounding and exact-head verification;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
-4. fail closed on malformed/stale adapter/control/receipt evidence while representing non-authoritative unavailable metadata explicitly;
+4. fail closed on malformed/stale adapter/control/receipt/registry evidence while preserving existing status semantics;
 5. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
 6. continue focused safety-gap audits until core implementation is internally ready;
 7. require #159 before real Figma mutation exposure;
