@@ -45,6 +45,7 @@ export function validateP14ValidationEvidence(value: unknown): P14ValidationEvid
     captured.value.profileIdsRun,
     DEFAULT_P14_INPUT_BOUNDS.maxActions,
     'validation.profileIdsRun',
+    'profile count',
   );
   if (!profileIdsSnapshot.valid || !profileIdsSnapshot.value) {
     failures.push(...profileIdsSnapshot.failures);
@@ -54,6 +55,7 @@ export function validateP14ValidationEvidence(value: unknown): P14ValidationEvid
     captured.value.checks,
     DEFAULT_P14_INPUT_BOUNDS.maxActions,
     'validation.checks',
+    'check count',
   );
   if (!checksSnapshot.valid || !checksSnapshot.value) {
     failures.push(...checksSnapshot.failures);
@@ -112,7 +114,8 @@ export function validateP14ValidationEvidence(value: unknown): P14ValidationEvid
     });
   }
 
-  if (failures.length > 0 || typeof passed !== 'boolean' || !profileIdsSnapshot.value) {
+  const profileIdsRun = profileIdsSnapshot.value;
+  if (failures.length > 0 || typeof passed !== 'boolean' || !profileIdsRun) {
     return { valid: false, failures, value: null };
   }
 
@@ -122,7 +125,7 @@ export function validateP14ValidationEvidence(value: unknown): P14ValidationEvid
     value: {
       version: P14_VALIDATION_EVIDENCE_VERSION,
       passed,
-      profileIdsRun: [...profileIdsSnapshot.value],
+      profileIdsRun: [...profileIdsRun],
       checks,
     },
   };
