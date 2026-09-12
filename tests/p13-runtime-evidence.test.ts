@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildBuildReadyReport } from '../src/core/build-ready';
+import { buildBuildReadyReport, serializeBuildReadyReportJson } from '../src/core/build-ready';
 import { buildAuditReport } from '../src/core/scoring';
 import type { AuditNode } from '../src/core/types';
 import {
@@ -12,6 +12,7 @@ import {
   type P13RuntimeEvidenceBundle,
 } from '../src/plugin/p13-runtime-evidence';
 import {
+  inspectLatestP13RuntimeEvidence,
   loadLatestP13RuntimeEvidence,
   persistP13RuntimeEvidenceBestEffort,
   type P13RuntimeEvidenceClientStorage,
@@ -101,6 +102,12 @@ class FailingSetStorage extends MemoryStorage {
   }
 }
 
+class FailingGetStorage extends MemoryStorage {
+  async getAsync(): Promise<unknown> {
+    throw new Error('forced read failure');
+  }
+}
+
 describe('P13 plugin runtime evidence', () => {
   it('binds a read-only evidence bundle to exact runtime/build/frame context', () => {
     const bundle = evidence();
@@ -166,9 +173,49 @@ describe('P13 plugin runtime evidence', () => {
     expect(result.byteLength).toBeGreaterThan(0);
     expect(storage.values.has(P13_RUNTIME_EVIDENCE_STORAGE_KEY)).toBe(true);
     expect(await loadLatestP13RuntimeEvidence(storage)).toEqual(bundle);
+    expect(await inspectLatestP13RuntimeEvidence(storage)).toEqual({
+      status: 'VALID',
+      evidence: bundle,
+      reason: null,
+    });
 
     storage.values.set(P13_RUNTIME_EVIDENCE_STORAGE_KEY, { schemaVersion: 999 });
     expect(await loadLatestP13RuntimeEvidence(storage)).toBeNull();
+    const invalid = await inspectLatestP13RuntimeEvidence(storage);
+    expect(invalid.status).toBe('INVALID');
+    expect(invalid.evidence).toBeNull();
+    expect(invalid.reason).toContain('schema version');
+  });
+
+  it('distinguishes empty, stale-analyzer and clientStorage read failures', async () => {
+    const empty = await inspectLatestP13RuntimeEvidence(new MemoryStorage());
+    expect(empty).toEqual({ status: 'EMPTY', evidence: null, reason: null });
+
+    const staleStorage = new MemoryStorage();
+    const stale = JSON.parse(JSON.stringify(evidence())) as P13RuntimeEvidenceBundle;
+    stale.buildReady.source.analyzerVersion = 'p13-core-v1';
+    stale.buildReady.runId = `p13-${stale.buildReady.source.structuralHash}-${stale.buildReady.source.configHash}`;
+    stale.buildReadyJson = serializeBuildReadyReportJson(stale.buildReady);
+    staleStorage.values.set(P13_RUNTIME_EVIDENCE_STORAGE_KEY, stale);
+    const staleInspection = await inspectLatestP13RuntimeEvidence(staleStorage);
+    expect(staleInspection.status).toBe('INVALID');
+    expect(staleInspection.reason).toContain('Unsupported Build-Ready analyzer version');
+
+    const readFailure = await inspectLatestP13RuntimeEvidence(new FailingGetStorage());
+    expect(readFailure.status).toBe('READ_FAILED');
+    expect(readFailure.reason).toContain('forced read failure');
+  });
+
+  it('bounds clientStorage read-failure diagnostics', async () => {
+    class LongFailStorage extends MemoryStorage {
+      async getAsync(): Promise<unknown> {
+        throw new Error('x'.repeat(5_000));
+      }
+    }
+    const inspection = await inspectLatestP13RuntimeEvidence(new LongFailStorage());
+    expect(inspection.status).toBe('READ_FAILED');
+    expect(inspection.reason?.length).toBeLessThan(600);
+    expect(inspection.reason?.endsWith('…')).toBe(true);
   });
 
   it('invalidates prior valid evidence when a replacement bundle is invalid or oversized', async () => {
@@ -215,6 +262,10 @@ describe('P13 plugin runtime evidence', () => {
     expect(result.reason).toContain('stale-evidence invalidation failed');
     expect(storage.values.get(P13_RUNTIME_EVIDENCE_STORAGE_KEY)).toEqual(prior);
     expect(await loadLatestP13RuntimeEvidence(storage)).toBeNull();
+    const quarantined = await inspectLatestP13RuntimeEvidence(storage);
+    expect(quarantined.status).toBe('QUARANTINED');
+    expect(quarantined.evidence).toBeNull();
+    expect(quarantined.reason).toContain('quarantined persisted P13 evidence');
 
     storage.failAllSets = false;
     const fresh = evidence();

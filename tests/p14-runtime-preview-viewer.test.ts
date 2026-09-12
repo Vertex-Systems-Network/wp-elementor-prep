@@ -102,10 +102,29 @@ describe('P14 runtime preview in persisted P13 evidence viewer', () => {
     expect(html).not.toContain('Apply this P14');
   });
 
-  it('keeps the empty-evidence viewer fail-closed without a fabricated P14 plan', () => {
-    const html = buildP13RuntimeEvidenceViewerHtml(null);
+  it('keeps genuinely empty evidence fail-closed without fabricating a rejection reason or P14 plan', () => {
+    const html = buildP13RuntimeEvidenceViewerHtml(null, {
+      status: 'EMPTY',
+      evidence: null,
+      reason: null,
+    });
 
-    expect(html).toContain('No valid persisted P13 runtime evidence');
+    expect(html).toContain('No persisted P13 runtime evidence');
+    expect(html).not.toContain('P13 Runtime Evidence Unavailable');
+    expect(html).not.toContain('P14 Guided Prepare Preview');
+  });
+
+  it('shows the exact bounded rejection status/reason for stale or invalid persisted evidence', () => {
+    const html = buildP13RuntimeEvidenceViewerHtml(null, {
+      status: 'INVALID',
+      evidence: null,
+      reason: 'Unsupported Build-Ready analyzer version; expected p13-core-v2.',
+    });
+
+    expect(html).toContain('P13 Runtime Evidence Unavailable');
+    expect(html).toContain('INVALID');
+    expect(html).toContain('Unsupported Build-Ready analyzer version; expected p13-core-v2.');
+    expect(html).toContain('Run Audit on exactly one current Frame');
     expect(html).not.toContain('P14 Guided Prepare Preview');
   });
 });

@@ -19,14 +19,35 @@ export interface P13RuntimeEvidencePersistenceResult {
   byteLength: number;
 }
 
+export type P13RuntimeEvidenceInspectionStatus =
+  | 'VALID'
+  | 'EMPTY'
+  | 'INVALID'
+  | 'READ_FAILED'
+  | 'QUARANTINED';
+
+export interface P13RuntimeEvidenceInspection {
+  status: P13RuntimeEvidenceInspectionStatus;
+  evidence: P13RuntimeEvidenceBundle | null;
+  reason: string | null;
+}
+
+const INSPECTION_REASON_MAX_CHARS = 512;
 const quarantinedEvidenceStores = new WeakSet<P13RuntimeEvidenceClientStorage>();
 
 function byteLength(bundle: P13RuntimeEvidenceBundle): number {
   return utf8ByteLength(serializeP13RuntimeEvidenceJson(bundle));
 }
 
+function boundedReason(value: unknown): string {
+  const detail = value instanceof Error ? value.message : String(value);
+  return detail.length <= INSPECTION_REASON_MAX_CHARS
+    ? detail
+    : `${detail.slice(0, INSPECTION_REASON_MAX_CHARS - 1)}…`;
+}
+
 function errorDetail(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
+  return boundedReason(error);
 }
 
 /**
@@ -82,17 +103,56 @@ export async function persistP13RuntimeEvidenceBestEffort(
   }
 }
 
-export async function loadLatestP13RuntimeEvidence(
+/**
+ * Read-only diagnostic inspection for persisted P13 evidence. Unlike the compatibility loader,
+ * this preserves why evidence cannot be used so development surfaces can give precise fresh-Audit
+ * guidance without weakening validation or returning rejected evidence.
+ */
+export async function inspectLatestP13RuntimeEvidence(
   storage: P13RuntimeEvidenceClientStorage,
-): Promise<P13RuntimeEvidenceBundle | null> {
-  if (quarantinedEvidenceStores.has(storage)) return null;
+): Promise<P13RuntimeEvidenceInspection> {
+  if (quarantinedEvidenceStores.has(storage)) {
+    return {
+      status: 'QUARANTINED',
+      evidence: null,
+      reason: 'This runtime session quarantined persisted P13 evidence after stale-slot invalidation failed. Run Audit again after clientStorage is writable.',
+    };
+  }
 
   let stored: unknown;
   try {
     stored = await storage.getAsync(P13_RUNTIME_EVIDENCE_STORAGE_KEY);
-  } catch {
-    return null;
+  } catch (error) {
+    return {
+      status: 'READ_FAILED',
+      evidence: null,
+      reason: `clientStorage read failed: ${boundedReason(error)}`,
+    };
   }
+
+  if (stored === null || stored === undefined) {
+    return { status: 'EMPTY', evidence: null, reason: null };
+  }
+
   const validation = validateP13RuntimeEvidence(stored);
-  return validation.valid ? stored as P13RuntimeEvidenceBundle : null;
+  if (!validation.valid) {
+    return {
+      status: 'INVALID',
+      evidence: null,
+      reason: validation.reason ? boundedReason(validation.reason) : 'Persisted P13 runtime evidence is invalid.',
+    };
+  }
+
+  return {
+    status: 'VALID',
+    evidence: stored as P13RuntimeEvidenceBundle,
+    reason: null,
+  };
+}
+
+export async function loadLatestP13RuntimeEvidence(
+  storage: P13RuntimeEvidenceClientStorage,
+): Promise<P13RuntimeEvidenceBundle | null> {
+  const inspection = await inspectLatestP13RuntimeEvidence(storage);
+  return inspection.status === 'VALID' ? inspection.evidence : null;
 }

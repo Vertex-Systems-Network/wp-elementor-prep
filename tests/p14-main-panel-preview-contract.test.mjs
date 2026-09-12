@@ -43,7 +43,10 @@ describe('P14 main-panel Guided Prepare preview contract', () => {
     expect(main).toContain("from './p14-plan-preview'");
     expect(main).toContain("from './p14-preview-context'");
     expect(main).toContain("from './p14-preview-freshness'");
-    expect(main).toContain('loadLatestP13RuntimeEvidence(figma.clientStorage)');
+    expect(main).toContain('inspectLatestP13RuntimeEvidence(figma.clientStorage)');
+    expect(main).toContain('const evidence = inspection.evidence');
+    expect(main).toContain('Persisted P13 Build-Ready evidence was rejected (${inspection.status})');
+    expect(main).toContain('Run Audit on exactly one current Frame first.');
     expect(main).toContain('assessP14PreviewContextBinding(evidence.context');
     expect(main).toContain('fileKey: currentFileKey');
     expect(main).toContain('pageId: currentPageId');
