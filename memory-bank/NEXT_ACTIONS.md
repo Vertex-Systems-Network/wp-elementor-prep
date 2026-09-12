@@ -32,26 +32,7 @@ Current retained publishing candidate:
 
 PR #129 / issue #126 added deterministic evidence intake support. The exact candidate is pinned in `config/p12-publisher-candidate.json`; use `docs/P12_PUBLISHER_EVIDENCE_INTAKE.md` and `npm run p12:publisher-evidence -- ...`.
 
-Current screenshot triage is explicitly **non-accepting** and retained in #84 comment `5633658106`:
-
-- the available final-details screenshot still shows the historical `Invalid ID in manifest.json` state;
-- two available Publish screenshots are Data Security steps, not final-details/identity/2FA proof;
-- the available plugin screenshot is historical P6 closure evidence, not the minimal release #20 package rebind;
-- no currently retained screenshot proves 2FA enabled.
-
-Deferred P27 release evidence/action:
-
-1. use the exact pinned release #20 publish ZIP and extracted three-file directory;
-2. re-import/update that exact package in Figma Desktop and confirm it opens/runs on the known acceptance design/frame;
-3. retain a **fresh** Publish → Add final details screen where the generated publishing ID is accepted and the intended Publish-as identity, Community target, support contact and `No network access` are visible;
-4. retain a **fresh** Figma account/security screen showing required 2FA enabled;
-5. run `npm run p12:publisher-evidence -- ...` with all explicit confirmations set to `yes` only for facts actually observed;
-6. retain the generated receipt; it must say `acceptanceAuthority: false` and `evidenceBundleComplete: true`;
-7. perform final internal release-exit review from the receipt + original screenshots.
-
-The evidence intake tool verifies exact bytes and hashes screenshots; it deliberately does not OCR screenshots, infer account state, submit the plugin or self-promote P12.
-
-Community submission/review/approval remains external.
+Current screenshot triage is explicitly **non-accepting** and retained in #84 comment `5633658106`. Deferred P27 work remains exact package rebind, live final-details/publisher identity, live 2FA evidence, deterministic evidence intake and separate internal release-exit review. Community submission/review/approval remains external.
 
 ### #119 — Multi-target commercial expansion roadmap
 
@@ -59,74 +40,33 @@ Classification: **P13-P27 active roadmap; implementation/testing through P26 is 
 
 P13 implementation is complete, P14 pure-core implementation is active, P15-P26 remain preflight-frozen/not-started, and P27 #182 is the deferred final production-release gate.
 
-Canonical future order:
-
-- R0 — recurring AI-assisted market/platform research gate;
-- R1 — recurring adapter reliability/compatibility gate;
-- P13 — Build-Ready Score 2.0 + Responsive Risk;
-- P14 — Target-Ready Duplicate + Guided Prepare;
-- P15 — Elementor native export + import validation;
-- P16 — Gutenberg native export + section transfer;
-- P17 — HTML/CSS/JS export + static-first code-to-design import;
-- P18 — framework adapter platform;
-- P19 — asset pack + font manifest + design-system export;
-- P20 — round-trip visual QA + exact section portability / optional WP Builders Bridge;
-- P21 — developer handoff + client/QA + bounded a11y/SEO advisories;
-- P22 — deterministic complexity/effort estimator;
-- P23 — agency/project + existing-component bindings + change-only regeneration;
-- P24 — CMS/dynamic data/forms/interactions;
-- P25 — Free/Pro/Agency packaging + entitlements;
-- P26 — optional AI assistance;
-- P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
+Canonical future order remains R0 -> R1 -> P13 -> P14 -> P15 Elementor -> P16 Gutenberg -> P17 code -> P18 frameworks -> P19 assets -> P20 round-trip -> P21 handoff -> P22 estimator -> P23 agency/project -> P24 dynamic/forms -> P25 packaging -> P26 optional AI -> P27 final release.
 
 ### #195 — P14 runtime clock and event timestamp evidence
 
-Classification: **active focused implementation slice / PR #196**.
+Classification: **COMPLETED / merged through PR #196**.
 
-The branch `fix/p14-runtime-clock-evidence-195` hardens runtime wall-clock evidence without changing transaction authority:
+PR #196 completed the focused clock-evidence scope without adding real Figma mutation or production recipe authority:
 
-1. shared `isP14NormalizedUtcTimestamp(...)` reuses the strict normalized UTC millisecond timestamp contract already used by P14 confirmations;
-2. P14 confirmation build/validation now uses that shared helper and still refuses unavailable-time evidence;
-3. receipt event timestamps accept only normalized UTC evidence or explicit `UNKNOWN`;
-4. timestamp strings are bounded/shape-checked before `Date.parse(...)`;
-5. runtime `now()` throw/non-string/oversized/non-canonical results become explicit `UNKNOWN` rather than escaping the transaction or being copied raw;
-6. `UNKNOWN` means unavailable wall-clock evidence only and does not alter event state/detail, cleanup or terminal-status semantics;
-7. tests cover hostile callbacks, pre-parse length rejection, canonical confirmation compatibility and forged receipt timestamps.
+1. shared normalized UTC millisecond timestamp validation is used by confirmation and event evidence;
+2. confirmations remain strict and reject unavailable-time evidence;
+3. receipt event timestamps accept only normalized UTC or explicit `UNKNOWN`;
+4. oversized/non-canonical event timestamps are rejected before parsing;
+5. runtime `now()` throw/non-string/oversized/non-canonical output cannot escape the transaction and becomes `UNKNOWN`;
+6. event state/detail/cleanup semantics remain unchanged;
+7. tests cover hostile clocks, parse bounds, strict confirmation compatibility and forged receipt timestamps.
 
-Initial PR head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` passed P12 Offline Acceptance #203 but exposed a test-only TypeScript inference error in CI #848 and P12 Final Release Artifact #159. The heterogeneous test callbacks were explicitly typed in follow-up commit `4d2b56497d90c58c71293ec9f473260fb9c8cef8`; final acceptance depends only on the final synchronized PR head passing every required gate.
-
-Before #195 may close, the final synchronized head must pass CI, Integration Readiness, P12 Final Release Artifact and P12 Offline Acceptance, have zero unresolved review threads/comments, remain current with main and be mergeable.
+Initial head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` exposed a test-only TypeScript inference failure in CI #848. After explicit callback typing, exact synchronized head `47cb0b4d2d3c53f7f818af760131cc78737cb5c4` passed CI #854, Integration Readiness #224, P12 Final Release Artifact #165 and P12 Offline Acceptance #209 on Ubuntu/macOS/Windows. It had zero unresolved review threads/reviews/comments, was current with main and `mergeable=true`, then squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf`. Issue #195 closed completed.
 
 ### #192 — P14 bounded receipt envelope and runtime diagnostics
 
 Classification: **COMPLETED / merged through PR #193**.
 
-PR #193 completed bounded receipt collections, identities, diagnostics and runtime exception rendering and squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd` after exact synchronized-head verification. Issue #192 is closed completed.
+PR #193 completed bounded receipt collections, identities, diagnostics and runtime exception rendering and squash-merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd` after exact synchronized-head verification.
 
-## R0 research actions already captured
+## R0 / R1 retained rules
 
-PR #131 retained the current September 2026 snapshot in `docs/R0_MARKET_SNAPSHOT_2026-09-11.md` and merged as `a22b3121f1d00698ee9d4e4bf283f3bf2bfa9119`.
-
-The retained snapshot records official Elementor/Gutenberg/Figma constraints, current competitor pressure and the durable positioning rule that generic conversion alone is not the moat: validated target readiness, environment-aware diagnostics, explicit mapping/fallback states, render/round-trip proof and receipts are the stronger differentiators.
-
-Before implementing P15, P16, P17 or P18, refresh official target docs and competitor baseline again rather than assuming this snapshot is still current.
-
-## R1 reliability actions now mandatory
-
-Canonical contract: `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md`.
-
-Before implementation of a target adapter, freeze and test:
-
-1. immutable versioned `TargetProfile` schema;
-2. adapter capability descriptor (`SUPPORTED`, `SUPPORTED_WITH_REVIEW`, `UNSUPPORTED`, `REQUIRES`);
-3. UI dependency/reset rules so stale incompatible options cannot survive target/version changes;
-4. target-specific structured error codes and recovery paths;
-5. source fingerprint/staleness policy;
-6. atomic generation/download policy;
-7. artifact schema/reference/assets validator;
-8. real target import/build/render harness where applicable;
-9. round-trip QA policy where feasible;
-10. acceptance labels: SOURCE READY / ARTIFACT VALIDATED / IMPORT VERIFIED / RENDER VERIFIED / ROUND-TRIP VERIFIED / REVIEW / BLOCKED.
+Before major external target adapters, refresh official target/competitor facts where material and execute the reliability contract: immutable target profile, capability descriptor, option-state reset rules, structured errors, source staleness, atomic generation, artifact validators, real-target harness where applicable and evidence-scoped readiness labels.
 
 No adapter may claim live target compatibility from local package validation alone.
 
@@ -134,78 +74,46 @@ No adapter may claim live target compatibility from local package validation alo
 
 ### P13
 
-Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI integration and retained real-source calibration. Remaining work is #159 genuine real-plugin runtime/parity evidence and separate internal runtime acceptance. This is not a production-release claim.
+Implementation is complete. Remaining work is #159 genuine real-plugin runtime/parity evidence and separate internal runtime acceptance. This does not block P14 pure-core development.
 
 ### P14
 
 Current work is target-neutral pure-core hardening only:
 
-1. finish #195 / PR #196 only after final-head CI, Integration Readiness, P12 Final Release Artifact and P12 Offline Acceptance pass and the PR is current/mergeable with no unresolved review threads;
+1. start the next focused safety-gap audit from main `8021874...` now that #195 / PR #196 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt evidence while representing non-authoritative unavailable metadata explicitly;
 5. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
-6. after #195 closes, continue focused safety-gap audits until core implementation is internally ready;
+6. continue focused safety-gap audits until core implementation is internally ready;
 7. require #159 before real Figma mutation exposure;
 8. require genuine real-Figma acceptance before any production mutation/readiness claim.
 
 ### P15 Elementor
 
-Before implementation:
-
-1. R0 refresh official Elementor docs;
-2. R1 freeze separate initial adapter families (`elementor-v3-container`, `elementor-v4-atomic`);
-3. define Core/Pro capability overlays explicitly;
-4. distinguish template JSON, template ZIP and website-kit ZIP contracts;
-5. define global-style/variable/reference closure rules;
-6. define DECLARED vs OBSERVED WordPress environment profiles;
-7. add schema/package/asset validators;
-8. add real import tests into supported Elementor versions;
-9. add server/import failure diagnostics for ZIP support/upload/memory/third-party requirements where observable;
-10. prove section artifact/bridge flow without undocumented clipboard internals.
+Before implementation: refresh R0, freeze separate v3 Container/v4 Atomic target profiles, define Core/Pro capabilities, package contracts, global reference closure, declared-vs-observed environment evidence, schema/package/assets validators, real import harnesses and documented section transfer.
 
 ### P16 Gutenberg
 
-Before implementation:
-
-1. R0 refresh target WordPress/block docs;
-2. R1 freeze WordPress version/block capability profile;
-3. native core-block mapping matrix;
-4. parse -> serialize -> parse stability tests;
-5. editor-open tests without invalid-block recovery prompts;
-6. explicit theme/custom-block dependency reporting;
-7. section/pattern transfer proof.
+Before implementation: refresh official block docs, freeze WordPress/block capabilities, native block mapping, parse/serialize stability, editor-open validity, dependency reporting and section/pattern transfer proof.
 
 ### P17/P18 web/framework
 
-Before implementation:
-
-1. R0 demand/version research;
-2. R1 target profile and option capability matrix;
-3. generated project dependency versions pinned, never `latest`;
-4. generated fixture install/typecheck/build matrix;
-5. invalid option combinations impossible in UI and rejected by core contracts;
-6. static-first code import only;
-7. ZIP path traversal/zip-bomb/file-count/remote-resource tests;
-8. arbitrary JS remains OFF until separate sandbox acceptance.
+Before implementation: refresh demand/version facts, freeze capability matrices, pin generated dependencies, require fixture install/typecheck/build, prevent invalid options, keep static-first import, enforce archive defenses and leave arbitrary JS OFF pending separate sandbox acceptance.
 
 ## Important implementation guardrails
 
-- Do not reverse-engineer undocumented Elementor clipboard internals; prefer template artifacts and optional WP Builders Bridge.
-- Keep the Community core offline; arbitrary direct push to customer WordPress domains is not part of the current `allowedDomains: ["none"]` contract.
-- Do not claim "NestJS design export"; NestJS is backend/API scaffold only and must pair with a front-end adapter.
-- Code-to-design JavaScript execution stays OFF by default until a separate sandbox specification is accepted.
-- Figma image-fill bytes may be exported as `Stored Original` when `getImageByHash(...).getBytesAsync()` succeeds; cropped/effected appearance is a separate rendered export.
-- Do not call stored image bytes the upstream upload source when provenance is unknown.
-- Raw font binaries are not exported from Figma merely because font names are accessible. Default is a font manifest; package raw fonts only when user-supplied and license-permitted.
-- Every downloadable target artifact requires target validation and an export receipt.
-- Offline-valid package != observed live-site import success.
-- Round-trip visual QA must never auto-pass unsupported target rendering.
-- Optional AI cannot authorize mutations, change score evidence or replace target validators.
+- Do not reverse-engineer undocumented Elementor clipboard internals.
+- Keep the Community core offline.
+- NestJS is backend/API scaffolding, not a visual renderer.
+- Code-to-design arbitrary JavaScript stays OFF pending a separate accepted sandbox.
+- Stored Figma image bytes and rendered appearance remain distinct evidence/output concepts.
+- Raw font binaries require user-supplied/license-permitted files.
+- Every target artifact requires validation and a receipt.
+- Offline-valid package != observed live-site success.
+- Optional AI cannot authorize mutations, change score evidence or replace validators.
 
 ## Verification baseline
-
-For future implementation batches run the relevant subset of:
 
 ```bash
 npm install
@@ -221,9 +129,7 @@ npm run p12:offline
 npm run integration:readiness
 ```
 
-Target phases will add adapter capability, option-state, schema/package, malformed-input, import/build/render and round-trip harness tests.
-
-Runtime artifact preflight requires exact-build provenance, immutable/manifest checks and the active schema-v3 registry contract.
+Runtime artifact preflight requires exact-build provenance and the active schema-v3 registry contract.
 
 ## Progress tracking
 
