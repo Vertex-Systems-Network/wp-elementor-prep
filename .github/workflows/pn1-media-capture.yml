@@ -1,0 +1,64 @@
+name: Pella Nova Template 1 Media Capture
+
+on:
+  push:
+    branches:
+      - pella-nova-template-1-media
+    paths:
+      - .github/workflows/pn1-media-capture.yml
+
+permissions:
+  contents: write
+
+jobs:
+  capture-media:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: pella-nova-template-1-media
+
+      - name: Download exact Figma node exports
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/pella-nova-template-1
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/b8cd859d-a436-4924-8cdf-60900f0c1429.png' -o public/pella-nova-template-1/hero-base.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/db280af1-6d85-4272-8b17-f987dad27877.png' -o public/pella-nova-template-1/hero-foreground.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/fcecb807-927c-4459-bc44-5a48f0fe01ef.png' -o public/pella-nova-template-1/about-left.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/360bdcb1-2a08-48da-8404-b9002d2bb5bc.png' -o public/pella-nova-template-1/about-right.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/f42296a5-a80c-41dd-8be3-8b1559ae4c91.png' -o public/pella-nova-template-1/journey-early.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/a90dffe4-a45d-4d39-aa97-0a34d2026a24.png' -o public/pella-nova-template-1/journey-formation.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/90300ba5-c8b9-4c61-88f3-1b14ca2c0772.png' -o public/pella-nova-template-1/journey-growth.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/ad502301-1449-429d-a7eb-16665485e7dd.png' -o public/pella-nova-template-1/sector-venture.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/8c22e510-a7d2-4c41-b4b7-1d04af379970.png' -o public/pella-nova-template-1/sector-book.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/66f23ca7-b2cc-4600-aee9-b7db20589dc2.png' -o public/pella-nova-template-1/sector-editorial.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/c5b03adb-7e43-4a6c-8454-78a0ef816d04.png' -o public/pella-nova-template-1/media-coffee.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/837ab2ca-8e13-4cf8-ab02-bab5026698fe.png' -o public/pella-nova-template-1/media-black-suit.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/a8739fd5-362c-4ca2-8590-301c451759b4.png' -o public/pella-nova-template-1/media-desk.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/2a912675-15c0-4b5b-a4dc-98163022822d.png' -o public/pella-nova-template-1/media-dark-portrait.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/8460c15f-6651-4150-b597-d4877df47e42.png' -o public/pella-nova-template-1/media-walking.png
+          curl -L --fail --retry 3 'https://www.figma.com/api/mcp/asset/ce231c2c-539b-4919-a61b-d44b66bef82d.png' -o public/pella-nova-template-1/media-cream-blouse.png
+
+      - name: Validate PNG exports and create checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in public/pella-nova-template-1/*.png; do
+            test -s "$f"
+            file "$f" | grep -q 'PNG image data'
+          done
+          cd public/pella-nova-template-1
+          sha256sum *.png > SHA256SUMS.txt
+          ls -ln *.png > FILE-SIZES.txt
+
+      - name: Commit captured assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Pella Nova Build Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add public/pella-nova-template-1
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add exact Template 1 Figma media exports'
+          git push origin HEAD:pella-nova-template-1-media
