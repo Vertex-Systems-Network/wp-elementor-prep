@@ -1,0 +1,128 @@
+name: Pella Nova Template 1 R9 Rebuild Hosted R6
+
+on:
+  push:
+    branches:
+      - pella-nova-template-1-media
+    paths:
+      - .github/workflows/pn1-r9-rebuild-hosted-r6.yml
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: pella-nova-template-1-media
+
+      - name: Rebuild canonical R6 from staged transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/pella-nova-template-1'
+          PARTS="$ROOT/r9-upload-chunks"
+          ZIP="$ROOT/Pella-Nova-Elementor-Web-Template-1-PASS4-R6-RUNTIME-CANDIDATE.zip"
+          REPORT="$ROOT/R9-HOSTED-R6-INTEGRITY.txt"
+          EXPECTED_BYTES='67418'
+          EXPECTED_SHA='f27dd864bf9ce19b189b7cb686a92b5b05125f0dfad17605d8748f20cad8bccd'
+          TMP_B64="$(mktemp)"
+          TMP_ZIP="$(mktemp --suffix=.zip)"
+          TMP_DIR="$(mktemp -d)"
+
+          for n in 01 02 03 04 05 06; do
+            test -s "$PARTS/part-$n.b64"
+          done
+
+          cat "$PARTS"/part-01.b64 "$PARTS"/part-02.b64 "$PARTS"/part-03.b64 "$PARTS"/part-04.b64 "$PARTS"/part-05.b64 "$PARTS"/part-06.b64 > "$TMP_B64"
+          test "$(wc -c < "$TMP_B64")" -eq 89892
+          base64 --decode "$TMP_B64" > "$TMP_ZIP"
+
+          ACTUAL_BYTES="$(stat -c %s "$TMP_ZIP")"
+          ACTUAL_SHA="$(sha256sum "$TMP_ZIP" | awk '{print $1}')"
+          test "$ACTUAL_BYTES" = "$EXPECTED_BYTES"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          unzip -t "$TMP_ZIP"
+
+          unzip -qq "$TMP_ZIP" -d "$TMP_DIR"
+
+          python - "$TMP_ZIP" <<'PY'
+          import json, sys, zipfile
+          path = sys.argv[1]
+          expected = [
+              'content/page/100.json',
+              'manifest.json',
+              'site-settings.json',
+              'taxonomies/category.json',
+              'taxonomies/nav_menu.json',
+              'templates/101.json',
+              'templates/102.json',
+              'templates/103.json',
+              'templates/104.json',
+              'templates/105.json',
+              'templates/106.json',
+              'templates/107.json',
+              'templates/108.json',
+              'templates/109.json',
+              'templates/110.json',
+              'wp-content/nav_menu_item/nav_menu_item.xml',
+          ]
+          with zipfile.ZipFile(path) as z:
+              names = z.namelist()
+              if names != expected:
+                  raise SystemExit(f'ZIP entry mismatch: {names!r}')
+              bad = z.testzip()
+              if bad is not None:
+                  raise SystemExit(f'CRC failure: {bad}')
+              for name in names:
+                  if name.endswith('.json'):
+                      json.loads(z.read(name))
+              payload = b'\n'.join(z.read(name) for name in names)
+              checks = {
+                  b'figma.com/api/mcp/asset': 0,
+                  b'_pn_': 0,
+                  b'custom_css': 0,
+                  b'custom_js': 0,
+              }
+              for token, expected_count in checks.items():
+                  actual = payload.count(token)
+                  if actual != expected_count:
+                      raise SystemExit(f'Forbidden token {token!r}: {actual}')
+          print('SEMANTIC_AND_CRC_GATE=PASS')
+          PY
+
+          {
+            echo 'PELLA NOVA TEMPLATE 1 — PASS 4 R9 HOSTED R6 INTEGRITY'
+            echo
+            echo 'REBUILD_GATE=PASS'
+            echo "BYTES=$ACTUAL_BYTES"
+            echo "SHA256=$ACTUAL_SHA"
+            echo 'ZIP_CRC=PASS'
+            echo 'ZIP_ENTRIES=16'
+            echo 'JSON_PARSE=PASS'
+            echo 'FIGMA_TEMP_URLS=0'
+            echo 'INTERNAL_PN_KEYS=0'
+            echo 'CUSTOM_CSS_KEYS=0'
+            echo 'CUSTOM_JS_KEYS=0'
+            echo 'CANONICAL_BYTE_MATCH=PASS'
+          } > "$REPORT"
+
+          cp "$TMP_ZIP" "$ZIP"
+          rm -rf "$PARTS"
+
+          test "$(stat -c %s "$ZIP")" = "$EXPECTED_BYTES"
+          test "$(sha256sum "$ZIP" | awk '{print $1}')" = "$EXPECTED_SHA"
+          unzip -t "$ZIP"
+
+      - name: Commit repaired hosted candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Pella Nova Build Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A public/pella-nova-template-1
+          git diff --cached --quiet && exit 0
+          git commit -m 'R9: repair hosted R6 with canonical bytes [skip ci]'
+          git push origin HEAD:pella-nova-template-1-media
