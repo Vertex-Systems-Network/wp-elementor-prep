@@ -51,10 +51,10 @@ export function analyzeSafePreparationCandidates(root: AuditNode): BuildReadyFin
       nodeIds: [plan.targetNodeId],
       evidence: {
         ...plan.evidence,
-        p5Decision: plan.decision,
+        p5Decision: 'ELIGIBLE',
         p5ReasonCode: plan.reasonCode,
-        recipe: plan.recipe,
-        pattern: plan.pattern,
+        recipe: 'vertical-stack',
+        pattern: 'vertical-stack',
         minConfidence: plan.minConfidence ?? 90,
         targetNodeName: plan.targetNodeName,
         targetPath: plan.targetPath.join('.'),
