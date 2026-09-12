@@ -15,7 +15,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * from changing evidence between shape checks and semantic validation without creating a generic
  * recursive clone or granting any new adapter authority.
  */
-export function snapshotP14AdapterOutputRecord<const K extends string>(
+export function snapshotP14AdapterOutputRecord<K extends string>(
   value: unknown,
   keys: readonly K[],
   label: string,
@@ -50,6 +50,7 @@ export function snapshotP14AdapterOutputArray(
   value: unknown,
   maxLength: number,
   label: string,
+  countLabel = 'item count',
 ): P14AdapterOutputSnapshot<unknown[]> {
   if (!Array.isArray(value)) {
     return {
@@ -80,7 +81,7 @@ export function snapshotP14AdapterOutputArray(
   if (length > maxLength) {
     return {
       valid: false,
-      failures: [`${label} exceeds bounded item count ${maxLength}.`],
+      failures: [`${label} exceeds bounded ${countLabel} ${maxLength}.`],
       value: null,
     };
   }
