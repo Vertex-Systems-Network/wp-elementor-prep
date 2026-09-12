@@ -38,6 +38,7 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
 - #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
 - #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
+- #213 — P14 top-level run-input runtime evidence snapshot: **ACTIVE / PR #214**. Known caller properties are guarded and snapshotted once before bounds/core semantics so hostile getters cannot escape or change evidence after the public boundary.
 - #210 — P14 unreadable runtime action-eligibility hook access: **COMPLETED** through PR #211; issue closed automatically by the verified guarded squash merge.
 - #207 — P14 caller run-control runtime evidence: **COMPLETED** through PR #208; issue closed automatically by the verified guarded squash merge.
 - #201 — P14 injected-coordinator runtime evidence and lease cleanup: **COMPLETED** through PR #205.
@@ -49,10 +50,12 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 
 ## Current PR / main queue
 
-- Current P14 core main baseline is `7f24e57a28941e80d290b9b7dfbdce5fd718e534`, the guarded squash merge of PR #211 / issue #210.
-- PR #211 exact synchronized head `57b97950928390e8c07ce82e48f92ddff7fabd4f` passed CI #895, Integration Readiness #257, P12 Final Release Artifact #206 and P12 Offline Acceptance #250 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and GitHub reported `mergeable=true` before the guarded squash merge.
-- The first two PR #211 heads exposed TypeScript-only facade typing defects before tests ran: CI #886 rejected an exact-optional property shape at `647a390028d0bee294448d96072a3515cf39f14a`, and CI #887 rejected implicit-any delegate parameters at `4a4cd0c818a4e5a334c80a2edfe175b6cbccb0c3`. Both were corrected without expanding runtime behavior; corrected implementation head `a85e0d80a2421f126a74cafe7b581abbb5d897a1` then passed CI #888, P12 Final Release Artifact #199 and P12 Offline Acceptance #243 on Ubuntu/macOS/Windows before same-cycle docs synchronization.
-- PR #211 keeps readable missing/non-function runtime-eligibility hooks on the established structured refusal path; a throwing hook getter becomes a deferred callable failure caught by the existing `P14_TRANSFORM_FAILED` / `transform-recheck` cleanup path; valid hooks retain the original adapter as `this`; cleanup failure remains `CLEANUP_REQUIRED` + `P14_DISCARD_FAILED`. No new status/error code, production recipe authority or real Figma mutation exposure was introduced.
+- Current main is `ce6b00b523eee675b34363bbe99ec467bc0b14b5`, the post-#211 docs/status synchronization from PR #212.
+- PR #214 (`fix/p14-run-input-snapshot-213`) is the active P14 top-level run-input trust-boundary slice.
+- Initial code/test head `3d558f9ac58bde1cfebd82b7e3a11d0a1d94c93e` passed CI #901 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #212 passed; P12 Offline Acceptance #256 passed on Ubuntu/macOS/Windows. Same-cycle docs synchronization follows on the same branch, so fresh exact-head gates remain required before merge.
+- PR #214 snapshots `plan`, `registry`, `coordinator`, `inputBounds`, `confirmation`, `transactionId`, `preparedName`, `allowPreparedWithReview` and `shouldCancel` through guarded one-shot reads, delegates only a plain explicit snapshot to the internal core, and removes `...input` getter re-entry. Non-object/unreadable caller evidence returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` at stage `run-input` before coordinator/adapter access. Runtime `now` property/callback handling intentionally remains on the established fail-soft `UNKNOWN` event-time contract.
+- PR #211 exact synchronized head `57b97950928390e8c07ce82e48f92ddff7fabd4f` passed CI #895, Integration Readiness #257, P12 Final Release Artifact #206 and P12 Offline Acceptance #250 on Ubuntu/macOS/Windows; it guarded squash-merged as `7f24e57a28941e80d290b9b7dfbdce5fd718e534` and issue #210 closed completed.
+- PR #212 synchronized post-#211 status and squash-merged as `ce6b00b523eee675b34363bbe99ec467bc0b14b5`.
 - PR #208 exact synchronized head `c3b577bcf09e3f97060cfcba7b76d202e9119019` passed CI #882, Integration Readiness #247, P12 Final Release Artifact #193 and P12 Offline Acceptance #237 on Ubuntu/macOS/Windows; it guarded squash-merged as `df1e8f33394f13a371c2ff0b97bb6eceb321fd91` and issue #207 closed completed.
 - PR #209 synchronized post-#208 status and squash-merged as `080ff3738720d6d2c77570e341f1e43a6cf8daa5`.
 - PR #205 exact synchronized head `1f76443e652f5d7c2c3dd9498b33463c1c2e7e03` passed CI #872, Integration Readiness #239, P12 Final Release Artifact #183 and P12 Offline Acceptance #227 on Ubuntu/macOS/Windows; it squash-merged as `e80bf4c21b64d6b72714965f4e954759e1c4159d`.
@@ -118,7 +121,7 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13 Build-Ready Score + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | #159 real-plugin parity/internal runtime acceptance |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Continue the next focused pure-core safety-gap audit after #210; production registry remains empty |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Complete #213 / PR #214 top-level run-input snapshot hardening; production registry remains empty |
 | P15-P26 multi-target commercial implementation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | Implement in dependency order with R0/R1 where applicable |
 | P27 final production release | GATE DEFINED / EXECUTION DEFERRED | 0% exec | Coordinate final live runtime/publisher/2FA evidence + #84 release-exit truth |
 
@@ -154,7 +157,7 @@ R0 research remains advisory and must be refreshed again when a major adapter im
 
 Continue the implementation/internal-readiness program without making production-release claims:
 
-1. start the next focused P14 target-neutral safety-gap audit from main `7f24e57a...` while real Figma mutation remains unwired and the production recipe registry remains empty;
+1. complete #213 / PR #214 on its final synchronized head; after merge, start the next focused P14 target-neutral safety-gap audit while real Figma mutation remains unwired and the production recipe registry remains empty;
 2. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
 3. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
 4. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;
