@@ -79,6 +79,27 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
+### #201 — P14 transaction coordinator runtime evidence and lease cleanup
+
+Classification: **ACTIVE / PR #205 under synchronized-head verification**.
+
+PR #205 (`fix/p14-coordinator-runtime-evidence-201`) hardens the remaining injected-coordinator trust boundary without changing recipe or target authority:
+
+1. `assessP14TransactionLeaseResultEvidence(...)` validates acquisition results as runtime evidence before any adapter access;
+2. acquired lease source scope and transaction ID must be bounded and exactly match the normalized requested identities;
+3. refusal reasons are restricted to the coordinator contract and optional owner identities are bounded before receipt use;
+4. throwing, unreadable proxy-backed or malformed acquisition evidence fails closed as structured coordination evidence;
+5. malformed evidence that still claims acquisition triggers a one-shot best-effort release using the exact expected lease identity;
+6. coordinator release is considered successful only when it returns literal `true`;
+7. release false/non-boolean/throw cannot escape or be silently ignored and instead converts the terminal transaction outcome to `CLEANUP_REQUIRED` with bounded `coordination-release` evidence;
+8. if retention already succeeded, truthful retained candidate/retention/validation/re-score evidence is preserved while lease recovery remains required; pre-clone cleanup failure does not invent a candidate;
+9. default coordinator conflict/concurrency behavior and NO_CHANGES_NEEDED no-lease behavior remain unchanged;
+10. no distributed locking, host authentication, real Figma mutation surface or production recipe authority is introduced.
+
+Initial code/test head `511bf68adbe1859695d7dbe2dea12e974afa024f` passed CI #867 including status verification, typecheck, full tests, builds and release/package/community contracts; P12 Final Release Artifact #178 passed; P12 Offline Acceptance #222 passed on Ubuntu/macOS/Windows. These checks validate the implementation slice only. Final merge authority requires fresh CI, Integration Readiness, Final Release Artifact and cross-platform Offline Acceptance on the synchronized documentation head plus a clean/current/mergeable PR gate.
+
+Accidental issues #202, #203 and #204 were created empty during tool invocation, immediately marked **CLOSED / NOT PLANNED**, and carry no work; #201 is the only authoritative issue for this slice.
+
 ### #198 — P14 safe-recipe registry evidence bounds
 
 Classification: **COMPLETED / merged through PR #199**.
@@ -175,12 +196,12 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. start the next focused safety-gap audit from main `80cefcb...` now that #198 / PR #199 is completed;
+1. complete #201 / PR #205 coordinator runtime-evidence and lease-cleanup hardening on its final synchronized head;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
-4. fail closed on malformed/stale adapter/control/receipt/registry evidence while preserving existing status semantics;
+4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
 5. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
-6. continue focused safety-gap audits until core implementation is internally ready;
+6. after #201 merges, continue focused safety-gap audits until core implementation is internally ready;
 7. require #159 before real Figma mutation exposure;
 8. require genuine real-Figma acceptance before any production mutation/readiness claim.
 
