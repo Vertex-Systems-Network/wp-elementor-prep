@@ -38,7 +38,7 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 - #119 — P13-P27 commercial/multi-target roadmap: **ACTIVE**. P13-P26 implementation/testing may proceed to implementation-complete/internal-readiness without waiting for #84; production acceptance/release remains separate.
 - #159 — P13 real-plugin Build-Ready runtime/parity evidence: **OPEN runtime-acceptance dependency**. P13 implementation is complete, but real-plugin runtime acceptance is not.
 - #182 — P27 final production-release gate: **DEFINED / execution deferred** until the implementation/internal-readiness program is ready.
-- #207 — P14 caller run-control runtime evidence: **ACTIVE / PR #208**. Transaction/prepared-name identity, explicit review policy and custom input-bound overrides are now validated/snapshotted before transaction semantics; final synchronized-head verification remains required.
+- #207 — P14 caller run-control runtime evidence: **COMPLETED** through PR #208; issue closed automatically by the verified guarded squash merge.
 - #201 — P14 injected-coordinator runtime evidence and lease cleanup: **COMPLETED** through PR #205.
 - #198 — P14 safe-recipe registry evidence bounds: **COMPLETED** through PR #199.
 - #195 — P14 runtime clock/event timestamp evidence: **COMPLETED** through PR #196.
@@ -48,13 +48,12 @@ Approved post-P12 direction is now broader: **Figma -> validated target-ready we
 
 ## Current PR / main queue
 
-- Current main baseline is `589eac5752c2774f4298bc95bbe61fb36b4c148b`, the docs/status synchronization after verified PR #205 / issue #201 completion.
-- PR #208 (`fix/p14-run-control-evidence-207`) is the active P14 run-control runtime-evidence slice.
-- Initial implementation head `9e4b0ca8c7abf69d2c7052bcf26f48526e0587dc` passed CI #876 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community contracts; P12 Final Release Artifact #187 passed; P12 Offline Acceptance #231 passed on Ubuntu/macOS/Windows. These are implementation checks only; fresh synchronized-head verification is required after documentation commits.
+- Current main P14 baseline is `df1e8f33394f13a371c2ff0b97bb6eceb321fd91`, the guarded squash merge of PR #208 / issue #207.
+- PR #208 exact synchronized head `c3b577bcf09e3f97060cfcba7b76d202e9119019` passed CI #882, Integration Readiness #247, P12 Final Release Artifact #193 and P12 Offline Acceptance #237 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, was `behind_by=0`, and GitHub reported `mergeable=true` before the guarded squash merge.
 - PR #208 adds `assessP14RunControlEvidence(...)`, rejects malformed/non-boolean caller controls before confirmation/coordinator/adapter access, safely snapshots known positive-integer `inputBounds` overrides, normalizes transaction/prepared-name identities once, and keeps valid oversized controls on the established `P14_INPUT_TOO_LARGE` path.
-- The previous retained-duplicate engine is preserved byte-for-byte as an internal core while the original public transaction module path becomes the hardened run-control boundary; production recipe authority and real Figma mutation remain unwired.
+- The previous retained-duplicate engine is preserved byte-for-byte as an internal core while the original public transaction module path is the hardened run-control boundary; production recipe authority and real Figma mutation remain unwired.
 - PR #205 exact synchronized head `1f76443e652f5d7c2c3dd9498b33463c1c2e7e03` passed CI #872, Integration Readiness #239, P12 Final Release Artifact #183 and P12 Offline Acceptance #227 on Ubuntu/macOS/Windows; it squash-merged as `e80bf4c21b64d6b72714965f4e954759e1c4159d`.
-- PR #206 synchronized post-#205 status and squash-merged as current main `589eac5752c2774f4298bc95bbe61fb36b4c148b`.
+- PR #206 synchronized post-#205 status and squash-merged as `589eac5752c2774f4298bc95bbe61fb36b4c148b`.
 - PR #199 exact synchronized head `e782a08090a4e158f99da22bf25d8fff60c8c529` passed CI #863, Integration Readiness #231, P12 Final Release Artifact #174 and P12 Offline Acceptance #218 on Ubuntu/macOS/Windows; it squash-merged as `80cefcb8b90a85b5e5a8b5ad4e6a0f65ddf6d12b`.
 - PR #196 exact synchronized head `47cb0b4d2d3c53f7f818af760131cc78737cb5c4` passed CI #854, Integration Readiness #224, P12 Final Release Artifact #165 and P12 Offline Acceptance #209 on Ubuntu/macOS/Windows; it squash-merged as `8021874323f5bad6ebf648b0891bc9f6358dd1bf`.
 - PR #193 completed receipt-envelope/runtime-diagnostic hardening and merged as `e54cb44c3dabe6cd2a459f70df917b9422fadddd`.
@@ -117,7 +116,7 @@ The P13-P26 direction remains commercially strong, but the reliable product cont
 | R0 market/platform research | PLANNING GATE | N/A | September snapshot retained; refresh before each major adapter |
 | R1 reliability/compatibility | PLANNING GATE | N/A | Freeze adapter/profile/validation/error contracts before implementation |
 | P13 Build-Ready Score + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | #159 real-plugin parity/internal runtime acceptance |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Complete #207 / PR #208 run-control runtime evidence; production registry remains empty |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | Continue the next focused pure-core fail-closed audit after #207; production registry remains empty |
 | P15-P26 multi-target commercial implementation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | Implement in dependency order with R0/R1 where applicable |
 | P27 final production release | GATE DEFINED / EXECUTION DEFERRED | 0% exec | Coordinate final live runtime/publisher/2FA evidence + #84 release-exit truth |
 
@@ -153,7 +152,7 @@ R0 research remains advisory and must be refreshed again when a major adapter im
 
 Continue the implementation/internal-readiness program without making production-release claims:
 
-1. complete #207 / PR #208 run-control runtime-evidence hardening on its final synchronized head; after merge, continue the next focused P14 target-neutral safety-gap audit while real Figma mutation remains unwired and the production recipe registry remains empty;
+1. start the next focused P14 target-neutral safety-gap audit from main `df1e8f3...` while real Figma mutation remains unwired and the production recipe registry remains empty;
 2. complete #159 only when genuine real-plugin runtime/parity evidence is available; it gates P14 real mutation exposure, not pure-core development;
 3. refresh R0 and execute R1 before each major external target adapter where platform facts/capabilities require it;
 4. implement P15-P26 in dependency order with atomic validators/harnesses and no live-target claim without observed evidence;
