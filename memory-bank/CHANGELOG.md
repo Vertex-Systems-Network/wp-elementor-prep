@@ -12,7 +12,8 @@
 - Added `tests/p14-run-control-evidence.test.ts` covering throwing bounds getters, malformed control types/values, truthy non-boolean review authorization, normalized runtime identities, explicit boolean review authorization and oversized-control regression semantics.
 - Initial implementation head `9e4b0ca8c7abf69d2c7052bcf26f48526e0587dc` passed CI #876 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #187 passed; P12 Offline Acceptance #231 passed on Ubuntu/macOS/Windows.
 - Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #207. No real Figma mutation command, production recipe authority, target-compatibility claim or production acceptance was introduced.
-- Final synchronized-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #208 may merge.
+- Final synchronized PR head `c3b577bcf09e3f97060cfcba7b76d202e9119019` passed CI #882, Integration Readiness #247, P12 Final Release Artifact #193 and P12 Offline Acceptance #237 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main (`behind_by=0`) and was reported `mergeable=true` by GitHub.
+- PR #208 guarded squash-merged as `df1e8f33394f13a371c2ff0b97bb6eceb321fd91`; issue #207 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
 
 ## 2026-09-12 — P14 coordinator runtime-evidence and lease-cleanup hardening
 
