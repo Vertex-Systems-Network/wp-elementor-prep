@@ -1,0 +1,17 @@
+name: P14 plan integrity snapshot 243
+
+on: push
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.ref == 'refs/heads/fix/p14-plan-integrity-snapshot-243'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply focused source and adversarial test patch
+        run: python .github/scripts/p14-plan-integrity-snapshot-243.py
