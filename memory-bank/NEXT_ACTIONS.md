@@ -66,7 +66,7 @@ Canonical future order:
 - P13 — Build-Ready Score 2.0 + Responsive Risk;
 - P14 — Target-Ready Duplicate + Guided Prepare;
 - P15 — Elementor native export + import validation;
-- P16 — Gutenberg native block/pattern export + section transfer;
+- P16 — Gutenberg native export + section transfer;
 - P17 — HTML/CSS/JS export + static-first code-to-design import;
 - P18 — framework adapter platform;
 - P19 — asset pack + font manifest + design-system export;
@@ -122,7 +122,7 @@ PR #211 (`fix/p14-runtime-eligibility-hook-210`) closed the narrow unreadable op
 2. readable missing/non-function values preserve the existing structured `P14_TRANSFORM_FAILED` / `transform-recheck` refusal after a prior recipe;
 3. a throwing/proxy-backed getter becomes a deferred callable failure, so the core catches it only at the existing guarded runtime recheck point and attempts candidate discard;
 4. if that discard also fails, existing `CLEANUP_REQUIRED` + `P14_DISCARD_FAILED` evidence is preserved;
-5. a valid hook is invoked with the original adapter as `this`, preserving adapter state/private expectations;
+5. a valid hook is invoked with the original adapter as `this`, preserving adapter state/private method expectations;
 6. the later recipe is never applied when hook access cannot be trusted;
 7. no new status/error code, production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
 
