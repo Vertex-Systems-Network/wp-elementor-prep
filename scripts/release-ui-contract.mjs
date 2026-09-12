@@ -70,9 +70,9 @@ export function buildReleaseUi(developmentUi) {
     '<div class="sub">Audit + actionable backlog + visual validation + safety-gated Safe Fix + sequential batch preparation</div>',
     'development UI subtitle',
   );
-  releaseUi = requireReplacement(
+  releaseUi = requireRegexReplacement(
     releaseUi,
-    '      <button id="p14-preview">Preview Guided Prepare</button>\n',
+    /      <button id="p14-preview">Preview Guided Prepare<\/button>\r?\n/,
     '',
     'development-only P14 preview button',
   );
