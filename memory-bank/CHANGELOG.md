@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-12 — P14 runtime eligibility hook property hardening
+
+- Opened issue #210 and focused PR #211 (`fix/p14-runtime-eligibility-hook-210`) for the remaining unreadable optional runtime action-eligibility hook property boundary.
+- Audited the sequential transform path and confirmed that `adapter.assessActionEligibility` was read outside the guarded invocation after a prior recipe could already have mutated the candidate; a throwing/proxy-backed getter could therefore escape before structured candidate cleanup.
+- Hardened the public retained-duplicate adapter boundary with a guarded optional-hook property: a throwing getter becomes a deferred callable failure consumed by the existing `P14_TRANSFORM_FAILED` / `transform-recheck` catch path, so candidate discard is attempted instead of letting the transaction escape.
+- Readable missing/non-function hook values preserve the existing deterministic structured refusal, while valid hooks are invoked with the original adapter as `this` so adapter state/private expectations remain intact.
+- Existing cleanup semantics remain authoritative: if candidate discard also fails after unreadable hook access, the receipt becomes `CLEANUP_REQUIRED` with `P14_DISCARD_FAILED`; no new status or error code was added.
+- Added `tests/p14-runtime-eligibility-hook-boundary.test.ts` covering throwing getter cleanup, throwing getter plus discard failure, readable non-function behavior and valid-hook regression.
+- Initial head `647a390028d0bee294448d96072a3515cf39f14a` exposed an exact-optional adapter-facade type mismatch in CI #886 before tests ran. Follow-up head `4a4cd0c818a4e5a334c80a2edfe175b6cbccb0c3` exposed implicit-any delegate parameters in CI #887, also before tests; both were TypeScript-only boundary corrections with no runtime-scope expansion.
+- Corrected implementation head `a85e0d80a2421f126a74cafe7b581abbb5d897a1` passed CI #888 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #199 passed; P12 Offline Acceptance #243 passed on Ubuntu/macOS/Windows.
+- Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #210. No real Figma mutation command, production recipe authority, target-compatibility claim or production acceptance was introduced.
+- Final synchronized-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #211 may merge.
+
 ## 2026-09-12 — P14 caller run-control runtime-evidence hardening
 
 - Opened issue #207 and focused PR #208 (`fix/p14-run-control-evidence-207`) for the remaining caller-supplied transaction control trust boundary.
@@ -48,7 +61,7 @@
 - Opened issue #195 and focused PR #196 (`fix/p14-runtime-clock-evidence-195`) for the remaining untrusted runtime-clock/event-timestamp evidence gap.
 - Added `src/core/p14-timestamp-evidence.ts` with a shared strict normalized UTC millisecond timestamp validator, explicit `UNKNOWN` event-time sentinel and fail-safe runtime clock reader.
 - P14 preparation confirmation build/validation now reuses the shared normalized UTC validator; confirmation timestamps remain strict reviewed-intent evidence and do not accept `UNKNOWN`.
-- Receipt event integrity now accepts only normalized UTC event time or explicit `UNKNOWN`, and rejects oversized/non-canonical/impossible timestamp evidence before `Date.parse(...)`.
+- Receipt event integrity now accepts only normalized UTC or explicit `UNKNOWN`, and rejects oversized/non-canonical/impossible timestamp evidence before `Date.parse(...)`.
 - Transaction event construction now treats `now()` as untrusted metadata evidence: throw, non-string, oversized and non-canonical values cannot escape the transaction and are represented as unavailable time rather than fabricated wall-clock evidence.
 - Added `tests/p14-timestamp-evidence.test.ts` covering pre-parse length rejection, strict timestamp shapes, hostile clock callbacks, confirmation compatibility, valid-clock preservation and forged receipt timestamps.
 - Initial PR head `38ec9c36e44aa1e2431802bc74d8c9bab6a1adbe` passed P12 Offline Acceptance #203 but exposed a test-only TypeScript inference failure in CI #848 / P12 Final Release Artifact #159. The heterogeneous test callbacks were explicitly typed in follow-up commit `4d2b56497d90c58c71293ec9f473260fb9c8cef8`; no production clock logic change was required for that failure.
