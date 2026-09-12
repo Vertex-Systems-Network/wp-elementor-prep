@@ -12,11 +12,6 @@ function safeArrayCheck(value: unknown): boolean | null {
   }
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  if (typeof value !== 'object' || value === null) return false;
-  return safeArrayCheck(value) === false;
-}
-
 /**
  * Capture a known adapter-output record exactly once per declared property.
  *
@@ -29,10 +24,26 @@ export function snapshotP14AdapterOutputRecord<K extends string>(
   keys: readonly K[],
   label: string,
 ): P14AdapterOutputSnapshot<Record<K, unknown>> {
-  if (!isRecord(value)) {
+  if (typeof value !== 'object' || value === null) {
     return {
       valid: false,
-      failures: [`${label} must be a safely readable object.`],
+      failures: [`${label} must be an object.`],
+      value: null,
+    };
+  }
+
+  const isArray = safeArrayCheck(value);
+  if (isArray === null) {
+    return {
+      valid: false,
+      failures: [`${label} could not be inspected safely as an object.`],
+      value: null,
+    };
+  }
+  if (isArray) {
+    return {
+      valid: false,
+      failures: [`${label} must be an object.`],
       value: null,
     };
   }
