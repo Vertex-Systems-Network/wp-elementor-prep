@@ -34,8 +34,6 @@ export interface P14PlanPreviewV1 {
   plan: P14PreparationPlanV1 | null;
 }
 
-const DECISIONS: readonly P14PlanDecision[] = ['ELIGIBLE', 'NOOP', 'REVIEW', 'REFUSED'];
-
 function decisionCount(plan: P14PreparationPlanV1, decision: P14PlanDecision): number {
   return plan.actions.reduce((count, action) => count + (action.decision === decision ? 1 : 0), 0);
 }
@@ -51,10 +49,10 @@ export function buildP14PlanPreview(reportValue: unknown): P14PlanPreviewV1 {
     ? {
         status: plan.status,
         totalActions: plan.actions.length,
-        eligible: decisionCount(plan, DECISIONS[0]),
-        noOp: decisionCount(plan, DECISIONS[1]),
-        review: decisionCount(plan, DECISIONS[2]),
-        refused: decisionCount(plan, DECISIONS[3]),
+        eligible: decisionCount(plan, 'ELIGIBLE'),
+        noOp: decisionCount(plan, 'NOOP'),
+        review: decisionCount(plan, 'REVIEW'),
+        refused: decisionCount(plan, 'REFUSED'),
         blockers: plan.blockers.length,
       }
     : {
@@ -86,4 +84,8 @@ export function buildP14PlanPreview(reportValue: unknown): P14PlanPreviewV1 {
     summary,
     plan,
   };
+}
+
+export function serializeP14PlanPreviewJson(preview: P14PlanPreviewV1): string {
+  return `${JSON.stringify(preview, null, 2)}\n`;
 }
