@@ -1,5 +1,9 @@
 import type { P7RuntimeBuildIdentity } from '../core/batch-runtime-evidence';
 import { serializeBuildReadyReportJson } from '../core/build-ready';
+import {
+  BUILD_READY_ANALYZER_VERSION,
+  matchesCurrentBuildReadyRunIdentity,
+} from '../core/build-ready-identity';
 import type { BuildReadyReportV2 } from '../core/build-ready-types';
 import type { AuditReport } from '../core/types';
 
@@ -192,6 +196,17 @@ export function validateP13RuntimeEvidence(value: unknown): { valid: boolean; re
     || !isRecord(buildReady.coverage)
     || !Array.isArray(buildReady.limitations)) {
     return { valid: false, reason: 'Build-Ready report is missing or malformed.' };
+  }
+  if (buildReady.source.analyzerVersion !== BUILD_READY_ANALYZER_VERSION) {
+    return { valid: false, reason: `Unsupported Build-Ready analyzer version; expected ${BUILD_READY_ANALYZER_VERSION}.` };
+  }
+  if (!matchesCurrentBuildReadyRunIdentity({
+    runId: buildReady.runId,
+    structuralHash: buildReady.source.structuralHash,
+    configHash: buildReady.source.configHash,
+    analyzerVersion: buildReady.source.analyzerVersion,
+  })) {
+    return { valid: false, reason: 'Build-Ready runId contradicts the exact source/config/analyzer identity.' };
   }
   if (buildReady.source.rootId !== context.frameId || buildReady.source.rootName !== context.frameName) {
     return { valid: false, reason: 'Build-Ready source identity does not match the captured Figma frame.' };
