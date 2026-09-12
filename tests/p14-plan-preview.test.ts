@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { buildBuildReadyReport } from '../src/core/build-ready';
 import type { AuditNode } from '../src/core/types';
-import { buildP14PlanPreview } from '../src/plugin/p14-plan-preview';
+import {
+  buildP14PlanPreview,
+  serializeP14PlanPreviewJson,
+} from '../src/plugin/p14-plan-preview';
 
 function node(overrides: Partial<AuditNode> = {}): AuditNode {
   const children = overrides.children ?? [];
@@ -76,6 +79,38 @@ describe('P14 Guided Prepare plan preview', () => {
     expect(preview.confirmationEnabled).toBe(false);
     expect(preview.handoff.valid).toBe(true);
     expect(preview.plan).not.toBeNull();
+    expect(preview.reviewManifest).not.toBeNull();
+    expect(preview.reviewManifest).toMatchObject({
+      acceptanceAuthority: false,
+      targetCompatibilityClaim: false,
+      mutationEnabled: false,
+      confirmationEnabled: false,
+    });
+  });
+
+  it('binds the review manifest to the exact preview plan without creating confirmation authority', () => {
+    const preview = buildP14PlanPreview(buildReportWithSafeCandidate());
+    expect(preview.plan).not.toBeNull();
+    expect(preview.reviewManifest).not.toBeNull();
+
+    expect(preview.reviewManifest?.binding).toEqual({
+      p13RunId: preview.plan?.p13RunId,
+      source: preview.plan?.source,
+      planDigest: preview.plan?.planDigest,
+      eligibleActionIds: preview.plan?.eligibleActionIds,
+    });
+    expect(preview.reviewManifest?.actions).toEqual([]);
+    expect(preview.confirmationEnabled).toBe(false);
+  });
+
+  it('serializes the concise review manifest before the full plan evidence', () => {
+    const preview = buildP14PlanPreview(buildReportWithSafeCandidate());
+    const json = serializeP14PlanPreviewJson(preview);
+
+    expect(json).toContain('"reviewManifest"');
+    expect(json).toContain('"eligibleActionIds"');
+    expect(json).toContain('"confirmationEnabled": false');
+    expect(json.indexOf('"reviewManifest"')).toBeLessThan(json.indexOf('"plan"'));
   });
 
   it('keeps an unregistered safe candidate review-only under the empty production registry', () => {
@@ -95,12 +130,13 @@ describe('P14 Guided Prepare plan preview', () => {
 
     expect(preview.handoff.valid).toBe(false);
     expect(preview.plan).toBeNull();
+    expect(preview.reviewManifest).toBeNull();
     expect(preview.summary.status).toBe('INVALID_HANDOFF');
     expect(preview.mutationEnabled).toBe(false);
     expect(preview.confirmationEnabled).toBe(false);
   });
 
-  it('produces deterministic plan identity for the same current Build-Ready evidence', () => {
+  it('produces deterministic plan and review identity for the same current Build-Ready evidence', () => {
     const report = buildReportWithSafeCandidate();
     const first = buildP14PlanPreview(report);
     const second = buildP14PlanPreview(report);
@@ -108,5 +144,6 @@ describe('P14 Guided Prepare plan preview', () => {
     expect(first.summary).toEqual(second.summary);
     expect(first.plan?.planDigest).toBe(second.plan?.planDigest);
     expect(first.plan?.actions).toEqual(second.plan?.actions);
+    expect(first.reviewManifest).toEqual(second.reviewManifest);
   });
 });
