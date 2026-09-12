@@ -1,3 +1,5 @@
+import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import { snapshotP14SemanticInputEvidence } from './p14-semantic-input-snapshot';
 import type { P14PreparationAction, P14PreparationPlanV1 } from './p14-preparation-types';
 import {
   PRODUCTION_P14_SAFE_RECIPE_REGISTRY,
@@ -48,7 +50,20 @@ export function authorizeP14PreparationPlan(
   }
   const stableRegistry = registryEvidence.value;
 
-  const actions = eligibleActions(plan);
+  const planSnapshot = snapshotP14SemanticInputEvidence(
+    plan,
+    undefined,
+    DEFAULT_P14_INPUT_BOUNDS,
+  );
+  if (!planSnapshot.valid) {
+    return {
+      authorized: false,
+      failures: planSnapshot.failures.map((failure) => `Invalid P14 plan evidence: ${failure}`).sort(),
+      authorizedActionIds: [],
+    };
+  }
+  const stablePlan = planSnapshot.plan as P14PreparationPlanV1;
+  const actions = eligibleActions(stablePlan);
   if (actions.length === 0) {
     return { authorized: true, failures: [], authorizedActionIds: [] };
   }
