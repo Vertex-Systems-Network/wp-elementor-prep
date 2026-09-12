@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,11 +9,11 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
 
 ## Bounded input preflight
 
-`assessP14PreparationInputBounds(...)` is the first transaction gate, before canonical plan validation, registry authorization, confirmation validation, source coordination or adapter access.
+`assessP14PreparationInputBounds(...)` remains the resource-size gate before canonical plan validation, registry authorization, confirmation validation, source coordination or adapter access.
 
 It applies deterministic limits to action/blocker counts, targets per action, total target references, prerequisites/conflicts/mutation fields, action buckets, blocker action references, plan/source identities, run-level transaction/prepared-name identity lengths and supplied confirmation identities/action lists.
 
@@ -30,6 +30,23 @@ Important safety behavior:
 - source transaction coordinator and adapter methods remain untouched on a bounded-preflight rejection.
 
 These limits are freeze/resource safety bounds only. They are not estimates of Elementor/Gutenberg conversion effort or target compatibility.
+
+## Run-control runtime evidence
+
+Caller-supplied transaction controls are runtime evidence, not authority granted by TypeScript declarations. The public `runP14RetainedDuplicateTransaction(...)` boundary therefore validates and snapshots control values before delegating to the retained-duplicate transaction core.
+
+`assessP14RunControlEvidence(...)` requires:
+
+- `transactionId` to be a string with a non-whitespace identity; the accepted value is normalized once before coordinator, adapter and receipt use;
+- supplied `preparedName` to be a string; it is normalized once and preserves the established empty/whitespace fallback to `Prepared Duplicate`;
+- supplied `allowPreparedWithReview` to be a literal boolean; only literal `true` can authorize the existing `PREPARED_WITH_REVIEW` policy path;
+- supplied `inputBounds` to be an object whose known override fields can be read safely and whose present values are positive integers.
+
+Known `inputBounds` properties are snapshotted into a plain object before the transaction core reuses them. A proxy/getter that throws therefore cannot escape the first bounds gate by being re-read later. Malformed run-control evidence returns a bounded `BLOCKED` receipt with `P14_INTERNAL_INVARIANT_FAILED` at stage `run-control`, before confirmation, coordination or adapter access.
+
+Resource-size authority remains separate from run-control type/shape authority. Valid typed but oversized transaction/prepared-name strings are still measured from their raw values and retain the established `P14_INPUT_TOO_LARGE` outcome. Stricter caller-supplied positive-integer bounds still use the existing clamp/default/hard-limit policy and cannot loosen defaults.
+
+The prior transaction engine is retained as the internal deterministic core; the original public module path is now the hardened run-control boundary. This split adds no recipe, target, host-identity or production-acceptance authority.
 
 ## Bounded safe-recipe registry evidence
 
@@ -223,7 +240,7 @@ P14 receipt integrity treats the receipt envelope itself as untrusted evidence, 
 
 Top-level receipt correlation identities — `transactionId`, `p13RunId`, `planDigest` and `source.nodeId` — use the existing P14 identity bound. Error `stage` also uses the identity bound, while error `detail`, optional `recovery` and optional event `detail` use the existing P14 detail bound. The plan digest keeps its existing `p14-plan-` correlation prefix requirement; no host-specific node-ID or authentication format is invented.
 
-Transaction diagnostic constructors use the same shared bounds. `receiptError(...)` and event construction therefore emit bounded stage/detail/recovery evidence by construction, including details assembled from planner/authorization/runtime failures. Runtime adapter/discard/coordinator exceptions are rendered through `safeP14RuntimeErrorMessage(...)`, which bounds long messages and falls back deterministically when hostile exception stringification itself throws.
+Transaction diagnostic constructors use the same shared bounds. `receiptError(...)` and event construction therefore emit bounded diagnostics by construction, including details assembled from planner/authorization/runtime failures. Runtime adapter/discard/coordinator exceptions are rendered through `safeP14RuntimeErrorMessage(...)`, which bounds long messages and falls back deterministically when hostile exception stringification itself throws.
 
 These envelope/resource limits do not make a receipt authoritative. They bound traversal and evidence size only; `acceptanceAuthority` and `targetCompatibilityClaim` remain false.
 
@@ -269,7 +286,7 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 20. A P14 transaction never swaps, replaces or deletes the approved source.
 21. A candidate cannot reach `PREPARED` without mandatory validation, accepted re-score policy and source-immutability proof.
 22. New HIGH/BLOCKER findings caused by preparation reject the candidate.
-23. `PREPARED_WITH_REVIEW` requires an explicit policy flag.
+23. `PREPARED_WITH_REVIEW` requires explicit literal-boolean review authorization; truthy non-boolean runtime values cannot grant it.
 24. Explicit cancellation and cancellation-check failure are distinct; callback failure is never emitted as `P14_CANCELLED`.
 25. Cancellation-check throw/reject/non-boolean results fail closed; after clone they require candidate cleanup before return.
 26. Failed/cancelled candidates are discarded; discard failure becomes `CLEANUP_REQUIRED`.
@@ -300,6 +317,11 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 51. Malformed evidence that claims acquisition triggers one bounded best-effort exact-lease cleanup attempt before return.
 52. Only literal `true` release evidence proves coordinator cleanup; false/non-boolean/throwing release cannot silently produce a clean terminal outcome.
 53. Coordinator cleanup failure preserves truthful candidate/retention state while changing the transaction outcome to `CLEANUP_REQUIRED`; it does not imply distributed lock recovery or host authenticity.
+54. Caller run-control type/shape evidence is validated before confirmation, coordinator or adapter access.
+55. Transaction and prepared-name identities are normalized once before runtime semantics; their raw typed values still drive resource-size rejection.
+56. Known input-bound override fields are snapshotted safely before the core reuses them; throwing getters cannot escape the first gate.
+57. Present input-bound override values must be positive integers and remain stricter-only through the existing clamp/default/hard-limit policy.
+58. Run-control hardening adds no recipe, target, authentication, compatibility or production-acceptance authority.
 
 ## Deliberately not wired yet
 

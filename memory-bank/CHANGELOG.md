@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-09-12 — P14 caller run-control runtime-evidence hardening
+
+- Opened issue #207 and focused PR #208 (`fix/p14-run-control-evidence-207`) for the remaining caller-supplied transaction control trust boundary.
+- Added `src/core/p14-run-control-evidence.ts` with `assessP14RunControlEvidence(...)` so transaction ID, prepared name, explicit review policy and custom input-bound overrides are validated before confirmation, coordination or adapter access.
+- `transactionId` must be a runtime string with a non-whitespace identity and is normalized once before coordinator, adapter and receipt use; supplied `preparedName` must be a string, is normalized once and preserves the established empty/whitespace fallback to `Prepared Duplicate`.
+- `allowPreparedWithReview` must be absent or a literal boolean. Truthy non-boolean runtime values can no longer grant the existing `PREPARED_WITH_REVIEW` policy exception.
+- Known `inputBounds` fields are read through guarded property access, snapshotted into a plain object and require positive-integer values when supplied. Throwing proxy/getter evidence therefore fails closed instead of escaping the first safety gate.
+- Malformed run controls return bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` evidence at stage `run-control` before source coordination or adapter access. Valid typed but oversized raw identities preserve the existing `P14_INPUT_TOO_LARGE` bounds outcome.
+- Preserved the previous retained-duplicate engine byte-for-byte as internal `src/core/p14-retained-duplicate-transaction-core.ts`; the original public transaction module path is now the hardened run-control boundary.
+- Added `tests/p14-run-control-evidence.test.ts` covering throwing bounds getters, malformed control types/values, truthy non-boolean review authorization, normalized runtime identities, explicit boolean review authorization and oversized-control regression semantics.
+- Initial implementation head `9e4b0ca8c7abf69d2c7052bcf26f48526e0587dc` passed CI #876 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #187 passed; P12 Offline Acceptance #231 passed on Ubuntu/macOS/Windows.
+- Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #207. No real Figma mutation command, production recipe authority, target-compatibility claim or production acceptance was introduced.
+- Final synchronized-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #208 may merge.
+
 ## 2026-09-12 — P14 coordinator runtime-evidence and lease-cleanup hardening
 
 - Opened issue #201 and focused PR #205 (`fix/p14-coordinator-runtime-evidence-201`) for the remaining injected source-transaction coordinator trust-boundary gap.
