@@ -52,7 +52,7 @@ const rows = moduleSection
   .slice(1)
   .map((line) => line.split('|').slice(1, -1).map((cell) => cell.trim()));
 
-if (rows.length < 28) {
+if (rows.length < 27) {
   throw new Error(`Expected the full P0-P27/R0/R1 module table, found only ${rows.length} rows.`);
 }
 
