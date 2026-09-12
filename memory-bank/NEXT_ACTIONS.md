@@ -81,9 +81,9 @@ Canonical future order:
 
 ### #210 — P14 runtime action-eligibility hook property boundary
 
-Classification: **ACTIVE / PR #211 under same-cycle documentation and final exact-head verification**.
+Classification: **COMPLETED / merged through PR #211**.
 
-PR #211 (`fix/p14-runtime-eligibility-hook-210`) closes the narrow unreadable optional-hook gap without changing mutation or target authority:
+PR #211 (`fix/p14-runtime-eligibility-hook-210`) closed the narrow unreadable optional-hook gap without changing mutation or target authority:
 
 1. the public retained-duplicate adapter boundary exposes a guarded `assessActionEligibility` property;
 2. readable missing/non-function values preserve the existing structured `P14_TRANSFORM_FAILED` / `transform-recheck` refusal after a prior recipe;
@@ -93,7 +93,7 @@ PR #211 (`fix/p14-runtime-eligibility-hook-210`) closes the narrow unreadable op
 6. the later recipe is never applied when hook access cannot be trusted;
 7. no new status/error code, production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
 
-The first implementation head `647a390028d0bee294448d96072a3515cf39f14a` exposed an exact-optional TypeScript facade mismatch in CI #886. Follow-up head `4a4cd0c818a4e5a334c80a2edfe175b6cbccb0c3` exposed implicit-any delegate typing in CI #887. Both failed before tests and were corrected without runtime-scope expansion. Corrected implementation head `a85e0d80a2421f126a74cafe7b581abbb5d897a1` passed CI #888, P12 Final Release Artifact #199 and P12 Offline Acceptance #243 on Ubuntu/macOS/Windows. Final merge authority still requires fresh CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review evidence on the synchronized documentation head.
+The first implementation head `647a390028d0bee294448d96072a3515cf39f14a` exposed an exact-optional TypeScript facade mismatch in CI #886. Follow-up head `4a4cd0c818a4e5a334c80a2edfe175b6cbccb0c3` exposed implicit-any delegate typing in CI #887. Both failed before tests and were corrected without runtime-scope expansion. Corrected implementation head `a85e0d80a2421f126a74cafe7b581abbb5d897a1` passed CI #888, P12 Final Release Artifact #199 and P12 Offline Acceptance #243 on Ubuntu/macOS/Windows. Exact synchronized head `57b97950928390e8c07ce82e48f92ddff7fabd4f` then passed CI #895, Integration Readiness #257, P12 Final Release Artifact #206 and P12 Offline Acceptance #250 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `7f24e57a28941e80d290b9b7dfbdce5fd718e534`. Issue #210 closed completed.
 
 ### #207 — P14 caller run-control runtime evidence
 
@@ -230,7 +230,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #210 / PR #211 on its final synchronized head, then begin the next focused safety-gap audit from the resulting main;
+1. start the next focused safety-gap audit from main `7f24e57a...` now that #210 / PR #211 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
