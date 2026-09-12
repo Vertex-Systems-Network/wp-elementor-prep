@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190, #192, #195, #198, #201, #207, #210, #213, #216, #223, #226  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded bounded semantic snapshots for known nested plan/confirmation evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight with fail-closed unreadable nested evidence, guarded bounded semantic snapshots for known nested plan/confirmation evidence, guarded one-shot top-level run-input evidence, bounded caller run-control evidence, bounded safe-recipe registry resource and semantic-snapshot evidence, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation with guarded optional-hook property access, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, bounded receipt-envelope/runtime-diagnostic evidence, bounded runtime event-clock/timestamp evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup, source-scope transaction coordination and bounded injected-coordinator runtime evidence/lease cleanup.
 
 ## Bounded input preflight
 
@@ -57,7 +57,7 @@ If the top-level input is not a runtime object, or any known transaction propert
 
 Runtime clock metadata remains intentionally separate: reading `now` still uses the existing fail-soft clock contract. A missing, malformed or throwing `now` property/callback becomes `UNKNOWN` event-time evidence rather than transaction authority failure.
 
-The top-level snapshot stabilizes caller references; it does not itself replace nested plan, confirmation, registry, bounds, coordinator or cancellation validators. Nested plan/confirmation references are subsequently captured through the bounded semantic-snapshot contract above. Valid oversized controls therefore retain the established `P14_INPUT_TOO_LARGE` path, and no recipe, target, authentication, compatibility or production-acceptance authority is added.
+The top-level snapshot stabilizes caller references; it does not itself replace nested plan, confirmation, registry, bounds, coordinator or cancellation validators. Nested plan/confirmation references are subsequently captured through the bounded semantic-snapshot contract above, while a supplied registry reference is subsequently captured through the dedicated bounded safe-recipe registry semantic-snapshot contract below before authorization consumes it. Valid oversized controls therefore retain the established `P14_INPUT_TOO_LARGE` path, and no recipe, target, authentication, compatibility or production-acceptance authority is added.
 
 ## Run-control runtime evidence
 
@@ -76,11 +76,11 @@ Resource-size authority remains separate from run-control type/shape authority. 
 
 The prior transaction engine is retained as the internal deterministic core; the original public module path is now the hardened caller-evidence boundary. This split adds no recipe, target, host-identity or production-acceptance authority.
 
-## Bounded safe-recipe registry evidence
+## Bounded safe-recipe registry evidence and semantic snapshot
 
 The safe-recipe registry is authorization evidence and is therefore treated as an untrusted runtime structure even though production currently registers no mutating recipes.
 
-`assessP14SafeRecipeRegistryBounds(...)` reuses the existing P14 safety limits before `validateP14SafeRecipeRegistry(...)` performs semantic validation. It does not define a parallel registry-specific limit system.
+`assessP14SafeRecipeRegistryBounds(...)` reuses the existing P14 safety limits as the first resource gate. It does not define a parallel registry-specific limit system.
 
 The bounds gate requires:
 
@@ -89,9 +89,17 @@ The bounds gate requires:
 - binding source-rule identity, recipe ID, validation-profile ID, order class and nested rule/dependency/conflict identities to remain within the existing P14 identity limit;
 - oversized proxy-backed arrays to fail from `.length` without property/item traversal.
 
-The bounds assessment runs inside `validateP14SafeRecipeRegistry(...)`, so handoff resolution and execution authorization inherit the same resource guard. Bounded-but-malformed registries still use the established semantic validation failures. Oversized registry evidence also stays on the existing execution authorization outcome: `BLOCKED` + `P14_RECIPE_UNAUTHORIZED`, before confirmation, source coordination or adapter access. No new transaction status/error authority is created by this resource gate.
+A successful first bounds pass is only a time-local resource proof. A readable caller-owned registry proxy/getter could otherwise return one bounded contract during that pass and different readable bindings or nested recipe evidence during later semantic validation or authorization.
 
-The production safe-recipe registry remains intentionally empty. Registry bounding does not register a recipe, prove a recipe safe, grant mutation authority or establish target compatibility/production acceptance.
+After the first registry bounds pass allows the evidence, `snapshotP14SafeRecipeRegistryEvidence(...)` captures only the known registry contract into plain values through guarded, bounded property/index reads: schema version, bindings, binding rule identity/version, and the known recipe identity/version/source-rule/min-confidence/prerequisite/mutation/profile/conflict/order fields. It does not enumerate arbitrary caller properties or perform a generic recursive deep clone. Collection traversal is constrained by the already-effective P14 registry limits; an array observed oversized during capture is represented by bounded sentinel size without traversing its items. Malformed object-valued scalar evidence is reduced to non-authoritative plain markers rather than delegating caller-owned objects into authorization semantics.
+
+`assessP14SafeRecipeRegistryEvidence(...)` then re-runs the existing registry bounds contract against that plain snapshot before semantic validation. Evidence that grows oversized between first resource preflight and semantic capture therefore remains invalid and cannot enter recipe authorization. If capture itself encounters unreadable evidence, the assessment fails closed with bounded diagnostics.
+
+`validateP14SafeRecipeRegistry(...)`, `resolveP14SafeRecipe(...)` and `authorizeP14PreparationPlan(...)` consume the stable plain registry evidence produced by this assessment for their own operation. Caller-owned `bindings` or nested recipe getters are therefore not re-entered after the registry evidence boundary and cannot change the recipe contract after validation.
+
+Bounded-but-malformed, unreadable or oversized registry evidence preserves the established transaction authority outcome: `BLOCKED` + `P14_RECIPE_UNAUTHORIZED`, before confirmation, source coordination or adapter access. No new transaction status/error authority is created by registry snapshotting.
+
+The production safe-recipe registry remains intentionally empty. Registry bounding/snapshotting does not register a recipe, prove a recipe safe, grant mutation authority or establish target compatibility/production acceptance.
 
 ## Plan integrity, execution authority and reviewed confirmation
 
@@ -369,6 +377,13 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 73. The existing bounds contract is re-run on the plain semantic snapshot; evidence that grows oversized between first preflight and capture preserves `P14_INPUT_TOO_LARGE` / `bounds` rather than entering semantic traversal.
 74. Unreadable semantic capture remains bounded `P14_INTERNAL_INVARIANT_FAILED` / `bounds-evidence`; the established #216 `UNKNOWN` / `p14-plan-invalid` fallback remains authoritative where correlation cannot be trusted.
 75. Nested semantic snapshotting adds no production recipe, real Figma mutation surface, target compatibility or production-acceptance authority.
+76. Safe-recipe registry resource bounds run before registry semantic capture; a first allowed pass does not by itself make caller-owned registry evidence authoritative.
+77. After an allowed first registry bounds pass, only the known safe-recipe registry contract is captured through bounded guarded reads into plain evidence.
+78. Registry semantic capture never enumerates arbitrary caller properties or performs an unbounded generic deep clone, and collection reads remain constrained by the existing P14 registry limits.
+79. The existing registry bounds contract is re-run on the plain registry snapshot; evidence that grows oversized between first preflight and capture remains invalid and cannot enter recipe authorization.
+80. Registry validation, exact recipe resolution and plan authorization consume stable plain evidence for their own operation and do not re-enter caller-owned registry getters after the evidence boundary.
+81. Unreadable registry semantic capture fails as invalid registry evidence before confirmation, coordination or adapter access; transaction execution preserves the existing `P14_RECIPE_UNAUTHORIZED` refusal path.
+82. Registry semantic snapshotting adds no production recipe, real Figma mutation surface, target compatibility or production-acceptance authority.
 
 ## Deliberately not wired yet
 
