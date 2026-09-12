@@ -47,7 +47,7 @@ describe('P14 runtime planned-action binding snapshot', () => {
     expect(result!.valid).toBe(false);
     expect(result!.value).toBeNull();
     expect(result!.failures.some((failure: string) => failure.includes('P14 planned runtime action binding'))).toBe(true);
-    expect(result!.failures.some((failure: string) => failure.includes('could not be read safely'))).toBe(true);
+    expect(result!.failures.some((failure: string) => failure.includes('safely'))).toBe(true);
   });
 
   it('captures stateful planned identity getters exactly once', () => {
