@@ -5,6 +5,7 @@ import {
   validateP14RetentionEvidence,
 } from './p14-adapter-evidence';
 import { validateP14RescoreEvidence } from './p14-rescore-evidence';
+import { validateP14ValidationEvidence } from './p14-validation-evidence';
 import {
   P14_UNKNOWN_SOURCE_FINGERPRINT,
   isP14ReceiptSourceFingerprintEvidence,
@@ -166,16 +167,15 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
   }
 
   if (value.validation !== undefined) {
-    if (!isRecord(value.validation)
-      || typeof value.validation.passed !== 'boolean'
-      || !Array.isArray(value.validation.profileIdsRun)
-      || !Array.isArray(value.validation.checks)) {
-      failures.push('validation is malformed.');
+    const validationEvidence = validateP14ValidationEvidence(value.validation);
+    if (!validationEvidence.valid || !validationEvidence.value) {
+      failures.push(...validationEvidence.failures);
     } else {
-      if (value.validation.profileIdsRun.length > DEFAULT_P14_INPUT_BOUNDS.maxActions) {
+      const boundedValidation = validationEvidence.value;
+      if (boundedValidation.profileIdsRun.length > DEFAULT_P14_INPUT_BOUNDS.maxActions) {
         failures.push('validation.profileIdsRun exceeds the bounded profile count.');
       } else {
-        const profileIds = value.validation.profileIdsRun as unknown[];
+        const profileIds = boundedValidation.profileIdsRun;
         if (profileIds.some((profileId) => !nonEmptyString(profileId)
           || String(profileId).length > DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength)) {
           failures.push('validation.profileIdsRun contains an invalid or oversized profile ID.');
@@ -184,17 +184,8 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
           failures.push('validation.profileIdsRun contains duplicate profile IDs.');
         }
       }
-      for (const [index, check] of value.validation.checks.entries()) {
-        if (!isRecord(check)
-          || !nonEmptyString(check.id)
-          || typeof check.passed !== 'boolean'
-          || typeof check.required !== 'boolean'
-          || (check.detail !== undefined && typeof check.detail !== 'string')) {
-          failures.push(`validation.checks[${index}] is malformed.`);
-        }
-      }
-      if (value.validation.passed) {
-        const failedRequired = value.validation.checks.some((check) => isRecord(check) && check.required === true && check.passed !== true);
+      if (boundedValidation.passed) {
+        const failedRequired = boundedValidation.checks.some((check) => check.required && !check.passed);
         if (failedRequired) failures.push('validation.passed contradicts a failed required check.');
       }
     }

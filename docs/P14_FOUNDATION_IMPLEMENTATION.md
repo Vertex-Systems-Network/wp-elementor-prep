@@ -1,7 +1,7 @@
 # P14 Retained-Duplicate Foundation
 
 Status: IMPLEMENTATION FOUNDATION ONLY — RUNTIME UNWIRED  
-Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188  
+Foundation issues: #163, #165, #169, #171, #173, #175, #177, #179, #181, #184, #186, #188, #190  
 Roadmap: #119  
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
@@ -9,7 +9,7 @@ Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 rele
 
 This foundation turns the frozen P14 specification into a target-neutral deterministic core without exposing a new Figma mutation command.
 
-It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup and source-scope transaction coordination.
+It includes explicit P13→P14 handoff, versioned safe-recipe authorization, bounded input preflight, deterministic dependency-topological planning, explicit reviewed-plan confirmation, plan/receipt integrity validation, retained-duplicate transaction semantics, candidate-only recipe callbacks, sequential runtime action-eligibility re-evaluation, bounded adapter-output evidence, active-recipe validation-profile coverage, bounded validation-check evidence, mandatory validation/re-score, bounded re-score evidence validation, bounded runtime source-fingerprint evidence, source-immutability proof, cooperative cancellation with bounded callback-failure handling, fail-closed cleanup and source-scope transaction coordination.
 
 ## Bounded input preflight
 
@@ -104,6 +104,23 @@ Adapter validation output is treated as untrusted runtime evidence even though t
 
 Validation-profile coverage and generic mandatory validation checks are independent gates. Both must pass before Build-Ready re-score can start. Profile coverage proves only that declared validator profiles were represented in execution evidence; it does not prove the validators are externally accepted, prove target compatibility or grant runtime/production acceptance.
 
+## Bounded validation-check evidence
+
+`validateP14ValidationEvidence(...)` treats the adapter-provided validation summary and its `checks` array as untrusted runtime evidence before policy evaluation or receipt attachment. Strong TypeScript return types are not runtime authority.
+
+The validator enforces resource and evidence bounds before the transaction can trust check data:
+
+- `checks` must be an explicit array and its count is bounded by the existing P14 action-count safety limit;
+- an oversized check array is rejected from `.length` before any item traversal;
+- every check ID must be a non-empty string within the existing P14 identity bound;
+- optional check detail must be a string within the existing P14 detail bound;
+- `passed` and `required` must be booleans;
+- only accepted bounded checks are normalized into transaction evidence.
+
+Malformed or oversized validation-check evidence follows `P14_VALIDATION_FAILED`, discards the candidate and stops before re-score or retention. Raw hostile oversized check detail is not copied into the receipt. Receipt integrity reuses the same bounded check validator, so copied/forged receipts cannot bypass the runtime resource contract.
+
+This shape/resource gate remains separate from validation-profile coverage and from the generic mandatory-check policy. It does not decide whether a required check should exist, does not authorize a validator, and does not create target-readiness or production-acceptance evidence.
+
 ## Candidate re-score evidence hardening
 
 `rescoreCandidate(...)` output is also treated as untrusted runtime evidence before any field dereference.
@@ -171,7 +188,7 @@ Lease acquisition occurs only after integrity, recipe authorization and exact co
 
 Every P14 receipt explicitly carries `acceptanceAuthority: false` and `targetCompatibilityClaim: false`.
 
-Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation, re-score and recipe-execution evidence. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; prepared outcomes require non-empty profile execution evidence. Runtime/receipt re-score evidence uses the same accepted scored-P13 validator. Source fingerprint evidence is bounded and may use the explicit `UNKNOWN` sentinel only as receipt evidence for unavailable proof. Candidate identities, recipe execution results and retention identities are bounded through the same adapter-evidence contracts used at runtime. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
+Receipt validation rejects contradictory/malformed status, candidate, retention, source-fingerprint, error, event, validation, re-score and recipe-execution evidence. Validation profile evidence must be present, bounded and duplicate-free where validation evidence is carried; validation-check count, IDs, boolean fields and optional detail are bounded through the same shared validator used at runtime; prepared outcomes require non-empty profile execution evidence. Runtime/receipt re-score evidence uses the same accepted scored-P13 validator. Source fingerprint evidence is bounded and may use the explicit `UNKNOWN` sentinel only as receipt evidence for unavailable proof. Candidate identities, recipe execution results and retention identities are bounded through the same adapter-evidence contracts used at runtime. Its supported error-code allowlist includes current authorization, confirmation, coordination and bounded-input outcomes emitted by the transaction core. A valid receipt remains evidence only; it is never an Elementor, Gutenberg, framework, publish or production-acceptance claim.
 
 ## Safety invariants
 
@@ -208,6 +225,8 @@ Receipt validation rejects contradictory/malformed status, candidate, retention,
 31. P14 receipts have no acceptance/target-compatibility authority.
 32. One executable READY transaction may own a source scope at a time.
 33. Acquired transaction leases are released in a bounded `finally` path, including cancellation-check failure paths.
+34. Validation-check arrays are count-bounded before traversal, and check IDs/details are bounded before policy evaluation or receipt attachment.
+35. Validation-check shape/resource validation remains separate from profile coverage and required-check policy; bounded evidence alone never proves target readiness.
 
 ## Deliberately not wired yet
 
