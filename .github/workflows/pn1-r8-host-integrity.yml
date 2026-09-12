@@ -71,9 +71,9 @@ jobs:
             TMP=$(mktemp -d)
             unzip -qq "$ZIP" -d "$TMP"
             echo "FIGMA_TEMP_URLS=$(grep -Rho 'figma.com/api/mcp/asset' "$TMP" 2>/dev/null | wc -l || true)"
-            echo "INTERNAL_PN_KEYS=$(grep -Rho '"'_pn_' "$TMP" 2>/dev/null | wc -l || true)"
-            echo "CUSTOM_CSS_KEYS=$(grep -Rho '"'custom_css'"' "$TMP" 2>/dev/null | wc -l || true)"
-            echo "CUSTOM_JS_KEYS=$(grep -Rho '"'custom_js'"' "$TMP" 2>/dev/null | wc -l || true)"
+            echo "INTERNAL_PN_KEYS=$(grep -Rho '_pn_' "$TMP" 2>/dev/null | wc -l || true)"
+            echo "CUSTOM_CSS_KEYS=$(grep -Rho 'custom_css' "$TMP" 2>/dev/null | wc -l || true)"
+            echo "CUSTOM_JS_KEYS=$(grep -Rho 'custom_js' "$TMP" 2>/dev/null | wc -l || true)"
             echo
             if [ "$(sha256sum "$ZIP" | awk '{print $1}')" = "$EXPECTED_SHA" ]; then
               echo 'CANONICAL_BYTE_MATCH=PASS'
