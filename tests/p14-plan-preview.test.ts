@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { buildBuildReadyReport } from '../src/core/build-ready';
 import type { AuditNode } from '../src/core/types';
-import { buildP14PlanPreview } from '../src/plugin/p14-plan-preview';
+import {
+  buildP14PlanPreview,
+  serializeP14PlanPreviewJson,
+} from '../src/plugin/p14-plan-preview';
 
 function node(overrides: Partial<AuditNode> = {}): AuditNode {
   const children = overrides.children ?? [];
@@ -98,6 +101,16 @@ describe('P14 Guided Prepare plan preview', () => {
     });
     expect(preview.reviewManifest?.actions).toEqual([]);
     expect(preview.confirmationEnabled).toBe(false);
+  });
+
+  it('serializes the concise review manifest before the full plan evidence', () => {
+    const preview = buildP14PlanPreview(buildReportWithSafeCandidate());
+    const json = serializeP14PlanPreviewJson(preview);
+
+    expect(json).toContain('"reviewManifest"');
+    expect(json).toContain('"eligibleActionIds"');
+    expect(json).toContain('"confirmationEnabled": false');
+    expect(json.indexOf('"reviewManifest"')).toBeLessThan(json.indexOf('"plan"'));
   });
 
   it('keeps an unregistered safe candidate review-only under the empty production registry', () => {
