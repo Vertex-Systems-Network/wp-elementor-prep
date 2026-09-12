@@ -76,6 +76,28 @@ describe('P14 Guided Prepare plan preview', () => {
     expect(preview.confirmationEnabled).toBe(false);
     expect(preview.handoff.valid).toBe(true);
     expect(preview.plan).not.toBeNull();
+    expect(preview.reviewManifest).not.toBeNull();
+    expect(preview.reviewManifest).toMatchObject({
+      acceptanceAuthority: false,
+      targetCompatibilityClaim: false,
+      mutationEnabled: false,
+      confirmationEnabled: false,
+    });
+  });
+
+  it('binds the review manifest to the exact preview plan without creating confirmation authority', () => {
+    const preview = buildP14PlanPreview(buildReportWithSafeCandidate());
+    expect(preview.plan).not.toBeNull();
+    expect(preview.reviewManifest).not.toBeNull();
+
+    expect(preview.reviewManifest?.binding).toEqual({
+      p13RunId: preview.plan?.p13RunId,
+      source: preview.plan?.source,
+      planDigest: preview.plan?.planDigest,
+      eligibleActionIds: preview.plan?.eligibleActionIds,
+    });
+    expect(preview.reviewManifest?.actions).toEqual([]);
+    expect(preview.confirmationEnabled).toBe(false);
   });
 
   it('keeps an unregistered safe candidate review-only under the empty production registry', () => {
@@ -95,12 +117,13 @@ describe('P14 Guided Prepare plan preview', () => {
 
     expect(preview.handoff.valid).toBe(false);
     expect(preview.plan).toBeNull();
+    expect(preview.reviewManifest).toBeNull();
     expect(preview.summary.status).toBe('INVALID_HANDOFF');
     expect(preview.mutationEnabled).toBe(false);
     expect(preview.confirmationEnabled).toBe(false);
   });
 
-  it('produces deterministic plan identity for the same current Build-Ready evidence', () => {
+  it('produces deterministic plan and review identity for the same current Build-Ready evidence', () => {
     const report = buildReportWithSafeCandidate();
     const first = buildP14PlanPreview(report);
     const second = buildP14PlanPreview(report);
@@ -108,5 +131,6 @@ describe('P14 Guided Prepare plan preview', () => {
     expect(first.summary).toEqual(second.summary);
     expect(first.plan?.planDigest).toBe(second.plan?.planDigest);
     expect(first.plan?.actions).toEqual(second.plan?.actions);
+    expect(first.reviewManifest).toEqual(second.reviewManifest);
   });
 });
