@@ -20,6 +20,14 @@ function classify(value: unknown, path: string, failures: string[]): SnapshotKin
   return typeof value === 'object' && value !== null ? 'record' : 'other';
 }
 
+function snapshotLeaf(value: unknown, path: string, failures: string[]): unknown {
+  const kind = classify(value, path, failures);
+  if (kind === 'unreadable') return undefined;
+  if (kind === 'array') return [];
+  if (kind === 'record') return {};
+  return value;
+}
+
 function readProperty(
   record: Record<string, unknown>,
   key: string,
@@ -75,10 +83,12 @@ function snapshotArray(
   limit: number,
   path: string,
   failures: string[],
-  snapshotItem: (item: unknown, index: number) => unknown = (item) => item,
+  snapshotItem: (item: unknown, index: number) => unknown = (item, index) =>
+    snapshotLeaf(item, `${path}[${index}]`, failures),
 ): unknown {
   const kind = classify(value, path, failures);
   if (kind === 'unreadable') return undefined;
+  if (kind === 'record') return {};
   if (kind !== 'array') return value;
 
   const values = value as unknown[];
@@ -101,8 +111,12 @@ function snapshotSource(value: unknown, path: string, failures: string[]): unkno
 
   const record = value as Record<string, unknown>;
   return {
-    nodeId: readProperty(record, 'nodeId', `${path}.nodeId`, failures),
-    fingerprint: readProperty(record, 'fingerprint', `${path}.fingerprint`, failures),
+    nodeId: snapshotLeaf(readProperty(record, 'nodeId', `${path}.nodeId`, failures), `${path}.nodeId`, failures),
+    fingerprint: snapshotLeaf(
+      readProperty(record, 'fingerprint', `${path}.fingerprint`, failures),
+      `${path}.fingerprint`,
+      failures,
+    ),
   };
 }
 
@@ -120,45 +134,56 @@ function snapshotAction(
   if (kind !== 'record') return value;
 
   const record = value as Record<string, unknown>;
-  const targetNodeIds = readProperty(record, 'targetNodeIds', `${path}.targetNodeIds`, failures);
+  const targetPath = `${path}.targetNodeIds`;
+  const targetNodeIds = readProperty(record, 'targetNodeIds', targetPath, failures);
   let targetSnapshot: unknown;
-  const targetKind = classify(targetNodeIds, `${path}.targetNodeIds`, failures);
+  const targetKind = classify(targetNodeIds, targetPath, failures);
   if (targetKind === 'array') {
     const targets = targetNodeIds as unknown[];
-    const length = readArrayLength(targets, `${path}.targetNodeIds`, failures);
+    const length = readArrayLength(targets, targetPath, failures);
     if (length === null) {
       targetSnapshot = [];
     } else if (length > limits.maxTargetsPerAction) {
       targetSnapshot = oversizedArray(limits.maxTargetsPerAction);
-    } else if (targetBudget.total > limits.maxTotalTargetReferences) {
-      targetSnapshot = [];
     } else {
-      const remaining = limits.maxTotalTargetReferences - targetBudget.total;
+      const remaining = Math.max(0, limits.maxTotalTargetReferences - targetBudget.total);
       const copyLength = length > remaining ? Math.min(length, remaining + 1) : length;
       const copied: unknown[] = [];
       for (let targetIndex = 0; targetIndex < copyLength; targetIndex += 1) {
-        copied.push(readArrayItem(targets, targetIndex, `${path}.targetNodeIds`, failures));
+        copied.push(snapshotLeaf(
+          readArrayItem(targets, targetIndex, targetPath, failures),
+          `${targetPath}[${targetIndex}]`,
+          failures,
+        ));
       }
       targetBudget.total += copyLength;
       targetSnapshot = copied;
     }
+  } else if (targetKind === 'record') {
+    targetSnapshot = {};
   } else if (targetKind === 'unreadable') {
     targetSnapshot = undefined;
   } else {
     targetSnapshot = targetNodeIds;
   }
 
+  const leaf = (key: string): unknown => snapshotLeaf(
+    readProperty(record, key, `${path}.${key}`, failures),
+    `${path}.${key}`,
+    failures,
+  );
+
   return {
-    actionId: readProperty(record, 'actionId', `${path}.actionId`, failures),
-    findingId: readProperty(record, 'findingId', `${path}.findingId`, failures),
-    decision: readProperty(record, 'decision', `${path}.decision`, failures),
-    sourceRuleId: readProperty(record, 'sourceRuleId', `${path}.sourceRuleId`, failures),
-    sourceRuleVersion: readProperty(record, 'sourceRuleVersion', `${path}.sourceRuleVersion`, failures),
+    actionId: leaf('actionId'),
+    findingId: leaf('findingId'),
+    decision: leaf('decision'),
+    sourceRuleId: leaf('sourceRuleId'),
+    sourceRuleVersion: leaf('sourceRuleVersion'),
     targetNodeIds: targetSnapshot,
-    confidence: readProperty(record, 'confidence', `${path}.confidence`, failures),
-    recipeId: readProperty(record, 'recipeId', `${path}.recipeId`, failures),
-    recipeVersion: readProperty(record, 'recipeVersion', `${path}.recipeVersion`, failures),
-    orderClass: readProperty(record, 'orderClass', `${path}.orderClass`, failures),
+    confidence: leaf('confidence'),
+    recipeId: leaf('recipeId'),
+    recipeVersion: leaf('recipeVersion'),
+    orderClass: leaf('orderClass'),
     prerequisiteRecipeIds: snapshotArray(
       readProperty(record, 'prerequisiteRecipeIds', `${path}.prerequisiteRecipeIds`, failures),
       limits.maxPrerequisitesPerAction,
@@ -177,8 +202,8 @@ function snapshotAction(
       `${path}.mutationAllowlist`,
       failures,
     ),
-    validationProfileId: readProperty(record, 'validationProfileId', `${path}.validationProfileId`, failures),
-    refusalCode: readProperty(record, 'refusalCode', `${path}.refusalCode`, failures),
+    validationProfileId: leaf('validationProfileId'),
+    refusalCode: leaf('refusalCode'),
   };
 }
 
@@ -196,8 +221,8 @@ function snapshotBlocker(
 
   const record = value as Record<string, unknown>;
   return {
-    code: readProperty(record, 'code', `${path}.code`, failures),
-    detail: readProperty(record, 'detail', `${path}.detail`, failures),
+    code: snapshotLeaf(readProperty(record, 'code', `${path}.code`, failures), `${path}.code`, failures),
+    detail: snapshotLeaf(readProperty(record, 'detail', `${path}.detail`, failures), `${path}.detail`, failures),
     actionIds: snapshotArray(
       readProperty(record, 'actionIds', `${path}.actionIds`, failures),
       limits.maxBlockerActionIds,
@@ -219,12 +244,18 @@ function snapshotPlan(
 
   const record = value as Record<string, unknown>;
   const targetBudget = { total: 0 };
+  const leaf = (key: string): unknown => snapshotLeaf(
+    readProperty(record, key, `plan.${key}`, failures),
+    `plan.${key}`,
+    failures,
+  );
+
   return {
-    schemaVersion: readProperty(record, 'schemaVersion', 'plan.schemaVersion', failures),
-    engineVersion: readProperty(record, 'engineVersion', 'plan.engineVersion', failures),
-    p13RunId: readProperty(record, 'p13RunId', 'plan.p13RunId', failures),
+    schemaVersion: leaf('schemaVersion'),
+    engineVersion: leaf('engineVersion'),
+    p13RunId: leaf('p13RunId'),
     source: snapshotSource(readProperty(record, 'source', 'plan.source', failures), 'plan.source', failures),
-    status: readProperty(record, 'status', 'plan.status', failures),
+    status: leaf('status'),
     actions: snapshotArray(
       readProperty(record, 'actions', 'plan.actions', failures),
       limits.maxActions,
@@ -263,7 +294,7 @@ function snapshotPlan(
       'plan.refusedActionIds',
       failures,
     ),
-    planDigest: readProperty(record, 'planDigest', 'plan.planDigest', failures),
+    planDigest: leaf('planDigest'),
   };
 }
 
@@ -279,13 +310,19 @@ function snapshotConfirmation(
   if (kind !== 'record') return value;
 
   const record = value as Record<string, unknown>;
+  const leaf = (key: string): unknown => snapshotLeaf(
+    readProperty(record, key, `confirmation.${key}`, failures),
+    `confirmation.${key}`,
+    failures,
+  );
+
   return {
-    schemaVersion: readProperty(record, 'schemaVersion', 'confirmation.schemaVersion', failures),
-    acceptanceAuthority: readProperty(record, 'acceptanceAuthority', 'confirmation.acceptanceAuthority', failures),
-    targetCompatibilityClaim: readProperty(record, 'targetCompatibilityClaim', 'confirmation.targetCompatibilityClaim', failures),
-    confirmedAt: readProperty(record, 'confirmedAt', 'confirmation.confirmedAt', failures),
-    planDigest: readProperty(record, 'planDigest', 'confirmation.planDigest', failures),
-    p13RunId: readProperty(record, 'p13RunId', 'confirmation.p13RunId', failures),
+    schemaVersion: leaf('schemaVersion'),
+    acceptanceAuthority: leaf('acceptanceAuthority'),
+    targetCompatibilityClaim: leaf('targetCompatibilityClaim'),
+    confirmedAt: leaf('confirmedAt'),
+    planDigest: leaf('planDigest'),
+    p13RunId: leaf('p13RunId'),
     source: snapshotSource(
       readProperty(record, 'source', 'confirmation.source', failures),
       'confirmation.source',
