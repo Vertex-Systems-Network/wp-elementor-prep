@@ -56,6 +56,8 @@ function boundedIdentity(value: unknown): string | null {
 /**
  * Treat an injected coordinator result as runtime evidence, not authority granted by its TypeScript type.
  * The returned value is normalized/bounded before transaction code may branch on it or copy owner identity.
+ * Known semantic properties are captured once so readable stateful getters cannot change meaning between
+ * shape validation, exact lease binding and accepted-value construction.
  */
 export function assessP14TransactionLeaseResultEvidence(
   value: unknown,
@@ -84,11 +86,14 @@ export function assessP14TransactionLeaseResultEvidence(
     }
 
     if (acquired) {
-      if (!isRecord(value.lease)) {
+      const leaseEvidence = value.lease;
+      if (!isRecord(leaseEvidence)) {
         failures.push('Acquired coordinator result must include a lease object.');
       } else {
-        const sourceScope = boundedIdentity(value.lease.sourceScope);
-        const transactionId = boundedIdentity(value.lease.transactionId);
+        const sourceScopeEvidence = leaseEvidence.sourceScope;
+        const transactionIdEvidence = leaseEvidence.transactionId;
+        const sourceScope = boundedIdentity(sourceScopeEvidence);
+        const transactionId = boundedIdentity(transactionIdEvidence);
         if (!sourceScope || sourceScope !== expectedLease.sourceScope) {
           failures.push('Coordinator lease sourceScope is missing, oversized or does not match the requested source scope.');
         }
@@ -101,19 +106,22 @@ export function assessP14TransactionLeaseResultEvidence(
       }
     } else {
       const reason = value.reason;
+      const ownerTransactionIdEvidence = value.ownerTransactionId;
+      const ownerSourceScopeEvidence = value.ownerSourceScope;
+
       if (typeof reason !== 'string' || !LEASE_FAILURE_REASONS.has(reason as P14TransactionLeaseFailureReason)) {
         failures.push('Coordinator lease refusal reason is unsupported.');
       }
 
       let ownerTransactionId: string | undefined;
-      if (value.ownerTransactionId !== undefined) {
-        ownerTransactionId = boundedIdentity(value.ownerTransactionId) ?? undefined;
+      if (ownerTransactionIdEvidence !== undefined) {
+        ownerTransactionId = boundedIdentity(ownerTransactionIdEvidence) ?? undefined;
         if (!ownerTransactionId) failures.push('Coordinator ownerTransactionId is malformed or oversized.');
       }
 
       let ownerSourceScope: string | undefined;
-      if (value.ownerSourceScope !== undefined) {
-        ownerSourceScope = boundedIdentity(value.ownerSourceScope) ?? undefined;
+      if (ownerSourceScopeEvidence !== undefined) {
+        ownerSourceScope = boundedIdentity(ownerSourceScopeEvidence) ?? undefined;
         if (!ownerSourceScope) failures.push('Coordinator ownerSourceScope is malformed or oversized.');
       }
 
