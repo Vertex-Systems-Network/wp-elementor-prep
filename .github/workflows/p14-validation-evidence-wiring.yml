@@ -1,0 +1,47 @@
+name: P14 Validation Evidence Wiring
+
+on:
+  push:
+    branches:
+      - p14/validation-check-evidence
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: p14/validation-check-evidence
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+      - name: Verify exact branch scope
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "p14/validation-check-evidence"
+          test -f scripts/p14-validation-evidence-wiring.py
+          test -f .github/workflows/p14-validation-evidence-wiring.yml
+      - name: Apply exact validation evidence wiring
+        run: python scripts/p14-validation-evidence-wiring.py
+      - name: Install dependencies
+        run: npm install
+      - name: Verify P14 validation evidence contracts
+        run: |
+          set -euo pipefail
+          npm run typecheck
+          npx vitest run tests/p14-*.test.ts
+      - name: Commit verified product wiring
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/core/p14-retained-duplicate-transaction.ts \
+            src/core/p14-preparation-receipt.ts
+          git diff --cached --quiet && { echo "No product wiring changes staged"; exit 1; }
+          git commit -m "feat: bound P14 validation check evidence"
+          git push origin HEAD:p14/validation-check-evidence
