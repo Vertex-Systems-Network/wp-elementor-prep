@@ -81,9 +81,9 @@ Canonical future order:
 
 ### #216 — P14 unreadable nested bounded-input evidence
 
-Classification: **ACTIVE / PR #221 under same-cycle documentation and final exact-head verification**.
+Classification: **COMPLETED / merged through PR #221**.
 
-PR #221 (`fix/p14-bounds-evidence-216`) closes the narrow unreadable nested bounds-traversal gap without changing mutation or target authority:
+PR #221 (`fix/p14-bounds-evidence-216`) closed the narrow unreadable nested bounds-traversal gap without changing mutation or target authority:
 
 1. the public bounded-input preflight catches throwing nested plan/confirmation getters and returns bounded `BLOCKED` + `P14_INTERNAL_INVARIANT_FAILED` at stage `bounds-evidence`;
 2. the internal retained-duplicate core guards its second bounded-input traversal too, so evidence that becomes unreadable only on the second pass cannot escape;
@@ -93,9 +93,9 @@ PR #221 (`fix/p14-bounds-evidence-216`) closes the narrow unreadable nested boun
 6. readable normal preparation remains unchanged;
 7. no deep canonical snapshot of readable nested semantics, new status/error code, production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
 
-Initial code/test head `7ef0a2b43262024ee1f1df59e658143e4dac2681` passed CI #913, P12 Final Release Artifact #224 and P12 Offline Acceptance #268 on Ubuntu/macOS/Windows. Same-cycle documentation synchronization follows on the same branch; fresh CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review evidence are required on the final synchronized head.
+Initial code/test head `7ef0a2b43262024ee1f1df59e658143e4dac2681` passed CI #913, P12 Final Release Artifact #224 and P12 Offline Acceptance #268 on Ubuntu/macOS/Windows. Exact synchronized head `33e9a956b1c63aec9623e9c3187449a8569f6236` then passed CI #921, Integration Readiness #280, P12 Final Release Artifact #232 and P12 Offline Acceptance #276 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `e028c76d520564fde6177269e75c6efa423b0a5b`. Issue #216 closed completed.
 
-Accidental duplicate/placeholder issues #217, #218, #219 and #220 were created during the #216 tool-routing cycle, immediately marked **CLOSED / NOT PLANNED**, and carry no implementation scope. #216 is authoritative.
+Accidental duplicate/placeholder issues #217, #218, #219 and #220 were created during the #216 tool-routing cycle, immediately marked **CLOSED / NOT PLANNED**, and carry no implementation scope. #216 was authoritative.
 
 ### #213 — P14 top-level run-input runtime evidence snapshot
 
@@ -263,7 +263,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #216 / PR #221 on its final synchronized head, then begin the next focused safety-gap audit from the resulting main;
+1. start the next focused safety-gap audit from core main `e028c76d...` now that #216 / PR #221 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
