@@ -1,5 +1,9 @@
 import { buildP14PreparationPlanFromBuildReady } from '../core/p13-p14-handoff';
 import type { P14PlanDecision, P14PreparationPlanV1 } from '../core/p14-preparation-types';
+import {
+  buildP14ProposedChangeReviewManifest,
+  type P14ProposedChangeReviewManifestV1,
+} from './p14-proposed-change-review';
 
 export const P14_PLAN_PREVIEW_SCHEMA_VERSION = 1 as const;
 export const P14_PLAN_PREVIEW_VERSION = 1 as const;
@@ -31,6 +35,7 @@ export interface P14PlanPreviewV1 {
     registryValid: boolean;
   };
   summary: P14PlanPreviewSummaryV1;
+  reviewManifest: P14ProposedChangeReviewManifestV1 | null;
   plan: P14PreparationPlanV1 | null;
 }
 
@@ -82,6 +87,7 @@ export function buildP14PlanPreview(reportValue: unknown): P14PlanPreviewV1 {
       registryValid: result.handoff.registryValid,
     },
     summary,
+    reviewManifest: buildP14ProposedChangeReviewManifest(plan),
     plan,
   };
 }
