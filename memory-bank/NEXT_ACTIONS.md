@@ -79,13 +79,45 @@ Canonical future order:
 - P26 — optional AI assistance;
 - P27 — final production release + retained live runtime/publisher/2FA evidence and #84 release-exit decision.
 
+### #233 — post-#232 P14 repository status synchronization
+
+Classification: **ACTIVE / draft PR #234**.
+
+PR #234 (`docs/p14-post-232-status-233`) synchronizes canonical repository truth after the guarded #230 and #232 merges without expanding runtime scope:
+
+1. README records #229 / PR #230 as completed at merge `bad83a48ab58dfa8b956e7b6bf02c74a079a4665` with exact synchronized-head CI #958, Integration Readiness #310, P12 Final Release Artifact #269 and P12 Offline Acceptance #313;
+2. README records #231 / PR #232 as completed at merge `2bbc24fb8afa3ccb9cc202fd816dfc8d69888941` with exact head `b06240a02cc8fc14c0c94e23ba9e554a62eae319`, CI #965, P12 Final Release Artifact #276 and P12 Offline Acceptance #320;
+3. the status truth explicitly records that Integration Readiness did not run on code-only PR #232 because its pull-request trigger is path-filtered;
+4. `docs/P14_FOUNDATION_IMPLEMENTATION.md` now records the #231 one-shot adapter-output semantic snapshot boundary and invariants while preserving production recipe authority as empty and real Figma mutation as unwired;
+5. `memory-bank/PROJECT_STATE.md` and this queue are synchronized to the actual merges and current draft PR;
+6. the first README synchronization head `4711425b2e5e2e510745ffd1fe196a9bc18dfe35` triggered Integration Readiness #313, which passed; the final exact head still requires the complete CI/Integration/Final Release/Offline gate set before merge;
+7. after this sync closes, the next action is a fresh focused P14 pure-core safety-gap audit rather than real Figma mutation exposure.
+
+PR #234 remains draft until the final exact head is gate-clean, current with main, mergeable and review-clean.
+
+### #231 — P14 adapter-output semantic snapshot
+
+Classification: **COMPLETED / merged through PR #232**.
+
+PR #232 (`fix/p14-adapter-output-snapshot-231`) closed the readable-but-stateful adapter-output boundary without changing recipe or target authority:
+
+1. known candidate-handle, recipe-execution, runtime-eligibility, validation, re-score and retention output fields are captured through guarded one-shot reads before semantic validation or accepted-copy construction;
+2. prerequisite/profile/check arrays are copied through bounded guarded length/index reads into plain arrays before later coverage/policy/receipt semantics;
+3. nested validation checks are captured into plain known-schema values so accepted evidence retains no adapter-owned check object references;
+4. readable stateful getters/proxies cannot present one value during validation and another during exact binding or final accepted-copy construction;
+5. throwing property/length/index access and revoked proxies fail closed as invalid evidence rather than escaping the transaction;
+6. existing failure stages/error codes and bounded count diagnostics remain authoritative;
+7. the boundary is shallow/schema-driven, not a generic recursive deep clone, and adds no production recipe, real Figma mutation surface, target compatibility or production acceptance authority.
+
+An early implementation head exposed only a test-fixture TypeScript literal-narrowing error in CI #960 / Final Release #271; Offline Acceptance #315 had already passed. The test fixture was widened without runtime-scope expansion and the proxy helper was made explicitly type-safe. Exact final head `b06240a02cc8fc14c0c94e23ba9e554a62eae319` then passed CI #965, P12 Final Release Artifact #276 and P12 Offline Acceptance #320 on Ubuntu/macOS/Windows. The PR had zero review threads/reviews/comments, was current with main (`behind_by=0`) and mergeable, then guarded squash-merged as `2bbc24fb8afa3ccb9cc202fd816dfc8d69888941`. Integration Readiness was correctly absent from the code-only PR because its PR trigger is path-filtered. Issue #231 closed completed.
+
 ### #229 — P14 adapter callback input isolation
 
-Classification: **ACTIVE / PR #230**.
+Classification: **COMPLETED / merged through PR #230**.
 
-The fresh post-#226 audit confirmed a distinct adapter-input mutation boundary: caller-owned plan/confirmation/registry evidence is already snapshotted, but the accepted mutable candidate/action/plan objects were then passed by reference into runtime adapter callbacks and reused by later core semantics.
+The post-#226 audit confirmed a distinct adapter-input mutation boundary: caller-owned plan/confirmation/registry evidence was already snapshotted, but the accepted mutable candidate/action/plan objects were then passed by reference into runtime adapter callbacks and reused by later core semantics.
 
-PR #230 (`fix/p14-adapter-input-isolation-229`) narrows that boundary without changing recipe or target authority:
+PR #230 (`fix/p14-adapter-input-isolation-229`) narrowed that boundary without changing recipe or target authority:
 
 1. known P14 candidate/action/plan values are copied into fresh plain adapter-facing objects;
 2. action and plan collections are copied only from the already-accepted bounded P14 contract — this is not an arbitrary recursive deep clone;
@@ -95,7 +127,7 @@ PR #230 (`fix/p14-adapter-input-isolation-229`) narrows that boundary without ch
 6. the boundary does not sandbox or validate an adapter's actual candidate-side mutation behavior;
 7. the production safe-recipe registry remains empty and no real Figma adapter/UI/mutation command, target compatibility or production acceptance is introduced.
 
-Initial implementation/test head `651d4c5f9d8d3e7776eb23b9eafeecb1727498d0` passed CI #952, P12 Final Release Artifact #263 and P12 Offline Acceptance #307 on Ubuntu/macOS/Windows. Same-cycle docs synchronization is in progress; fresh exact-head CI, Integration Readiness, Final Release Artifact, Offline Acceptance and final review/current-main/mergeable gates remain required before merge.
+Initial implementation/test head `651d4c5f9d8d3e7776eb23b9eafeecb1727498d0` passed CI #952, P12 Final Release Artifact #263 and P12 Offline Acceptance #307 on Ubuntu/macOS/Windows. Exact synchronized head `7466a230344c8a85a10c4a68fb05216ac7d5d4cf` then passed CI #958, Integration Readiness #310, P12 Final Release Artifact #269 and P12 Offline Acceptance #313 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `bad83a48ab58dfa8b956e7b6bf02c74a079a4665`. Issue #229 closed completed.
 
 ### #226 — P14 safe-recipe registry semantic snapshot
 
@@ -313,14 +345,15 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #229 / PR #230 adapter callback input-isolation hardening on the final synchronized head;
-2. keep the approved source immutable and mutate only retained candidates;
-3. keep production safe-recipe authority empty until explicit acceptance;
-4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
-5. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
-6. continue focused safety-gap audits until core implementation is internally ready;
-7. require #159 before real Figma mutation exposure;
-8. require genuine real-Figma acceptance before any production mutation/readiness claim.
+1. complete #233 / draft PR #234 canonical post-#232 status synchronization on a fully verified exact head;
+2. after #233 closes, run the next focused P14 pure-core safety-gap audit rather than exposing real mutation;
+3. keep the approved source immutable and mutate only retained candidates;
+4. keep production safe-recipe authority empty until explicit acceptance;
+5. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
+6. validate/re-score before retention and reject newly introduced HIGH/BLOCKER findings;
+7. continue focused safety-gap audits until core implementation is internally ready;
+8. require #159 before real Figma mutation exposure;
+9. require genuine real-Figma acceptance before any production mutation/readiness claim.
 
 ### P15 Elementor
 
