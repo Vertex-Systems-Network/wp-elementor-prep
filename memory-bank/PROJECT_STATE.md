@@ -222,6 +222,10 @@ It owns:
 - exact-current release artifact/provenance checks;
 - clear separation of internal production acceptance from external marketplace review/approval.
 
+## Runtime artifact registry
+
+`config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable operational artifact registry.
+
 ## Immediate project action
 
 Complete #264 docs-only synchronization and its exact-head gates. After it merges, continue the next focused P14 implementation/safety slice without interpreting the read-only preview as confirmation or mutation authority.
