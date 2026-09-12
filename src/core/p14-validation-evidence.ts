@@ -41,41 +41,42 @@ function boundedDetail(value: unknown): value is string {
 export function validateP14ValidationEvidence(value: unknown): P14ValidationEvidenceResult {
   const failures: string[] = [];
   if (!isRecord(value)) {
-    return { valid: false, failures: ['Validation evidence must be an object.'], value: null };
+    return { valid: false, failures: ['validation must be an object.'], value: null };
   }
 
-  if (typeof value.passed !== 'boolean') failures.push('Validation evidence passed must be boolean.');
+  if (typeof value.passed !== 'boolean') failures.push('validation.passed must be boolean.');
   if (!Array.isArray(value.profileIdsRun)) {
-    failures.push('Validation evidence profileIdsRun must be an array.');
+    failures.push('validation.profileIdsRun must be an array.');
   } else if (value.profileIdsRun.length > DEFAULT_P14_INPUT_BOUNDS.maxActions) {
-    failures.push(`Validation profile evidence exceeds bounded profile count ${DEFAULT_P14_INPUT_BOUNDS.maxActions}.`);
+    failures.push(`validation.profileIdsRun exceeds bounded profile count ${DEFAULT_P14_INPUT_BOUNDS.maxActions}.`);
   }
 
   if (!Array.isArray(value.checks)) {
-    failures.push('Validation evidence checks must be an array.');
+    failures.push('validation.checks must be an array.');
     return { valid: false, failures, value: null };
   }
   if (value.checks.length > DEFAULT_P14_INPUT_BOUNDS.maxActions) {
-    failures.push(`Validation check evidence exceeds bounded check count ${DEFAULT_P14_INPUT_BOUNDS.maxActions}.`);
+    failures.push(`validation.checks exceeds bounded check count ${DEFAULT_P14_INPUT_BOUNDS.maxActions}.`);
     return { valid: false, failures, value: null };
   }
 
   const checks: P14ValidationCheck[] = [];
   for (const [index, check] of value.checks.entries()) {
+    const path = `validation.checks[${index}]`;
     if (!isRecord(check)) {
-      failures.push(`Validation check ${index} must be an object.`);
+      failures.push(`${path} must be an object.`);
       continue;
     }
     if (!boundedIdentity(check.id)) {
-      failures.push(`Validation check ${index} has an empty, non-string or oversized id.`);
+      failures.push(`${path}.id is empty, non-string or oversized.`);
       continue;
     }
     if (typeof check.passed !== 'boolean' || typeof check.required !== 'boolean') {
-      failures.push(`Validation check ${index} must include boolean passed and required fields.`);
+      failures.push(`${path} must include boolean passed and required fields.`);
       continue;
     }
     if (check.detail !== undefined && !boundedDetail(check.detail)) {
-      failures.push(`Validation check ${index} has a non-string or oversized detail.`);
+      failures.push(`${path}.detail is non-string or oversized.`);
       continue;
     }
     checks.push({
