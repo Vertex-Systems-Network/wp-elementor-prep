@@ -21,17 +21,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function boundedIdentity(value: unknown): value is string {
-  return typeof value === 'string'
-    && value.length > 0
-    && value.length <= DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength;
-}
-
-function boundedDetail(value: unknown): value is string {
-  return typeof value === 'string'
-    && value.length <= DEFAULT_P14_INPUT_BOUNDS.maxDetailLength;
-}
-
 /**
  * Bounded shape/resource validation for adapter-provided validation evidence.
  *
@@ -67,17 +56,31 @@ export function validateP14ValidationEvidence(value: unknown): P14ValidationEvid
       failures.push(`${path} must be an object.`);
       continue;
     }
-    if (!boundedIdentity(check.id)) {
-      failures.push(`${path}.id is empty, non-string or oversized.`);
+    if (typeof check.id !== 'string') {
+      failures.push(`${path}.id must be a string.`);
+      continue;
+    }
+    if (check.id.length === 0) {
+      failures.push(`${path}.id must not be empty.`);
+      continue;
+    }
+    if (check.id.length > DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength) {
+      failures.push(`${path} has oversized id evidence (max ${DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength}).`);
       continue;
     }
     if (typeof check.passed !== 'boolean' || typeof check.required !== 'boolean') {
       failures.push(`${path} must include boolean passed and required fields.`);
       continue;
     }
-    if (check.detail !== undefined && !boundedDetail(check.detail)) {
-      failures.push(`${path}.detail is non-string or oversized.`);
-      continue;
+    if (check.detail !== undefined) {
+      if (typeof check.detail !== 'string') {
+        failures.push(`${path}.detail must be a string when present.`);
+        continue;
+      }
+      if (check.detail.length > DEFAULT_P14_INPUT_BOUNDS.maxDetailLength) {
+        failures.push(`${path} has oversized detail evidence (max ${DEFAULT_P14_INPUT_BOUNDS.maxDetailLength}).`);
+        continue;
+      }
     }
     checks.push({
       id: check.id,
