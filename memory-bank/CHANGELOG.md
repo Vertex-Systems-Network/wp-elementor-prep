@@ -11,7 +11,8 @@
 - Added `tests/p14-run-input-snapshot.test.ts` covering non-object input, throwing getters across all known top-level properties, hostile `now`, exact one-shot getter reads and normal `PREPARED` regression. Existing run-control tests continue to prove oversized-control behavior.
 - Initial code/test head `3d558f9ac58bde1cfebd82b7e3a11d0a1d94c93e` passed CI #901 including status verification, typecheck, full tests, plugin/CLI builds and release/package/community checks; P12 Final Release Artifact #212 passed; P12 Offline Acceptance #256 passed on Ubuntu/macOS/Windows.
 - Updated the P14 foundation, README, PROJECT_STATE and NEXT_ACTIONS for #213. No real Figma mutation command, production recipe authority, target-compatibility claim or production acceptance was introduced.
-- Final synchronized-head CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review verification remain required before PR #214 may merge.
+- Exact synchronized PR head `5058b82ad17eb166c1e9445aed6959a07bbe856c` passed CI #907, Integration Readiness #268, P12 Final Release Artifact #218 and P12 Offline Acceptance #262 on Ubuntu/macOS/Windows; it had zero unresolved review threads/reviews/comments, remained current with main (`behind_by=0`) and was reported `mergeable=true` by GitHub.
+- PR #214 guarded squash-merged as `f8a983a1ed7d18963e23901996a60f64d55678cd`; issue #213 closed completed. P14 remains runtime-unwired and production safe-recipe authority remains empty.
 
 ## 2026-09-12 — P14 runtime eligibility hook property hardening
 

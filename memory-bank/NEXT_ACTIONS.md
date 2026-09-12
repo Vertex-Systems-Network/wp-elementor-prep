@@ -81,9 +81,9 @@ Canonical future order:
 
 ### #213 — P14 top-level run-input runtime evidence snapshot
 
-Classification: **ACTIVE / PR #214 under same-cycle documentation and final exact-head verification**.
+Classification: **COMPLETED / merged through PR #214**.
 
-PR #214 (`fix/p14-run-input-snapshot-213`) closes the narrow public caller-object property-access boundary without changing mutation or target authority:
+PR #214 (`fix/p14-run-input-snapshot-213`) closed the narrow public caller-object property-access boundary without changing mutation or target authority:
 
 1. `plan`, `registry`, `coordinator`, `inputBounds`, `confirmation`, `transactionId`, `preparedName`, `allowPreparedWithReview` and `shouldCancel` are read through guarded one-shot access before bounds/core semantics;
 2. accepted values are copied into a plain snapshot and delegated explicitly; the wrapper no longer uses `...input`, so caller getters are not re-entered after validation;
@@ -92,7 +92,7 @@ PR #214 (`fix/p14-run-input-snapshot-213`) closes the narrow public caller-objec
 5. existing run-control normalization, raw-size `P14_INPUT_TOO_LARGE`, confirmation, registry authorization, coordinator, cancellation and adapter evidence semantics are preserved;
 6. no new status/error code, production recipe, real Figma mutation surface, target compatibility or production acceptance is introduced.
 
-Initial code/test head `3d558f9ac58bde1cfebd82b7e3a11d0a1d94c93e` passed CI #901, P12 Final Release Artifact #212 and P12 Offline Acceptance #256 on Ubuntu/macOS/Windows. Same-cycle documentation synchronization follows on the same branch; fresh CI, Integration Readiness, Final Release Artifact, cross-platform Offline Acceptance and clean/current/mergeable review evidence are required on the final synchronized head.
+Initial code/test head `3d558f9ac58bde1cfebd82b7e3a11d0a1d94c93e` passed CI #901, P12 Final Release Artifact #212 and P12 Offline Acceptance #256 on Ubuntu/macOS/Windows. Exact synchronized head `5058b82ad17eb166c1e9445aed6959a07bbe856c` then passed CI #907, Integration Readiness #268, P12 Final Release Artifact #218 and P12 Offline Acceptance #262 on Ubuntu/macOS/Windows. The PR had zero unresolved review threads/reviews/comments, was current with main (`behind_by=0`) and `mergeable=true`, then guarded squash-merged as `f8a983a1ed7d18963e23901996a60f64d55678cd`. Issue #213 closed completed.
 
 ### #210 — P14 runtime action-eligibility hook property boundary
 
@@ -245,7 +245,7 @@ Implementation is complete for Build-Ready Score v2, Responsive Risk, plugin/CLI
 
 Current work is target-neutral pure-core hardening only:
 
-1. complete #213 / PR #214 on its final synchronized head, then begin the next focused safety-gap audit from the resulting main;
+1. start the next focused safety-gap audit from core main `f8a983a1...` now that #213 / PR #214 is completed;
 2. keep the approved source immutable and mutate only retained candidates;
 3. keep production safe-recipe authority empty until explicit acceptance;
 4. fail closed on malformed/stale adapter/control/receipt/registry/coordinator evidence while preserving truthful cleanup state;
