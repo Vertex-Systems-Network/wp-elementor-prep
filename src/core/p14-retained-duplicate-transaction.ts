@@ -12,6 +12,11 @@ import {
   assessP14CancellationCheck,
   boundedP14CancellationFailureDetail,
 } from './p14-cancellation-check';
+import {
+  boundP14ReceiptDetail,
+  boundP14ReceiptIdentity,
+  safeP14RuntimeErrorMessage,
+} from './p14-receipt-evidence';
 import { validateP14PreparationPlan } from './p14-plan-integrity';
 import { authorizeP14PreparationPlan } from './p14-plan-authorization';
 import { validateP14PreparationConfirmation } from './p14-preparation-confirmation';
@@ -63,10 +68,6 @@ export interface P14RetainedDuplicateRunInput {
   shouldCancel?: () => boolean | Promise<boolean>;
 }
 
-function messageOf(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
-}
-
 async function readP14SourceFingerprint(
   adapter: P14RetainedDuplicateAdapter,
   sourceNodeId: string,
@@ -80,11 +81,20 @@ async function readP14SourceFingerprint(
 }
 
 function event(now: () => string, state: P14TransactionState, detail?: string): P14TransactionEvent {
-  return { state, at: now(), ...(detail ? { detail } : {}) };
+  const safeDetail = detail ? boundP14ReceiptDetail(detail) : undefined;
+  return { state, at: now(), ...(safeDetail ? { detail: safeDetail } : {}) };
 }
 
 function receiptError(code: P14ErrorCode, stage: string, detail: string, recovery?: string): P14ReceiptError {
-  return { code, stage, detail, ...(recovery ? { recovery } : {}) };
+  const safeStage = boundP14ReceiptIdentity(stage, 'unknown-stage');
+  const safeDetail = boundP14ReceiptDetail(detail);
+  const safeRecovery = recovery ? boundP14ReceiptDetail(recovery) : undefined;
+  return {
+    code,
+    stage: safeStage,
+    detail: safeDetail,
+    ...(safeRecovery ? { recovery: safeRecovery } : {}),
+  };
 }
 
 async function discardCandidate(
@@ -95,7 +105,7 @@ async function discardCandidate(
     await adapter.discardCandidate(candidate);
     return null;
   } catch (error) {
-    return messageOf(error);
+    return safeP14RuntimeErrorMessage(error);
   }
 }
 
@@ -410,7 +420,7 @@ export async function runP14RetainedDuplicateTransaction(
       terminalState: 'BLOCKED',
       beforeFingerprint: unknownFingerprint,
       afterFingerprint: unknownFingerprint,
-      errors: [receiptError('P14_INTERNAL_INVARIANT_FAILED', 'preflight', `Unable to fingerprint source: ${messageOf(error)}`)],
+      errors: [receiptError('P14_INTERNAL_INVARIANT_FAILED', 'preflight', `Unable to fingerprint source: ${safeP14RuntimeErrorMessage(error)}`)],
       events: [...events, event(now, 'BLOCKED', 'source fingerprint failed')],
     });
   }
@@ -446,7 +456,7 @@ export async function runP14RetainedDuplicateTransaction(
         terminalState: 'BLOCKED',
         beforeFingerprint,
         afterFingerprint: unknownFingerprint,
-        errors: [receiptError('P14_INTERNAL_INVARIANT_FAILED', 'preflight', `Unable to re-check no-op source: ${messageOf(error)}`)],
+        errors: [receiptError('P14_INTERNAL_INVARIANT_FAILED', 'preflight', `Unable to re-check no-op source: ${safeP14RuntimeErrorMessage(error)}`)],
         events: [...events, event(now, 'BLOCKED', 'no-op source recheck failed')],
       });
     }
@@ -535,7 +545,7 @@ export async function runP14RetainedDuplicateTransaction(
       terminalState: 'REJECTED',
       beforeFingerprint,
       afterFingerprint: unknownFingerprint,
-      errors: [receiptError('P14_CLONE_FAILED', 'clone', messageOf(error))],
+      errors: [receiptError('P14_CLONE_FAILED', 'clone', safeP14RuntimeErrorMessage(error))],
       events: [...events, event(now, 'REJECTED', 'candidate clone failed')],
     });
   }
@@ -663,7 +673,7 @@ export async function runP14RetainedDuplicateTransaction(
           appliedActions,
           events,
           now,
-          primaryError: receiptError('P14_TRANSFORM_FAILED', 'transform-recheck', messageOf(error)),
+          primaryError: receiptError('P14_TRANSFORM_FAILED', 'transform-recheck', safeP14RuntimeErrorMessage(error)),
           discardError,
         });
       }
@@ -709,7 +719,7 @@ export async function runP14RetainedDuplicateTransaction(
         appliedActions,
         events,
         now,
-        primaryError: receiptError('P14_TRANSFORM_FAILED', 'transform', messageOf(error)),
+        primaryError: receiptError('P14_TRANSFORM_FAILED', 'transform', safeP14RuntimeErrorMessage(error)),
         discardError,
       });
     }
@@ -773,7 +783,7 @@ export async function runP14RetainedDuplicateTransaction(
       appliedActions,
       events,
       now,
-      primaryError: receiptError('P14_VALIDATION_FAILED', 'validate', `Validation crashed: ${messageOf(error)}`),
+      primaryError: receiptError('P14_VALIDATION_FAILED', 'validate', `Validation crashed: ${safeP14RuntimeErrorMessage(error)}`),
       discardError,
     });
   }
@@ -830,7 +840,7 @@ export async function runP14RetainedDuplicateTransaction(
       appliedActions,
       events,
       now,
-      primaryError: receiptError('P14_RESCORE_FAILED', 'rescore', messageOf(error)),
+      primaryError: receiptError('P14_RESCORE_FAILED', 'rescore', safeP14RuntimeErrorMessage(error)),
       discardError,
     });
     return { ...result, validation };
@@ -924,7 +934,7 @@ export async function runP14RetainedDuplicateTransaction(
       appliedActions,
       events,
       now,
-      primaryError: receiptError('P14_SOURCE_CHANGED_DURING_RUN', 'pre-finalize', `Unable to verify source immutability: ${messageOf(error)}`),
+      primaryError: receiptError('P14_SOURCE_CHANGED_DURING_RUN', 'pre-finalize', `Unable to verify source immutability: ${safeP14RuntimeErrorMessage(error)}`),
       discardError,
       rejectedState: 'SOURCE_STALE',
     });
@@ -979,7 +989,7 @@ export async function runP14RetainedDuplicateTransaction(
       appliedActions,
       events,
       now,
-      primaryError: receiptError('P14_FINALIZE_FAILED', 'finalize', messageOf(error)),
+      primaryError: receiptError('P14_FINALIZE_FAILED', 'finalize', safeP14RuntimeErrorMessage(error)),
       discardError,
     });
     return { ...result, validation, rescore };
@@ -999,7 +1009,7 @@ export async function runP14RetainedDuplicateTransaction(
       appliedActions,
       events,
       now,
-      primaryError: receiptError('P14_SOURCE_CHANGED_DURING_RUN', 'post-finalize', `Unable to prove source immutability after retention: ${messageOf(error)}`),
+      primaryError: receiptError('P14_SOURCE_CHANGED_DURING_RUN', 'post-finalize', `Unable to prove source immutability after retention: ${safeP14RuntimeErrorMessage(error)}`),
       discardError,
       rejectedState: 'SOURCE_STALE',
     });
