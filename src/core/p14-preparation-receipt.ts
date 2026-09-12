@@ -301,9 +301,16 @@ export function validateP14PreparationReceipt(value: unknown): P14ReceiptIntegri
 
   if (status === 'CLEANUP_REQUIRED') {
     if (terminal !== 'CLEANUP_REQUIRED') failures.push('CLEANUP_REQUIRED must terminate at CLEANUP_REQUIRED.');
-    if (!candidate) failures.push('CLEANUP_REQUIRED must identify the candidate requiring recovery.');
     const hasDiscardFailure = boundedErrors.some((error) => isRecord(error) && error.code === 'P14_DISCARD_FAILED');
-    if (!hasDiscardFailure) failures.push('CLEANUP_REQUIRED requires P14_DISCARD_FAILED evidence.');
+    const hasCoordinatorReleaseFailure = boundedErrors.some((error) => isRecord(error)
+      && error.code === 'P14_INTERNAL_INVARIANT_FAILED'
+      && error.stage === 'coordination-release');
+    if (!candidate && !hasCoordinatorReleaseFailure) {
+      failures.push('CLEANUP_REQUIRED must identify the candidate unless source-coordinator lease recovery is required.');
+    }
+    if (!hasDiscardFailure && !hasCoordinatorReleaseFailure) {
+      failures.push('CLEANUP_REQUIRED requires candidate-discard or coordinator-release failure evidence.');
+    }
   }
 
   return { valid: failures.length === 0, failures };
