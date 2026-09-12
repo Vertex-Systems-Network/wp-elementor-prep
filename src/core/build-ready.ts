@@ -2,6 +2,10 @@ import { computeStats, flatten } from './scanner';
 import type { AuditNode } from './types';
 import { analyzeResponsiveRisk, RESPONSIVE_RISK_RULES } from './responsive-risk';
 import {
+  analyzeSafePreparationCandidates,
+  SAFE_PREPARATION_CANDIDATE_RULES,
+} from './safe-preparation-candidates';
+import {
   BUILD_READY_SCHEMA_VERSION,
   BUILD_READY_SCORE_VERSION,
   RESPONSIVE_RISK_VERSION,
@@ -93,6 +97,7 @@ const CORE_RULES: Record<string, BuildReadyRuleDefinition> = {
 const ALL_RULES: Record<string, BuildReadyRuleDefinition> = {
   ...CORE_RULES,
   ...RESPONSIVE_RISK_RULES,
+  ...SAFE_PREPARATION_CANDIDATE_RULES,
 };
 
 function clampScore(value: number): number {
@@ -573,6 +578,7 @@ export function buildBuildReadyReport(
   const context = { root, config };
   const findings = [
     ...structureFindings(root),
+    ...analyzeSafePreparationCandidates(root),
     ...consistencyFindings(root),
     ...handoffFindings(root),
     ...analyzeResponsiveRisk(context),
