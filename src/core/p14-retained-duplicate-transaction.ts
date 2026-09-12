@@ -354,7 +354,7 @@ export async function runP14RetainedDuplicateTransaction(
   );
   if (!semanticEvidence.valid) {
     return boundaryBlockedReceipt(
-      semanticEvidence.plan,
+      undefined,
       controls.safeTransactionId,
       now,
       semanticEvidence.failures,
