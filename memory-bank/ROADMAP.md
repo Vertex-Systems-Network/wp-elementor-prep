@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-09-11
+Last updated: 2026-09-12
 
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
@@ -20,20 +20,21 @@ Last updated: 2026-09-11
 | P12 | Final integrated validation/release acceptance | IN PROGRESS | 80% | `████████░░` | Finish exact publish-ID package/account/2FA/exit review in #84 |
 | R0 | Market/platform research gate | PLANNING GATE | N/A | `──────────` | Refresh before major externally evolving adapters |
 | R1 | Reliability/compatibility gate | PLANNING GATE | N/A | `──────────` | Freeze TargetProfile/capabilities/errors/validators/acceptance harness before adapter implementation |
-| P13 | Build-Ready Score 2.0 + Responsive Risk | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | P12 internal exit first |
-| P14 | Target-Ready Duplicate + Guided Prepare | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Requires P13 read-only contracts |
-| P15 | Elementor native export + import validation | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | R0+R1, versioned v3/v4 adapters, real import acceptance |
-| P16 | Gutenberg native export + section transfer | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | R0+R1, parse/serialize/editor validation |
-| P17 | HTML/CSS/JS export + code-to-design import | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
-| P18 | Framework adapter platform | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
-| P19 | Asset pack + font manifest + design-system export | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Stored-original vs rendered policy; font/API constraints |
-| P20 | Round-trip visual QA + exact section portability | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Target render harness + optional offline-first WP Builders Bridge |
-| P21 | Developer handoff + client/QA + bounded a11y/SEO advisories | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Build from accepted target outputs |
-| P22 | Deterministic complexity/effort estimator | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Transparent/configurable factors only |
-| P23 | Agency/project + existing-component bindings | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Stable adapters/report contracts first |
-| P24 | CMS/dynamic data/forms/interactions | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Static/native export stability first |
-| P25 | Free / Pro / Agency packaging + entitlements | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Keep account/payment outside deterministic core |
-| P26 | Optional AI assistance | PLANNED / BLOCKED | 0% | `░░░░░░░░░░` | Opt-in research/explainer/drafting only |
+| P13 | Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance |
+| P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Continue pure-core hardening; production registry empty; #159 before real mutation exposure |
+| P15 | Elementor native export + import validation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, versioned v3/v4 adapters, real import acceptance |
+| P16 | Gutenberg native export + section transfer | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, parse/serialize/editor validation |
+| P17 | HTML/CSS/JS export + code-to-design import | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
+| P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
+| P19 | Asset pack + font manifest + design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Stored-original vs rendered policy; font/API constraints |
+| P20 | Round-trip visual QA + exact section portability | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Target render harness + optional offline-first WP Builders Bridge |
+| P21 | Developer handoff + client/QA + bounded a11y/SEO advisories | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Build from accepted target outputs |
+| P22 | Deterministic complexity/effort estimator | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Transparent/configurable factors only |
+| P23 | Agency/project + existing-component bindings | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Stable adapters/report contracts first |
+| P24 | CMS/dynamic data/forms/interactions | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static/native export stability first |
+| P25 | Free / Pro / Agency packaging + entitlements | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Keep account/payment outside deterministic core |
+| P26 | Optional AI assistance | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Opt-in research/explainer/drafting only |
+| P27 | Final production release + publisher/runtime evidence | GATE DEFINED / EXECUTION DEFERRED | 0% exec | `░░░░░░░░░░` | Final live evidence + retained #84 release-exit decision after implementation/internal readiness |
 
 ## Progress interpretation
 
@@ -41,7 +42,7 @@ Last updated: 2026-09-11
 
 **P12 final validation:** `████████░░ 80%`.
 
-R0/R1 are governance/acceptance gates and do not receive product implementation percentages. P13-P26 are approved future scope at `0% / PLANNED-BLOCKED`. New scope does not retroactively lower completed-core progress.
+R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open; P14 implementation is active with no stable numeric denominator while the pure-core safety surface is still being closed; P15-P26 implementation is not started; P27 execution is deferred. New scope does not retroactively lower completed-core progress.
 
 ## R0 — recurring market/platform intelligence
 
@@ -80,7 +81,7 @@ No adapter may claim a live-site guarantee from local package validation alone.
 
 The exact publishing-ID package under manual evaluation was produced from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with Figma-assigned ID `1680034649341961379` and Final Release Artifact #20. Static/offline verification passed, but P12 remains at 80% until live publisher/account/2FA/current-package evidence and final internal exit review are retained. Actual Community review/approval remains external.
 
-## P13-P26 dependency order
+## P13-P27 dependency and release order
 
 1. P13 proves target/readiness risk evidence read-only.
 2. P14 can prepare only conditions already detectable/explainable.
@@ -95,6 +96,7 @@ The exact publishing-ID package under manual evaluation was produced from source
 11. P24 adds dynamic/CMS/forms/interactions only after static output is stable.
 12. P25 defines commercial tiers/entitlements without changing correctness.
 13. P26 adds optional AI only after deterministic outputs exist.
+14. P27 performs the final production-release sequence, coordinates remaining live runtime/publisher/2FA evidence and preserves #84 as the P12 release-exit truth.
 
 ## Runtime artifact registry
 
