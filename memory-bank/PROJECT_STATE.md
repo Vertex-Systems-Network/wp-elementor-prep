@@ -12,7 +12,7 @@ Current implemented surfaces:
 2. P13 Build-Ready Score 2.0 + Responsive Risk with `p13-core-v2` analyzer-bound provenance;
 3. P14 retained-duplicate core and development-only read-only Guided Prepare/review evidence surfaces;
 4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain;
-5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, bounded local JSON I/O and prototype-safe canonicalization;
+5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, bounded local JSON I/O, prototype-safe canonicalization and alias-safe atomic output writes;
 6. exact-build release/provenance tooling.
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
@@ -21,7 +21,7 @@ Current implemented surfaces:
 
 Current verified main before this documentation sync:
 
-`4ec559f538899697d51138fc35ed79c2bea486b1`
+`8445fc0632a58515a52d72e3cf85ed1364761b9c`
 
 Recent guarded merge line:
 
@@ -39,7 +39,9 @@ Recent guarded merge line:
 - #392 canonical validation-CLI docs sync -> `78f25d0cbc72427ea9824370762099db916750ed`;
 - #394 retention operator local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`;
 - #396 canonical file-bound-hardening docs sync -> `12dc1e7e7e149e4da51a13c14722ac834f8a69ca`;
-- #398 prototype-safe retention-manifest canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`.
+- #398 prototype-safe retention-manifest canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`;
+- #400 canonical prototype-safe docs sync -> `158132b4076fe5a70afa8e8778ae888fcca4db60`;
+- #402 alias-safe atomic retention output writes -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`.
 
 ## Persistent issue queue
 
@@ -97,9 +99,11 @@ Current bounded deterministic/read-only/evidence chain includes:
 - deterministic `gutenberg-native-serialization-evidence-retention-requirements-validation-v1`, which rebuilds the current exact requirements manifest and validates a previously exported manifest using strict JSON-only, key-order-independent semantic equality;
 - package command `p16:evidence-retention-requirements-validate`, a Node-20 offline/operator validation CLI that reads only local document/profile/receipt/authentication-report/manifest JSON and writes only the sanitized validator result;
 - shared bounded local JSON I/O for both retention CLIs: each input is capped at 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
-- prototype-safe exact-current canonicalization: canonical object snapshots use no `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain data properties, alter fingerprints and are rejected when added instead of being silently dropped.
+- prototype-safe exact-current canonicalization: canonical object snapshots use no `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain data properties, alter fingerprints and are rejected when added instead of being silently dropped;
+- alias-safe output writes: output parents are created then canonicalized with `realpath`, canonical output locations are compared to real input paths, existing output symlinks/non-regular targets are rejected, and hardlink aliases are rejected where filesystem identity is available;
+- unique same-directory regular temporary output plus atomic rename prevents late-created final symlinks from being followed onto inputs, with temporary state cleaned before fail-closed write errors.
 
-Focused regressions cover both top-level and nested own `__proto__` additions and confirm `Object.prototype` remains unpolluted. Validator version/schema/status are unchanged because this restores the existing strict extra-field rejection contract.
+Focused output-path tests cover symlink, hardlink and symlinked-parent aliases and verify source input immutability. Focused canonicalization regressions cover both top-level and nested own `__proto__` additions and confirm `Object.prototype` remains unpolluted.
 
 Operator/input failures remain exit code 2 with deterministic content-free errors. Windows path comparison is case-normalized for output/input collision checks.
 
@@ -132,7 +136,7 @@ Current authority remains fixed:
 
 The normalized JSON model is not Gutenberg post-content serialization and intentionally omits WordPress `innerContent`. Custom/unregistered/freeform content remains `REVIEW_REQUIRED`.
 
-Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, bounded local-file I/O and prototype-safe canonicalization that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
+Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, bounded/alias-safe local-file I/O and prototype-safe canonicalization that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
 
 ## P17-P26 state
 
