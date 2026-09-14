@@ -32,11 +32,13 @@ Machine-readable operational registry: `config/runtime-artifacts.json`, schema v
 
 > **Progress policy:** implementation, runtime acceptance and external review are separate evidence states. New future scope does not reduce already-completed historical core progress.
 
+**Open PR/MR:** see the repository's current pull-request list; this README intentionally does not hardcode a count.
+
 Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#159` — genuine Figma Desktop Build-Ready runtime/parity acceptance dependency;
+- `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
