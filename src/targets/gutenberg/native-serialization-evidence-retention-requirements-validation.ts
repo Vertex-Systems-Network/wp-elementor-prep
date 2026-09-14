@@ -114,6 +114,17 @@ function consumeCanonicalTextBudget(value: string, budget: CanonicalizationBudge
   budget.textBytes += bytes;
 }
 
+function readOwnDataProperty(value: object, key: PropertyKey): unknown {
+  const descriptor = Object.getOwnPropertyDescriptor(value, key);
+  if (!descriptor) {
+    throw new Error('Manifest value is missing an expected own property.');
+  }
+  if (!('value' in descriptor)) {
+    throw new Error('Manifest value contains an accessor property.');
+  }
+  return descriptor.value;
+}
+
 function canonicalizeJson(
   value: unknown,
   seen: Set<object>,
@@ -153,7 +164,12 @@ function canonicalizeJson(
         if (!Object.prototype.hasOwnProperty.call(value, index)) {
           throw new Error('Sparse arrays are not accepted as canonical JSON.');
         }
-        result.push(canonicalizeJson(value[index], seen, budget, nextDepth));
+        result.push(canonicalizeJson(
+          readOwnDataProperty(value, String(index)),
+          seen,
+          budget,
+          nextDepth,
+        ));
       }
       return result;
     }
@@ -172,7 +188,7 @@ function canonicalizeJson(
     const result = Object.create(null) as { [key: string]: CanonicalJsonValue };
     for (const key of keys) {
       result[key] = canonicalizeJson(
-        (value as Record<string, unknown>)[key],
+        readOwnDataProperty(value, key),
         seen,
         budget,
         nextDepth,
