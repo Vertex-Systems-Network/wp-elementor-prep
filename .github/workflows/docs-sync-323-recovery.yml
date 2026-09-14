@@ -6,6 +6,7 @@ on:
       - docs/p15-r1-status-sync-323
     paths:
       - .github/workflows/docs-sync-323-recovery.yml
+      - .github/docs-sync-323.py
 
 permissions:
   contents: write
