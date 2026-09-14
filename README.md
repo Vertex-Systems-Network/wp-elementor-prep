@@ -13,7 +13,7 @@ Current product surfaces:
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare/review evidence surfaces;
 - P15 Elementor R1 exact candidate/profile/import/reference evidence chain;
-- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI and bounded local JSON I/O;
+- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O and prototype-safe canonicalization;
 - exact-build release/provenance tooling.
 
 Canonical planning/status docs:
@@ -44,7 +44,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`19d36b87b71cdc0d8b8f862c733420d64a56d3d2`
+`4ec559f538899697d51138fc35ed79c2bea486b1`
 
 ### Recent verified P16 sequence
 
@@ -65,6 +65,8 @@ Current verified main before this documentation sync:
 - PR #390 — added `p16:evidence-retention-requirements-validate`, a Node-20 offline CLI for exact-current saved-manifest validation -> `c173c617ad205f0fef4a5659f27bf007067e6eb5`; exact head `7fcd4b553830527ab5900355663c3412a63780bc` passed CI #1166, P12 Final Release Artifact #477 and P12 Offline Acceptance #521.
 - PR #392 — synchronized canonical docs through the offline exact-current validation CLI -> `78f25d0cbc72427ea9824370762099db916750ed`; exact head `65d74941faa01a585e984d9d3b53c6932a864546` passed CI #1168, Integration Readiness #433, P12 Final Release Artifact #479 and P12 Offline Acceptance #523.
 - PR #394 — hardened both retention operator CLIs with shared bounded local JSON I/O -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`; exact head `adbdfa0da1f61d4b9ff2dab3272526c36b19c3e4` passed CI #1170, P12 Final Release Artifact #481 and P12 Offline Acceptance #525.
+- PR #396 — synchronized canonical docs through retention operator file-bound hardening -> `12dc1e7e7e149e4da51a13c14722ac834f8a69ca`; exact head `6ac64e15f1c5fca058983a9a33ba4b9ab519a8d5` passed CI #1172, Integration Readiness #436, P12 Final Release Artifact #483 and P12 Offline Acceptance #527.
+- PR #398 — made retention-manifest canonicalization prototype-safe so own enumerable `__proto__` keys remain canonical data and are rejected as hostile extra fields -> `4ec559f538899697d51138fc35ed79c2bea486b1`; exact head `b7f3eead07fd9305d9b2f9290a572c715466e981` passed CI #1174, P12 Final Release Artifact #485 and P12 Offline Acceptance #529.
 
 ### Module-wise progress
 
@@ -85,7 +87,7 @@ Current verified main before this documentation sync:
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review is active; production registry remains empty; #159 required before real mutation exposure |
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Genuine trusted authentication/internal decision and real target import remain pending |
-| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + bounded local I/O exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
+| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + bounded local I/O + prototype-safe canonicalization exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
 | P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
@@ -127,7 +129,10 @@ Current bounded chain now includes:
 - `p16:evidence-retention-requirements`, a Node-20 offline/operator export that accepts only the existing local document/profile/receipt/authentication-report chain and writes the sanitized manifest. Exit 0 means only requirements metadata is READY; it is not evidence authentication or decision authority;
 - `gutenberg-native-serialization-evidence-retention-requirements-validation-v1`, which rebuilds the current exact manifest and validates a previously exported manifest with strict JSON-only, key-order-independent semantic equality. It rejects stale/tampered/extra/missing fields and reports only sanitized fingerprints/status metadata;
 - `p16:evidence-retention-requirements-validate`, a Node-20 offline/operator validation CLI that accepts only local document/profile/receipt/authentication-report/manifest JSON, writes only the sanitized validator result, and exits 0 only for `CURRENT_REQUIREMENTS_MANIFEST_VALID`;
-- shared bounded operator JSON I/O for both retention CLIs: every input is limited to 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path.
+- shared bounded operator JSON I/O for both retention CLIs: every input is limited to 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
+- prototype-safe exact-current canonicalization: canonical object snapshots are created without `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain canonical data fields, affect fingerprints, and are rejected when added to the manifest instead of being silently dropped.
+
+Focused regressions cover top-level and nested own `__proto__` additions and confirm `Object.prototype` is not polluted. The validator schema/version/status remain unchanged because this restores the existing strict extra-field rejection contract.
 
 Operator/input failures remain exit code 2 with deterministic content-free errors. Windows path comparison is case-normalized for output/input collision checks.
 
