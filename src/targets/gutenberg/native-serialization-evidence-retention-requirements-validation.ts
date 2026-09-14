@@ -6,6 +6,8 @@ import {
 
 export const GUTENBERG_NATIVE_SERIALIZATION_EVIDENCE_RETENTION_REQUIREMENTS_VALIDATION_VERSION =
   'gutenberg-native-serialization-evidence-retention-requirements-validation-v1' as const;
+export const GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_DEPTH = 64;
+export const GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_VALUES = 50_000;
 
 export type GutenbergNativeSerializationEvidenceRetentionRequirementsValidationStatus =
   | 'REJECTED_CURRENT_CHAIN_NOT_READY'
@@ -63,11 +65,25 @@ type CanonicalJsonValue =
   | CanonicalJsonValue[]
   | { [key: string]: CanonicalJsonValue };
 
+type CanonicalizationBudget = {
+  visitedValues: number;
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function canonicalizeJson(value: unknown, seen: Set<object>): CanonicalJsonValue {
+function canonicalizeJson(
+  value: unknown,
+  seen: Set<object>,
+  budget: CanonicalizationBudget,
+  containerDepth: number,
+): CanonicalJsonValue {
+  budget.visitedValues += 1;
+  if (budget.visitedValues > GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_VALUES) {
+    throw new Error('Manifest value exceeds canonical JSON structural value limit.');
+  }
+
   if (value === null) return null;
   if (typeof value === 'string' || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
@@ -76,6 +92,11 @@ function canonicalizeJson(value: unknown, seen: Set<object>): CanonicalJsonValue
   }
   if (typeof value !== 'object') {
     throw new Error('Manifest value contains a non-JSON value.');
+  }
+
+  const nextDepth = containerDepth + 1;
+  if (nextDepth > GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_DEPTH) {
+    throw new Error('Manifest value exceeds canonical JSON nesting limit.');
   }
 
   if (seen.has(value)) throw new Error('Manifest value contains a cycle.');
@@ -87,7 +108,7 @@ function canonicalizeJson(value: unknown, seen: Set<object>): CanonicalJsonValue
         if (!Object.prototype.hasOwnProperty.call(value, index)) {
           throw new Error('Sparse arrays are not accepted as canonical JSON.');
         }
-        result.push(canonicalizeJson(value[index], seen));
+        result.push(canonicalizeJson(value[index], seen, budget, nextDepth));
       }
       return result;
     }
@@ -99,7 +120,12 @@ function canonicalizeJson(value: unknown, seen: Set<object>): CanonicalJsonValue
 
     const result = Object.create(null) as { [key: string]: CanonicalJsonValue };
     for (const key of Object.keys(value).sort()) {
-      result[key] = canonicalizeJson((value as Record<string, unknown>)[key], seen);
+      result[key] = canonicalizeJson(
+        (value as Record<string, unknown>)[key],
+        seen,
+        budget,
+        nextDepth,
+      );
     }
     return result;
   } finally {
@@ -109,7 +135,12 @@ function canonicalizeJson(value: unknown, seen: Set<object>): CanonicalJsonValue
 
 function canonicalJson(value: unknown): string | null {
   try {
-    return JSON.stringify(canonicalizeJson(value, new Set<object>()));
+    return JSON.stringify(canonicalizeJson(
+      value,
+      new Set<object>(),
+      { visitedValues: 0 },
+      0,
+    ));
   } catch {
     return null;
   }
