@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet and P15 foundation merges
+Canonical status synchronized through P14 review-packet and P15 R1 evidence/profile/reference-review merges
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
 ## Purpose
@@ -297,9 +297,9 @@ Earlier retained review-manifest / real-candidate / human-review-binding proof r
 
 Current main is:
 
-`426314b183f220f66a315a24f9b1122a464909b9`
+`d603ce87a645160204d2de6fd458279ba7b3bf3f`
 
-P12 remains at its retained 80% release-exit state. P15 now has a bounded non-authorizing Elementor foundation (v0.4/container validation, documented-core capability reporting and candidate envelope), but real target import remains unvalidated and no Figma-to-Elementor generation/download surface is wired. P16-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.
+P12 remains at its retained 80% release-exit state. P15 now has a bounded non-authorizing Elementor R1 foundation: v0.4/container validation, documented-core capability reporting, candidate identity/receipt + offline intake, immutable declared target-profile fingerprints, profile-bound import evidence, read-only profile alignment assessment and a global-reference key review gate. Real target import remains unvalidated, detected global references are not resolved, asset-reference review remains NOT_RUN, and no Figma-to-Elementor generation/download surface is wired. P16-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.
 
 ## Next P13/P14 step
 
