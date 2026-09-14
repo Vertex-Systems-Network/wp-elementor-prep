@@ -12,7 +12,7 @@ Current implemented surfaces:
 2. P13 Build-Ready Score 2.0 + Responsive Risk with `p13-core-v2` analyzer-bound provenance;
 3. P14 retained-duplicate core and development-only read-only Guided Prepare/review evidence surfaces;
 4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain;
-5. bounded P16 Gutenberg R1 normalized parsed-block/capability/profile/candidate/evidence-review chain;
+5. bounded P16 Gutenberg R1 normalized parsed-block/capability/profile/candidate/evidence-review/external-authentication-report chain;
 6. exact-build release/provenance tooling.
 
 Approved target order remains Elementor first, Gutenberg second, followed by generic web/framework targets.
@@ -23,7 +23,7 @@ Approved target order remains Elementor first, Gutenberg second, followed by gen
 
 Current verified main before this documentation sync:
 
-`d14e0416413531ca98bfd97dc57e839bef6440a1`
+`5328f6d0205a350e5e1f27b0106fd930e680ae17`
 
 Recent guarded merge line:
 
@@ -33,7 +33,9 @@ Recent guarded merge line:
 - #360 exact-bound external native-serialization receipt -> `11499202e48d3c51ef416bbc447a729547eba4ce`;
 - #362 canonical candidate/identity/receipt docs sync -> `dbd740a1b33ed389510fa0e5274dd5ca26e52dba`;
 - #364 Node-20 offline exact-bound native-serialization evidence intake -> `75d77f5eeb0d63e838bceec8fe799c31ba179117`;
-- #366 sanitized native-serialization pre-decision review packet -> `d14e0416413531ca98bfd97dc57e839bef6440a1`.
+- #366 sanitized native-serialization pre-decision review packet -> `d14e0416413531ca98bfd97dc57e839bef6440a1`;
+- #368 canonical intake/review-packet docs sync -> `bb21a2561df06b3053606ea35eaec66a9b903128`;
+- #370 exact-bound externally reported native evidence authentication -> `5328f6d0205a350e5e1f27b0106fd930e680ae17`.
 
 ## Current issue queue
 
@@ -45,7 +47,7 @@ Persistent roadmap/release dependencies:
 - #182 — P27 final production-release/evidence gate;
 - #287 — repository-admin branch protection/ruleset hardening residual.
 
-Focused P16 issues through #365 are completed through their reviewed implementation flows. Issue #367 owns the current canonical docs sync.
+Focused P16 issues through #369 are completed through their reviewed implementation flows. Issue #371 owns the current canonical docs sync.
 
 ## P12 state
 
@@ -116,16 +118,16 @@ Current bounded deterministic/read-only/evidence-review chain includes:
 - exact canonical `gutenberg-normalized-candidate-identity-v1` SHA-256 integrity identity;
 - exact-bound caller-supplied `gutenberg-native-serialization-validation-receipt-v1`;
 - Node-20 offline intake that rebuilds the current candidate, recomputes identity, revalidates the receipt and emits sanitized `BOUND_REPORTED_PASS|BOUND_REPORTED_FAIL|REJECTED` evidence plus raw-input hashes;
-- deterministic `gutenberg-native-serialization-review-packet-v1` where valid reported PASS advances only to `REPORTED_PASS_AUTHENTICATION_REQUIRED` and next action `AUTHENTICATE_EVIDENCE_THEN_INTERNAL_REVIEW`.
+- deterministic `gutenberg-native-serialization-review-packet-v1` where valid reported PASS advances only to `REPORTED_PASS_AUTHENTICATION_REQUIRED` and next action `AUTHENTICATE_EVIDENCE_THEN_INTERNAL_REVIEW`;
+- exact-bound `gutenberg-native-serialization-authentication-report-v1` where a caller-supplied authentication result binds the exact current candidate identity digest, canonical receipt SHA-256 and SHA-256 of the exact source evidence reference and emits `EXTERNALLY_REPORTED_PASS|EXTERNALLY_REPORTED_FAIL|REJECTED`.
 
 The normalized JSON serializer is not Gutenberg post-content serialization and the normalized repository model intentionally omits WordPress `innerContent`.
 
-Repository code still does not execute WordPress, `@wordpress/blocks` or PHP; does not connect to WordPress REST/site runtime; does not fetch/authenticate the evidence reference; does not identify a verifier; and does not prove editor/import/render behavior.
+The pre-decision packet itself still records `evidenceAuthenticationStatus=NOT_RUN`. The separate authentication-report contract remains external reporting only: `authenticationAuthority=false` and `internalDecisionStatus=NOT_RUN` stay fixed. Repository code still does not execute WordPress, `@wordpress/blocks` or PHP; does not connect to WordPress REST/site runtime; does not fetch/authenticate the evidence reference; does not identify an authenticator/verifier; does not verify signatures; and does not prove target-environment/editor/import/render behavior.
 
 Current authority remains fixed:
 
-- `evidenceAuthenticationStatus=NOT_RUN`;
-- `internalDecisionStatus=NOT_RUN`;
+- `authenticationAuthority=false`;
 - `nativeSerializationAuthority=false`;
 - `targetEnvironmentValidated=false`;
 - `editorImportValidated=false`;
@@ -134,9 +136,10 @@ Current authority remains fixed:
 - `targetCompatibilityClaim=false`;
 - `productionAcceptance=false`;
 - `generationEnabled=false`;
-- `downloadEnabled=false`.
+- `downloadEnabled=false`;
+- `internalDecisionStatus=NOT_RUN`.
 
-A valid exact-bound reported PASS is caller-supplied evidence only. It is not repository-native serialization proof or target compatibility.
+A valid `EXTERNALLY_REPORTED_PASS` is caller-supplied reporting only. It is not repository authentication, repository-native serialization proof, an internal decision or target compatibility.
 
 ## P17-P26 state
 
@@ -151,7 +154,7 @@ P27 #182 remains **GATE DEFINED / EXECUTION DEFERRED**. It owns final production
 1. Keep #159 as the prerequisite before real P14 mutation exposure.
 2. Continue P15 only where genuine trusted evidence allows stronger internal decisions.
 3. Continue P16 only through bounded deterministic/read-only/evidence-review R1 slices while native target validation remains unwired.
-4. For P16, the next authority-bearing step must authenticate retained evidence and still require a separate internal decision; caller-supplied PASS/intake/review packet state alone cannot grant authority.
+4. Do not manufacture P16 authority from `EXTERNALLY_REPORTED_PASS`; any authority-bearing progression requires genuinely retained authenticated evidence and a separate explicit internal decision path.
 5. Keep P17-P26 in dependency order after stable target-adapter foundations.
 6. Execute P27 only when implementation/internal readiness is complete.
 7. Keep #287 open until repository settings actually enforce the required rules.
