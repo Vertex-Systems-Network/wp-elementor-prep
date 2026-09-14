@@ -286,6 +286,9 @@ export function serializeElementorTemplateV04(document: ElementorTemplateV04): s
   const validation = validateElementorTemplateV04(document);
   if (!validation.valid) {
     const first = validation.issues[0];
+    if (!first) {
+      throw new Error('Invalid Elementor template v0.4: validation failed without a diagnostic.');
+    }
     throw new Error(`Invalid Elementor template v0.4: ${first.code} at ${first.path}: ${first.message}`);
   }
   return `${JSON.stringify(document, null, 2)}\n`;
