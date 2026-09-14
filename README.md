@@ -13,7 +13,7 @@ Current product surfaces:
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare/review evidence surfaces;
 - P15 Elementor R1 exact candidate/profile/import/reference evidence chain;
-- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O, iterative structural bounds, depth/value/text-bounded + accessor-safe direct canonicalization, prototype-safe canonicalization and alias-safe atomic output writes;
+- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O, iterative structural bounds, depth/value/text-bounded + accessor/own-shape-safe direct canonicalization, prototype-safe canonicalization and alias-safe atomic output writes;
 - exact-build release/provenance tooling.
 
 Canonical planning/status docs:
@@ -44,7 +44,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`4adc40d74b74f74f362cb635854dd2c8240134d8`
+`29285d205a61cc437e446367b3d8fefc52595e1d`
 
 ### Recent verified P16 sequence
 
@@ -77,6 +77,8 @@ Current verified main before this documentation sync:
 - PR #414 — added direct aggregate 1 MiB UTF-8 text budget across canonical string values and object keys, with pre-sort key charging and browser-safe Unicode accounting -> `86cc545456a1f994c9893069b878110662a60bbe`; exact head `6c92b2dd6707be8a7242bf1911cdb46c3ff4972a` passed CI #1190, P12 Final Release Artifact #501 and P12 Offline Acceptance #545.
 - PR #416 — synchronized canonical docs through direct canonical text-byte bounds -> `5b0d3e9f08122c4df7cb29edfd0e51dabb8de440`; exact head `b463984615d3d1c78d872ee8e3ea85390093ca8f` passed CI #1192, Integration Readiness #451, P12 Final Release Artifact #503 and P12 Offline Acceptance #547.
 - PR #418 — rejected accessor-backed direct canonicalization values without invoking getters/setters -> `4adc40d74b74f74f362cb635854dd2c8240134d8`; exact head `7038cd7434dc4da03c3c0e590a4c927a47e8b7f7` passed CI #1194, P12 Final Release Artifact #505 and P12 Offline Acceptance #549.
+- PR #420 — synchronized canonical docs through accessor-safe direct canonicalization -> `b89dbba01dd85fc84d53761190581a2ab93ba8f0`; exact head `027b59c704fb8181c75df24e4e0f0487a49caeb5` passed CI #1196, Integration Readiness #454, P12 Final Release Artifact #507 and P12 Offline Acceptance #551.
+- PR #422 — rejected hidden non-JSON own properties from direct canonicalization while retaining frozen/sealed JSON-shaped values -> `29285d205a61cc437e446367b3d8fefc52595e1d`; exact head `5c7256666b690533a1821cf4c087cbaa7963c47d` passed CI #1198, P12 Final Release Artifact #509 and P12 Offline Acceptance #553.
 
 ### Module-wise progress
 
@@ -97,7 +99,7 @@ Current verified main before this documentation sync:
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review is active; production registry remains empty; #159 required before real mutation exposure |
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Genuine trusted authentication/internal decision and real target import remain pending |
-| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O + depth/value/text-bounded accessor-safe direct canonicalization exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
+| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O + depth/value/text-bounded accessor/own-shape-safe direct canonicalization exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
 | P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
@@ -142,17 +144,18 @@ Current bounded chain now includes:
 - shared bounded operator JSON I/O for both retention CLIs: every input is limited to 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
 - iterative post-parse structural validation: input is rejected before target builders/validators when container nesting exceeds 64 levels or total JSON values exceed 50,000; the traversal itself is non-recursive;
 - direct retention-manifest canonicalization independently enforces 64 container levels, 50,000 visited values and an aggregate 1 MiB UTF-8 text budget across string values + object keys for exported validator/fingerprint callers that bypass the CLIs;
-- accessor-safe direct canonicalization: own property descriptors are inspected instead of invoking values through ordinary property access, so enumerable object accessors and array-index accessors fail closed without getter/setter execution while ordinary data descriptors remain supported;
+- accessor-safe direct canonicalization: own property descriptors are inspected instead of invoking values through ordinary property access, so object/array accessors fail closed without getter/setter execution;
+- strict own-shape direct canonicalization: plain objects reject own symbol and non-enumerable string properties; arrays allow only standard `length` plus canonical own indices and reject extra named/symbol properties; frozen/sealed JSON-shaped data remains accepted;
 - prototype-safe exact-current canonicalization: canonical object snapshots are created without `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain canonical data fields, affect fingerprints, and are rejected when added to the manifest instead of being silently dropped;
 - alias-safe output writes: the real output parent is resolved, existing symlink/non-regular targets are rejected, hardlink identity against inputs is rejected where available, and output is staged in a unique same-directory regular temp file before atomic rename.
 
-The direct canonicalization budget bounds recursive descent to at most 64 container levels, total direct values to 50,000 and aggregate UTF-8 text to 1 MiB. Object keys are charged before sorting. UTF-8 accounting is browser-safe/manual and covers multi-byte Unicode, paired surrogates and lone-surrogate replacement width. Accessor-backed object values and array indices are rejected from own descriptors without invoking caller-controlled getters/setters; normal own data descriptors, including own enumerable `__proto__` data keys, remain canonicalized. Existing cycle, sparse-array, non-finite, non-JSON, non-plain-object and prototype-safe handling remain unchanged.
+The direct canonicalization budget bounds recursive descent to at most 64 container levels, total direct values to 50,000 and aggregate UTF-8 text to 1 MiB. Object keys are charged before sorting. UTF-8 accounting is browser-safe/manual and covers multi-byte Unicode, paired surrogates and lone-surrogate replacement width. Accessor-backed properties are rejected without invocation. Hidden JavaScript-only own state is also rejected: plain-object symbols/non-enumerables and array named/symbol extras cannot silently disappear from a fingerprint. Arrays fail fast if their length cannot fit the remaining value budget. Normal frozen/sealed JSON-shaped data and own enumerable `__proto__` data keys remain canonicalizable. Existing cycle, sparse-array, non-finite, non-JSON, non-plain-object and prototype-safe handling remain unchanged.
 
 The operator structural guard prevents byte-bounded but deeply nested or high-cardinality JSON from reaching downstream validation/canonicalization. Focused cross-CLI tests exercise depth 65 and more than 50,000 total JSON values while remaining below the 1 MiB byte cap.
 
 The atomic output path prevents `writeFile` from following a late-created final symlink back onto an input. Temporary output state is cleaned before fail-closed write errors. Focused tests cover output symlink, hardlink and symlinked-parent aliases and verify source input immutability.
 
-Focused canonicalization regressions cover top-level and nested own `__proto__` additions, direct structural/text boundaries and accessor-backed values, and confirm `Object.prototype` is not polluted. The validator schema/version/status remain unchanged because these hardenings preserve the existing strict exact-current metadata contract.
+Focused canonicalization regressions cover top-level and nested own `__proto__` additions, direct structural/text boundaries, accessor-backed values and hidden own-property shapes, and confirm `Object.prototype` is not polluted. The validator schema/version/status remain unchanged because these hardenings preserve the existing strict exact-current metadata contract.
 
 Operator/input failures remain exit code 2 with deterministic content-free errors. Windows path comparison is case-normalized for output/input collision checks.
 
