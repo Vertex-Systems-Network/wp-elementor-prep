@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet and P15 R1 profile/reference-review/closure-evidence merges
+Canonical status synchronized through P14 review-packet and P15 R1 profile/reference-review/closure-evidence/operator-intake merges
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
 ## Purpose
@@ -297,9 +297,9 @@ Earlier retained review-manifest / real-candidate / human-review-binding proof r
 
 Current main is:
 
-`d0796310fb3b6d4f1753d472e0e9f9783bb752b3`
+`c20d8835c27cf73e1e367c478f346f6c80d72824`
 
-P12 remains at its retained 80% release-exit state. P15 now has a bounded non-authorizing Elementor R1 foundation: v0.4/container validation, documented-core capability reporting, candidate identity/receipt + offline intake, immutable declared target-profile fingerprints, profile-bound import evidence, read-only profile alignment, global-reference key review, exact core-image MEDIA asset review, a deterministic combined reference-review identity and an exact-bound external closure-evidence receipt contract. Real target import remains unvalidated; raw global values and asset URLs are not resolved/emitted; no external closure evidence is authenticated by repository code; reported PASS remains non-authorizing; and no Figma-to-Elementor generation/download surface is wired. P16-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.
+P12 remains at its retained 80% release-exit state. P15 now has a bounded non-authorizing Elementor R1 foundation: v0.4/container validation, documented-core capability reporting, candidate identity/receipt + offline import intake, immutable declared target-profile fingerprints, profile-bound import evidence, read-only profile alignment, global-reference key review, exact core-image MEDIA asset review, a deterministic combined reference-review identity, an exact-bound external closure-evidence receipt contract and an offline closure-evidence operator intake. Real target import remains unvalidated; raw global values and asset URLs are not resolved/emitted; the operator intake does not authenticate external evidence references; `BOUND_REPORTED_PASS` remains non-authorizing and requires separate genuine evidence/internal review; and no Figma-to-Elementor generation/download surface is wired. P16-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.
 
 ## Next P13/P14 step
 
