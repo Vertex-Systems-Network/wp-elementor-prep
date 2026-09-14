@@ -29,25 +29,21 @@ export async function readP16OperatorJsonInput(
   fail: Fail,
 ): Promise<unknown> {
   const resolvedPath = resolve(path);
-  let size: number;
+  let info;
 
   try {
-    const info = await lstat(resolvedPath);
-    if (!info.isFile()) {
-      fail(`${label} input must be a regular file.`);
-    }
-    size = info.size;
-  } catch (error) {
-    if (error instanceof Error && error.message.endsWith('input must be a regular file.')) {
-      throw error;
-    }
+    info = await lstat(resolvedPath);
+  } catch {
     fail(`Unable to inspect ${label} input.`);
   }
 
-  if (size === 0) {
+  if (!info.isFile()) {
+    fail(`${label} input must be a regular file.`);
+  }
+  if (info.size === 0) {
     fail(`${label} input is empty.`);
   }
-  if (size > P16_OPERATOR_JSON_INPUT_MAX_BYTES) {
+  if (info.size > P16_OPERATOR_JSON_INPUT_MAX_BYTES) {
     fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
   }
 
