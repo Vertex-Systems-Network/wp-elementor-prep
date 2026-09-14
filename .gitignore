@@ -4,7 +4,20 @@ dist-cli/
 dist-local/
 dist-release/
 dist-p12/
-.env
-.DS_Store
 coverage/
 *.log
+.DS_Store
+
+# Local environment and credential material
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.mobileprovision
+credentials.json
+service-account*.json
