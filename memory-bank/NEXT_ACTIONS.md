@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through iterative JSON structural limits + alias-safe atomic output
+## Parallel P16 state — bounded code-side foundation complete through direct canonicalization limits
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -52,7 +52,9 @@ Current implemented P16 chain:
 - PR #400 — canonical prototype-safe-canonicalization docs sync;
 - PR #402 — alias-safe atomic output writer for both retention operator CLIs;
 - PR #404 — canonical alias-safe-output docs sync;
-- PR #406 — iterative post-parse JSON structural bounds for both retention operator CLIs.
+- PR #406 — iterative post-parse JSON structural bounds for both retention operator CLIs;
+- PR #408 — canonical JSON-structure-bounds docs sync;
+- PR #410 — direct retention-manifest canonicalization bounds independent of CLI guards.
 
 Current progression is intentionally bounded:
 
@@ -80,13 +82,16 @@ Their shared output writer additionally:
 - removes temporary output state before fail-closed exit on write errors;
 - preserves source-input bytes in rejected symlink/hardlink/parent-alias cases covered by focused tests.
 
-The exact-current requirements-manifest canonicalizer remains prototype-safe:
+The exact-current requirements-manifest canonicalizer is independently bounded and prototype-safe:
 
+- direct validator/fingerprint callers are capped at 64 nested container levels and 50,000 total visited values even when the CLI is bypassed;
+- depth 64 and exactly 50,000 values are accepted; depth 65 and 50,001 values fail closed;
+- recursive descent is therefore bounded at 64 container levels;
 - canonical object snapshots use `Object.create(null)`;
 - own enumerable JSON keys such as `__proto__` remain data fields instead of invoking the legacy prototype setter;
 - hostile top-level or nested `__proto__` additions therefore change the canonical fingerprint and are rejected as extra/stale fields;
-- focused tests confirm `Object.prototype` is not polluted;
-- validator version/schema/status remain unchanged because this restores the existing strict extra-field rejection contract.
+- cycle, sparse-array, non-finite, non-JSON and non-plain-object rejection remains unchanged;
+- validator version/schema/status remain unchanged because these are hardening of the existing exact-current metadata contract.
 
 `p16:evidence-retention-requirements-validate` additionally:
 
@@ -164,7 +169,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #400 docs sync -> `158132b4076fe5a70afa8e8778ae888fcca4db60`; exact head `b6cfb1922429f48e69e40d6a8c270454d10c99a2`; CI #1176, Integration #439, Final Release #487, Offline #531 PASS;
 - #402 alias-safe atomic output writes -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`; exact head `039f45aaf95571828b38dfc661a41dd2bcc62dc0`; CI #1178, Final Release #489, Offline #533 PASS;
 - #404 docs sync -> `4f66522ae9d8dc6fb82875b32634306918ed0a9a`; exact head `4917d79bad91086a5262b99f16091e3eff14c647`; CI #1180, Integration #442, Final Release #491, Offline #535 PASS;
-- #406 JSON structural bounds -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`; exact head `42c26747e6609cb4c890174baa5627a4e000e889`; CI #1182, Final Release #493, Offline #537 PASS.
+- #406 JSON structural bounds -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`; exact head `42c26747e6609cb4c890174baa5627a4e000e889`; CI #1182, Final Release #493, Offline #537 PASS;
+- #408 docs sync -> `ab8cb5e783b14688180959017aa79b9a86adfa66`; exact head `8c984f124a5b22a5c05cb15527e1cf468b0ff772`; CI #1184, Integration #445, Final Release #495, Offline #539 PASS;
+- #410 direct canonicalization bounds -> `cb4de36d4922b31b1e278d4f55426d042736549b`; exact head `c3ef7329d430c3e450a8b8e4292a5293eace8865`; CI #1186, Final Release #497, Offline #541 PASS.
 
 ## Current guardrails
 
