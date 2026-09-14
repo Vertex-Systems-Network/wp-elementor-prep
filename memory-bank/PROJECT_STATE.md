@@ -14,8 +14,9 @@ Current implemented surfaces:
 4. validated P5/P6/P7 safe-prep/runtime foundations;
 5. P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 6. P14 target-neutral retained-duplicate core;
-7. development-only read-only P14 Guided Prepare preview with exact evidence freshness, proposed-change review binding and persisted-evidence rejection diagnostics;
-8. exact-build release/provenance and fail-closed P12 publisher-evidence tooling.
+7. development-only read-only P14 Guided Prepare preview with exact evidence freshness, proposed-change review binding, exact runtime review packet and persisted-evidence rejection diagnostics;
+8. bounded P15 Elementor foundation with v0.4/container validation, documented-core widget capability reporting and a non-authorizing candidate artifact envelope;
+9. exact-build release/provenance and fail-closed P12 publisher-evidence tooling.
 
 Approved direction remains:
 
@@ -41,22 +42,22 @@ Elementor is first target family, Gutenberg second, followed by generic web/fram
 
 ## Current repository main
 
-Current verified main after security hardening and analyzer-v2 offline parity alignment:
+Current verified main after P14 review-packet, workflow-credential hardening and first P15 foundation slices:
 
-`9955be0561807550a7ad1444d8d013d783820188`
+`426314b183f220f66a315a24f9b1122a464909b9`
 
 Recent guarded merge line:
 
 - #283 docs sync -> `54fad8332e9ef4d41c5ccd2c5ccda4fb10247c5c`;
 - #286 supply-chain security -> `245a045fcbc30bd2ec81edb06dba65119e358a50`;
 - #293 P3 pixel-broker fail-closed security -> `47dbc078b0a41cbbe5301d6e0d95d5ca33cc8721`;
-- #294 P13 offline analyzer-v2 parity -> `9955be0561807550a7ad1444d8d013d783820188`.
-
-Current docs-only synchronization:
-
-- issue #297;
-- branch `docs/post-security-p13-parity-297`;
-- scope limited to README, P14 foundation and memory-bank state/next-actions.
+- #294 P13 offline analyzer-v2 parity -> `9955be0561807550a7ad1444d8d013d783820188`;
+- #298 canonical docs sync -> `127c7215a15a36a2aabc62da79a02708903f4cb9`;
+- #300 P14 deterministic runtime review packet -> `3a1f2f96617304aa4251aa4f3e4e112bce13612a`;
+- #302 persisted checkout-credential hardening -> `5295a40839b093a77b3c6d2dc98daa6ac63d5067`;
+- #304 Elementor v0.4/container validator -> `4c6e0f63718a6b38b056c82207e25973356d0d66`;
+- #306 Elementor read-only capability registry/report -> `c242197a2d0a0dd24d7364db5f10c1fb6fa76e13`;
+- #308 non-authorizing Elementor candidate artifact envelope -> `426314b183f220f66a315a24f9b1122a464909b9`.
 
 ## Current issue queue
 
@@ -65,9 +66,7 @@ Current docs-only synchronization:
 - #159 — **P13 real-plugin Build-Ready runtime/parity evidence: OPEN runtime-acceptance dependency**. Genuine real-Figma runtime acceptance remains pending.
 - #182 — **P27 final production-release gate: DEFINED / execution deferred**.
 - #287 — **OPEN repository-admin security hardening**. Main branch protection/ruleset enforcement requires GitHub administration access and is not represented as fixed by code changes.
-- #297 — **ACTIVE docs-only synchronization** through current security/parity/artifact truth.
-
-Focused issues #275, #280, #284, #285, #288 and #295 are completed through their reviewed implementation/artifact flows.
+Focused issues #275, #280, #284, #285, #288, #295, #297, #299, #301, #303, #305 and #307 are completed through their reviewed implementation/artifact flows.
 
 ## P13 state
 
@@ -135,7 +134,8 @@ Development-only Guided Prepare includes:
 - #268/#269 — versioned snapshot-first proposed-change review manifest;
 - #271/#272 — human-readable Proposed Change Review Binding;
 - #275/#279 — current `p13-core-v2` analyzer/run provenance required by retained evidence and P13 -> P14 handoff;
-- #280/#281 — precise persisted-evidence rejection diagnostics and fresh-Audit guidance.
+- #280/#281 — precise persisted-evidence rejection diagnostics and fresh-Audit guidance;
+- #299/#300 — deterministic exact-context runtime review packet with all P14 authority flags still false.
 
 The preview requires exact current context and fresh current-build P13 evidence. The review manifest is bound to P13 run ID, source node/fingerprint, plan digest, canonical eligible action IDs and exact eligible action rule/recipe/target/prerequisite/mutation/validation evidence.
 
@@ -226,9 +226,19 @@ Publishing-authoritative historical candidate remains:
 
 Later P13/P14 development commits do not replace that historical P12 publishing candidate or count as live publisher acceptance. Remaining P12 live/manual evidence is owned by final P27 sequence #182.
 
-## P15-P26 state
+## P15 state
 
-P15-P26 remain **preflight frozen / implementation not started**. They may proceed under roadmap #119 when dependency order is reached, with R0 refresh and R1 acceptance contracts where required.
+P15 is now **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**. Three bounded offline/read-only layers are merged:
+
+- PR #304 — documented Elementor data version `0.4` modern `container`/`widget` contract with bounded validation; legacy `section`/`column`, Atomic `e-*`, unknown element types, malformed settings, duplicate IDs and resource-limit violations fail closed;
+- PR #306 — versioned read-only capability registry/report for directly evidenced classic widget IDs `heading`, `image`, and `button`; unregistered widgets are `REVIEW_REQUIRED`, with no Pro/add-on availability inference;
+- PR #308 — deterministic candidate artifact envelope with `REJECTED_INVALID_TEMPLATE`, `REVIEW_REQUIRED`, or `READY_FOR_TARGET_IMPORT_VALIDATION` state while `importValidationStatus=NOT_RUN`, `downloadEnabled=false`, `targetCompatibilityClaim=false`, and `productionAcceptance=false`.
+
+No Figma-to-Elementor semantic auto-mapping/generator, WordPress connection, real Elementor import proof, product download control, Elementor Pro/third-party mapping or Atomic generation has been accepted.
+
+## P16-P26 state
+
+P16-P26 remain **preflight frozen / implementation not started** and proceed under roadmap #119 with R0/R1 gates as applicable.
 
 ## P27 state
 
@@ -240,6 +250,6 @@ P27 #182 remains the final production-release gate and owns deferred exact P12 r
 
 ## Immediate project action
 
-Complete #297 docs-only synchronization and exact-head gates. Then use the current #295 artifact only for genuine #159 Figma Desktop evidence capture/parity review; do not manufacture runtime acceptance in repository CI. Target-neutral/read-only P14 work may continue without changing the locked confirmation/mutation/compatibility authority state.
+Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. In parallel, continue P15 only through bounded deterministic target-adapter slices: next work must bind any future import-validation evidence to an exact candidate and must not enable product download or target-compatibility authority before real Elementor target validation exists.
 
 No synthetic overall project percentage is used. Historical module progress and current implementation/runtime/release states remain separate.

@@ -11,7 +11,8 @@ Current product surfaces:
 - deterministic audit/backlog/Build-Ready outputs;
 - safety-gated P5/P6/P7 preparation foundations;
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
-- development-only read-only P14 Guided Prepare preview, proposed-change review binding and persisted-evidence diagnostics;
+- development-only read-only P14 Guided Prepare preview, proposed-change review binding, exact runtime review packet and persisted-evidence diagnostics;
+- P15 Elementor foundation: documented v0.4/container validation, bounded widget-capability reporting and a non-authorizing candidate artifact envelope;
 - exact-build release/provenance tooling.
 
 Current core flow:
@@ -49,7 +50,7 @@ Open roadmap / acceptance issues:
 
 Current verified main is:
 
-`9955be0561807550a7ad1444d8d013d783820188`
+`426314b183f220f66a315a24f9b1122a464909b9`
 
 ### Recent verified P13/P14 sequence
 
@@ -63,6 +64,12 @@ Current verified main is:
 - PR #293 hardened the P3 UI pixel-broker boundary so malformed/tampered metrics and oversized broker images fail closed, then guarded squash-merged as `47dbc078b0a41cbbe5301d6e0d95d5ca33cc8721`. Exact head passed CI #1054, P12 Final Release Artifact #365 and P12 Offline Acceptance #409; Integration Readiness did not trigger for this code-only diff.
 - PR #294 aligned the operator-facing P13 offline parity intake with `p13-core-v2` analyzer-bound run identity and guarded squash-merged as `9955be0561807550a7ad1444d8d013d783820188`. Exact head `68189da1fba9b42610cc932e1193851c8c7e9636` passed CI #1056, P12 Final Release Artifact #367 and P12 Offline Acceptance #411; Integration Readiness did not trigger for this code-only diff.
 - Issue #295 regenerated the current traceable, non-publishable P13 development runtime artifact from source `9955be0561807550a7ad1444d8d013d783820188`: Actions run `34833881774`, artifact `p13-runtime-evidence-9955be056180-analyzer-v2`, ID `10343017256`, digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`. The artifact does not grant runtime acceptance; #159 remains open for genuine Figma Desktop evidence.
+- PR #298 synchronized the canonical P13/P14 docs after security/parity work and guarded squash-merged as `127c7215a15a36a2aabc62da79a02708903f4cb9`.
+- PR #300 added a deterministic development-only P14 runtime review packet bound to exact plugin/build provenance, persisted evidence, full Figma context and analyzer-bound P13 identity while keeping all four authority flags false; guarded squash merge `3a1f2f96617304aa4251aa4f3e4e112bce13612a`.
+- PR #302 disabled persisted checkout credentials in all four permanent trusted workflows and enforced the security contract; Integration Readiness proved canonical public refs remain fetchable without persisted credentials; guarded squash merge `5295a40839b093a77b3c6d2dc98daa6ac63d5067`.
+- PR #304 established the documented Elementor v0.4/container template contract and bounded offline validator; guarded squash merge `4c6e0f63718a6b38b056c82207e25973356d0d66`.
+- PR #306 added the read-only Elementor capability registry/report for directly documented classic widget IDs `heading`, `image`, and `button`; guarded squash merge `c242197a2d0a0dd24d7364db5f10c1fb6fa76e13`.
+- PR #308 added the deterministic non-authorizing Elementor candidate artifact envelope. Import validation remains `NOT_RUN`, download remains disabled, and target-compatibility/production-acceptance claims remain false; guarded squash merge `426314b183f220f66a315a24f9b1122a464909b9`.
 
 The real P13 vertical-stack opportunity is still **not** production mutation authority. `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty, so production P13→P14 handoff downgrades the candidate to REVIEW with `P14_SAFE_BINDING_REQUIRED`, produces no production-eligible action IDs, and keeps the P14 plan BLOCKED.
 
@@ -86,7 +93,7 @@ The proposed-change review manifest, visible review-binding panel, analyzer iden
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains; current analyzer is p13-core-v2 with analyzer-bound run identity |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only preview requires current analyzer/fresh evidence and shows rejection diagnostics; real candidate remains REVIEW/BLOCKED because production registry remains empty; retained-duplicate mutation runtime is unwired; #159 current real-Figma evidence remains required before real Figma mutation exposure |
-| P15 Elementor native export + validation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; versioned v3/v4 adapter + real import proof |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | v0.4/container validator + bounded widget capability report + non-authorizing candidate envelope merged; Figma semantic mapping/generation, WordPress import validation and product download remain unwired |
 | P16 Gutenberg native export + transfer | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; native block/pattern/editor validation |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + versioned adapter/build matrix retained |
@@ -100,7 +107,7 @@ The proposed-change review manifest, visible review-binding panel, analyzer iden
 | P26 Optional AI assistance | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Non-authoritative AI authority firewall retained; provider/network choice still unselected |
 | P27 Final production release + publisher/runtime evidence | GATE DEFINED / EXECUTION DEFERRED | 0% exec | `░░░░░░░░░░` | Coordinate retained #84 truth + final live runtime/publisher/2FA evidence after implementation/internal readiness |
 
-**Overall progress is intentionally not collapsed into one synthetic percentage.** Historical P0-P7 core remains 100%; P12 remains 80%; P13 implementation is complete with real-plugin runtime acceptance pending; P14 core/read-only review implementation is active while confirmation and retained-duplicate mutation authority remain unwired; P15-P26 implementation is not started; P27 release execution is not started.
+**Overall progress is intentionally not collapsed into one synthetic percentage.** Historical P0-P7 core remains 100%; P12 remains 80%; P13 implementation is complete with real-plugin runtime acceptance pending; P14 core/read-only review implementation is active while confirmation and retained-duplicate mutation authority remain unwired; P15 core foundation is in progress with target import still unvalidated; P16-P26 implementation is not started; P27 release execution is not started.
 
 R0/R1 gate definitions remain complete but are re-executed where applicable. Implementation completion, real-runtime acceptance and production release are separate evidence states; one does not imply another.
 
