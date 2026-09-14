@@ -17,13 +17,13 @@ Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 be
 
 ## Immediate action — P15 authenticated external closure + internal review boundary
 
-Classification: **OPERATOR INTAKE MERGED / AUTHENTICATED CLOSURE DECISION PENDING**.
+Classification: **PRE-DECISION REVIEW PACKET MERGED / AUTHENTICATED CLOSURE DECISION PENDING**.
 
-The documented core-image asset review, combined global+asset reference-review identity, exact-bound external closure PASS/FAIL receipt contract and offline/operator intake are merged. The next authority-bearing step requires genuine externally captured closure evidence plus a separate internal review/decision; repository CI or a synthetic receipt cannot substitute for that evidence.
+The documented core-image asset review, combined global+asset reference-review identity, exact-bound external closure PASS/FAIL receipt contract, offline/operator intake and deterministic pre-decision review packet are merged. The next authority-bearing step requires genuine externally captured closure evidence authentication plus a separate internal review/decision; repository CI, synthetic receipts or fixture review packets cannot substitute for that evidence.
 
-Use `p15:reference-closure-intake` only to validate exact template/profile/receipt binding and sanitize operator evidence. `BOUND_REPORTED_PASS` means all currently required external reports say PASS; it does not authenticate `evidenceReference`, set `referenceClosureClaim`, establish target compatibility, or grant production/generation/download authority. Stale, REVIEW, BLOCKED and no-reference bypass attempts must continue to fail closed.
+Use `p15:reference-closure-intake` only to validate exact template/profile/receipt binding and sanitize operator evidence. Use `p15:reference-closure-review-packet` only to freeze that exact-bound reported state for human pre-decision review. `BOUND_REPORTED_PASS` / `REPORTED_PASS_AUTHENTICATION_REQUIRED` mean all currently required external reports say PASS; neither state authenticates `evidenceReference`, sets `referenceClosureClaim`, establishes target compatibility, or grants production/generation/download authority. Stale, REVIEW, BLOCKED and no-reference bypass attempts must continue to fail closed.
 
-Do not introduce a WordPress connection, target mutation, Pro/add-on availability inference, Atomic generation or product download UI merely to manufacture closure. Any next code-side review contract must preserve the distinction between reported evidence, authenticated evidence, internal decision and target compatibility.
+Do not introduce a WordPress connection, target mutation, Pro/add-on availability inference, Atomic generation or product download UI merely to manufacture closure. No next code-side contract may turn `evidenceAuthenticationStatus=NOT_RUN` or `internalDecisionStatus=NOT_RUN` into authority without genuine retained evidence and an explicit separate decision path.
 
 ## Parallel required runtime evidence — genuine #159 Figma Desktop evidence
 
@@ -94,7 +94,7 @@ Current state:
 
 - P13 — implementation complete / real-plugin runtime acceptance pending (#159), with `p13-core-v2` analyzer-bound provenance and one real target-neutral safe-preparation candidate signal;
 - P14 — deterministic core + fresh read-only Guided Prepare + review manifest/binding + exact runtime review packet + persisted-evidence rejection diagnostics active in development; confirmation/mutation still unwired;
-- P15 — core foundation in progress / target import unvalidated: exact candidate/profile/import evidence, bounded global/core-image asset review, combined reference-review identity, exact-bound external closure receipt and offline operator intake are merged; authenticated external closure/internal decision, real target import, semantic generation and download authority remain pending/unwired;
+- P15 — core foundation in progress / target import unvalidated: exact candidate/profile/import evidence, bounded global/core-image asset review, combined reference-review identity, exact-bound external closure receipt, offline operator intake and non-authorizing pre-decision review packet are merged; genuine evidence authentication/internal decision, real target import, semantic generation and download authority remain pending/unwired;
 - P16-P26 — preflight frozen / implementation not started;
 - P27 — final production-release gate defined, execution deferred (#182).
 
@@ -161,7 +161,8 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 G
 - PR #330 -> `d0796310fb3b6d4f1753d472e0e9f9783bb752b3`; CI #1102, Final Release #413 and Offline #457 PASS;
 - PR #332 docs sync -> `f2403e41998a8c91aedde3fa411863edd983ea99`; CI #1104, Integration Readiness #388, Final Release #415 and Offline #459 PASS;
 - PR #334 -> `c20d8835c27cf73e1e367c478f346f6c80d72824`; CI #1106, Final Release #417 and Offline #461 PASS;
-- Integration Readiness did not trigger for the code-only #326/#328/#330/#334 diffs.
+- PR #338 -> `250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`; CI #1110, Final Release #421 and Offline #465 PASS;
+- Integration Readiness did not trigger for the code-only #326/#328/#330/#334/#338 diffs.
 
 ## Current guardrails for next work
 
@@ -169,7 +170,7 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 G
 2. P14 production safe-recipe registry remains empty and all four authority flags remain false.
 3. P15 target import remains unvalidated; compatibility, production, generation and download authority remain disabled.
 4. Exact-candidate/import evidence, declared-profile binding and combined global+asset reference-review identity are implemented; future observed target evidence must match current identities and still requires internal review.
-5. Global review emits key/path inventory only; documented asset review currently covers only the pinned core Image MEDIA control and emits URL fingerprints, not raw URLs. External closure receipts and the offline intake are exact-bound PASS/FAIL evidence only; repository code does not authenticate evidence references and `BOUND_REPORTED_PASS` does not grant closure authority.
+5. Global review emits key/path inventory only; documented asset review currently covers only the pinned core Image MEDIA control and emits URL fingerprints, not raw URLs. External closure receipts, offline intake and pre-decision packet are exact-bound reported evidence/review surfaces only; repository code does not authenticate evidence references, and neither `BOUND_REPORTED_PASS` nor `REPORTED_PASS_AUTHENTICATION_REQUIRED` grants closure authority.
 6. No Figma-to-Elementor semantic generator, Pro/add-on mapping or Atomic generation support is accepted yet.
 7. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
 8. P12 historical publishing evidence remains unchanged and P27 owns final live release-exit evidence.
