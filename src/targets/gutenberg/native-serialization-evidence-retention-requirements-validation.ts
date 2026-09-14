@@ -8,6 +8,7 @@ export const GUTENBERG_NATIVE_SERIALIZATION_EVIDENCE_RETENTION_REQUIREMENTS_VALI
   'gutenberg-native-serialization-evidence-retention-requirements-validation-v1' as const;
 export const GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_DEPTH = 64;
 export const GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_VALUES = 50_000;
+export const GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_TEXT_BYTES = 1024 * 1024;
 
 export type GutenbergNativeSerializationEvidenceRetentionRequirementsValidationStatus =
   | 'REJECTED_CURRENT_CHAIN_NOT_READY'
@@ -67,10 +68,50 @@ type CanonicalJsonValue =
 
 type CanonicalizationBudget = {
   visitedValues: number;
+  textBytes: number;
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function utf8ByteLengthWithinLimit(value: string, limit: number): number | null {
+  let bytes = 0;
+
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+
+    if (code <= 0x7f) {
+      bytes += 1;
+    } else if (code <= 0x7ff) {
+      bytes += 2;
+    } else if (code >= 0xd800 && code <= 0xdbff) {
+      const next = value.charCodeAt(index + 1);
+      if (next >= 0xdc00 && next <= 0xdfff) {
+        bytes += 4;
+        index += 1;
+      } else {
+        bytes += 3;
+      }
+    } else if (code >= 0xdc00 && code <= 0xdfff) {
+      bytes += 3;
+    } else {
+      bytes += 3;
+    }
+
+    if (bytes > limit) return null;
+  }
+
+  return bytes;
+}
+
+function consumeCanonicalTextBudget(value: string, budget: CanonicalizationBudget): void {
+  const remaining = GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_TEXT_BYTES - budget.textBytes;
+  const bytes = utf8ByteLengthWithinLimit(value, remaining);
+  if (bytes === null) {
+    throw new Error('Manifest value exceeds canonical JSON text byte limit.');
+  }
+  budget.textBytes += bytes;
 }
 
 function canonicalizeJson(
@@ -85,7 +126,11 @@ function canonicalizeJson(
   }
 
   if (value === null) return null;
-  if (typeof value === 'string' || typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    consumeCanonicalTextBudget(value, budget);
+    return value;
+  }
+  if (typeof value === 'boolean') return value;
   if (typeof value === 'number') {
     if (!Number.isFinite(value)) throw new Error('Non-finite numbers are not valid JSON values.');
     return value;
@@ -118,8 +163,14 @@ function canonicalizeJson(
       throw new Error('Manifest object must be a plain JSON object.');
     }
 
+    const keys = Object.keys(value);
+    for (const key of keys) {
+      consumeCanonicalTextBudget(key, budget);
+    }
+    keys.sort();
+
     const result = Object.create(null) as { [key: string]: CanonicalJsonValue };
-    for (const key of Object.keys(value).sort()) {
+    for (const key of keys) {
       result[key] = canonicalizeJson(
         (value as Record<string, unknown>)[key],
         seen,
@@ -138,7 +189,7 @@ function canonicalJson(value: unknown): string | null {
     return JSON.stringify(canonicalizeJson(
       value,
       new Set<object>(),
-      { visitedValues: 0 },
+      { visitedValues: 0, textBytes: 0 },
       0,
     ));
   } catch {
