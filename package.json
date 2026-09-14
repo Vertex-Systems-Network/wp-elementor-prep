@@ -21,6 +21,7 @@
     "p15:reference-closure-intake": "node scripts/p15-reference-closure-intake.mjs",
     "p15:reference-closure-review-packet": "node scripts/p15-reference-closure-review-packet.mjs",
     "p16:native-serialization-intake": "node scripts/p16-native-serialization-intake.mjs",
+    "p16:evidence-retention-requirements": "node scripts/p16-evidence-retention-requirements.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
