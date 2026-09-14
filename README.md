@@ -13,6 +13,7 @@ Current product surfaces:
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare preview, proposed-change review binding, exact runtime review packet and persisted-evidence diagnostics;
 - P15 Elementor R1 foundation: v0.4/container validation, bounded widget-capability reporting, exact candidate/import-evidence binding, immutable declared target profiles, read-only profile assessment, bounded global/core-image asset review, deterministic combined reference identity, exact-bound external closure-evidence receipts, offline closure-evidence operator intake, deterministic non-authorizing pre-decision review packets and exact-bound externally reported authentication-result binding;
+- P16 Gutenberg foundation: current official R0 snapshot, bounded `gutenberg-normalized-parsed-block-v1` review contract, fail-closed normalized block validation and read-only documented-core capability reporting for `core/paragraph`, `core/heading`, `core/image`, and `core/group`;
 - exact-build release/provenance tooling.
 
 Current core flow:
@@ -30,7 +31,8 @@ Canonical planning/status docs:
 - `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md` — R1 adapter/option/system reliability contract;
 - `docs/COMMERCIAL_EXPANSION_PLAN.md` — retained P13-P26 commercial implementation roadmap; P27 final production-release gate is tracked by #182;
 - `docs/P13_P26_PREFLIGHT_COMPLETION_2026-09-11.md` — retained P13-P26 planning/preflight completion index;
-- `docs/P14_FOUNDATION_IMPLEMENTATION.md` — current target-neutral P14 safety/read-only review contract;
+- `docs/P14_FOUNDATION_IMPLEMENTATION.md` — current target-neutral P14 safety/read-only review contract plus synchronized downstream adapter status;
+- `docs/R0_GUTENBERG_P16_2026-09-14.md` — retained first P16 official WordPress/Gutenberg platform snapshot;
 - `memory-bank/PROJECT_STATE.md` — current repository/project truth;
 - `memory-bank/NEXT_ACTIONS.md` — current execution queue.
 
@@ -50,9 +52,9 @@ Open roadmap / acceptance issues:
 
 Current verified main is:
 
-`464461a86a4aed4bd43260baee79619a25216c2b`
+`66f6a77f31c69b0c4cd280a21bc03eb53759ec4d`
 
-### Recent verified P13/P14 sequence
+### Recent verified P13/P14/P15/P16 sequence
 
 - PR #269 added a versioned snapshot-first non-authorizing proposed-change review manifest and guarded squash-merged as `6514959cbfd9a71c241b204f371a330a6be462e2`; exact head `234eda81ab5c49c3325c7fd9231d3d66841c0013` passed CI #1014, P12 Final Release Artifact #325 and P12 Offline Acceptance #369.
 - PR #270 added the first real zero-penalty P13 `BR_SAFE_VERTICAL_STACK_CANDIDATE`, derived only from the accepted P2/P5 planner pipeline, and guarded squash-merged as `a70b003bd533cbf42d1aaaabf722639852ba48db`; corrected exact head `5d739cde842cefe6ff640aeba74da4900eddb831` passed CI #1017, P12 Final Release Artifact #328 and P12 Offline Acceptance #372.
@@ -86,6 +88,8 @@ Current verified main is:
 - PR #338 added a deterministic sanitized pre-decision reference-closure review packet. Exact-bound PASS advances only to `REPORTED_PASS_AUTHENTICATION_REQUIRED`; evidence authentication and internal decision stay `NOT_RUN`, all authority flags remain false, and raw evidence references/global values/asset URLs remain absent; guarded squash merge `250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`.
 - PR #340 synchronized canonical README/P14/project-state/next-actions through the pre-decision review-packet slice; guarded squash merge `34b77b567d49423dae9e15212cf4c82cf842eca5`.
 - PR #343 added exact binding for a caller-supplied externally reported evidence-authentication result to the current reference-review identity, canonical closure-receipt SHA-256 and SHA-256 of each required evidence reference. `EXTERNALLY_REPORTED_PASS` is not repository authentication or closure authority; all authority flags stay false and `internalDecisionStatus=NOT_RUN`; exact head `e75a30ecd4d38b17ea0b56300827f5a3e06e0b0d` passed CI #1114, P12 Final Release Artifact #425 and P12 Offline Acceptance #469 on Windows/macOS/Ubuntu before guarded squash merge `464461a86a4aed4bd43260baee79619a25216c2b`. Integration Readiness did not trigger for this code-only diff.
+- PR #345 synchronized canonical README/P14/project-state/next-actions through the P15 external-authentication binding and guarded squash-merged as `359f247fbb70ee5e301136682ad69a0945e0a6ed`.
+- PR #346 added the first bounded P16 Gutenberg foundation and guarded squash-merged as `66f6a77f31c69b0c4cd280a21bc03eb53759ec4d`. Exact head `faab4bb4d0805e6d71c04e91ac543ee2805f762e` passed CI #1118, P12 Final Release Artifact #429 and P12 Offline Acceptance #473 on Windows/macOS/Ubuntu; Integration Readiness did not trigger for this diff.
 
 The real P13 vertical-stack opportunity is still **not** production mutation authority. `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty, so production P13→P14 handoff downgrades the candidate to REVIEW with `P14_SAFE_BINDING_REQUIRED`, produces no production-eligible action IDs, and keeps the P14 plan BLOCKED.
 
@@ -110,7 +114,7 @@ The proposed-change review manifest, visible review-binding panel, analyzer iden
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains; current analyzer is p13-core-v2 with analyzer-bound run identity |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only preview requires current analyzer/fresh evidence and shows rejection diagnostics; real candidate remains REVIEW/BLOCKED because production registry remains empty; retained-duplicate mutation runtime is unwired; #159 current real-Figma evidence remains required before real Figma mutation exposure |
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Exact candidate/profile/import evidence + bounded global/core-image asset review + combined reference identity + external closure receipt + offline operator intake + non-authorizing pre-decision review packet + exact-bound externally reported authentication-result binding are merged; genuine trusted authentication/internal decision, real target import, Figma semantic generation and product download remain unaccepted/unwired |
-| P16 Gutenberg native export + transfer | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; native block/pattern/editor validation |
+| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Official R0 snapshot + normalized parsed-block review contract + documented-core API-v3 capability report are merged; raw Gutenberg serialization, WordPress runtime/import/render validation, Figma semantic mapping, pattern packaging and download authority remain unwired/unaccepted |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + versioned adapter/build matrix retained |
 | P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
@@ -123,7 +127,7 @@ The proposed-change review manifest, visible review-binding panel, analyzer iden
 | P26 Optional AI assistance | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Non-authoritative AI authority firewall retained; provider/network choice still unselected |
 | P27 Final production release + publisher/runtime evidence | GATE DEFINED / EXECUTION DEFERRED | 0% exec | `░░░░░░░░░░` | Coordinate retained #84 truth + final live runtime/publisher/2FA evidence after implementation/internal readiness |
 
-**Overall progress is intentionally not collapsed into one synthetic percentage.** Historical P0-P7 core remains 100%; P12 remains 80%; P13 implementation is complete with real-plugin runtime acceptance pending; P14 core/read-only review implementation is active while confirmation and retained-duplicate mutation authority remain unwired; P15 core foundation is in progress with target import still unvalidated; P16-P26 implementation is not started; P27 release execution is not started.
+**Overall progress is intentionally not collapsed into one synthetic percentage.** Historical P0-P7 core remains 100%; P12 remains 80%; P13 implementation is complete with real-plugin runtime acceptance pending; P14 core/read-only review implementation is active while confirmation and retained-duplicate mutation authority remain unwired; P15 core foundation is in progress with target import still unvalidated; P16 core foundation is now in progress with target validation unwired; P17-P26 implementation is not started; P27 release execution is not started.
 
 R0/R1 gate definitions remain complete but are re-executed where applicable. Implementation completion, real-runtime acceptance and production release are separate evidence states; one does not imply another.
 
@@ -154,6 +158,23 @@ Current explicit P14 preview/review locks remain:
 
 The generated publishable release UI strips the development-only Guided Prepare preview and Proposed Change Review Binding surface.
 
+## Current P15 boundary
+
+P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**. The exact candidate/profile/import/reference-closure chain is bounded and non-authorizing. A caller-supplied externally reported authentication PASS is bound to current hashes only; repository code does not authenticate the evidence or verifier, `authenticationAuthority=false`, `internalDecisionStatus=NOT_RUN`, and compatibility/production/generation/download authority remain false.
+
+## Current P16 boundary
+
+P16 is **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**. PR #346 retained:
+
+- the current official WordPress/Gutenberg R0 snapshot;
+- repository-owned `gutenberg-normalized-parsed-block-v1` normalized JSON review contract for `blockName`, `attrs`, `innerBlocks`, and `innerHTML`;
+- bounded node/depth/attribute/string limits and fail-closed diagnostics;
+- top-level `blockName=null` freeform handling distinct from named namespaced blocks;
+- read-only documented-core capability reporting for exact current official API-v3 IDs `core/paragraph`, `core/heading`, `core/image`, and `core/group`;
+- `REVIEW_REQUIRED` for custom/unregistered/freeform content.
+
+The normalized JSON serializer is not Gutenberg post-content serialization and the repository model intentionally omits WordPress `innerContent`. No raw comment-delimited markup generation, `@wordpress/blocks`/PHP runtime execution, WordPress REST/site connection, editor/import/render proof, dynamic-block proof, Figma semantic mapping, selected-section transfer, pattern/package generation, production acceptance or download authority is claimed. `targetCompatibilityClaim=false`, `productionAcceptance=false`, `generationEnabled=false`, and `downloadEnabled=false` remain fixed.
+
 ## Current P12 publishing line
 
 The retained publishing candidate under manual evaluation was produced from source:
@@ -168,7 +189,7 @@ Verification on that historical candidate passed CI #709, Integration Readiness 
 
 The exact candidate is pinned in `config/p12-publisher-candidate.json`. `npm run p12:publisher-evidence` verifies exact ZIP/extracted-plugin hashes, hashes runtime/publish/2FA screenshots, requires explicit operator confirmations, and emits a receipt with `acceptanceAuthority: false`.
 
-The currently retained screenshot set is **not sufficient** for exit. Fresh exact-#20 runtime, valid Publish final-details and 2FA screenshots remain required. Later P13/P14 development commits do not silently replace this historical P12 publishing candidate or count as live publisher acceptance. Actual Community review/approval remains external.
+The currently retained screenshot set is **not sufficient** for exit. Fresh exact-#20 runtime, valid Publish final-details and 2FA screenshots remain required. Later P13/P14/P15/P16 development commits do not silently replace this historical P12 publishing candidate or count as live publisher acceptance. Actual Community review/approval remains external.
 
 ## R0 / R1 target-adapter gates
 
@@ -178,14 +199,13 @@ A package can be `ARTIFACT VALIDATED` without being `IMPORT VERIFIED`. We do not
 
 ## Planned target order
 
-1. finish the current P14 target-neutral preparation/read-only review foundation without silently granting production authority;
+1. keep the current P14 target-neutral preparation/read-only review foundation non-authorizing while #159 remains pending;
 2. complete #159 real-plugin P13 runtime/parity acceptance when genuine Figma evidence is available;
-3. refresh R0/R1 for the target when needed;
-4. implement P15 Elementor;
-5. implement P16 Gutenberg;
-6. continue P17-P26 in retained dependency order;
-7. execute P27 #182 only after implementation/internal readiness is ready;
-8. during P27, capture remaining exact release runtime/publisher/2FA evidence and perform the genuine #84 release-exit decision.
+3. continue P15 only where genuine trusted evidence permits stronger internal decisions;
+4. continue bounded P16 Gutenberg R1/foundation work while raw serialization, target validation and generation authority remain unwired;
+5. continue P17-P26 in retained dependency order;
+6. execute P27 #182 only after implementation/internal readiness is ready;
+7. during P27, capture remaining exact release runtime/publisher/2FA evidence and perform the genuine #84 release-exit decision.
 
 ## Development and validation commands
 

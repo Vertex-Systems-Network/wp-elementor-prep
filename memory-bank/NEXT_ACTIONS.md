@@ -25,6 +25,25 @@ Use `p15:reference-closure-intake` only to validate exact template/profile/recei
 
 Do not introduce a WordPress connection, target mutation, Pro/add-on availability inference, Atomic generation or product download UI merely to manufacture closure. No next code-side contract may convert caller-supplied authentication reporting into authority without genuine retained evidence and an explicit separate internal decision path.
 
+## Parallel unblocked action — continue bounded P16 Gutenberg foundation
+
+Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
+
+PR #346 / issue #341 started the first bounded P16 implementation slice and retained the current official WordPress/Gutenberg R0 snapshot, repository-owned `gutenberg-normalized-parsed-block-v1` review contract and read-only documented-core capability reporting for exact official API-v3 IDs `core/paragraph`, `core/heading`, `core/image`, and `core/group`.
+
+The next P16 work may proceed only as a bounded deterministic/read-only R1 slice while preserving these current facts:
+
+- custom/unregistered/freeform blocks remain `REVIEW_REQUIRED`;
+- top-level `blockName=null` freeform content remains distinct from named namespaced blocks;
+- normalized JSON is review evidence, not Gutenberg post-content serialization;
+- the repository model intentionally omits WordPress `innerContent` and is not the raw `parse_blocks()` return type;
+- `targetCompatibilityClaim=false`;
+- `productionAcceptance=false`;
+- `generationEnabled=false`;
+- `downloadEnabled=false`.
+
+Do not claim raw comment-delimited block serialization, `@wordpress/blocks`/PHP runtime parity, WordPress REST/site connectivity, live editor/import/render success, dynamic-block rendering, Figma semantic mapping, selected-section transfer, pattern/package generation, production acceptance or download authority until each is separately implemented and evidenced.
+
 ## Parallel required runtime evidence — genuine #159 Figma Desktop evidence
 
 The current traceable operator artifact is `p13-runtime-evidence-9955be056180-analyzer-v2`, artifact ID `10343017256`, source `9955be0561807550a7ad1444d8d013d783820188`, digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`.
@@ -82,7 +101,7 @@ Current retained publishing candidate remains:
 - artifact digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`;
 - exact three-file publish ZIP digest `sha256:1ccfa457d4ae4145cf36b748f7758187ef3092503c270a46f28e03675878a066`.
 
-Do not treat later P13/P14 CI artifacts as replacement publisher evidence.
+Do not treat later P13/P14/P15/P16 CI artifacts as replacement publisher evidence.
 
 Deferred P27 evidence still requires genuine live proof for exact release package runtime rebind, valid Publish final-details state, publisher/account identity, required 2FA/security state and final internal release-exit review. Community review/approval remains external.
 
@@ -95,10 +114,11 @@ Current state:
 - P13 — implementation complete / real-plugin runtime acceptance pending (#159), with `p13-core-v2` analyzer-bound provenance and one real target-neutral safe-preparation candidate signal;
 - P14 — deterministic core + fresh read-only Guided Prepare + review manifest/binding + exact runtime review packet + persisted-evidence rejection diagnostics active in development; confirmation/mutation still unwired;
 - P15 — core foundation in progress / target import unvalidated: exact candidate/profile/import evidence, bounded global/core-image asset review, combined reference-review identity, exact-bound external closure receipt, offline operator intake, non-authorizing pre-decision review packet and exact-bound externally reported authentication-result binding are merged; genuine trusted authentication/internal decision, real target import, semantic generation and download authority remain pending/unwired;
-- P16-P26 — preflight frozen / implementation not started;
+- P16 — core foundation in progress / target validation unwired: official R0 snapshot, normalized parsed-block review contract and read-only documented-core capability report are merged; raw native serialization, WordPress runtime/import/render validation, Figma semantic generation, pattern packaging and download authority remain unwired/unaccepted;
+- P17-P26 — preflight frozen / implementation not started;
 - P27 — final production-release gate defined, execution deferred (#182).
 
-Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 Gutenberg -> P17 code/static-first import -> P18 frameworks -> P19 assets/design-system -> P20 round-trip QA -> P21 handoff/QA -> P22 effort -> P23 agency/bindings -> P24 CMS/forms/interactions -> P25 entitlements -> P26 optional non-authoritative AI -> P27 final production release/evidence closure.
+Future dependency order remains P14 -> R0/R1 as needed -> continue P15 only where genuine evidence permits -> continue bounded P16 Gutenberg foundation -> P17 code/static-first import -> P18 frameworks -> P19 assets/design-system -> P20 round-trip QA -> P21 handoff/QA -> P22 effort -> P23 agency/bindings -> P24 CMS/forms/interactions -> P25 entitlements -> P26 optional non-authoritative AI -> P27 final production release/evidence closure.
 
 ## Latest retained proof
 
@@ -164,7 +184,17 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 G
 - PR #338 -> `250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`; CI #1110, Final Release #421 and Offline #465 PASS;
 - PR #340 docs sync -> `34b77b567d49423dae9e15212cf4c82cf842eca5`; CI #1112, Integration Readiness #394, Final Release #423 and Offline #467 PASS;
 - PR #343 -> `464461a86a4aed4bd43260baee79619a25216c2b`; exact head `e75a30ecd4d38b17ea0b56300827f5a3e06e0b0d`; CI #1114, Final Release #425 and Offline #469 PASS;
-- Integration Readiness did not trigger for the code-only #326/#328/#330/#334/#338/#343 diffs.
+- PR #345 docs sync -> `359f247fbb70ee5e301136682ad69a0945e0a6ed`; exact-head required checks PASS.
+
+### P16 first bounded Gutenberg foundation
+
+- PR #346 -> `66f6a77f31c69b0c4cd280a21bc03eb53759ec4d`;
+- exact head `faab4bb4d0805e6d71c04e91ac543ee2805f762e`;
+- CI #1118 — PASS;
+- P12 Final Release Artifact #429 — PASS;
+- P12 Offline Acceptance #473 — PASS Windows/macOS/Ubuntu;
+- Integration Readiness did not trigger for this diff;
+- final merged scope retained the official R0 snapshot, normalized parsed-block contract, capability registry/report and focused tests only.
 
 ## Current guardrails for next work
 
@@ -174,5 +204,6 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 G
 4. Exact-candidate/import evidence, declared-profile binding and combined global+asset reference-review identity are implemented; future observed target evidence must match current identities and still requires internal review.
 5. Global review emits key/path inventory only; documented asset review currently covers only the pinned core Image MEDIA control and emits URL fingerprints, not raw URLs. External closure receipts, offline intake, pre-decision packet and external authentication-report binding are exact-bound evidence/reporting surfaces only; repository code does not authenticate evidence references or verifier identity, and neither `BOUND_REPORTED_PASS`, `REPORTED_PASS_AUTHENTICATION_REQUIRED` nor `EXTERNALLY_REPORTED_PASS` grants closure authority.
 6. No Figma-to-Elementor semantic generator, Pro/add-on mapping or Atomic generation support is accepted yet.
-7. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
-8. P12 historical publishing evidence remains unchanged and P27 owns final live release-exit evidence.
+7. P16 is now started only at normalized review/capability level. No native Gutenberg post-content serialization, target profile/import/render proof, dynamic-block proof, Figma semantic mapping, pattern package, target compatibility, production acceptance or download authority is accepted.
+8. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
+9. P12 historical publishing evidence remains unchanged and P27 owns final live release-exit evidence.
