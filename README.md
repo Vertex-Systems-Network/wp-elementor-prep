@@ -13,7 +13,7 @@ Current product surfaces:
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare/review evidence surfaces;
 - P15 Elementor R1 exact candidate/profile/import/reference evidence chain;
-- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O, prototype-safe canonicalization and alias-safe atomic output writes;
+- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O, iterative structural bounds, prototype-safe canonicalization and alias-safe atomic output writes;
 - exact-build release/provenance tooling.
 
 Canonical planning/status docs:
@@ -44,7 +44,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`8445fc0632a58515a52d72e3cf85ed1364761b9c`
+`5feb04adcd6aaca2079b749d495e22e1da6f6671`
 
 ### Recent verified P16 sequence
 
@@ -69,6 +69,8 @@ Current verified main before this documentation sync:
 - PR #398 — made retention-manifest canonicalization prototype-safe so own enumerable `__proto__` keys remain canonical data and are rejected as hostile extra fields -> `4ec559f538899697d51138fc35ed79c2bea486b1`; exact head `b7f3eead07fd9305d9b2f9290a572c715466e981` passed CI #1174, P12 Final Release Artifact #485 and P12 Offline Acceptance #529.
 - PR #400 — synchronized canonical docs through prototype-safe canonicalization -> `158132b4076fe5a70afa8e8778ae888fcca4db60`; exact head `b6cfb1922429f48e69e40d6a8c270454d10c99a2` passed CI #1176, Integration Readiness #439, P12 Final Release Artifact #487 and P12 Offline Acceptance #531.
 - PR #402 — hardened retention CLI output writes against symlink/hardlink/real-parent aliases with same-directory temporary files and atomic rename -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`; exact head `039f45aaf95571828b38dfc661a41dd2bcc62dc0` passed CI #1178, P12 Final Release Artifact #489 and P12 Offline Acceptance #533.
+- PR #404 — synchronized canonical docs through alias-safe atomic output writes -> `4f66522ae9d8dc6fb82875b32634306918ed0a9a`; exact head `4917d79bad91086a5262b99f16091e3eff14c647` passed CI #1180, Integration Readiness #442, P12 Final Release Artifact #491 and P12 Offline Acceptance #535.
+- PR #406 — added iterative retention-operator JSON structural bounds: maximum 64 container levels and 50,000 total JSON values -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`; exact head `42c26747e6609cb4c890174baa5627a4e000e889` passed CI #1182, P12 Final Release Artifact #493 and P12 Offline Acceptance #537.
 
 ### Module-wise progress
 
@@ -89,7 +91,7 @@ Current verified main before this documentation sync:
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review is active; production registry remains empty; #159 required before real mutation exposure |
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Genuine trusted authentication/internal decision and real target import remain pending |
-| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + bounded/prototype-safe/alias-safe local I/O exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
+| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + bounded/structure-bounded/prototype-safe/alias-safe local I/O exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
 | P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
@@ -132,8 +134,11 @@ Current bounded chain now includes:
 - `gutenberg-native-serialization-evidence-retention-requirements-validation-v1`, which rebuilds the current exact manifest and validates a previously exported manifest with strict JSON-only, key-order-independent semantic equality. It rejects stale/tampered/extra/missing fields and reports only sanitized fingerprints/status metadata;
 - `p16:evidence-retention-requirements-validate`, a Node-20 offline/operator validation CLI that accepts only local document/profile/receipt/authentication-report/manifest JSON, writes only the sanitized validator result, and exits 0 only for `CURRENT_REQUIREMENTS_MANIFEST_VALID`;
 - shared bounded operator JSON I/O for both retention CLIs: every input is limited to 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
+- iterative post-parse structural validation: input is rejected before target builders/validators when container nesting exceeds 64 levels or total JSON values exceed 50,000; the traversal itself is non-recursive;
 - prototype-safe exact-current canonicalization: canonical object snapshots are created without `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain canonical data fields, affect fingerprints, and are rejected when added to the manifest instead of being silently dropped;
 - alias-safe output writes: the real output parent is resolved, existing symlink/non-regular targets are rejected, hardlink identity against inputs is rejected where available, and output is staged in a unique same-directory regular temp file before atomic rename.
+
+The structural guard prevents byte-bounded but deeply nested or high-cardinality JSON from reaching downstream recursive validation/canonicalization. Focused cross-CLI tests exercise depth 65 and more than 50,000 total JSON values while remaining below the 1 MiB byte cap.
 
 The atomic output path prevents `writeFile` from following a late-created final symlink back onto an input. Temporary output state is cleaned before fail-closed write errors. Focused tests cover output symlink, hardlink and symlinked-parent aliases and verify source input immutability.
 
