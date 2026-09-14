@@ -73,7 +73,7 @@ describe('P15 Elementor template v0.4 contract', () => {
 
   it('allows documented recursive nesting, including nested widget children', () => {
     const document = validTemplate();
-    document.content[0].elements[0].elements.push({
+    document.content[0]!.elements[0]!.elements.push({
       id: 'nested001',
       elType: 'widget',
       widgetType: 'button',
@@ -81,7 +81,7 @@ describe('P15 Elementor template v0.4 contract', () => {
       settings: [],
       elements: [],
     });
-    document.content[0].elements.push({
+    document.content[0]!.elements.push({
       id: 'nested002',
       elType: 'container',
       isInner: true,
@@ -110,9 +110,9 @@ describe('P15 Elementor template v0.4 contract', () => {
 
   it('rejects legacy, Atomic and unknown element families with explicit codes', () => {
     const base = validTemplate();
-    const legacy = validateElementorTemplateV04({ ...base, content: [{ ...base.content[0], elType: 'section' }] });
-    const atomic = validateElementorTemplateV04({ ...base, content: [{ ...base.content[0], elType: 'e-div-block' }] });
-    const unknown = validateElementorTemplateV04({ ...base, content: [{ ...base.content[0], elType: 'mystery-layout' }] });
+    const legacy = validateElementorTemplateV04({ ...base, content: [{ ...base.content[0]!, elType: 'section' }] });
+    const atomic = validateElementorTemplateV04({ ...base, content: [{ ...base.content[0]!, elType: 'e-div-block' }] });
+    const unknown = validateElementorTemplateV04({ ...base, content: [{ ...base.content[0]!, elType: 'mystery-layout' }] });
 
     expect(legacy.issues.map((issue) => issue.code)).toContain('P15_LEGACY_ELEMENT_UNSUPPORTED');
     expect(atomic.issues.map((issue) => issue.code)).toContain('P15_ATOMIC_ELEMENT_UNSUPPORTED');
@@ -122,10 +122,10 @@ describe('P15 Elementor template v0.4 contract', () => {
   it('rejects duplicate ids, malformed widget types and undocumented populated settings arrays', () => {
     const document = validTemplate() as unknown as Record<string, unknown>;
     const content = document.content as Array<Record<string, unknown>>;
-    const children = content[0].elements as Array<Record<string, unknown>>;
-    children[1].id = children[0].id;
-    children[1].widgetType = '';
-    children[2].settings = ['not-documented-as-populated-array'];
+    const children = content[0]!.elements as Array<Record<string, unknown>>;
+    children[1]!.id = children[0]!.id;
+    children[1]!.widgetType = '';
+    children[2]!.settings = ['not-documented-as-populated-array'];
 
     const result = validateElementorTemplateV04(document);
     const codes = result.issues.map((issue) => issue.code);
@@ -153,8 +153,8 @@ describe('P15 Elementor template v0.4 contract', () => {
 
   it('bounds recursive validation depth', () => {
     const document = validTemplate() as unknown as Record<string, unknown>;
-    const root = (document.content as Array<Record<string, unknown>>)[0];
-    let current = root;
+    const root = (document.content as Array<Record<string, unknown>>)[0]!;
+    let current: Record<string, unknown> = root;
     for (let index = 0; index < ELEMENTOR_TEMPLATE_MAX_DEPTH + 2; index += 1) {
       const child: Record<string, unknown> = {
         id: `depth-${index}`,
