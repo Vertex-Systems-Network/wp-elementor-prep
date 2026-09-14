@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through alias-safe atomic operator output
+## Parallel P16 state — bounded code-side foundation complete through iterative JSON structural limits + alias-safe atomic output
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -50,7 +50,9 @@ Current implemented P16 chain:
 - PR #396 — canonical file-bound-hardening docs sync;
 - PR #398 — prototype-safe exact-current retention-manifest canonicalization;
 - PR #400 — canonical prototype-safe-canonicalization docs sync;
-- PR #402 — alias-safe atomic output writer for both retention operator CLIs.
+- PR #402 — alias-safe atomic output writer for both retention operator CLIs;
+- PR #404 — canonical alias-safe-output docs sync;
+- PR #406 — iterative post-parse JSON structural bounds for both retention operator CLIs.
 
 Current progression is intentionally bounded:
 
@@ -61,11 +63,14 @@ Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requireme
 - each JSON input is capped at 1 MiB before parse, with a post-read byte-length recheck;
 - each input must be a regular file;
 - zero-byte and whitespace-only inputs are rejected;
+- after parse, container nesting is capped at 64 levels;
+- after parse, total JSON values visited are capped at 50,000;
+- structural traversal is iterative, not recursive, and over-limit input is rejected before target builders/validators execute;
 - the normalized output path must not collide with any input path;
 - Windows path comparison is case-normalized for collision checks;
 - operator/input failures remain exit code 2 with deterministic content-free errors.
 
-Their shared output writer now additionally:
+Their shared output writer additionally:
 
 - creates the requested output parent directory, then resolves that parent through `realpath` before final target checks;
 - compares the canonical output location against real input paths;
@@ -127,7 +132,7 @@ Until such genuine evidence exists, keep these facts true:
 
 ### Safe code-only work while genuine evidence is absent
 
-Only deterministic/read-only/supporting work remains unblocked, such as structural/depth limits for hostile JSON, further serialization/sanitization hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
+Only deterministic/read-only/supporting work remains unblocked, such as further serialization/sanitization hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
 
 ## Roadmap state
 
@@ -157,7 +162,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #396 docs sync -> `12dc1e7e7e149e4da51a13c14722ac834f8a69ca`; exact head `6ac64e15f1c5fca058983a9a33ba4b9ab519a8d5`; CI #1172, Integration #436, Final Release #483, Offline #527 PASS;
 - #398 prototype-safe canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`; exact head `b7f3eead07fd9305d9b2f9290a572c715466e981`; CI #1174, Final Release #485, Offline #529 PASS;
 - #400 docs sync -> `158132b4076fe5a70afa8e8778ae888fcca4db60`; exact head `b6cfb1922429f48e69e40d6a8c270454d10c99a2`; CI #1176, Integration #439, Final Release #487, Offline #531 PASS;
-- #402 alias-safe atomic output writes -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`; exact head `039f45aaf95571828b38dfc661a41dd2bcc62dc0`; CI #1178, Final Release #489, Offline #533 PASS.
+- #402 alias-safe atomic output writes -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`; exact head `039f45aaf95571828b38dfc661a41dd2bcc62dc0`; CI #1178, Final Release #489, Offline #533 PASS;
+- #404 docs sync -> `4f66522ae9d8dc6fb82875b32634306918ed0a9a`; exact head `4917d79bad91086a5262b99f16091e3eff14c647`; CI #1180, Integration #442, Final Release #491, Offline #535 PASS;
+- #406 JSON structural bounds -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`; exact head `42c26747e6609cb4c890174baa5627a4e000e889`; CI #1182, Final Release #493, Offline #537 PASS.
 
 ## Current guardrails
 
