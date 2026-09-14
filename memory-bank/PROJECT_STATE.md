@@ -15,7 +15,7 @@ Current implemented surfaces:
 5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest;
 6. exact-build release/provenance tooling.
 
-`config/runtime-artifacts.json` remains runtime artifact registry schema v3 and the machine-readable runtime artifact authority.
+`config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
 
 ## Current repository main
 
