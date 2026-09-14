@@ -12,7 +12,7 @@ Current product surfaces:
 - safety-gated P5/P6/P7 preparation foundations;
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare preview, proposed-change review binding, exact runtime review packet and persisted-evidence diagnostics;
-- P15 Elementor R1 foundation: v0.4/container validation, bounded widget-capability reporting, exact candidate/import-evidence binding, immutable declared target profiles, read-only profile assessment and a non-authorizing global-reference review gate;
+- P15 Elementor R1 foundation: v0.4/container validation, bounded widget-capability reporting, exact candidate/import-evidence binding, immutable declared target profiles, read-only profile assessment, bounded global/core-image asset review, deterministic combined reference identity and exact-bound external closure-evidence receipts;
 - exact-build release/provenance tooling.
 
 Current core flow:
@@ -50,7 +50,7 @@ Open roadmap / acceptance issues:
 
 Current verified main is:
 
-`d603ce87a645160204d2de6fd458279ba7b3bf3f`
+`d0796310fb3b6d4f1753d472e0e9f9783bb752b3`
 
 ### Recent verified P13/P14 sequence
 
@@ -77,6 +77,10 @@ Current verified main is:
 - PR #318 bound validated exact-candidate import evidence to the immutable declared target-profile fingerprint without changing receipt-v1 authority; guarded squash merge `fb7a9f210f5088b645e4bf046cd4b1f09e3aa72b`.
 - PR #320 added read-only target-profile/candidate metadata alignment assessment. `PROFILE_ALIGNED_REFERENCE_REVIEW_PENDING` is not a compatibility claim and reference/target validation remains `NOT_RUN`; guarded squash merge `44a9e0851b3e7a4235e8854066ef09cc399fb78b`.
 - PR #322 added a non-authorizing global-reference key review gate. It emits no raw `__globals__` values, requires external closure when keys exist, and keeps asset-reference review `NOT_RUN`; guarded squash merge `d603ce87a645160204d2de6fd458279ba7b3bf3f`.
+- PR #324 synchronized the canonical P15 R1 status docs through the global-reference review batch; guarded squash merge `94bc8635b68c5781353d3bcb89388e4b630c69c5`.
+- PR #326 added the first documented asset-reference review gate, whitelisting only the exact core `image` widget `settings.image` MEDIA control from pinned upstream Elementor source. Raw asset URLs are not emitted; guarded squash merge `cde7ea30ad64e2fc6d308de29779f1a49068d543`.
+- PR #328 bound the exact current global + documented asset review state into one deterministic SHA-256 reference-review identity while keeping closure/compatibility authority false; guarded squash merge `5b95d5e3e96d7051e4c74930b6df7eb16038707f`.
+- PR #330 added an exact-bound external reference-closure PASS/FAIL evidence receipt contract. Receipt intake rejects BLOCKED/REVIEW/no-reference identities, and even reported PASS remains non-authorizing; guarded squash merge `d0796310fb3b6d4f1753d472e0e9f9783bb752b3`.
 
 The real P13 vertical-stack opportunity is still **not** production mutation authority. `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty, so production P13→P14 handoff downgrades the candidate to REVIEW with `P14_SAFE_BINDING_REQUIRED`, produces no production-eligible action IDs, and keeps the P14 plan BLOCKED.
 
@@ -100,7 +104,7 @@ The proposed-change review manifest, visible review-binding panel, analyzer iden
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains; current analyzer is p13-core-v2 with analyzer-bound run identity |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only preview requires current analyzer/fresh evidence and shows rejection diagnostics; real candidate remains REVIEW/BLOCKED because production registry remains empty; retained-duplicate mutation runtime is unwired; #159 current real-Figma evidence remains required before real Figma mutation exposure |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Exact candidate/receipt intake + immutable target profile + profile-bound evidence + read-only alignment/global-reference review are merged; real target import, asset closure, Figma semantic generation and product download remain unwired |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Exact candidate/profile/import evidence + bounded global/core-image asset review + combined reference identity + external closure-evidence receipt contract are merged; actual external closure evidence/internal decision, real target import, Figma semantic generation and product download remain unaccepted/unwired |
 | P16 Gutenberg native export + transfer | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; native block/pattern/editor validation |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + versioned adapter/build matrix retained |
