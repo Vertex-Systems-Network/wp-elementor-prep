@@ -15,7 +15,7 @@ Current implemented surfaces:
 5. P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 6. P14 target-neutral retained-duplicate core;
 7. development-only read-only P14 Guided Prepare preview with exact evidence freshness, proposed-change review binding, exact runtime review packet and persisted-evidence rejection diagnostics;
-8. bounded P15 Elementor R1 foundation with v0.4/container validation, documented-core capabilities, exact candidate/import-evidence binding, immutable declared target profiles, read-only alignment, bounded global/core-image asset review, combined reference identity and exact-bound external closure-evidence receipts;
+8. bounded P15 Elementor R1 foundation with v0.4/container validation, documented-core capabilities, exact candidate/import-evidence binding, immutable declared target profiles, read-only alignment, bounded global/core-image asset review, combined reference identity, exact-bound external closure-evidence receipts and offline operator intake;
 9. exact-build release/provenance and fail-closed P12 publisher-evidence tooling.
 
 Approved direction remains:
@@ -42,9 +42,9 @@ Elementor is first target family, Gutenberg second, followed by generic web/fram
 
 ## Current repository main
 
-Current verified main after the P15 R1 asset/reference-identity/closure-evidence batch:
+Current verified main after the P15 R1 reference-closure operator-intake slice:
 
-`d0796310fb3b6d4f1753d472e0e9f9783bb752b3`
+`c20d8835c27cf73e1e367c478f346f6c80d72824`
 
 Recent guarded merge line:
 
@@ -68,7 +68,9 @@ Recent guarded merge line:
 - #324 canonical P15 R1 docs sync -> `94bc8635b68c5781353d3bcb89388e4b630c69c5`;
 - #326 documented core Image MEDIA asset-reference review -> `cde7ea30ad64e2fc6d308de29779f1a49068d543`;
 - #328 deterministic combined reference-review identity -> `5b95d5e3e96d7051e4c74930b6df7eb16038707f`;
-- #330 exact-bound external reference-closure evidence receipt contract -> `d0796310fb3b6d4f1753d472e0e9f9783bb752b3`.
+- #330 exact-bound external reference-closure evidence receipt contract -> `d0796310fb3b6d4f1753d472e0e9f9783bb752b3`;
+- #332 canonical reference-evidence docs sync -> `f2403e41998a8c91aedde3fa411863edd983ea99`;
+- #334 offline exact-bound reference-closure evidence intake -> `c20d8835c27cf73e1e367c478f346f6c80d72824`.
 
 ## Current issue queue
 
@@ -77,7 +79,7 @@ Recent guarded merge line:
 - #159 — **P13 real-plugin Build-Ready runtime/parity evidence: OPEN runtime-acceptance dependency**. Genuine real-Figma runtime acceptance remains pending.
 - #182 — **P27 final production-release gate: DEFINED / execution deferred**.
 - #287 — **OPEN repository-admin security hardening**. Main branch protection/ruleset enforcement requires GitHub administration access and is not represented as fixed by code changes.
-Focused issues #275, #280, #284, #285, #288, #295, #297, #299, #301, #303, #305, #307, #309, #311, #313, #315, #317, #319, #321, #323, #325, #327 and #329 are completed through their reviewed implementation/artifact flows.
+Focused issues #275, #280, #284, #285, #288, #295, #297, #299, #301, #303, #305, #307, #309, #311, #313, #315, #317, #319, #321, #323, #325, #327, #329, #331 and #333 are completed through their reviewed implementation/artifact flows.
 
 ## P13 state
 
@@ -253,8 +255,9 @@ P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**. The bou
 - PR #326 — first documented asset-reference review gate, restricted to the exact core `image` widget `settings.image` MEDIA control from pinned Elementor source. Source media IDs remain evidence only, raw URLs are replaced by SHA-256 fingerprints, and arbitrary/third-party media-shaped settings are not inferred as supported;
 - PR #328 — one deterministic SHA-256 reference-review identity binding exact candidate/profile plus canonical global + asset review state. REVIEW/BLOCKED and outstanding external-closure facts remain distinct;
 - PR #330 — exact-bound external global/asset closure PASS/FAIL evidence receipt contract. Intake is eligible only for current `EXTERNAL_CLOSURE_REQUIRED` identity; reported PASS remains external evidence, not a closure/compatibility/production authority claim.
+- PR #334 — offline operator intake for an exact template + declared profile + closure receipt. It revalidates the fresh current identity, emits only sanitized reported results/current identity/exact raw-input SHA-256 hashes, rejects stale/ineligible replay, and does not echo evidence references, raw global values or raw asset URLs.
 
-Real WordPress/Elementor target import remains unvalidated. `targetCompatibilityClaim=false`, production acceptance remains false, generation/download authority remains disabled, global-reference values remain unresolved, raw asset URLs are not emitted, no external closure evidence is fetched/authenticated by repository code, and no Figma-to-Elementor semantic generator, Elementor Pro/third-party mapping, gallery/video/add-on asset support or Atomic generation has been accepted.
+Real WordPress/Elementor target import remains unvalidated. `targetCompatibilityClaim=false`, production acceptance remains false, generation/download authority remains disabled, global-reference values remain unresolved, raw asset URLs are not emitted, the offline intake does not fetch/authenticate external evidence references, reported PASS still requires separate authenticated/internal review, and no Figma-to-Elementor semantic generator, Elementor Pro/third-party mapping, gallery/video/add-on asset support or Atomic generation has been accepted.
 
 ## P16-P26 state
 
