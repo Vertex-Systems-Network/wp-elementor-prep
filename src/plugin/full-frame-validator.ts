@@ -3,6 +3,7 @@ import { DEFAULT_VALIDATION_THRESHOLDS, mergePixelValidation, validateIntegrity 
 import type { PixelDiffMetrics, ValidationReport } from '../core/validation-types';
 
 const MAX_VALIDATION_RENDER_DIMENSION = 2048;
+const MAX_VALIDATION_PIXELS = MAX_VALIDATION_RENDER_DIMENSION * MAX_VALIDATION_RENDER_DIMENSION;
 export const DEFAULT_PIXEL_BROKER_TIMEOUT_MS = 30_000;
 
 export interface FullFrameValidationResult {
@@ -26,6 +27,64 @@ interface PixelRequestMessage {
   beforePng: Uint8Array;
   afterPng: Uint8Array;
   channelTolerance: number;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isFiniteNumberInRange(value: unknown, min: number, max: number): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= min && value <= max;
+}
+
+function isIntegerInRange(value: unknown, min: number, max: number): value is number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= min && value <= max;
+}
+
+function round(value: number, digits = 4): number {
+  const scale = 10 ** digits;
+  return Math.round(value * scale) / scale;
+}
+
+export function isValidPixelDiffMetrics(
+  value: unknown,
+  expectedChannelTolerance?: number,
+): value is PixelDiffMetrics {
+  if (!isRecord(value) || typeof value.sameDimensions !== 'boolean') return false;
+
+  const dimensions = [value.widthBefore, value.heightBefore, value.widthAfter, value.heightAfter];
+  if (!dimensions.every((entry) => isIntegerInRange(entry, 1, MAX_VALIDATION_RENDER_DIMENSION))) return false;
+  if (!isIntegerInRange(value.totalPixels, 0, MAX_VALIDATION_PIXELS)) return false;
+  if (!isIntegerInRange(value.changedPixels, 0, MAX_VALIDATION_PIXELS)) return false;
+  if (!isFiniteNumberInRange(value.changedPixelPct, 0, 100)) return false;
+  if (!isFiniteNumberInRange(value.meanChannelDelta, 0, 255)) return false;
+  if (!isFiniteNumberInRange(value.maxChannelDelta, 0, 255)) return false;
+  if (!isIntegerInRange(value.channelTolerance, 0, 255)) return false;
+  if (expectedChannelTolerance !== undefined && value.channelTolerance !== expectedChannelTolerance) return false;
+  if (value.meanChannelDelta > value.maxChannelDelta) return false;
+
+  const widthBefore = value.widthBefore as number;
+  const heightBefore = value.heightBefore as number;
+  const widthAfter = value.widthAfter as number;
+  const heightAfter = value.heightAfter as number;
+  const totalPixels = value.totalPixels as number;
+  const changedPixels = value.changedPixels as number;
+  const changedPixelPct = value.changedPixelPct as number;
+
+  if (value.sameDimensions) {
+    if (widthBefore !== widthAfter || heightBefore !== heightAfter) return false;
+    if (totalPixels !== widthBefore * heightBefore) return false;
+    if (changedPixels > totalPixels) return false;
+    if (changedPixelPct !== round((changedPixels / totalPixels) * 100)) return false;
+    return true;
+  }
+
+  if (widthBefore === widthAfter && heightBefore === heightAfter) return false;
+  return totalPixels === 0
+    && changedPixels === 0
+    && changedPixelPct === 100
+    && value.meanChannelDelta === 255
+    && value.maxChannelDelta === 255;
 }
 
 /**
@@ -104,11 +163,16 @@ export class FullFrameValidator {
     });
   }
 
-  finish(validationId: number, pixelMetrics: PixelDiffMetrics): boolean {
+  finish(validationId: number, pixelMetrics: unknown): boolean {
     const pending = this.pending.get(validationId);
     if (!pending) return false;
     this.pending.delete(validationId);
     clearTimeout(pending.timeoutHandle);
+
+    if (!isValidPixelDiffMetrics(pixelMetrics, pending.report.thresholds.pixelChannelDelta)) {
+      pending.reject(new Error('Pixel comparison returned invalid or inconsistent metrics.'));
+      return true;
+    }
 
     const report = mergePixelValidation(pending.report, pixelMetrics);
     pending.resolve({ report, labels: pending.labels, renderScale: pending.renderScale });
