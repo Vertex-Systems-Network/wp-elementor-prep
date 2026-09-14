@@ -5,6 +5,8 @@ export const P16_OPERATOR_JSON_INPUT_MAX_BYTES = 1024 * 1024;
 
 type Fail = (message: string) => never;
 
+type InputStats = Awaited<ReturnType<typeof lstat>>;
+
 function comparisonPath(path: string): string {
   const resolved = resolve(path);
   return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
@@ -29,7 +31,7 @@ export async function readP16OperatorJsonInput(
   fail: Fail,
 ): Promise<unknown> {
   const resolvedPath = resolve(path);
-  let info;
+  let info: InputStats;
 
   try {
     info = await lstat(resolvedPath);
