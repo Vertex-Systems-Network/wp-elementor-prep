@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through prototype-safe exact-current validation
+## Parallel P16 state — bounded code-side foundation complete through alias-safe atomic operator output
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -48,7 +48,9 @@ Current implemented P16 chain:
 - PR #392 — canonical validation-CLI docs sync;
 - PR #394 — shared bounded local JSON I/O hardening for both retention operator CLIs;
 - PR #396 — canonical file-bound-hardening docs sync;
-- PR #398 — prototype-safe exact-current retention-manifest canonicalization.
+- PR #398 — prototype-safe exact-current retention-manifest canonicalization;
+- PR #400 — canonical prototype-safe-canonicalization docs sync;
+- PR #402 — alias-safe atomic output writer for both retention operator CLIs.
 
 Current progression is intentionally bounded:
 
@@ -63,7 +65,17 @@ Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requireme
 - Windows path comparison is case-normalized for collision checks;
 - operator/input failures remain exit code 2 with deterministic content-free errors.
 
-The exact-current requirements-manifest canonicalizer is now prototype-safe:
+Their shared output writer now additionally:
+
+- creates the requested output parent directory, then resolves that parent through `realpath` before final target checks;
+- compares the canonical output location against real input paths;
+- rejects existing output symlinks and other non-regular output targets;
+- rejects an existing output regular file that shares filesystem identity (`dev` + `ino`) with an input when identity is available;
+- writes through a unique same-directory temporary regular file and atomically renames it into place, so a late-created final symlink is replaced rather than followed;
+- removes temporary output state before fail-closed exit on write errors;
+- preserves source-input bytes in rejected symlink/hardlink/parent-alias cases covered by focused tests.
+
+The exact-current requirements-manifest canonicalizer remains prototype-safe:
 
 - canonical object snapshots use `Object.create(null)`;
 - own enumerable JSON keys such as `__proto__` remain data fields instead of invoking the legacy prototype setter;
@@ -115,7 +127,7 @@ Until such genuine evidence exists, keep these facts true:
 
 ### Safe code-only work while genuine evidence is absent
 
-Only deterministic/read-only/supporting work remains unblocked, such as structural/depth limits for hostile JSON, path-alias/output-link hardening, further serialization/sanitization hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
+Only deterministic/read-only/supporting work remains unblocked, such as structural/depth limits for hostile JSON, further serialization/sanitization hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
 
 ## Roadmap state
 
@@ -143,7 +155,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #392 docs sync -> `78f25d0cbc72427ea9824370762099db916750ed`; exact head `65d74941faa01a585e984d9d3b53c6932a864546`; CI #1168, Integration #433, Final Release #479, Offline #523 PASS;
 - #394 local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`; exact head `adbdfa0da1f61d4b9ff2dab3272526c36b19c3e4`; CI #1170, Final Release #481, Offline #525 PASS;
 - #396 docs sync -> `12dc1e7e7e149e4da51a13c14722ac834f8a69ca`; exact head `6ac64e15f1c5fca058983a9a33ba4b9ab519a8d5`; CI #1172, Integration #436, Final Release #483, Offline #527 PASS;
-- #398 prototype-safe canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`; exact head `b7f3eead07fd9305d9b2f9290a572c715466e981`; CI #1174, Final Release #485, Offline #529 PASS.
+- #398 prototype-safe canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`; exact head `b7f3eead07fd9305d9b2f9290a572c715466e981`; CI #1174, Final Release #485, Offline #529 PASS;
+- #400 docs sync -> `158132b4076fe5a70afa8e8778ae888fcca4db60`; exact head `b6cfb1922429f48e69e40d6a8c270454d10c99a2`; CI #1176, Integration #439, Final Release #487, Offline #531 PASS;
+- #402 alias-safe atomic output writes -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`; exact head `039f45aaf95571828b38dfc661a41dd2bcc62dc0`; CI #1178, Final Release #489, Offline #533 PASS.
 
 ## Current guardrails
 
