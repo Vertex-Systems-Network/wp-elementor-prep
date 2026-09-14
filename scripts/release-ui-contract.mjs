@@ -1,3 +1,5 @@
+import { buildSecureUi } from './ui-security-contract.mjs';
+
 function requireReplacement(source, from, to, label) {
   if (!source.includes(from)) {
     throw new Error(`Release UI contract drifted: missing ${label}.`);
@@ -32,6 +34,11 @@ const REQUIRED_PRODUCTION_TOKENS = [
   'SAFE FIX PREVIEW',
   'SAFE FIX RESULT',
   'BATCH PREP',
+  'MAX_PIXEL_PNG_BYTES',
+  'MAX_PIXEL_DIMENSION',
+  'boundedPngBytes',
+  'isSafeValidationId',
+  'isSafeChannelTolerance',
 ];
 
 const FORBIDDEN_DEVELOPER_TOKENS = [
@@ -62,7 +69,7 @@ export function assertReleaseUiCapabilities(source) {
 }
 
 export function buildReleaseUi(developmentUi) {
-  let releaseUi = developmentUi.replace(/\r\n/g, '\n');
+  let releaseUi = buildSecureUi(developmentUi).replace(/\r\n/g, '\n');
 
   releaseUi = requireReplacement(
     releaseUi,
