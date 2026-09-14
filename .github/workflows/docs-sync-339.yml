@@ -33,7 +33,27 @@ jobs:
           BASE_SHA: 250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba
         run: |
           set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('.github/scripts/docs-sync-339.py')
+          text = path.read_text(encoding='utf-8')
+          old = """replace_once(
+              'README.md',
+              '`c20d8835c27cf73e1e367c478f346f6c80d72824`',
+              '`250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`',
+          )"""
+          new = """replace_once(
+              'README.md',
+              'Current verified main is:\\n\\n`c20d8835c27cf73e1e367c478f346f6c80d72824`',
+              'Current verified main is:\\n\\n`250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`',
+          )"""
+          if text.count(old) != 1:
+              raise SystemExit('temporary helper patch anchor drifted')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
           python .github/scripts/docs-sync-339.py
+          git checkout -- .github/scripts/docs-sync-339.py
           npm run status:verify
           git diff --check
 
