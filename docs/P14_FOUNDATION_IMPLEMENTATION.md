@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation.
+Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI.
 
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and P27 final production-release gate (#182).
 
@@ -49,13 +49,16 @@ Current bounded chain includes:
 - sanitized decision prerequisite where external auth PASS stops at `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED`;
 - deterministic `gutenberg-native-serialization-evidence-retention-requirements-v1`, READY only from that exact prerequisite and containing only chain fingerprints, declared WordPress version and future retention requirements metadata;
 - Node-20 package command `p16:evidence-retention-requirements`, which exports that sanitized requirements manifest from local document/profile/receipt/authentication-report JSON only;
-- deterministic `gutenberg-native-serialization-evidence-retention-requirements-validation-v1`, which rebuilds the current exact requirements manifest and rejects stale/tampered/extra/missing saved manifests using strict JSON-only, key-order-independent semantic comparison.
+- deterministic `gutenberg-native-serialization-evidence-retention-requirements-validation-v1`, which rebuilds the current exact requirements manifest and rejects stale/tampered/extra/missing saved manifests using strict JSON-only, key-order-independent semantic comparison;
+- Node-20 package command `p16:evidence-retention-requirements-validate`, which validates local document/profile/receipt/authentication-report/manifest JSON through that contract and writes only sanitized validation metadata.
 
-Validator outcomes are `REJECTED_CURRENT_CHAIN_NOT_READY`, `REJECTED_REQUIREMENTS_MANIFEST_INVALID_OR_STALE`, or `CURRENT_REQUIREMENTS_MANIFEST_VALID`. VALID means only that the saved non-authorizing requirements metadata matches the current exact chain. It does not authenticate evidence, validate WordPress, or create an internal decision.
+Validation CLI exit 0 means only `CURRENT_REQUIREMENTS_MANIFEST_VALID`; every rejection exits 2. Stdout is limited to output path, validation/current-requirements status, exactSemanticMatch and canonical expected/provided SHA-256 values. The supplied manifest payload is never echoed.
 
-The retention requirements manifest/export/validator accepts no future evidence artifact, authenticator identity, authentication method, authenticated-at assertion or evidence PASS/FAIL; it does not authenticate evidence and does not make an internal decision. Export exit 0 still means only `EVIDENCE_RETENTION_REQUIREMENTS_READY` metadata.
+Validator outcomes remain `REJECTED_CURRENT_CHAIN_NOT_READY`, `REJECTED_REQUIREMENTS_MANIFEST_INVALID_OR_STALE`, or `CURRENT_REQUIREMENTS_MANIFEST_VALID`. VALID means only that the saved non-authorizing requirements metadata matches the current exact chain. It does not authenticate evidence, validate WordPress, or create an internal decision.
 
-It intentionally does not expose raw evidence references, source evidence-reference hashes or raw native Gutenberg post content in the written manifest, validator result or stdout.
+The retention requirements manifest/export/validator/validation CLI accepts no future evidence artifact, authenticator identity, authentication method, authenticated-at assertion or evidence PASS/FAIL; it does not authenticate evidence and does not make an internal decision. Export exit 0 still means only `EVIDENCE_RETENTION_REQUIREMENTS_READY` metadata.
+
+It intentionally does not expose raw evidence references, source evidence-reference hashes, supplied manifest payloads or raw native Gutenberg post content in the written manifest, validator result or stdout.
 
 Current P16 authority remains fixed:
 
@@ -82,7 +85,7 @@ The normalized JSON serializer is not Gutenberg post-content serialization and t
 
 Current verified main before this documentation sync:
 
-`1532fa54ec9c26bb8904ca939a01754418a70602`
+`c173c617ad205f0fef4a5659f27bf007067e6eb5`
 
 Recent P16 merge line:
 
@@ -94,7 +97,9 @@ Recent P16 merge line:
 - #380 canonical retention-requirements docs sync -> `c6f6009538e1e0f82bed087783f2c55fa0d9e75d`;
 - #382 offline/operator retention-requirements export -> `e2fe19364ac8615bc390f125c2afb4085bfc474c`;
 - #384 canonical operator-export docs sync -> `4c91cb3033672d6dc3a6fa28287e060a22e40734`;
-- #386 exact-current retention-manifest validator -> `1532fa54ec9c26bb8904ca939a01754418a70602`.
+- #386 exact-current retention-manifest validator -> `1532fa54ec9c26bb8904ca939a01754418a70602`;
+- #388 canonical manifest-validator docs sync -> `d7532a98b71e5dc5ac6c100b0386f06422966cf9`;
+- #390 offline/operator exact-current validation CLI -> `c173c617ad205f0fef4a5659f27bf007067e6eb5`.
 
 P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`.
 
@@ -104,4 +109,4 @@ P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains t
 
 Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Any future P14 mutation surface requires separate explicit authorization with fresh evidence, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
 
-For P16, do not promote the requirements manifest/export/validator into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
+For P16, do not promote the requirements manifest/export/validator/validation CLI into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
