@@ -55,25 +55,61 @@ export interface GutenbergNativeSerializationEvidenceRetentionRequirementsValida
   internalReviewRequired: true;
 }
 
+type CanonicalJsonValue =
+  | null
+  | boolean
+  | number
+  | string
+  | CanonicalJsonValue[]
+  | { [key: string]: CanonicalJsonValue };
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function canonicalize(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map((item) => canonicalize(item));
-  if (!isRecord(value)) return value;
-
-  const result: Record<string, unknown> = {};
-  for (const key of Object.keys(value).sort()) {
-    result[key] = canonicalize(value[key]);
+function canonicalizeJson(value: unknown, seen: Set<object>): CanonicalJsonValue {
+  if (value === null) return null;
+  if (typeof value === 'string' || typeof value === 'boolean') return value;
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) throw new Error('Non-finite numbers are not valid JSON values.');
+    return value;
   }
-  return result;
+  if (typeof value !== 'object') {
+    throw new Error('Manifest value contains a non-JSON value.');
+  }
+
+  if (seen.has(value)) throw new Error('Manifest value contains a cycle.');
+  seen.add(value);
+  try {
+    if (Array.isArray(value)) {
+      const result: CanonicalJsonValue[] = [];
+      for (let index = 0; index < value.length; index += 1) {
+        if (!Object.prototype.hasOwnProperty.call(value, index)) {
+          throw new Error('Sparse arrays are not accepted as canonical JSON.');
+        }
+        result.push(canonicalizeJson(value[index], seen));
+      }
+      return result;
+    }
+
+    const prototype = Object.getPrototypeOf(value);
+    if (prototype !== Object.prototype && prototype !== null) {
+      throw new Error('Manifest object must be a plain JSON object.');
+    }
+
+    const result: { [key: string]: CanonicalJsonValue } = {};
+    for (const key of Object.keys(value).sort()) {
+      result[key] = canonicalizeJson((value as Record<string, unknown>)[key], seen);
+    }
+    return result;
+  } finally {
+    seen.delete(value);
+  }
 }
 
 function canonicalJson(value: unknown): string | null {
   try {
-    const serialized = JSON.stringify(canonicalize(value));
-    return typeof serialized === 'string' ? serialized : null;
+    return JSON.stringify(canonicalizeJson(value, new Set<object>()));
   } catch {
     return null;
   }
