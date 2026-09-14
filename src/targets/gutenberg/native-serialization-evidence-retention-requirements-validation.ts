@@ -97,7 +97,7 @@ function canonicalizeJson(value: unknown, seen: Set<object>): CanonicalJsonValue
       throw new Error('Manifest object must be a plain JSON object.');
     }
 
-    const result: { [key: string]: CanonicalJsonValue } = {};
+    const result = Object.create(null) as { [key: string]: CanonicalJsonValue };
     for (const key of Object.keys(value).sort()) {
       result[key] = canonicalizeJson((value as Record<string, unknown>)[key], seen);
     }
