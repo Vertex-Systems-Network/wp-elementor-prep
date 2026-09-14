@@ -1,5 +1,6 @@
 import { build } from 'esbuild';
-import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { buildSecureUi } from './ui-security-contract.mjs';
 
 const packageJson = JSON.parse(await readFile('package.json', 'utf8'));
 await mkdir('dist', { recursive: true });
@@ -66,7 +67,8 @@ await build({
   define: { ...provenanceDefines, ...p7BuildDefines },
 });
 
-await cp('src/ui/ui.html', 'dist/ui.html');
+const developmentUi = await readFile('src/ui/ui.html', 'utf8');
+await writeFile('dist/ui.html', buildSecureUi(developmentUi), 'utf8');
 
 const template = await readFile('manifest.template.json', 'utf8');
 const pluginId = process.env.FIGMA_PLUGIN_ID ?? '000000000000000000';
