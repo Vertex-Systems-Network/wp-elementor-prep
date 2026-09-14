@@ -1,0 +1,80 @@
+name: P14 Review Packet 299 Once
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p14-review-packet-299-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/p14-review-packet-299'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Apply bounded integration patches
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one target, found {count}: {old[:120]!r}')
+              p.write_text(text.replace(old, new, 1))
+
+          replace_once(
+            'src/plugin/main.ts',
+            "import { buildP14PlanPreview, serializeP14PlanPreviewJson } from './p14-plan-preview';\n",
+            "import { buildP14PlanPreview, serializeP14PlanPreviewJson } from './p14-plan-preview';\nimport { buildP14ReviewPacket, serializeP14ReviewPacketJson } from './p14-review-packet';\n",
+          )
+
+          old_post = '''    const preview = buildP14PlanPreview(evidence.buildReady);\n    figma.ui.postMessage({\n      type: 'p14-plan-preview-result',\n      preview,\n      previewJson: serializeP14PlanPreviewJson(preview),\n      context: {\n        fileKey: evidence.context.fileKey,\n        pageName: evidence.context.pageName,\n        frameName: evidence.context.frameName,\n      },\n      capturedAt: evidence.capturedAt,\n    });'''
+          new_post = '''    const preview = buildP14PlanPreview(evidence.buildReady);\n    const reviewPacket = buildP14ReviewPacket({\n      preview,\n      evidence,\n      pluginVersion: PLUGIN_VERSION,\n      runtimeBuild: P7_BUILD_IDENTITY,\n    });\n    figma.ui.postMessage({\n      type: 'p14-plan-preview-result',\n      preview,\n      previewJson: serializeP14PlanPreviewJson(preview),\n      reviewPacket,\n      reviewPacketJson: serializeP14ReviewPacketJson(reviewPacket),\n      context: { ...evidence.context },\n      capturedAt: evidence.capturedAt,\n    });'''
+          replace_once('src/plugin/main.ts', old_post, new_post)
+
+          replace_once(
+            'src/ui/ui.html',
+            '''      const reviewManifest = preview.reviewManifest || null;\n''',
+            '''      const reviewManifest = preview.reviewManifest || null;\n      const reviewPacket = message.reviewPacket || null;\n      const reviewPacketJson = typeof message.reviewPacketJson === 'string' ? message.reviewPacketJson : '';\n''',
+          )
+
+          review_binding_end = '''        : '';\n      const groups = ['''
+          review_packet_block = '''        : '';\n      const reviewPacketBinding = reviewPacket\n        ? `\n          <div class="sectionTitle">P14 Runtime Review Packet</div>\n          <div class="hero">\n            <div class="status">DETERMINISTIC READ-ONLY REVIEW PACKET · schema v${escapeHtml(reviewPacket.schemaVersion)} · packet v${escapeHtml(reviewPacket.packetVersion)}</div>\n            <div class="meta">Runtime build: ${escapeHtml(reviewPacket.runtime.build.sourceSha)} · run ${escapeHtml(reviewPacket.runtime.build.runNumber)}/${escapeHtml(reviewPacket.runtime.build.runId)}</div>\n            <div class="meta">Plugin version: ${escapeHtml(reviewPacket.runtime.pluginVersion)} · evidence captured ${escapeHtml(reviewPacket.evidence.capturedAt)}</div>\n            <div class="meta">File: ${escapeHtml(reviewPacket.context.fileKey)} · page ${escapeHtml(reviewPacket.context.pageId)} (${escapeHtml(reviewPacket.context.pageName)})</div>\n            <div class="meta">Frame: ${escapeHtml(reviewPacket.context.frameId)} (${escapeHtml(reviewPacket.context.frameName)})</div>\n            <div class="meta">P13 run: ${escapeHtml(reviewPacket.p13Identity.runId)} · analyzer ${escapeHtml(reviewPacket.p13Identity.analyzerVersion)}</div>\n            <div class="meta">acceptanceAuthority=false · targetCompatibilityClaim=false · mutationEnabled=false · confirmationEnabled=false</div>\n            ${reviewPacketJson ? '<div class="inlineActions one"><button class="smallButton" id="exportP14ReviewPacket">Export review packet JSON</button></div>' : ''}\n          </div>`\n        : '';\n      const groups = ['''
+          replace_once('src/ui/ui.html', review_binding_end, review_packet_block)
+
+          replace_once(
+            'src/ui/ui.html',
+            '''        ${unavailable}\n        ${reviewBinding}\n        ${rows}\n''',
+            '''        ${unavailable}\n        ${reviewBinding}\n        ${reviewPacketBinding}\n        ${rows}\n''',
+          )
+
+          old_renderer_end = '''        ${blockers}\n        <details><summary>Read-only P14 preview JSON</summary><pre>${escapeHtml(message.previewJson || JSON.stringify(preview, null, 2))}</pre></details>`;\n    }\n\n    function renderSafePlan(message) {'''
+          new_renderer_end = '''        ${blockers}\n        <details><summary>Read-only P14 preview JSON</summary><pre>${escapeHtml(message.previewJson || JSON.stringify(preview, null, 2))}</pre></details>`;\n      const exportReviewPacket = document.getElementById('exportP14ReviewPacket');\n      if (exportReviewPacket && reviewPacketJson) {\n        exportReviewPacket.addEventListener('click', () => {\n          downloadText('p14-guided-prepare-review.json', reviewPacketJson, 'application/json;charset=utf-8');\n        });\n      }\n    }\n\n    function renderSafePlan(message) {'''
+          replace_once('src/ui/ui.html', old_renderer_end, new_renderer_end)
+
+          replace_once(
+            'scripts/release-ui-contract.mjs',
+            '''  'P14 GUIDED PREPARE PREVIEW',\n  'P5 COMPILED RUNTIME SELF-TEST',''',
+            '''  'P14 GUIDED PREPARE PREVIEW',\n  'P14 Runtime Review Packet',\n  'reviewPacketJson',\n  'p14-guided-prepare-review.json',\n  'P5 COMPILED RUNTIME SELF-TEST',''',
+          )
+          PY
+
+      - name: Remove temporary workflow and commit integration
+        shell: bash
+        run: |
+          rm .github/workflows/p14-review-packet-299-once.yml
+          git add -- src/plugin/main.ts src/ui/ui.html scripts/release-ui-contract.mjs .github/workflows/p14-review-packet-299-once.yml
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'P14: wire deterministic review packet into preview'
+          git push origin HEAD:"$GITHUB_HEAD_REF"
