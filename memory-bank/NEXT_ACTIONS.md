@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through offline exact-current requirements validation + local-file hardening
+## Parallel P16 state — bounded code-side foundation complete through prototype-safe exact-current validation
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -46,13 +46,15 @@ Current implemented P16 chain:
 - PR #388 — canonical manifest-validator docs sync;
 - PR #390 — offline/operator exact-current retention-manifest validation CLI;
 - PR #392 — canonical validation-CLI docs sync;
-- PR #394 — shared bounded local JSON I/O hardening for both retention operator CLIs.
+- PR #394 — shared bounded local JSON I/O hardening for both retention operator CLIs;
+- PR #396 — canonical file-bound-hardening docs sync;
+- PR #398 — prototype-safe exact-current retention-manifest canonicalization.
 
 Current progression is intentionally bounded:
 
 `normalized document/profile -> READY candidate -> exact identity -> external receipt -> offline revalidation -> pre-decision packet -> REPORTED_PASS_AUTHENTICATION_REQUIRED -> external authentication report -> EXTERNALLY_REPORTED_PASS|FAIL -> decision prerequisite -> GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED -> retention requirements manifest/export -> exact-current manifest validation/CLI -> genuinely retained authenticated evidence -> separate internal decision`
 
-Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requirements-validate` now use the same fail-closed local JSON I/O guard:
+Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requirements-validate` use the same fail-closed local JSON I/O guard:
 
 - each JSON input is capped at 1 MiB before parse, with a post-read byte-length recheck;
 - each input must be a regular file;
@@ -60,6 +62,14 @@ Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requireme
 - the normalized output path must not collide with any input path;
 - Windows path comparison is case-normalized for collision checks;
 - operator/input failures remain exit code 2 with deterministic content-free errors.
+
+The exact-current requirements-manifest canonicalizer is now prototype-safe:
+
+- canonical object snapshots use `Object.create(null)`;
+- own enumerable JSON keys such as `__proto__` remain data fields instead of invoking the legacy prototype setter;
+- hostile top-level or nested `__proto__` additions therefore change the canonical fingerprint and are rejected as extra/stale fields;
+- focused tests confirm `Object.prototype` is not polluted;
+- validator version/schema/status remain unchanged because this restores the existing strict extra-field rejection contract.
 
 `p16:evidence-retention-requirements-validate` additionally:
 
@@ -105,7 +115,7 @@ Until such genuine evidence exists, keep these facts true:
 
 ### Safe code-only work while genuine evidence is absent
 
-Only deterministic/read-only/supporting work remains unblocked, such as further serialization/sanitization hardening, path-alias/symlink rejection hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
+Only deterministic/read-only/supporting work remains unblocked, such as structural/depth limits for hostile JSON, path-alias/output-link hardening, further serialization/sanitization hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
 
 ## Roadmap state
 
@@ -131,7 +141,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #388 docs sync -> `d7532a98b71e5dc5ac6c100b0386f06422966cf9`; exact head `83d76c7f91e66d6ffdff8b141b3ffa2338d30a27`; CI #1164, Integration #430, Final Release #475, Offline #519 PASS;
 - #390 validation CLI -> `c173c617ad205f0fef4a5659f27bf007067e6eb5`; exact head `7fcd4b553830527ab5900355663c3412a63780bc`; CI #1166, Final Release #477, Offline #521 PASS;
 - #392 docs sync -> `78f25d0cbc72427ea9824370762099db916750ed`; exact head `65d74941faa01a585e984d9d3b53c6932a864546`; CI #1168, Integration #433, Final Release #479, Offline #523 PASS;
-- #394 local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`; exact head `adbdfa0da1f61d4b9ff2dab3272526c36b19c3e4`; CI #1170, Final Release #481, Offline #525 PASS.
+- #394 local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`; exact head `adbdfa0da1f61d4b9ff2dab3272526c36b19c3e4`; CI #1170, Final Release #481, Offline #525 PASS;
+- #396 docs sync -> `12dc1e7e7e149e4da51a13c14722ac834f8a69ca`; exact head `6ac64e15f1c5fca058983a9a33ba4b9ab519a8d5`; CI #1172, Integration #436, Final Release #483, Offline #527 PASS;
+- #398 prototype-safe canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`; exact head `b7f3eead07fd9305d9b2f9290a572c715466e981`; CI #1174, Final Release #485, Offline #529 PASS.
 
 ## Current guardrails
 
