@@ -12,7 +12,7 @@ Current implemented surfaces:
 2. P13 Build-Ready Score 2.0 + Responsive Risk with `p13-core-v2` analyzer-bound provenance;
 3. P14 retained-duplicate core and development-only read-only Guided Prepare/review evidence surfaces;
 4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain;
-5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI and bounded local JSON I/O;
+5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, bounded local JSON I/O and prototype-safe canonicalization;
 6. exact-build release/provenance tooling.
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
@@ -21,7 +21,7 @@ Current implemented surfaces:
 
 Current verified main before this documentation sync:
 
-`19d36b87b71cdc0d8b8f862c733420d64a56d3d2`
+`4ec559f538899697d51138fc35ed79c2bea486b1`
 
 Recent guarded merge line:
 
@@ -37,7 +37,9 @@ Recent guarded merge line:
 - #388 canonical manifest-validator docs sync -> `d7532a98b71e5dc5ac6c100b0386f06422966cf9`;
 - #390 offline/operator exact-current retention-manifest validation CLI -> `c173c617ad205f0fef4a5659f27bf007067e6eb5`;
 - #392 canonical validation-CLI docs sync -> `78f25d0cbc72427ea9824370762099db916750ed`;
-- #394 retention operator local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`.
+- #394 retention operator local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`;
+- #396 canonical file-bound-hardening docs sync -> `12dc1e7e7e149e4da51a13c14722ac834f8a69ca`;
+- #398 prototype-safe retention-manifest canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`.
 
 ## Persistent issue queue
 
@@ -94,7 +96,10 @@ Current bounded deterministic/read-only/evidence chain includes:
 - package command `p16:evidence-retention-requirements`, a Node-20 offline/operator export that reads only the existing local document/profile/receipt/authentication-report JSON chain and writes that sanitized requirements manifest;
 - deterministic `gutenberg-native-serialization-evidence-retention-requirements-validation-v1`, which rebuilds the current exact requirements manifest and validates a previously exported manifest using strict JSON-only, key-order-independent semantic equality;
 - package command `p16:evidence-retention-requirements-validate`, a Node-20 offline/operator validation CLI that reads only local document/profile/receipt/authentication-report/manifest JSON and writes only the sanitized validator result;
-- shared bounded local JSON I/O for both retention CLIs: each input is capped at 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path.
+- shared bounded local JSON I/O for both retention CLIs: each input is capped at 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
+- prototype-safe exact-current canonicalization: canonical object snapshots use no `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain data properties, alter fingerprints and are rejected when added instead of being silently dropped.
+
+Focused regressions cover both top-level and nested own `__proto__` additions and confirm `Object.prototype` remains unpolluted. Validator version/schema/status are unchanged because this restores the existing strict extra-field rejection contract.
 
 Operator/input failures remain exit code 2 with deterministic content-free errors. Windows path comparison is case-normalized for output/input collision checks.
 
@@ -127,7 +132,7 @@ Current authority remains fixed:
 
 The normalized JSON model is not Gutenberg post-content serialization and intentionally omits WordPress `innerContent`. Custom/unregistered/freeform content remains `REVIEW_REQUIRED`.
 
-Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker and bounded local-file I/O that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
+Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, bounded local-file I/O and prototype-safe canonicalization that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
 
 ## P17-P26 state
 
