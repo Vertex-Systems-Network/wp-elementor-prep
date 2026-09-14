@@ -20,6 +20,7 @@
     "p15:elementor-import-intake": "node scripts/p15-elementor-import-intake.mjs",
     "p15:reference-closure-intake": "node scripts/p15-reference-closure-intake.mjs",
     "p15:reference-closure-review-packet": "node scripts/p15-reference-closure-review-packet.mjs",
+    "p16:native-serialization-intake": "node scripts/p16-native-serialization-intake.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
