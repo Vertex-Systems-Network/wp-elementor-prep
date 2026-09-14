@@ -13,7 +13,7 @@ Current product surfaces:
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare preview, proposed-change review binding, exact runtime review packet and persisted-evidence diagnostics;
 - P15 Elementor R1 foundation: v0.4/container validation, bounded widget-capability reporting, exact candidate/import-evidence binding, immutable declared target profiles, read-only profile assessment, bounded global/core-image asset review, deterministic combined reference identity, exact-bound external closure-evidence receipts, offline closure-evidence operator intake, deterministic non-authorizing pre-decision review packets and exact-bound externally reported authentication-result binding;
-- P16 Gutenberg foundation: current official R0 snapshot, bounded `gutenberg-normalized-parsed-block-v1` review contract, fail-closed normalized block validation, read-only documented-core capability reporting, immutable declared `gutenberg-target-profile-v1` identity/fingerprint and profile-bound normalized capability assessment;
+- P16 Gutenberg R1 foundation: current official R0 snapshot, bounded `gutenberg-normalized-parsed-block-v1` review contract, documented-core capability reporting, immutable declared target-profile identity, profile-bound normalized assessment, non-authorizing normalized candidate envelope, exact candidate SHA-256 identity and exact-bound externally reported native-serialization validation receipt contract;
 - exact-build release/provenance tooling.
 
 Current core flow:
@@ -52,47 +52,45 @@ Open roadmap / acceptance issues:
 
 Current verified main is:
 
-`5ed52132da6bee067e6e3005d1748dfd3677d2e6`
+`11499202e48d3c51ef416bbc447a729547eba4ce`
 
 ### Recent verified P13/P14/P15/P16 sequence
 
 - PR #269 added a versioned snapshot-first non-authorizing proposed-change review manifest and guarded squash-merged as `6514959cbfd9a71c241b204f371a330a6be462e2`; exact head `234eda81ab5c49c3325c7fd9231d3d66841c0013` passed CI #1014, P12 Final Release Artifact #325 and P12 Offline Acceptance #369.
 - PR #270 added the first real zero-penalty P13 `BR_SAFE_VERTICAL_STACK_CANDIDATE`, derived only from the accepted P2/P5 planner pipeline, and guarded squash-merged as `a70b003bd533cbf42d1aaaabf722639852ba48db`; corrected exact head `5d739cde842cefe6ff640aeba74da4900eddb831` passed CI #1017, P12 Final Release Artifact #328 and P12 Offline Acceptance #372.
 - PR #272 rendered the exact proposed-change review binding in the development Guided Prepare panel while preserving publishable-release stripping, and guarded squash-merged as `f06858ce384ce7d01510813b34b0ff803912e944`; exact head `e59058a7de174b18d8377d8052610efc9a12b4c2` passed CI #1019, P12 Final Release Artifact #330 and P12 Offline Acceptance #374.
-- PR #279 introduced `p13-core-v2` and analyzer-bound Build-Ready run identity across report generation, persisted runtime evidence, P13→P14 handoff and plugin/CLI parity. Corrected exact head `b590d0c1652d153525f6fd1a6c8db95dba7e9d54` passed CI #1026, P12 Final Release Artifact #337 and P12 Offline Acceptance #381 before guarded squash merge `31c2ddcee932592a9f7357b1bba07c4009cac684`. Integration Readiness did not trigger for this code-only diff.
-- PR #281 preserved persisted-evidence inspection status/reasons (`VALID`, `EMPTY`, `INVALID`, `READ_FAILED`, `QUARANTINED`) and surfaced exact fresh-Audit diagnostics in the development P13 viewer and P14 preview. Exact head `e201f43a7b11355daa2b73c957f82ce397bb6003` passed CI #1028, P12 Final Release Artifact #339 and P12 Offline Acceptance #383 before guarded squash merge `801075561f22a1738219e58e9f39096705dc80ac`. Integration Readiness did not trigger for this code-only diff.
-- PR #283 synchronized the canonical P13/P14 status docs through PR #281 and guarded squash-merged as `54fad8332e9ef4d41c5ccd2c5ccda4fb10247c5c`; exact head passed CI #1030, Integration Readiness #349, P12 Final Release Artifact #341 and P12 Offline Acceptance #385.
-- PR #286 hardened dependency/workflow supply-chain controls with a committed lockfile, `npm ci`, immutable first-party action SHAs, Dependabot and secret-file ignore coverage, then guarded squash-merged as `245a045fcbc30bd2ec81edb06dba65119e358a50`. Exact head passed CI #1048, Integration Readiness #362, P12 Final Release Artifact #359 and P12 Offline Acceptance #403; a one-time locked `npm audit --audit-level=high` reported 0 vulnerabilities.
-- PR #293 hardened the P3 UI pixel-broker boundary so malformed/tampered metrics and oversized broker images fail closed, then guarded squash-merged as `47dbc078b0a41cbbe5301d6e0d95d5ca33cc8721`. Exact head passed CI #1054, P12 Final Release Artifact #365 and P12 Offline Acceptance #409; Integration Readiness did not trigger for this code-only diff.
-- PR #294 aligned the operator-facing P13 offline parity intake with `p13-core-v2` analyzer-bound run identity and guarded squash-merged as `9955be0561807550a7ad1444d8d013d783820188`. Exact head `68189da1fba9b42610cc932e1193851c8c7e9636` passed CI #1056, P12 Final Release Artifact #367 and P12 Offline Acceptance #411; Integration Readiness did not trigger for this code-only diff.
-- Issue #295 regenerated the current traceable, non-publishable P13 development runtime artifact from source `9955be0561807550a7ad1444d8d013d783820188`: Actions run `34833881774`, artifact `p13-runtime-evidence-9955be056180-analyzer-v2`, ID `10343017256`, digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`. The artifact does not grant runtime acceptance; #159 remains open for genuine Figma Desktop evidence.
-- PR #298 synchronized the canonical P13/P14 docs after security/parity work and guarded squash-merged as `127c7215a15a36a2aabc62da79a02708903f4cb9`.
-- PR #300 added a deterministic development-only P14 runtime review packet bound to exact plugin/build provenance, persisted evidence, full Figma context and analyzer-bound P13 identity while keeping all four authority flags false; guarded squash merge `3a1f2f96617304aa4251aa4f3e4e112bce13612a`.
-- PR #302 disabled persisted checkout credentials in all four permanent trusted workflows and enforced the security contract; Integration Readiness proved canonical public refs remain fetchable without persisted credentials; guarded squash merge `5295a40839b093a77b3c6d2dc98daa6ac63d5067`.
+- PR #279 introduced `p13-core-v2` and analyzer-bound Build-Ready run identity across report generation, persisted runtime evidence, P13→P14 handoff and plugin/CLI parity. Corrected exact head `b590d0c1652d153525f6fd1a6c8db95dba7e9d54` passed CI #1026, P12 Final Release Artifact #337 and P12 Offline Acceptance #381 before guarded squash merge `31c2ddcee932592a9f7357b1bba07c4009cac684`.
+- PR #281 preserved persisted-evidence inspection status/reasons (`VALID`, `EMPTY`, `INVALID`, `READ_FAILED`, `QUARANTINED`) and surfaced exact fresh-Audit diagnostics in the development P13 viewer and P14 preview; guarded squash merge `801075561f22a1738219e58e9f39096705dc80ac`.
+- PR #286 hardened dependency/workflow supply-chain controls with a committed lockfile, `npm ci`, immutable first-party action SHAs, Dependabot and secret-file ignore coverage; guarded squash merge `245a045fcbc30bd2ec81edb06dba65119e358a50`.
+- PR #293 hardened the P3 UI pixel-broker boundary so malformed/tampered metrics and oversized broker images fail closed; guarded squash merge `47dbc078b0a41cbbe5301d6e0d95d5ca33cc8721`.
+- PR #294 aligned the operator-facing P13 offline parity intake with `p13-core-v2` analyzer-bound run identity; guarded squash merge `9955be0561807550a7ad1444d8d013d783820188`.
+- Issue #295 regenerated the current traceable, non-publishable P13 development runtime artifact from source `9955be0561807550a7ad1444d8d013d783820188`: Actions run `34833881774`, artifact `p13-runtime-evidence-9955be056180-analyzer-v2`, ID `10343017256`, digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`.
+- PR #300 added a deterministic development-only P14 runtime review packet while keeping all four authority flags false; guarded squash merge `3a1f2f96617304aa4251aa4f3e4e112bce13612a`.
+- PR #302 disabled persisted checkout credentials in all four permanent trusted workflows; guarded squash merge `5295a40839b093a77b3c6d2dc98daa6ac63d5067`.
 - PR #304 established the documented Elementor v0.4/container template contract and bounded offline validator; guarded squash merge `4c6e0f63718a6b38b056c82207e25973356d0d66`.
 - PR #306 added the read-only Elementor capability registry/report for directly documented classic widget IDs `heading`, `image`, and `button`; guarded squash merge `c242197a2d0a0dd24d7364db5f10c1fb6fa76e13`.
-- PR #308 added the deterministic non-authorizing Elementor candidate artifact envelope. Import validation remains `NOT_RUN`, download remains disabled, and target-compatibility/production-acceptance claims remain false; guarded squash merge `426314b183f220f66a315a24f9b1122a464909b9`.
-- PR #310 synchronized the canonical P14/P15 status docs through the first Elementor foundation slices; guarded squash merge `3e3254b1c77d78fe7eff2f9278b6a6c6def1c5a9`.
+- PR #308 added the deterministic non-authorizing Elementor candidate artifact envelope; guarded squash merge `426314b183f220f66a315a24f9b1122a464909b9`.
 - PR #312 added exact canonical candidate SHA-256 identity and a fail-closed non-authorizing future import-validation receipt contract; guarded squash merge `a5b87cad3df803de32ff359d8d0e84796b5d8482`.
 - PR #314 added offline operator intake for externally captured exact-bound Elementor import evidence; guarded squash merge `5992fe947a0a2f73d388d0239fde23a53435f046`.
 - PR #316 added an immutable declared Elementor target profile and SHA-256 profile fingerprint while keeping target observation/compatibility/generation/download authority false; guarded squash merge `da29e5c95a76dc6eb25ad8026a7fa1bba156423e`.
-- PR #318 bound validated exact-candidate import evidence to the immutable declared target-profile fingerprint without changing receipt-v1 authority; guarded squash merge `fb7a9f210f5088b645e4bf046cd4b1f09e3aa72b`.
-- PR #320 added read-only target-profile/candidate metadata alignment assessment. `PROFILE_ALIGNED_REFERENCE_REVIEW_PENDING` is not a compatibility claim and reference/target validation remains `NOT_RUN`; guarded squash merge `44a9e0851b3e7a4235e8854066ef09cc399fb78b`.
-- PR #322 added a non-authorizing global-reference key review gate. It emits no raw `__globals__` values, requires external closure when keys exist, and keeps asset-reference review `NOT_RUN`; guarded squash merge `d603ce87a645160204d2de6fd458279ba7b3bf3f`.
-- PR #324 synchronized the canonical P15 R1 status docs through the global-reference review batch; guarded squash merge `94bc8635b68c5781353d3bcb89388e4b630c69c5`.
-- PR #326 added the first documented asset-reference review gate, whitelisting only the exact core `image` widget `settings.image` MEDIA control from pinned upstream Elementor source. Raw asset URLs are not emitted; guarded squash merge `cde7ea30ad64e2fc6d308de29779f1a49068d543`.
-- PR #328 bound the exact current global + documented asset review state into one deterministic SHA-256 reference-review identity while keeping closure/compatibility authority false; guarded squash merge `5b95d5e3e96d7051e4c74930b6df7eb16038707f`.
-- PR #330 added an exact-bound external reference-closure PASS/FAIL evidence receipt contract. Receipt intake rejects BLOCKED/REVIEW/no-reference identities, and even reported PASS remains non-authorizing; guarded squash merge `d0796310fb3b6d4f1753d472e0e9f9783bb752b3`.
-- PR #332 synchronized canonical README/P14/project-state/next-actions through that reference-evidence batch; guarded squash merge `f2403e41998a8c91aedde3fa411863edd983ea99`.
-- PR #334 added a Node-20 offline operator intake for exact template/profile/reference-closure receipts. It emits sanitized current-identity/results/input-hash evidence, rejects stale/ineligible replay, never echoes evidence references/raw global values/raw asset URLs, and keeps reported PASS non-authorizing; guarded squash merge `c20d8835c27cf73e1e367c478f346f6c80d72824`.
-- PR #338 added a deterministic sanitized pre-decision reference-closure review packet. Exact-bound PASS advances only to `REPORTED_PASS_AUTHENTICATION_REQUIRED`; evidence authentication and internal decision stay `NOT_RUN`, all authority flags remain false, and raw evidence references/global values/asset URLs remain absent; guarded squash merge `250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`.
-- PR #340 synchronized canonical README/P14/project-state/next-actions through the pre-decision review-packet slice; guarded squash merge `34b77b567d49423dae9e15212cf4c82cf842eca5`.
-- PR #343 added exact binding for a caller-supplied externally reported evidence-authentication result to the current reference-review identity, canonical closure-receipt SHA-256 and SHA-256 of each required evidence reference. `EXTERNALLY_REPORTED_PASS` is not repository authentication or closure authority; all authority flags stay false and `internalDecisionStatus=NOT_RUN`; exact head `e75a30ecd4d38b17ea0b56300827f5a3e06e0b0d` passed CI #1114, P12 Final Release Artifact #425 and P12 Offline Acceptance #469 on Windows/macOS/Ubuntu before guarded squash merge `464461a86a4aed4bd43260baee79619a25216c2b`. Integration Readiness did not trigger for this code-only diff.
-- PR #345 synchronized canonical README/P14/project-state/next-actions through the P15 external-authentication binding and guarded squash-merged as `359f247fbb70ee5e301136682ad69a0945e0a6ed`.
-- PR #346 added the first bounded P16 Gutenberg foundation and guarded squash-merged as `66f6a77f31c69b0c4cd280a21bc03eb53759ec4d`. Exact head `faab4bb4d0805e6d71c04e91ac543ee2805f762e` passed CI #1118, P12 Final Release Artifact #429 and P12 Offline Acceptance #473 on Windows/macOS/Ubuntu; Integration Readiness did not trigger for this diff.
-- PR #348 synchronized the first P16 foundation into canonical docs and guarded squash-merged as `a9718ab0f9b349bbf349e829d9b0e932aa41a6c6`. Exact head `1ffb6ff5f5174721047cb14616ab2d2eb2d09ee6` passed CI #1120, Integration Readiness #400, P12 Final Release Artifact #431 and P12 Offline Acceptance #475.
-- PR #350 added immutable declared `gutenberg-target-profile-v1`, deterministic canonical serialization and SHA-256 profile fingerprint while keeping native serialization/target validation/compatibility/production/generation/download authority disabled; guarded squash merge `db14fe54d2d3397c9b393d95534ffffb1d475ce1`. Exact head `36002c95e459b2ae60e45adc2e0db76054c1d733` passed CI #1122, P12 Final Release Artifact #433 and P12 Offline Acceptance #477; Integration Readiness did not trigger.
-- PR #352 added deterministic profile-bound normalized capability assessment with exact profile/document fingerprints, exact review-required inventory and highest state `PROFILE_ALIGNED_NATIVE_VALIDATION_PENDING`; native serialization, editor/import/render and target-environment validation remain `NOT_RUN`, and compatibility/production/generation/download authority remains false. Guarded squash merge `5ed52132da6bee067e6e3005d1748dfd3677d2e6`; exact head `18d8635e959ab63c1af2eb1239fccbca9dbb6644` passed CI #1124, P12 Final Release Artifact #435 and P12 Offline Acceptance #479; Integration Readiness did not trigger.
+- PR #318 bound validated exact-candidate import evidence to the immutable declared target-profile fingerprint; guarded squash merge `fb7a9f210f5088b645e4bf046cd4b1f09e3aa72b`.
+- PR #320 added read-only target-profile/candidate metadata alignment assessment; guarded squash merge `44a9e0851b3e7a4235e8854066ef09cc399fb78b`.
+- PR #322 added a non-authorizing global-reference key review gate; guarded squash merge `d603ce87a645160204d2de6fd458279ba7b3bf3f`.
+- PR #326 added the first documented asset-reference review gate for the exact core `image` MEDIA control; guarded squash merge `cde7ea30ad64e2fc6d308de29779f1a49068d543`.
+- PR #328 bound the exact current global + documented asset review state into one deterministic SHA-256 reference-review identity; guarded squash merge `5b95d5e3e96d7051e4c74930b6df7eb16038707f`.
+- PR #330 added an exact-bound external reference-closure PASS/FAIL evidence receipt contract; guarded squash merge `d0796310fb3b6d4f1753d472e0e9f9783bb752b3`.
+- PR #334 added a Node-20 offline operator intake for exact template/profile/reference-closure receipts; guarded squash merge `c20d8835c27cf73e1e367c478f346f6c80d72824`.
+- PR #338 added a deterministic sanitized pre-decision reference-closure review packet; guarded squash merge `250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`.
+- PR #343 added exact binding for a caller-supplied externally reported evidence-authentication result while keeping `authenticationAuthority=false` and `internalDecisionStatus=NOT_RUN`; guarded squash merge `464461a86a4aed4bd43260baee79619a25216c2b`.
+- PR #345 synchronized canonical P15 docs; guarded squash merge `359f247fbb70ee5e301136682ad69a0945e0a6ed`.
+- PR #346 added the first bounded P16 Gutenberg normalized parsed-block/capability foundation; guarded squash merge `66f6a77f31c69b0c4cd280a21bc03eb53759ec4d`; exact head `faab4bb4d0805e6d71c04e91ac543ee2805f762e` passed CI #1118, Final Release #429 and Offline #473.
+- PR #348 synchronized the first P16 foundation into canonical docs; guarded squash merge `a9718ab0f9b349bbf349e829d9b0e932aa41a6c6`; exact head `1ffb6ff5f5174721047cb14616ab2d2eb2d09ee6` passed CI #1120, Integration Readiness #400, Final Release #431 and Offline #475.
+- PR #350 added immutable declared `gutenberg-target-profile-v1` and deterministic SHA-256 profile fingerprint; guarded squash merge `db14fe54d2d3397c9b393d95534ffffb1d475ce1`; exact head `36002c95e459b2ae60e45adc2e0db76054c1d733` passed CI #1122, Final Release #433 and Offline #477.
+- PR #352 added deterministic profile-bound normalized capability assessment with strongest state `PROFILE_ALIGNED_NATIVE_VALIDATION_PENDING`; guarded squash merge `5ed52132da6bee067e6e3005d1748dfd3677d2e6`; exact head `18d8635e959ab63c1af2eb1239fccbca9dbb6644` passed CI #1124, Final Release #435 and Offline #479.
+- PR #354 synchronized canonical P16 profile/assessment docs; guarded squash merge `b29e53c264362b0e01224d15cf7b603f9aea989f`; exact head `197bf68c38fcd0886d7f00a885c97a2fb0ad2057` passed CI #1126, Integration Readiness #404, Final Release #437 and Offline #481.
+- PR #356 added deterministic non-authorizing `gutenberg-normalized-candidate-v1` with explicit invalid/review/`READY_FOR_NATIVE_SERIALIZATION_VALIDATION` states and canonical embedded profile/document JSON only after their validation gates; guarded squash merge `14a55bf31fc741adea0839d661e3c3358cfb7053`; exact head `b01e08e517a4430b6cffcc916fdb0ae965ea1159` passed CI #1128, Final Release #439 and Offline #483.
+- PR #358 added exact canonical `gutenberg-normalized-candidate-identity-v1` SHA-256 integrity identity; review/invalid/tampered candidates fail before identity creation; guarded squash merge `88617cde269393a3f886b2178c6c0a4765e3bb4a`; exact head `0ba249e9932abf76998e79abbfad122cffd18ccb` passed CI #1130, Final Release #441 and Offline #485.
+- PR #360 added exact-bound externally reported `gutenberg-native-serialization-validation-receipt-v1`; reported PASS requires exact candidate/declared-WordPress binding, parse+serialize+round-trip success, no invalid-block warnings and native-output digest metadata, while repository execution/authentication and all authority remain false; guarded squash merge `11499202e48d3c51ef416bbc447a729547eba4ce`; exact head `728e585d5ef7d90dde0fcf61286f85fdca1b1a01` passed CI #1132, Final Release #443 and Offline #487.
 
 The real P13 vertical-stack opportunity is still **not** production mutation authority. `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty, so production P13→P14 handoff downgrades the candidate to REVIEW with `P14_SAFE_BINDING_REQUIRED`, produces no production-eligible action IDs, and keeps the P14 plan BLOCKED.
 
@@ -117,7 +115,7 @@ The proposed-change review manifest, visible review-binding panel, analyzer iden
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains; current analyzer is p13-core-v2 with analyzer-bound run identity |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only preview requires current analyzer/fresh evidence and shows rejection diagnostics; real candidate remains REVIEW/BLOCKED because production registry remains empty; retained-duplicate mutation runtime is unwired; #159 current real-Figma evidence remains required before real Figma mutation exposure |
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Exact candidate/profile/import evidence + bounded global/core-image asset review + combined reference identity + external closure receipt + offline operator intake + non-authorizing pre-decision review packet + exact-bound externally reported authentication-result binding are merged; genuine trusted authentication/internal decision, real target import, Figma semantic generation and product download remain unaccepted/unwired |
-| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Official R0 + normalized parsed-block/capability foundation + declared target-profile fingerprint + profile-bound normalized assessment are merged; strongest state is `PROFILE_ALIGNED_NATIVE_VALIDATION_PENDING`; native serialization, real WordPress editor/import/render validation, Figma semantic mapping, pattern packaging, section transfer and download authority remain unwired/unaccepted |
+| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Normalized contract/capabilities + declared profile + profile-bound assessment + normalized candidate + exact candidate identity + exact-bound externally reported native-serialization receipt are merged; repository native serialization/WordPress execution/authentication, real editor/import/render validation, Figma semantic mapping, pattern packaging, section transfer and download authority remain unwired/unaccepted |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + versioned adapter/build matrix retained |
 | P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
@@ -130,36 +128,26 @@ The proposed-change review manifest, visible review-binding panel, analyzer iden
 | P26 Optional AI assistance | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Non-authoritative AI authority firewall retained; provider/network choice still unselected |
 | P27 Final production release + publisher/runtime evidence | GATE DEFINED / EXECUTION DEFERRED | 0% exec | `░░░░░░░░░░` | Coordinate retained #84 truth + final live runtime/publisher/2FA evidence after implementation/internal readiness |
 
-**Overall progress is intentionally not collapsed into one synthetic percentage.** Historical P0-P7 core remains 100%; P12 remains 80%; P13 implementation is complete with real-plugin runtime acceptance pending; P14 core/read-only review implementation is active while confirmation and retained-duplicate mutation authority remain unwired; P15 core foundation is in progress with target import still unvalidated; P16 core foundation is now in progress with target validation unwired; P17-P26 implementation is not started; P27 release execution is not started.
+**Overall progress is intentionally not collapsed into one synthetic percentage.** Historical P0-P7 core remains 100%; P12 remains 80%; P13 implementation is complete with real-plugin runtime acceptance pending; P14 core/read-only review implementation is active while confirmation and retained-duplicate mutation authority remain unwired; P15 core foundation is in progress with target import still unvalidated; P16 core foundation is in progress with target validation unwired; P17-P26 implementation is not started; P27 release execution is not started.
 
 R0/R1 gate definitions remain complete but are re-executed where applicable. Implementation completion, real-runtime acceptance and production release are separate evidence states; one does not imply another.
 
 ## Current P13 provenance boundary
 
-P13 current analyzer semantic version is `p13-core-v2`. Build-Ready `runId` now binds exact source `structuralHash`, `configHash` and `analyzerVersion`; the same identity contract is used for normal and insufficient-evidence reports.
-
-Persisted P13 evidence rejects stale/unsupported analyzer versions and contradictory run IDs. P13→P14 handoff also requires this current analyzer-bound identity, and plugin/CLI parity includes analyzer version in `sameRunIdentity`. `generatedAt` is intentionally non-semantic runtime metadata.
-
-Persisted evidence inspection distinguishes `VALID`, `EMPTY`, `INVALID`, `READ_FAILED` and `QUARANTINED`. Rejection/read/quarantine reasons are bounded. The development P13 evidence viewer and P14 Guided Prepare preview surface those reasons and require a fresh Audit rather than silently treating rejected evidence as current.
-
-The operator-facing offline parity intake now independently enforces `p13-core-v2`, requires the analyzer-bound `runId`, includes analyzer version in exact run identity and emits explicit per-side run-identity evidence while keeping `generatedAt` non-semantic. Stale analyzer evidence and forged run IDs fail before a parity receipt is written.
+P13 current analyzer semantic version is `p13-core-v2`. Build-Ready `runId` binds exact source `structuralHash`, `configHash` and `analyzerVersion`. Persisted P13 evidence rejects stale/unsupported analyzer versions and contradictory run IDs. P13→P14 handoff requires the same analyzer-bound identity, and plugin/CLI parity includes analyzer version in `sameRunIdentity`.
 
 The current traceable development artifact for the next genuine #159 attempt is `p13-runtime-evidence-9955be056180-analyzer-v2` (artifact ID `10343017256`, source `9955be0561807550a7ad1444d8d013d783820188`). It is explicitly non-authorizing and do-not-publish.
 
 ## Current P14 boundary
 
-P14 Guided Prepare remains development-only and read-only. Before rendering, it requires exact current file/page/frame identity, stable selection during evidence load, a fresh matching Build-Ready source/run/config/analyzer fingerprint, and exact current plugin/build identity.
-
-The versioned proposed-change review artifact binds human review to the exact P13 run, source fingerprint, P14 plan digest and canonical eligible action IDs. In normal production configuration the registry is empty, so the real vertical-stack candidate remains review-only and the manifest contains no production-authorized eligible action binding.
-
-Current explicit P14 preview/review locks remain:
+P14 Guided Prepare remains development-only and read-only. Current explicit P14 preview/review locks remain:
 
 - `acceptanceAuthority=false`;
 - `targetCompatibilityClaim=false`;
 - `mutationEnabled=false`;
 - `confirmationEnabled=false`.
 
-The generated publishable release UI strips the development-only Guided Prepare preview and Proposed Change Review Binding surface.
+The production safe-recipe registry remains empty. The generated publishable release UI strips development-only Guided Prepare/review surfaces. #159 remains required before real Figma mutation exposure.
 
 ## Current P15 boundary
 
@@ -167,18 +155,20 @@ P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**. The exa
 
 ## Current P16 boundary
 
-P16 is **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**. The current bounded chain includes:
+P16 remains **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**. The current bounded chain includes:
 
-- the official WordPress/Gutenberg R0 snapshot;
-- repository-owned `gutenberg-normalized-parsed-block-v1` normalized JSON review contract for `blockName`, `attrs`, `innerBlocks`, and `innerHTML`;
-- bounded node/depth/attribute/string limits and fail-closed diagnostics;
-- top-level `blockName=null` freeform handling distinct from named namespaced blocks;
-- read-only documented-core capability reporting for exact current official API-v3 IDs `core/paragraph`, `core/heading`, `core/image`, and `core/group`;
-- `REVIEW_REQUIRED` for custom/unregistered/freeform content;
-- immutable declared `gutenberg-target-profile-v1` with bounded declared WordPress version, canonical JSON and deterministic SHA-256 profile fingerprint;
-- deterministic profile-bound normalized capability assessment with exact validated document fingerprint, exact profile fingerprint, exact review-required inventory, and strongest state `PROFILE_ALIGNED_NATIVE_VALIDATION_PENDING`.
+- official WordPress/Gutenberg R0 snapshot;
+- repository-owned `gutenberg-normalized-parsed-block-v1` normalized review contract with bounded validation and top-level freeform handling;
+- read-only documented-core capability reporting for exact official API-v3 IDs `core/paragraph`, `core/heading`, `core/image`, and `core/group`; custom/unregistered/freeform content remains `REVIEW_REQUIRED`;
+- immutable declared `gutenberg-target-profile-v1`, canonical JSON and deterministic SHA-256 profile fingerprint;
+- deterministic `gutenberg-target-profile-assessment-v1` with exact validated document/profile fingerprints and strongest non-authorizing `PROFILE_ALIGNED_NATIVE_VALIDATION_PENDING` state;
+- deterministic `gutenberg-normalized-candidate-v1` with explicit invalid-profile, invalid-document, REVIEW and `READY_FOR_NATIVE_SERIALIZATION_VALIDATION` states; canonical profile/document JSON is embedded only after its validation gate succeeds;
+- exact `gutenberg-normalized-candidate-identity-v1` SHA-256 integrity identity available only for canonical READY candidates; embedded profile/document evidence is rebuilt and byte-compared before identity creation;
+- exact-bound `gutenberg-native-serialization-validation-receipt-v1` for caller-supplied external PASS|FAIL reports. Reported PASS requires exact candidate + declared WordPress binding, parse/serialize/round-trip success, no invalid-block warnings and native-output digest metadata.
 
-The declared target profile is intended-target evidence only, not observed environment evidence. `PROFILE_ALIGNED_NATIVE_VALIDATION_PENDING` is repository metadata/profile alignment only; `nativeSerializationStatus`, `editorImportValidationStatus`, `renderValidationStatus`, and `targetEnvironmentValidationStatus` remain `NOT_RUN`. The normalized JSON serializer is not Gutenberg post-content serialization and the repository model intentionally omits WordPress `innerContent`. No raw comment-delimited markup generation, `@wordpress/blocks`/PHP runtime execution, WordPress REST/site connection, editor/import/render proof, dynamic-block proof, Figma semantic mapping, selected-section transfer, pattern/package generation, production acceptance or download authority is claimed. `targetCompatibilityClaim=false`, `productionAcceptance=false`, `generationEnabled=false`, and `downloadEnabled=false` remain fixed.
+None of the above executes WordPress or authenticates external evidence. `READY_FOR_NATIVE_SERIALIZATION_VALIDATION` is not native serialization proof. A valid externally reported PASS is not repository native-serialization authority or target compatibility. The receipt stores native-output digest/length metadata only and does not ingest raw Gutenberg post-content bytes. `nativeSerializationAuthority=false`, `targetEnvironmentValidated=false`, `editorImportValidated=false`, `renderValidated=false`, `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, `generationEnabled=false`, and `downloadEnabled=false` remain fixed.
+
+The normalized JSON serializer is not Gutenberg post-content serialization and the repository model intentionally omits WordPress `innerContent`. No repository raw comment-delimited block serializer, `@wordpress/blocks`/PHP runtime execution, WordPress REST/site connection, genuine editor/import/render proof, dynamic-block render proof, Figma semantic mapping, selected-section transfer, pattern/package generation or product download surface is accepted.
 
 ## Current P12 publishing line
 
@@ -191,8 +181,6 @@ Figma-assigned publishing ID:
 `1680034649341961379`
 
 Verification on that historical candidate passed CI #709, Integration Readiness #145, P12 Offline #64 and Final Release Artifact #20 (`wp-builders-prepare-final-release-20`, artifact ID `10179286885`, digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`). The exact three-file publish ZIP SHA-256 is `1ccfa457d4ae4145cf36b748f7758187ef3092503c270a46f28e03675878a066`.
-
-The exact candidate is pinned in `config/p12-publisher-candidate.json`. `npm run p12:publisher-evidence` verifies exact ZIP/extracted-plugin hashes, hashes runtime/publish/2FA screenshots, requires explicit operator confirmations, and emits a receipt with `acceptanceAuthority: false`.
 
 The currently retained screenshot set is **not sufficient** for exit. Fresh exact-#20 runtime, valid Publish final-details and 2FA screenshots remain required. Later P13/P14/P15/P16 development commits do not silently replace this historical P12 publishing candidate or count as live publisher acceptance. Actual Community review/approval remains external.
 
@@ -207,7 +195,7 @@ A package can be `ARTIFACT VALIDATED` without being `IMPORT VERIFIED`. We do not
 1. keep the current P14 target-neutral preparation/read-only review foundation non-authorizing while #159 remains pending;
 2. complete #159 real-plugin P13 runtime/parity acceptance when genuine Figma evidence is available;
 3. continue P15 only where genuine trusted evidence permits stronger internal decisions;
-4. continue bounded P16 Gutenberg R1/foundation work while native serialization, target validation and generation authority remain unwired;
+4. continue bounded P16 Gutenberg R1 work while repository native serialization, target validation and generation authority remain unwired;
 5. continue P17-P26 in retained dependency order;
 6. execute P27 #182 only after implementation/internal readiness is ready;
 7. during P27, capture remaining exact release runtime/publisher/2FA evidence and perform the genuine #84 release-exit decision.
