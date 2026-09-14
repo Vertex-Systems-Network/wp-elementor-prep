@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-13
+Last updated: 2026-09-14
 
 ## Product
 
@@ -41,16 +41,21 @@ Elementor is first target family, Gutenberg second, followed by generic web/fram
 
 ## Current repository main
 
-Current verified main after P13 persisted-evidence diagnostic hardening:
+Current verified main after security hardening and analyzer-v2 offline parity alignment:
 
-`801075561f22a1738219e58e9f39096705dc80ac`
+`9955be0561807550a7ad1444d8d013d783820188`
 
-That is the guarded squash merge of PR #281.
+Recent guarded merge line:
+
+- #283 docs sync -> `54fad8332e9ef4d41c5ccd2c5ccda4fb10247c5c`;
+- #286 supply-chain security -> `245a045fcbc30bd2ec81edb06dba65119e358a50`;
+- #293 P3 pixel-broker fail-closed security -> `47dbc078b0a41cbbe5301d6e0d95d5ca33cc8721`;
+- #294 P13 offline analyzer-v2 parity -> `9955be0561807550a7ad1444d8d013d783820188`.
 
 Current docs-only synchronization:
 
-- issue #282;
-- branch `docs/p13-v2-evidence-diagnostics-282`;
+- issue #297;
+- branch `docs/post-security-p13-parity-297`;
 - scope limited to README, P14 foundation and memory-bank state/next-actions.
 
 ## Current issue queue
@@ -59,9 +64,10 @@ Current docs-only synchronization:
 - #119 — **P13-P27 commercial/multi-target roadmap: ACTIVE**. P13-P26 implementation/testing may progress independently of final production release.
 - #159 — **P13 real-plugin Build-Ready runtime/parity evidence: OPEN runtime-acceptance dependency**. Genuine real-Figma runtime acceptance remains pending.
 - #182 — **P27 final production-release gate: DEFINED / execution deferred**.
-- #282 — **ACTIVE docs-only synchronization** through PR #281.
+- #287 — **OPEN repository-admin security hardening**. Main branch protection/ruleset enforcement requires GitHub administration access and is not represented as fixed by code changes.
+- #297 — **ACTIVE docs-only synchronization** through current security/parity/artifact truth.
 
-Focused issues #275 and #280 are completed through PRs #279 and #281.
+Focused issues #275, #280, #284, #285, #288 and #295 are completed through their reviewed implementation/artifact flows.
 
 ## P13 state
 
@@ -90,6 +96,10 @@ PR #281 then preserved why persisted evidence cannot be used. Read-only inspecti
 Validation/read/quarantine diagnostics are bounded. The development P13 evidence viewer and P14 Guided Prepare preview now show the rejection reason and fresh-Audit guidance instead of collapsing all unusable evidence to a generic null state.
 
 The compatibility helper `loadLatestP13RuntimeEvidence(): bundle | null` remains available; accepted evidence semantics are unchanged.
+
+PR #294 brings the offline operator intake under the same current identity contract: both plugin evidence and CLI Build-Ready input must use `p13-core-v2`, each run ID must bind exact structural/config/analyzer identity, analyzer version participates in `sameRunIdentity`, and stale/forged identity fails before a receipt is written. `generatedAt` remains the intentionally ignored semantic-comparison field.
+
+Issue #295 then regenerated the traceable development artifact for the genuine #159 attempt from current source `9955be0561807550a7ad1444d8d013d783820188`: run `34833881774`, artifact `p13-runtime-evidence-9955be056180-analyzer-v2`, ID `10343017256`, digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`. It remains non-authorizing/do-not-publish and #159 remains open.
 
 ## P13 safe-preparation opportunity
 
@@ -172,6 +182,33 @@ Not wired into the Figma plugin:
 - Integration Readiness did not trigger for this code-only diff;
 - guarded squash merge `801075561f22a1738219e58e9f39096705dc80ac`.
 
+### PR #286 — dependency/workflow supply-chain hardening
+
+- guarded squash merge `245a045fcbc30bd2ec81edb06dba65119e358a50`;
+- CI #1048 — PASS;
+- Integration Readiness #362 — PASS;
+- P12 Final Release Artifact #359 — PASS;
+- P12 Offline Acceptance #403 — PASS Windows/macOS/Ubuntu;
+- one-time locked npm audit reported 0 vulnerabilities.
+
+### PR #293 — P3 pixel-broker fail-closed hardening
+
+- exact head `fe8dd4c25802eb77acd375f3e14874568db9f988`;
+- CI #1054 — PASS;
+- P12 Final Release Artifact #365 — PASS;
+- P12 Offline Acceptance #409 — PASS Windows/macOS/Ubuntu;
+- Integration Readiness did not trigger for the code-only diff;
+- guarded squash merge `47dbc078b0a41cbbe5301d6e0d95d5ca33cc8721`.
+
+### PR #294 — analyzer-v2 offline runtime parity intake
+
+- exact head `68189da1fba9b42610cc932e1193851c8c7e9636`;
+- CI #1056 — PASS;
+- P12 Final Release Artifact #367 — PASS;
+- P12 Offline Acceptance #411 — PASS Windows/macOS/Ubuntu;
+- Integration Readiness did not trigger for the code-only diff;
+- guarded squash merge `9955be0561807550a7ad1444d8d013d783820188`.
+
 Earlier retained review-manifest / real-candidate / review-binding proof remains recorded in PRs #269, #270 and #272.
 
 ## P12 release truth
@@ -203,6 +240,6 @@ P27 #182 remains the final production-release gate and owns deferred exact P12 r
 
 ## Immediate project action
 
-Complete #282 docs-only synchronization and exact-head gates. After merge, audit the next P13/P14 implementation gap without treating analyzer provenance, evidence diagnostics, the review manifest or the real P13 candidate as confirmation/mutation authority.
+Complete #297 docs-only synchronization and exact-head gates. Then use the current #295 artifact only for genuine #159 Figma Desktop evidence capture/parity review; do not manufacture runtime acceptance in repository CI. Target-neutral/read-only P14 work may continue without changing the locked confirmation/mutation/compatibility authority state.
 
 No synthetic overall project percentage is used. Historical module progress and current implementation/runtime/release states remain separate.
