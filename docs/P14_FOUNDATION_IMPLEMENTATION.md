@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + prototype-safe canonicalization.
+Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + prototype-safe canonicalization + alias-safe atomic output writes.
 
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and P27 final production-release gate (#182).
 
@@ -52,9 +52,12 @@ Current bounded chain includes:
 - deterministic `gutenberg-native-serialization-evidence-retention-requirements-validation-v1`, which rebuilds the current exact requirements manifest and rejects stale/tampered/extra/missing saved manifests using strict JSON-only, key-order-independent semantic comparison;
 - Node-20 package command `p16:evidence-retention-requirements-validate`, which validates local document/profile/receipt/authentication-report/manifest JSON through that contract and writes only sanitized validation metadata;
 - shared fail-closed local JSON I/O for both retention CLIs: every input is capped at 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
-- prototype-safe canonicalization for the exact-current manifest validator: canonical objects use no `Object.prototype`, so own enumerable JSON keys including `__proto__` remain data fields, affect fingerprints and are rejected when added instead of being silently dropped.
+- prototype-safe canonicalization for the exact-current manifest validator: canonical objects use no `Object.prototype`, so own enumerable JSON keys including `__proto__` remain data fields, affect fingerprints and are rejected when added instead of being silently dropped;
+- alias-safe output writes: output parent directories are resolved through `realpath`, canonical output is compared against real input locations, existing symlink/non-regular targets are rejected, hardlink identity against inputs is rejected where available, and output is staged in a unique same-directory regular temp file before atomic rename.
 
-Focused regressions cover top-level and nested own `__proto__` additions and confirm `Object.prototype` is not polluted. Validator version/schema/status are unchanged because the fix restores the existing strict extra-field rejection contract.
+Atomic rename prevents a late-created final symlink from being followed back onto an input; it is replaced instead. Temporary output state is cleaned before fail-closed write errors. Focused tests cover symlink, hardlink and symlinked-parent aliases and verify source input immutability.
+
+Focused canonicalization regressions cover top-level and nested own `__proto__` additions and confirm `Object.prototype` is not polluted. Validator version/schema/status are unchanged because the fix restores the existing strict extra-field rejection contract.
 
 Operator/input failures remain exit code 2 with deterministic content-free errors. Windows path comparison is case-normalized for output/input collision checks.
 
@@ -91,7 +94,7 @@ The normalized JSON serializer is not Gutenberg post-content serialization and t
 
 Current verified main before this documentation sync:
 
-`4ec559f538899697d51138fc35ed79c2bea486b1`
+`8445fc0632a58515a52d72e3cf85ed1364761b9c`
 
 Recent P16 merge line:
 
@@ -109,7 +112,9 @@ Recent P16 merge line:
 - #392 canonical validation-CLI docs sync -> `78f25d0cbc72427ea9824370762099db916750ed`;
 - #394 retention operator local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`;
 - #396 canonical file-bound-hardening docs sync -> `12dc1e7e7e149e4da51a13c14722ac834f8a69ca`;
-- #398 prototype-safe retention-manifest canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`.
+- #398 prototype-safe retention-manifest canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`;
+- #400 canonical prototype-safe docs sync -> `158132b4076fe5a70afa8e8778ae888fcca4db60`;
+- #402 alias-safe atomic retention output writes -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`.
 
 P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`.
 
@@ -119,4 +124,4 @@ P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains t
 
 Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Any future P14 mutation surface requires separate explicit authorization with fresh evidence, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
 
-For P16, do not promote the requirements manifest/export/validator/validation CLI, bounded local-file guard or prototype-safe canonicalization into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
+For P16, do not promote the requirements manifest/export/validator/validation CLI, bounded/alias-safe local-file guards or prototype-safe canonicalization into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
