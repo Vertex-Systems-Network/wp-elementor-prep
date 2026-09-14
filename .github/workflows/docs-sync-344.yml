@@ -29,6 +29,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/docs-sync-344.py')
+          text = p.read_text(encoding='utf-8')
+          old = """replace_once(
+              'README.md',
+              '`250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`',
+              f'`{MAIN}`',
+          )"""
+          new = """replace_once(
+              'README.md',
+              'Current verified main is:\\n\\n`250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`',
+              f'Current verified main is:\\n\\n`{MAIN}`',
+          )"""
+          if text.count(old) != 1:
+              raise SystemExit(f'expected one README main-pointer helper block, found {text.count(old)}')
+          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
           python3 scripts/docs-sync-344.py
           npm run status:verify
           grep -Fq 'Machine-readable operational registry: `config/runtime-artifacts.json` schema v3.' README.md
