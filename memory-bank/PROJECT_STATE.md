@@ -12,7 +12,7 @@ Current implemented surfaces:
 2. P13 Build-Ready Score 2.0 + Responsive Risk with `p13-core-v2` analyzer-bound provenance;
 3. P14 retained-duplicate core and development-only read-only Guided Prepare/review evidence surfaces;
 4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain;
-5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export and exact-current saved-manifest validator;
+5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator and offline validation CLI;
 6. exact-build release/provenance tooling.
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
@@ -21,7 +21,7 @@ Current implemented surfaces:
 
 Current verified main before this documentation sync:
 
-`1532fa54ec9c26bb8904ca939a01754418a70602`
+`c173c617ad205f0fef4a5659f27bf007067e6eb5`
 
 Recent guarded merge line:
 
@@ -33,7 +33,9 @@ Recent guarded merge line:
 - #380 canonical retention-requirements docs sync -> `c6f6009538e1e0f82bed087783f2c55fa0d9e75d`;
 - #382 offline/operator retention-requirements export -> `e2fe19364ac8615bc390f125c2afb4085bfc474c`;
 - #384 canonical operator-export docs sync -> `4c91cb3033672d6dc3a6fa28287e060a22e40734`;
-- #386 exact-current retention-requirements manifest validator -> `1532fa54ec9c26bb8904ca939a01754418a70602`.
+- #386 exact-current retention-requirements manifest validator -> `1532fa54ec9c26bb8904ca939a01754418a70602`;
+- #388 canonical manifest-validator docs sync -> `d7532a98b71e5dc5ac6c100b0386f06422966cf9`;
+- #390 offline/operator exact-current retention-manifest validation CLI -> `c173c617ad205f0fef4a5659f27bf007067e6eb5`.
 
 ## Persistent issue queue
 
@@ -88,13 +90,16 @@ Current bounded deterministic/read-only/evidence chain includes:
 - deterministic decision prerequisite where external auth PASS stops at `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED`;
 - deterministic `gutenberg-native-serialization-evidence-retention-requirements-v1` that is READY only from that exact prerequisite, preserves exact chain fingerprints + declared WordPress version, and fingerprints a fixed future evidence-retention requirements profile;
 - package command `p16:evidence-retention-requirements`, a Node-20 offline/operator export that reads only the existing local document/profile/receipt/authentication-report JSON chain and writes that sanitized requirements manifest;
-- deterministic `gutenberg-native-serialization-evidence-retention-requirements-validation-v1`, which rebuilds the current exact requirements manifest and validates a previously exported manifest using strict JSON-only, key-order-independent semantic equality.
+- deterministic `gutenberg-native-serialization-evidence-retention-requirements-validation-v1`, which rebuilds the current exact requirements manifest and validates a previously exported manifest using strict JSON-only, key-order-independent semantic equality;
+- package command `p16:evidence-retention-requirements-validate`, a Node-20 offline/operator validation CLI that reads only local document/profile/receipt/authentication-report/manifest JSON and writes only the sanitized validator result.
+
+The validation CLI exits 0 only for `CURRENT_REQUIREMENTS_MANIFEST_VALID`; every rejected current-chain/stale/tampered state exits 2. Stdout contains only output path, validation status, current requirements status, exactSemanticMatch and canonical expected/provided SHA-256 values.
 
 The validator rejects extra/missing/mutated fields and stale exact-chain bindings. Exact outcomes are `REJECTED_CURRENT_CHAIN_NOT_READY`, `REJECTED_REQUIREMENTS_MANIFEST_INVALID_OR_STALE`, and `CURRENT_REQUIREMENTS_MANIFEST_VALID`. VALID means only that the previously exported non-authorizing requirements metadata exactly matches the current deterministic chain.
 
-The retention requirements manifest/export/validator accepts no future evidence artifact, authenticator identity, authentication method, authenticated-at assertion or evidence PASS/FAIL. It does not authenticate anything and does not make an internal decision. Export exit 0 means only `EVIDENCE_RETENTION_REQUIREMENTS_READY` requirements metadata.
+The retention requirements manifest/export/validator/validation CLI accepts no future evidence artifact, authenticator identity, authentication method, authenticated-at assertion or evidence PASS/FAIL. It does not authenticate anything and does not make an internal decision. Export exit 0 means only `EVIDENCE_RETENTION_REQUIREMENTS_READY` requirements metadata.
 
-Written output/stdout/validator results intentionally omit the raw evidence reference, source evidence-reference hash and native Gutenberg post content. Validator output carries sanitized status metadata plus canonical expected/provided SHA-256 fingerprints only.
+Written output/stdout/validator results intentionally omit the raw evidence reference, source evidence-reference hash, supplied manifest payload and native Gutenberg post content. Validator/CLI output carries sanitized status metadata plus canonical expected/provided SHA-256 fingerprints only.
 
 Repository code still does not execute WordPress, `@wordpress/blocks` or PHP; does not connect to WordPress REST/site runtime; does not fetch/authenticate evidence; does not identify or verify an authenticator; does not validate signatures; and does not prove target environment/editor/import/render behavior.
 
@@ -117,7 +122,7 @@ Current authority remains fixed:
 
 The normalized JSON model is not Gutenberg post-content serialization and intentionally omits WordPress `innerContent`. Custom/unregistered/freeform content remains `REVIEW_REQUIRED`.
 
-Strongest current code-side state remains a requirements-ready export/validation surface that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
+Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
 
 ## P17-P26 state
 
