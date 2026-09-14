@@ -50,6 +50,7 @@ import {
 } from './p13-runtime-evidence-storage';
 import { buildP13RuntimeEvidenceViewerHtml } from './p13-runtime-evidence-viewer';
 import { buildP14PlanPreview, serializeP14PlanPreviewJson } from './p14-plan-preview';
+import { buildP14ReviewPacket, serializeP14ReviewPacketJson } from './p14-review-packet';
 import { assessP14PreviewContextBinding } from './p14-preview-context';
 import { assessP14PreviewFreshness } from './p14-preview-freshness';
 import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
@@ -479,15 +480,19 @@ async function runP14GuidedPreparePreview(): Promise<void> {
     }
 
     const preview = buildP14PlanPreview(evidence.buildReady);
+    const reviewPacket = buildP14ReviewPacket({
+      preview,
+      evidence,
+      pluginVersion: PLUGIN_VERSION,
+      runtimeBuild: P7_BUILD_IDENTITY,
+    });
     figma.ui.postMessage({
       type: 'p14-plan-preview-result',
       preview,
       previewJson: serializeP14PlanPreviewJson(preview),
-      context: {
-        fileKey: evidence.context.fileKey,
-        pageName: evidence.context.pageName,
-        frameName: evidence.context.frameName,
-      },
+      reviewPacket,
+      reviewPacketJson: serializeP14ReviewPacketJson(reviewPacket),
+      context: { ...evidence.context },
       capturedAt: evidence.capturedAt,
     });
     figma.notify(`P14 Guided Prepare preview loaded: ${preview.summary.status} · read-only.`);

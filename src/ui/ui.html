@@ -370,6 +370,8 @@
         && preview.mutationEnabled === false
         && preview.confirmationEnabled === false;
       const reviewManifest = preview.reviewManifest || null;
+      const reviewPacket = message.reviewPacket || null;
+      const reviewPacketJson = typeof message.reviewPacketJson === 'string' ? message.reviewPacketJson : '';
       const reviewActionRows = reviewManifest && Array.isArray(reviewManifest.actions)
         ? reviewManifest.actions.map((action) => `
             <div class="row">
@@ -398,6 +400,20 @@
           ${reviewActionRows
             ? `<div class="sectionTitle">Eligible reviewed actions · ${reviewManifest.actions.length}</div>${reviewActionRows}`
             : '<div class="empty">No eligible action bindings are authorized by the current production P14 recipe registry. This review artifact does not create confirmation or mutation authority.</div>'}`
+        : '';
+      const reviewPacketBinding = reviewPacket
+        ? `
+          <div class="sectionTitle">P14 Runtime Review Packet</div>
+          <div class="hero">
+            <div class="status">DETERMINISTIC READ-ONLY REVIEW PACKET · schema v${escapeHtml(reviewPacket.schemaVersion)} · packet v${escapeHtml(reviewPacket.packetVersion)}</div>
+            <div class="meta">Runtime build: ${escapeHtml(reviewPacket.runtime.build.sourceSha)} · run ${escapeHtml(reviewPacket.runtime.build.runNumber)}/${escapeHtml(reviewPacket.runtime.build.runId)}</div>
+            <div class="meta">Plugin version: ${escapeHtml(reviewPacket.runtime.pluginVersion)} · evidence captured ${escapeHtml(reviewPacket.evidence.capturedAt)}</div>
+            <div class="meta">File: ${escapeHtml(reviewPacket.context.fileKey)} · page ${escapeHtml(reviewPacket.context.pageId)} (${escapeHtml(reviewPacket.context.pageName)})</div>
+            <div class="meta">Frame: ${escapeHtml(reviewPacket.context.frameId)} (${escapeHtml(reviewPacket.context.frameName)})</div>
+            <div class="meta">P13 run: ${escapeHtml(reviewPacket.p13Identity.runId)} · analyzer ${escapeHtml(reviewPacket.p13Identity.analyzerVersion)}</div>
+            <div class="meta">acceptanceAuthority=false · targetCompatibilityClaim=false · mutationEnabled=false · confirmationEnabled=false</div>
+            ${reviewPacketJson ? '<div class="inlineActions one"><button class="smallButton" id="exportP14ReviewPacket">Export review packet JSON</button></div>' : ''}
+          </div>`
         : '';
       const groups = [
         ['ELIGIBLE', 'Eligible changes'],
@@ -454,9 +470,16 @@
         </div>
         ${unavailable}
         ${reviewBinding}
+        ${reviewPacketBinding}
         ${rows}
         ${blockers}
         <details><summary>Read-only P14 preview JSON</summary><pre>${escapeHtml(message.previewJson || JSON.stringify(preview, null, 2))}</pre></details>`;
+      const exportReviewPacket = document.getElementById('exportP14ReviewPacket');
+      if (exportReviewPacket && reviewPacketJson) {
+        exportReviewPacket.addEventListener('click', () => {
+          downloadText('p14-guided-prepare-review.json', reviewPacketJson, 'application/json;charset=utf-8');
+        });
+      }
     }
 
     function renderSafePlan(message) {

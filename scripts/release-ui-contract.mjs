@@ -50,6 +50,9 @@ const FORBIDDEN_DEVELOPER_TOKENS = [
   'p14-plan-preview-request',
   'Preview Guided Prepare',
   'P14 GUIDED PREPARE PREVIEW',
+  'P14 Runtime Review Packet',
+  'reviewPacketJson',
+  'p14-guided-prepare-review.json',
   'P5 COMPILED RUNTIME SELF-TEST',
   '>Runtime self-test<',
 ];
