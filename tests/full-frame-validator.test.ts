@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { PixelDiffMetrics } from '../src/core/validation-types';
-import { FullFrameValidator } from '../src/plugin/full-frame-validator';
+import { FullFrameValidator, isValidPixelDiffMetrics } from '../src/plugin/full-frame-validator';
 
 function fakeFrame(name: string): FrameNode {
   return {
@@ -85,5 +85,28 @@ describe('FullFrameValidator pixel broker lifecycle', () => {
 
     await vi.advanceTimersByTimeAsync(50);
     expect(validator.pendingCount).toBe(0);
+  });
+
+  it('rejects malformed or internally inconsistent pixel evidence', () => {
+    expect(isValidPixelDiffMetrics({ ...exactPixelMetrics(), channelTolerance: 9 }, 8)).toBe(false);
+    expect(isValidPixelDiffMetrics({ ...exactPixelMetrics(), changedPixels: 1, changedPixelPct: 0 }, 8)).toBe(false);
+    expect(isValidPixelDiffMetrics({ ...exactPixelMetrics(), widthBefore: 4096 }, 8)).toBe(false);
+    expect(isValidPixelDiffMetrics({ ...exactPixelMetrics(), meanChannelDelta: 10, maxChannelDelta: 5 }, 8)).toBe(false);
+  });
+
+  it('consumes a pending validation but rejects its promise when broker metrics are forged', async () => {
+    const posted: Array<{ validationId: number }> = [];
+    const validator = new FullFrameValidator((message) => posted.push(message), 250);
+    const validationPromise = validator.validate(fakeFrame('Before'), fakeFrame('After'));
+    const rejection = expect(validationPromise).rejects.toThrow('invalid or inconsistent metrics');
+    await settleExports();
+
+    expect(posted).toHaveLength(1);
+    expect(validator.finish(posted[0]!.validationId, {
+      ...exactPixelMetrics(),
+      channelTolerance: 0,
+    })).toBe(true);
+    expect(validator.pendingCount).toBe(0);
+    await rejection;
   });
 });
