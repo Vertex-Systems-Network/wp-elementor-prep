@@ -15,15 +15,15 @@ Last updated: 2026-09-14
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 before artifact-dependent operations.
 
-## Immediate action — P15 asset-reference review contract
+## Immediate action — P15 external reference-closure evidence intake
 
-Classification: **PLANNED / READ-ONLY R1 REFERENCE CLOSURE**.
+Classification: **PLANNED / NON-AUTHORITATIVE EXTERNAL EVIDENCE INTAKE**.
 
-The exact-candidate receipt, offline intake, immutable declared target profile, profile-bound evidence, read-only target-profile assessment and global-reference key review gates are merged. The next safe P15 R1 slice is bounded asset-reference review/closure semantics.
+The documented core-image asset review, combined global+asset reference-review identity and exact-bound external closure PASS/FAIL receipt contract are merged. The next safe P15 R1 slice is offline/operator intake for a caller-supplied closure receipt plus an explicit separate internal-review candidate.
 
-Refresh official target documentation first where asset fields/version behavior could have changed. Do not infer asset semantics from arbitrary Elementor settings. Keep asset work read-only and evidence-oriented: classify only documented asset references, preserve provenance, fail closed on unknown shapes, and leave `downloadEnabled=false`, `generationEnabled=false`, `targetCompatibilityClaim=false`, and `productionAcceptance=false` until genuine target validation and later gates justify authority.
+The intake must validate the exact current candidate/profile/reference-review identity, preserve class-specific reported PASS/FAIL unchanged, reject REVIEW/BLOCKED/no-reference bypass attempts, and never fetch/authenticate `evidenceReference` values. `allRequiredEvidenceReportsPass=true` remains reported external evidence only and must not set `referenceClosureClaim`, `targetCompatibilityClaim`, production acceptance, generation or download authority.
 
-Do not introduce a WordPress connection, Pro/add-on availability inference, Atomic generation or product download UI merely to advance the offline contract.
+Do not introduce a WordPress connection, target mutation, Pro/add-on availability inference, Atomic generation or product download UI merely to advance the offline contract.
 
 ## Parallel required runtime evidence — genuine #159 Figma Desktop evidence
 
@@ -94,7 +94,7 @@ Current state:
 
 - P13 — implementation complete / real-plugin runtime acceptance pending (#159), with `p13-core-v2` analyzer-bound provenance and one real target-neutral safe-preparation candidate signal;
 - P14 — deterministic core + fresh read-only Guided Prepare + review manifest/binding + exact runtime review packet + persisted-evidence rejection diagnostics active in development; confirmation/mutation still unwired;
-- P15 — core foundation in progress / target import unvalidated: exact candidate/receipt intake, immutable declared target profile, profile-bound evidence, read-only profile alignment and global-reference key review are merged; real target import, asset closure, semantic generation and download authority remain unwired;
+- P15 — core foundation in progress / target import unvalidated: exact candidate/profile/import evidence, bounded global/core-image asset review, combined reference-review identity and exact-bound external closure-evidence receipt contract are merged; actual external closure evidence/internal decision, real target import, semantic generation and download authority remain pending/unwired;
 - P16-P26 — preflight frozen / implementation not started;
 - P27 — final production-release gate defined, execution deferred (#182).
 
@@ -147,7 +147,7 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 G
 - artifact branch returned to zero content diff;
 - artifact remains non-authorizing/do-not-publish.
 
-### P15 exact-evidence + R1 profile/reference batch
+### P15 exact-evidence + R1 profile/reference/closure batch
 
 - PR #312 -> `a5b87cad3df803de32ff359d8d0e84796b5d8482`; CI #1082, Final Release #393 and Offline #437 PASS;
 - PR #314 -> `5992fe947a0a2f73d388d0239fde23a53435f046`; CI #1084, Final Release #395 and Offline #439 PASS;
@@ -155,15 +155,19 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 G
 - PR #318 -> `fb7a9f210f5088b645e4bf046cd4b1f09e3aa72b`; CI #1090, Final Release #401 and Offline #445 PASS;
 - PR #320 -> `44a9e0851b3e7a4235e8854066ef09cc399fb78b`; CI #1092, Final Release #403 and Offline #447 PASS;
 - PR #322 -> `d603ce87a645160204d2de6fd458279ba7b3bf3f`; CI #1094, Final Release #405 and Offline #449 PASS;
-- Integration Readiness did not trigger for these code-only diffs.
+- PR #324 docs sync -> `94bc8635b68c5781353d3bcb89388e4b630c69c5`; CI #1096, Integration Readiness #383, Final Release #407 and Offline #451 PASS;
+- PR #326 -> `cde7ea30ad64e2fc6d308de29779f1a49068d543`; CI #1098, Final Release #409 and Offline #453 PASS;
+- PR #328 -> `5b95d5e3e96d7051e4c74930b6df7eb16038707f`; CI #1100, Final Release #411 and Offline #455 PASS;
+- PR #330 -> `d0796310fb3b6d4f1753d472e0e9f9783bb752b3`; CI #1102, Final Release #413 and Offline #457 PASS;
+- Integration Readiness did not trigger for the code-only #326/#328/#330 diffs.
 
 ## Current guardrails for next work
 
 1. #159 genuine Figma Desktop evidence remains required before real P14 mutation exposure.
 2. P14 production safe-recipe registry remains empty and all four authority flags remain false.
 3. P15 target import remains unvalidated; compatibility, production, generation and download authority remain disabled.
-4. Exact-candidate receipt intake and exact declared-profile evidence binding are implemented; future observed target evidence must match both identities and still requires internal review.
-5. Global-reference review emits key/path inventory only; raw global values remain unresolved and asset-reference review/closure remains `NOT_RUN`.
+4. Exact-candidate/import evidence, declared-profile binding and combined global+asset reference-review identity are implemented; future observed target evidence must match current identities and still requires internal review.
+5. Global review emits key/path inventory only; documented asset review currently covers only the pinned core Image MEDIA control and emits URL fingerprints, not raw URLs. External closure receipts are exact-bound PASS/FAIL evidence only; repository code does not authenticate evidence references and reported PASS does not grant closure authority.
 6. No Figma-to-Elementor semantic generator, Pro/add-on mapping or Atomic generation support is accepted yet.
 7. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
 8. P12 historical publishing evidence remains unchanged and P27 owns final live release-exit evidence.
