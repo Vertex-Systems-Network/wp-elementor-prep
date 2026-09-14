@@ -1,5 +1,9 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { dirname } from 'node:path';
+import {
+  readP16OperatorJsonInput,
+  resolveP16OperatorOutputPath,
+} from './p16-operator-json-io';
 import {
   serializeGutenbergNativeSerializationEvidenceRetentionRequirementsValidation,
   validateGutenbergNativeSerializationEvidenceRetentionRequirements,
@@ -43,37 +47,30 @@ function required(values: Map<string, string>, key: string): string {
   return value;
 }
 
-async function readJson(path: string, label: string): Promise<unknown> {
-  let raw: string;
-  try {
-    raw = await readFile(resolve(path), 'utf8');
-  } catch (error) {
-    fail(`Unable to read ${label} ${path}: ${error instanceof Error ? error.message : String(error)}`);
-  }
-
-  try {
-    return JSON.parse(raw) as unknown;
-  } catch {
-    fail(`${label} ${path} is not valid JSON.`);
-  }
-}
-
 const args = parseArgs(process.argv.slice(2));
 const documentPath = required(args, 'document');
 const profilePath = required(args, 'profile');
 const receiptPath = required(args, 'receipt');
 const authenticationReportPath = required(args, 'authentication-report');
 const manifestPath = required(args, 'manifest');
-const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
+const inputPaths = [
+  documentPath,
+  profilePath,
+  receiptPath,
+  authenticationReportPath,
+  manifestPath,
+];
+const outPath = resolveP16OperatorOutputPath(args.get('out') ?? DEFAULT_OUT, inputPaths, fail);
 
-const documentValue = await readJson(documentPath, 'document');
-const profileValue = await readJson(profilePath, 'profile');
-const receiptValue = await readJson(receiptPath, 'receipt');
-const authenticationReportValue = await readJson(
+const documentValue = await readP16OperatorJsonInput(documentPath, 'document', fail);
+const profileValue = await readP16OperatorJsonInput(profilePath, 'profile', fail);
+const receiptValue = await readP16OperatorJsonInput(receiptPath, 'receipt', fail);
+const authenticationReportValue = await readP16OperatorJsonInput(
   authenticationReportPath,
   'authentication report',
+  fail,
 );
-const manifestValue = await readJson(manifestPath, 'requirements manifest');
+const manifestValue = await readP16OperatorJsonInput(manifestPath, 'requirements manifest', fail);
 
 const validation = validateGutenbergNativeSerializationEvidenceRetentionRequirements(
   manifestValue,
