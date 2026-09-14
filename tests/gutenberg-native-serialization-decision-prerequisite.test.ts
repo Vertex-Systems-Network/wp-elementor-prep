@@ -298,6 +298,7 @@ describe('P16 R1 native decision prerequisite packet', () => {
     expect(first).not.toContain(receipt.evidenceReference);
     expect(first).not.toContain('<!-- wp:');
     expect(first).not.toContain('postContent');
-    expect(first).toContain(report.evidenceAuthentication.sourceEvidenceReferenceSha256);
+    expect(first).not.toContain(report.evidenceAuthentication.sourceEvidenceReferenceSha256);
+    expect(first).toMatch(/"canonicalAuthenticationReportSha256": "sha256:[0-9a-f]{64}"/);
   });
 });
