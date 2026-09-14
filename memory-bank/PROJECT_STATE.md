@@ -16,7 +16,8 @@ Current implemented surfaces:
 6. P14 target-neutral retained-duplicate core;
 7. development-only read-only P14 Guided Prepare preview with exact evidence freshness, proposed-change review binding, exact runtime review packet and persisted-evidence rejection diagnostics;
 8. bounded P15 Elementor R1 foundation with v0.4/container validation, documented-core capabilities, exact candidate/import-evidence binding, immutable declared target profiles, read-only alignment, bounded global/core-image asset review, combined reference identity, exact-bound external closure-evidence receipts, offline operator intake, deterministic non-authorizing pre-decision review packets and exact-bound externally reported authentication-result binding;
-9. exact-build release/provenance and fail-closed P12 publisher-evidence tooling.
+9. bounded P16 Gutenberg foundation with the repository-owned `gutenberg-normalized-parsed-block-v1` review contract and read-only documented-core capability reporting for `core/paragraph`, `core/heading`, `core/image`, and `core/group`;
+10. exact-build release/provenance and fail-closed P12 publisher-evidence tooling.
 
 Approved direction remains:
 
@@ -42,9 +43,9 @@ Elementor is first target family, Gutenberg second, followed by generic web/fram
 
 ## Current repository main
 
-Current verified main after the P15 R1 externally reported authentication-binding slice:
+Current verified main after the first bounded P16 Gutenberg normalized parsed-block/capability foundation:
 
-`464461a86a4aed4bd43260baee79619a25216c2b`
+`66f6a77f31c69b0c4cd280a21bc03eb53759ec4d`
 
 Recent guarded merge line:
 
@@ -73,7 +74,9 @@ Recent guarded merge line:
 - #334 offline exact-bound reference-closure evidence intake -> `c20d8835c27cf73e1e367c478f346f6c80d72824`;
 - #338 non-authorizing pre-decision reference-closure review packet -> `250f3d2f82f0f7ca8a5c374ff0199ffef39d16ba`;
 - #340 canonical pre-decision packet docs sync -> `34b77b567d49423dae9e15212cf4c82cf842eca5`;
-- #343 exact-bound externally reported authentication-result binding -> `464461a86a4aed4bd43260baee79619a25216c2b`.
+- #343 exact-bound externally reported authentication-result binding -> `464461a86a4aed4bd43260baee79619a25216c2b`;
+- #345 canonical P15 external-authentication docs sync -> `359f247fbb70ee5e301136682ad69a0945e0a6ed`;
+- #346 first bounded P16 Gutenberg normalized parsed-block/capability foundation -> `66f6a77f31c69b0c4cd280a21bc03eb53759ec4d`.
 
 ## Current issue queue
 
@@ -82,7 +85,7 @@ Recent guarded merge line:
 - #159 — **P13 real-plugin Build-Ready runtime/parity evidence: OPEN runtime-acceptance dependency**. Genuine real-Figma runtime acceptance remains pending.
 - #182 — **P27 final production-release gate: DEFINED / execution deferred**.
 - #287 — **OPEN repository-admin security hardening**. Main branch protection/ruleset enforcement requires GitHub administration access and is not represented as fixed by code changes.
-Focused issues #275, #280, #284, #285, #288, #295, #297, #299, #301, #303, #305, #307, #309, #311, #313, #315, #317, #319, #321, #323, #325, #327, #329, #331, #333, #337, #339 and #342 are completed through their reviewed implementation/artifact flows.
+Focused issues #275, #280, #284, #285, #288, #295, #297, #299, #301, #303, #305, #307, #309, #311, #313, #315, #317, #319, #321, #323, #325, #327, #329, #331, #333, #337, #339, #342, #344 and #341 are completed through their reviewed implementation/artifact flows.
 
 ## P13 state
 
@@ -240,7 +243,7 @@ Publishing-authoritative historical candidate remains:
 - artifact digest `sha256:698d6620dac85af4bd1dba9c402bccc74192072da9af2a1031060903eeeb606f`;
 - exact three-file publish ZIP `sha256:1ccfa457d4ae4145cf36b748f7758187ef3092503c270a46f28e03675878a066`.
 
-Later P13/P14 development commits do not replace that historical P12 publishing candidate or count as live publisher acceptance. Remaining P12 live/manual evidence is owned by final P27 sequence #182.
+Later P13/P14/P15/P16 development commits do not replace that historical P12 publishing candidate or count as live publisher acceptance. Remaining P12 live/manual evidence is owned by final P27 sequence #182.
 
 ## P15 state
 
@@ -264,9 +267,22 @@ P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**. The bou
 
 Real WordPress/Elementor target import remains unvalidated. `targetCompatibilityClaim=false`, production acceptance remains false, generation/download authority remains disabled, global-reference values remain unresolved, raw asset URLs are not emitted, and repository code does not fetch/authenticate external evidence references or identify/verify an authenticator. The exact-bound external authentication-report contract records only a caller-supplied PASS|FAIL result tied to current hashes; `EXTERNALLY_REPORTED_PASS` is not genuine authentication authority, and `internalDecisionStatus` remains `NOT_RUN`. Genuine trusted authentication plus a separate internal decision are still required, and no Figma-to-Elementor semantic generator, Elementor Pro/third-party mapping, gallery/video/add-on asset support or Atomic generation has been accepted.
 
-## P16-P26 state
+## P16 state
 
-P16-P26 remain **preflight frozen / implementation not started** and proceed under roadmap #119 with R0/R1 gates as applicable.
+P16 is **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress. PR #346 / issue #341 retained the first bounded Gutenberg foundation:
+
+- current official WordPress/Gutenberg R0 snapshot;
+- repository-owned `gutenberg-normalized-parsed-block-v1` review contract over normalized `blockName`, `attrs`, `innerBlocks`, and `innerHTML`;
+- bounded block/depth/attribute/string limits with fail-closed diagnostics;
+- top-level `blockName=null` freeform handling kept distinct from named namespaced blocks;
+- read-only documented-core capability registry/report for exact official API-v3 IDs `core/paragraph`, `core/heading`, `core/image`, and `core/group`;
+- custom/unregistered/freeform content remains `REVIEW_REQUIRED`.
+
+The normalized JSON serializer is not Gutenberg post-content serialization and the repository model intentionally omits WordPress `innerContent`. No raw block markup generation, `@wordpress/blocks`/PHP runtime execution, WordPress REST/site connection, live editor/import/render proof, dynamic render proof, pattern/package generation, Figma semantic mapping, selected-section transfer, production acceptance or download authority has been introduced. `targetCompatibilityClaim=false`, `productionAcceptance=false`, `generationEnabled=false`, and `downloadEnabled=false` remain fixed.
+
+## P17-P26 state
+
+P17-P26 remain **preflight frozen / implementation not started** and proceed under roadmap #119 with R0/R1 gates as applicable.
 
 ## P27 state
 
@@ -278,6 +294,6 @@ P27 #182 remains the final production-release gate and owns deferred exact P12 r
 
 ## Immediate project action
 
-Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. In parallel, continue P15 only through bounded deterministic R1 target-adapter slices. Documented core-image asset review, combined reference-review identity, exact-bound closure-evidence receipt validation, offline operator intake, the non-authorizing pre-decision review packet and exact-bound externally reported authentication-result binding are implemented. The next authority-bearing step still requires genuine trusted authentication plus a separate internal decision; repository code must not fetch/authenticate evidenceReference values, infer authenticator identity, or treat `EXTERNALLY_REPORTED_PASS` as closure/compatibility authority. Product download, semantic generation and target-compatibility authority stay disabled until genuine Elementor target validation and later gates justify them.
+Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. P15 remains blocked at the next authority-bearing step until genuine trusted authentication plus a separate internal decision are retained; repository code must not fetch/authenticate evidenceReference values, infer authenticator identity, or treat `EXTERNALLY_REPORTED_PASS` as closure/compatibility authority. In parallel, P16 may continue only through bounded deterministic/read-only foundation slices that preserve the current non-authorizing Gutenberg boundary. Native serialization, target profile binding, real editor/import/render validation, Figma semantic generation, pattern packaging and download authority each require separate evidence/gates before stronger claims are made.
 
 No synthetic overall project percentage is used. Historical module progress and current implementation/runtime/release states remain separate.
