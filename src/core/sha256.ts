@@ -80,7 +80,7 @@ export function sha256Hex(value: string): string {
     if (shift === 0n) break;
   }
 
-  const hash = [...SHA256_INITIAL];
+  const hash: number[] = [...SHA256_INITIAL];
   const words = new Uint32Array(64);
 
   for (let offset = 0; offset < bytes.length; offset += 64) {
