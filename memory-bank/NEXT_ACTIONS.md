@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through direct canonical text limits
+## Parallel P16 state — bounded code-side foundation complete through accessor-safe direct canonicalization
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -56,7 +56,9 @@ Current implemented P16 chain:
 - PR #408 — canonical JSON-structure-bounds docs sync;
 - PR #410 — direct retention-manifest canonicalization depth/value bounds independent of CLI guards;
 - PR #412 — canonical direct-canonicalization-bounds docs sync;
-- PR #414 — direct aggregate UTF-8 text-byte bound across canonical object keys and string values.
+- PR #414 — direct aggregate UTF-8 text-byte bound across canonical object keys and string values;
+- PR #416 — canonical direct-canonical-text docs sync;
+- PR #418 — accessor-safe direct canonicalization using own data descriptors without invoking getters/setters.
 
 Current progression is intentionally bounded:
 
@@ -84,12 +86,15 @@ Their shared output writer additionally:
 - removes temporary output state before fail-closed exit on write errors;
 - preserves source-input bytes in rejected symlink/hardlink/parent-alias cases covered by focused tests.
 
-The exact-current requirements-manifest canonicalizer is independently depth/value/text bounded and prototype-safe:
+The exact-current requirements-manifest canonicalizer is independently depth/value/text bounded, accessor-safe and prototype-safe:
 
 - direct validator/fingerprint callers are capped at 64 nested container levels and 50,000 total visited values even when the CLI is bypassed;
 - aggregate UTF-8 text across JSON string values + object keys is capped at 1 MiB;
 - object-key text is charged before lexical sorting;
 - browser-safe manual UTF-8 accounting covers ASCII, multi-byte Unicode, surrogate pairs and lone-surrogate replacement width and stops once the remaining budget is exceeded;
+- own property descriptors are inspected instead of reading enumerable values through ordinary property access;
+- enumerable object accessors and array-index accessors fail closed without invoking caller-controlled getters/setters;
+- normal own data descriptors remain supported, including own enumerable `__proto__` data keys;
 - canonical object snapshots use `Object.create(null)`;
 - own enumerable JSON keys such as `__proto__` remain data fields instead of invoking the legacy prototype setter;
 - hostile top-level or nested `__proto__` additions therefore change the canonical fingerprint and are rejected as extra/stale fields;
@@ -176,7 +181,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #408 docs sync -> `ab8cb5e783b14688180959017aa79b9a86adfa66`; exact head `8c984f124a5b22a5c05cb15527e1cf468b0ff772`; CI #1184, Integration #445, Final Release #495, Offline #539 PASS;
 - #410 direct canonicalization bounds -> `cb4de36d4922b31b1e278d4f55426d042736549b`; exact head `c3ef7329d430c3e450a8b8e4292a5293eace8865`; CI #1186, Final Release #497, Offline #541 PASS;
 - #412 docs sync -> `1a7cb4b7692a0361d645ddf1396f6aac561ad093`; exact head `edd6b0166ed9184dde5168614f2b311cd62062b6`; CI #1188, Integration #448, Final Release #499, Offline #543 PASS;
-- #414 direct canonical text-byte bounds -> `86cc545456a1f994c9893069b878110662a60bbe`; exact head `6c92b2dd6707be8a7242bf1911cdb46c3ff4972a`; CI #1190, Final Release #501, Offline #545 PASS.
+- #414 direct canonical text-byte bounds -> `86cc545456a1f994c9893069b878110662a60bbe`; exact head `6c92b2dd6707be8a7242bf1911cdb46c3ff4972a`; CI #1190, Final Release #501, Offline #545 PASS;
+- #416 docs sync -> `5b0d3e9f08122c4df7cb29edfd0e51dabb8de440`; exact head `b463984615d3d1c78d872ee8e3ea85390093ca8f`; CI #1192, Integration #451, Final Release #503, Offline #547 PASS;
+- #418 accessor-safe direct canonicalization -> `4adc40d74b74f74f362cb635854dd2c8240134d8`; exact head `7038cd7434dc4da03c3c0e590a4c927a47e8b7f7`; CI #1194, Final Release #505, Offline #549 PASS.
 
 ## Current guardrails
 
