@@ -158,16 +158,21 @@ export async function writeP16OperatorJsonOutput(
   }
 
   let temporaryDirectory: string | null = null;
+  let writeFailed = false;
   try {
     temporaryDirectory = await mkdtemp(join(realParent, '.p16-output-'));
     const temporaryPath = join(temporaryDirectory, 'payload.json');
     await writeFile(temporaryPath, content, { encoding: 'utf8', flag: 'wx', mode: 0o600 });
     await rename(temporaryPath, canonicalOutput);
   } catch {
-    fail('Unable to write output safely.');
+    writeFailed = true;
   } finally {
     if (temporaryDirectory) {
       await rm(temporaryDirectory, { recursive: true, force: true }).catch(() => undefined);
     }
+  }
+
+  if (writeFailed) {
+    fail('Unable to write output safely.');
   }
 }
