@@ -1,0 +1,190 @@
+name: Docs Sync 323
+
+on:
+  push:
+    branches: [docs/p15-r1-status-sync-323]
+    paths:
+      - '.github/workflows/docs-sync-323.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 20
+      - name: Apply bounded canonical status replacements
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one match, got {count}: {old[:100]!r}')
+              p.write_text(text.replace(old, new, 1))
+
+          # README
+          replace_once('README.md',
+              '- P15 Elementor foundation: documented v0.4/container validation, bounded widget-capability reporting and a non-authorizing candidate artifact envelope;',
+              '- P15 Elementor R1 foundation: v0.4/container validation, bounded widget-capability reporting, exact candidate/import-evidence binding, immutable declared target profiles, read-only profile assessment and a non-authorizing global-reference review gate;')
+          replace_once('README.md',
+              'Current verified main is:\n\n`426314b183f220f66a315a24f9b1122a464909b9`',
+              'Current verified main is:\n\n`d603ce87a645160204d2de6fd458279ba7b3bf3f`')
+          replace_once('README.md',
+              '- PR #308 added the deterministic non-authorizing Elementor candidate artifact envelope. Import validation remains `NOT_RUN`, download remains disabled, and target-compatibility/production-acceptance claims remain false; guarded squash merge `426314b183f220f66a315a24f9b1122a464909b9`.',
+              '''- PR #308 added the deterministic non-authorizing Elementor candidate artifact envelope. Import validation remains `NOT_RUN`, download remains disabled, and target-compatibility/production-acceptance claims remain false; guarded squash merge `426314b183f220f66a315a24f9b1122a464909b9`.
+- PR #310 synchronized the canonical P14/P15 status docs through the first Elementor foundation slices; guarded squash merge `3e3254b1c77d78fe7eff2f9278b6a6c6def1c5a9`.
+- PR #312 added exact canonical candidate SHA-256 identity and a fail-closed non-authorizing future import-validation receipt contract; guarded squash merge `a5b87cad3df803de32ff359d8d0e84796b5d8482`.
+- PR #314 added offline operator intake for externally captured exact-bound Elementor import evidence; guarded squash merge `5992fe947a0a2f73d388d0239fde23a53435f046`.
+- PR #316 added an immutable declared Elementor target profile and SHA-256 profile fingerprint while keeping target observation/compatibility/generation/download authority false; guarded squash merge `da29e5c95a76dc6eb25ad8026a7fa1bba156423e`.
+- PR #318 bound validated exact-candidate import evidence to the immutable declared target-profile fingerprint without changing receipt-v1 authority; guarded squash merge `fb7a9f210f5088b645e4bf046cd4b1f09e3aa72b`.
+- PR #320 added read-only target-profile/candidate metadata alignment assessment. `PROFILE_ALIGNED_REFERENCE_REVIEW_PENDING` is not a compatibility claim and reference/target validation remains `NOT_RUN`; guarded squash merge `44a9e0851b3e7a4235e8854066ef09cc399fb78b`.
+- PR #322 added a non-authorizing global-reference key review gate. It emits no raw `__globals__` values, requires external closure when keys exist, and keeps asset-reference review `NOT_RUN`; guarded squash merge `d603ce87a645160204d2de6fd458279ba7b3bf3f`.''')
+          replace_once('README.md',
+              '| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | v0.4/container validator + bounded widget capability report + non-authorizing candidate envelope merged; Figma semantic mapping/generation, WordPress import validation and product download remain unwired |',
+              '| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Exact candidate/receipt intake + immutable target profile + profile-bound evidence + read-only alignment/global-reference review are merged; real target import, asset closure, Figma semantic generation and product download remain unwired |')
+
+          # P14 foundation doc
+          replace_once('docs/P14_FOUNDATION_IMPLEMENTATION.md',
+              'Canonical status synchronized through P14 review-packet and P15 foundation merges',
+              'Canonical status synchronized through P14 review-packet and P15 R1 evidence/profile/reference-review merges')
+          replace_once('docs/P14_FOUNDATION_IMPLEMENTATION.md',
+              'Current main is:\n\n`426314b183f220f66a315a24f9b1122a464909b9`',
+              'Current main is:\n\n`d603ce87a645160204d2de6fd458279ba7b3bf3f`')
+          replace_once('docs/P14_FOUNDATION_IMPLEMENTATION.md',
+              'P12 remains at its retained 80% release-exit state. P15 now has a bounded non-authorizing Elementor foundation (v0.4/container validation, documented-core capability reporting and candidate envelope), but real target import remains unvalidated and no Figma-to-Elementor generation/download surface is wired. P16-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.',
+              'P12 remains at its retained 80% release-exit state. P15 now has a bounded non-authorizing Elementor R1 foundation: v0.4/container validation, documented-core capability reporting, candidate identity/receipt + offline intake, immutable declared target-profile fingerprints, profile-bound import evidence, read-only profile alignment assessment and a global-reference key review gate. Real target import remains unvalidated, detected global references are not resolved, asset-reference review remains NOT_RUN, and no Figma-to-Elementor generation/download surface is wired. P16-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.')
+
+          # PROJECT_STATE
+          replace_once('memory-bank/PROJECT_STATE.md',
+              '8. bounded P15 Elementor foundation with v0.4/container validation, documented-core widget capability reporting and a non-authorizing candidate artifact envelope;',
+              '8. bounded P15 Elementor R1 foundation with v0.4/container validation, documented-core capabilities, exact candidate/import-evidence binding, immutable declared target profiles, read-only alignment assessment and global-reference key review;')
+          replace_once('memory-bank/PROJECT_STATE.md',
+              'Current verified main after P14 review-packet, workflow-credential hardening and first P15 foundation slices:\n\n`426314b183f220f66a315a24f9b1122a464909b9`',
+              'Current verified main after the P15 R1 target-profile/evidence/reference-review batch:\n\n`d603ce87a645160204d2de6fd458279ba7b3bf3f`')
+          replace_once('memory-bank/PROJECT_STATE.md',
+              '- #308 non-authorizing Elementor candidate artifact envelope -> `426314b183f220f66a315a24f9b1122a464909b9`.',
+              '''- #308 non-authorizing Elementor candidate artifact envelope -> `426314b183f220f66a315a24f9b1122a464909b9`;
+- #310 canonical P14/P15 docs sync -> `3e3254b1c77d78fe7eff2f9278b6a6c6def1c5a9`;
+- #312 exact candidate identity + import-validation receipt contract -> `a5b87cad3df803de32ff359d8d0e84796b5d8482`;
+- #314 offline exact-bound Elementor import-evidence intake -> `5992fe947a0a2f73d388d0239fde23a53435f046`;
+- #316 immutable declared Elementor target profile/fingerprint -> `da29e5c95a76dc6eb25ad8026a7fa1bba156423e`;
+- #318 profile-bound import-evidence envelope -> `fb7a9f210f5088b645e4bf046cd4b1f09e3aa72b`;
+- #320 read-only target-profile compatibility/alignment assessment -> `44a9e0851b3e7a4235e8854066ef09cc399fb78b`;
+- #322 non-authorizing global-reference key review gate -> `d603ce87a645160204d2de6fd458279ba7b3bf3f`.''')
+          replace_once('memory-bank/PROJECT_STATE.md',
+              'Focused issues #275, #280, #284, #285, #288, #295, #297, #299, #301, #303, #305 and #307 are completed through their reviewed implementation/artifact flows.',
+              'Focused issues #275, #280, #284, #285, #288, #295, #297, #299, #301, #303, #305, #307, #309, #311, #313, #315, #317, #319 and #321 are completed through their reviewed implementation/artifact flows.')
+          old_p15 = '''## P15 state
+
+P15 is now **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**. Three bounded offline/read-only layers are merged:
+
+- PR #304 — documented Elementor data version `0.4` modern `container`/`widget` contract with bounded validation; legacy `section`/`column`, Atomic `e-*`, unknown element types, malformed settings, duplicate IDs and resource-limit violations fail closed;
+- PR #306 — versioned read-only capability registry/report for directly evidenced classic widget IDs `heading`, `image`, and `button`; unregistered widgets are `REVIEW_REQUIRED`, with no Pro/add-on availability inference;
+- PR #308 — deterministic candidate artifact envelope with `REJECTED_INVALID_TEMPLATE`, `REVIEW_REQUIRED`, or `READY_FOR_TARGET_IMPORT_VALIDATION` state while `importValidationStatus=NOT_RUN`, `downloadEnabled=false`, `targetCompatibilityClaim=false`, and `productionAcceptance=false`.
+
+No Figma-to-Elementor semantic auto-mapping/generator, WordPress connection, real Elementor import proof, product download control, Elementor Pro/third-party mapping or Atomic generation has been accepted.'''
+          new_p15 = '''## P15 state
+
+P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**. The bounded offline/read-only chain now includes:
+
+- PR #304 — documented Elementor data version `0.4` modern `container`/`widget` contract with bounded validation; legacy `section`/`column`, Atomic `e-*`, unknown element types, malformed settings, duplicate IDs and resource-limit violations fail closed;
+- PR #306 — versioned read-only capability registry/report for directly evidenced classic widget IDs `heading`, `image`, and `button`; unregistered widgets are `REVIEW_REQUIRED`, with no Pro/add-on availability inference;
+- PR #308 — deterministic non-authorizing candidate artifact envelope;
+- PR #312 — exact canonical candidate SHA-256 identity and fail-closed non-authorizing import-validation receipt contract;
+- PR #314 — offline operator intake for externally captured exact-bound PASS/FAIL import evidence; even bound observed PASS requires separate internal review and grants no compatibility/download authority;
+- PR #316 — immutable declared Elementor target profile with SHA-256 fingerprint; environment source remains `DECLARED`, not observed;
+- PR #318 — additive import-evidence binding to the exact current target-profile fingerprint and declared target versions;
+- PR #320 — read-only target-profile/candidate metadata alignment assessment; the highest state is `PROFILE_ALIGNED_REFERENCE_REVIEW_PENDING`, not target compatibility;
+- PR #322 — global-reference key review gate that emits only widget/path/key inventory, never raw `__globals__` values. Detected keys require external closure; asset-reference review remains `NOT_RUN`.
+
+Real WordPress/Elementor target import remains unvalidated. `targetCompatibilityClaim=false`, production acceptance remains false, generation/download authority remains disabled, global-reference values are unresolved, asset-reference closure is not implemented, and no Figma-to-Elementor semantic generator, Elementor Pro/third-party mapping or Atomic generation has been accepted.'''
+          replace_once('memory-bank/PROJECT_STATE.md', old_p15, new_p15)
+          replace_once('memory-bank/PROJECT_STATE.md',
+              'Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. In parallel, continue P15 only through bounded deterministic target-adapter slices: next work must bind any future import-validation evidence to an exact candidate and must not enable product download or target-compatibility authority before real Elementor target validation exists.',
+              'Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. In parallel, continue P15 only through bounded deterministic R1 target-adapter slices. Exact candidate + declared-profile evidence binding is now implemented; the next reference-closure work must audit asset-reference semantics against documented target data before implementation and must not infer support from arbitrary settings. Product download, semantic generation and target-compatibility authority stay disabled until genuine Elementor target validation and later gates justify them.')
+
+          # NEXT_ACTIONS
+          old_immediate = '''## Immediate action — P15 exact-candidate import-validation contract
+
+Classification: **PLANNED / NON-AUTHORITATIVE TARGET EVIDENCE**.
+
+Build from the merged P15 foundation without guessing Figma widget semantics. The next slice should define deterministic identity/binding for one validated candidate artifact and the shape of a future real Elementor import-validation receipt. It must keep `downloadEnabled=false`, `targetCompatibilityClaim=false`, and `productionAcceptance=false` until genuine target import evidence exists.
+
+Do not introduce a WordPress connection, Pro/add-on availability inference, Atomic generation or product download UI merely to satisfy the offline contract.'''
+          new_immediate = '''## Immediate action — P15 asset-reference review contract
+
+Classification: **PLANNED / READ-ONLY R1 REFERENCE CLOSURE**.
+
+The exact-candidate receipt, offline intake, immutable declared target profile, profile-bound evidence, read-only target-profile assessment and global-reference key review gates are merged. The next safe P15 R1 slice is bounded asset-reference review/closure semantics.
+
+Refresh official target documentation first where asset fields/version behavior could have changed. Do not infer asset semantics from arbitrary Elementor settings. Keep asset work read-only and evidence-oriented: classify only documented asset references, preserve provenance, fail closed on unknown shapes, and leave `downloadEnabled=false`, `generationEnabled=false`, `targetCompatibilityClaim=false`, and `productionAcceptance=false` until genuine target validation and later gates justify authority.
+
+Do not introduce a WordPress connection, Pro/add-on availability inference, Atomic generation or product download UI merely to advance the offline contract.'''
+          replace_once('memory-bank/NEXT_ACTIONS.md', old_immediate, new_immediate)
+          replace_once('memory-bank/NEXT_ACTIONS.md',
+              '- P15 — core foundation in progress / target import unvalidated: v0.4/container validator, bounded documented-core capability report and non-authorizing candidate envelope are merged;',
+              '- P15 — core foundation in progress / target import unvalidated: exact candidate/receipt intake, immutable declared target profile, profile-bound evidence, read-only profile alignment and global-reference key review are merged; real target import, asset closure, semantic generation and download authority remain unwired;')
+          marker = '''### Issue #295 — current P13 runtime evidence artifact
+
+- run `34833881774`;
+- artifact ID `10343017256`;
+- digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`;
+- artifact branch returned to zero content diff;
+- artifact remains non-authorizing/do-not-publish.'''
+          addition = marker + '''
+
+### P15 exact-evidence + R1 profile/reference batch
+
+- PR #312 -> `a5b87cad3df803de32ff359d8d0e84796b5d8482`; CI #1082, Final Release #393 and Offline #437 PASS;
+- PR #314 -> `5992fe947a0a2f73d388d0239fde23a53435f046`; CI #1084, Final Release #395 and Offline #439 PASS;
+- PR #316 -> `da29e5c95a76dc6eb25ad8026a7fa1bba156423e`; CI #1088, Final Release #399 and Offline #443 PASS;
+- PR #318 -> `fb7a9f210f5088b645e4bf046cd4b1f09e3aa72b`; CI #1090, Final Release #401 and Offline #445 PASS;
+- PR #320 -> `44a9e0851b3e7a4235e8854066ef09cc399fb78b`; CI #1092, Final Release #403 and Offline #447 PASS;
+- PR #322 -> `d603ce87a645160204d2de6fd458279ba7b3bf3f`; CI #1094, Final Release #405 and Offline #449 PASS;
+- Integration Readiness did not trigger for these code-only diffs.'''
+          replace_once('memory-bank/NEXT_ACTIONS.md', marker, addition)
+          old_guard = '''3. P15 candidate artifacts are not target-import validated; download/compatibility/production authority remains disabled.
+4. Future P15 import-validation evidence must bind to an exact deterministic candidate and retain explicit target/platform version evidence.
+5. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
+6. P12 historical publishing evidence remains unchanged and P27 owns final live release-exit evidence.'''
+          new_guard = '''3. P15 target import remains unvalidated; compatibility, production, generation and download authority remain disabled.
+4. Exact-candidate receipt intake and exact declared-profile evidence binding are implemented; future observed target evidence must match both identities and still requires internal review.
+5. Global-reference review emits key/path inventory only; raw global values remain unresolved and asset-reference review/closure remains `NOT_RUN`.
+6. No Figma-to-Elementor semantic generator, Pro/add-on mapping or Atomic generation support is accepted yet.
+7. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
+8. P12 historical publishing evidence remains unchanged and P27 owns final live release-exit evidence.'''
+          replace_once('memory-bank/NEXT_ACTIONS.md', old_guard, new_guard)
+          PY
+
+          npm run status:verify
+          grep -F 'CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED' README.md docs/P14_FOUNDATION_IMPLEMENTATION.md
+          grep -F 'CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED' README.md memory-bank/PROJECT_STATE.md
+          grep -F 'production registry remains empty' README.md
+          grep -F 'Machine-readable operational registry: `config/runtime-artifacts.json` schema v3.' README.md
+          grep -F '`config/runtime-artifacts.json` is runtime artifact registry schema v3' memory-bank/PROJECT_STATE.md
+          grep -F 'Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3' memory-bank/NEXT_ACTIONS.md
+          git diff --check
+          test "$(git diff --name-only | sort | tr '\n' ' ')" = "README.md docs/P14_FOUNDATION_IMPLEMENTATION.md memory-bank/NEXT_ACTIONS.md memory-bank/PROJECT_STATE.md "
+      - name: Commit canonical docs and remove temporary workflow
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          rm .github/workflows/docs-sync-323.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/P14_FOUNDATION_IMPLEMENTATION.md memory-bank/PROJECT_STATE.md memory-bank/NEXT_ACTIONS.md .github/workflows/docs-sync-323.yml
+          git diff --cached --check
+          git commit -m 'docs: sync P15 R1 target-profile and reference-review status'
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
