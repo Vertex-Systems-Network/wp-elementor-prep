@@ -15,7 +15,7 @@ Current implemented surfaces:
 5. P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 6. P14 target-neutral retained-duplicate core;
 7. development-only read-only P14 Guided Prepare preview with exact evidence freshness, proposed-change review binding, exact runtime review packet and persisted-evidence rejection diagnostics;
-8. bounded P15 Elementor foundation with v0.4/container validation, documented-core widget capability reporting and a non-authorizing candidate artifact envelope;
+8. bounded P15 Elementor R1 foundation with v0.4/container validation, documented-core capabilities, exact candidate/import-evidence binding, immutable declared target profiles, read-only alignment assessment and global-reference key review;
 9. exact-build release/provenance and fail-closed P12 publisher-evidence tooling.
 
 Approved direction remains:
@@ -42,9 +42,9 @@ Elementor is first target family, Gutenberg second, followed by generic web/fram
 
 ## Current repository main
 
-Current verified main after P14 review-packet, workflow-credential hardening and first P15 foundation slices:
+Current verified main after the P15 R1 target-profile/evidence/reference-review batch:
 
-`426314b183f220f66a315a24f9b1122a464909b9`
+`d603ce87a645160204d2de6fd458279ba7b3bf3f`
 
 Recent guarded merge line:
 
@@ -57,7 +57,14 @@ Recent guarded merge line:
 - #302 persisted checkout-credential hardening -> `5295a40839b093a77b3c6d2dc98daa6ac63d5067`;
 - #304 Elementor v0.4/container validator -> `4c6e0f63718a6b38b056c82207e25973356d0d66`;
 - #306 Elementor read-only capability registry/report -> `c242197a2d0a0dd24d7364db5f10c1fb6fa76e13`;
-- #308 non-authorizing Elementor candidate artifact envelope -> `426314b183f220f66a315a24f9b1122a464909b9`.
+- #308 non-authorizing Elementor candidate artifact envelope -> `426314b183f220f66a315a24f9b1122a464909b9`;
+- #310 canonical P14/P15 docs sync -> `3e3254b1c77d78fe7eff2f9278b6a6c6def1c5a9`;
+- #312 exact candidate identity + import-validation receipt contract -> `a5b87cad3df803de32ff359d8d0e84796b5d8482`;
+- #314 offline exact-bound Elementor import-evidence intake -> `5992fe947a0a2f73d388d0239fde23a53435f046`;
+- #316 immutable declared Elementor target profile/fingerprint -> `da29e5c95a76dc6eb25ad8026a7fa1bba156423e`;
+- #318 profile-bound import-evidence envelope -> `fb7a9f210f5088b645e4bf046cd4b1f09e3aa72b`;
+- #320 read-only target-profile compatibility/alignment assessment -> `44a9e0851b3e7a4235e8854066ef09cc399fb78b`;
+- #322 non-authorizing global-reference key review gate -> `d603ce87a645160204d2de6fd458279ba7b3bf3f`.
 
 ## Current issue queue
 
@@ -66,7 +73,7 @@ Recent guarded merge line:
 - #159 — **P13 real-plugin Build-Ready runtime/parity evidence: OPEN runtime-acceptance dependency**. Genuine real-Figma runtime acceptance remains pending.
 - #182 — **P27 final production-release gate: DEFINED / execution deferred**.
 - #287 — **OPEN repository-admin security hardening**. Main branch protection/ruleset enforcement requires GitHub administration access and is not represented as fixed by code changes.
-Focused issues #275, #280, #284, #285, #288, #295, #297, #299, #301, #303, #305 and #307 are completed through their reviewed implementation/artifact flows.
+Focused issues #275, #280, #284, #285, #288, #295, #297, #299, #301, #303, #305, #307, #309, #311, #313, #315, #317, #319 and #321 are completed through their reviewed implementation/artifact flows.
 
 ## P13 state
 
@@ -228,13 +235,19 @@ Later P13/P14 development commits do not replace that historical P12 publishing 
 
 ## P15 state
 
-P15 is now **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**. Three bounded offline/read-only layers are merged:
+P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**. The bounded offline/read-only chain now includes:
 
 - PR #304 — documented Elementor data version `0.4` modern `container`/`widget` contract with bounded validation; legacy `section`/`column`, Atomic `e-*`, unknown element types, malformed settings, duplicate IDs and resource-limit violations fail closed;
 - PR #306 — versioned read-only capability registry/report for directly evidenced classic widget IDs `heading`, `image`, and `button`; unregistered widgets are `REVIEW_REQUIRED`, with no Pro/add-on availability inference;
-- PR #308 — deterministic candidate artifact envelope with `REJECTED_INVALID_TEMPLATE`, `REVIEW_REQUIRED`, or `READY_FOR_TARGET_IMPORT_VALIDATION` state while `importValidationStatus=NOT_RUN`, `downloadEnabled=false`, `targetCompatibilityClaim=false`, and `productionAcceptance=false`.
+- PR #308 — deterministic non-authorizing candidate artifact envelope;
+- PR #312 — exact canonical candidate SHA-256 identity and fail-closed non-authorizing import-validation receipt contract;
+- PR #314 — offline operator intake for externally captured exact-bound PASS/FAIL import evidence; even bound observed PASS requires separate internal review and grants no compatibility/download authority;
+- PR #316 — immutable declared Elementor target profile with SHA-256 fingerprint; environment source remains `DECLARED`, not observed;
+- PR #318 — additive import-evidence binding to the exact current target-profile fingerprint and declared target versions;
+- PR #320 — read-only target-profile/candidate metadata alignment assessment; the highest state is `PROFILE_ALIGNED_REFERENCE_REVIEW_PENDING`, not target compatibility;
+- PR #322 — global-reference key review gate that emits only widget/path/key inventory, never raw `__globals__` values. Detected keys require external closure; asset-reference review remains `NOT_RUN`.
 
-No Figma-to-Elementor semantic auto-mapping/generator, WordPress connection, real Elementor import proof, product download control, Elementor Pro/third-party mapping or Atomic generation has been accepted.
+Real WordPress/Elementor target import remains unvalidated. `targetCompatibilityClaim=false`, production acceptance remains false, generation/download authority remains disabled, global-reference values are unresolved, asset-reference closure is not implemented, and no Figma-to-Elementor semantic generator, Elementor Pro/third-party mapping or Atomic generation has been accepted.
 
 ## P16-P26 state
 
@@ -250,6 +263,6 @@ P27 #182 remains the final production-release gate and owns deferred exact P12 r
 
 ## Immediate project action
 
-Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. In parallel, continue P15 only through bounded deterministic target-adapter slices: next work must bind any future import-validation evidence to an exact candidate and must not enable product download or target-compatibility authority before real Elementor target validation exists.
+Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. In parallel, continue P15 only through bounded deterministic R1 target-adapter slices. Exact candidate + declared-profile evidence binding is now implemented; the next reference-closure work must audit asset-reference semantics against documented target data before implementation and must not infer support from arbitrary settings. Product download, semantic generation and target-compatibility authority stay disabled until genuine Elementor target validation and later gates justify them.
 
 No synthetic overall project percentage is used. Historical module progress and current implementation/runtime/release states remain separate.

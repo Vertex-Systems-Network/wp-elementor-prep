@@ -15,13 +15,15 @@ Last updated: 2026-09-14
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 before artifact-dependent operations.
 
-## Immediate action — P15 exact-candidate import-validation contract
+## Immediate action — P15 asset-reference review contract
 
-Classification: **PLANNED / NON-AUTHORITATIVE TARGET EVIDENCE**.
+Classification: **PLANNED / READ-ONLY R1 REFERENCE CLOSURE**.
 
-Build from the merged P15 foundation without guessing Figma widget semantics. The next slice should define deterministic identity/binding for one validated candidate artifact and the shape of a future real Elementor import-validation receipt. It must keep `downloadEnabled=false`, `targetCompatibilityClaim=false`, and `productionAcceptance=false` until genuine target import evidence exists.
+The exact-candidate receipt, offline intake, immutable declared target profile, profile-bound evidence, read-only target-profile assessment and global-reference key review gates are merged. The next safe P15 R1 slice is bounded asset-reference review/closure semantics.
 
-Do not introduce a WordPress connection, Pro/add-on availability inference, Atomic generation or product download UI merely to satisfy the offline contract.
+Refresh official target documentation first where asset fields/version behavior could have changed. Do not infer asset semantics from arbitrary Elementor settings. Keep asset work read-only and evidence-oriented: classify only documented asset references, preserve provenance, fail closed on unknown shapes, and leave `downloadEnabled=false`, `generationEnabled=false`, `targetCompatibilityClaim=false`, and `productionAcceptance=false` until genuine target validation and later gates justify authority.
+
+Do not introduce a WordPress connection, Pro/add-on availability inference, Atomic generation or product download UI merely to advance the offline contract.
 
 ## Parallel required runtime evidence — genuine #159 Figma Desktop evidence
 
@@ -92,7 +94,7 @@ Current state:
 
 - P13 — implementation complete / real-plugin runtime acceptance pending (#159), with `p13-core-v2` analyzer-bound provenance and one real target-neutral safe-preparation candidate signal;
 - P14 — deterministic core + fresh read-only Guided Prepare + review manifest/binding + exact runtime review packet + persisted-evidence rejection diagnostics active in development; confirmation/mutation still unwired;
-- P15 — core foundation in progress / target import unvalidated: v0.4/container validator, bounded documented-core capability report and non-authorizing candidate envelope are merged;
+- P15 — core foundation in progress / target import unvalidated: exact candidate/receipt intake, immutable declared target profile, profile-bound evidence, read-only profile alignment and global-reference key review are merged; real target import, asset closure, semantic generation and download authority remain unwired;
 - P16-P26 — preflight frozen / implementation not started;
 - P27 — final production-release gate defined, execution deferred (#182).
 
@@ -145,11 +147,23 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 G
 - artifact branch returned to zero content diff;
 - artifact remains non-authorizing/do-not-publish.
 
+### P15 exact-evidence + R1 profile/reference batch
+
+- PR #312 -> `a5b87cad3df803de32ff359d8d0e84796b5d8482`; CI #1082, Final Release #393 and Offline #437 PASS;
+- PR #314 -> `5992fe947a0a2f73d388d0239fde23a53435f046`; CI #1084, Final Release #395 and Offline #439 PASS;
+- PR #316 -> `da29e5c95a76dc6eb25ad8026a7fa1bba156423e`; CI #1088, Final Release #399 and Offline #443 PASS;
+- PR #318 -> `fb7a9f210f5088b645e4bf046cd4b1f09e3aa72b`; CI #1090, Final Release #401 and Offline #445 PASS;
+- PR #320 -> `44a9e0851b3e7a4235e8854066ef09cc399fb78b`; CI #1092, Final Release #403 and Offline #447 PASS;
+- PR #322 -> `d603ce87a645160204d2de6fd458279ba7b3bf3f`; CI #1094, Final Release #405 and Offline #449 PASS;
+- Integration Readiness did not trigger for these code-only diffs.
+
 ## Current guardrails for next work
 
 1. #159 genuine Figma Desktop evidence remains required before real P14 mutation exposure.
 2. P14 production safe-recipe registry remains empty and all four authority flags remain false.
-3. P15 candidate artifacts are not target-import validated; download/compatibility/production authority remains disabled.
-4. Future P15 import-validation evidence must bind to an exact deterministic candidate and retain explicit target/platform version evidence.
-5. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
-6. P12 historical publishing evidence remains unchanged and P27 owns final live release-exit evidence.
+3. P15 target import remains unvalidated; compatibility, production, generation and download authority remain disabled.
+4. Exact-candidate receipt intake and exact declared-profile evidence binding are implemented; future observed target evidence must match both identities and still requires internal review.
+5. Global-reference review emits key/path inventory only; raw global values remain unresolved and asset-reference review/closure remains `NOT_RUN`.
+6. No Figma-to-Elementor semantic generator, Pro/add-on mapping or Atomic generation support is accepted yet.
+7. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
+8. P12 historical publishing evidence remains unchanged and P27 owns final live release-exit evidence.
