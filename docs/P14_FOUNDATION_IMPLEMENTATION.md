@@ -2,84 +2,60 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through the exact-bound decision-prerequisite packet.
+Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata.
 
-Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182).
+Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and P27 final production-release gate (#182).
 
 ## Purpose
 
-P14 owns target-neutral **Target-Ready Duplicate + Guided Prepare** foundations. Its safety contract is deliberately separate from Elementor/Gutenberg target adapters.
-
-The approved source design remains authoritative. Any preparation path must operate on a retained candidate/duplicate, validate before acceptance, fail closed on ambiguity, and never reinterpret static evidence as production mutation authority.
+P14 owns target-neutral **Target-Ready Duplicate + Guided Prepare** foundations. The approved source design remains authoritative. Preparation must operate on a retained candidate/duplicate, validate before acceptance, fail closed on ambiguity and never reinterpret static evidence as production mutation authority.
 
 ## Current P14 authority boundary
 
 P14 remains exactly **CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED**.
 
-Current retained behavior includes:
+`PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty. Current production handoff therefore remains REVIEW/BLOCKED and no production-eligible mutation action IDs exist.
 
-- deterministic target-neutral retained-duplicate planning;
-- development-only read-only Guided Prepare preview;
-- fresh analyzer-bound P13 evidence requirements;
-- proposed-change review manifest/binding;
-- exact runtime review packet;
-- persisted-evidence inspection/rejection diagnostics;
-- candidate-only safety semantics.
+Read-only preview/review/evidence surfaces do not confirm or execute a mutation, grant target compatibility or production acceptance, or bypass #159 genuine Figma Desktop evidence.
 
-`PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty. Therefore current production handoff still downgrades a candidate to REVIEW with `P14_SAFE_BINDING_REQUIRED`, produces no production-eligible mutation action IDs and keeps the P14 plan blocked.
-
-The read-only preview/review surfaces do **not**:
-
-- confirm a mutation;
-- execute the retained-duplicate transaction;
-- grant target compatibility;
-- grant production acceptance;
-- bypass #159 real-Figma runtime evidence.
-
-## P13 provenance dependency
-
-P13 current analyzer semantic version remains `p13-core-v2`. Build-Ready run identity binds exact source structural hash, config hash and analyzer version. Persisted evidence must fail closed when stale, malformed or produced by an unsupported analyzer identity.
-
-#159 remains the genuine Figma Desktop runtime/parity acceptance dependency before real P14 mutation exposure.
+P13 analyzer identity remains `p13-core-v2`; stale or unsupported persisted evidence must fail closed.
 
 ## Downstream adapter separation
 
-P15 Elementor and P16 Gutenberg may build deterministic/read-only/evidence contracts in parallel, but they do not authorize P14 mutation and P14 does not manufacture their target-runtime evidence.
+P15 Elementor and P16 Gutenberg may build deterministic/read-only/evidence contracts in parallel, but they do not authorize P14 mutation and P14 does not manufacture target-runtime evidence.
 
 ### Current P15 state
 
 P15 remains exactly **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** with `N/A` progress.
 
-The bounded Elementor chain includes declared target profiles, exact candidate/import-evidence binding, reference review/closure evidence, offline operator intake, pre-decision packets and externally reported authentication-result binding. These are non-authorizing evidence/review surfaces.
+Its bounded chain includes declared target profiles, exact candidate/import/reference evidence binding, offline operator intake, pre-decision review and externally reported authentication-result binding. These remain non-authorizing evidence/review surfaces.
 
-Real WordPress/Elementor target import, trusted evidence authentication/internal decision, semantic generation, target compatibility, production acceptance and product download remain unvalidated/unaccepted.
+Real WordPress/Elementor target import, genuine trusted evidence authentication/internal decision, semantic generation, compatibility, production acceptance and download authority remain unvalidated/unaccepted.
 
 ### Current P16 state
 
 P16 remains exactly **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
-Current bounded Gutenberg R1 chain includes:
+Current bounded chain includes:
 
-- official WordPress/Gutenberg R0 snapshot;
-- repository-owned `gutenberg-normalized-parsed-block-v1` normalized review contract;
-- fail-closed normalized block validation and documented-core API-v3 capability reporting;
-- immutable declared `gutenberg-target-profile-v1` + deterministic SHA-256 fingerprint;
-- deterministic profile-bound normalized assessment with strongest state `PROFILE_ALIGNED_NATIVE_VALIDATION_PENDING`;
-- non-authorizing `gutenberg-normalized-candidate-v1` and exact canonical candidate identity;
-- exact-bound caller-supplied `gutenberg-native-serialization-validation-receipt-v1`;
-- Node-20 offline intake that rebuilds the current candidate, revalidates exact receipt binding and emits sanitized `BOUND_REPORTED_PASS|BOUND_REPORTED_FAIL|REJECTED` evidence without echoing raw evidence references or native Gutenberg post-content;
-- deterministic sanitized `gutenberg-native-serialization-review-packet-v1` where valid reported PASS advances only to `REPORTED_PASS_AUTHENTICATION_REQUIRED` / `AUTHENTICATE_EVIDENCE_THEN_INTERNAL_REVIEW`;
-- exact-bound `gutenberg-native-serialization-authentication-report-v1` where caller-supplied authentication `PASS|FAIL` binds exact current candidate identity digest, canonical receipt SHA-256 and SHA-256 of the source evidence reference, producing `EXTERNALLY_REPORTED_PASS|EXTERNALLY_REPORTED_FAIL|REJECTED` only;
-- sanitized `gutenberg-native-serialization-decision-prerequisite-v1` that revalidates the full chain, fingerprints canonical authentication-report bytes and yields only `REJECTED_INVALID_AUTHENTICATION_REPORT`, `EXTERNAL_AUTH_FAIL_REVIEW_REQUIRED`, or strongest `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED`. It does not re-expose the raw evidence reference or source evidence-reference hash.
+- normalized `gutenberg-normalized-parsed-block-v1` review contract and documented-core capability reporting;
+- immutable declared `gutenberg-target-profile-v1` + deterministic profile fingerprint;
+- profile-bound assessment with strongest metadata state `PROFILE_ALIGNED_NATIVE_VALIDATION_PENDING`;
+- deterministic normalized candidate + exact canonical candidate identity;
+- exact-bound caller-supplied native-serialization receipt;
+- offline exact-bound receipt intake/revalidation;
+- sanitized pre-decision review packet;
+- exact-bound externally reported evidence-authentication report;
+- sanitized decision prerequisite where external auth PASS stops at `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED`;
+- deterministic `gutenberg-native-serialization-evidence-retention-requirements-v1`, READY only from that exact prerequisite and containing only chain fingerprints, declared WordPress version and future retention requirements metadata.
 
-The pre-decision packet continues to record `evidenceAuthenticationStatus=NOT_RUN`. The separate authentication-report surface is caller-supplied external reporting only: `authenticationAuthority=false`. The decision-prerequisite packet adds no decision authority: `decisionAuthority=false` and `internalDecisionStatus=NOT_RUN` remain fixed. Repository code does not execute WordPress, fetch/authenticate evidence, identify an authenticator/verifier, verify signatures or establish truth of the external observation.
+The retention requirements manifest accepts no evidence PASS/FAIL, does not authenticate evidence, and does not make an internal decision. It requires any future separate trusted intake to bind a content-addressed evidence artifact, authenticator identity-reference hash, bounded authentication method, canonical authenticated-at timestamp and the exact current chain.
 
-The normalized JSON serializer is not Gutenberg post-content serialization and the repository normalized model intentionally omits WordPress `innerContent`.
+It intentionally does not expose raw evidence references, source evidence-reference hashes or raw native Gutenberg post content.
 
-No raw block-comment serializer, `@wordpress/blocks`/PHP runtime execution, WordPress REST/site connection, target-environment validation, editor/import/render proof, dynamic-block render proof, Figma semantic mapping, selected-section transfer, pattern/package generation, production acceptance or download authority is wired.
+Current P16 authority remains fixed:
 
-Current P16 authority flags remain false:
-
+- `evidenceAuthenticationStatus=NOT_RUN`;
 - `authenticationAuthority=false`;
 - `nativeSerializationAuthority=false`;
 - `targetEnvironmentValidated=false`;
@@ -91,33 +67,33 @@ Current P16 authority flags remain false:
 - `productionAcceptance=false`;
 - `generationEnabled=false`;
 - `downloadEnabled=false`;
-- `internalDecisionStatus=NOT_RUN`.
+- `internalDecisionStatus=NOT_RUN`;
+- `internalDecisionEligible=false`.
+
+Repository code still does not execute WordPress/PHP/`@wordpress/blocks`, connect to WordPress REST/site runtime, fetch/authenticate evidence, identify/verify an authenticator, validate signatures, prove target environment/editor/import/render behavior, map Figma semantics, transfer sections, or generate patterns/packages.
+
+The normalized JSON serializer is not Gutenberg post-content serialization and the repository normalized model intentionally omits WordPress `innerContent`. Custom/unregistered/freeform content remains `REVIEW_REQUIRED`.
 
 ## Current repository state
 
-Current verified main before this documentation sync is:
+Current verified main before this documentation sync:
 
-`6dc86dfc900244616869e5ff289c3afa815a1d2d`
+`2d7c9e76eb293b8914dd1106c262064013d70b11`
 
 Recent P16 merge line:
 
-- #356 normalized candidate -> `14a55bf31fc741adea0839d661e3c3358cfb7053`;
-- #358 exact candidate identity -> `88617cde269393a3f886b2178c6c0a4765e3bb4a`;
-- #360 external native-serialization receipt -> `11499202e48d3c51ef416bbc447a729547eba4ce`;
-- #362 canonical docs sync -> `dbd740a1b33ed389510fa0e5274dd5ca26e52dba`;
-- #364 offline native-serialization evidence intake -> `75d77f5eeb0d63e838bceec8fe799c31ba179117`;
-- #366 sanitized pre-decision native-serialization review packet -> `d14e0416413531ca98bfd97dc57e839bef6440a1`;
-- #368 canonical intake/review-packet docs sync -> `bb21a2561df06b3053606ea35eaec66a9b903128`;
-- #370 exact-bound externally reported native evidence authentication -> `5328f6d0205a350e5e1f27b0106fd930e680ae17`;
-- #372 canonical external-authentication docs sync -> `ba2e3d78de79d66a5a07abd2030548893b090845`;
-- #374 exact-bound native decision prerequisite packet -> `6dc86dfc900244616869e5ff289c3afa815a1d2d`.
+- #370 external authentication binding -> `5328f6d0205a350e5e1f27b0106fd930e680ae17`;
+- #372 canonical auth docs sync -> `ba2e3d78de79d66a5a07abd2030548893b090845`;
+- #374 decision prerequisite -> `6dc86dfc900244616869e5ff289c3afa815a1d2d`;
+- #376 canonical decision-prerequisite docs sync -> `31080f673102206e6e6ae41801569d62e2eb7512`;
+- #378 genuine-evidence retention requirements manifest -> `2d7c9e76eb293b8914dd1106c262064013d70b11`.
 
-P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`. Later development commits do not silently replace that publishing candidate.
+P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`.
 
-P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.
+P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate. #287 remains the admin-level repository-protection residual.
 
 ## Next P13/P14 step
 
-Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Target-neutral/read-only P14 work may continue, but any future confirmation/mutation surface requires a separate explicit contract preserving exact evidence freshness, production recipe authorization, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
+Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Any future P14 mutation surface requires separate explicit authorization with fresh evidence, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
 
-In parallel, P16 may continue only through bounded deterministic/read-only/evidence-review R1 slices while native target validation remains unwired. The strongest current code-side state explicitly requires genuinely retained authenticated evidence before any internal decision; no caller-supplied report or deterministic packet may be promoted into repository authentication, native-serialization authority or target compatibility.
+For P16, do not promote the retention requirements manifest into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
