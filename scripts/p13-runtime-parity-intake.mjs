@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 
+const CURRENT_BUILD_READY_ANALYZER_VERSION = 'p13-core-v2';
+
 function fail(message, exitCode = 2) {
   process.stderr.write(`P13_RUNTIME_PARITY_FAILED: ${message}\n`);
   process.exit(exitCode);
@@ -64,15 +66,48 @@ function realFigmaContext(context) {
   return context.fileKey !== 'local-file';
 }
 
+function expectedBuildReadyRunId(report) {
+  return `p13-${report.source.structuralHash}-${report.source.configHash}-${report.source.analyzerVersion}`;
+}
+
+function buildReadyRunIdentity(report) {
+  return {
+    runId: report.runId,
+    structuralHash: report.source.structuralHash,
+    configHash: report.source.configHash,
+    analyzerVersion: report.source.analyzerVersion,
+  };
+}
+
+function validateBuildReadyIdentity(report, label) {
+  if (!isRecord(report.source)
+    || typeof report.source.rootId !== 'string'
+    || typeof report.source.rootName !== 'string'
+    || typeof report.source.structuralHash !== 'string'
+    || typeof report.source.configHash !== 'string'
+    || typeof report.source.analyzerVersion !== 'string') {
+    fail(`${label} Build-Ready source identity is malformed.`);
+  }
+  if (report.source.analyzerVersion !== CURRENT_BUILD_READY_ANALYZER_VERSION) {
+    fail(`${label} Build-Ready analyzerVersion is unsupported: ${report.source.analyzerVersion}. Expected ${CURRENT_BUILD_READY_ANALYZER_VERSION}. Run a fresh current Audit.`);
+  }
+  const expectedRunId = expectedBuildReadyRunId(report);
+  if (report.runId !== expectedRunId) {
+    fail(`${label} Build-Ready runId does not match exact structural/config/analyzer identity. Expected ${expectedRunId}. Run a fresh current Audit.`);
+  }
+}
+
 function validateEvidence(evidence) {
   if (!isRecord(evidence) || evidence.schemaVersion !== 1) fail('Plugin evidence must use schemaVersion 1.');
   if (evidence.acceptanceAuthority !== false) fail('Plugin evidence must explicitly carry acceptanceAuthority=false.');
   if (!isRecord(evidence.buildReady)
     || evidence.buildReady.schemaVersion !== 1
     || evidence.buildReady.buildReadyScoreVersion !== 2
-    || evidence.buildReady.responsiveRiskVersion !== 1) {
+    || evidence.buildReady.responsiveRiskVersion !== 1
+    || typeof evidence.buildReady.runId !== 'string') {
     fail('Plugin evidence does not contain a valid Build-Ready v2 / Responsive Risk v1 report.');
   }
+  validateBuildReadyIdentity(evidence.buildReady, 'Plugin evidence');
   if (!realFigmaContext(evidence.context) && !isRecord(evidence.context)) {
     fail('Plugin evidence runtime context is missing.');
   }
@@ -81,8 +116,7 @@ function validateEvidence(evidence) {
     || typeof evidence.context.frameName !== 'string') {
     fail('Plugin evidence runtime context is malformed.');
   }
-  if (!isRecord(evidence.buildReady.source)
-    || evidence.buildReady.source.rootId !== evidence.context.frameId
+  if (evidence.buildReady.source.rootId !== evidence.context.frameId
     || evidence.buildReady.source.rootName !== evidence.context.frameName) {
     fail('Plugin evidence frame context does not match Build-Ready source identity.');
   }
@@ -108,6 +142,7 @@ function validateCli(cli) {
     || !isRecord(cli.source)) {
     fail('CLI report is not a Build-Ready v2 / Responsive Risk v1 report.');
   }
+  validateBuildReadyIdentity(cli, 'CLI report');
 }
 
 function normalize(report) {
@@ -160,20 +195,13 @@ const mismatches = [];
 collect(normalize(pluginReport), normalize(cliReport), 'buildReady', mismatches);
 const sameRunIdentity = pluginReport.runId === cliReport.runId
   && pluginReport.source.structuralHash === cliReport.source.structuralHash
-  && pluginReport.source.configHash === cliReport.source.configHash;
+  && pluginReport.source.configHash === cliReport.source.configHash
+  && pluginReport.source.analyzerVersion === cliReport.source.analyzerVersion;
 if (!sameRunIdentity) {
   mismatches.unshift({
     path: 'buildReady.runIdentity',
-    plugin: {
-      runId: pluginReport.runId,
-      structuralHash: pluginReport.source.structuralHash,
-      configHash: pluginReport.source.configHash,
-    },
-    cli: {
-      runId: cliReport.runId,
-      structuralHash: cliReport.source.structuralHash,
-      configHash: cliReport.source.configHash,
-    },
+    plugin: buildReadyRunIdentity(pluginReport),
+    cli: buildReadyRunIdentity(cliReport),
   });
 }
 
@@ -182,7 +210,9 @@ const receipt = {
   gate: 'p13-runtime-plugin-cli-parity',
   acceptanceAuthority: false,
   productionAcceptance: false,
+  targetCompatibilityClaim: false,
   p12FinalGateRequired: true,
+  currentAnalyzerVersion: CURRENT_BUILD_READY_ANALYZER_VERSION,
   pluginEvidence: {
     sha256: sha256(pluginFile.raw),
     traceableBuild: eligibility.traceable,
@@ -194,10 +224,12 @@ const receipt = {
     pageId: pluginFile.value.context?.pageId ?? null,
     frameId: pluginFile.value.context?.frameId ?? null,
     buildReadyRunId: pluginReport.runId,
+    buildReadyRunIdentity: buildReadyRunIdentity(pluginReport),
   },
   cliReport: {
     sha256: sha256(cliFile.raw),
     buildReadyRunId: cliReport.runId,
+    buildReadyRunIdentity: buildReadyRunIdentity(cliReport),
   },
   sameRunIdentity,
   mismatchCount: mismatches.length,
