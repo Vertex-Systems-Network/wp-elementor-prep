@@ -25,8 +25,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install dependencies from lockfile
+        run: npm ci
 
       - name: Verify repository status and contracts
         run: |
