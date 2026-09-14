@@ -36,27 +36,25 @@ Current implemented P16 chain:
 - PR #358 — exact canonical candidate SHA-256 identity;
 - PR #360 — exact-bound external native-serialization PASS/FAIL receipt contract;
 - PR #364 — Node-20 offline exact-bound native-serialization evidence intake;
-- PR #366 — sanitized native-serialization pre-decision review packet.
+- PR #366 — sanitized native-serialization pre-decision review packet;
+- PR #368 — canonical intake/review-packet docs sync;
+- PR #370 — exact-bound externally reported native evidence authentication binding.
 
 Current review progression is intentionally bounded:
 
-`normalized document/profile -> READY candidate -> exact candidate identity -> external receipt -> offline revalidation/intake -> pre-decision packet -> REPORTED_PASS_AUTHENTICATION_REQUIRED -> authenticate retained evidence -> separate internal decision`
+`normalized document/profile -> READY candidate -> exact candidate identity -> external receipt -> offline revalidation/intake -> pre-decision packet -> REPORTED_PASS_AUTHENTICATION_REQUIRED -> external authentication report -> EXTERNALLY_REPORTED_PASS|FAIL -> genuinely retained authenticated evidence -> separate internal decision`
 
-The next safe P16 slice may bind an **externally reported evidence-authentication result** to the exact current candidate identity + canonical receipt hash + evidence-reference hash, following the existing P15 pattern, but it must remain non-authorizing by itself.
+The current `gutenberg-native-serialization-authentication-report-v1` binds:
 
-Required next-slice constraints if implemented:
+- exact current candidate identity digest;
+- exact canonical receipt SHA-256;
+- SHA-256 of the exact receipt `evidenceReference` without echoing the raw reference;
+- bounded caller-supplied authentication result `PASS|FAIL`;
+- canonical reported timestamp.
 
-- only accept a current exact-bound `REPORTED_PASS_AUTHENTICATION_REQUIRED` packet;
-- bind exact current candidate identity;
-- bind canonical receipt SHA-256;
-- bind SHA-256 of the required evidence reference without echoing the raw reference;
-- allow only bounded externally reported authentication outcomes;
-- keep repository evidence authentication authority false;
-- keep `internalDecisionStatus=NOT_RUN`;
-- keep all target/runtime/compatibility/production/generation/download authority false;
-- reject stale candidate/profile/document/receipt/review identities fail closed.
+`EXTERNALLY_REPORTED_PASS` remains non-authorizing. Repository code does not fetch evidence, identify an authenticator, verify signatures, authenticate the evidence itself, execute WordPress or make an internal decision.
 
-Do **not** treat the current intake or pre-decision packet as native serialization authority. Repository code still does not execute WordPress, fetch/authenticate evidence, identify a verifier or prove the target environment.
+The next authority-bearing P16 progression must **not** be manufactured from another caller-supplied flag. It requires genuinely retained authenticated evidence plus a separate explicit internal-decision path. Any additional code-only work should remain deterministic/read-only/evidence-review support and must not imply that this external authentication report is trusted authentication.
 
 Current P16 non-authority facts that must remain true:
 
@@ -65,8 +63,9 @@ Current P16 non-authority facts that must remain true:
 - the repository model intentionally omits WordPress `innerContent`;
 - declared target profile is intended-target evidence only, not observed site/runtime evidence;
 - `PROFILE_ALIGNED_NATIVE_VALIDATION_PENDING` is metadata/profile alignment only;
-- `REPORTED_PASS_AUTHENTICATION_REQUIRED` is caller-supplied evidence awaiting authentication/internal review;
-- `evidenceAuthenticationStatus=NOT_RUN`;
+- the pre-decision packet keeps `evidenceAuthenticationStatus=NOT_RUN`;
+- `EXTERNALLY_REPORTED_PASS` is caller-supplied authentication reporting only;
+- `authenticationAuthority=false`;
 - `internalDecisionStatus=NOT_RUN`;
 - `nativeSerializationAuthority=false`;
 - `targetEnvironmentValidated=false`;
@@ -99,14 +98,16 @@ Future dependency order remains P14 -> R0/R1 as needed -> continue P15 only wher
 - #360 -> `11499202e48d3c51ef416bbc447a729547eba4ce`; exact head `728e585d5ef7d90dde0fcf61286f85fdca1b1a01`; CI #1132, Final Release #443, Offline #487 PASS;
 - #362 docs sync -> `dbd740a1b33ed389510fa0e5274dd5ca26e52dba`; exact-head CI/Integration/Final/Offline PASS;
 - #364 -> `75d77f5eeb0d63e838bceec8fe799c31ba179117`; exact head `9190ed8c6a8f3b7b6913adef93e16184c6ccd071`; CI #1136, Final Release #447, Offline #491 PASS;
-- #366 -> `d14e0416413531ca98bfd97dc57e839bef6440a1`; exact head `a5424bca7ce1e78527beba440300125058986ac7`; CI #1138, Final Release #449, Offline #493 PASS.
+- #366 -> `d14e0416413531ca98bfd97dc57e839bef6440a1`; exact head `a5424bca7ce1e78527beba440300125058986ac7`; CI #1138, Final Release #449, Offline #493 PASS;
+- #368 docs sync -> `bb21a2561df06b3053606ea35eaec66a9b903128`; exact head `9d0204660a2d8cda7578f39b153e962905fb4341`; CI #1140, Integration #413, Final Release #451, Offline #495 PASS;
+- #370 -> `5328f6d0205a350e5e1f27b0106fd930e680ae17`; exact head `bd97932bafb32056979011178653eff0430c0266`; CI #1142, Final Release #453, Offline #497 PASS.
 
 ## Current guardrails
 
 1. No synthetic overall project percentage.
 2. P12 retained release truth remains 80%; later implementation commits do not silently replace its publishing candidate.
 3. P14 real mutation remains blocked until #159 plus separate mutation authorization.
-4. P15/P16 evidence surfaces are non-authorizing unless a later explicit authenticated/internal decision contract says otherwise.
+4. P15/P16 caller-supplied evidence and external authentication reports remain non-authorizing until genuinely retained trusted evidence plus a separate explicit internal decision exists.
 5. No raw evidence references, raw global values, raw asset URLs or raw native Gutenberg post-content should leak into sanitized review artifacts.
 6. No Figma-to-Elementor/Gutenberg semantic generator or section transfer is accepted yet.
 7. No WordPress target-environment/editor/import/render validation is accepted for P16 yet.
