@@ -13,7 +13,7 @@ Current product surfaces:
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare/review evidence surfaces;
 - P15 Elementor R1 exact candidate/profile/import/reference evidence chain;
-- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite plus a non-authorizing genuine-evidence retention requirements manifest;
+- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest and offline operator export;
 - exact-build release/provenance tooling.
 
 Canonical planning/status docs:
@@ -44,7 +44,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`2d7c9e76eb293b8914dd1106c262064013d70b11`
+`e2fe19364ac8615bc390f125c2afb4085bfc474c`
 
 ### Recent verified P16 sequence
 
@@ -57,6 +57,8 @@ Current verified main before this documentation sync:
 - PR #374 — exact-bound decision prerequisite; external auth PASS stops at `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED` -> `6dc86dfc900244616869e5ff289c3afa815a1d2d`.
 - PR #376 — canonical decision-prerequisite docs sync -> `31080f673102206e6e6ae41801569d62e2eb7512`; exact head `e05e6e366626f43e99d6745dddbdc9d87c348f93` passed CI #1149, Integration Readiness #419, P12 Final Release Artifact #460 and P12 Offline Acceptance #504.
 - PR #378 — deterministic `gutenberg-native-serialization-evidence-retention-requirements-v1`; READY only from the exact `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED` prerequisite and still non-authorizing -> `2d7c9e76eb293b8914dd1106c262064013d70b11`; exact head `8ffee524268d2fb1aac0a1dfefffd63014590d88` passed CI #1151, P12 Final Release Artifact #462 and P12 Offline Acceptance #506.
+- PR #380 — synchronized canonical retention-requirements docs -> `c6f6009538e1e0f82bed087783f2c55fa0d9e75d`; corrected exact head `c64a3cd5936fcc2c0d055fe7810a6cf574003da9` passed CI #1155, Integration Readiness #424, P12 Final Release Artifact #466 and P12 Offline Acceptance #510.
+- PR #382 — added package command `p16:evidence-retention-requirements` plus Node-20 offline/operator export for the sanitized requirements manifest -> `e2fe19364ac8615bc390f125c2afb4085bfc474c`; exact head `0626987afe962f54a7a89996219e12cf57744bc4` passed CI #1157, P12 Final Release Artifact #468 and P12 Offline Acceptance #512.
 
 ### Module-wise progress
 
@@ -77,7 +79,7 @@ Current verified main before this documentation sync:
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review is active; production registry remains empty; #159 required before real mutation exposure |
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Genuine trusted authentication/internal decision and real target import remain pending |
-| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
+| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
 | P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
@@ -115,9 +117,10 @@ Current bounded chain now includes:
 - sanitized pre-decision review packet;
 - exact-bound externally reported evidence-authentication report;
 - sanitized decision-prerequisite packet that stops at `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED`;
-- deterministic `gutenberg-native-serialization-evidence-retention-requirements-v1`, READY only from that exact prerequisite. It preserves exact candidate identity, canonical receipt SHA-256, canonical authentication-report SHA-256 and declared WordPress version, then fingerprints a requirements profile for a future separate trusted intake.
+- deterministic `gutenberg-native-serialization-evidence-retention-requirements-v1`, READY only from that exact prerequisite. It preserves exact candidate identity, canonical receipt SHA-256, canonical authentication-report SHA-256 and declared WordPress version, then fingerprints a requirements profile for a future separate trusted intake;
+- `p16:evidence-retention-requirements`, a Node-20 offline/operator export that accepts only the existing local document/profile/receipt/authentication-report chain and writes the sanitized manifest. Exit 0 means only requirements metadata is READY; it is not evidence authentication or decision authority.
 
-The retention requirements manifest accepts **no evidence PASS/FAIL**, performs no authentication, and makes no internal decision. It only states that any future genuinely retained evidence must be content-addressed and exact-bound to the current chain, authenticator identity reference hash, bounded authentication method, canonical authenticated-at timestamp and exact declared WordPress version.
+The retention requirements manifest/export accepts **no future evidence artifact or evidence PASS/FAIL**, performs no authentication, and makes no internal decision. It only states what any future genuinely retained evidence must bind. Stdout and output remain sanitized and do not expose the raw evidence reference, source evidence-reference hash or native Gutenberg post content.
 
 Current authority remains fixed: `evidenceAuthenticationStatus=NOT_RUN`, `authenticationAuthority=false`, `nativeSerializationAuthority=false`, `targetEnvironmentValidated=false`, `editorImportValidated=false`, `renderValidated=false`, `decisionAuthority=false`, `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, `generationEnabled=false`, `downloadEnabled=false`, `internalDecisionStatus=NOT_RUN`, and `internalDecisionEligible=false`.
 
