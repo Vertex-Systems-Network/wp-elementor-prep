@@ -56,6 +56,14 @@ describe('security supply-chain contract', () => {
     }
   });
 
+  it('enables automated npm and GitHub Actions dependency update monitoring', () => {
+    expect(existsSync('.github/dependabot.yml')).toBe(true);
+    const dependabot = read('.github/dependabot.yml');
+    expect(dependabot).toContain('package-ecosystem: npm');
+    expect(dependabot).toContain('package-ecosystem: github-actions');
+    expect(dependabot.match(/interval:\s*weekly/g)?.length).toBe(2);
+  });
+
   it('does not retain the temporary write-capable lockfile bootstrap', () => {
     expect(existsSync('.github/workflows/security-lockfile-bootstrap.yml')).toBe(false);
   });
