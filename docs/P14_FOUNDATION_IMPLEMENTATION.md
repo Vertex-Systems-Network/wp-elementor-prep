@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + iterative structural bounds + prototype-safe canonicalization + alias-safe atomic output writes.
+Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + iterative structural bounds + bounded direct canonicalization + prototype-safe canonicalization + alias-safe atomic output writes.
 
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and P27 final production-release gate (#182).
 
@@ -53,14 +53,17 @@ Current bounded chain includes:
 - Node-20 package command `p16:evidence-retention-requirements-validate`, which validates local document/profile/receipt/authentication-report/manifest JSON through that contract and writes only sanitized validation metadata;
 - shared fail-closed local JSON I/O for both retention CLIs: every input is capped at 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
 - iterative post-parse structural validation: container nesting is capped at 64 levels and total JSON values at 50,000 before target builders/validators execute;
+- direct exact-current canonicalization independently enforces 64 container levels / 50,000 visited values for exported validator/fingerprint callers, so bypassing the operator CLI does not bypass complexity bounds;
 - prototype-safe canonicalization for the exact-current manifest validator: canonical objects use no `Object.prototype`, so own enumerable JSON keys including `__proto__` remain data fields, affect fingerprints and are rejected when added instead of being silently dropped;
 - alias-safe output writes: output parent directories are resolved through `realpath`, canonical output is compared against real input locations, existing symlink/non-regular targets are rejected, hardlink identity against inputs is rejected where available, and output is staged in a unique same-directory regular temp file before atomic rename.
 
-The structural guard is iterative rather than recursive, so the guard itself does not create a recursion limit. It rejects byte-bounded but deeply nested or high-cardinality JSON before downstream recursive validation/canonicalization. Focused cross-CLI tests cover depth 65 and more than 50,000 total JSON values while remaining under the 1 MiB byte cap.
+The operator structural guard is iterative rather than recursive, so the guard itself does not create a recursion limit. It rejects byte-bounded but deeply nested or high-cardinality JSON before downstream validation/canonicalization. Focused cross-CLI tests cover depth 65 and more than 50,000 total JSON values while remaining under the 1 MiB byte cap.
+
+The direct canonicalizer accepts depth 64 and exactly 50,000 total values, fails closed for 65 / 50,001, and therefore bounds recursive canonicalization to at most 64 container levels. Existing cycle, sparse-array, non-finite, non-JSON and non-plain-object rejection remains unchanged.
 
 Atomic rename prevents a late-created final symlink from being followed back onto an input; it is replaced instead. Temporary output state is cleaned before fail-closed write errors. Focused tests cover symlink, hardlink and symlinked-parent aliases and verify source input immutability.
 
-Focused canonicalization regressions cover top-level and nested own `__proto__` additions and confirm `Object.prototype` is not polluted. Validator version/schema/status are unchanged because the fix restores the existing strict extra-field rejection contract.
+Focused canonicalization regressions cover top-level and nested own `__proto__` additions and confirm `Object.prototype` is not polluted. Validator version/schema/status are unchanged because the hardenings preserve the existing strict exact-current metadata contract.
 
 Operator/input failures remain exit code 2 with deterministic content-free errors. Windows path comparison is case-normalized for output/input collision checks.
 
@@ -97,7 +100,7 @@ The normalized JSON serializer is not Gutenberg post-content serialization and t
 
 Current verified main before this documentation sync:
 
-`5feb04adcd6aaca2079b749d495e22e1da6f6671`
+`cb4de36d4922b31b1e278d4f55426d042736549b`
 
 Recent P16 merge line:
 
@@ -119,7 +122,9 @@ Recent P16 merge line:
 - #400 canonical prototype-safe docs sync -> `158132b4076fe5a70afa8e8778ae888fcca4db60`;
 - #402 alias-safe atomic retention output writes -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`;
 - #404 canonical alias-safe-output docs sync -> `4f66522ae9d8dc6fb82875b32634306918ed0a9a`;
-- #406 iterative retention JSON structural bounds -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`.
+- #406 iterative retention JSON structural bounds -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`;
+- #408 canonical JSON-structure-bounds docs sync -> `ab8cb5e783b14688180959017aa79b9a86adfa66`;
+- #410 direct retention-manifest canonicalization bounds -> `cb4de36d4922b31b1e278d4f55426d042736549b`.
 
 P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`.
 
@@ -129,4 +134,4 @@ P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains t
 
 Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Any future P14 mutation surface requires separate explicit authorization with fresh evidence, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
 
-For P16, do not promote the requirements manifest/export/validator/validation CLI, bounded/structure-bounded/alias-safe local-file guards or prototype-safe canonicalization into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
+For P16, do not promote the requirements manifest/export/validator/validation CLI, byte/structure-bounded alias-safe local-file guards, bounded/prototype-safe direct canonicalization or any caller-supplied result into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
