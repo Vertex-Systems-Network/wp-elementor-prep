@@ -1,0 +1,48 @@
+name: Docs Sync 331
+
+on:
+  push:
+    branches:
+      - docs/p15-reference-evidence-sync-331
+    paths:
+      - .github/workflows/docs-sync-331.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 20
+      - name: Run bounded docs sync and verify
+        run: |
+          python .github/docs-sync-331.py
+          npm run status:verify
+          grep -F 'CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED' README.md docs/P14_FOUNDATION_IMPLEMENTATION.md
+          grep -F 'CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED' README.md memory-bank/PROJECT_STATE.md
+          grep -F 'production registry remains empty' README.md
+          grep -F 'Machine-readable operational registry: `config/runtime-artifacts.json` schema v3.' README.md
+          grep -F '`config/runtime-artifacts.json` is runtime artifact registry schema v3' memory-bank/PROJECT_STATE.md
+          grep -F 'Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3' memory-bank/NEXT_ACTIONS.md
+          git diff --check
+          test "$(git diff --name-only | sort | tr '\n' ' ')" = "README.md docs/P14_FOUNDATION_IMPLEMENTATION.md memory-bank/NEXT_ACTIONS.md memory-bank/PROJECT_STATE.md "
+      - name: Commit canonical docs and remove temporary sync files
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          rm .github/workflows/docs-sync-331.yml
+          rm .github/docs-sync-331.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/P14_FOUNDATION_IMPLEMENTATION.md memory-bank/PROJECT_STATE.md memory-bank/NEXT_ACTIONS.md .github
+          git diff --cached --check
+          git commit -m 'docs: sync P15 reference evidence status'
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
