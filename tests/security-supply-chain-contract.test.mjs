@@ -23,6 +23,12 @@ function actionPins(workflow) {
     .map((match) => ({ action: match[1], ref: match[2] }));
 }
 
+function checkoutStep(workflow) {
+  const lines = workflow.split('\n');
+  const index = lines.findIndex((line) => line.includes('uses: actions/checkout@'));
+  return index >= 0 ? lines.slice(index, index + 8).join('\n') : '';
+}
+
 describe('security supply-chain contract', () => {
   it('commits a deterministic npm lockfile', () => {
     expect(existsSync('package-lock.json')).toBe(true);
@@ -45,6 +51,14 @@ describe('security supply-chain contract', () => {
       for (const pin of pins) {
         expect(pin.ref, `${path}: ${pin.action}`).toMatch(/^[0-9a-f]{40}$/i);
       }
+    }
+  });
+
+  it('does not persist checkout credentials into later build steps', () => {
+    for (const path of WORKFLOWS) {
+      const step = checkoutStep(read(path));
+      expect(step, `${path}: checkout step`).toContain('uses: actions/checkout@');
+      expect(step, `${path}: checkout credentials`).toContain('persist-credentials: false');
     }
   });
 
