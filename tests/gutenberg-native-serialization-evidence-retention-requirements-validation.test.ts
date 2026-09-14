@@ -143,6 +143,19 @@ function reorderObject(value: unknown): unknown {
   );
 }
 
+function cloneJsonRecord(value: unknown): Record<string, unknown> {
+  return JSON.parse(JSON.stringify(value)) as Record<string, unknown>;
+}
+
+function defineEnumerableProtoKey(target: Record<string, unknown>): void {
+  Object.defineProperty(target, '__proto__', {
+    value: { polluted: true },
+    enumerable: true,
+    configurable: true,
+    writable: true,
+  });
+}
+
 describe('P16 retention requirements manifest validation', () => {
   it('accepts only the exact current deterministic requirements manifest without granting authority', () => {
     const { doc, targetProfile, receipt, report, manifest } = readyFixture();
@@ -217,6 +230,53 @@ describe('P16 retention requirements manifest validation', () => {
       expect(validation.issues.map((issue) => issue.code))
         .toContain('P16_RETENTION_MANIFEST_INVALID_OR_STALE');
     }
+  });
+
+  it('preserves and rejects an own top-level __proto__ key instead of dropping it', () => {
+    const { doc, targetProfile, receipt, report, manifest } = readyFixture();
+    const hostile = cloneJsonRecord(manifest);
+    defineEnumerableProtoKey(hostile);
+
+    const cleanFingerprint = fingerprintGutenbergNativeSerializationEvidenceRetentionRequirementsValue(manifest);
+    const hostileFingerprint = fingerprintGutenbergNativeSerializationEvidenceRetentionRequirementsValue(hostile);
+    const validation = validateGutenbergNativeSerializationEvidenceRetentionRequirements(
+      hostile,
+      doc,
+      targetProfile,
+      receipt,
+      report,
+    );
+
+    expect(Object.keys(hostile)).toContain('__proto__');
+    expect(hostileFingerprint).toMatch(/^sha256:[0-9a-f]{64}$/);
+    expect(hostileFingerprint).not.toBe(cleanFingerprint);
+    expect(validation.status).toBe('REJECTED_REQUIREMENTS_MANIFEST_INVALID_OR_STALE');
+    expect(validation.exactSemanticMatch).toBe(false);
+    expect(validation.canonicalProvidedManifestSha256).toBe(hostileFingerprint);
+    expect(Object.prototype).not.toHaveProperty('polluted');
+  });
+
+  it('preserves and rejects a nested own __proto__ key without prototype pollution', () => {
+    const { doc, targetProfile, receipt, report, manifest } = readyFixture();
+    const hostile = cloneJsonRecord(manifest);
+    const requirementsProfile = hostile.requirementsProfile as Record<string, unknown>;
+    defineEnumerableProtoKey(requirementsProfile);
+
+    const cleanFingerprint = fingerprintGutenbergNativeSerializationEvidenceRetentionRequirementsValue(manifest);
+    const hostileFingerprint = fingerprintGutenbergNativeSerializationEvidenceRetentionRequirementsValue(hostile);
+    const validation = validateGutenbergNativeSerializationEvidenceRetentionRequirements(
+      hostile,
+      doc,
+      targetProfile,
+      receipt,
+      report,
+    );
+
+    expect(Object.keys(requirementsProfile)).toContain('__proto__');
+    expect(hostileFingerprint).not.toBe(cleanFingerprint);
+    expect(validation.status).toBe('REJECTED_REQUIREMENTS_MANIFEST_INVALID_OR_STALE');
+    expect(validation.exactSemanticMatch).toBe(false);
+    expect(Object.prototype).not.toHaveProperty('polluted');
   });
 
   it('rejects non-object manifest input without echoing it', () => {
