@@ -1,8 +1,8 @@
 # P14 Retained-Duplicate Foundation
 
-Status: CORE IMPLEMENTATION + READ-ONLY GUIDED PREPARE RUNTIME PREVIEW — CONFIRMATION/MUTATION UNWIRED  
+Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED
 Roadmap: #119  
-Current status synchronization: #297
+Canonical status synchronized through P14 review-packet and P15 foundation merges
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182)
 
 ## Purpose
@@ -12,7 +12,7 @@ P14 implements the target-neutral safety foundation for `Target-Ready Duplicate 
 The implementation currently has two distinct surfaces:
 
 1. a deterministic retained-duplicate core with bounded plan, confirmation, authorization, transaction, adapter-evidence, validation/re-score, cleanup and receipt contracts;
-2. a development-only **read-only Guided Prepare preview** driven by exact current P13 Build-Ready evidence, including a non-authorizing proposed-change review artifact and precise persisted-evidence rejection diagnostics.
+2. a development-only **read-only Guided Prepare preview** driven by exact current P13 Build-Ready evidence, including a non-authorizing proposed-change review artifact, an exact-context deterministic runtime review packet and precise persisted-evidence rejection diagnostics.
 
 The second surface does **not** create confirmation evidence or wire retained-duplicate mutation into Figma.
 
@@ -160,9 +160,10 @@ Development surfaces were added through:
 - #268/#269 — versioned snapshot-first proposed-change review manifest;
 - #271/#272 — human-readable Proposed Change Review Binding panel;
 - #275/#279 — analyzer-bound P13 identity required by persisted evidence and P13 -> P14 handoff;
-- #280/#281 — persisted-evidence rejection diagnostics and precise fresh-Audit guidance.
+- #280/#281 — persisted-evidence rejection diagnostics and precise fresh-Audit guidance;
+- #299/#300 — deterministic read-only runtime review packet bound to exact current plugin/build identity, persisted evidence timestamp, full file/page/frame context, analyzer-bound P13 identity and P14 plan summary.
 
-The generated publishable release UI strips the development-only P14 preview/review-binding surface.
+The generated publishable release UI strips the development-only P14 preview/review-binding/review-packet surfaces.
 
 ## Exact current-context and freshness binding
 
@@ -203,6 +204,18 @@ When eligible actions exist, the manifest detaches action ID, source rule/versio
 Revoked, unreadable or integrity-invalid plan evidence fails closed instead of becoming review authority.
 
 PR #272 renders this exact manifest as a human-readable Proposed Change Review Binding block in the development panel. It adds no approve/confirm control and the publishable release UI strips the entire development-only surface.
+
+## Deterministic runtime review packet
+
+PR #300 adds a development-only `P14 Runtime Review Packet` for exact human-review provenance after freshness checks pass. It binds the review artifact to:
+
+- current plugin version and compiled runtime build `sourceSha`, `runId`, and `runNumber`;
+- persisted evidence capture time and matching persisted build provenance;
+- exact file key, page ID/name and frame ID/name;
+- analyzer-bound P13 run ID, structural hash, config hash and analyzer version;
+- P14 preview status/counts/blockers/plan digest and a defensive snapshot of the proposed-change review manifest.
+
+The packet is deterministic JSON and is not a signature, confirmation token, persisted approval or execution authorization. Its authority flags remain `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `mutationEnabled=false`, and `confirmationEnabled=false`. The publishable release UI explicitly forbids the packet surface and export filename.
 
 ## First real P13 safe-preparation opportunity
 
@@ -284,12 +297,10 @@ Earlier retained review-manifest / real-candidate / human-review-binding proof r
 
 Current main is:
 
-`9955be0561807550a7ad1444d8d013d783820188`
+`426314b183f220f66a315a24f9b1122a464909b9`
 
-Canonical status synchronization is tracked by #297 on `docs/post-security-p13-parity-297`.
-
-P12 remains at its retained 80% release-exit state. P15-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.
+P12 remains at its retained 80% release-exit state. P15 now has a bounded non-authorizing Elementor foundation (v0.4/container validation, documented-core capability reporting and candidate envelope), but real target import remains unvalidated and no Figma-to-Elementor generation/download surface is wired. P16-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains the final production-release gate.
 
 ## Next P13/P14 step
 
-After #297 status synchronization, the next authority-bearing P13 step is genuine Figma Desktop evidence under #159 using the current analyzer-v2 traceable development artifact. Until that evidence is captured and separately reviewed, do not expose real P14 Figma mutation. Target-neutral/read-only P14 work may continue, but current analyzer provenance, offline parity, persisted-evidence diagnostics, the real P13 candidate and the review manifest remain non-authorizing. Any future confirmation/mutation surface requires an explicit separate contract preserving exact evidence freshness, production recipe authorization, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
+The next authority-bearing P13 step remains genuine Figma Desktop evidence under #159 using the current analyzer-v2 traceable development artifact. Until that evidence is captured and separately reviewed, do not expose real P14 Figma mutation. Target-neutral/read-only P14 work may continue, but current analyzer provenance, offline parity, persisted-evidence diagnostics, the real P13 candidate and the review manifest remain non-authorizing. Any future confirmation/mutation surface requires an explicit separate contract preserving exact evidence freshness, production recipe authorization, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.

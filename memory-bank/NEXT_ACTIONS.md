@@ -15,30 +15,15 @@ Last updated: 2026-09-14
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 before artifact-dependent operations.
 
-## Immediate action — #297 current security/parity status synchronization
+## Immediate action — P15 exact-candidate import-validation contract
 
-Classification: **ACTIVE / DOCS ONLY**.
+Classification: **PLANNED / NON-AUTHORITATIVE TARGET EVIDENCE**.
 
-Branch:
+Build from the merged P15 foundation without guessing Figma widget semantics. The next slice should define deterministic identity/binding for one validated candidate artifact and the shape of a future real Elementor import-validation receipt. It must keep `downloadEnabled=false`, `targetCompatibilityClaim=false`, and `productionAcceptance=false` until genuine target import evidence exists.
 
-`docs/post-security-p13-parity-297`
+Do not introduce a WordPress connection, Pro/add-on availability inference, Atomic generation or product download UI merely to satisfy the offline contract.
 
-Base main:
-
-`9955be0561807550a7ad1444d8d013d783820188`
-
-Required surfaces only:
-
-- `README.md`;
-- `docs/P14_FOUNDATION_IMPLEMENTATION.md`;
-- `memory-bank/PROJECT_STATE.md`;
-- `memory-bank/NEXT_ACTIONS.md`.
-
-Record the completed sequence through security hardening, analyzer-v2 offline parity and the current non-publishable P13 runtime artifact while preserving every P14 authority lock and the historical P12 publishing candidate.
-
-Before merge, exact docs head must pass CI, Integration Readiness, P12 Final Release Artifact, P12 Offline Acceptance on Windows/macOS/Ubuntu, clean review-thread state and current/mergeable branch state.
-
-## After #297 — genuine #159 Figma Desktop evidence
+## Parallel required runtime evidence — genuine #159 Figma Desktop evidence
 
 The current traceable operator artifact is `p13-runtime-evidence-9955be056180-analyzer-v2`, artifact ID `10343017256`, source `9955be0561807550a7ad1444d8d013d783820188`, digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`.
 
@@ -106,8 +91,9 @@ Classification: **ACTIVE P13-P27 roadmap**.
 Current state:
 
 - P13 — implementation complete / real-plugin runtime acceptance pending (#159), with `p13-core-v2` analyzer-bound provenance and one real target-neutral safe-preparation candidate signal;
-- P14 — deterministic core + fresh read-only Guided Prepare + review manifest/binding + persisted-evidence rejection diagnostics active in development; confirmation/mutation still unwired;
-- P15-P26 — preflight frozen / implementation not started;
+- P14 — deterministic core + fresh read-only Guided Prepare + review manifest/binding + exact runtime review packet + persisted-evidence rejection diagnostics active in development; confirmation/mutation still unwired;
+- P15 — core foundation in progress / target import unvalidated: v0.4/container validator, bounded documented-core capability report and non-authorizing candidate envelope are merged;
+- P16-P26 — preflight frozen / implementation not started;
 - P27 — final production-release gate defined, execution deferred (#182).
 
 Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 Gutenberg -> P17 code/static-first import -> P18 frameworks -> P19 assets/design-system -> P20 round-trip QA -> P21 handoff/QA -> P22 effort -> P23 agency/bindings -> P24 CMS/forms/interactions -> P25 entitlements -> P26 optional non-authoritative AI -> P27 final production release/evidence closure.
@@ -159,16 +145,11 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 G
 - artifact branch returned to zero content diff;
 - artifact remains non-authorizing/do-not-publish.
 
-## Definition of done for #297
+## Current guardrails for next work
 
-#297 is complete only when:
-
-1. the four canonical docs/status files match current main/security/parity/artifact truth;
-2. stale #282 current-action references and old current-main SHA are removed from active status text;
-3. no runtime/test/config/workflow files appear in the final diff;
-4. README status/schema contracts remain valid, including the exact P14 status token and empty production registry wording;
-5. no runtime, compatibility or production-authority claim is inflated;
-6. CI + Integration Readiness + Final Release + cross-platform Offline Acceptance pass on the exact docs head;
-7. review state is clean and guarded merge succeeds.
-
-After that, proceed from the genuine #159 operator evidence step or another explicitly non-authorizing P14 slice; do not simulate real-Figma acceptance.
+1. #159 genuine Figma Desktop evidence remains required before real P14 mutation exposure.
+2. P14 production safe-recipe registry remains empty and all four authority flags remain false.
+3. P15 candidate artifacts are not target-import validated; download/compatibility/production authority remains disabled.
+4. Future P15 import-validation evidence must bind to an exact deterministic candidate and retain explicit target/platform version evidence.
+5. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
+6. P12 historical publishing evidence remains unchanged and P27 owns final live release-exit evidence.
