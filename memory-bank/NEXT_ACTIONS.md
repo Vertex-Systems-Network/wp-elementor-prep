@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete up to retention requirements
+## Parallel P16 state — bounded code-side foundation complete through requirements export
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -38,21 +38,23 @@ Current implemented P16 chain:
 - PR #370 — exact-bound externally reported native evidence authentication binding;
 - PR #374 — exact-bound native decision-prerequisite packet;
 - PR #376 — canonical decision-prerequisite docs sync;
-- PR #378 — exact-bound genuine-evidence retention requirements manifest.
+- PR #378 — exact-bound genuine-evidence retention requirements manifest;
+- PR #380 — canonical retention-requirements docs sync;
+- PR #382 — offline/operator retention-requirements export command.
 
 Current progression is intentionally bounded:
 
-`normalized document/profile -> READY candidate -> exact identity -> external receipt -> offline revalidation -> pre-decision packet -> REPORTED_PASS_AUTHENTICATION_REQUIRED -> external authentication report -> EXTERNALLY_REPORTED_PASS|FAIL -> decision prerequisite -> GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED -> retention requirements manifest -> genuinely retained authenticated evidence -> separate internal decision`
+`normalized document/profile -> READY candidate -> exact identity -> external receipt -> offline revalidation -> pre-decision packet -> REPORTED_PASS_AUTHENTICATION_REQUIRED -> external authentication report -> EXTERNALLY_REPORTED_PASS|FAIL -> decision prerequisite -> GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED -> retention requirements manifest/export -> genuinely retained authenticated evidence -> separate internal decision`
 
-The new `gutenberg-native-serialization-evidence-retention-requirements-v1`:
+`p16:evidence-retention-requirements` now provides a Node-20 offline/operator export surface that:
 
-- becomes READY only from exact `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED` state;
-- preserves exact candidate identity, canonical receipt SHA-256, canonical authentication-report SHA-256 and declared WordPress version;
-- fingerprints a deterministic requirements profile;
-- requires any future separate trusted intake to bind a content-addressed evidence artifact SHA-256 + byte length, authenticator identity-reference hash, bounded authentication method, canonical authenticated-at timestamp and exact target binding;
-- accepts no evidence PASS/FAIL;
-- performs no evidence authentication;
-- makes no internal decision;
+- accepts only local document/profile/receipt/authentication-report JSON plus optional output path;
+- rebuilds the existing exact chain;
+- writes only the sanitized `gutenberg-native-serialization-evidence-retention-requirements-v1` manifest;
+- returns exit 0 only for `EVIDENCE_RETENTION_REQUIREMENTS_READY`, otherwise exit 2;
+- prints only safe summary metadata;
+- accepts no future evidence artifact, authenticator identity, authentication method, authenticated-at assertion or evidence PASS/FAIL;
+- performs no authentication and makes no internal decision;
 - exposes no raw evidence reference, source evidence-reference hash or raw native Gutenberg post content.
 
 ### Authority stop line
@@ -86,7 +88,7 @@ Until such genuine evidence exists, keep these facts true:
 
 ### Safe code-only work while genuine evidence is absent
 
-Only deterministic/read-only/supporting work is unblocked, for example stricter bounds, serialization/sanitization tests, or a non-authorizing operator export surface for the requirements manifest. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
+Only deterministic/read-only/supporting work remains unblocked, such as stricter input bounds, serialization/sanitization hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
 
 ## Roadmap state
 
@@ -104,7 +106,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 
 - #374 -> `6dc86dfc900244616869e5ff289c3afa815a1d2d`; corrected exact head `4560a7d9fdfaac79369bba1f5dc05b0897eeb9a9`; CI #1147, Final Release #458, Offline #502 PASS;
 - #376 docs sync -> `31080f673102206e6e6ae41801569d62e2eb7512`; exact head `e05e6e366626f43e99d6745dddbdc9d87c348f93`; CI #1149, Integration #419, Final Release #460, Offline #504 PASS;
-- #378 retention requirements -> `2d7c9e76eb293b8914dd1106c262064013d70b11`; exact head `8ffee524268d2fb1aac0a1dfefffd63014590d88`; CI #1151, Final Release #462, Offline #506 PASS.
+- #378 retention requirements -> `2d7c9e76eb293b8914dd1106c262064013d70b11`; exact head `8ffee524268d2fb1aac0a1dfefffd63014590d88`; CI #1151, Final Release #462, Offline #506 PASS;
+- #380 docs sync -> `c6f6009538e1e0f82bed087783f2c55fa0d9e75d`; corrected exact head `c64a3cd5936fcc2c0d055fe7810a6cf574003da9`; CI #1155, Integration #424, Final Release #466, Offline #510 PASS;
+- #382 requirements export -> `e2fe19364ac8615bc390f125c2afb4085bfc474c`; exact head `0626987afe962f54a7a89996219e12cf57744bc4`; CI #1157, Final Release #468, Offline #512 PASS.
 
 ## Current guardrails
 
@@ -112,7 +116,7 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 2. P12 retained release truth remains 80%; later implementation commits do not silently replace its publishing candidate.
 3. P14 real mutation remains blocked until #159 plus separate mutation authorization.
 4. P15/P16 caller-supplied evidence and external authentication reports remain non-authorizing until genuinely retained trusted evidence plus a separate explicit internal decision exists.
-5. No raw evidence references, source evidence-reference hashes, raw global values, raw asset URLs or raw native Gutenberg post content should leak into sanitized review/decision/requirements artifacts.
+5. No raw evidence references, source evidence-reference hashes, raw global values, raw asset URLs or raw native Gutenberg post content should leak into sanitized review/decision/requirements/export artifacts.
 6. No Figma-to-Elementor/Gutenberg semantic generator or section transfer is accepted yet.
 7. No WordPress target-environment/editor/import/render validation is accepted for P16 yet.
 8. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
