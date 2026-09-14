@@ -45,11 +45,11 @@ Open roadmap / acceptance issues:
 - `#119` — P13-P27 commercial/multi-target roadmap owner; P13-P26 implementation/testing may proceed before final production release.
 - `#159` — P13 real-plugin Build-Ready runtime/parity evidence and internal runtime-acceptance dependency.
 - `#182` — P27 final production-release gate coordinating remaining live/manual release evidence and final release decision.
-- `#282` — docs-only synchronization of canonical P13/P14 status through verified PR #281.
+- `#287` — repository-admin branch-protection/ruleset hardening remains open because it requires GitHub administration access.
 
-Current verified main before #282 docs synchronization is:
+Current verified main is:
 
-`801075561f22a1738219e58e9f39096705dc80ac`
+`9955be0561807550a7ad1444d8d013d783820188`
 
 ### Recent verified P13/P14 sequence
 
@@ -58,6 +58,11 @@ Current verified main before #282 docs synchronization is:
 - PR #272 rendered the exact proposed-change review binding in the development Guided Prepare panel while preserving publishable-release stripping, and guarded squash-merged as `f06858ce384ce7d01510813b34b0ff803912e944`; exact head `e59058a7de174b18d8377d8052610efc9a12b4c2` passed CI #1019, P12 Final Release Artifact #330 and P12 Offline Acceptance #374.
 - PR #279 introduced `p13-core-v2` and analyzer-bound Build-Ready run identity across report generation, persisted runtime evidence, P13→P14 handoff and plugin/CLI parity. Corrected exact head `b590d0c1652d153525f6fd1a6c8db95dba7e9d54` passed CI #1026, P12 Final Release Artifact #337 and P12 Offline Acceptance #381 before guarded squash merge `31c2ddcee932592a9f7357b1bba07c4009cac684`. Integration Readiness did not trigger for this code-only diff.
 - PR #281 preserved persisted-evidence inspection status/reasons (`VALID`, `EMPTY`, `INVALID`, `READ_FAILED`, `QUARANTINED`) and surfaced exact fresh-Audit diagnostics in the development P13 viewer and P14 preview. Exact head `e201f43a7b11355daa2b73c957f82ce397bb6003` passed CI #1028, P12 Final Release Artifact #339 and P12 Offline Acceptance #383 before guarded squash merge `801075561f22a1738219e58e9f39096705dc80ac`. Integration Readiness did not trigger for this code-only diff.
+- PR #283 synchronized the canonical P13/P14 status docs through PR #281 and guarded squash-merged as `54fad8332e9ef4d41c5ccd2c5ccda4fb10247c5c`; exact head passed CI #1030, Integration Readiness #349, P12 Final Release Artifact #341 and P12 Offline Acceptance #385.
+- PR #286 hardened dependency/workflow supply-chain controls with a committed lockfile, `npm ci`, immutable first-party action SHAs, Dependabot and secret-file ignore coverage, then guarded squash-merged as `245a045fcbc30bd2ec81edb06dba65119e358a50`. Exact head passed CI #1048, Integration Readiness #362, P12 Final Release Artifact #359 and P12 Offline Acceptance #403; a one-time locked `npm audit --audit-level=high` reported 0 vulnerabilities.
+- PR #293 hardened the P3 UI pixel-broker boundary so malformed/tampered metrics and oversized broker images fail closed, then guarded squash-merged as `47dbc078b0a41cbbe5301d6e0d95d5ca33cc8721`. Exact head passed CI #1054, P12 Final Release Artifact #365 and P12 Offline Acceptance #409; Integration Readiness did not trigger for this code-only diff.
+- PR #294 aligned the operator-facing P13 offline parity intake with `p13-core-v2` analyzer-bound run identity and guarded squash-merged as `9955be0561807550a7ad1444d8d013d783820188`. Exact head `68189da1fba9b42610cc932e1193851c8c7e9636` passed CI #1056, P12 Final Release Artifact #367 and P12 Offline Acceptance #411; Integration Readiness did not trigger for this code-only diff.
+- Issue #295 regenerated the current traceable, non-publishable P13 development runtime artifact from source `9955be0561807550a7ad1444d8d013d783820188`: Actions run `34833881774`, artifact `p13-runtime-evidence-9955be056180-analyzer-v2`, ID `10343017256`, digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`. The artifact does not grant runtime acceptance; #159 remains open for genuine Figma Desktop evidence.
 
 The real P13 vertical-stack opportunity is still **not** production mutation authority. `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty, so production P13→P14 handoff downgrades the candidate to REVIEW with `P14_SAFE_BINDING_REQUIRED`, produces no production-eligible action IDs, and keeps the P14 plan BLOCKED.
 
@@ -80,7 +85,7 @@ The proposed-change review manifest, visible review-binding panel, analyzer iden
 | R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Current snapshot retained; refresh again per major adapter |
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains; current analyzer is p13-core-v2 with analyzer-bound run identity |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Complete #282 status sync; read-only preview requires current analyzer/fresh evidence and shows rejection diagnostics; real candidate remains REVIEW/BLOCKED because production registry remains empty; retained-duplicate mutation runtime is unwired; #159 required before real Figma mutation exposure |
+| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only preview requires current analyzer/fresh evidence and shows rejection diagnostics; real candidate remains REVIEW/BLOCKED because production registry remains empty; retained-duplicate mutation runtime is unwired; #159 current real-Figma evidence remains required before real Figma mutation exposure |
 | P15 Elementor native export + validation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; versioned v3/v4 adapter + real import proof |
 | P16 Gutenberg native export + transfer | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1 refresh as needed; native block/pattern/editor validation |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution remains separately gated |
@@ -106,6 +111,10 @@ P13 current analyzer semantic version is `p13-core-v2`. Build-Ready `runId` now 
 Persisted P13 evidence rejects stale/unsupported analyzer versions and contradictory run IDs. P13→P14 handoff also requires this current analyzer-bound identity, and plugin/CLI parity includes analyzer version in `sameRunIdentity`. `generatedAt` is intentionally non-semantic runtime metadata.
 
 Persisted evidence inspection distinguishes `VALID`, `EMPTY`, `INVALID`, `READ_FAILED` and `QUARANTINED`. Rejection/read/quarantine reasons are bounded. The development P13 evidence viewer and P14 Guided Prepare preview surface those reasons and require a fresh Audit rather than silently treating rejected evidence as current.
+
+The operator-facing offline parity intake now independently enforces `p13-core-v2`, requires the analyzer-bound `runId`, includes analyzer version in exact run identity and emits explicit per-side run-identity evidence while keeping `generatedAt` non-semantic. Stale analyzer evidence and forged run IDs fail before a parity receipt is written.
+
+The current traceable development artifact for the next genuine #159 attempt is `p13-runtime-evidence-9955be056180-analyzer-v2` (artifact ID `10343017256`, source `9955be0561807550a7ad1444d8d013d783820188`). It is explicitly non-authorizing and do-not-publish.
 
 ## Current P14 boundary
 
@@ -158,7 +167,7 @@ A package can be `ARTIFACT VALIDATED` without being `IMPORT VERIFIED`. We do not
 ## Development and validation commands
 
 ```bash
-npm install
+npm ci
 npm run status:verify
 npm run typecheck
 npm test

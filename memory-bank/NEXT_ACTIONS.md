@@ -1,6 +1,6 @@
 # Next Actions
 
-Last updated: 2026-09-13
+Last updated: 2026-09-14
 
 ## Mandatory cycle
 
@@ -15,17 +15,17 @@ Last updated: 2026-09-13
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 before artifact-dependent operations.
 
-## Immediate action — #282 P13 provenance/diagnostics status synchronization
+## Immediate action — #297 current security/parity status synchronization
 
 Classification: **ACTIVE / DOCS ONLY**.
 
 Branch:
 
-`docs/p13-v2-evidence-diagnostics-282`
+`docs/post-security-p13-parity-297`
 
 Base main:
 
-`801075561f22a1738219e58e9f39096705dc80ac`
+`9955be0561807550a7ad1444d8d013d783820188`
 
 Required surfaces only:
 
@@ -34,62 +34,53 @@ Required surfaces only:
 - `memory-bank/PROJECT_STATE.md`;
 - `memory-bank/NEXT_ACTIONS.md`.
 
-Record the completed sequence:
+Record the completed sequence through security hardening, analyzer-v2 offline parity and the current non-publishable P13 runtime artifact while preserving every P14 authority lock and the historical P12 publishing candidate.
 
-- #275 / PR #279 — P13 analyzer semantic version `p13-core-v2`, analyzer-bound Build-Ready run identity, stale-v1 rejection in persisted evidence/P13→P14 handoff and analyzer-aware plugin/CLI parity;
-- #280 / PR #281 — persisted evidence inspection states `VALID`, `EMPTY`, `INVALID`, `READ_FAILED`, `QUARANTINED`, bounded rejection reasons, exact diagnostics in the development P13 viewer and P14 Guided Prepare fresh-Audit guidance;
-- valid-evidence behavior remains unchanged;
-- production P14 registry remains empty and all P14 authority flags remain false.
+Before merge, exact docs head must pass CI, Integration Readiness, P12 Final Release Artifact, P12 Offline Acceptance on Windows/macOS/Ubuntu, clean review-thread state and current/mergeable branch state.
 
-Before merge, exact docs head must pass:
+## After #297 — genuine #159 Figma Desktop evidence
 
-- CI;
-- Integration Readiness;
-- P12 Final Release Artifact;
-- P12 Offline Acceptance on Windows/macOS/Ubuntu;
-- clean review-thread state;
-- current/mergeable branch state.
+The current traceable operator artifact is `p13-runtime-evidence-9955be056180-analyzer-v2`, artifact ID `10343017256`, source `9955be0561807550a7ad1444d8d013d783820188`, digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`.
 
-## After #282 — next P13/P14 implementation slice
+Use it only for the real Figma Desktop evidence step. Repository CI cannot substitute for that runtime evidence. Preserve these boundaries:
 
-Run a fresh focused gap audit before adding any new authority.
-
-Preserve these current boundaries:
-
-- P13 current analyzer identity is `p13-core-v2`;
-- Build-Ready `runId` binds exact structural/config/analyzer semantics;
-- stale/unsupported analyzer evidence fails closed and requires fresh Audit;
-- Guided Prepare preview is development-only and read-only;
-- proposed-change review manifest is evidence, not approval/confirmation;
-- real P13 vertical-stack candidate is an opportunity signal only;
+- current analyzer `p13-core-v2`;
+- exact analyzer-bound run identity;
+- stale/forged evidence fails closed;
+- Guided Prepare remains development-only/read-only;
 - `acceptanceAuthority=false`;
 - `targetCompatibilityClaim=false`;
 - `mutationEnabled=false`;
 - `confirmationEnabled=false`;
 - production safe-recipe registry remains empty;
 - no real retained-duplicate Figma mutation command/adapter is exposed;
-- generated publishable release UI remains free of development-only P14 preview/review-binding controls;
-- exact file/page/frame binding, current analyzer identity and fresh current-build/Frame evidence cannot be weakened.
-
-Any future confirmation or mutation surface must be a separate explicit issue and must preserve plan integrity, registry authorization, reviewed-confirmation correlation, candidate-only mutation, runtime eligibility, validation/re-score, source-immutability and cleanup contracts.
+- publishable release UI remains free of development-only P14 controls;
+- #159 evidence is required before real P14 Figma mutation exposure.
 
 ## #159 — P13 real-plugin runtime/parity acceptance
 
 Classification: **OPEN / required before real P14 mutation exposure**.
 
-P13 implementation is complete, including analyzer-bound v2 provenance and the target-neutral vertical-stack opportunity signal, but genuine real-plugin runtime acceptance remains pending.
+Current implementation and operator tooling are ready, but genuine real-plugin runtime acceptance remains pending. Use the current #295 artifact, not the superseded pre-analyzer-bound pack.
 
-When genuine Figma evidence is available:
+Required genuine sequence:
 
-1. capture a traceable current plugin Build-Ready evidence bundle on the accepted real file/frame;
-2. require current `p13-core-v2` analyzer identity and exact analyzer-bound run ID;
-3. retain exact build/source identity and real file/page/frame context;
-4. verify current P13 semantics, including safe-preparation opportunity evidence when actually present;
-5. compare semantic plugin evidence with accepted CLI output through deterministic parity intake, including analyzer version in `sameRunIdentity`;
-6. review mismatches explicitly rather than normalizing them away;
-7. retain the final internal runtime-acceptance result.
+1. import the current development artifact in Figma Desktop;
+2. open the intended accepted real file/frame and run Audit on exactly one current Frame;
+3. open the P13 runtime evidence developer viewer and copy the exact evidence JSON unchanged;
+4. require `p13-core-v2`, exact analyzer-bound run ID, traceable build identity and real file/page/frame context;
+5. generate/use the matching current CLI Build-Ready report for that exact deterministic identity;
+6. run the current `p13:runtime-parity` intake;
+7. review any mismatches explicitly rather than normalizing them away;
+8. retain a separate internal runtime-acceptance decision.
 
 #159 does not block target-neutral P14 core/read-only development. It remains a prerequisite before real P14 Figma mutation exposure.
+
+## #287 — repository-admin security enforcement
+
+Classification: **OPEN / ADMIN-LEVEL RESIDUAL**.
+
+Code-side supply-chain and pixel-broker security hardening is merged, but `main` branch protection/ruleset enforcement requires GitHub administration access unavailable to the current connector. Required admin controls remain PR enforcement, conversation resolution, blocking force-push/deletion and required exact-head CI/release/offline checks. Do not describe this repository setting as fixed until it is actually enabled.
 
 ## #84 — P12 retained release-exit truth
 
@@ -141,16 +132,43 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 Elementor -> P16 G
 - Integration Readiness did not trigger for the code-only diff;
 - guarded squash merge `801075561f22a1738219e58e9f39096705dc80ac`.
 
-## Definition of done for #282
+### PR #286 — supply-chain hardening
 
-#282 is complete only when:
+- guarded squash merge `245a045fcbc30bd2ec81edb06dba65119e358a50`;
+- CI #1048, Integration Readiness #362, Final Release #359 and Offline #403 — PASS;
+- locked npm advisory scan — 0 vulnerabilities.
 
-1. the four canonical docs/status files match post-#281 repository truth;
-2. old #273 current-action references are removed;
-3. no runtime/test/config files appear in the diff;
-4. README status/schema contracts remain valid;
-5. no roadmap percentage or production-authority claim is inflated;
+### PR #293 — P3 pixel-broker hardening
+
+- guarded squash merge `47dbc078b0a41cbbe5301d6e0d95d5ca33cc8721`;
+- CI #1054, Final Release #365 and Offline #409 — PASS;
+- Integration Readiness did not trigger for the code-only diff.
+
+### PR #294 — offline analyzer-v2 parity
+
+- guarded squash merge `9955be0561807550a7ad1444d8d013d783820188`;
+- exact head `68189da1fba9b42610cc932e1193851c8c7e9636`;
+- CI #1056, Final Release #367 and Offline #411 — PASS;
+- Integration Readiness did not trigger for the code-only diff.
+
+### Issue #295 — current P13 runtime evidence artifact
+
+- run `34833881774`;
+- artifact ID `10343017256`;
+- digest `sha256:b3e5a07a5a012f9c1f4deec32389ad83a0e8550580f60de408db14644de5f1fe`;
+- artifact branch returned to zero content diff;
+- artifact remains non-authorizing/do-not-publish.
+
+## Definition of done for #297
+
+#297 is complete only when:
+
+1. the four canonical docs/status files match current main/security/parity/artifact truth;
+2. stale #282 current-action references and old current-main SHA are removed from active status text;
+3. no runtime/test/config/workflow files appear in the final diff;
+4. README status/schema contracts remain valid, including the exact P14 status token and empty production registry wording;
+5. no runtime, compatibility or production-authority claim is inflated;
 6. CI + Integration Readiness + Final Release + cross-platform Offline Acceptance pass on the exact docs head;
 7. review state is clean and guarded merge succeeds.
 
-After that, continue P13/P14 from current repository truth rather than the pre-analyzer-v2 checkpoint.
+After that, proceed from the genuine #159 operator evidence step or another explicitly non-authorizing P14 slice; do not simulate real-Figma acceptance.
