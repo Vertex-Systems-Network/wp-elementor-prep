@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata.
+Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export.
 
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and P27 final production-release gate (#182).
 
@@ -47,11 +47,12 @@ Current bounded chain includes:
 - sanitized pre-decision review packet;
 - exact-bound externally reported evidence-authentication report;
 - sanitized decision prerequisite where external auth PASS stops at `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED`;
-- deterministic `gutenberg-native-serialization-evidence-retention-requirements-v1`, READY only from that exact prerequisite and containing only chain fingerprints, declared WordPress version and future retention requirements metadata.
+- deterministic `gutenberg-native-serialization-evidence-retention-requirements-v1`, READY only from that exact prerequisite and containing only chain fingerprints, declared WordPress version and future retention requirements metadata;
+- Node-20 package command `p16:evidence-retention-requirements`, which exports that sanitized requirements manifest from local document/profile/receipt/authentication-report JSON only.
 
-The retention requirements manifest accepts no evidence PASS/FAIL, does not authenticate evidence, and does not make an internal decision. It requires any future separate trusted intake to bind a content-addressed evidence artifact, authenticator identity-reference hash, bounded authentication method, canonical authenticated-at timestamp and the exact current chain.
+The retention requirements manifest/export accepts no future evidence artifact, authenticator identity, authentication method, authenticated-at assertion or evidence PASS/FAIL; it does not authenticate evidence and does not make an internal decision. Exit 0 means only `EVIDENCE_RETENTION_REQUIREMENTS_READY` metadata.
 
-It intentionally does not expose raw evidence references, source evidence-reference hashes or raw native Gutenberg post content.
+It intentionally does not expose raw evidence references, source evidence-reference hashes or raw native Gutenberg post content in the written manifest or stdout.
 
 Current P16 authority remains fixed:
 
@@ -78,7 +79,7 @@ The normalized JSON serializer is not Gutenberg post-content serialization and t
 
 Current verified main before this documentation sync:
 
-`2d7c9e76eb293b8914dd1106c262064013d70b11`
+`e2fe19364ac8615bc390f125c2afb4085bfc474c`
 
 Recent P16 merge line:
 
@@ -86,7 +87,9 @@ Recent P16 merge line:
 - #372 canonical auth docs sync -> `ba2e3d78de79d66a5a07abd2030548893b090845`;
 - #374 decision prerequisite -> `6dc86dfc900244616869e5ff289c3afa815a1d2d`;
 - #376 canonical decision-prerequisite docs sync -> `31080f673102206e6e6ae41801569d62e2eb7512`;
-- #378 genuine-evidence retention requirements manifest -> `2d7c9e76eb293b8914dd1106c262064013d70b11`.
+- #378 genuine-evidence retention requirements manifest -> `2d7c9e76eb293b8914dd1106c262064013d70b11`;
+- #380 canonical retention-requirements docs sync -> `c6f6009538e1e0f82bed087783f2c55fa0d9e75d`;
+- #382 offline/operator retention-requirements export -> `e2fe19364ac8615bc390f125c2afb4085bfc474c`.
 
 P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`.
 
@@ -96,4 +99,4 @@ P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains t
 
 Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Any future P14 mutation surface requires separate explicit authorization with fresh evidence, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
 
-For P16, do not promote the retention requirements manifest into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
+For P16, do not promote the requirements manifest/export into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
