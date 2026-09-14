@@ -13,7 +13,7 @@ Current product surfaces:
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare/review evidence surfaces;
 - P15 Elementor R1 exact candidate/profile/import/reference evidence chain;
-- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O, iterative structural bounds, bounded direct canonicalization, prototype-safe canonicalization and alias-safe atomic output writes;
+- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O, iterative structural bounds, depth/value/text-bounded direct canonicalization, prototype-safe canonicalization and alias-safe atomic output writes;
 - exact-build release/provenance tooling.
 
 Canonical planning/status docs:
@@ -44,7 +44,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`cb4de36d4922b31b1e278d4f55426d042736549b`
+`86cc545456a1f994c9893069b878110662a60bbe`
 
 ### Recent verified P16 sequence
 
@@ -73,6 +73,8 @@ Current verified main before this documentation sync:
 - PR #406 — added iterative retention-operator JSON structural bounds: maximum 64 container levels and 50,000 total JSON values -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`; exact head `42c26747e6609cb4c890174baa5627a4e000e889` passed CI #1182, P12 Final Release Artifact #493 and P12 Offline Acceptance #537.
 - PR #408 — synchronized canonical docs through retention JSON structural bounds -> `ab8cb5e783b14688180959017aa79b9a86adfa66`; exact head `8c984f124a5b22a5c05cb15527e1cf468b0ff772` passed CI #1184, Integration Readiness #445, P12 Final Release Artifact #495 and P12 Offline Acceptance #539.
 - PR #410 — bounded direct retention-manifest canonicalization independently of CLI guards: 64 container levels / 50,000 total values -> `cb4de36d4922b31b1e278d4f55426d042736549b`; exact head `c3ef7329d430c3e450a8b8e4292a5293eace8865` passed CI #1186, P12 Final Release Artifact #497 and P12 Offline Acceptance #541.
+- PR #412 — synchronized canonical docs through direct canonicalization bounds -> `1a7cb4b7692a0361d645ddf1396f6aac561ad093`; exact head `edd6b0166ed9184dde5168614f2b311cd62062b6` passed CI #1188, Integration Readiness #448, P12 Final Release Artifact #499 and P12 Offline Acceptance #543.
+- PR #414 — added direct aggregate 1 MiB UTF-8 text budget across canonical string values and object keys, with pre-sort key charging and browser-safe Unicode accounting -> `86cc545456a1f994c9893069b878110662a60bbe`; exact head `6c92b2dd6707be8a7242bf1911cdb46c3ff4972a` passed CI #1190, P12 Final Release Artifact #501 and P12 Offline Acceptance #545.
 
 ### Module-wise progress
 
@@ -93,7 +95,7 @@ Current verified main before this documentation sync:
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review is active; production registry remains empty; #159 required before real mutation exposure |
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Genuine trusted authentication/internal decision and real target import remain pending |
-| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O + bounded direct canonicalization exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
+| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O + depth/value/text-bounded direct canonicalization exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
 | P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
@@ -137,11 +139,11 @@ Current bounded chain now includes:
 - `p16:evidence-retention-requirements-validate`, a Node-20 offline/operator validation CLI that accepts only local document/profile/receipt/authentication-report/manifest JSON, writes only the sanitized validator result, and exits 0 only for `CURRENT_REQUIREMENTS_MANIFEST_VALID`;
 - shared bounded operator JSON I/O for both retention CLIs: every input is limited to 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
 - iterative post-parse structural validation: input is rejected before target builders/validators when container nesting exceeds 64 levels or total JSON values exceed 50,000; the traversal itself is non-recursive;
-- direct retention-manifest canonicalization independently enforces the same 64-level / 50,000-value limits for exported validator/fingerprint callers that bypass the CLIs; depth 64 and exactly 50,000 values are accepted while 65 / 50,001 fail closed;
+- direct retention-manifest canonicalization independently enforces 64 container levels, 50,000 visited values and an aggregate 1 MiB UTF-8 text budget across string values + object keys for exported validator/fingerprint callers that bypass the CLIs;
 - prototype-safe exact-current canonicalization: canonical object snapshots are created without `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain canonical data fields, affect fingerprints, and are rejected when added to the manifest instead of being silently dropped;
 - alias-safe output writes: the real output parent is resolved, existing symlink/non-regular targets are rejected, hardlink identity against inputs is rejected where available, and output is staged in a unique same-directory regular temp file before atomic rename.
 
-The direct canonicalization budget bounds recursive descent to at most 64 container levels and caps direct in-memory work at 50,000 visited values. Existing cycle, sparse-array, non-finite, non-JSON, non-plain-object and prototype-safe handling remain unchanged.
+The direct canonicalization budget bounds recursive descent to at most 64 container levels, total direct values to 50,000 and aggregate UTF-8 text to 1 MiB. Object keys are charged before sorting. UTF-8 accounting is browser-safe/manual and covers multi-byte Unicode, paired surrogates and lone-surrogate replacement width. Existing cycle, sparse-array, non-finite, non-JSON, non-plain-object and prototype-safe handling remain unchanged.
 
 The operator structural guard prevents byte-bounded but deeply nested or high-cardinality JSON from reaching downstream validation/canonicalization. Focused cross-CLI tests exercise depth 65 and more than 50,000 total JSON values while remaining below the 1 MiB byte cap.
 
