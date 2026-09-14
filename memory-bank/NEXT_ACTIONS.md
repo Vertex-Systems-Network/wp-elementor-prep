@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through offline exact-current requirements validation
+## Parallel P16 state — bounded code-side foundation complete through offline exact-current requirements validation + local-file hardening
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -44,13 +44,24 @@ Current implemented P16 chain:
 - PR #384 — canonical operator-export docs sync;
 - PR #386 — exact-current strict-JSON retention-requirements manifest validator;
 - PR #388 — canonical manifest-validator docs sync;
-- PR #390 — offline/operator exact-current retention-manifest validation CLI.
+- PR #390 — offline/operator exact-current retention-manifest validation CLI;
+- PR #392 — canonical validation-CLI docs sync;
+- PR #394 — shared bounded local JSON I/O hardening for both retention operator CLIs.
 
 Current progression is intentionally bounded:
 
 `normalized document/profile -> READY candidate -> exact identity -> external receipt -> offline revalidation -> pre-decision packet -> REPORTED_PASS_AUTHENTICATION_REQUIRED -> external authentication report -> EXTERNALLY_REPORTED_PASS|FAIL -> decision prerequisite -> GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED -> retention requirements manifest/export -> exact-current manifest validation/CLI -> genuinely retained authenticated evidence -> separate internal decision`
 
-`p16:evidence-retention-requirements-validate` now:
+Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requirements-validate` now use the same fail-closed local JSON I/O guard:
+
+- each JSON input is capped at 1 MiB before parse, with a post-read byte-length recheck;
+- each input must be a regular file;
+- zero-byte and whitespace-only inputs are rejected;
+- the normalized output path must not collide with any input path;
+- Windows path comparison is case-normalized for collision checks;
+- operator/input failures remain exit code 2 with deterministic content-free errors.
+
+`p16:evidence-retention-requirements-validate` additionally:
 
 - accepts only local document/profile/receipt/authentication-report/manifest JSON plus optional output path;
 - invokes the strict-JSON exact-current requirements-manifest validator;
@@ -94,7 +105,7 @@ Until such genuine evidence exists, keep these facts true:
 
 ### Safe code-only work while genuine evidence is absent
 
-Only deterministic/read-only/supporting work remains unblocked, such as stricter input bounds, serialization/sanitization hardening, exact-current metadata validation tooling or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
+Only deterministic/read-only/supporting work remains unblocked, such as further serialization/sanitization hardening, path-alias/symlink rejection hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
 
 ## Roadmap state
 
@@ -118,7 +129,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #384 docs sync -> `4c91cb3033672d6dc3a6fa28287e060a22e40734`; exact head `919df37267b195516f1b98dfd744502b58ecfe66`; CI #1159, Integration #427, Final Release #470, Offline #514 PASS;
 - #386 manifest validator -> `1532fa54ec9c26bb8904ca939a01754418a70602`; exact head `dd5d1a9674e9e4fbc86fe11b040a4c9f04d0bb68`; CI #1162, Final Release #473, Offline #517 PASS;
 - #388 docs sync -> `d7532a98b71e5dc5ac6c100b0386f06422966cf9`; exact head `83d76c7f91e66d6ffdff8b141b3ffa2338d30a27`; CI #1164, Integration #430, Final Release #475, Offline #519 PASS;
-- #390 validation CLI -> `c173c617ad205f0fef4a5659f27bf007067e6eb5`; exact head `7fcd4b553830527ab5900355663c3412a63780bc`; CI #1166, Final Release #477, Offline #521 PASS.
+- #390 validation CLI -> `c173c617ad205f0fef4a5659f27bf007067e6eb5`; exact head `7fcd4b553830527ab5900355663c3412a63780bc`; CI #1166, Final Release #477, Offline #521 PASS;
+- #392 docs sync -> `78f25d0cbc72427ea9824370762099db916750ed`; exact head `65d74941faa01a585e984d9d3b53c6932a864546`; CI #1168, Integration #433, Final Release #479, Offline #523 PASS;
+- #394 local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`; exact head `adbdfa0da1f61d4b9ff2dab3272526c36b19c3e4`; CI #1170, Final Release #481, Offline #525 PASS.
 
 ## Current guardrails
 
