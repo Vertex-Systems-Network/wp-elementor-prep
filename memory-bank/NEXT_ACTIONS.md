@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through strict own-shape direct canonicalization
+## Parallel P16 state — bounded code-side foundation complete through early direct object-cardinality preflight
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -60,7 +60,9 @@ Current implemented P16 chain:
 - PR #416 — canonical direct-canonical-text docs sync;
 - PR #418 — accessor-safe direct canonicalization using own data descriptors without invoking getters/setters;
 - PR #420 — canonical accessor-safe-canonicalization docs sync;
-- PR #422 — strict own-property shape validation for direct canonicalization.
+- PR #422 — strict own-property shape validation for direct canonicalization;
+- PR #424 — canonical strict-own-property docs sync;
+- PR #426 — direct plain-object cardinality preflight before descriptor/text/sort work.
 
 Current progression is intentionally bounded:
 
@@ -88,7 +90,7 @@ Their shared output writer additionally:
 - removes temporary output state before fail-closed exit on write errors;
 - preserves source-input bytes in rejected symlink/hardlink/parent-alias cases covered by focused tests.
 
-The exact-current requirements-manifest canonicalizer is independently depth/value/text bounded, accessor-safe, strict-own-shape and prototype-safe:
+The exact-current requirements-manifest canonicalizer is independently depth/value/text bounded, accessor-safe, strict-own-shape, object-cardinality-preflighted and prototype-safe:
 
 - direct validator/fingerprint callers are capped at 64 nested container levels and 50,000 total visited values even when the CLI is bypassed;
 - aggregate UTF-8 text across JSON string values + object keys is capped at 1 MiB;
@@ -98,6 +100,7 @@ The exact-current requirements-manifest canonicalizer is independently depth/val
 - object/array accessors fail closed without invoking caller-controlled getters/setters;
 - plain objects reject own symbol properties and non-enumerable own string properties;
 - arrays allow only standard `length` plus canonical own indices, reject extra named/symbol properties, preserve sparse-array rejection, and fail early when length cannot fit the remaining value budget;
+- plain objects compare own string-property count with the remaining value budget before descriptor scanning, UTF-8 key charging or sorting; root + 49,999 primitive properties is accepted while root + 50,000 rejects;
 - frozen/sealed JSON-shaped values remain acceptable because writable/configurable flags are not semantic authority inputs;
 - normal own data descriptors remain supported, including own enumerable `__proto__` data keys;
 - canonical object snapshots use `Object.create(null)`;
@@ -190,7 +193,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #416 docs sync -> `5b0d3e9f08122c4df7cb29edfd0e51dabb8de440`; exact head `b463984615d3d1c78d872ee8e3ea85390093ca8f`; CI #1192, Integration #451, Final Release #503, Offline #547 PASS;
 - #418 accessor-safe direct canonicalization -> `4adc40d74b74f74f362cb635854dd2c8240134d8`; exact head `7038cd7434dc4da03c3c0e590a4c927a47e8b7f7`; CI #1194, Final Release #505, Offline #549 PASS;
 - #420 docs sync -> `b89dbba01dd85fc84d53761190581a2ab93ba8f0`; exact head `027b59c704fb8181c75df24e4e0f0487a49caeb5`; CI #1196, Integration #454, Final Release #507, Offline #551 PASS;
-- #422 strict own-property canonicalization -> `29285d205a61cc437e446367b3d8fefc52595e1d`; exact head `5c7256666b690533a1821cf4c087cbaa7963c47d`; CI #1198, Final Release #509, Offline #553 PASS.
+- #422 strict own-property canonicalization -> `29285d205a61cc437e446367b3d8fefc52595e1d`; exact head `5c7256666b690533a1821cf4c087cbaa7963c47d`; CI #1198, Final Release #509, Offline #553 PASS;
+- #424 docs sync -> `61ba4dc5b456a588383ed0169045387e0fc51482`; exact head `56cdf6d1314dcb59764a6c652e2d31a10fca297e`; CI #1200, Integration #457, Final Release #511, Offline #555 PASS;
+- #426 object-cardinality preflight -> `06cdd845e46613541f555cc0de59237d261c1fa3`; exact head `03c41d0c4b6880038e24a1f35c854401c0223fee`; CI #1202, Final Release #513, Offline #557 PASS.
 
 ## Current guardrails
 
