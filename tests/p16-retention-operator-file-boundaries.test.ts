@@ -1,5 +1,13 @@
 import { spawnSync } from 'node:child_process';
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import {
+  link,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  symlink,
+  writeFile,
+} from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -129,6 +137,83 @@ describe('P16 retention operator local file boundaries', () => {
           expect(result.stderr).toContain(
             `${cli.prefix}: Output path must not resolve to an input path.`,
           );
+        } finally {
+          await rm(dir, { recursive: true, force: true });
+        }
+      });
+
+      it('rejects an existing output hardlink to an input without modifying the input', async () => {
+        const dir = await mkdtemp(join(tmpdir(), 'wp-elementor-prep-p16-bound-hardlink-'));
+        try {
+          const documentPath = join(dir, 'document.json');
+          const outPath = join(dir, 'out.json');
+          const original = '{"protected":"input"}\n';
+          await writeFile(documentPath, original, 'utf8');
+          await link(documentPath, outPath);
+          const args = await createBaseInputs(dir, cli);
+          args.push('--document', documentPath, '--out', outPath);
+
+          const result = run(args);
+
+          expect(result.status).toBe(2);
+          expect(result.stdout).toBe('');
+          expect(result.stderr).toContain(
+            `${cli.prefix}: Output path must not alias an input file.`,
+          );
+          expect(await readFile(documentPath, 'utf8')).toBe(original);
+        } finally {
+          await rm(dir, { recursive: true, force: true });
+        }
+      });
+
+      it('rejects an existing output symlink without following it', async () => {
+        if (process.platform === 'win32') return;
+        const dir = await mkdtemp(join(tmpdir(), 'wp-elementor-prep-p16-bound-symlink-'));
+        try {
+          const documentPath = join(dir, 'document.json');
+          const outPath = join(dir, 'out.json');
+          const original = '{"protected":"input"}\n';
+          await writeFile(documentPath, original, 'utf8');
+          await symlink(documentPath, outPath, 'file');
+          const args = await createBaseInputs(dir, cli);
+          args.push('--document', documentPath, '--out', outPath);
+
+          const result = run(args);
+
+          expect(result.status).toBe(2);
+          expect(result.stdout).toBe('');
+          expect(result.stderr).toContain(
+            `${cli.prefix}: Output path must not be a symbolic link.`,
+          );
+          expect(await readFile(documentPath, 'utf8')).toBe(original);
+        } finally {
+          await rm(dir, { recursive: true, force: true });
+        }
+      });
+
+      it('rejects output through a symlinked parent that resolves onto an input', async () => {
+        if (process.platform === 'win32') return;
+        const dir = await mkdtemp(join(tmpdir(), 'wp-elementor-prep-p16-bound-parent-alias-'));
+        try {
+          const realDir = join(dir, 'real');
+          const aliasDir = join(dir, 'alias');
+          await mkdir(realDir);
+          await symlink(realDir, aliasDir, 'dir');
+          const documentPath = join(realDir, 'document.json');
+          const aliasOutputPath = join(aliasDir, 'document.json');
+          const original = '{"protected":"input"}\n';
+          await writeFile(documentPath, original, 'utf8');
+          const args = await createBaseInputs(dir, cli);
+          args.push('--document', documentPath, '--out', aliasOutputPath);
+
+          const result = run(args);
+
+          expect(result.status).toBe(2);
+          expect(result.stdout).toBe('');
+          expect(result.stderr).toContain(
+            `${cli.prefix}: Output path must not resolve to an input path.`,
+          );
+          expect(await readFile(documentPath, 'utf8')).toBe(original);
         } finally {
           await rm(dir, { recursive: true, force: true });
         }

@@ -1,8 +1,7 @@
-import { mkdir, writeFile } from 'node:fs/promises';
-import { dirname } from 'node:path';
 import {
   readP16OperatorJsonInput,
   resolveP16OperatorOutputPath,
+  writeP16OperatorJsonOutput,
 } from './p16-operator-json-io';
 import {
   buildGutenbergNativeSerializationEvidenceRetentionRequirements,
@@ -68,18 +67,14 @@ const manifest = buildGutenbergNativeSerializationEvidenceRetentionRequirements(
   receiptValue,
   authenticationReportValue,
 );
-
-await mkdir(dirname(outPath), { recursive: true });
-await writeFile(
-  outPath,
-  serializeGutenbergNativeSerializationEvidenceRetentionRequirements(
-    documentValue,
-    profileValue,
-    receiptValue,
-    authenticationReportValue,
-  ),
-  'utf8',
+const serializedManifest = serializeGutenbergNativeSerializationEvidenceRetentionRequirements(
+  documentValue,
+  profileValue,
+  receiptValue,
+  authenticationReportValue,
 );
+
+await writeP16OperatorJsonOutput(outPath, inputPaths, serializedManifest, fail);
 
 process.stdout.write(`${JSON.stringify({
   out: outPath,
