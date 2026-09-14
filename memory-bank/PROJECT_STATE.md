@@ -12,7 +12,7 @@ Current implemented surfaces:
 2. P13 Build-Ready Score 2.0 + Responsive Risk with `p13-core-v2` analyzer-bound provenance;
 3. P14 retained-duplicate core and development-only read-only Guided Prepare/review evidence surfaces;
 4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain;
-5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, bounded local JSON I/O, iterative structural bounds, prototype-safe canonicalization and alias-safe atomic output writes;
+5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, byte/structure-bounded local JSON I/O, bounded prototype-safe direct canonicalization and alias-safe atomic output writes;
 6. exact-build release/provenance tooling.
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
@@ -21,7 +21,7 @@ Current implemented surfaces:
 
 Current verified main before this documentation sync:
 
-`5feb04adcd6aaca2079b749d495e22e1da6f6671`
+`cb4de36d4922b31b1e278d4f55426d042736549b`
 
 Recent guarded merge line:
 
@@ -43,7 +43,9 @@ Recent guarded merge line:
 - #400 canonical prototype-safe docs sync -> `158132b4076fe5a70afa8e8778ae888fcca4db60`;
 - #402 alias-safe atomic retention output writes -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`;
 - #404 canonical alias-safe-output docs sync -> `4f66522ae9d8dc6fb82875b32634306918ed0a9a`;
-- #406 iterative retention JSON structural bounds -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`.
+- #406 iterative retention JSON structural bounds -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`;
+- #408 canonical JSON-structure-bounds docs sync -> `ab8cb5e783b14688180959017aa79b9a86adfa66`;
+- #410 direct retention-manifest canonicalization bounds -> `cb4de36d4922b31b1e278d4f55426d042736549b`.
 
 ## Persistent issue queue
 
@@ -102,11 +104,14 @@ Current bounded deterministic/read-only/evidence chain includes:
 - package command `p16:evidence-retention-requirements-validate`, a Node-20 offline/operator validation CLI that reads only local document/profile/receipt/authentication-report/manifest JSON and writes only the sanitized validator result;
 - shared bounded local JSON I/O for both retention CLIs: each input is capped at 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
 - iterative post-parse structural validation that rejects more than 64 nested container levels or more than 50,000 total JSON values before target builders/validators execute;
+- direct exact-current retention-manifest canonicalization independently caps nested containers at 64 levels and total visited values at 50,000 for exported validator/fingerprint callers that bypass the CLIs;
 - prototype-safe exact-current canonicalization: canonical object snapshots use no `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain data properties, alter fingerprints and are rejected when added instead of being silently dropped;
 - alias-safe output writes: output parents are created then canonicalized with `realpath`, canonical output locations are compared to real input paths, existing output symlinks/non-regular targets are rejected, and hardlink aliases are rejected where filesystem identity is available;
 - unique same-directory regular temporary output plus atomic rename prevents late-created final symlinks from being followed onto inputs, with temporary state cleaned before fail-closed write errors.
 
-The structural traversal is iterative, not recursive, so the guard itself does not create stack-exhaustion risk. Focused cross-CLI tests reject depth 65 and more than 50,000 total JSON values while remaining below the 1 MiB input cap.
+The operator structural traversal is iterative, not recursive, so the guard itself does not create stack-exhaustion risk. Focused cross-CLI tests reject depth 65 and more than 50,000 total JSON values while remaining below the 1 MiB input cap.
+
+The direct canonicalizer accepts depth 64 and exactly 50,000 total values and fails closed for 65 / 50,001. Its recursive descent is therefore bounded to at most 64 container levels while cycle, sparse-array, non-finite, non-JSON, non-plain-object and prototype-safe handling remain unchanged.
 
 Focused output-path tests cover symlink, hardlink and symlinked-parent aliases and verify source input immutability. Focused canonicalization regressions cover both top-level and nested own `__proto__` additions and confirm `Object.prototype` remains unpolluted.
 
@@ -141,7 +146,7 @@ Current authority remains fixed:
 
 The normalized JSON model is not Gutenberg post-content serialization and intentionally omits WordPress `innerContent`. Custom/unregistered/freeform content remains `REVIEW_REQUIRED`.
 
-Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, byte/structure-bounded alias-safe local-file I/O and prototype-safe canonicalization that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
+Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, byte/structure-bounded alias-safe local-file I/O and bounded/prototype-safe direct canonicalization that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
 
 ## P17-P26 state
 
