@@ -154,12 +154,19 @@ function assertCanonicalArrayOwnShape(
   }
 }
 
-function getCanonicalObjectKeys(value: object): string[] {
+function getCanonicalObjectKeys(
+  value: object,
+  budget: CanonicalizationBudget,
+): string[] {
   if (Object.getOwnPropertySymbols(value).length > 0) {
     throw new Error('Manifest object contains a symbol property.');
   }
 
   const keys = Object.getOwnPropertyNames(value);
+  if (keys.length > GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_VALUES - budget.visitedValues) {
+    throw new Error('Manifest value exceeds canonical JSON structural value limit.');
+  }
+
   for (const key of keys) {
     const descriptor = Object.getOwnPropertyDescriptor(value, key);
     if (!descriptor) {
@@ -230,7 +237,7 @@ function canonicalizeJson(
       throw new Error('Manifest object must be a plain JSON object.');
     }
 
-    const keys = getCanonicalObjectKeys(value);
+    const keys = getCanonicalObjectKeys(value, budget);
     for (const key of keys) {
       consumeCanonicalTextBudget(key, budget);
     }
