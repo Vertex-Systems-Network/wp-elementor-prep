@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through exact-bound externally reported native evidence authentication.
+Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through the exact-bound decision-prerequisite packet.
 
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and final production-release gate P27 (#182).
 
@@ -69,9 +69,10 @@ Current bounded Gutenberg R1 chain includes:
 - exact-bound caller-supplied `gutenberg-native-serialization-validation-receipt-v1`;
 - Node-20 offline intake that rebuilds the current candidate, revalidates exact receipt binding and emits sanitized `BOUND_REPORTED_PASS|BOUND_REPORTED_FAIL|REJECTED` evidence without echoing raw evidence references or native Gutenberg post-content;
 - deterministic sanitized `gutenberg-native-serialization-review-packet-v1` where valid reported PASS advances only to `REPORTED_PASS_AUTHENTICATION_REQUIRED` / `AUTHENTICATE_EVIDENCE_THEN_INTERNAL_REVIEW`;
-- exact-bound `gutenberg-native-serialization-authentication-report-v1` where caller-supplied authentication `PASS|FAIL` binds the exact current candidate identity digest, canonical receipt SHA-256 and SHA-256 of the source evidence reference, producing `EXTERNALLY_REPORTED_PASS|EXTERNALLY_REPORTED_FAIL|REJECTED` only.
+- exact-bound `gutenberg-native-serialization-authentication-report-v1` where caller-supplied authentication `PASS|FAIL` binds exact current candidate identity digest, canonical receipt SHA-256 and SHA-256 of the source evidence reference, producing `EXTERNALLY_REPORTED_PASS|EXTERNALLY_REPORTED_FAIL|REJECTED` only;
+- sanitized `gutenberg-native-serialization-decision-prerequisite-v1` that revalidates the full chain, fingerprints canonical authentication-report bytes and yields only `REJECTED_INVALID_AUTHENTICATION_REPORT`, `EXTERNAL_AUTH_FAIL_REVIEW_REQUIRED`, or strongest `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED`. It does not re-expose the raw evidence reference or source evidence-reference hash.
 
-The pre-decision packet continues to record `evidenceAuthenticationStatus=NOT_RUN`. The separate authentication-report surface is caller-supplied external reporting only: `authenticationAuthority=false` and `internalDecisionStatus=NOT_RUN` remain fixed. Repository code does not execute WordPress, fetch/authenticate evidence, identify an authenticator/verifier, verify signatures or establish truth of the external observation.
+The pre-decision packet continues to record `evidenceAuthenticationStatus=NOT_RUN`. The separate authentication-report surface is caller-supplied external reporting only: `authenticationAuthority=false`. The decision-prerequisite packet adds no decision authority: `decisionAuthority=false` and `internalDecisionStatus=NOT_RUN` remain fixed. Repository code does not execute WordPress, fetch/authenticate evidence, identify an authenticator/verifier, verify signatures or establish truth of the external observation.
 
 The normalized JSON serializer is not Gutenberg post-content serialization and the repository normalized model intentionally omits WordPress `innerContent`.
 
@@ -84,17 +85,19 @@ Current P16 authority flags remain false:
 - `targetEnvironmentValidated=false`;
 - `editorImportValidated=false`;
 - `renderValidated=false`;
+- `decisionAuthority=false`;
 - `acceptanceAuthority=false`;
 - `targetCompatibilityClaim=false`;
 - `productionAcceptance=false`;
 - `generationEnabled=false`;
-- `downloadEnabled=false`.
+- `downloadEnabled=false`;
+- `internalDecisionStatus=NOT_RUN`.
 
 ## Current repository state
 
 Current verified main before this documentation sync is:
 
-`5328f6d0205a350e5e1f27b0106fd930e680ae17`
+`6dc86dfc900244616869e5ff289c3afa815a1d2d`
 
 Recent P16 merge line:
 
@@ -105,7 +108,9 @@ Recent P16 merge line:
 - #364 offline native-serialization evidence intake -> `75d77f5eeb0d63e838bceec8fe799c31ba179117`;
 - #366 sanitized pre-decision native-serialization review packet -> `d14e0416413531ca98bfd97dc57e839bef6440a1`;
 - #368 canonical intake/review-packet docs sync -> `bb21a2561df06b3053606ea35eaec66a9b903128`;
-- #370 exact-bound externally reported native evidence authentication -> `5328f6d0205a350e5e1f27b0106fd930e680ae17`.
+- #370 exact-bound externally reported native evidence authentication -> `5328f6d0205a350e5e1f27b0106fd930e680ae17`;
+- #372 canonical external-authentication docs sync -> `ba2e3d78de79d66a5a07abd2030548893b090845`;
+- #374 exact-bound native decision prerequisite packet -> `6dc86dfc900244616869e5ff289c3afa815a1d2d`.
 
 P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`. Later development commits do not silently replace that publishing candidate.
 
@@ -115,4 +120,4 @@ P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains t
 
 Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Target-neutral/read-only P14 work may continue, but any future confirmation/mutation surface requires a separate explicit contract preserving exact evidence freshness, production recipe authorization, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
 
-In parallel, P16 may continue only through bounded deterministic/read-only/evidence-review R1 slices while native target validation remains unwired. `EXTERNALLY_REPORTED_PASS` must not be promoted into repository authentication, native-serialization authority or target compatibility; any authority-bearing progression requires genuinely retained authenticated evidence plus a separate explicit internal decision path.
+In parallel, P16 may continue only through bounded deterministic/read-only/evidence-review R1 slices while native target validation remains unwired. The strongest current code-side state explicitly requires genuinely retained authenticated evidence before any internal decision; no caller-supplied report or deterministic packet may be promoted into repository authentication, native-serialization authority or target compatibility.
