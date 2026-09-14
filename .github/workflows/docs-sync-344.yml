@@ -64,8 +64,7 @@ jobs:
         run: |
           set -euo pipefail
           rm scripts/docs-sync-344.py .github/workflows/docs-sync-344.yml
-          mapfile -t changed < <(git diff --name-only origin/main...HEAD; git diff --name-only)
-          printf '%s\n' "${changed[@]}" | sort -u > /tmp/changed.txt
+          git diff --name-only origin/main | sort -u > /tmp/changed.txt
           cat > /tmp/expected.txt <<'EOF'
           README.md
           docs/P14_FOUNDATION_IMPLEMENTATION.md
@@ -74,7 +73,7 @@ jobs:
           EOF
           sort -u /tmp/expected.txt -o /tmp/expected.txt
           diff -u /tmp/expected.txt /tmp/changed.txt
-          git diff --check
+          git diff --check origin/main
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add README.md docs/P14_FOUNDATION_IMPLEMENTATION.md memory-bank/PROJECT_STATE.md memory-bank/NEXT_ACTIONS.md scripts/docs-sync-344.py .github/workflows/docs-sync-344.yml
