@@ -1,0 +1,64 @@
+name: Docs Sync 344
+
+on:
+  push:
+    branches:
+      - docs/p15-reference-auth-sync-344
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Node 20
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '20'
+
+      - name: Run bounded docs sync and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/docs-sync-344.py
+          npm run status:verify
+          grep -Fq 'Machine-readable operational registry: `config/runtime-artifacts.json` schema v3.' README.md
+          grep -Fq '`config/runtime-artifacts.json` is runtime artifact registry schema v3' memory-bank/PROJECT_STATE.md
+          grep -Fq 'Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3' memory-bank/NEXT_ACTIONS.md
+          grep -Fq '| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` |' README.md
+          grep -Fq 'production registry remains empty' README.md
+          grep -Fq '| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` |' README.md
+          grep -Fq 'EXTERNALLY_REPORTED_PASS' README.md memory-bank/PROJECT_STATE.md memory-bank/NEXT_ACTIONS.md
+          grep -Fq 'authenticationAuthority=false' memory-bank/NEXT_ACTIONS.md
+          git diff --check
+
+      - name: Commit canonical docs and remove temporary sync files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm scripts/docs-sync-344.py .github/workflows/docs-sync-344.yml
+          mapfile -t changed < <(git diff --name-only origin/main...HEAD; git diff --name-only)
+          printf '%s\n' "${changed[@]}" | sort -u > /tmp/changed.txt
+          cat > /tmp/expected.txt <<'EOF'
+          README.md
+          docs/P14_FOUNDATION_IMPLEMENTATION.md
+          memory-bank/NEXT_ACTIONS.md
+          memory-bank/PROJECT_STATE.md
+          EOF
+          sort -u /tmp/expected.txt -o /tmp/expected.txt
+          diff -u /tmp/expected.txt /tmp/changed.txt
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/P14_FOUNDATION_IMPLEMENTATION.md memory-bank/PROJECT_STATE.md memory-bank/NEXT_ACTIONS.md scripts/docs-sync-344.py .github/workflows/docs-sync-344.yml
+          git commit -m 'docs: sync P15 external authentication binding status'
+          git push origin HEAD:docs/p15-reference-auth-sync-344
