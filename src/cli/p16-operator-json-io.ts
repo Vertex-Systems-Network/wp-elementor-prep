@@ -11,10 +11,17 @@ import {
 import { basename, dirname, join, resolve } from 'node:path';
 
 export const P16_OPERATOR_JSON_INPUT_MAX_BYTES = 1024 * 1024;
+export const P16_OPERATOR_JSON_INPUT_MAX_DEPTH = 64;
+export const P16_OPERATOR_JSON_INPUT_MAX_VALUES = 50_000;
 
 type Fail = (message: string) => never;
 
 type InputStats = Awaited<ReturnType<typeof lstat>>;
+
+type JsonTraversalEntry = {
+  value: unknown;
+  containerDepth: number;
+};
 
 function comparisonPath(path: string): string {
   const resolved = resolve(path);
@@ -33,6 +40,50 @@ function sameFileIdentity(first: InputStats, second: InputStats): boolean {
     && second.ino !== 0
     && first.dev === second.dev
     && first.ino === second.ino;
+}
+
+function validateP16OperatorJsonStructure(
+  value: unknown,
+  label: string,
+  fail: Fail,
+): void {
+  const stack: JsonTraversalEntry[] = [{ value, containerDepth: 0 }];
+  let visitedValues = 0;
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current) continue;
+
+    visitedValues += 1;
+    if (visitedValues > P16_OPERATOR_JSON_INPUT_MAX_VALUES) {
+      fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_VALUES}-value structural limit.`);
+    }
+
+    if (current.value === null || typeof current.value !== 'object') {
+      continue;
+    }
+
+    const nextDepth = current.containerDepth + 1;
+    if (nextDepth > P16_OPERATOR_JSON_INPUT_MAX_DEPTH) {
+      fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_DEPTH}-level nesting limit.`);
+    }
+
+    if (Array.isArray(current.value)) {
+      for (let index = current.value.length - 1; index >= 0; index -= 1) {
+        stack.push({ value: current.value[index], containerDepth: nextDepth });
+      }
+      continue;
+    }
+
+    const record = current.value as Record<string, unknown>;
+    const keys = Object.keys(record);
+    for (let index = keys.length - 1; index >= 0; index -= 1) {
+      const key = keys[index];
+      if (key !== undefined) {
+        stack.push({ value: record[key], containerDepth: nextDepth });
+      }
+    }
+  }
 }
 
 export function resolveP16OperatorOutputPath(
@@ -87,11 +138,15 @@ export async function readP16OperatorJsonInput(
     fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
   }
 
+  let parsed: unknown;
   try {
-    return JSON.parse(raw) as unknown;
+    parsed = JSON.parse(raw) as unknown;
   } catch {
     fail(`${label} input is not valid JSON.`);
   }
+
+  validateP16OperatorJsonStructure(parsed, label, fail);
+  return parsed;
 }
 
 export async function writeP16OperatorJsonOutput(
