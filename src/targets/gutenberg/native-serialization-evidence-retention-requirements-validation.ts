@@ -125,6 +125,56 @@ function readOwnDataProperty(value: object, key: PropertyKey): unknown {
   return descriptor.value;
 }
 
+function isCanonicalArrayIndexKey(key: string, length: number): boolean {
+  if (key.length === 0) return false;
+  const index = Number(key);
+  return Number.isInteger(index)
+    && index >= 0
+    && index < length
+    && String(index) === key;
+}
+
+function assertCanonicalArrayOwnShape(
+  value: unknown[],
+  budget: CanonicalizationBudget,
+): void {
+  if (value.length > GUTENBERG_RETENTION_MANIFEST_CANONICAL_MAX_VALUES - budget.visitedValues) {
+    throw new Error('Manifest value exceeds canonical JSON structural value limit.');
+  }
+
+  if (Object.getOwnPropertySymbols(value).length > 0) {
+    throw new Error('Manifest array contains a symbol property.');
+  }
+
+  for (const key of Object.getOwnPropertyNames(value)) {
+    if (key === 'length') continue;
+    if (!isCanonicalArrayIndexKey(key, value.length)) {
+      throw new Error('Manifest array contains a non-JSON own property.');
+    }
+  }
+}
+
+function getCanonicalObjectKeys(value: object): string[] {
+  if (Object.getOwnPropertySymbols(value).length > 0) {
+    throw new Error('Manifest object contains a symbol property.');
+  }
+
+  const keys = Object.getOwnPropertyNames(value);
+  for (const key of keys) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (!descriptor) {
+      throw new Error('Manifest value is missing an expected own property.');
+    }
+    if (!descriptor.enumerable) {
+      throw new Error('Manifest object contains a non-enumerable property.');
+    }
+    if (!('value' in descriptor)) {
+      throw new Error('Manifest value contains an accessor property.');
+    }
+  }
+  return keys;
+}
+
 function canonicalizeJson(
   value: unknown,
   seen: Set<object>,
@@ -159,6 +209,7 @@ function canonicalizeJson(
   seen.add(value);
   try {
     if (Array.isArray(value)) {
+      assertCanonicalArrayOwnShape(value, budget);
       const result: CanonicalJsonValue[] = [];
       for (let index = 0; index < value.length; index += 1) {
         if (!Object.prototype.hasOwnProperty.call(value, index)) {
@@ -179,7 +230,7 @@ function canonicalizeJson(
       throw new Error('Manifest object must be a plain JSON object.');
     }
 
-    const keys = Object.keys(value);
+    const keys = getCanonicalObjectKeys(value);
     for (const key of keys) {
       consumeCanonicalTextBudget(key, budget);
     }
