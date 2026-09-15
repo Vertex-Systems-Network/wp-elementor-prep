@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through temporary payload identity binding
+## Parallel P16 state — bounded code-side foundation complete through non-recursive temporary cleanup
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -70,7 +70,9 @@ Current implemented P16 chain:
 - PR #436 — canonical immutable-snapshot docs sync;
 - PR #438 — frozen output-parent snapshot + pre-temp/pre-rename revalidation + identity/path-guarded temp cleanup;
 - PR #440 — canonical output-parent snapshot docs sync;
-- PR #442 — temporary-directory + opened-payload identity binding across create/write/rename.
+- PR #442 — temporary-directory + opened-payload identity binding across create/write/rename;
+- PR #444 — canonical temporary-payload identity docs sync;
+- PR #446 — remove recursive temp-directory cleanup; cleanup now attempts only non-recursive `rmdir` after parent/temp snapshot checks.
 
 Current progression is intentionally bounded:
 
@@ -110,8 +112,8 @@ Their shared output writer additionally:
 - writes payload content through that opened `FileHandle` rather than path-based `writeFile`;
 - captures a frozen post-write payload file snapshot and requires the payload source pathname to still match it immediately before rename;
 - preserves input-snapshot and output-parent revalidation immediately before rename, then atomically renames the bound payload into place;
-- recursively removes temp state only while both captured parent and stable temp-directory identity still match;
-- when stable temp identity is unavailable, cleanup falls back to non-recursive `rmdir`, avoiding recursive deletion through a replacement-controlled temp path;
+- temporary cleanup is never recursive: after output-parent and temp-directory snapshot checks it attempts only non-recursive `rmdir`;
+- successful writes remove the now-empty owned temp directory; failed/non-empty temp state is left untouched and may remain as a bounded orphan rather than recursively traversing an unproven pathname;
 - preserves source-input bytes and replacement-controlled sentinel contents in focused rejected-alias/path-swap cases;
 - these checks narrow path-swap/TOCTOU ambiguity but are not claimed as perfect filesystem-race elimination where stable identity is unavailable.
 
@@ -203,7 +205,7 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #386 manifest validator -> `1532fa54ec9c26bb8904ca939a01754418a70602`; exact head `dd5d1a9674e9e4fbc86fe11b040a4c9f04d0bb68`; CI #1162, Final Release #473, Offline #517 PASS;
 - #388 docs sync -> `d7532a98b71e5dc5ac6c100b0386f06422966cf9`; exact head `83d76c7f91e66d6ffdff8b141b3ffa2338d30a27`; CI #1164, Integration #430, Final Release #475, Offline #519 PASS;
 - #390 validation CLI -> `c173c617ad205f0fef4a5659f27bf007067e6eb5`; exact head `7fcd4b553830527ab5900355663c3412a63780bc`; CI #1166, Final Release #477, Offline #521 PASS;
-- #392 docs sync -> `78f25d0cbc72427ea9824370762099db916750ed`; exact head `65d74941faa01a585e984d9d3b53c6932a864546`; CI #1168, Integration #433, Final Release #479, Offline #523 PASS;
+- #392 docs sync -> `78f25d0cbc72427ea9824370762099db916750ed`; exact head `65d74941faa01a585e984d9d3b53c6932a864546`; CI #1168, Integration #433, Final Release #479, Offline #523;
 - #394 local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`; exact head `adbdfa0da1f61d4b9ff2dab3272526c36b19c3e4`; CI #1170, Final Release #481, Offline #525 PASS;
 - #396 docs sync -> `12dc1e7e7e149e4da51a13c14722ac834f8a69ca`; exact head `6ac64e15f1c5fca058983a9a33ba4b9ab519a8d5`; CI #1172, Integration #436, Final Release #483, Offline #527 PASS;
 - #398 prototype-safe canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`; exact head `b7f3eead07fd9305d9b2f9290a572c715466e981`; CI #1174, Final Release #485, Offline #529 PASS;
@@ -228,7 +230,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #436 docs sync -> `df3a5503eb274c4e9c5c5dccf6383b66138cec12`; exact head `352a670eb5b1d301ea8badccf71b6c2e35831286`; CI #1212, Integration #466, Final Release #523, Offline #567 PASS;
 - #438 output-parent snapshot revalidation -> `2b67f292d192b86f825e99860313978ee49dfb6f`; exact head `ca1c51df84ab96cf1b1ddfa2a0a53d20805a1e21`; CI #1214, Final Release #525, Offline #569 PASS;
 - #440 docs sync -> `f58029610c5fc8e07c2cff467eae33490be6a92f`; exact head `1fe88eac56697e79dd548f4610e33f7c449bc4f0`; CI #1216, Integration #469, Final Release #527, Offline #571 PASS;
-- #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`; final exact head `1632207cefd8e3ea2882b23962d9172609fef39b`; CI #1219, Final Release #530, Offline #574 PASS.
+- #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`; final exact head `1632207cefd8e3ea2882b23962d9172609fef39b`; CI #1219, Final Release #530, Offline #574 PASS;
+- #444 docs sync -> `f82a667f1e397e713af1447af2117e20c55150d4`; exact head `5609018b5af23340b08080699c69620dbb558b85`; CI #1221, Integration #472, Final Release #532, Offline #576 PASS;
+- #446 non-recursive temp cleanup -> `0c9325fe995e983b4c904f59f788ac91167276aa`; exact head `efc6d1b34f238928635abb5eaa2d5afb20ff0b2b`; CI #1223, Final Release #534, Offline #578 PASS.
 
 ## Current guardrails
 
