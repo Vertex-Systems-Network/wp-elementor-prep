@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + stable immutable operator input snapshots + output-parent snapshot revalidation + temporary payload identity binding + iterative structural bounds + depth/value/text-bounded accessor/own-shape-safe direct canonicalization + object-cardinality preflight + prototype-safe canonicalization + alias-safe atomic output writes.
+Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + stable immutable operator input snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + iterative structural bounds + depth/value/text-bounded accessor/own-shape-safe direct canonicalization + object-cardinality preflight + prototype-safe canonicalization + alias-safe atomic output writes.
 
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and P27 final production-release gate (#182).
 
@@ -56,7 +56,7 @@ Current bounded chain includes:
 - immutable snapshot metadata: `P16OperatorJsonInputSnapshot` wrapper fields and nested read-time file metadata are TypeScript-readonly and runtime-frozen, preventing later mutation of resolved/canonical paths or captured dev/ino/size/time metadata used by output safety. Parsed `.value` is intentionally not deep-frozen, preserving current builder/validator behavior;
 - output snapshot revalidation: the files actually read are checked again before temporary output creation and immediately before atomic rename. Observed post-read pathname replacement fails closed and temporary output state is cleaned before failure. Stable dev/ino identity is used when available; otherwise canonical path + size/mtime/ctime consistency is a bounded fallback rather than a perfect filesystem-race-elimination guarantee;
 - output-parent snapshot revalidation: the canonical output directory is captured as a frozen path/dev/ino snapshot after creation/resolution, checked again before temp creation and immediately before final rename, and must still be a directory that self-resolves to the same canonical path. When stable identity existed at capture, the same dev/ino directory identity is required; otherwise the fallback is canonical-path/directory consistency only;
-- fail-safe temp cleanup: recursive removal runs only when the captured parent and stable temp identity still match; without stable temp identity cleanup falls back to non-recursive `rmdir`, so a parent/temp replacement cannot turn cleanup into recursive deletion of replacement-controlled contents;
+- non-recursive temp cleanup: after output-parent and temporary-directory snapshot checks, cleanup attempts only `rmdir`. Successful writes remove the now-empty owned temp directory after payload rename; failed/non-empty temp state is left untouched and may remain as a bounded orphan rather than recursively traversing a pathname whose ownership cannot be continuously proven;
 - temporary-directory identity binding: the `mkdtemp` directory is captured and must remain a directory that self-resolves to the same path; it is revalidated before payload open, immediately after payload open, after payload write and immediately before final rename, with same dev/ino required where stable identity was captured;
 - opened temporary payload binding: `payload.json` is created exclusively with `open(..., 'wx')`, the opened handle and current pathname must identify the same regular file before any content write, content is written through that `FileHandle`, a frozen post-write file snapshot is captured, and the source pathname must still match that snapshot before rename;
 - iterative post-parse structural validation: container nesting is capped at 64 levels and total JSON values at 50,000 before target builders/validators execute;
@@ -71,7 +71,7 @@ The operator structural guard is iterative rather than recursive, so the guard i
 
 The direct canonicalizer accepts depth 64 and exactly 50,000 total values, fails closed for 65 / 50,001, and caps aggregate UTF-8 text from object keys + string values at 1 MiB. Object-key bytes are charged before sorting. Browser-safe manual UTF-8 accounting covers ASCII, multi-byte Unicode, surrogate pairs and lone-surrogate replacement width. Accessor-backed properties fail closed without invoking caller-controlled getters/setters. Hidden JavaScript-only own state is rejected rather than omitted from fingerprints. Arrays and plain objects both preflight child cardinality against the remaining value budget; plain-object property count is rejected before descriptor/text/sort work. Frozen/sealed JSON-shaped data and own enumerable `__proto__` data keys remain canonicalized. Existing cycle, sparse-array, non-finite, non-JSON and non-plain-object rejection remains unchanged.
 
-Atomic rename prevents a late-created final symlink from being followed back onto an input; it is replaced instead. Temporary payload content is written through an exclusively opened `FileHandle` after handle/path identity is verified, and the post-write payload snapshot is revalidated before rename. Temporary cleanup remains parent/temp-identity guarded so replaced parent/temp paths are not recursively deleted. Focused tests cover symlink, hardlink and symlinked-parent aliases, stable input snapshots, post-read pathname replacement, runtime-frozen snapshot metadata, stable/replaced output-parent snapshots, stable/replaced temp-directory snapshots, opened payload handle/path mismatch, post-write payload replacement and replacement-parent sentinel preservation.
+Atomic rename prevents a late-created final symlink from being followed back onto an input; it is replaced instead. Temporary payload content is written through an exclusively opened `FileHandle` after handle/path identity is verified, and the post-write payload snapshot is revalidated before rename. Temporary cleanup is never recursive: after parent/temp snapshot revalidation it attempts only `rmdir`; non-empty failed-path temp state is preserved rather than recursively deleting unproven contents. Focused tests cover symlink, hardlink and symlinked-parent aliases, stable input snapshots, post-read pathname replacement, runtime-frozen snapshot metadata, stable/replaced output-parent snapshots, stable/replaced temp-directory snapshots, opened payload handle/path mismatch, post-write payload replacement, empty owned-temp removal and non-empty temp-content preservation.
 
 Focused canonicalization regressions cover top-level and nested own `__proto__` additions, direct structural/text boundaries, accessor-backed values, strict own-property shape and exact object-cardinality boundaries, and confirm `Object.prototype` is not polluted. Validator version/schema/status are unchanged because the hardenings preserve the existing strict exact-current metadata contract.
 
@@ -110,7 +110,7 @@ The normalized JSON serializer is not Gutenberg post-content serialization and t
 
 Current verified main before this documentation sync:
 
-`13cc556d87652a9f0f30a8749f98ae823c9dbd9a`
+`0c9325fe995e983b4c904f59f788ac91167276aa`
 
 Recent P16 merge line:
 
@@ -150,7 +150,9 @@ Recent P16 merge line:
 - #436 canonical immutable-snapshot docs sync -> `df3a5503eb274c4e9c5c5dccf6383b66138cec12`;
 - #438 output-parent snapshot revalidation -> `2b67f292d192b86f825e99860313978ee49dfb6f`;
 - #440 canonical output-parent snapshot docs sync -> `f58029610c5fc8e07c2cff467eae33490be6a92f`;
-- #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`.
+- #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`;
+- #444 canonical temporary-payload docs sync -> `f82a667f1e397e713af1447af2117e20c55150d4`;
+- #446 non-recursive temporary-directory cleanup -> `0c9325fe995e983b4c904f59f788ac91167276aa`.
 
 P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`.
 
@@ -160,4 +162,4 @@ P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains t
 
 Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Any future P14 mutation surface requires separate explicit authorization with fresh evidence, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
 
-For P16, do not promote the requirements manifest/export/validator/validation CLI, stable immutable read-snapshot/file-bound/output-parent/temp-payload guards, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization or any caller-supplied result into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
+For P16, do not promote the requirements manifest/export/validator/validation CLI, stable immutable read-snapshot/file-bound/output-parent/temp-payload/non-recursive-cleanup guards, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization or any caller-supplied result into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
