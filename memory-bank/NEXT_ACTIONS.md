@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through non-recursive temporary cleanup
+## Parallel P16 state — bounded code-side foundation complete through output-destination state binding
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -73,6 +73,8 @@ Current implemented P16 chain:
 - PR #442 — temporary-directory + opened-payload identity binding across create/write/rename;
 - PR #444 — canonical temporary-payload identity docs sync;
 - PR #446 — remove recursive temp-directory cleanup; cleanup now attempts only non-recursive `rmdir` after parent/temp snapshot checks.
+- PR #448 — canonical non-recursive-temp-cleanup docs sync.
+- PR #452 — capture final output destination as absent/existing-regular state and revalidate it immediately before atomic rename.
 
 Current progression is intentionally bounded:
 
@@ -106,16 +108,18 @@ Their shared output writer additionally:
 - fails closed on observed post-read input replacement or output-parent replacement; output-parent replacement reports `Output directory changed during write.`;
 - rejects existing output symlinks and other non-regular output targets;
 - rejects an existing output regular file that shares stable filesystem identity with a file actually read when identity is available;
+- captures the final output destination before staging as `ABSENT` or frozen `EXISTING_REGULAR` canonical path + file identity/metadata, preserving overwrite only for the same unchanged existing regular destination;
+- immediately before rename, requires the captured destination state to remain unchanged and reports `Output path changed during write.` on observed creation, replacement, removal or type change;
 - creates a unique same-directory temp directory and captures its path + dev/ino identity;
 - requires that temp directory to remain a directory that self-resolves to the same path, revalidating it before payload open, immediately after payload open, after payload write and immediately before rename; stable dev/ino must remain identical where available;
 - creates `payload.json` exclusively with `open(..., 'wx')` and verifies the opened handle and current pathname are the same regular file before any content is written;
 - writes payload content through that opened `FileHandle` rather than path-based `writeFile`;
 - captures a frozen post-write payload file snapshot and requires the payload source pathname to still match it immediately before rename;
-- preserves input-snapshot and output-parent revalidation immediately before rename, then atomically renames the bound payload into place;
+- preserves input-snapshot and output-parent revalidation immediately before rename, then revalidates output-destination state before atomically renaming the bound payload into place;
 - temporary cleanup is never recursive: after output-parent and temp-directory snapshot checks it attempts only non-recursive `rmdir`;
 - successful writes remove the now-empty owned temp directory; failed/non-empty temp state is left untouched and may remain as a bounded orphan rather than recursively traversing an unproven pathname;
 - preserves source-input bytes and replacement-controlled sentinel contents in focused rejected-alias/path-swap cases;
-- these checks narrow path-swap/TOCTOU ambiguity but are not claimed as perfect filesystem-race elimination where stable identity is unavailable.
+- these checks narrow path-swap/TOCTOU ambiguity but are not claimed as perfect filesystem-race elimination: a narrow final destination check→rename race remains without an OS-specific conditional-rename primitive, and metadata fallback is bounded where stable identity is unavailable.
 
 The exact-current requirements-manifest canonicalizer is independently depth/value/text bounded, accessor-safe, strict-own-shape, object-cardinality-preflighted and prototype-safe:
 
@@ -233,6 +237,8 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`; final exact head `1632207cefd8e3ea2882b23962d9172609fef39b`; CI #1219, Final Release #530, Offline #574 PASS;
 - #444 docs sync -> `f82a667f1e397e713af1447af2117e20c55150d4`; exact head `5609018b5af23340b08080699c69620dbb558b85`; CI #1221, Integration #472, Final Release #532, Offline #576 PASS;
 - #446 non-recursive temp cleanup -> `0c9325fe995e983b4c904f59f788ac91167276aa`; exact head `efc6d1b34f238928635abb5eaa2d5afb20ff0b2b`; CI #1223, Final Release #534, Offline #578 PASS.
+- #448 docs sync -> `af517e1477d57753993f805ccb4d0f770fdf51d5`; exact head `875c1ab816f67761be11f032a87cd3a4ec6e4d57`; CI #1225, Integration #475, Final Release #536, Offline #580 PASS.
+- #452 output-destination state binding -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`; exact head `ae6fff73839f874ca5eb0b92d50e7632e74ce533`; CI #1231, Final Release #542, Offline #586 PASS.
 
 ## Current guardrails
 
