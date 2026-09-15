@@ -52,30 +52,44 @@ After reading repository context and **before starting new implementation**, exe
 
 Never fabricate runtime/manual evidence or bypass an acceptance gate simply to close an issue or merge a branch.
 
+## Fast release-train execution
+
+Use release trains to reduce coordination overhead without weakening correctness or acceptance evidence.
+
+- A release train is one focused issue/branch/PR with one acceptance objective and one explicit authority boundary.
+- Multiple small implementation commits may remain in the same release train when they are tightly related, independently testable and do not broaden the accepted authority boundary.
+- Do not create a separate docs-only PR after every micro-commit. Synchronize canonical status/docs once in the same accepted release train when practical, or once immediately after a grouped implementation train when the status surface genuinely changed.
+- Update status/authority documentation immediately when a change actually changes phase status, authority, target support, runtime requirements or architectural sequencing.
+- During development, prefer focused typecheck/tests/builds for rapid feedback. At the integration/merge checkpoint, the exact PR head must still pass the full documented CI/release/offline gates required by the repository.
+- Never skip, weaken or reinterpret exact-head acceptance merely to shorten the development cycle.
+- Parallel work is encouraged only when file ownership is clear. Avoid assigning multiple agents to the same integration hotspot (for example `src/plugin/main.ts` or `src/ui/ui.html`) at the same time unless one agent is explicitly responsible for integration.
+- Keep target-specific work inside its adapter/module as long as possible; touch shared plugin/UI integration surfaces only at the bounded integration step.
+- Prefer one coherent commercial slice that can be verified end-to-end over several partially wired roadmap phases.
+
 ## Mandatory session end
 
-After meaningful work, update:
+After meaningful work, update only the canonical files whose truth materially changed:
 
-- `memory-bank/PROJECT_STATE.md` — what is done, in progress, blocked, and remaining.
-- `memory-bank/NEXT_ACTIONS.md` — exact next executable tasks.
-- `memory-bank/ROADMAP.md` — when module/phase completion state or sequencing changes.
-- `memory-bank/CHANGELOG.md` — concise dated record of changes.
+- `memory-bank/PROJECT_STATE.md` — when done/in-progress/blocked/remaining project truth changes.
+- `memory-bank/NEXT_ACTIONS.md` — when the executable queue changes.
+- `memory-bank/ROADMAP.md` — when module/phase state, progress interpretation or sequencing changes.
+- `memory-bank/CHANGELOG.md` — concise dated record for an accepted meaningful release train, not every intermediate commit.
 - `memory-bank/DECISIONS.md` — only when a durable architectural/product/process decision changes or is added.
-- root `README.md` — current issue/PR status plus module-wise and overall progress.
+- root `README.md` — when user-facing module status/progress/blockers or product-surface truth changes.
+
+Documentation sync is part of completion, but it must not create reflexive PR churn. Intermediate commits inside one release train do not each require a full canonical-doc rewrite when the externally visible truth has not changed yet.
 
 ### README progress contract
 
-Every meaningful completed work batch MUST leave the root README with a current module-wise progress table containing at least:
+Every accepted work batch that changes module status/progress MUST leave the root README with a current module-wise progress table containing at least:
 
 - module/phase,
 - status,
-- numeric progress percentage,
-- 10-cell visual progress bar where practical,
+- evidence-based progress percentage only where a stable denominator exists; otherwise `N/A`,
+- 10-cell visual progress bar for percentage-backed rows or the non-denominated bar for `N/A`,
 - blocker or exact next work.
 
-Also update an overall project progress percentage/bar.
-
-Progress must be evidence-based. Do not mark externally blocked runtime acceptance as complete. Mark intentionally deferred work as `DEFERRED` rather than lowering active progress misleadingly.
+Do **not** collapse the whole project into one synthetic overall percentage. Implementation, runtime acceptance and external review are separate evidence states. Progress must remain evidence-based; do not mark externally blocked runtime acceptance as complete. Mark intentionally deferred work as `DEFERRED` rather than lowering active progress misleadingly.
 
 ## Engineering rules
 
@@ -111,15 +125,18 @@ Use focused branches and PRs. Recommended prefixes:
 - `test/`
 - `docs/`
 
+A focused PR may contain multiple tightly related commits in one release train. Avoid splitting implementation, tests, UI contract and immediately required status sync into separate PRs solely for process ceremony.
+
 ## Definition of done
 
-A task is not complete because code exists. It is complete when:
+A task/release train is not complete because code exists. It is complete when:
 
 - the Issues-first and PR/MR-second queues were checked,
 - required R0/R1 gates were completed for external target work,
-- tests/verification pass,
-- relevant memory-bank state is updated,
-- README module and overall progress are updated,
+- focused development verification passed during implementation,
+- the exact integration/PR head passed the full required merge/release gates,
+- relevant canonical memory/status files are synchronized once the truth changes,
+- README module progress is updated when its user-facing status/progress/blocker truth changed,
 - docs are updated when behavior/contracts changed,
 - no known visual safety regression is introduced,
 - no unsupported option combination is exposed as valid,
