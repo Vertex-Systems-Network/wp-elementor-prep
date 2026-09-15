@@ -92,29 +92,20 @@ function sameObservedFile(
   return sameFileMetadata(first, second);
 }
 
-async function inspectCurrentInputPath(
+async function inputPathMatchesSnapshot(
   snapshot: P16OperatorJsonInputSnapshot,
-  fail: Fail,
-): Promise<Stats> {
-  let currentInfo: Stats;
-  let currentCanonical: string;
+): Promise<boolean> {
   try {
-    currentInfo = await lstat(snapshot.resolvedPath);
-    currentCanonical = await realpath(snapshot.resolvedPath);
-  } catch {
-    fail('Input path changed after it was read.');
-  }
+    const currentInfo = await lstat(snapshot.resolvedPath);
+    if (!currentInfo.isFile()) return false;
 
-  if (!currentInfo.isFile()) {
-    fail('Input path changed after it was read.');
+    const currentCanonical = await realpath(snapshot.resolvedPath);
+    if (comparisonPath(currentCanonical) !== comparisonPath(snapshot.canonicalPath)) return false;
+
+    return sameObservedFile(snapshot.file, currentInfo);
+  } catch {
+    return false;
   }
-  if (comparisonPath(currentCanonical) !== comparisonPath(snapshot.canonicalPath)) {
-    fail('Input path changed after it was read.');
-  }
-  if (!sameObservedFile(snapshot.file, currentInfo)) {
-    fail('Input path changed after it was read.');
-  }
-  return currentInfo;
 }
 
 function validateP16OperatorJsonStructure(
@@ -290,7 +281,9 @@ export async function writeP16OperatorJsonOutput(
   const canonicalOutputComparison = comparisonPath(canonicalOutput);
 
   for (const inputSnapshot of inputSnapshots) {
-    await inspectCurrentInputPath(inputSnapshot, fail);
+    if (!(await inputPathMatchesSnapshot(inputSnapshot))) {
+      fail('Input path changed after it was read.');
+    }
     if (comparisonPath(inputSnapshot.canonicalPath) === canonicalOutputComparison) {
       fail('Output path must not resolve to an input path.');
     }
@@ -319,20 +312,23 @@ export async function writeP16OperatorJsonOutput(
 
   let temporaryDirectory: string | null = null;
   let writeFailed = false;
+  let inputChanged = false;
   try {
     temporaryDirectory = await mkdtemp(join(realParent, '.p16-output-'));
     const temporaryPath = join(temporaryDirectory, 'payload.json');
     await writeFile(temporaryPath, content, { encoding: 'utf8', flag: 'wx', mode: 0o600 });
 
     for (const inputSnapshot of inputSnapshots) {
-      await inspectCurrentInputPath(inputSnapshot, fail);
+      if (!(await inputPathMatchesSnapshot(inputSnapshot))) {
+        inputChanged = true;
+        break;
+      }
     }
 
-    await rename(temporaryPath, canonicalOutput);
-  } catch (error) {
-    if (error instanceof Error && error.message === 'Input path changed after it was read.') {
-      throw error;
+    if (!inputChanged) {
+      await rename(temporaryPath, canonicalOutput);
     }
+  } catch {
     writeFailed = true;
   } finally {
     if (temporaryDirectory) {
@@ -340,6 +336,9 @@ export async function writeP16OperatorJsonOutput(
     }
   }
 
+  if (inputChanged) {
+    fail('Input path changed after it was read.');
+  }
   if (writeFailed) {
     fail('Unable to write output safely.');
   }
