@@ -7,7 +7,6 @@ import {
   open,
   realpath,
   rename,
-  rm,
   rmdir,
 } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
@@ -317,11 +316,6 @@ export async function removeP16OperatorTemporaryDirectoryIfOwned(
 ): Promise<boolean> {
   if (!(await p16OperatorOutputParentMatchesSnapshot(parent))) return false;
   if (!(await p16OperatorTemporaryDirectoryMatchesSnapshot(temporary))) return false;
-
-  if (hasStableFileIdentity(temporary)) {
-    await rm(temporary.path, { recursive: true, force: true }).catch(() => undefined);
-    return true;
-  }
 
   try {
     await rmdir(temporary.path);
