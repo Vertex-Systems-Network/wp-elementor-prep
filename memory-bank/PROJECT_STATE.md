@@ -12,7 +12,7 @@ Current implemented surfaces:
 2. P13 Build-Ready Score 2.0 + Responsive Risk with `p13-core-v2` analyzer-bound provenance;
 3. P14 retained-duplicate core and development-only read-only Guided Prepare/review evidence surfaces;
 4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain;
-5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, byte/structure-bounded local JSON I/O with stable read snapshots, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with object-cardinality preflight and alias-safe atomic output writes;
+5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, byte/structure-bounded local JSON I/O with stable immutable read snapshots, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with object-cardinality preflight and alias-safe atomic output writes;
 6. exact-build release/provenance tooling.
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
@@ -21,7 +21,7 @@ Current implemented surfaces:
 
 Current verified main before this documentation sync:
 
-`146b2dd7a534ab12b4598fe1c78823d5e9733118`
+`78c162728af3249a4ce5905eb831b7a0f72dcd4d`
 
 Recent guarded merge line:
 
@@ -55,7 +55,9 @@ Recent guarded merge line:
 - #424 canonical strict-own-property docs sync -> `61ba4dc5b456a588383ed0169045387e0fc51482`;
 - #426 direct object-cardinality preflight -> `06cdd845e46613541f555cc0de59237d261c1fa3`;
 - #428 canonical object-cardinality docs sync -> `44186a19b5719ae3cd3b883140e6e2b8bf776553`;
-- #430 stable retention operator input snapshots -> `146b2dd7a534ab12b4598fe1c78823d5e9733118`.
+- #430 stable retention operator input snapshots -> `146b2dd7a534ab12b4598fe1c78823d5e9733118`;
+- #432 canonical stable-input-snapshot docs sync -> `686a4e8bf65a2b0b43075baa20c6fa6eccadb10d`;
+- #434 immutable retention operator snapshot metadata -> `78c162728af3249a4ce5905eb831b7a0f72dcd4d`.
 
 ## Persistent issue queue
 
@@ -114,6 +116,7 @@ Current bounded deterministic/read-only/evidence chain includes:
 - package command `p16:evidence-retention-requirements-validate`, a Node-20 offline/operator validation CLI that reads only local document/profile/receipt/authentication-report/manifest JSON and writes only the sanitized validator result;
 - shared bounded local JSON I/O for both retention CLIs: each input is capped at 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
 - stable operator input snapshots: initial path inspection stays ahead of content read, the opened handle must match the inspected regular file before read, handle/path metadata is rechecked after read, and parsed `.value` is carried with resolved/canonical path + read-time dev/ino and size/mtime/ctime metadata into output safety;
+- immutable snapshot metadata: outer snapshot fields and nested read-time file metadata are TypeScript-readonly and runtime-frozen, so resolved/canonical paths and captured dev/ino/size/time metadata cannot be changed after capture. Parsed `.value` intentionally remains outside this freeze so builder/validator behavior is unchanged;
 - output snapshot revalidation: the exact files read are checked before temporary output creation and immediately before atomic rename; observed post-read pathname replacement fails closed and temp state is cleaned before failure. Stable dev/ino identity is used where available; otherwise canonical path + size/mtime/ctime consistency is a bounded fallback, not a perfect filesystem-race-elimination guarantee;
 - iterative post-parse structural validation that rejects more than 64 nested container levels or more than 50,000 total JSON values before target builders/validators execute;
 - direct exact-current retention-manifest canonicalization independently caps nested containers at 64 levels, total visited values at 50,000 and aggregate UTF-8 text from object keys + string values at 1 MiB for exported validator/fingerprint callers that bypass the CLIs;
@@ -124,11 +127,11 @@ Current bounded deterministic/read-only/evidence chain includes:
 - alias-safe output writes: output parents are created then canonicalized with `realpath`, canonical output locations are compared to the read snapshots, existing output symlinks/non-regular targets are rejected, and hardlink aliases to files actually read are rejected where stable filesystem identity is available;
 - unique same-directory regular temporary output plus atomic rename prevents late-created final symlinks from being followed onto inputs, with temporary state cleaned before fail-closed write errors or second snapshot-revalidation failure.
 
-The operator structural traversal is iterative, not recursive, so the guard itself does not create stack-exhaustion risk. Stable read snapshots additionally bind parsed content to the observed file and carry the same observation into output safety. Path changes detected before/during/after read or before output rename fail closed. This narrows path-swap/TOCTOU ambiguity but does not claim perfect race elimination when stable filesystem identity is unavailable.
+The operator structural traversal is iterative, not recursive, so the guard itself does not create stack-exhaustion risk. Stable read snapshots additionally bind parsed content to the observed file and carry the same observation into output safety. Their path/identity metadata is frozen after capture, preventing accidental later redirection of output-safety checks. Path changes detected before/during/after read or before output rename fail closed. This narrows path-swap/TOCTOU ambiguity but does not claim perfect race elimination when stable filesystem identity is unavailable.
 
 The direct canonicalizer accepts depth 64 and exactly 50,000 total values and fails closed for 65 / 50,001. It also limits aggregate object-key + string-value UTF-8 text to 1 MiB, charges key bytes before sorting and uses browser-safe manual accounting for ASCII, multi-byte Unicode, surrogate pairs and lone-surrogate replacement width. Accessor-backed properties fail closed without invocation. Hidden JavaScript-only own state is rejected rather than omitted from fingerprints. Arrays and plain objects both preflight child cardinality against the remaining value budget; the plain-object preflight runs before descriptor/text/sort work. Frozen/sealed JSON-shaped values and own enumerable `__proto__` data keys remain canonicalized.
 
-Focused output-path tests cover symlink, hardlink and symlinked-parent aliases and verify source input immutability. Stable-snapshot tests cover normal writes, post-read pathname replacement rejection with original/replacement bytes preserved, and pre-read symlink rejection. Focused canonicalization regressions cover top-level/nested own `__proto__`, direct structural/text limits, accessor-backed values, strict own-property shape and exact object-cardinality limits, and confirm `Object.prototype` remains unpolluted.
+Focused output-path tests cover symlink, hardlink and symlinked-parent aliases and verify source input immutability. Stable-snapshot tests cover normal writes, post-read pathname replacement rejection with original/replacement bytes preserved, pre-read symlink rejection, runtime-frozen outer/file metadata, rejected path/identity mutation and intentionally mutable parsed `.value`. Focused canonicalization regressions cover top-level/nested own `__proto__`, direct structural/text limits, accessor-backed values, strict own-property shape and exact object-cardinality limits, and confirm `Object.prototype` remains unpolluted.
 
 Operator/input failures remain exit code 2 with deterministic content-free errors. Windows path comparison is case-normalized for output/input collision checks.
 
@@ -161,7 +164,7 @@ Current authority remains fixed:
 
 The normalized JSON model is not Gutenberg post-content serialization and intentionally omits WordPress `innerContent`. Custom/unregistered/freeform content remains `REVIEW_REQUIRED`.
 
-Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, byte/structure-bounded alias-safe local-file I/O with stable read snapshots and depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with early object-cardinality preflight that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
+Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, byte/structure-bounded alias-safe local-file I/O with stable immutable read snapshots and depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with early object-cardinality preflight that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
 
 ## P17-P26 state
 
