@@ -12,7 +12,7 @@ Current implemented surfaces:
 2. P13 Build-Ready Score 2.0 + Responsive Risk with `p13-core-v2` analyzer-bound provenance;
 3. P14 retained-duplicate core and development-only read-only Guided Prepare/review evidence surfaces;
 4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain;
-5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, byte/structure-bounded local JSON I/O with stable immutable read snapshots + output-parent snapshot revalidation, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with object-cardinality preflight and alias-safe atomic output writes;
+5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, byte/structure-bounded local JSON I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with object-cardinality preflight and alias-safe atomic output writes;
 6. exact-build release/provenance tooling.
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
@@ -21,7 +21,7 @@ Current implemented surfaces:
 
 Current verified main before this documentation sync:
 
-`2b67f292d192b86f825e99860313978ee49dfb6f`
+`13cc556d87652a9f0f30a8749f98ae823c9dbd9a`
 
 Recent guarded merge line:
 
@@ -59,7 +59,9 @@ Recent guarded merge line:
 - #432 canonical stable-input-snapshot docs sync -> `686a4e8bf65a2b0b43075baa20c6fa6eccadb10d`;
 - #434 immutable retention operator snapshot metadata -> `78c162728af3249a4ce5905eb831b7a0f72dcd4d`;
 - #436 canonical immutable-snapshot docs sync -> `df3a5503eb274c4e9c5c5dccf6383b66138cec12`;
-- #438 output-parent snapshot revalidation -> `2b67f292d192b86f825e99860313978ee49dfb6f`.
+- #438 output-parent snapshot revalidation -> `2b67f292d192b86f825e99860313978ee49dfb6f`;
+- #440 canonical output-parent snapshot docs sync -> `f58029610c5fc8e07c2cff467eae33490be6a92f`;
+- #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`.
 
 ## Persistent issue queue
 
@@ -122,19 +124,21 @@ Current bounded deterministic/read-only/evidence chain includes:
 - output snapshot revalidation: the exact files read are checked before temporary output creation and immediately before atomic rename; observed post-read pathname replacement fails closed and temp state is cleaned before failure. Stable dev/ino identity is used where available; otherwise canonical path + size/mtime/ctime consistency is a bounded fallback, not a perfect filesystem-race-elimination guarantee;
 - output-parent snapshot revalidation: the canonical output directory is captured as a frozen path/dev/ino snapshot after creation/resolution, revalidated before temporary output creation and immediately before final rename, and must remain a directory that self-resolves to the same canonical path. Where stable identity existed at capture, the same dev/ino directory identity is required; otherwise canonical-path/directory consistency is the bounded fallback;
 - fail-safe temp cleanup: recursive cleanup runs only when the captured parent and stable temp identity still match; without stable temp identity cleanup falls back to non-recursive `rmdir`, so replacement-controlled contents are not recursively deleted after a parent/temp path swap;
+- temporary-directory identity binding: the `mkdtemp` directory is captured and must remain a directory that self-resolves to the same path; it is revalidated before payload open, immediately after payload open, after payload write and immediately before final rename, with same dev/ino required where stable identity was captured;
+- opened temporary payload binding: `payload.json` is created exclusively with `open(..., 'wx')`, the opened handle and current pathname must identify the same regular file before any content write, content is written through that `FileHandle`, a frozen post-write file snapshot is captured, and the source pathname must still match that snapshot before rename;
 - iterative post-parse structural validation that rejects more than 64 nested container levels or more than 50,000 total JSON values before target builders/validators execute;
 - direct exact-current retention-manifest canonicalization independently caps nested containers at 64 levels, total visited values at 50,000 and aggregate UTF-8 text from object keys + string values at 1 MiB for exported validator/fingerprint callers that bypass the CLIs;
 - accessor-safe direct canonicalization reads own property descriptors instead of invoking values through ordinary property access, so object/array accessors fail closed without getter/setter execution;
 - strict own-shape direct canonicalization rejects own symbol/non-enumerable fields on plain objects and rejects extra named/symbol properties on arrays while accepting standard `length` + canonical indices and frozen/sealed JSON-shaped data;
 - object-cardinality preflight rejects a plain object whose own string-property count cannot fit the remaining 50,000-value budget before descriptor scanning, UTF-8 key charging or sorting; root + 49,999 primitive properties remains valid, root + 50,000 rejects;
 - prototype-safe exact-current canonicalization: canonical object snapshots use no `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain data properties, alter fingerprints and are rejected when added instead of being silently dropped;
-- alias-safe output writes: canonical output locations are compared to the read snapshots, existing output symlinks/non-regular targets are rejected, hardlink aliases to files actually read are rejected where stable filesystem identity is available, output is staged in a unique same-directory temp file and the captured output parent is revalidated before atomic rename.
+- alias-safe output writes: canonical output locations are compared to the read snapshots, existing output symlinks/non-regular targets are rejected, hardlink aliases to files actually read are rejected where stable filesystem identity is available, output is staged in a unique same-directory temp file and input/output-parent/temp-directory/payload snapshots are revalidated before atomic rename.
 
-The operator structural traversal is iterative, not recursive, so the guard itself does not create stack-exhaustion risk. Stable read snapshots bind parsed content to the observed file and carry the same observation into output safety; their path/identity metadata is frozen after capture. Output-parent snapshots separately bind the final rename to the canonical directory that was safety-checked and are revalidated immediately before rename. Path changes detected before/during/after input read, before output rename or at the output-parent boundary fail closed. These checks narrow path-swap/TOCTOU ambiguity but do not claim perfect race elimination when stable filesystem identity is unavailable.
+The operator structural traversal is iterative, not recursive, so the guard itself does not create stack-exhaustion risk. Stable read snapshots bind parsed content to the observed file and carry the same observation into output safety; their path/identity metadata is frozen after capture. Output-parent snapshots bind the final rename to the canonical directory that was safety-checked. Temporary-directory snapshots and the opened payload handle/file snapshot separately bind temporary payload creation, content write and rename to the observed temp subtree. Path changes detected before/during/after input read, before output rename or across the parent/temp/payload boundaries fail closed. These checks narrow path-swap/TOCTOU ambiguity but do not claim perfect race elimination when stable filesystem identity is unavailable.
 
 The direct canonicalizer accepts depth 64 and exactly 50,000 total values and fails closed for 65 / 50,001. It also limits aggregate object-key + string-value UTF-8 text to 1 MiB, charges key bytes before sorting and uses browser-safe manual accounting for ASCII, multi-byte Unicode, surrogate pairs and lone-surrogate replacement width. Accessor-backed properties fail closed without invocation. Hidden JavaScript-only own state is rejected rather than omitted from fingerprints. Arrays and plain objects both preflight child cardinality against the remaining value budget; the plain-object preflight runs before descriptor/text/sort work. Frozen/sealed JSON-shaped values and own enumerable `__proto__` data keys remain canonicalized.
 
-Focused output-path tests cover symlink, hardlink and symlinked-parent aliases and verify source input immutability. Stable-input-snapshot tests cover normal writes, post-read pathname replacement rejection, pre-read symlink rejection and immutable metadata. Output-parent tests cover stable parent revalidation, non-directory replacement, identity-aware same-path replacement and fail-safe cleanup that preserves replacement-controlled sentinel contents. Focused canonicalization regressions cover top-level/nested own `__proto__`, direct structural/text limits, accessor-backed values, strict own-property shape and exact object-cardinality limits, and confirm `Object.prototype` remains unpolluted.
+Focused output-path tests cover symlink, hardlink and symlinked-parent aliases and verify source input immutability. Stable-input-snapshot tests cover normal writes, post-read pathname replacement rejection, pre-read symlink rejection and immutable metadata. Output-parent tests cover stable parent revalidation, non-directory replacement, identity-aware same-path replacement and fail-safe cleanup that preserves replacement-controlled sentinel contents. Temp/payload tests cover stable temp-directory matching, non-directory and identity-aware same-path temp replacement, opened payload handle/path mismatch before content write, and post-write payload pathname replacement rejection. Focused canonicalization regressions cover top-level/nested own `__proto__`, direct structural/text limits, accessor-backed values, strict own-property shape and exact object-cardinality limits, and confirm `Object.prototype` remains unpolluted.
 
 Operator/input failures remain exit code 2 with deterministic content-free errors. Windows path comparison is case-normalized for output/input collision checks.
 
@@ -167,7 +171,7 @@ Current authority remains fixed:
 
 The normalized JSON model is not Gutenberg post-content serialization and intentionally omits WordPress `innerContent`. Custom/unregistered/freeform content remains `REVIEW_REQUIRED`.
 
-Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, byte/structure-bounded alias-safe local-file I/O with stable immutable input snapshots + output-parent snapshot revalidation and depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with early object-cardinality preflight that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
+Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, byte/structure-bounded alias-safe local-file I/O with stable immutable input snapshots + output-parent snapshot revalidation + temporary payload identity binding and depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with early object-cardinality preflight that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
 
 ## P17-P26 state
 
