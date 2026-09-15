@@ -39,6 +39,18 @@ export type P16OperatorOutputParentSnapshot = StableIdentity & {
   readonly canonicalPath: string;
 };
 
+export type P16OperatorOutputDestinationSnapshot =
+  | {
+      readonly state: 'ABSENT';
+      readonly path: string;
+    }
+  | {
+      readonly state: 'EXISTING_REGULAR';
+      readonly path: string;
+      readonly canonicalPath: string;
+      readonly file: P16OperatorJsonFileSnapshot;
+    };
+
 export type P16OperatorTemporaryDirectorySnapshot = StableIdentity & {
   readonly path: string;
 };
@@ -235,6 +247,78 @@ export async function p16OperatorOutputParentMatchesSnapshot(
       return hasStableFileIdentity(currentInfo) && sameFileIdentity(snapshot, currentInfo);
     }
     return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function captureP16OperatorOutputDestinationSnapshot(
+  path: string,
+  fail: Fail,
+): Promise<P16OperatorOutputDestinationSnapshot> {
+  let infoBefore: Stats;
+  try {
+    infoBefore = await lstat(path);
+  } catch (error) {
+    if (isMissingPathError(error)) {
+      return Object.freeze({ state: 'ABSENT', path });
+    }
+    fail('Unable to inspect output path.');
+  }
+
+  if (infoBefore.isSymbolicLink()) {
+    fail('Output path must not be a symbolic link.');
+  }
+  if (!infoBefore.isFile()) {
+    fail('Output path must be a regular file or not exist.');
+  }
+
+  let canonicalPath: string;
+  let infoAfter: Stats;
+  try {
+    canonicalPath = await realpath(path);
+    infoAfter = await lstat(path);
+  } catch {
+    fail('Output path changed while being inspected.');
+  }
+
+  if (
+    infoAfter.isSymbolicLink()
+    || !infoAfter.isFile()
+    || comparisonPath(canonicalPath) !== comparisonPath(path)
+    || !sameObservedFile(infoBefore, infoAfter)
+  ) {
+    fail('Output path changed while being inspected.');
+  }
+
+  return Object.freeze({
+    state: 'EXISTING_REGULAR',
+    path,
+    canonicalPath,
+    file: toFileSnapshot(infoAfter),
+  });
+}
+
+export async function p16OperatorOutputDestinationMatchesSnapshot(
+  snapshot: P16OperatorOutputDestinationSnapshot,
+): Promise<boolean> {
+  if (snapshot.state === 'ABSENT') {
+    try {
+      await lstat(snapshot.path);
+      return false;
+    } catch (error) {
+      return isMissingPathError(error);
+    }
+  }
+
+  try {
+    const currentInfo = await lstat(snapshot.path);
+    if (currentInfo.isSymbolicLink() || !currentInfo.isFile()) return false;
+
+    const currentCanonical = await realpath(snapshot.path);
+    if (comparisonPath(currentCanonical) !== comparisonPath(snapshot.canonicalPath)) return false;
+
+    return sameObservedFile(snapshot.file, currentInfo);
   } catch {
     return false;
   }
@@ -457,25 +541,17 @@ export async function writeP16OperatorJsonOutput(
     }
   }
 
-  let existingOutput: Stats | null = null;
-  try {
-    existingOutput = await lstat(canonicalOutput);
-  } catch (error) {
-    if (!isMissingPathError(error)) {
-      fail('Unable to inspect output path.');
-    }
-  }
-
-  if (existingOutput) {
-    if (existingOutput.isSymbolicLink()) {
-      fail('Output path must not be a symbolic link.');
-    }
-    if (!existingOutput.isFile()) {
-      fail('Output path must be a regular file or not exist.');
-    }
-    if (inputSnapshots.some((inputSnapshot) => sameFileIdentity(existingOutput, inputSnapshot.file))) {
-      fail('Output path must not alias an input file.');
-    }
+  const outputDestinationSnapshot = await captureP16OperatorOutputDestinationSnapshot(
+    canonicalOutput,
+    fail,
+  );
+  if (
+    outputDestinationSnapshot.state === 'EXISTING_REGULAR'
+    && inputSnapshots.some((inputSnapshot) => (
+      sameFileIdentity(outputDestinationSnapshot.file, inputSnapshot.file)
+    ))
+  ) {
+    fail('Output path must not alias an input file.');
   }
 
   let temporarySnapshot: P16OperatorTemporaryDirectorySnapshot | null = null;
@@ -483,6 +559,7 @@ export async function writeP16OperatorJsonOutput(
   let writeFailed = false;
   let inputChanged = false;
   let outputParentChanged = false;
+  let outputDestinationChanged = false;
   let temporaryPathChanged = false;
   try {
     if (!(await p16OperatorOutputParentMatchesSnapshot(parentSnapshot))) {
@@ -564,7 +641,23 @@ export async function writeP16OperatorJsonOutput(
           temporaryPathChanged = true;
         }
 
-        if (!temporaryPathChanged && !inputChanged && !outputParentChanged && payloadSnapshot) {
+        if (
+          !temporaryPathChanged
+          && !inputChanged
+          && !outputParentChanged
+          && payloadSnapshot
+          && !(await p16OperatorOutputDestinationMatchesSnapshot(outputDestinationSnapshot))
+        ) {
+          outputDestinationChanged = true;
+        }
+
+        if (
+          !temporaryPathChanged
+          && !inputChanged
+          && !outputParentChanged
+          && !outputDestinationChanged
+          && payloadSnapshot
+        ) {
           await rename(payloadSnapshot.path, canonicalOutput);
         }
       }
@@ -582,6 +675,9 @@ export async function writeP16OperatorJsonOutput(
   }
   if (outputParentChanged) {
     fail('Output directory changed during write.');
+  }
+  if (outputDestinationChanged) {
+    fail('Output path changed during write.');
   }
   if (temporaryPathChanged) {
     fail('Temporary output path changed during write.');
