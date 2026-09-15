@@ -8,6 +8,7 @@ export const P15_NEUTRAL_EXPORT_MAX_SPACING_PX = 4_096;
 export type P15NeutralDocumentType = 'page' | 'section';
 export type P15NeutralDirection = 'row' | 'column';
 export type P15NeutralAlignment = 'start' | 'center' | 'end';
+export type P15NeutralTextAlignment = P15NeutralAlignment | 'justify';
 export type P15NeutralCrossAlignment = P15NeutralAlignment | 'stretch';
 export type P15NeutralJustification = P15NeutralAlignment | 'space-between' | 'space-around' | 'space-evenly';
 export type P15NeutralHeadingLevel = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div' | 'span' | 'p';
@@ -40,6 +41,12 @@ export interface P15NeutralHeadingNode extends P15NeutralNodeBase {
   align?: P15NeutralAlignment;
 }
 
+export interface P15NeutralTextNode extends P15NeutralNodeBase {
+  kind: 'text';
+  text: string;
+  align?: P15NeutralTextAlignment;
+}
+
 export interface P15NeutralButtonNode extends P15NeutralNodeBase {
   kind: 'button';
   text: string;
@@ -64,6 +71,7 @@ export interface P15NeutralReviewNode extends P15NeutralNodeBase {
 export type P15NeutralExportNode =
   | P15NeutralContainerNode
   | P15NeutralHeadingNode
+  | P15NeutralTextNode
   | P15NeutralButtonNode
   | P15NeutralImageNode
   | P15NeutralReviewNode;
@@ -271,6 +279,15 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     }
     if (value.align !== undefined && !['start', 'center', 'end'].includes(String(value.align))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.align`, 'Heading alignment must be start, center or end.');
+    }
+    return;
+  }
+
+  if (kind === 'text') {
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align'], path, state);
+    validateText(value.text, `${path}.text`, state);
+    if (value.align !== undefined && !['start', 'center', 'end', 'justify'].includes(String(value.align))) {
+      pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.align`, 'Text alignment must be start, center, end or justify.');
     }
     return;
   }
