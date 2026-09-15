@@ -19,18 +19,18 @@ export const P16_OPERATOR_JSON_INPUT_MAX_VALUES = 50_000;
 type Fail = (message: string) => never;
 
 export type P16OperatorJsonFileSnapshot = {
-  dev: number;
-  ino: number;
-  size: number;
-  mtimeMs: number;
-  ctimeMs: number;
+  readonly dev: number;
+  readonly ino: number;
+  readonly size: number;
+  readonly mtimeMs: number;
+  readonly ctimeMs: number;
 };
 
 export type P16OperatorJsonInputSnapshot = {
-  value: unknown;
-  resolvedPath: string;
-  canonicalPath: string;
-  file: P16OperatorJsonFileSnapshot;
+  readonly value: unknown;
+  readonly resolvedPath: string;
+  readonly canonicalPath: string;
+  readonly file: P16OperatorJsonFileSnapshot;
 };
 
 type JsonTraversalEntry = {
@@ -51,13 +51,13 @@ function isMissingPathError(error: unknown): boolean {
 }
 
 function toFileSnapshot(info: Stats): P16OperatorJsonFileSnapshot {
-  return {
+  return Object.freeze({
     dev: info.dev,
     ino: info.ino,
     size: info.size,
     mtimeMs: info.mtimeMs,
     ctimeMs: info.ctimeMs,
-  };
+  });
 }
 
 function hasStableFileIdentity(info: P16OperatorJsonFileSnapshot | Stats): boolean {
@@ -263,12 +263,12 @@ export async function readP16OperatorJsonInput(
     }
 
     validateP16OperatorJsonStructure(parsed, label, fail);
-    return {
+    return Object.freeze({
       value: parsed,
       resolvedPath,
       canonicalPath,
       file: toFileSnapshot(after),
-    };
+    });
   } finally {
     await handle.close().catch(() => undefined);
   }
