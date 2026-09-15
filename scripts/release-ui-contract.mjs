@@ -16,10 +16,15 @@ function requireRegexReplacement(source, pattern, to, label) {
 
 const REQUIRED_PRODUCTION_TOKENS = [
   'id="audit"',
+  'id="p15-preview"',
   'id="plan"',
   'id="validate"',
   'id="selftest"',
   'id="batch"',
+  "post('p15-elementor-preview-request')",
+  "message.type === 'p15-elementor-preview-result'",
+  'P15 ELEMENTOR LOCAL PREVIEW',
+  'targetCompatibilityClaim=false · productionAcceptance=false · downloadEnabled=false · importValidationStatus=NOT_RUN',
   "post('safe-plan-request')",
   "post('safe-fix-apply-request'",
   "post('safe-fix-restore-request')",
@@ -76,8 +81,8 @@ export function buildReleaseUi(developmentUi) {
 
   releaseUi = requireReplacement(
     releaseUi,
-    '<div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare preview + P3 validator + P5 Safe Fix + P7 batch queue</div>',
-    '<div class="sub">Audit + actionable backlog + visual validation + safety-gated Safe Fix + sequential batch preparation</div>',
+    '<div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>',
+    '<div class="sub">Audit + actionable backlog + read-only Elementor preview + visual validation + safety-gated Safe Fix + sequential batch preparation</div>',
     'development UI subtitle',
   );
   releaseUi = requireRegexReplacement(
@@ -88,26 +93,26 @@ export function buildReleaseUi(developmentUi) {
   );
   releaseUi = requireRegexReplacement(
     releaseUi,
-    /\n    document\.getElementById\('p14-preview'\)\.addEventListener\('click', \(\) => \{[\s\S]*?\n    \}\);\n    document\.getElementById\('plan'\)/,
-    "\n    document.getElementById('plan')",
+    /\n    document\.getElementById\('p14-preview'\)\.addEventListener\('click', \(\) => \{[\s\S]*?\n    \}\);\n    document\.getElementById\('p15-preview'\)/,
+    "\n    document.getElementById('p15-preview')",
     'development-only P14 preview click handler',
   );
   releaseUi = requireRegexReplacement(
     releaseUi,
-    /\n    function renderP14PlanPreview\(message\) \{[\s\S]*?\n    \}\n\n    function renderSafePlan\(message\) \{/,
-    '\n    function renderSafePlan(message) {',
+    /\n    function renderP14PlanPreview\(message\) \{[\s\S]*?\n    \}\n\n    function renderP15ElementorPreview\(message\) \{/,
+    '\n    function renderP15ElementorPreview(message) {',
     'development-only P14 preview renderer',
   );
   releaseUi = requireRegexReplacement(
     releaseUi,
-    /\n      if \(message\.type === 'p14-plan-preview-result'\) \{[\s\S]*?\n      if \(message\.type === 'safe-plan-result'\) \{/,
-    "\n      if (message.type === 'safe-plan-result') {",
+    /\n      if \(message\.type === 'p14-plan-preview-result'\) \{[\s\S]*?\n      if \(message\.type === 'p15-elementor-preview-result'\) \{/,
+    "\n      if (message.type === 'p15-elementor-preview-result') {",
     'development-only P14 preview message handlers',
   );
   releaseUi = requireReplacement(
     releaseUi,
     '<div id="root" class="empty">Select one Frame to audit/preview, two Frames to compare, or multiple Frames for P7 batch processing.</div>',
-    '<div id="root" class="empty">Select one Frame to audit or prepare safely, two Frames to compare, or multiple Frames for sequential batch preparation.</div>',
+    '<div id="root" class="empty">Select one Frame to audit, inspect for Elementor, or prepare safely; select two Frames to compare or multiple Frames for sequential batch preparation.</div>',
     'development UI initial guidance',
   );
   releaseUi = requireReplacement(
