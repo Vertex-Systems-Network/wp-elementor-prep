@@ -44,7 +44,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`f3306a3aba5b42544cbdabe950f975ce5ce338a9`
+`cd4e8394dfaa6917d28676e51eec831591b6b99a`
 
 ### Recent verified P16 sequence
 
@@ -93,13 +93,25 @@ Current verified main before this documentation sync:
 - PR #446 — removed recursive temporary-directory cleanup so cleanup attempts only non-recursive `rmdir` after parent/temp snapshot checks -> `0c9325fe995e983b4c904f59f788ac91167276aa`; exact head `efc6d1b34f238928635abb5eaa2d5afb20ff0b2b` passed CI #1223, P12 Final Release Artifact #534 and P12 Offline Acceptance #578.
 - PR #448 — synchronized canonical docs through non-recursive temporary cleanup -> `af517e1477d57753993f805ccb4d0f770fdf51d5`; exact head `875c1ab816f67761be11f032a87cd3a4ec6e4d57` passed CI #1225, Integration Readiness #475, P12 Final Release Artifact #536 and P12 Offline Acceptance #580.
 - PR #452 — bound final atomic rename to captured output-destination state -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`; exact head `ae6fff73839f874ca5eb0b92d50e7632e74ce533` passed CI #1231, P12 Final Release Artifact #542 and P12 Offline Acceptance #586.
+- PR #454 — synchronized the four canonical status documents through output-destination state binding -> `b5e8f919156fb8dc75cab9bad418ce95c7e36f0a`; exact head `25aab78d4f198cf688522a1a1f5ff75df0467855` retained P12/P14/P15/P16/P17-P27 authority truth unchanged.
+
+### Recent verified governance sequence
+
+- PR #456 — added read-only `Main PR Origin Audit` detection for pushes to `main`; unassociated direct-main commits fail the post-push audit, but the workflow does not prevent the push -> `1896ba5d576e6d33f693a2a5dc0a7fb09094d1d6`; exact head `6945cd73e5d852bb5069fbdb31831e11c7b7f144` passed CI #1239, P12 Final Release Artifact #550 and P12 Offline Acceptance #594; post-merge audit run #1 PASS.
+- PR #458 — extended the same read-only audit to fail on `github.event.forced == true` before PR association lookup -> `cd4e8394dfaa6917d28676e51eec831591b6b99a`; exact head `40f036dcfd5814b3476d249b32cb113009269fc6` passed CI #1241, P12 Final Release Artifact #552 and P12 Offline Acceptance #596; post-merge audit #2, CI #1242, Integration Readiness #488, Final #553 and Offline #597 all PASS.
+- `#287` remains OPEN because repository-admin branch protection/rulesets are still required for actual prevention; `main` is not represented as protected merely because post-push detection exists.
 
 ### Module-wise progress
 
 | Module | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---:|---|---|
-| AI-native governance + repo tooling | COMPLETE | 100% | `██████████` | Keep Issues -> PR/MR -> R0 -> R1 -> development -> evidence lifecycle synchronized |
-| P0–P4 core audit/validation/transaction | COMPLETE | 100% | `██████████` | None |
+| AI-native governance + repo tooling | REPO-SIDE DETECTION COMPLETE / ADMIN ENFORCEMENT IN PROGRESS | N/A | `──────────` | Main PR-origin + forced-update audit is active; #287 admin branch/ruleset enforcement still required |
+| P0–P4 historical core aggregate | COMPLETE | 100% | `██████████` | Compatibility summary only; individual P0-P4 rows below are canonical for phase visibility |
+| P0 AI-native foundation + audit-only scaffold | COMPLETE | 100% | `██████████` | Planning, memory-bank, deterministic audit-only scaffold and CI foundation established |
+| P1 Audit-Only MVP + golden-fixture calibration | COMPLETE | 100% | `██████████` | Read-only selected-frame audit, explainable scoring and fixture calibration complete |
+| P2 Deterministic layout classifier + evidence/confidence | COMPLETE | 100% | `██████████` | Classifier families, preservation roles and adversarial regression coverage complete |
+| P3 Geometry/content/image integrity + visual-diff validator | COMPLETE | 100% | `██████████` | Full validation and fail-closed pixel-broker path retained |
+| P4 Candidate transaction engine + rollback guarantees | COMPLETE | 100% | `██████████` | Candidate clone -> transform -> validate -> commit/discard transaction foundation complete |
 | P5 Conservative Safe Fix | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Retained real Figma closure |
 | P6 Advanced structures | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Retained positive/refusal closure |
 | P7 Batch queue | COMPLETE / PRODUCTION ACCEPTED | 100% | `██████████` | Retained 64-Frame stress/cancellation closure |
