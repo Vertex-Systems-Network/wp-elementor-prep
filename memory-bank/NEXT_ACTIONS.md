@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through stable operator input snapshots
+## Parallel P16 state — bounded code-side foundation complete through immutable stable operator input snapshots
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -64,7 +64,9 @@ Current implemented P16 chain:
 - PR #424 — canonical strict-own-property docs sync;
 - PR #426 — direct plain-object cardinality preflight before descriptor/text/sort work;
 - PR #428 — canonical object-cardinality-preflight docs sync;
-- PR #430 — stable retention operator input snapshots carried into output safety.
+- PR #430 — stable retention operator input snapshots carried into output safety;
+- PR #432 — canonical stable-input-snapshot docs sync;
+- PR #434 — readonly/runtime-frozen retention operator snapshot path/file metadata while parsed `.value` remains intentionally unfrozen.
 
 Current progression is intentionally bounded:
 
@@ -77,6 +79,8 @@ Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requireme
 - zero-byte and whitespace-only inputs are rejected;
 - the inspected input is opened once, the opened handle must still match the inspected regular file before content read, and handle/path metadata is rechecked after read;
 - the parsed value is retained in a sanitized internal snapshot together with resolved/canonical path + read-time dev/ino and size/mtime/ctime metadata;
+- snapshot wrapper fields and nested file metadata are TypeScript-readonly and runtime-frozen after capture, preventing later mutation of paths/identity metadata used by output safety;
+- parsed `.value` is intentionally not deep-frozen so existing builder/validator behavior remains unchanged;
 - after parse, container nesting is capped at 64 levels;
 - after parse, total JSON values visited are capped at 50,000;
 - structural traversal is iterative, not recursive, and over-limit input is rejected before target builders/validators execute;
@@ -86,7 +90,7 @@ Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requireme
 
 Their shared output writer additionally:
 
-- receives the exact snapshots associated with the values consumed by the builder/validator rather than re-discovering unrelated files from raw paths;
+- receives the exact frozen metadata snapshots associated with the values consumed by the builder/validator rather than re-discovering unrelated files from raw paths;
 - creates the requested output parent directory, then resolves that parent through `realpath` before final target checks;
 - compares the canonical output location against the canonical files actually read;
 - revalidates each input pathname against its read snapshot before temporary output creation and immediately before atomic rename;
@@ -205,7 +209,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #424 docs sync -> `61ba4dc5b456a588383ed0169045387e0fc51482`; exact head `56cdf6d1314dcb59764a6c652e2d31a10fca297e`; CI #1200, Integration #457, Final Release #511, Offline #555 PASS;
 - #426 object-cardinality preflight -> `06cdd845e46613541f555cc0de59237d261c1fa3`; exact head `03c41d0c4b6880038e24a1f35c854401c0223fee`; CI #1202, Final Release #513, Offline #557 PASS;
 - #428 docs sync -> `44186a19b5719ae3cd3b883140e6e2b8bf776553`; exact head `a140a6918df8cc6be46c990cc10dd1f6aaa13e88`; CI #1204, Integration #460, Final Release #515, Offline #559 PASS;
-- #430 stable operator input snapshots -> `146b2dd7a534ab12b4598fe1c78823d5e9733118`; exact head `211d24d7615217b9711debecc06d05dbff16c92d`; CI #1206, Final Release #517, Offline #561 PASS.
+- #430 stable operator input snapshots -> `146b2dd7a534ab12b4598fe1c78823d5e9733118`; exact head `211d24d7615217b9711debecc06d05dbff16c92d`; CI #1206, Final Release #517, Offline #561 PASS;
+- #432 docs sync -> `686a4e8bf65a2b0b43075baa20c6fa6eccadb10d`; exact head `2507049a686e9a757838da2dbfce427580b8ad40`; CI #1208, Integration #463, Final Release #519, Offline #563 PASS;
+- #434 immutable snapshot metadata -> `78c162728af3249a4ce5905eb831b7a0f72dcd4d`; exact head `250d8490ad4ceaaede0fa4a9af7daadbb74ae655`; CI #1210, Final Release #521, Offline #565 PASS.
 
 ## Current guardrails
 
