@@ -52,6 +52,11 @@
     .checkpoint { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 10px; margin: 10px 0; }
     .progressTrack { height: 6px; border-radius: 999px; overflow: hidden; background: var(--figma-color-bg-secondary); margin-top: 10px; }
     .progressFill { height: 100%; background: var(--figma-color-text); opacity: .72; }
+    .profilePanel { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 10px; margin-top: 12px; }
+    .profileGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .profileField { font-size: 10px; opacity: .78; }
+    .profileInput { width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg); color: var(--figma-color-text); font: inherit; }
+    .fingerprint { font-size: 9px; word-break: break-all; opacity: .72; margin-top: 5px; }
   </style>
 </head>
 <body>
@@ -59,6 +64,19 @@
     <h1>WP Builders Prepare</h1>
     <div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>
     <div id="root" class="empty">Select one Frame to audit/preview, two Frames to compare, or multiple Frames for P7 batch processing.</div>
+    <div class="profilePanel">
+      <div class="status">Declared TargetProfile compatibility</div>
+      <div class="meta">Versions entered here are user-declared only. They are not observed from, or verified against, a WordPress/Elementor site.</div>
+      <div class="profileGrid">
+        <label class="profileField">Declared WordPress version
+          <input id="p15-wp-version" class="profileInput" maxlength="64" autocomplete="off" spellcheck="false" placeholder="e.g. 6.8.2" />
+        </label>
+        <label class="profileField">Declared Elementor version
+          <input id="p15-elementor-version" class="profileInput" maxlength="64" autocomplete="off" spellcheck="false" placeholder="e.g. 3.31.2" />
+        </label>
+      </div>
+      <div class="inlineActions one"><button id="p15-profile">Assess declared target</button></div>
+    </div>
     <div class="actions">
       <button id="audit">Run audit</button>
       <button id="p14-preview">Preview Guided Prepare</button>
@@ -102,6 +120,14 @@
       root.textContent = 'Inspecting the selected Frame through the bounded read-only P15 Elementor path…';
       exportPanel.hidden = true;
       post('p15-elementor-preview-request');
+    });
+    document.getElementById('p15-profile').addEventListener('click', () => {
+      const wordpressVersion = document.getElementById('p15-wp-version').value;
+      const elementorVersion = document.getElementById('p15-elementor-version').value;
+      root.className = 'empty';
+      root.textContent = 'Assessing the current selected Frame against the user-declared Elementor TargetProfile…';
+      exportPanel.hidden = true;
+      post('p15-elementor-target-profile-request', { wordpressVersion, elementorVersion });
     });
     document.getElementById('plan').addEventListener('click', () => {
       root.className = 'empty';
@@ -542,6 +568,69 @@
         ${!reviewRows && !validationRows ? '<div class="empty">A deterministic local candidate was built for inspection only. Target import/editor/render validation has not been run.</div>' : ''}`;
     }
 
+    function renderP15TargetProfilePreview(message) {
+      const report = message.report;
+      const declared = report.declaredTarget;
+      const assessment = report.assessment;
+      const authority = report.authority;
+      const locked = report.readOnly === true
+        && authority.environmentObserved === false
+        && authority.figmaMutation === false
+        && authority.networkAccess === false
+        && authority.wordpressConnection === false
+        && authority.targetImport === false
+        && authority.fileDownload === false
+        && authority.sectionTransfer === false
+        && authority.targetCompatibilityClaim === false
+        && authority.productionAcceptance === false;
+      const inputIssues = declared.inputIssueCodes.map((code) => `
+        <div class="row"><div class="rowHead"><div class="name">${escapeHtml(code)}</div><div class="badge">DECLARED INPUT</div></div></div>`).join('');
+      const extractionReview = report.extractionReviewEntries.map((entry) => `
+        <div class="row">
+          <div class="rowHead"><div class="name">${escapeHtml(entry.reasonCode)}</div><div class="badge">REVIEW</div></div>
+          <div class="finding">Source node: ${escapeHtml(entry.sourceNodeId)}</div>
+        </div>`).join('');
+      const alignmentRows = assessment ? Object.entries(assessment.alignment).map(([key, value]) => `
+        <div class="metric"><strong>${value ? 'YES' : 'NO'}</strong>${escapeHtml(key)}</div>`).join('') : '';
+      const assessmentIssues = assessment
+        ? [...assessment.profileIssueCodes, ...assessment.templateIssueCodes].map((code) => `
+          <div class="row"><div class="rowHead"><div class="name">${escapeHtml(code)}</div><div class="badge">ASSESSMENT</div></div></div>`).join('')
+        : '';
+      const reviewWidgetTypes = assessment && assessment.reviewWidgetTypes.length
+        ? assessment.reviewWidgetTypes.join(', ')
+        : 'none';
+
+      root.className = '';
+      root.innerHTML = `
+        <div class="hero">
+          <div class="score">${escapeHtml(report.status)}</div>
+          <div class="status">P15 DECLARED TARGETPROFILE · ${locked ? 'READ-ONLY / LOCKED' : 'UNEXPECTED AUTHORITY'}</div>
+          <div class="meta">${escapeHtml(report.frame.name)} · Frame ${escapeHtml(report.frame.id)}</div>
+          <div class="meta">Environment source: DECLARED — values were entered by the user and were not observed from a target site.</div>
+          <div class="meta">WordPress: ${escapeHtml(declared.wordpressVersion || '—')} · Elementor: ${escapeHtml(declared.elementorVersion || '—')}</div>
+          <div class="meta">targetCompatibilityClaim=false · productionAcceptance=false · environmentObserved=false · no import/download/transfer</div>
+        </div>
+        ${assessment ? `
+          <div class="sectionTitle">Declared metadata alignment only</div>
+          <div class="hero">
+            <div class="status">${escapeHtml(assessment.status)} · DECLARED METADATA ALIGNMENT ONLY</div>
+            <div class="meta">This state is not target compatibility, import verification, editor verification, render verification or production acceptance.</div>
+            <div class="metricGrid">${alignmentRows}</div>
+            <div class="meta">Widgets: ${assessment.capabilitySummary.totalWidgets} total · ${assessment.capabilitySummary.documentedCoreWidgets} documented core · ${assessment.capabilitySummary.reviewRequiredWidgets} review required</div>
+            <div class="meta">Responsive settings: ${assessment.capabilitySummary.widgetsWithResponsiveSettings} · global references: ${assessment.capabilitySummary.widgetsWithGlobalReferences}</div>
+            <div class="meta">Review widget types: ${escapeHtml(reviewWidgetTypes)}</div>
+            <div class="meta">referenceClosureStatus=${escapeHtml(assessment.referenceClosureStatus)} · targetEnvironmentValidationStatus=${escapeHtml(assessment.targetEnvironmentValidationStatus)}</div>
+            <div class="meta">targetCompatibilityClaim=false · productionAcceptance=false · generationEnabled=false · downloadEnabled=false</div>
+            <div class="fingerprint">Profile fingerprint: ${escapeHtml(assessment.profileFingerprint)}</div>
+            <div class="fingerprint">Candidate fingerprint: ${escapeHtml(assessment.candidateFingerprint)}</div>
+          </div>` : ''}
+        ${inputIssues ? `<div class="sectionTitle">Declared input issues · ${declared.inputIssueCodes.length}</div>${inputIssues}` : ''}
+        ${extractionReview ? `<div class="sectionTitle">Extraction review required · ${report.extractionReviewEntries.length}</div>${extractionReview}` : ''}
+        ${assessmentIssues ? `<div class="sectionTitle">Assessment issues</div>${assessmentIssues}` : ''}
+        ${report.status === 'INVALID_DECLARED_PROFILE' ? '<div class="empty">Enter bounded declared version strings without leading/trailing whitespace, then assess again. Nothing was observed or inferred.</div>' : ''}
+        ${report.status === 'EXTRACTION_REVIEW_REQUIRED' ? '<div class="empty">The current selected Frame requires review before a declared TargetProfile assessment can run. No partial candidate was assessed.</div>' : ''}`;
+    }
+
     function renderSafePlan(message) {
       const counts = { ELIGIBLE: 0, REVIEW: 0, NOOP: 0, UNSUPPORTED: 0 };
       for (const plan of message.plans) counts[plan.decision] = (counts[plan.decision] || 0) + 1;
@@ -786,6 +875,19 @@
         exportPanel.hidden = true;
         root.className = 'empty';
         root.textContent = message.message || 'P15 Elementor preview is unavailable. Select exactly one Frame and retry.';
+        return;
+      }
+
+      if (message.type === 'p15-elementor-target-profile-result') {
+        exportPanel.hidden = true;
+        renderP15TargetProfilePreview(message);
+        return;
+      }
+
+      if (message.type === 'p15-elementor-target-profile-unavailable') {
+        exportPanel.hidden = true;
+        root.className = 'empty';
+        root.textContent = message.message || 'P15 declared TargetProfile preview is unavailable. Select exactly one Frame and retry.';
         return;
       }
 
