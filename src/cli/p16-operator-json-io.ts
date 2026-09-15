@@ -1,8 +1,9 @@
+import type { Stats } from 'node:fs';
 import {
   lstat,
   mkdir,
   mkdtemp,
-  readFile,
+  open,
   realpath,
   rename,
   rm,
@@ -16,7 +17,20 @@ export const P16_OPERATOR_JSON_INPUT_MAX_VALUES = 50_000;
 
 type Fail = (message: string) => never;
 
-type InputStats = Awaited<ReturnType<typeof lstat>>;
+export type P16OperatorJsonFileSnapshot = {
+  dev: number;
+  ino: number;
+  size: number;
+  mtimeMs: number;
+  ctimeMs: number;
+};
+
+export type P16OperatorJsonInputSnapshot = {
+  value: unknown;
+  resolvedPath: string;
+  canonicalPath: string;
+  file: P16OperatorJsonFileSnapshot;
+};
 
 type JsonTraversalEntry = {
   value: unknown;
@@ -35,11 +49,72 @@ function isMissingPathError(error: unknown): boolean {
     && (error as { code?: unknown }).code === 'ENOENT';
 }
 
-function sameFileIdentity(first: InputStats, second: InputStats): boolean {
-  return first.ino !== 0
-    && second.ino !== 0
+function toFileSnapshot(info: Stats): P16OperatorJsonFileSnapshot {
+  return {
+    dev: info.dev,
+    ino: info.ino,
+    size: info.size,
+    mtimeMs: info.mtimeMs,
+    ctimeMs: info.ctimeMs,
+  };
+}
+
+function hasStableFileIdentity(info: P16OperatorJsonFileSnapshot | Stats): boolean {
+  return info.ino !== 0;
+}
+
+function sameFileIdentity(
+  first: P16OperatorJsonFileSnapshot | Stats,
+  second: P16OperatorJsonFileSnapshot | Stats,
+): boolean {
+  return hasStableFileIdentity(first)
+    && hasStableFileIdentity(second)
     && first.dev === second.dev
     && first.ino === second.ino;
+}
+
+function sameFileMetadata(
+  first: P16OperatorJsonFileSnapshot | Stats,
+  second: P16OperatorJsonFileSnapshot | Stats,
+): boolean {
+  return first.size === second.size
+    && first.mtimeMs === second.mtimeMs
+    && first.ctimeMs === second.ctimeMs;
+}
+
+function sameObservedFile(
+  first: P16OperatorJsonFileSnapshot | Stats,
+  second: P16OperatorJsonFileSnapshot | Stats,
+): boolean {
+  if (hasStableFileIdentity(first) && hasStableFileIdentity(second)) {
+    return sameFileIdentity(first, second) && sameFileMetadata(first, second);
+  }
+  return sameFileMetadata(first, second);
+}
+
+async function inspectCurrentInputPath(
+  snapshot: P16OperatorJsonInputSnapshot,
+  fail: Fail,
+): Promise<Stats> {
+  let currentInfo: Stats;
+  let currentCanonical: string;
+  try {
+    currentInfo = await lstat(snapshot.resolvedPath);
+    currentCanonical = await realpath(snapshot.resolvedPath);
+  } catch {
+    fail('Input path changed after it was read.');
+  }
+
+  if (!currentInfo.isFile()) {
+    fail('Input path changed after it was read.');
+  }
+  if (comparisonPath(currentCanonical) !== comparisonPath(snapshot.canonicalPath)) {
+    fail('Input path changed after it was read.');
+  }
+  if (!sameObservedFile(snapshot.file, currentInfo)) {
+    fail('Input path changed after it was read.');
+  }
+  return currentInfo;
 }
 
 function validateP16OperatorJsonStructure(
@@ -103,58 +178,98 @@ export async function readP16OperatorJsonInput(
   path: string,
   label: string,
   fail: Fail,
-): Promise<unknown> {
+): Promise<P16OperatorJsonInputSnapshot> {
   const resolvedPath = resolve(path);
-  let info: InputStats;
-
+  let handle;
   try {
-    info = await lstat(resolvedPath);
+    handle = await open(resolvedPath, 'r');
   } catch {
     fail(`Unable to inspect ${label} input.`);
   }
 
-  if (!info.isFile()) {
-    fail(`${label} input must be a regular file.`);
-  }
-  if (info.size === 0) {
-    fail(`${label} input is empty.`);
-  }
-  if (info.size > P16_OPERATOR_JSON_INPUT_MAX_BYTES) {
-    fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
-  }
-
-  let raw: string;
   try {
-    raw = await readFile(resolvedPath, 'utf8');
-  } catch {
-    fail(`Unable to read ${label} input.`);
-  }
+    let before: Stats;
+    try {
+      before = await handle.stat();
+    } catch {
+      fail(`Unable to inspect ${label} input.`);
+    }
 
-  const actualBytes = Buffer.byteLength(raw, 'utf8');
-  if (actualBytes === 0 || raw.trim().length === 0) {
-    fail(`${label} input is empty.`);
-  }
-  if (actualBytes > P16_OPERATOR_JSON_INPUT_MAX_BYTES) {
-    fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
-  }
+    if (!before.isFile()) {
+      fail(`${label} input must be a regular file.`);
+    }
+    if (before.size === 0) {
+      fail(`${label} input is empty.`);
+    }
+    if (before.size > P16_OPERATOR_JSON_INPUT_MAX_BYTES) {
+      fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
+    }
 
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw) as unknown;
-  } catch {
-    fail(`${label} input is not valid JSON.`);
-  }
+    let raw: string;
+    let after: Stats;
+    try {
+      raw = await handle.readFile({ encoding: 'utf8' });
+      after = await handle.stat();
+    } catch {
+      fail(`Unable to read ${label} input.`);
+    }
 
-  validateP16OperatorJsonStructure(parsed, label, fail);
-  return parsed;
+    if (!sameObservedFile(before, after)) {
+      fail(`${label} input changed while being read.`);
+    }
+
+    const actualBytes = Buffer.byteLength(raw, 'utf8');
+    if (actualBytes === 0 || raw.trim().length === 0) {
+      fail(`${label} input is empty.`);
+    }
+    if (actualBytes > P16_OPERATOR_JSON_INPUT_MAX_BYTES) {
+      fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
+    }
+
+    let pathInfoBefore: Stats;
+    let canonicalPath: string;
+    let pathInfoAfter: Stats;
+    try {
+      pathInfoBefore = await lstat(resolvedPath);
+      canonicalPath = await realpath(resolvedPath);
+      pathInfoAfter = await lstat(resolvedPath);
+    } catch {
+      fail(`${label} input changed after it was read.`);
+    }
+
+    if (!pathInfoBefore.isFile() || !pathInfoAfter.isFile()) {
+      fail(`${label} input must be a regular file.`);
+    }
+    if (!sameObservedFile(pathInfoBefore, pathInfoAfter) || !sameObservedFile(after, pathInfoAfter)) {
+      fail(`${label} input changed after it was read.`);
+    }
+
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(raw) as unknown;
+    } catch {
+      fail(`${label} input is not valid JSON.`);
+    }
+
+    validateP16OperatorJsonStructure(parsed, label, fail);
+    return {
+      value: parsed,
+      resolvedPath,
+      canonicalPath,
+      file: toFileSnapshot(after),
+    };
+  } finally {
+    await handle.close().catch(() => undefined);
+  }
 }
 
 export async function writeP16OperatorJsonOutput(
   outputPath: string,
-  inputPaths: readonly string[],
+  inputSnapshots: readonly P16OperatorJsonInputSnapshot[],
   content: string,
   fail: Fail,
 ): Promise<void> {
+  const inputPaths = inputSnapshots.map((snapshot) => snapshot.resolvedPath);
   const resolvedOutput = resolveP16OperatorOutputPath(outputPath, inputPaths, fail);
   const requestedParent = dirname(resolvedOutput);
 
@@ -173,25 +288,15 @@ export async function writeP16OperatorJsonOutput(
 
   const canonicalOutput = join(realParent, basename(resolvedOutput));
   const canonicalOutputComparison = comparisonPath(canonicalOutput);
-  const inputIdentities: InputStats[] = [];
 
-  for (const inputPath of inputPaths) {
-    let canonicalInput: string;
-    let inputInfo: InputStats;
-    try {
-      canonicalInput = await realpath(resolve(inputPath));
-      inputInfo = await lstat(canonicalInput);
-    } catch {
-      fail('Unable to resolve input path for output safety.');
-    }
-
-    if (comparisonPath(canonicalInput) === canonicalOutputComparison) {
+  for (const inputSnapshot of inputSnapshots) {
+    await inspectCurrentInputPath(inputSnapshot, fail);
+    if (comparisonPath(inputSnapshot.canonicalPath) === canonicalOutputComparison) {
       fail('Output path must not resolve to an input path.');
     }
-    inputIdentities.push(inputInfo);
   }
 
-  let existingOutput: InputStats | null = null;
+  let existingOutput: Stats | null = null;
   try {
     existingOutput = await lstat(canonicalOutput);
   } catch (error) {
@@ -207,7 +312,7 @@ export async function writeP16OperatorJsonOutput(
     if (!existingOutput.isFile()) {
       fail('Output path must be a regular file or not exist.');
     }
-    if (inputIdentities.some((inputInfo) => sameFileIdentity(existingOutput, inputInfo))) {
+    if (inputSnapshots.some((inputSnapshot) => sameFileIdentity(existingOutput, inputSnapshot.file))) {
       fail('Output path must not alias an input file.');
     }
   }
@@ -218,8 +323,16 @@ export async function writeP16OperatorJsonOutput(
     temporaryDirectory = await mkdtemp(join(realParent, '.p16-output-'));
     const temporaryPath = join(temporaryDirectory, 'payload.json');
     await writeFile(temporaryPath, content, { encoding: 'utf8', flag: 'wx', mode: 0o600 });
+
+    for (const inputSnapshot of inputSnapshots) {
+      await inspectCurrentInputPath(inputSnapshot, fail);
+    }
+
     await rename(temporaryPath, canonicalOutput);
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Input path changed after it was read.') {
+      throw error;
+    }
     writeFailed = true;
   } finally {
     if (temporaryDirectory) {
