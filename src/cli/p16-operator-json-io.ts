@@ -1,4 +1,5 @@
 import type { Stats } from 'node:fs';
+import type { FileHandle } from 'node:fs/promises';
 import {
   lstat,
   mkdir,
@@ -171,29 +172,45 @@ export async function readP16OperatorJsonInput(
   fail: Fail,
 ): Promise<P16OperatorJsonInputSnapshot> {
   const resolvedPath = resolve(path);
-  let handle;
+  let initialPathInfo: Stats;
   try {
-    handle = await open(resolvedPath, 'r');
+    initialPathInfo = await lstat(resolvedPath);
   } catch {
     fail(`Unable to inspect ${label} input.`);
   }
 
+  if (!initialPathInfo.isFile()) {
+    fail(`${label} input must be a regular file.`);
+  }
+  if (initialPathInfo.size === 0) {
+    fail(`${label} input is empty.`);
+  }
+  if (initialPathInfo.size > P16_OPERATOR_JSON_INPUT_MAX_BYTES) {
+    fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
+  }
+
+  let handle: FileHandle;
+  try {
+    handle = await open(resolvedPath, 'r');
+  } catch {
+    fail(`Unable to read ${label} input.`);
+  }
+
   try {
     let before: Stats;
+    let pathInfoBeforeRead: Stats;
     try {
       before = await handle.stat();
+      pathInfoBeforeRead = await lstat(resolvedPath);
     } catch {
-      fail(`Unable to inspect ${label} input.`);
+      fail(`${label} input changed before it was read.`);
     }
 
-    if (!before.isFile()) {
+    if (!before.isFile() || !pathInfoBeforeRead.isFile()) {
       fail(`${label} input must be a regular file.`);
     }
-    if (before.size === 0) {
-      fail(`${label} input is empty.`);
-    }
-    if (before.size > P16_OPERATOR_JSON_INPUT_MAX_BYTES) {
-      fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
+    if (!sameObservedFile(initialPathInfo, before) || !sameObservedFile(before, pathInfoBeforeRead)) {
+      fail(`${label} input changed before it was read.`);
     }
 
     let raw: string;
@@ -217,21 +234,24 @@ export async function readP16OperatorJsonInput(
       fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
     }
 
-    let pathInfoBefore: Stats;
+    let pathInfoBeforeRealpath: Stats;
     let canonicalPath: string;
-    let pathInfoAfter: Stats;
+    let pathInfoAfterRealpath: Stats;
     try {
-      pathInfoBefore = await lstat(resolvedPath);
+      pathInfoBeforeRealpath = await lstat(resolvedPath);
       canonicalPath = await realpath(resolvedPath);
-      pathInfoAfter = await lstat(resolvedPath);
+      pathInfoAfterRealpath = await lstat(resolvedPath);
     } catch {
       fail(`${label} input changed after it was read.`);
     }
 
-    if (!pathInfoBefore.isFile() || !pathInfoAfter.isFile()) {
-      fail(`${label} input must be a regular file.`);
+    if (!pathInfoBeforeRealpath.isFile() || !pathInfoAfterRealpath.isFile()) {
+      fail(`${label} input changed after it was read.`);
     }
-    if (!sameObservedFile(pathInfoBefore, pathInfoAfter) || !sameObservedFile(after, pathInfoAfter)) {
+    if (
+      !sameObservedFile(pathInfoBeforeRealpath, pathInfoAfterRealpath)
+      || !sameObservedFile(after, pathInfoAfterRealpath)
+    ) {
       fail(`${label} input changed after it was read.`);
     }
 
