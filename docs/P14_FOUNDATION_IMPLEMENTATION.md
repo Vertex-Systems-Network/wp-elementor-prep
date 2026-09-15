@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + stable immutable operator input snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + iterative structural bounds + depth/value/text-bounded accessor/own-shape-safe direct canonicalization + object-cardinality preflight + prototype-safe canonicalization + alias-safe atomic output writes.
+Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain plus target-neutral IR, deterministic local v0.4 Template JSON generation and read-only selected-Figma-Frame extraction, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + stable immutable operator input snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + iterative structural bounds + depth/value/text-bounded accessor/own-shape-safe direct canonicalization + object-cardinality preflight + prototype-safe canonicalization + alias-safe atomic output writes.
 
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and P27 final production-release gate (#182).
 
@@ -30,7 +30,11 @@ P15 remains exactly **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** 
 
 Its bounded chain includes declared target profiles, exact candidate/import/reference evidence binding, offline operator intake, pre-decision review and externally reported authentication-result binding. These remain non-authorizing evidence/review surfaces.
 
-Real WordPress/Elementor target import, genuine trusted evidence authentication/internal decision, semantic generation, compatibility, production acceptance and download authority remain unvalidated/unaccepted.
+The commercial-V1 code-side foundation now additionally includes a target-neutral export IR plus deterministic local Elementor v0.4 Container/Widget Template JSON generation for bounded explicit container/heading/button/image/plain-text intents. Generated candidates are revalidated through the existing template/candidate contract and any REVIEW intent fails closed without partial output.
+
+A read-only selected-Figma-Frame extractor now retains bounded HORIZONTAL/VERTICAL Auto Layout, padding/gap/alignment and visible plain TEXT facts in that neutral IR. Generic plain text maps to documented core `text-editor` with escaping and line-break retention. Manual/grid/wrapped layout, absolute children, image-backed content pending asset export, unsupported visible node/alignment states and depth/node overflow produce REVIEW. Layer names are never used to guess heading/button semantics.
+
+Real WordPress/Elementor target import/editor/render validation, genuine trusted evidence authentication/internal decision, broader semantic/media/responsive mapping, production acceptance and download/transfer authority remain unvalidated/unaccepted. The new local generation/extraction surfaces do not authorize P14 mutation.
 
 ### Current P16 state
 
@@ -111,51 +115,17 @@ The normalized JSON serializer is not Gutenberg post-content serialization and t
 
 Current verified main before this documentation sync:
 
-`f3306a3aba5b42544cbdabe950f975ce5ce338a9`
+`9d7718dd19d56c28a183023f347947bcdc3123c9`
 
-Recent P16 merge line:
+Recent merge line:
 
-- #370 external authentication binding -> `5328f6d0205a350e5e1f27b0106fd930e680ae17`;
-- #372 canonical auth docs sync -> `ba2e3d78de79d66a5a07abd2030548893b090845`;
-- #374 decision prerequisite -> `6dc86dfc900244616869e5ff289c3afa815a1d2d`;
-- #376 canonical decision-prerequisite docs sync -> `31080f673102206e6e6ae41801569d62e2eb7512`;
-- #378 genuine-evidence retention requirements manifest -> `2d7c9e76eb293b8914dd1106c262064013d70b11`;
-- #380 canonical retention-requirements docs sync -> `c6f6009538e1e0f82bed087783f2c55fa0d9e75d`;
-- #382 offline/operator retention-requirements export -> `e2fe19364ac8615bc390f125c2afb4085bfc474c`;
-- #384 canonical operator-export docs sync -> `4c91cb3033672d6dc3a6fa28287e060a22e40734`;
-- #386 exact-current retention-manifest validator -> `1532fa54ec9c26bb8904ca939a01754418a70602`;
-- #388 canonical manifest-validator docs sync -> `d7532a98b71e5dc5ac6c100b0386f06422966cf9`;
-- #390 offline/operator exact-current validation CLI -> `c173c617ad205f0fef4a5659f27bf007067e6eb5`;
-- #392 canonical validation-CLI docs sync -> `78f25d0cbc72427ea9824370762099db916750ed`;
-- #394 retention operator local-file hardening -> `19d36b87b71cdc0d8b8f862c733420d64a56d3d2`;
-- #396 canonical file-bound-hardening docs sync -> `12dc1e7e7e149e4da51a13c14722ac834f8a69ca`;
-- #398 prototype-safe retention-manifest canonicalization -> `4ec559f538899697d51138fc35ed79c2bea486b1`;
-- #400 canonical prototype-safe docs sync -> `158132b4076fe5a70afa8e8778ae888fcca4db60`;
-- #402 alias-safe atomic retention output writes -> `8445fc0632a58515a52d72e3cf85ed1364761b9c`;
-- #404 canonical alias-safe-output docs sync -> `4f66522ae9d8dc6fb82875b32634306918ed0a9a`;
-- #406 iterative retention JSON structural bounds -> `5feb04adcd6aaca2079b749d495e22e1da6f6671`;
-- #408 canonical JSON-structure-bounds docs sync -> `ab8cb5e783b14688180959017aa79b9a86adfa66`;
-- #410 direct retention-manifest canonicalization bounds -> `cb4de36d4922b31b1e278d4f55426d042736549b`;
-- #412 canonical direct-canonicalization-bounds docs sync -> `1a7cb4b7692a0361d645ddf1396f6aac561ad093`;
-- #414 direct canonicalization UTF-8 text-byte bounds -> `86cc545456a1f994c9893069b878110662a60bbe`;
-- #416 canonical direct-canonical-text docs sync -> `5b0d3e9f08122c4df7cb29edfd0e51dabb8de440`;
-- #418 accessor-safe direct canonicalization -> `4adc40d74b74f74f362cb635854dd2c8240134d8`;
-- #420 canonical accessor-safe docs sync -> `b89dbba01dd85fc84d53761190581a2ab93ba8f0`;
-- #422 strict own-property direct canonicalization -> `29285d205a61cc437e446367b3d8fefc52595e1d`;
-- #424 canonical strict-own-property docs sync -> `61ba4dc5b456a588383ed0169045387e0fc51482`;
-- #426 direct object-cardinality preflight -> `06cdd845e46613541f555cc0de59237d261c1fa3`;
-- #428 canonical object-cardinality docs sync -> `44186a19b5719ae3cd3b883140e6e2b8bf776553`;
-- #430 stable retention operator input snapshots -> `146b2dd7a534ab12b4598fe1c78823d5e9733118`;
-- #432 canonical stable-input-snapshot docs sync -> `686a4e8bf65a2b0b43075baa20c6fa6eccadb10d`;
-- #434 immutable retention operator snapshot metadata -> `78c162728af3249a4ce5905eb831b7a0f72dcd4d`;
-- #436 canonical immutable-snapshot docs sync -> `df3a5503eb274c4e9c5c5dccf6383b66138cec12`;
-- #438 output-parent snapshot revalidation -> `2b67f292d192b86f825e99860313978ee49dfb6f`;
-- #440 canonical output-parent snapshot docs sync -> `f58029610c5fc8e07c2cff467eae33490be6a92f`;
-- #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`;
-- #444 canonical temporary-payload docs sync -> `f82a667f1e397e713af1447af2117e20c55150d4`;
-- #446 non-recursive temporary-directory cleanup -> `0c9325fe995e983b4c904f59f788ac91167276aa`.
-- #448 canonical non-recursive-cleanup docs sync -> `af517e1477d57753993f805ccb4d0f770fdf51d5`;
-- #452 output-destination state binding -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`.
+- #452 output-destination state binding -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`;
+- #454 canonical four-document status sync -> `b5e8f919156fb8dc75cab9bad418ce95c7e36f0a`;
+- #456 read-only main PR-origin audit -> `1896ba5d576e6d33f693a2a5dc0a7fb09094d1d6`;
+- #458 forced-update detection in the same audit -> `cd4e8394dfaa6917d28676e51eec831591b6b99a`;
+- #460 README P0-P27 phase-status expansion -> `e2c446b162607767e55dfaa8705d5ac446c49734`;
+- #462 bounded P15 neutral IR + deterministic local Elementor v0.4 Template JSON generation -> `673a366ad3da25c5d3a327ed87572bcdb2af408d`;
+- #464 read-only selected-Figma-Frame extraction + plain `text-editor` mapping + depth/node fail-closed reviews -> `9d7718dd19d56c28a183023f347947bcdc3123c9`.
 
 P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`.
 
@@ -164,5 +134,7 @@ P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains t
 ## Next P13/P14 step
 
 Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Any future P14 mutation surface requires separate explicit authorization with fresh evidence, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
+
+P15 may continue deterministic/read-only commercial-V1 generation, extraction and plugin UI/reporting integration while target compatibility, import/editor/render validation, production acceptance and download/transfer authority remain false. Any stronger authority-bearing decision still requires genuinely retained trusted evidence and a separate accepted decision path.
 
 For P16, do not promote the requirements manifest/export/validator/validation CLI, stable immutable read-snapshot/file-bound/output-parent/temp-payload/non-recursive-cleanup guards, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization or any caller-supplied result into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
