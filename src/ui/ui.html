@@ -519,12 +519,18 @@
       const report = message.report;
       const generation = report.generation;
       const extraction = report.extraction;
+      const compatibility = report.compatibility;
       const authority = report.authority;
       const locked = report.readOnly === true
         && generation.targetCompatibilityClaim === false
         && generation.productionAcceptance === false
         && generation.downloadEnabled === false
         && generation.importValidationStatus === 'NOT_RUN'
+        && compatibility.targetCompatibilityClaim === false
+        && compatibility.productionAcceptance === false
+        && compatibility.downloadEnabled === false
+        && compatibility.importValidationStatus === 'NOT_RUN'
+        && compatibility.targetEnvironmentValidationStatus === 'NOT_RUN'
         && authority.figmaMutation === false
         && authority.networkAccess === false
         && authority.wordpressConnection === false
@@ -539,12 +545,29 @@
           </div>
           <div class="finding">Source node: ${escapeHtml(entry.sourceNodeId)}</div>
         </div>`).join('');
+      const compatibilityBlockers = compatibility.blockers.map((entry) => `
+        <div class="row">
+          <div class="rowHead">
+            <div class="name">${escapeHtml(entry.reasonCode)}</div>
+            <div class="badge">${escapeHtml(entry.category)}</div>
+          </div>
+          <div class="finding">Source node: ${escapeHtml(entry.sourceNodeId)}</div>
+        </div>`).join('');
+      const compatibilityReview = compatibility.reviewItems.map((entry) => `
+        <div class="row">
+          <div class="rowHead">
+            <div class="name">${escapeHtml(entry.reasonCode)}</div>
+            <div class="badge">${escapeHtml(entry.category)}</div>
+          </div>
+          <div class="finding">Source node: ${escapeHtml(entry.sourceNodeId)}</div>
+        </div>`).join('');
       const validationRows = extraction.validationIssueCodes.map((code) => `
         <div class="row">
           <div class="rowHead"><div class="name">${escapeHtml(code)}</div><div class="badge">IR VALIDATION</div></div>
         </div>`).join('');
       const widgetTypes = generation.widgetTypes.length ? generation.widgetTypes.join(', ') : 'none';
       const reviewWidgetTypes = generation.reviewWidgetTypes.length ? generation.reviewWidgetTypes.join(', ') : 'none';
+      const compatibilityCounts = compatibility.counts;
 
       root.className = '';
       root.innerHTML = `
@@ -563,7 +586,24 @@
           <div class="meta">Review widget types: ${escapeHtml(reviewWidgetTypes)}</div>
           <div class="meta">targetCompatibilityClaim=false · productionAcceptance=false · downloadEnabled=false · importValidationStatus=NOT_RUN</div>
         </div>
-        ${reviewRows ? `<div class="sectionTitle">Review required · ${generation.reviewEntries.length}</div>${reviewRows}` : ''}
+        <div class="sectionTitle">Target-Ready mapping readiness</div>
+        <div class="hero">
+          <div class="score">${escapeHtml(compatibility.status)}</div>
+          <div class="status">CATEGORICAL MAPPING READINESS · NOT TARGET COMPATIBILITY</div>
+          <div class="meta">Compatibility coverage: ${compatibility.compatibilityCoverage}% across ${compatibility.eligibleNodeCount} eligible classified node(s).</div>
+          <div class="metricGrid">
+            <div class="metric"><strong>${compatibilityCounts.native}</strong>NATIVE</div>
+            <div class="metric"><strong>${compatibilityCounts.nativeWithReview}</strong>NATIVE_WITH_REVIEW</div>
+            <div class="metric"><strong>${compatibilityCounts.convertible}</strong>CONVERTIBLE</div>
+            <div class="metric"><strong>${compatibilityCounts.fallback}</strong>FALLBACK</div>
+            <div class="metric"><strong>${compatibilityCounts.unsupported}</strong>UNSUPPORTED</div>
+            <div class="metric"><strong>${compatibilityCounts.unknown}</strong>UNKNOWN</div>
+          </div>
+          <div class="meta">targetCompatibilityClaim=false · productionAcceptance=false · importValidationStatus=NOT_RUN · targetEnvironmentValidationStatus=NOT_RUN · downloadEnabled=false</div>
+        </div>
+        ${compatibilityBlockers ? `<div class="sectionTitle">Mapping blockers · ${compatibility.blockers.length}</div>${compatibilityBlockers}` : ''}
+        ${compatibilityReview ? `<div class="sectionTitle">Mapping review · ${compatibility.reviewItems.length}</div>${compatibilityReview}` : ''}
+        ${reviewRows ? `<div class="sectionTitle">Generation review required · ${generation.reviewEntries.length}</div>${reviewRows}` : ''}
         ${validationRows ? `<div class="sectionTitle">IR validation issues · ${extraction.validationIssueCodes.length}</div>${validationRows}` : ''}
         ${!reviewRows && !validationRows ? '<div class="empty">A deterministic local candidate was built for inspection only. Target import/editor/render validation has not been run.</div>' : ''}`;
     }
