@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through early direct object-cardinality preflight
+## Parallel P16 state — bounded code-side foundation complete through stable operator input snapshots
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -62,7 +62,9 @@ Current implemented P16 chain:
 - PR #420 — canonical accessor-safe-canonicalization docs sync;
 - PR #422 — strict own-property shape validation for direct canonicalization;
 - PR #424 — canonical strict-own-property docs sync;
-- PR #426 — direct plain-object cardinality preflight before descriptor/text/sort work.
+- PR #426 — direct plain-object cardinality preflight before descriptor/text/sort work;
+- PR #428 — canonical object-cardinality-preflight docs sync;
+- PR #430 — stable retention operator input snapshots carried into output safety.
 
 Current progression is intentionally bounded:
 
@@ -71,8 +73,10 @@ Current progression is intentionally bounded:
 Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requirements-validate` use the same fail-closed local JSON I/O guard:
 
 - each JSON input is capped at 1 MiB before parse, with a post-read byte-length recheck;
-- each input must be a regular file;
+- each input must be a regular file and the initial `lstat` regular-file/size guard remains before content read;
 - zero-byte and whitespace-only inputs are rejected;
+- the inspected input is opened once, the opened handle must still match the inspected regular file before content read, and handle/path metadata is rechecked after read;
+- the parsed value is retained in a sanitized internal snapshot together with resolved/canonical path + read-time dev/ino and size/mtime/ctime metadata;
 - after parse, container nesting is capped at 64 levels;
 - after parse, total JSON values visited are capped at 50,000;
 - structural traversal is iterative, not recursive, and over-limit input is rejected before target builders/validators execute;
@@ -82,13 +86,17 @@ Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requireme
 
 Their shared output writer additionally:
 
+- receives the exact snapshots associated with the values consumed by the builder/validator rather than re-discovering unrelated files from raw paths;
 - creates the requested output parent directory, then resolves that parent through `realpath` before final target checks;
-- compares the canonical output location against real input paths;
+- compares the canonical output location against the canonical files actually read;
+- revalidates each input pathname against its read snapshot before temporary output creation and immediately before atomic rename;
+- fails closed on observed post-read pathname replacement and removes temporary output state before failure;
+- uses stable `dev` + `ino` identity when available and falls back to canonical-path + size/mtime/ctime consistency when identity is unavailable; this narrows path-swap/TOCTOU ambiguity but is not claimed as perfect filesystem-race elimination;
 - rejects existing output symlinks and other non-regular output targets;
-- rejects an existing output regular file that shares filesystem identity (`dev` + `ino`) with an input when identity is available;
+- rejects an existing output regular file that shares stable filesystem identity with a file actually read when identity is available;
 - writes through a unique same-directory temporary regular file and atomically renames it into place, so a late-created final symlink is replaced rather than followed;
 - removes temporary output state before fail-closed exit on write errors;
-- preserves source-input bytes in rejected symlink/hardlink/parent-alias cases covered by focused tests.
+- preserves source-input bytes in rejected symlink/hardlink/parent-alias and post-read pathname-replacement cases covered by focused tests.
 
 The exact-current requirements-manifest canonicalizer is independently depth/value/text bounded, accessor-safe, strict-own-shape, object-cardinality-preflighted and prototype-safe:
 
@@ -153,7 +161,7 @@ Until such genuine evidence exists, keep these facts true:
 
 ### Safe code-only work while genuine evidence is absent
 
-Only deterministic/read-only/supporting work remains unblocked, such as further serialization/sanitization hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
+Only deterministic/read-only/supporting work remains unblocked, such as further serialization/sanitization/file-boundary hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
 
 ## Roadmap state
 
@@ -195,7 +203,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #420 docs sync -> `b89dbba01dd85fc84d53761190581a2ab93ba8f0`; exact head `027b59c704fb8181c75df24e4e0f0487a49caeb5`; CI #1196, Integration #454, Final Release #507, Offline #551 PASS;
 - #422 strict own-property canonicalization -> `29285d205a61cc437e446367b3d8fefc52595e1d`; exact head `5c7256666b690533a1821cf4c087cbaa7963c47d`; CI #1198, Final Release #509, Offline #553 PASS;
 - #424 docs sync -> `61ba4dc5b456a588383ed0169045387e0fc51482`; exact head `56cdf6d1314dcb59764a6c652e2d31a10fca297e`; CI #1200, Integration #457, Final Release #511, Offline #555 PASS;
-- #426 object-cardinality preflight -> `06cdd845e46613541f555cc0de59237d261c1fa3`; exact head `03c41d0c4b6880038e24a1f35c854401c0223fee`; CI #1202, Final Release #513, Offline #557 PASS.
+- #426 object-cardinality preflight -> `06cdd845e46613541f555cc0de59237d261c1fa3`; exact head `03c41d0c4b6880038e24a1f35c854401c0223fee`; CI #1202, Final Release #513, Offline #557 PASS;
+- #428 docs sync -> `44186a19b5719ae3cd3b883140e6e2b8bf776553`; exact head `a140a6918df8cc6be46c990cc10dd1f6aaa13e88`; CI #1204, Integration #460, Final Release #515, Offline #559 PASS;
+- #430 stable operator input snapshots -> `146b2dd7a534ab12b4598fe1c78823d5e9733118`; exact head `211d24d7615217b9711debecc06d05dbff16c92d`; CI #1206, Final Release #517, Offline #561 PASS.
 
 ## Current guardrails
 
