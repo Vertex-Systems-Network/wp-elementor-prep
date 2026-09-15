@@ -1,3 +1,9 @@
+import {
+  assessP15ElementorCompatibilityReadiness,
+  type P15ElementorCompatibilityCountsV1,
+  type P15ElementorCompatibilityFindingV1,
+  type P15ElementorTargetReadyStatus,
+} from '../targets/elementor/compatibility-readiness';
 import type { P15FigmaNeutralExtractionResult } from './p15-neutral-export-extractor';
 
 export const P15_PLUGIN_PREVIEW_REPORT_VERSION = 'p15-elementor-plugin-preview-report-v1' as const;
@@ -24,6 +30,19 @@ export interface P15PluginPreviewReportV1 {
     reviewNodeCount: number;
     validationIssueCodes: string[];
   };
+  compatibility: {
+    status: P15ElementorTargetReadyStatus;
+    compatibilityCoverage: number;
+    eligibleNodeCount: number;
+    counts: P15ElementorCompatibilityCountsV1;
+    blockers: P15ElementorCompatibilityFindingV1[];
+    reviewItems: P15ElementorCompatibilityFindingV1[];
+    targetCompatibilityClaim: false;
+    productionAcceptance: false;
+    importValidationStatus: 'NOT_RUN';
+    targetEnvironmentValidationStatus: 'NOT_RUN';
+    downloadEnabled: false;
+  };
   generation: {
     generatorVersion: P15FigmaNeutralExtractionResult['generation']['generatorVersion'];
     status: P15FigmaNeutralExtractionResult['generation']['status'];
@@ -49,14 +68,15 @@ export interface P15PluginPreviewReportV1 {
 /**
  * Build the bounded plugin-facing P15 inspection payload.
  *
- * Deliberately omits template/candidate JSON and review detail text so the normal plugin UI cannot
- * accidentally become a file-transfer/import surface or expose future target-specific values.
+ * Deliberately omits template/candidate JSON, neutral source content and review detail text so the normal
+ * plugin UI cannot accidentally become a file-transfer/import surface or expose target-specific values.
  */
 export function buildP15PluginPreviewReport(
   frame: P15PluginPreviewFrameIdentity,
   result: P15FigmaNeutralExtractionResult,
 ): P15PluginPreviewReportV1 {
   const candidate = result.generation.candidate;
+  const compatibility = assessP15ElementorCompatibilityReadiness(result.document);
   return {
     schemaVersion: 1,
     reportVersion: P15_PLUGIN_PREVIEW_REPORT_VERSION,
@@ -68,6 +88,19 @@ export function buildP15PluginPreviewReport(
       nodeCount: result.validation.nodeCount,
       reviewNodeCount: result.validation.reviewNodeCount,
       validationIssueCodes: result.validation.issues.map((issue) => issue.code),
+    },
+    compatibility: {
+      status: compatibility.status,
+      compatibilityCoverage: compatibility.compatibilityCoverage,
+      eligibleNodeCount: compatibility.eligibleNodeCount,
+      counts: { ...compatibility.counts },
+      blockers: compatibility.blockers.map((finding) => ({ ...finding })),
+      reviewItems: compatibility.reviewItems.map((finding) => ({ ...finding })),
+      targetCompatibilityClaim: false,
+      productionAcceptance: false,
+      importValidationStatus: 'NOT_RUN',
+      targetEnvironmentValidationStatus: 'NOT_RUN',
+      downloadEnabled: false,
     },
     generation: {
       generatorVersion: result.generation.generatorVersion,

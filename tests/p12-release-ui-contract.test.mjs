@@ -19,7 +19,7 @@ describe('P12 publishable release UI capability contract', () => {
     expect(releaseUi).toContain('BATCH PREP');
   });
 
-  it('retains bounded P15 local + declared TargetProfile previews while stripping development-only P14 surfaces', async () => {
+  it('retains bounded P15 local + mapping readiness + declared TargetProfile previews while stripping development-only P14 surfaces', async () => {
     const developmentUi = await readFile('src/ui/ui.html', 'utf8');
     const releaseUi = buildReleaseUi(developmentUi);
 
@@ -28,7 +28,16 @@ describe('P12 publishable release UI capability contract', () => {
     expect(releaseUi).toContain("message.type === 'p15-elementor-preview-result'");
     expect(releaseUi).toContain('function renderP15ElementorPreview(message)');
     expect(releaseUi).toContain('P15 ELEMENTOR LOCAL PREVIEW');
+    expect(releaseUi).toContain('Target-Ready mapping readiness');
+    expect(releaseUi).toContain('CATEGORICAL MAPPING READINESS · NOT TARGET COMPATIBILITY');
+    expect(releaseUi).toContain('Compatibility coverage:');
+    expect(releaseUi).toContain('NATIVE_WITH_REVIEW');
+    expect(releaseUi).toContain('CONVERTIBLE');
+    expect(releaseUi).toContain('FALLBACK');
+    expect(releaseUi).toContain('UNSUPPORTED');
+    expect(releaseUi).toContain('UNKNOWN');
     expect(releaseUi).toContain('targetCompatibilityClaim=false · productionAcceptance=false · downloadEnabled=false · importValidationStatus=NOT_RUN');
+    expect(releaseUi).toContain('targetCompatibilityClaim=false · productionAcceptance=false · importValidationStatus=NOT_RUN · targetEnvironmentValidationStatus=NOT_RUN · downloadEnabled=false');
 
     expect(releaseUi).toContain('id="p15-profile"');
     expect(releaseUi).toContain('id="p15-wp-version"');
