@@ -1,0 +1,54 @@
+name: Temporary P16 destination docs wording fix 454
+
+on:
+  push:
+    branches:
+      - docs/p16-output-destination-sync-453
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/p16-output-destination-sync-453
+          fetch-depth: 0
+      - name: Correct stale late-created-destination wording
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          replacements = {
+            'README.md': (
+              'The atomic output path prevents a late-created final symlink from being followed onto an input. Temporary payload content is written through the exclusively opened handle rather than a path-based `writeFile`; handle/path identity is checked before content write and the post-write payload snapshot is checked before rename.',
+              'The output writer rejects a destination entry that is created, replaced, removed or changes type after its captured destination state and before the final checked rename boundary, so an observed late-created final symlink is not followed or silently accepted. Temporary payload content is written through the exclusively opened handle rather than a path-based `writeFile`; handle/path identity is checked before content write and the post-write payload snapshot is checked before rename.'
+            ),
+            'docs/P14_FOUNDATION_IMPLEMENTATION.md': (
+              'Atomic rename prevents a late-created final symlink from being followed back onto an input; it is replaced instead. Temporary payload content is written through an exclusively opened `FileHandle` after handle/path identity is verified, and the post-write payload snapshot is revalidated before rename.',
+              'The output writer rejects a destination entry that is created, replaced, removed or changes type after its captured destination state and before the final checked rename boundary, so an observed late-created final symlink is not followed or silently accepted. Temporary payload content is written through an exclusively opened `FileHandle` after handle/path identity is verified, and the post-write payload snapshot is revalidated before rename.'
+            ),
+          }
+
+          for filename, (old, new) in replacements.items():
+              path = Path(filename)
+              text = path.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{filename}: expected exactly one stale sentence, found {count}')
+              path.write_text(text.replace(old, new, 1))
+          PY
+      - name: Remove temporary workflow
+        run: rm .github/workflows/tmp-p16-doc-wording-fix-454.yml
+      - name: Commit correction
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/P14_FOUNDATION_IMPLEMENTATION.md .github/workflows/tmp-p16-doc-wording-fix-454.yml
+          git diff --cached --check
+          git commit -m 'Docs: correct P16 destination rename wording'
+          git push origin HEAD:docs/p16-output-destination-sync-453
