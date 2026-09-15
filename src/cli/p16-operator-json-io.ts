@@ -8,6 +8,7 @@ import {
   realpath,
   rename,
   rm,
+  rmdir,
   writeFile,
 } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
@@ -18,9 +19,12 @@ export const P16_OPERATOR_JSON_INPUT_MAX_VALUES = 50_000;
 
 type Fail = (message: string) => never;
 
-export type P16OperatorJsonFileSnapshot = {
+type StableIdentity = {
   readonly dev: number;
   readonly ino: number;
+};
+
+export type P16OperatorJsonFileSnapshot = StableIdentity & {
   readonly size: number;
   readonly mtimeMs: number;
   readonly ctimeMs: number;
@@ -31,6 +35,14 @@ export type P16OperatorJsonInputSnapshot = {
   readonly resolvedPath: string;
   readonly canonicalPath: string;
   readonly file: P16OperatorJsonFileSnapshot;
+};
+
+export type P16OperatorOutputParentSnapshot = StableIdentity & {
+  readonly canonicalPath: string;
+};
+
+export type P16OperatorTemporaryDirectorySnapshot = StableIdentity & {
+  readonly path: string;
 };
 
 type JsonTraversalEntry = {
@@ -60,14 +72,11 @@ function toFileSnapshot(info: Stats): P16OperatorJsonFileSnapshot {
   });
 }
 
-function hasStableFileIdentity(info: P16OperatorJsonFileSnapshot | Stats): boolean {
+function hasStableFileIdentity(info: StableIdentity): boolean {
   return info.ino !== 0;
 }
 
-function sameFileIdentity(
-  first: P16OperatorJsonFileSnapshot | Stats,
-  second: P16OperatorJsonFileSnapshot | Stats,
-): boolean {
+function sameFileIdentity(first: StableIdentity, second: StableIdentity): boolean {
   return hasStableFileIdentity(first)
     && hasStableFileIdentity(second)
     && first.dev === second.dev
@@ -164,6 +173,111 @@ export function resolveP16OperatorOutputPath(
     fail('Output path must not resolve to an input path.');
   }
   return resolvedOutput;
+}
+
+export async function captureP16OperatorOutputParentSnapshot(
+  requestedParent: string,
+  fail: Fail,
+): Promise<P16OperatorOutputParentSnapshot> {
+  try {
+    await mkdir(requestedParent, { recursive: true });
+  } catch {
+    fail('Unable to create output directory.');
+  }
+
+  let canonicalPath: string;
+  let infoBefore: Stats;
+  let infoAfter: Stats;
+  let selfCanonicalPath: string;
+  try {
+    canonicalPath = await realpath(requestedParent);
+    infoBefore = await lstat(canonicalPath);
+    selfCanonicalPath = await realpath(canonicalPath);
+    infoAfter = await lstat(canonicalPath);
+  } catch {
+    fail('Unable to resolve output directory.');
+  }
+
+  if (!infoBefore.isDirectory() || !infoAfter.isDirectory()) {
+    fail('Output directory must resolve to a directory.');
+  }
+  if (comparisonPath(selfCanonicalPath) !== comparisonPath(canonicalPath)) {
+    fail('Output directory changed while being resolved.');
+  }
+  if (
+    hasStableFileIdentity(infoBefore)
+    && (!hasStableFileIdentity(infoAfter) || !sameFileIdentity(infoBefore, infoAfter))
+  ) {
+    fail('Output directory changed while being resolved.');
+  }
+
+  return Object.freeze({
+    canonicalPath,
+    dev: infoAfter.dev,
+    ino: infoAfter.ino,
+  });
+}
+
+export async function p16OperatorOutputParentMatchesSnapshot(
+  snapshot: P16OperatorOutputParentSnapshot,
+): Promise<boolean> {
+  try {
+    const currentInfo = await lstat(snapshot.canonicalPath);
+    if (!currentInfo.isDirectory()) return false;
+
+    const currentCanonical = await realpath(snapshot.canonicalPath);
+    if (comparisonPath(currentCanonical) !== comparisonPath(snapshot.canonicalPath)) return false;
+
+    if (hasStableFileIdentity(snapshot)) {
+      return hasStableFileIdentity(currentInfo) && sameFileIdentity(snapshot, currentInfo);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function captureTemporaryDirectorySnapshot(
+  path: string,
+  info: Stats,
+): P16OperatorTemporaryDirectorySnapshot {
+  return Object.freeze({
+    path,
+    dev: info.dev,
+    ino: info.ino,
+  });
+}
+
+export async function removeP16OperatorTemporaryDirectoryIfOwned(
+  temporary: P16OperatorTemporaryDirectorySnapshot,
+  parent: P16OperatorOutputParentSnapshot,
+): Promise<boolean> {
+  if (!(await p16OperatorOutputParentMatchesSnapshot(parent))) return false;
+
+  let currentInfo: Stats;
+  try {
+    currentInfo = await lstat(temporary.path);
+  } catch (error) {
+    return isMissingPathError(error);
+  }
+  if (!currentInfo.isDirectory()) return false;
+
+  if (hasStableFileIdentity(temporary)) {
+    if (!hasStableFileIdentity(currentInfo) || !sameFileIdentity(temporary, currentInfo)) {
+      return false;
+    }
+    await rm(temporary.path, { recursive: true, force: true }).catch(() => undefined);
+    return true;
+  }
+
+  try {
+    const currentCanonical = await realpath(temporary.path);
+    if (comparisonPath(currentCanonical) !== comparisonPath(temporary.path)) return false;
+    await rmdir(temporary.path);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export async function readP16OperatorJsonInput(
@@ -283,19 +397,8 @@ export async function writeP16OperatorJsonOutput(
   const inputPaths = inputSnapshots.map((snapshot) => snapshot.resolvedPath);
   const resolvedOutput = resolveP16OperatorOutputPath(outputPath, inputPaths, fail);
   const requestedParent = dirname(resolvedOutput);
-
-  try {
-    await mkdir(requestedParent, { recursive: true });
-  } catch {
-    fail('Unable to create output directory.');
-  }
-
-  let realParent: string;
-  try {
-    realParent = await realpath(requestedParent);
-  } catch {
-    fail('Unable to resolve output directory.');
-  }
+  const parentSnapshot = await captureP16OperatorOutputParentSnapshot(requestedParent, fail);
+  const realParent = parentSnapshot.canonicalPath;
 
   const canonicalOutput = join(realParent, basename(resolvedOutput));
   const canonicalOutputComparison = comparisonPath(canonicalOutput);
@@ -330,34 +433,52 @@ export async function writeP16OperatorJsonOutput(
     }
   }
 
-  let temporaryDirectory: string | null = null;
+  let temporarySnapshot: P16OperatorTemporaryDirectorySnapshot | null = null;
   let writeFailed = false;
   let inputChanged = false;
+  let outputParentChanged = false;
   try {
-    temporaryDirectory = await mkdtemp(join(realParent, '.p16-output-'));
-    const temporaryPath = join(temporaryDirectory, 'payload.json');
-    await writeFile(temporaryPath, content, { encoding: 'utf8', flag: 'wx', mode: 0o600 });
-
-    for (const inputSnapshot of inputSnapshots) {
-      if (!(await inputPathMatchesSnapshot(inputSnapshot))) {
-        inputChanged = true;
-        break;
+    if (!(await p16OperatorOutputParentMatchesSnapshot(parentSnapshot))) {
+      outputParentChanged = true;
+    } else {
+      const temporaryDirectory = await mkdtemp(join(realParent, '.p16-output-'));
+      const temporaryInfo = await lstat(temporaryDirectory);
+      if (!temporaryInfo.isDirectory()) {
+        throw new Error('Temporary output path is not a directory.');
       }
-    }
+      temporarySnapshot = captureTemporaryDirectorySnapshot(temporaryDirectory, temporaryInfo);
 
-    if (!inputChanged) {
-      await rename(temporaryPath, canonicalOutput);
+      const temporaryPath = join(temporaryDirectory, 'payload.json');
+      await writeFile(temporaryPath, content, { encoding: 'utf8', flag: 'wx', mode: 0o600 });
+
+      for (const inputSnapshot of inputSnapshots) {
+        if (!(await inputPathMatchesSnapshot(inputSnapshot))) {
+          inputChanged = true;
+          break;
+        }
+      }
+
+      if (!inputChanged && !(await p16OperatorOutputParentMatchesSnapshot(parentSnapshot))) {
+        outputParentChanged = true;
+      }
+
+      if (!inputChanged && !outputParentChanged) {
+        await rename(temporaryPath, canonicalOutput);
+      }
     }
   } catch {
     writeFailed = true;
   } finally {
-    if (temporaryDirectory) {
-      await rm(temporaryDirectory, { recursive: true, force: true }).catch(() => undefined);
+    if (temporarySnapshot) {
+      await removeP16OperatorTemporaryDirectoryIfOwned(temporarySnapshot, parentSnapshot);
     }
   }
 
   if (inputChanged) {
     fail('Input path changed after it was read.');
+  }
+  if (outputParentChanged) {
+    fail('Output directory changed during write.');
   }
   if (writeFailed) {
     fail('Unable to write output safely.');
