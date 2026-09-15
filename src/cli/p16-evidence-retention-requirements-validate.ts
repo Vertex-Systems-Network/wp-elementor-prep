@@ -61,32 +61,43 @@ const inputPaths = [
 ];
 const outPath = resolveP16OperatorOutputPath(args.get('out') ?? DEFAULT_OUT, inputPaths, fail);
 
-const documentValue = await readP16OperatorJsonInput(documentPath, 'document', fail);
-const profileValue = await readP16OperatorJsonInput(profilePath, 'profile', fail);
-const receiptValue = await readP16OperatorJsonInput(receiptPath, 'receipt', fail);
-const authenticationReportValue = await readP16OperatorJsonInput(
+const documentInput = await readP16OperatorJsonInput(documentPath, 'document', fail);
+const profileInput = await readP16OperatorJsonInput(profilePath, 'profile', fail);
+const receiptInput = await readP16OperatorJsonInput(receiptPath, 'receipt', fail);
+const authenticationReportInput = await readP16OperatorJsonInput(
   authenticationReportPath,
   'authentication report',
   fail,
 );
-const manifestValue = await readP16OperatorJsonInput(manifestPath, 'requirements manifest', fail);
+const manifestInput = await readP16OperatorJsonInput(
+  manifestPath,
+  'requirements manifest',
+  fail,
+);
+const inputSnapshots = [
+  documentInput,
+  profileInput,
+  receiptInput,
+  authenticationReportInput,
+  manifestInput,
+];
 
 const validation = validateGutenbergNativeSerializationEvidenceRetentionRequirements(
-  manifestValue,
-  documentValue,
-  profileValue,
-  receiptValue,
-  authenticationReportValue,
+  manifestInput.value,
+  documentInput.value,
+  profileInput.value,
+  receiptInput.value,
+  authenticationReportInput.value,
 );
 const serializedValidation = serializeGutenbergNativeSerializationEvidenceRetentionRequirementsValidation(
-  manifestValue,
-  documentValue,
-  profileValue,
-  receiptValue,
-  authenticationReportValue,
+  manifestInput.value,
+  documentInput.value,
+  profileInput.value,
+  receiptInput.value,
+  authenticationReportInput.value,
 );
 
-await writeP16OperatorJsonOutput(outPath, inputPaths, serializedValidation, fail);
+await writeP16OperatorJsonOutput(outPath, inputSnapshots, serializedValidation, fail);
 
 process.stdout.write(`${JSON.stringify({
   out: outPath,
