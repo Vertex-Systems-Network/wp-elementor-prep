@@ -57,11 +57,12 @@
 <body>
   <div class="app">
     <h1>WP Builders Prepare</h1>
-    <div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare preview + P3 validator + P5 Safe Fix + P7 batch queue</div>
+    <div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>
     <div id="root" class="empty">Select one Frame to audit/preview, two Frames to compare, or multiple Frames for P7 batch processing.</div>
     <div class="actions">
       <button id="audit">Run audit</button>
       <button id="p14-preview">Preview Guided Prepare</button>
+      <button id="p15-preview">Preview Elementor</button>
       <button id="plan">Preview safe fixes</button>
       <button id="validate">Compare 2 frames</button>
       <button id="selftest">Runtime self-test</button>
@@ -95,6 +96,12 @@
       root.textContent = 'Loading the read-only P14 Guided Prepare preview from persisted P13 Build-Ready evidence…';
       exportPanel.hidden = true;
       post('p14-plan-preview-request');
+    });
+    document.getElementById('p15-preview').addEventListener('click', () => {
+      root.className = 'empty';
+      root.textContent = 'Inspecting the selected Frame through the bounded read-only P15 Elementor path…';
+      exportPanel.hidden = true;
+      post('p15-elementor-preview-request');
     });
     document.getElementById('plan').addEventListener('click', () => {
       root.className = 'empty';
@@ -482,6 +489,59 @@
       }
     }
 
+    function renderP15ElementorPreview(message) {
+      const report = message.report;
+      const generation = report.generation;
+      const extraction = report.extraction;
+      const authority = report.authority;
+      const locked = report.readOnly === true
+        && generation.targetCompatibilityClaim === false
+        && generation.productionAcceptance === false
+        && generation.downloadEnabled === false
+        && generation.importValidationStatus === 'NOT_RUN'
+        && authority.figmaMutation === false
+        && authority.networkAccess === false
+        && authority.wordpressConnection === false
+        && authority.targetImport === false
+        && authority.fileDownload === false
+        && authority.sectionTransfer === false;
+      const reviewRows = generation.reviewEntries.map((entry) => `
+        <div class="row">
+          <div class="rowHead">
+            <div class="name">${escapeHtml(entry.reasonCode)}</div>
+            <div class="badge">REVIEW</div>
+          </div>
+          <div class="finding">Source node: ${escapeHtml(entry.sourceNodeId)}</div>
+        </div>`).join('');
+      const validationRows = extraction.validationIssueCodes.map((code) => `
+        <div class="row">
+          <div class="rowHead"><div class="name">${escapeHtml(code)}</div><div class="badge">IR VALIDATION</div></div>
+        </div>`).join('');
+      const widgetTypes = generation.widgetTypes.length ? generation.widgetTypes.join(', ') : 'none';
+      const reviewWidgetTypes = generation.reviewWidgetTypes.length ? generation.reviewWidgetTypes.join(', ') : 'none';
+
+      root.className = '';
+      root.innerHTML = `
+        <div class="hero">
+          <div class="score">${escapeHtml(generation.status)}</div>
+          <div class="status">P15 ELEMENTOR LOCAL PREVIEW · ${locked ? 'READ-ONLY / LOCKED' : 'UNEXPECTED AUTHORITY'}</div>
+          <div class="meta">${escapeHtml(report.frame.name)} · Frame ${escapeHtml(report.frame.id)}</div>
+          <div class="meta">Target import is not validated. No file download, section transfer, WordPress connection or Figma mutation is available here.</div>
+          <div class="metricGrid">
+            <div class="metric"><strong>${extraction.nodeCount}</strong>neutral nodes</div>
+            <div class="metric"><strong>${extraction.reviewNodeCount}</strong>review nodes</div>
+            <div class="metric"><strong>${extraction.valid ? 'PASS' : 'FAIL'}</strong>IR validation</div>
+            <div class="metric"><strong>${escapeHtml(generation.candidateStatus || '—')}</strong>candidate state</div>
+          </div>
+          <div class="meta">Widgets: ${escapeHtml(widgetTypes)}</div>
+          <div class="meta">Review widget types: ${escapeHtml(reviewWidgetTypes)}</div>
+          <div class="meta">targetCompatibilityClaim=false · productionAcceptance=false · downloadEnabled=false · importValidationStatus=NOT_RUN</div>
+        </div>
+        ${reviewRows ? `<div class="sectionTitle">Review required · ${generation.reviewEntries.length}</div>${reviewRows}` : ''}
+        ${validationRows ? `<div class="sectionTitle">IR validation issues · ${extraction.validationIssueCodes.length}</div>${validationRows}` : ''}
+        ${!reviewRows && !validationRows ? '<div class="empty">A deterministic local candidate was built for inspection only. Target import/editor/render validation has not been run.</div>' : ''}`;
+    }
+
     function renderSafePlan(message) {
       const counts = { ELIGIBLE: 0, REVIEW: 0, NOOP: 0, UNSUPPORTED: 0 };
       for (const plan of message.plans) counts[plan.decision] = (counts[plan.decision] || 0) + 1;
@@ -713,6 +773,19 @@
         exportPanel.hidden = true;
         root.className = 'empty';
         root.textContent = message.message || 'P14 Guided Prepare preview is unavailable. Run Audit on exactly one Frame first.';
+        return;
+      }
+
+      if (message.type === 'p15-elementor-preview-result') {
+        exportPanel.hidden = true;
+        renderP15ElementorPreview(message);
+        return;
+      }
+
+      if (message.type === 'p15-elementor-preview-unavailable') {
+        exportPanel.hidden = true;
+        root.className = 'empty';
+        root.textContent = message.message || 'P15 Elementor preview is unavailable. Select exactly one Frame and retry.';
         return;
       }
 
