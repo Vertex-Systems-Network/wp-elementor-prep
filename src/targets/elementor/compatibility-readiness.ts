@@ -56,18 +56,6 @@ export interface P15ElementorCompatibilityReadinessV1 {
   downloadEnabled: false;
 }
 
-const UNKNOWN_REVIEW_REASONS = new Set([
-  'ABSOLUTE_POSITION_REQUIRES_REVIEW',
-  'DEPTH_LIMIT_EXCEEDED',
-  'EMPTY_TEXT_REQUIRES_REVIEW',
-  'GRID_LAYOUT_REQUIRES_REVIEW',
-  'MANUAL_LAYOUT_REQUIRES_REVIEW',
-  'NODE_LIMIT_EXCEEDED',
-  'UNSUPPORTED_AUTO_LAYOUT_ALIGNMENT',
-  'UNSUPPORTED_TEXT_ALIGNMENT',
-  'WRAPPED_AUTO_LAYOUT_REQUIRES_REVIEW',
-]);
-
 function nativeReason(node: Exclude<P15NeutralExportNode, P15NeutralReviewNode>): string {
   if (node.kind === 'container') return 'P15_NATIVE_CONTAINER';
   if (node.kind === 'heading') return 'P15_NATIVE_HEADING';
@@ -93,7 +81,7 @@ function classifyReview(node: P15NeutralReviewNode): P15ElementorCompatibilityFi
   }
   return {
     sourceNodeId: node.sourceNodeId,
-    category: UNKNOWN_REVIEW_REASONS.has(node.reasonCode) ? 'UNKNOWN' : 'UNKNOWN',
+    category: 'UNKNOWN',
     reasonCode: node.reasonCode,
   };
 }
