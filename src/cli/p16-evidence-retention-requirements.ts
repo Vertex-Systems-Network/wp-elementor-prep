@@ -52,29 +52,30 @@ const authenticationReportPath = required(args, 'authentication-report');
 const inputPaths = [documentPath, profilePath, receiptPath, authenticationReportPath];
 const outPath = resolveP16OperatorOutputPath(args.get('out') ?? DEFAULT_OUT, inputPaths, fail);
 
-const documentValue = await readP16OperatorJsonInput(documentPath, 'document', fail);
-const profileValue = await readP16OperatorJsonInput(profilePath, 'profile', fail);
-const receiptValue = await readP16OperatorJsonInput(receiptPath, 'receipt', fail);
-const authenticationReportValue = await readP16OperatorJsonInput(
+const documentInput = await readP16OperatorJsonInput(documentPath, 'document', fail);
+const profileInput = await readP16OperatorJsonInput(profilePath, 'profile', fail);
+const receiptInput = await readP16OperatorJsonInput(receiptPath, 'receipt', fail);
+const authenticationReportInput = await readP16OperatorJsonInput(
   authenticationReportPath,
   'authentication report',
   fail,
 );
+const inputSnapshots = [documentInput, profileInput, receiptInput, authenticationReportInput];
 
 const manifest = buildGutenbergNativeSerializationEvidenceRetentionRequirements(
-  documentValue,
-  profileValue,
-  receiptValue,
-  authenticationReportValue,
+  documentInput.value,
+  profileInput.value,
+  receiptInput.value,
+  authenticationReportInput.value,
 );
 const serializedManifest = serializeGutenbergNativeSerializationEvidenceRetentionRequirements(
-  documentValue,
-  profileValue,
-  receiptValue,
-  authenticationReportValue,
+  documentInput.value,
+  profileInput.value,
+  receiptInput.value,
+  authenticationReportInput.value,
 );
 
-await writeP16OperatorJsonOutput(outPath, inputPaths, serializedManifest, fail);
+await writeP16OperatorJsonOutput(outPath, inputSnapshots, serializedManifest, fail);
 
 process.stdout.write(`${JSON.stringify({
   out: outPath,
