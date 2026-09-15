@@ -53,6 +53,8 @@ import { buildP14PlanPreview, serializeP14PlanPreviewJson } from './p14-plan-pre
 import { buildP14ReviewPacket, serializeP14ReviewPacketJson } from './p14-review-packet';
 import { assessP14PreviewContextBinding } from './p14-preview-context';
 import { assessP14PreviewFreshness } from './p14-preview-freshness';
+import { buildP15ElementorV1PreviewFromFigmaFrame } from './p15-neutral-export-extractor';
+import { buildP15PluginPreviewReport } from './p15-plugin-preview-report';
 import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
@@ -505,6 +507,33 @@ async function runP14GuidedPreparePreview(): Promise<void> {
   }
 }
 
+function runP15ElementorPreview(): void {
+  const frame = selectedFrame();
+  if (!frame) {
+    figma.ui.postMessage({
+      type: 'p15-elementor-preview-unavailable',
+      message: 'Select exactly one Frame to inspect the bounded read-only Elementor preview.',
+    });
+    return;
+  }
+
+  try {
+    const extraction = buildP15ElementorV1PreviewFromFigmaFrame(frame);
+    const report = buildP15PluginPreviewReport({ id: frame.id, name: frame.name }, extraction);
+    figma.ui.postMessage({
+      type: 'p15-elementor-preview-result',
+      report,
+    });
+    figma.notify(`P15 Elementor preview: ${report.generation.status} · read-only / no download.`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    figma.ui.postMessage({
+      type: 'p15-elementor-preview-unavailable',
+      message: `P15 Elementor preview could not be built safely: ${message}`,
+    });
+  }
+}
+
 async function runRuntimeEvidenceViewer(): Promise<void> {
   const evidence = await loadLatestP5RuntimeEvidence(figma.clientStorage);
   if (!evidence) {
@@ -916,6 +945,11 @@ figma.ui.onmessage = async (message: unknown) => {
 
   if (type === 'p14-plan-preview-request') {
     await runP14GuidedPreparePreview();
+    return;
+  }
+
+  if (type === 'p15-elementor-preview-request') {
+    runP15ElementorPreview();
     return;
   }
 
