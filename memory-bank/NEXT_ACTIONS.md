@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through immutable stable operator input snapshots
+## Parallel P16 state — bounded code-side foundation complete through output-parent snapshot revalidation
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -66,7 +66,9 @@ Current implemented P16 chain:
 - PR #428 — canonical object-cardinality-preflight docs sync;
 - PR #430 — stable retention operator input snapshots carried into output safety;
 - PR #432 — canonical stable-input-snapshot docs sync;
-- PR #434 — readonly/runtime-frozen retention operator snapshot path/file metadata while parsed `.value` remains intentionally unfrozen.
+- PR #434 — readonly/runtime-frozen retention operator snapshot path/file metadata while parsed `.value` remains intentionally unfrozen;
+- PR #436 — canonical immutable-snapshot docs sync;
+- PR #438 — frozen output-parent snapshot + pre-temp/pre-rename revalidation + identity/path-guarded temp cleanup.
 
 Current progression is intentionally bounded:
 
@@ -90,17 +92,21 @@ Both `p16:evidence-retention-requirements` and `p16:evidence-retention-requireme
 
 Their shared output writer additionally:
 
-- receives the exact frozen metadata snapshots associated with the values consumed by the builder/validator rather than re-discovering unrelated files from raw paths;
-- creates the requested output parent directory, then resolves that parent through `realpath` before final target checks;
+- receives the exact frozen input metadata snapshots associated with the values consumed by the builder/validator rather than re-discovering unrelated files from raw paths;
+- creates/resolves the requested output parent and captures a frozen canonical parent snapshot containing canonical path + dev/ino identity;
+- requires the canonical parent to remain a directory that self-resolves to the same canonical path;
+- when stable parent identity existed at capture, requires the same dev/ino directory identity; otherwise fallback is canonical-path/directory consistency only;
+- revalidates the output parent before temporary output creation and again immediately before atomic rename;
 - compares the canonical output location against the canonical files actually read;
 - revalidates each input pathname against its read snapshot before temporary output creation and immediately before atomic rename;
-- fails closed on observed post-read pathname replacement and removes temporary output state before failure;
-- uses stable `dev` + `ino` identity when available and falls back to canonical-path + size/mtime/ctime consistency when identity is unavailable; this narrows path-swap/TOCTOU ambiguity but is not claimed as perfect filesystem-race elimination;
+- fails closed on observed post-read input replacement or output-parent replacement; output-parent replacement reports `Output directory changed during write.`;
 - rejects existing output symlinks and other non-regular output targets;
 - rejects an existing output regular file that shares stable filesystem identity with a file actually read when identity is available;
 - writes through a unique same-directory temporary regular file and atomically renames it into place, so a late-created final symlink is replaced rather than followed;
-- removes temporary output state before fail-closed exit on write errors;
-- preserves source-input bytes in rejected symlink/hardlink/parent-alias and post-read pathname-replacement cases covered by focused tests.
+- captures temp-directory dev/ino identity and recursively removes temp state only while both captured parent and stable temp identity still match;
+- when stable temp identity is unavailable, cleanup falls back to non-recursive `rmdir`, avoiding recursive deletion through a replacement-controlled temp path;
+- preserves source-input bytes and replacement-controlled sentinel contents in focused rejected-alias/path-swap cases;
+- these checks narrow path-swap/TOCTOU ambiguity but are not claimed as perfect filesystem-race elimination where stable identity is unavailable.
 
 The exact-current requirements-manifest canonicalizer is independently depth/value/text bounded, accessor-safe, strict-own-shape, object-cardinality-preflighted and prototype-safe:
 
@@ -211,7 +217,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #428 docs sync -> `44186a19b5719ae3cd3b883140e6e2b8bf776553`; exact head `a140a6918df8cc6be46c990cc10dd1f6aaa13e88`; CI #1204, Integration #460, Final Release #515, Offline #559 PASS;
 - #430 stable operator input snapshots -> `146b2dd7a534ab12b4598fe1c78823d5e9733118`; exact head `211d24d7615217b9711debecc06d05dbff16c92d`; CI #1206, Final Release #517, Offline #561 PASS;
 - #432 docs sync -> `686a4e8bf65a2b0b43075baa20c6fa6eccadb10d`; exact head `2507049a686e9a757838da2dbfce427580b8ad40`; CI #1208, Integration #463, Final Release #519, Offline #563 PASS;
-- #434 immutable snapshot metadata -> `78c162728af3249a4ce5905eb831b7a0f72dcd4d`; exact head `250d8490ad4ceaaede0fa4a9af7daadbb74ae655`; CI #1210, Final Release #521, Offline #565 PASS.
+- #434 immutable snapshot metadata -> `78c162728af3249a4ce5905eb831b7a0f72dcd4d`; exact head `250d8490ad4ceaaede0fa4a9af7daadbb74ae655`; CI #1210, Final Release #521, Offline #565 PASS;
+- #436 docs sync -> `df3a5503eb274c4e9c5c5dccf6383b66138cec12`; exact head `352a670eb5b1d301ea8badccf71b6c2e35831286`; CI #1212, Integration #466, Final Release #523, Offline #567 PASS;
+- #438 output-parent snapshot revalidation -> `2b67f292d192b86f825e99860313978ee49dfb6f`; exact head `ca1c51df84ab96cf1b1ddfa2a0a53d20805a1e21`; CI #1214, Final Release #525, Offline #569 PASS.
 
 ## Current guardrails
 
