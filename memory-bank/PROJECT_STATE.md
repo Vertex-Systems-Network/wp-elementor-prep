@@ -11,7 +11,7 @@ Current implemented surfaces:
 1. P0-P12 deterministic audit/safe-prep/CLI/release foundations;
 2. P13 Build-Ready Score 2.0 + Responsive Risk with `p13-core-v2` analyzer-bound provenance;
 3. P14 retained-duplicate core and development-only read-only Guided Prepare/review evidence surfaces;
-4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain plus target-neutral export IR, deterministic local Elementor v0.4 Container/Widget Template JSON candidate generation, and read-only selected-Figma-Frame extraction for bounded Auto Layout/plain-text structures;
+4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain plus target-neutral export IR, deterministic local Elementor v0.4 Container/Widget Template JSON candidate generation, read-only selected-Figma-Frame extraction for bounded Auto Layout/plain-text structures, sanitized normal/publishable plugin preview and user-declared TargetProfile alignment preview;
 5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, byte/structure-bounded local JSON I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with object-cardinality preflight and alias-safe atomic output writes;
 6. exact-build release/provenance tooling.
 
@@ -21,7 +21,7 @@ Current implemented surfaces:
 
 Current verified main before this documentation sync:
 
-`9d7718dd19d56c28a183023f347947bcdc3123c9`
+`553bfba0ae3cad4c94d7dd6b5c78c96ec3fde698`
 
 Recent guarded merge line:
 
@@ -71,7 +71,9 @@ Recent guarded merge line:
 - #458 forced-update detection in the same read-only main-origin audit -> `cd4e8394dfaa6917d28676e51eec831591b6b99a`;
 - #460 README P0-P27 status expansion -> `e2c446b162607767e55dfaa8705d5ac446c49734`;
 - #462 bounded target-neutral IR + deterministic Elementor v0.4 Template JSON candidate generation -> `673a366ad3da25c5d3a327ed87572bcdb2af408d`;
-- #464 read-only selected-Figma-Frame -> neutral IR extraction, plain `text-editor` mapping and fail-closed depth/node review bounds -> `9d7718dd19d56c28a183023f347947bcdc3123c9`.
+- #464 read-only selected-Figma-Frame -> neutral IR extraction, plain `text-editor` mapping and fail-closed depth/node review bounds -> `9d7718dd19d56c28a183023f347947bcdc3123c9`;
+- #468 normal/publishable sanitized read-only Elementor plugin preview -> `089cd53b990763bc0236d08888306682cbe1f202`;
+- #471 bounded user-declared TargetProfile alignment preview -> `553bfba0ae3cad4c94d7dd6b5c78c96ec3fde698`.
 
 ## Persistent issue queue
 
@@ -105,11 +107,15 @@ P15 remains exactly **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** 
 
 Current bounded Elementor chain includes documented template/capability validation, deterministic candidate + identity, declared target profile, exact-bound import/reference evidence, offline intake, sanitized pre-decision review and externally reported authentication-result binding.
 
-The commercial-V1 code-side foundation now also includes a bounded target-neutral export IR and deterministic local Elementor v0.4 Container/Widget Template JSON candidate generator. Neutral IR supports explicit container, heading, button, image, generic plain-text and REVIEW intents without accepting Elementor control names. Generated local candidates are revalidated through the existing P15 template/candidate contract; any REVIEW intent fails closed without a partial candidate.
+The commercial-V1 code-side foundation includes a bounded target-neutral export IR and deterministic local Elementor v0.4 Container/Widget Template JSON candidate generator. Neutral IR supports explicit container, heading, button, image, generic plain-text and REVIEW intents without accepting Elementor control names. Generated local candidates are revalidated through the existing P15 template/candidate contract; any REVIEW intent fails closed without a partial candidate.
 
-Read-only Figma extraction now maps a selected Frame through bounded HORIZONTAL/VERTICAL Auto Layout facts, padding/gap/alignment and visible plain TEXT into the neutral IR. Generic plain text maps to the documented core Elementor `text-editor` widget with HTML escaping and line-break retention. Manual/grid/wrapped layout, absolute-positioned children, image-backed content pending asset export, unsupported visible node/alignment states and depth/node bound overflow become explicit REVIEW outcomes. Figma layer names are not used to guess heading/button semantics.
+Read-only Figma extraction maps a selected Frame through bounded HORIZONTAL/VERTICAL Auto Layout facts, padding/gap/alignment and visible plain TEXT into the neutral IR. Generic plain text maps to the documented core Elementor `text-editor` widget with HTML escaping and line-break retention. Manual/grid/wrapped layout, absolute-positioned children, image-backed content pending asset export, unsupported visible node/alignment states and depth/node bound overflow become explicit REVIEW outcomes. Figma layer names are not used to guess heading/button semantics.
 
-This does **not** establish target compatibility. Genuine trusted evidence authentication/internal decision, broader semantic/media/responsive mapping, plugin UI exposure, real WordPress/Elementor import/editor/render validation, production acceptance and download/transfer authority remain pending/unwired.
+Normal and publishable plugin UI now expose a sanitized read-only `Preview Elementor` surface. `p15-elementor-plugin-preview-report-v1` deliberately omits template/candidate JSON and review detail text; only bounded extraction/generation status, node/review counts, widget/review types and review reason codes reach the UI. Invalid selection/runtime failure fails closed and no P15 download/import/section-transfer action exists.
+
+The same normal/publishable UI also exposes bounded user-declared WordPress + Elementor version inputs and a declared TargetProfile alignment preview. Every assessment re-reads exactly one current selected Frame and reruns the accepted extractor/generator, builds immutable `elementor-target-profile-v1` only from those declared strings and invokes the existing profile assessment only if a complete local template exists. `p15-elementor-target-profile-preview-report-v1` exposes only sanitized declared versions, profile/candidate fingerprints, assessment status, alignment booleans, capability counts, review widget types and issue codes. REVIEW-bearing extraction fails closed before target-profile assessment. `PROFILE_ALIGNED_REFERENCE_REVIEW_PENDING` is presented only as `DECLARED METADATA ALIGNMENT ONLY`, not as verified compatibility.
+
+This does **not** establish target compatibility. No target environment is discovered or observed, no WordPress REST/network connection is made, and no Elementor import/editor/render execution, reference-closure authentication, file/template download, clipboard/section transfer or Figma mutation is introduced. `referenceClosureStatus=NOT_RUN`, `targetEnvironmentValidationStatus=NOT_RUN`, `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false` and `downloadEnabled=false` remain explicit. Genuine trusted evidence authentication/internal decision and broader semantic/media/responsive mapping remain pending/unwired.
 
 ## P16 state
 
@@ -199,7 +205,7 @@ P27 #182 remains **GATE DEFINED / EXECUTION DEFERRED**. It owns final production
 ## Immediate project action
 
 1. Keep #159 as the prerequisite before real P14 mutation exposure.
-2. Continue P15 commercial-V1 only through deterministic/read-only generation, extraction and UI/reporting work while target/import/download authority remains false; genuine trusted evidence is still required before any stronger authority-bearing internal decision.
+2. Continue P15 commercial-V1 through deterministic/read-only mapping/coverage classification and explicit REVIEW/UNSUPPORTED evidence on top of the accepted generator/extractor/plugin-preview/declared-profile path while target/import/download authority remains false; genuine trusted evidence is still required before any stronger authority-bearing internal decision.
 3. Do not manufacture a P16 trusted-evidence intake or internal decision from another caller-supplied flag; actual retained authenticated evidence is now required for the next authority-bearing progression.
 4. Additional P16 code-only work may remain deterministic/read-only/supporting only if every current false authority flag remains false.
 5. Keep P17-P26 in dependency order after stable target-adapter foundations.
