@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-15
+Last updated: 2026-09-16
 
 ## Product direction
 
@@ -11,7 +11,7 @@ Current implemented surfaces:
 1. P0-P12 deterministic audit/safe-prep/CLI/release foundations;
 2. P13 Build-Ready Score 2.0 + Responsive Risk with `p13-core-v2` analyzer-bound provenance;
 3. P14 retained-duplicate core and development-only read-only Guided Prepare/review evidence surfaces;
-4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain;
+4. bounded P15 Elementor R1 candidate/profile/import/reference evidence chain plus target-neutral export IR, deterministic local Elementor v0.4 Container/Widget Template JSON candidate generation, and read-only selected-Figma-Frame extraction for bounded Auto Layout/plain-text structures;
 5. bounded P16 Gutenberg R1 normalized candidate/native-validation evidence chain through a genuine-evidence retention requirements manifest, offline operator export, exact-current saved-manifest validator, offline validation CLI, byte/structure-bounded local JSON I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with object-cardinality preflight and alias-safe atomic output writes;
 6. exact-build release/provenance tooling.
 
@@ -21,7 +21,7 @@ Current implemented surfaces:
 
 Current verified main before this documentation sync:
 
-`f3306a3aba5b42544cbdabe950f975ce5ce338a9`
+`9d7718dd19d56c28a183023f347947bcdc3123c9`
 
 Recent guarded merge line:
 
@@ -63,9 +63,15 @@ Recent guarded merge line:
 - #440 canonical output-parent snapshot docs sync -> `f58029610c5fc8e07c2cff467eae33490be6a92f`;
 - #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`;
 - #444 canonical temporary-payload docs sync -> `f82a667f1e397e713af1447af2117e20c55150d4`;
-- #446 non-recursive temporary-directory cleanup -> `0c9325fe995e983b4c904f59f788ac91167276aa`.
+- #446 non-recursive temporary-directory cleanup -> `0c9325fe995e983b4c904f59f788ac91167276aa`;
 - #448 canonical non-recursive-cleanup docs sync -> `af517e1477d57753993f805ccb4d0f770fdf51d5`;
-- #452 output-destination state binding -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`.
+- #452 output-destination state binding -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`;
+- #454 canonical four-document status sync -> `b5e8f919156fb8dc75cab9bad418ce95c7e36f0a`;
+- #456 read-only main PR-origin audit -> `1896ba5d576e6d33f693a2a5dc0a7fb09094d1d6`;
+- #458 forced-update detection in the same read-only main-origin audit -> `cd4e8394dfaa6917d28676e51eec831591b6b99a`;
+- #460 README P0-P27 status expansion -> `e2c446b162607767e55dfaa8705d5ac446c49734`;
+- #462 bounded target-neutral IR + deterministic Elementor v0.4 Template JSON candidate generation -> `673a366ad3da25c5d3a327ed87572bcdb2af408d`;
+- #464 read-only selected-Figma-Frame -> neutral IR extraction, plain `text-editor` mapping and fail-closed depth/node review bounds -> `9d7718dd19d56c28a183023f347947bcdc3123c9`.
 
 ## Persistent issue queue
 
@@ -99,7 +105,11 @@ P15 remains exactly **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** 
 
 Current bounded Elementor chain includes documented template/capability validation, deterministic candidate + identity, declared target profile, exact-bound import/reference evidence, offline intake, sanitized pre-decision review and externally reported authentication-result binding.
 
-Genuine trusted evidence authentication/internal decision, real WordPress/Elementor import, semantic generation, compatibility, production acceptance and download authority remain pending/unwired.
+The commercial-V1 code-side foundation now also includes a bounded target-neutral export IR and deterministic local Elementor v0.4 Container/Widget Template JSON candidate generator. Neutral IR supports explicit container, heading, button, image, generic plain-text and REVIEW intents without accepting Elementor control names. Generated local candidates are revalidated through the existing P15 template/candidate contract; any REVIEW intent fails closed without a partial candidate.
+
+Read-only Figma extraction now maps a selected Frame through bounded HORIZONTAL/VERTICAL Auto Layout facts, padding/gap/alignment and visible plain TEXT into the neutral IR. Generic plain text maps to the documented core Elementor `text-editor` widget with HTML escaping and line-break retention. Manual/grid/wrapped layout, absolute-positioned children, image-backed content pending asset export, unsupported visible node/alignment states and depth/node bound overflow become explicit REVIEW outcomes. Figma layer names are not used to guess heading/button semantics.
+
+This does **not** establish target compatibility. Genuine trusted evidence authentication/internal decision, broader semantic/media/responsive mapping, plugin UI exposure, real WordPress/Elementor import/editor/render validation, production acceptance and download/transfer authority remain pending/unwired.
 
 ## P16 state
 
@@ -137,7 +147,7 @@ Current bounded deterministic/read-only/evidence chain includes:
 - strict own-shape direct canonicalization rejects own symbol/non-enumerable fields on plain objects and rejects extra named/symbol properties on arrays while accepting standard `length` + canonical indices and frozen/sealed JSON-shaped data;
 - object-cardinality preflight rejects a plain object whose own string-property count cannot fit the remaining 50,000-value budget before descriptor scanning, UTF-8 key charging or sorting; root + 49,999 primitive properties remains valid, root + 50,000 rejects;
 - prototype-safe exact-current canonicalization: canonical object snapshots use no `Object.prototype`, so own enumerable JSON keys such as `__proto__` remain data properties, alter fingerprints and are rejected when added instead of being silently dropped;
-- alias-safe output writes: canonical output locations are compared to the read snapshots, existing output symlinks/non-regular targets are rejected, hardlink aliases to files actually read are rejected where stable filesystem identity is available, output is staged in a unique same-directory temp file and input/output-parent/output-destination/temp-directory/payload snapshots are revalidated before atomic rename.
+- alias-safe output writes: canonical output locations are compared to the read snapshots, existing output symlinks/non-regular targets are rejected, hardlink aliases to files actually read are rejected where stable identity is available, output is staged in a unique same-directory temp file and input/output-parent/output-destination/temp-directory/payload snapshots are revalidated before atomic rename.
 
 The operator structural traversal is iterative, not recursive, so the guard itself does not create stack-exhaustion risk. Stable read snapshots bind parsed content to the observed file and carry the same observation into output safety; their path/identity metadata is frozen after capture. Output-parent snapshots bind the final rename to the canonical directory that was safety-checked. Output-destination snapshots bind overwrite eligibility to the absent-or-existing regular entry observed before staging. Temporary-directory snapshots and the opened payload handle/file snapshot separately bind temporary payload creation, content write and rename to the observed temp subtree. Path changes detected before/during/after input read, before output rename or across the parent/temp/payload boundaries fail closed. These checks narrow path-swap/TOCTOU ambiguity but do not claim perfect race elimination; a narrow final destination check→rename race remains without an OS-specific conditional-rename primitive, and metadata fallback is bounded when stable filesystem identity is unavailable.
 
@@ -176,7 +186,7 @@ Current authority remains fixed:
 
 The normalized JSON model is not Gutenberg post-content serialization and intentionally omits WordPress `innerContent`. Custom/unregistered/freeform content remains `REVIEW_REQUIRED`.
 
-Strongest current code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, byte/structure-bounded alias-safe local-file I/O with stable immutable input snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup and depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with early object-cardinality preflight that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
+Strongest current P16 code-side state remains a requirements-ready export/validation surface with an offline exact-current checker, byte/structure-bounded alias-safe local-file I/O with stable immutable input snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup and depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization with early object-cardinality preflight that still requires **genuinely retained authenticated evidence** before any authority-bearing internal decision path may be added or executed.
 
 ## P17-P26 state
 
@@ -189,7 +199,7 @@ P27 #182 remains **GATE DEFINED / EXECUTION DEFERRED**. It owns final production
 ## Immediate project action
 
 1. Keep #159 as the prerequisite before real P14 mutation exposure.
-2. Continue P15 only where genuine trusted evidence allows a stronger internal decision.
+2. Continue P15 commercial-V1 only through deterministic/read-only generation, extraction and UI/reporting work while target/import/download authority remains false; genuine trusted evidence is still required before any stronger authority-bearing internal decision.
 3. Do not manufacture a P16 trusted-evidence intake or internal decision from another caller-supplied flag; actual retained authenticated evidence is now required for the next authority-bearing progression.
 4. Additional P16 code-only work may remain deterministic/read-only/supporting only if every current false authority flag remains false.
 5. Keep P17-P26 in dependency order after stable target-adapter foundations.
