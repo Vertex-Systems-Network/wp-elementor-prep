@@ -1,3 +1,4 @@
+import type { Stats } from 'node:fs';
 import {
   lstat,
   mkdir,
@@ -20,7 +21,7 @@ import {
 
 function directorySnapshot(
   path: string,
-  info: Awaited<ReturnType<typeof lstat>>,
+  info: Stats,
 ): P16OperatorTemporaryDirectorySnapshot {
   return Object.freeze({
     path,
@@ -31,7 +32,7 @@ function directorySnapshot(
 
 function payloadSnapshot(
   path: string,
-  info: Awaited<ReturnType<typeof lstat>>,
+  info: Stats,
 ): P16OperatorTemporaryPayloadSnapshot {
   return Object.freeze({
     path,
