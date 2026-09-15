@@ -12,7 +12,7 @@ Current product surfaces:
 - safety-gated P5/P6/P7 preparation foundations;
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare/review evidence surfaces;
-- P15 Elementor R1 evidence chain plus bounded target-neutral IR, deterministic local Elementor v0.4 Template JSON candidate generation and read-only selected-Figma-Frame Auto Layout/plain-text extraction;
+- P15 Elementor R1 evidence chain plus bounded target-neutral IR, deterministic local Elementor v0.4 Template JSON candidate generation, read-only selected-Figma-Frame Auto Layout/plain-text extraction, normal/publishable sanitized Elementor preview and user-declared TargetProfile alignment preview;
 - P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding, iterative structural bounds, depth/value/text-bounded + accessor/own-shape-safe direct canonicalization with object-cardinality preflight, prototype-safe canonicalization and alias-safe atomic output writes;
 - exact-build release/provenance tooling.
 
@@ -44,7 +44,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`9d7718dd19d56c28a183023f347947bcdc3123c9`
+`553bfba0ae3cad4c94d7dd6b5c78c96ec3fde698`
 
 ### Recent verified P16 sequence
 
@@ -106,6 +106,8 @@ Current verified main before this documentation sync:
 - PR #460 — expanded README phase visibility through P27 -> `e2c446b162607767e55dfaa8705d5ac446c49734`.
 - PR #462 — added bounded target-neutral export IR plus deterministic local Elementor v0.4 Container/Widget Template JSON candidate generation -> `673a366ad3da25c5d3a327ed87572bcdb2af408d`; generation remains local/non-authorizing and REVIEW fails closed without partial output.
 - PR #464 — added read-only selected-Figma-Frame extraction for bounded HORIZONTAL/VERTICAL Auto Layout/plain TEXT, documented-core `text-editor` mapping, HTML escaping/line-break retention and fail-closed manual/grid/wrap/absolute/image/depth/node review handling -> `9d7718dd19d56c28a183023f347947bcdc3123c9`; exact head `a4eb7eddcb60bdb00a15483775c1bb75cbcc1410` passed CI #1250, P12 Final Release Artifact #561 and P12 Offline Acceptance #605.
+- PR #468 — exposed the accepted local path in normal + publishable plugin UI through sanitized `p15-elementor-plugin-preview-report-v1`; no template/candidate bytes, download/import/network/mutation authority -> `089cd53b990763bc0236d08888306682cbe1f202`; exact head `5df10945869f92fd1c89c901eeaa2c222f3034d7` passed CI #1256, P12 Final Release Artifact #567 and P12 Offline Acceptance #611.
+- PR #471 — added bounded user-declared WordPress/Elementor TargetProfile inputs and sanitized profile/candidate fingerprint + declared-alignment preview; `PROFILE_ALIGNED_REFERENCE_REVIEW_PENDING` remains declared metadata alignment only -> `553bfba0ae3cad4c94d7dd6b5c78c96ec3fde698`; exact head `e65c09d38ea3e65743572bfc964007ff75fee169` passed CI #1258, P12 Final Release Artifact #569 and P12 Offline Acceptance #613.
 
 ### Module-wise progress
 
@@ -130,7 +132,7 @@ Current verified main before this documentation sync:
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review is active; production registry remains empty; #159 required before real mutation exposure |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Bounded local generator + selected-Frame extractor exist; plugin UI exposure, broader semantic/media/responsive mapping and real target import/editor/render validation remain pending |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Bounded local generator + selected-Frame extractor + sanitized plugin preview + declared TargetProfile alignment preview exist; broader semantic/media/responsive mapping and real target import/editor/render validation remain pending |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -156,7 +158,9 @@ P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**.
 
 The bounded local code path now includes target-neutral IR, deterministic Elementor v0.4 Template JSON candidate generation and read-only selected-Figma-Frame extraction for supported Auto Layout/plain-text facts. REVIEW-bearing extraction/generation fails closed with no partial candidate, and layer names are not used to invent heading/button semantics.
 
-These code-side capabilities do not establish WordPress/Elementor availability or compatibility. Real import/editor/render validation, broader semantic/media/responsive mapping, production acceptance, download/transfer authority and any stronger authority-bearing decision remain unvalidated/unwired.
+Normal and publishable plugin UI now expose a sanitized read-only Elementor preview and a bounded declared TargetProfile alignment preview. The local preview omits template/candidate bytes and exposes status/count/widget/reason-code metadata only. TargetProfile assessment uses user-entered declared WordPress/Elementor versions, reruns the current selected-Frame extraction, fingerprints the profile and candidate and labels profile-aligned state only as declared metadata alignment. It does not observe a target environment.
+
+These code/UI-side capabilities do not establish WordPress/Elementor availability or compatibility. `referenceClosureStatus=NOT_RUN`, `targetEnvironmentValidationStatus=NOT_RUN`, `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false` and `downloadEnabled=false` remain explicit. Real import/editor/render validation, broader semantic/media/responsive mapping, production acceptance, download/transfer authority and any stronger authority-bearing decision remain unvalidated/unwired.
 
 ## Current P16 boundary
 
@@ -223,7 +227,7 @@ P12 remains at the retained **80%** release-exit state. The publishing-authorita
 ## Immediate execution order
 
 1. keep P14 non-authorizing while #159 genuine Figma evidence remains pending;
-2. continue P15 commercial-V1 only through deterministic/read-only generation, extraction and plugin preview/report wiring while target/import/download authority remains false;
+2. continue P15 commercial-V1 through deterministic/read-only mapping/coverage classification and review evidence on top of the accepted generator/extractor/plugin-preview/declared-profile path while target/import/download authority remains false;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17-P26 only in retained dependency order;
