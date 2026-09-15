@@ -55,6 +55,7 @@ import { assessP14PreviewContextBinding } from './p14-preview-context';
 import { assessP14PreviewFreshness } from './p14-preview-freshness';
 import { buildP15ElementorV1PreviewFromFigmaFrame } from './p15-neutral-export-extractor';
 import { buildP15PluginPreviewReport } from './p15-plugin-preview-report';
+import { buildP15TargetProfilePreviewReport } from './p15-target-profile-preview-report';
 import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
@@ -534,6 +535,43 @@ function runP15ElementorPreview(): void {
   }
 }
 
+function runP15ElementorTargetProfilePreview(message: {
+  wordpressVersion?: unknown;
+  elementorVersion?: unknown;
+}): void {
+  const frame = selectedFrame();
+  if (!frame) {
+    figma.ui.postMessage({
+      type: 'p15-elementor-target-profile-unavailable',
+      message: 'Select exactly one Frame before assessing a declared Elementor TargetProfile.',
+    });
+    return;
+  }
+
+  try {
+    const extraction = buildP15ElementorV1PreviewFromFigmaFrame(frame);
+    const report = buildP15TargetProfilePreviewReport(
+      { id: frame.id, name: frame.name },
+      extraction,
+      {
+        wordpressVersion: message.wordpressVersion,
+        elementorVersion: message.elementorVersion,
+      },
+    );
+    figma.ui.postMessage({
+      type: 'p15-elementor-target-profile-result',
+      report,
+    });
+    figma.notify(`P15 declared TargetProfile preview: ${report.status} · not observed / no import.`);
+  } catch (error) {
+    const messageText = error instanceof Error ? error.message : String(error);
+    figma.ui.postMessage({
+      type: 'p15-elementor-target-profile-unavailable',
+      message: `P15 declared TargetProfile preview could not be built safely: ${messageText}`,
+    });
+  }
+}
+
 async function runRuntimeEvidenceViewer(): Promise<void> {
   const evidence = await loadLatestP5RuntimeEvidence(figma.clientStorage);
   if (!evidence) {
@@ -950,6 +988,14 @@ figma.ui.onmessage = async (message: unknown) => {
 
   if (type === 'p15-elementor-preview-request') {
     runP15ElementorPreview();
+    return;
+  }
+
+  if (type === 'p15-elementor-target-profile-request') {
+    runP15ElementorTargetProfilePreview(message as {
+      wordpressVersion?: unknown;
+      elementorVersion?: unknown;
+    });
     return;
   }
 
