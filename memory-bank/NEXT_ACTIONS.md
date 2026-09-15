@@ -26,9 +26,14 @@ The code-side V1 foundation now additionally supports:
 - read-only extraction from a selected Figma Frame for bounded HORIZONTAL/VERTICAL Auto Layout, padding/gap/alignment and visible plain TEXT;
 - generic plain text -> documented core Elementor `text-editor`, with HTML escaping and retained line breaks;
 - fail-closed REVIEW for manual/grid/wrapped layout, absolute children, image-backed content pending asset export, unsupported visible node/alignment states and depth/node bounds;
-- no heading/button semantic guessing from layer names and no partial candidate when REVIEW is present.
+- no heading/button semantic guessing from layer names and no partial candidate when REVIEW is present;
+- a normal and publishable-plugin `Preview Elementor` surface that reruns the current selected-Frame extractor/generator and exposes only sanitized local status/count/widget/reason-code metadata through `p15-elementor-plugin-preview-report-v1`;
+- a normal and publishable-plugin declared TargetProfile surface with bounded user-entered WordPress/Elementor version strings, no observed/default target facts, fresh selected-Frame extraction per request, immutable `elementor-target-profile-v1` construction and sanitized `p15-elementor-target-profile-preview-report-v1` profile/candidate identity + alignment metadata;
+- `PROFILE_ALIGNED_REFERENCE_REVIEW_PENDING` presented only as declared metadata alignment, with `referenceClosureStatus=NOT_RUN`, `targetEnvironmentValidationStatus=NOT_RUN`, `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false` and `downloadEnabled=false` retained.
 
-Next bounded commercial-V1 work may expose this accepted local generation/extraction path through a **read-only plugin preview/export-report surface**. It must not enable download/transfer, assert target compatibility, claim import/editor/render validation or mutate Figma/WordPress.
+The accepted plugin surfaces are inspection only: no template/candidate bytes are sent to the UI, no P15 download/clipboard/section-transfer/import action exists, no WordPress/Elementor target is contacted and no Figma mutation is introduced.
+
+Next bounded commercial-V1 work should extend deterministic mapping/coverage classification and explicit REVIEW/UNSUPPORTED evidence on top of the current neutral-IR/profile path. It must not enable download/transfer, assert target compatibility, claim import/editor/render validation or mutate Figma/WordPress.
 
 A caller-supplied/external PASS is not repository authentication. Any stronger P15 authority-bearing internal decision still requires genuinely retained trusted evidence and a separate explicit decision path.
 
@@ -252,6 +257,8 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 deterministic/read
 - #452 output-destination state binding -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`; exact head `ae6fff73839f874ca5eb0b92d50e7632e74ce533`; CI #1231, Final Release #542, Offline #586 PASS.
 - #462 P15 bounded neutral IR + deterministic Elementor v0.4 Template JSON generation -> `673a366ad3da25c5d3a327ed87572bcdb2af408d`.
 - #464 P15 selected-Figma-Frame neutral extraction + `text-editor` mapping + node/depth fail-closed review -> `9d7718dd19d56c28a183023f347947bcdc3123c9`; exact head `a4eb7eddcb60bdb00a15483775c1bb75cbcc1410`; CI #1250, Final Release #561, Offline #605 PASS.
+- #468 P15 normal/publishable read-only Elementor preview + sanitized plugin report -> `089cd53b990763bc0236d08888306682cbe1f202`; exact head `5df10945869f92fd1c89c901eeaa2c222f3034d7`; CI #1256, Final Release #567, Offline #611 PASS.
+- #471 P15 declared TargetProfile alignment preview -> `553bfba0ae3cad4c94d7dd6b5c78c96ec3fde698`; exact head `e65c09d38ea3e65743572bfc964007ff75fee169`; CI #1258, Final Release #569, Offline #613 PASS.
 
 ## Current guardrails
 
@@ -260,7 +267,7 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 deterministic/read
 3. P14 real mutation remains blocked until #159 plus separate mutation authorization.
 4. P15/P16 caller-supplied evidence and external authentication reports remain non-authorizing until genuinely retained trusted evidence plus a separate explicit internal decision exists.
 5. No raw evidence references, source evidence-reference hashes, raw global values, raw asset URLs, supplied manifest payloads or raw native Gutenberg post content should leak into sanitized review/decision/requirements/export/validation artifacts.
-6. P15 has an accepted bounded local Figma-to-neutral-IR-to-Elementor candidate path; it remains read-only/unwired in the plugin UI and does not establish target compatibility, import/editor/render validation, production acceptance or section-transfer/download authority.
+6. P15 has an accepted bounded local Figma-to-neutral-IR-to-Elementor candidate path plus normal/publishable read-only plugin preview and declared TargetProfile alignment surfaces; none establishes observed target compatibility, import/editor/render validation, production acceptance or section-transfer/download authority.
 7. No WordPress target-environment/editor/import/render validation is accepted for P16 yet.
 8. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
 9. P27 owns final production release and deferred live P12 evidence closure.
