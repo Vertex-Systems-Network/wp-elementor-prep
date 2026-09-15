@@ -13,7 +13,7 @@ Current product surfaces:
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - development-only read-only P14 Guided Prepare/review evidence surfaces;
 - P15 Elementor R1 exact candidate/profile/import/reference evidence chain;
-- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O with stable read snapshots, iterative structural bounds, depth/value/text-bounded + accessor/own-shape-safe direct canonicalization with object-cardinality preflight, prototype-safe canonicalization and alias-safe atomic output writes;
+- P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O with stable immutable read snapshots, iterative structural bounds, depth/value/text-bounded + accessor/own-shape-safe direct canonicalization with object-cardinality preflight, prototype-safe canonicalization and alias-safe atomic output writes;
 - exact-build release/provenance tooling.
 
 Canonical planning/status docs:
@@ -44,7 +44,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`146b2dd7a534ab12b4598fe1c78823d5e9733118`
+`78c162728af3249a4ce5905eb831b7a0f72dcd4d`
 
 ### Recent verified P16 sequence
 
@@ -55,7 +55,7 @@ Current verified main before this documentation sync:
 - PR #366 — sanitized native-serialization pre-decision review packet -> `d14e0416413531ca98bfd97dc57e839bef6440a1`.
 - PR #370 — exact-bound externally reported evidence-authentication report -> `5328f6d0205a350e5e1f27b0106fd930e680ae17`.
 - PR #374 — exact-bound decision prerequisite; external auth PASS stops at `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED` -> `6dc86dfc900244616869e5ff289c3afa815a1d2d`.
-- PR #376 — canonical decision-prerequisite docs sync -> `31080f673102206e6eae41801569d62e2eb7512`; exact head `e05e6e366626f43e99d6745dddbdc9d87c348f93` passed CI #1149, Integration Readiness #419, P12 Final Release Artifact #460 and P12 Offline Acceptance #504.
+- PR #376 — canonical decision-prerequisite docs sync -> `31080f673102206e6e6ae41801569d62e2eb7512`; exact head `e05e6e366626f43e99d6745dddbdc9d87c348f93` passed CI #1149, Integration Readiness #419, P12 Final Release Artifact #460 and P12 Offline Acceptance #504.
 - PR #378 — deterministic `gutenberg-native-serialization-evidence-retention-requirements-v1`; READY only from the exact `GENUINE_AUTHENTICATION_EVIDENCE_REQUIRED` prerequisite and still non-authorizing -> `2d7c9e76eb293b8914dd1106c262064013d70b11`; exact head `8ffee524268d2fb1aac0a1dfefffd63014590d88` passed CI #1151, P12 Final Release Artifact #462 and P12 Offline Acceptance #506.
 - PR #380 — synchronized canonical retention-requirements docs -> `c6f6009538e1e0f82bed087783f2c55fa0d9e75d`; corrected exact head `c64a3cd5936fcc2c0d055fe7810a6cf574003da9` passed CI #1155, Integration Readiness #424, P12 Final Release Artifact #466 and P12 Offline Acceptance #510.
 - PR #382 — added package command `p16:evidence-retention-requirements` plus Node-20 offline/operator export for the sanitized requirements manifest -> `e2fe19364ac8615bc390f125c2afb4085bfc474c`; exact head `0626987afe962f54a7a89996219e12cf57744bc4` passed CI #1157, P12 Final Release Artifact #468 and P12 Offline Acceptance #512.
@@ -83,6 +83,8 @@ Current verified main before this documentation sync:
 - PR #426 — added plain-object cardinality preflight before descriptor/text/sort work while preserving the exact 50,000-value boundary -> `06cdd845e46613541f555cc0de59237d261c1fa3`; exact head `03c41d0c4b6880038e24a1f35c854401c0223fee` passed CI #1202, P12 Final Release Artifact #513 and P12 Offline Acceptance #557.
 - PR #428 — synchronized canonical docs through direct object-cardinality preflight -> `44186a19b5719ae3cd3b883140e6e2b8bf776553`; exact head `a140a6918df8cc6be46c990cc10dd1f6aaa13e88` passed CI #1204, Integration Readiness #460, P12 Final Release Artifact #515 and P12 Offline Acceptance #559.
 - PR #430 — bound retention operator reads to stable file snapshots and carried those snapshots into output safety -> `146b2dd7a534ab12b4598fe1c78823d5e9733118`; exact head `211d24d7615217b9711debecc06d05dbff16c92d` passed CI #1206, P12 Final Release Artifact #517 and P12 Offline Acceptance #561.
+- PR #432 — synchronized canonical docs through stable operator input snapshots -> `686a4e8bf65a2b0b43075baa20c6fa6eccadb10d`; exact head `2507049a686e9a757838da2dbfce427580b8ad40` passed CI #1208, Integration Readiness #463, P12 Final Release Artifact #519 and P12 Offline Acceptance #563.
+- PR #434 — froze retention operator snapshot wrapper/file metadata while intentionally leaving parsed `.value` unfrozen -> `78c162728af3249a4ce5905eb831b7a0f72dcd4d`; exact head `250d8490ad4ceaaede0fa4a9af7daadbb74ae655` passed CI #1210, P12 Final Release Artifact #521 and P12 Offline Acceptance #565.
 
 ### Module-wise progress
 
@@ -103,7 +105,7 @@ Current verified main before this documentation sync:
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review is active; production registry remains empty; #159 required before real mutation exposure |
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Genuine trusted authentication/internal decision and real target import remain pending |
-| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable read snapshots + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
+| P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Static-first contract retained; JS execution separately gated |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
 | P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
@@ -147,6 +149,7 @@ Current bounded chain now includes:
 - `p16:evidence-retention-requirements-validate`, a Node-20 offline/operator validation CLI that accepts only local document/profile/receipt/authentication-report/manifest JSON, writes only the sanitized validator result, and exits 0 only for `CURRENT_REQUIREMENTS_MANIFEST_VALID`;
 - shared bounded operator JSON I/O for both retention CLIs: every input is limited to 1 MiB before parse with a post-read byte-length recheck, must be a regular file, cannot be zero-byte/whitespace-only, and the normalized output path cannot collide with any input path;
 - stable operator input snapshots: the existing initial path inspection remains before content read, the opened handle must still match the inspected regular file before read, handle/path metadata is rechecked after read, and the parsed value is carried together with resolved/canonical path + read-time identity/metadata into output safety;
+- immutable snapshot metadata: `P16OperatorJsonInputSnapshot` wrapper fields and nested file metadata are TypeScript-readonly and runtime-frozen, so later internal code cannot replace captured paths or file identity/metadata. Parsed `.value` is intentionally not deep-frozen and remains usable by existing builders/validators;
 - output snapshot revalidation: the exact files read by the CLIs are checked again before temporary output creation and immediately before atomic rename; observed post-read pathname replacement fails closed and temporary output state is cleaned before failure. Stable dev/ino identity is used where available; otherwise canonical path plus size/mtime/ctime consistency is a bounded fallback, not a perfect filesystem-race-elimination guarantee;
 - iterative post-parse structural validation: input is rejected before target builders/validators when container nesting exceeds 64 levels or total JSON values exceed 50,000; the traversal itself is non-recursive;
 - direct retention-manifest canonicalization independently enforces 64 container levels, 50,000 visited values and an aggregate 1 MiB UTF-8 text budget across string values + object keys for exported validator/fingerprint callers that bypass the CLIs;
@@ -158,9 +161,9 @@ Current bounded chain now includes:
 
 The direct canonicalization budget bounds recursive descent to at most 64 container levels, total direct values to 50,000 and aggregate UTF-8 text to 1 MiB. Object keys are charged before sorting. UTF-8 accounting is browser-safe/manual and covers multi-byte Unicode, paired surrogates and lone-surrogate replacement width. Accessor-backed properties are rejected without invocation. Hidden JavaScript-only own state is rejected rather than omitted from fingerprints. Arrays and plain objects both preflight their child cardinality against the remaining value budget; plain objects do so before descriptor/text/sort work. Normal frozen/sealed JSON-shaped data and own enumerable `__proto__` data keys remain canonicalizable. Existing cycle, sparse-array, non-finite, non-JSON, non-plain-object and prototype-safe handling remain unchanged.
 
-The operator structural guard prevents byte-bounded but deeply nested or high-cardinality JSON from reaching downstream validation/canonicalization. Stable read snapshots additionally bind parsed content to the observed file and carry that same observation into output checks; path replacement detected before/during/after read or before output rename fails closed. This narrows path-swap/TOCTOU ambiguity but does not claim perfect race elimination when stable filesystem identity is unavailable.
+The operator structural guard prevents byte-bounded but deeply nested or high-cardinality JSON from reaching downstream validation/canonicalization. Stable read snapshots additionally bind parsed content to the observed file and carry that same observation into output checks; path replacement detected before/during/after read or before output rename fails closed. The snapshot wrapper and nested file metadata are runtime-frozen after capture, while parsed `.value` intentionally remains unfrozen. This narrows path-swap/TOCTOU ambiguity but does not claim perfect race elimination when stable filesystem identity is unavailable.
 
-The atomic output path prevents `writeFile` from following a late-created final symlink back onto an input. Temporary output state is cleaned before fail-closed write errors or second snapshot-revalidation failure. Focused tests cover output symlink, hardlink and symlinked-parent aliases, stable snapshot writes, post-read pathname replacement, and source-input immutability.
+The atomic output path prevents `writeFile` from following a late-created final symlink back onto an input. Temporary output state is cleaned before fail-closed write errors or second snapshot-revalidation failure. Focused tests cover output symlink, hardlink and symlinked-parent aliases, stable snapshot writes, post-read pathname replacement, immutable snapshot metadata, and source-input immutability.
 
 Focused canonicalization regressions cover top-level and nested own `__proto__` additions, direct structural/text boundaries, accessor-backed values, strict own-property shapes and exact object-cardinality boundaries, and confirm `Object.prototype` is not polluted. The validator schema/version/status remain unchanged because these hardenings preserve the existing strict exact-current metadata contract.
 
