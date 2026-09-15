@@ -52,7 +52,7 @@ function asFrame(node: MockNode): FrameNode {
 }
 
 describe('P15 normal-plugin preview report', () => {
-  it('keeps generated local candidates inspection-only with every authority gate false', () => {
+  it('keeps generated local candidates inspection-only with categorical readiness and every authority gate false', () => {
     const frame = autoFrame('page', [textNode('copy', 'Private preview text')]);
     const extraction = buildP15ElementorV1PreviewFromFigmaFrame(asFrame(frame));
     const report = buildP15PluginPreviewReport({ id: frame.id, name: frame.name }, extraction);
@@ -63,6 +63,24 @@ describe('P15 normal-plugin preview report', () => {
       valid: true,
       nodeCount: 2,
       reviewNodeCount: 0,
+    }));
+    expect(report.compatibility).toEqual(expect.objectContaining({
+      status: 'READY',
+      compatibilityCoverage: 100,
+      eligibleNodeCount: 2,
+      counts: {
+        native: 2,
+        nativeWithReview: 0,
+        convertible: 0,
+        fallback: 0,
+        unsupported: 0,
+        unknown: 0,
+      },
+      targetCompatibilityClaim: false,
+      productionAcceptance: false,
+      importValidationStatus: 'NOT_RUN',
+      targetEnvironmentValidationStatus: 'NOT_RUN',
+      downloadEnabled: false,
     }));
     expect(report.generation).toEqual(expect.objectContaining({
       status: 'GENERATED_LOCAL_CANDIDATE',
@@ -88,7 +106,7 @@ describe('P15 normal-plugin preview report', () => {
     expect(serialized).not.toContain('settings');
   });
 
-  it('preserves review reason codes and exposes no partial candidate data', () => {
+  it('preserves review reason codes and keeps ambiguous review nodes visible in compatibility coverage', () => {
     const frame = autoFrame('manual', [textNode('copy', 'Text')], { layoutMode: 'NONE' });
     const extraction = buildP15ElementorV1PreviewFromFigmaFrame(asFrame(frame));
     const report = buildP15PluginPreviewReport({ id: frame.id, name: frame.name }, extraction);
@@ -98,6 +116,13 @@ describe('P15 normal-plugin preview report', () => {
     expect(report.generation.widgetTypes).toEqual([]);
     expect(report.generation.reviewEntries).toEqual([
       { sourceNodeId: 'manual', reasonCode: 'MANUAL_LAYOUT_REQUIRES_REVIEW' },
+    ]);
+    expect(report.compatibility.status).toBe('INSUFFICIENT_EVIDENCE');
+    expect(report.compatibility.compatibilityCoverage).toBe(0);
+    expect(report.compatibility.eligibleNodeCount).toBe(1);
+    expect(report.compatibility.counts.unknown).toBe(1);
+    expect(report.compatibility.blockers).toEqual([
+      { sourceNodeId: 'manual', category: 'UNKNOWN', reasonCode: 'MANUAL_LAYOUT_REQUIRES_REVIEW' },
     ]);
     expect(JSON.stringify(report)).not.toContain('templateJson');
   });
