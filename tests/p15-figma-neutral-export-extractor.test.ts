@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   P15_NEUTRAL_EXPORT_MAX_DEPTH,
+  P15_NEUTRAL_EXPORT_MAX_NODES,
 } from '../src/targets/elementor/neutral-export-ir';
 import {
   buildP15ElementorV1PreviewFromFigmaFrame,
@@ -185,6 +186,27 @@ describe('P15 read-only Figma neutral export extractor', () => {
         sourceNodeId: `${current.id}:p15-bounds`,
         kind: 'review',
         reasonCode: 'DEPTH_LIMIT_EXCEEDED',
+      }),
+    ]);
+    expect(result.validation.valid).toBe(true);
+    expect(result.validation.nodeCount).toBe(1);
+    expect(result.generation.status).toBe('REVIEW_REQUIRED');
+    expect(result.generation.template).toBeNull();
+  });
+
+  it('collapses over-node-limit source trees into one bounded review marker', () => {
+    const children = Array.from({ length: P15_NEUTRAL_EXPORT_MAX_NODES }, (_, index) => (
+      textNode(`copy-${index}`, `Text ${index}`)
+    ));
+    const selected = autoFrame('node-heavy', children);
+    const document = extractP15NeutralExportDocumentFromFigmaFrame(asFrame(selected));
+    const result = buildP15ElementorV1PreviewFromFigmaFrame(asFrame(selected));
+
+    expect(document.nodes).toEqual([
+      expect.objectContaining({
+        sourceNodeId: 'node-heavy:p15-bounds',
+        kind: 'review',
+        reasonCode: 'NODE_LIMIT_EXCEEDED',
       }),
     ]);
     expect(result.validation.valid).toBe(true);
