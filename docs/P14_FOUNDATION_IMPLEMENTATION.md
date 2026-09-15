@@ -2,7 +2,7 @@
 
 Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
 Roadmap: #119  
-Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + stable immutable operator input snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + iterative structural bounds + depth/value/text-bounded accessor/own-shape-safe direct canonicalization + object-cardinality preflight + prototype-safe canonicalization + alias-safe atomic output writes.
+Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain plus target-neutral IR, deterministic local v0.4 Template JSON generation and read-only selected-Figma-Frame extraction, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + stable immutable operator input snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + iterative structural bounds + depth/value/text-bounded accessor/own-shape-safe direct canonicalization + object-cardinality preflight + prototype-safe canonicalization + alias-safe atomic output writes.
 
 Open acceptance/release dependencies: P13 real-Figma acceptance (#159), P12 release-exit review (#84), and P27 final production-release gate (#182).
 
@@ -30,7 +30,11 @@ P15 remains exactly **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** 
 
 Its bounded chain includes declared target profiles, exact candidate/import/reference evidence binding, offline operator intake, pre-decision review and externally reported authentication-result binding. These remain non-authorizing evidence/review surfaces.
 
-Real WordPress/Elementor target import, genuine trusted evidence authentication/internal decision, semantic generation, compatibility, production acceptance and download authority remain unvalidated/unaccepted.
+The commercial-V1 code-side foundation now additionally includes a target-neutral export IR plus deterministic local Elementor v0.4 Container/Widget Template JSON generation for bounded explicit container/heading/button/image/plain-text intents. Generated candidates are revalidated through the existing template/candidate contract and any REVIEW intent fails closed without partial output.
+
+A read-only selected-Figma-Frame extractor now retains bounded HORIZONTAL/VERTICAL Auto Layout, padding/gap/alignment and visible plain TEXT facts in that neutral IR. Generic plain text maps to documented core `text-editor` with escaping and line-break retention. Manual/grid/wrapped layout, absolute children, image-backed content pending asset export, unsupported visible node/alignment states and depth/node overflow produce REVIEW. Layer names are never used to guess heading/button semantics.
+
+Real WordPress/Elementor target import/editor/render validation, genuine trusted evidence authentication/internal decision, broader semantic/media/responsive mapping, production acceptance and download/transfer authority remain unvalidated/unaccepted. The new local generation/extraction surfaces do not authorize P14 mutation.
 
 ### Current P16 state
 
@@ -111,9 +115,9 @@ The normalized JSON serializer is not Gutenberg post-content serialization and t
 
 Current verified main before this documentation sync:
 
-`f3306a3aba5b42544cbdabe950f975ce5ce338a9`
+`9d7718dd19d56c28a183023f347947bcdc3123c9`
 
-Recent P16 merge line:
+Recent P16/P15 merge line:
 
 - #370 external authentication binding -> `5328f6d0205a350e5e1f27b0106fd930e680ae17`;
 - #372 canonical auth docs sync -> `ba2e3d78de79d66a5a07abd2030548893b090845`;
@@ -153,9 +157,15 @@ Recent P16 merge line:
 - #440 canonical output-parent snapshot docs sync -> `f58029610c5fc8e07c2cff467eae33490be6a92f`;
 - #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`;
 - #444 canonical temporary-payload docs sync -> `f82a667f1e397e713af1447af2117e20c55150d4`;
-- #446 non-recursive temporary-directory cleanup -> `0c9325fe995e983b4c904f59f788ac91167276aa`.
+- #446 non-recursive temporary-directory cleanup -> `0c9325fe995e983b4c904f59f788ac91167276aa`;
 - #448 canonical non-recursive-cleanup docs sync -> `af517e1477d57753993f805ccb4d0f770fdf51d5`;
-- #452 output-destination state binding -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`.
+- #452 output-destination state binding -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`;
+- #454 canonical four-document status sync -> `b5e8f919156fb8dc75cab9bad418ce95c7e36f0a`;
+- #456 read-only main PR-origin audit -> `1896ba5d576e6d33f693a2a5dc0a7fb09094d1d6`;
+- #458 forced-update detection in the same audit -> `cd4e8394dfaa6917d28676e51eec831591b6b99a`;
+- #460 README P0-P27 phase-status expansion -> `e2c446b162607767e55dfaa8705d5ac446c49734`;
+- #462 bounded P15 neutral IR + deterministic local Elementor v0.4 Template JSON generation -> `673a366ad3da25c5d3a327ed87572bcdb2af408d`;
+- #464 read-only selected-Figma-Frame extraction + plain `text-editor` mapping + depth/node fail-closed reviews -> `9d7718dd19d56c28a183023f347947bcdc3123c9`.
 
 P12 remains at the retained **80%** release-exit state. Its publishing-authoritative historical candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`.
 
@@ -164,5 +174,7 @@ P17-P26 remain preflight-frozen / implementation-not-started. P27 #182 remains t
 ## Next P13/P14 step
 
 Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mutation exposure. Any future P14 mutation surface requires separate explicit authorization with fresh evidence, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
+
+P15 may continue deterministic/read-only commercial-V1 generation, extraction and plugin UI/reporting integration while target compatibility, import/editor/render validation, production acceptance and download/transfer authority remain false. Any stronger authority-bearing decision still requires genuinely retained trusted evidence and a separate accepted decision path.
 
 For P16, do not promote the requirements manifest/export/validator/validation CLI, stable immutable read-snapshot/file-bound/output-parent/temp-payload/non-recursive-cleanup guards, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization or any caller-supplied result into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
