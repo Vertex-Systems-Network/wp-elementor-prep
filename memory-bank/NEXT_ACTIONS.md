@@ -21,7 +21,7 @@ The current Elementor evidence chain supports exact candidate/profile/import/ref
 
 A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
 
-## Parallel P16 state — bounded code-side foundation complete through output-parent snapshot revalidation
+## Parallel P16 state — bounded code-side foundation complete through temporary payload identity binding
 
 Classification: **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
@@ -68,7 +68,9 @@ Current implemented P16 chain:
 - PR #432 — canonical stable-input-snapshot docs sync;
 - PR #434 — readonly/runtime-frozen retention operator snapshot path/file metadata while parsed `.value` remains intentionally unfrozen;
 - PR #436 — canonical immutable-snapshot docs sync;
-- PR #438 — frozen output-parent snapshot + pre-temp/pre-rename revalidation + identity/path-guarded temp cleanup.
+- PR #438 — frozen output-parent snapshot + pre-temp/pre-rename revalidation + identity/path-guarded temp cleanup;
+- PR #440 — canonical output-parent snapshot docs sync;
+- PR #442 — temporary-directory + opened-payload identity binding across create/write/rename.
 
 Current progression is intentionally bounded:
 
@@ -102,8 +104,13 @@ Their shared output writer additionally:
 - fails closed on observed post-read input replacement or output-parent replacement; output-parent replacement reports `Output directory changed during write.`;
 - rejects existing output symlinks and other non-regular output targets;
 - rejects an existing output regular file that shares stable filesystem identity with a file actually read when identity is available;
-- writes through a unique same-directory temporary regular file and atomically renames it into place, so a late-created final symlink is replaced rather than followed;
-- captures temp-directory dev/ino identity and recursively removes temp state only while both captured parent and stable temp identity still match;
+- creates a unique same-directory temp directory and captures its path + dev/ino identity;
+- requires that temp directory to remain a directory that self-resolves to the same path, revalidating it before payload open, immediately after payload open, after payload write and immediately before rename; stable dev/ino must remain identical where available;
+- creates `payload.json` exclusively with `open(..., 'wx')` and verifies the opened handle and current pathname are the same regular file before any content is written;
+- writes payload content through that opened `FileHandle` rather than path-based `writeFile`;
+- captures a frozen post-write payload file snapshot and requires the payload source pathname to still match it immediately before rename;
+- preserves input-snapshot and output-parent revalidation immediately before rename, then atomically renames the bound payload into place;
+- recursively removes temp state only while both captured parent and stable temp-directory identity still match;
 - when stable temp identity is unavailable, cleanup falls back to non-recursive `rmdir`, avoiding recursive deletion through a replacement-controlled temp path;
 - preserves source-input bytes and replacement-controlled sentinel contents in focused rejected-alias/path-swap cases;
 - these checks narrow path-swap/TOCTOU ambiguity but are not claimed as perfect filesystem-race elimination where stable identity is unavailable.
@@ -171,7 +178,7 @@ Until such genuine evidence exists, keep these facts true:
 
 ### Safe code-only work while genuine evidence is absent
 
-Only deterministic/read-only/supporting work remains unblocked, such as further serialization/sanitization/file-boundary hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
+Only deterministic/read-only/supporting work remains unblocked, such as further serialization/sanitization/file-boundary/temp-payload hardening or additional rejection tests. Such work must not accept evidence as trusted, assert authentication, connect to WordPress, claim compatibility or enable generation/download.
 
 ## Roadmap state
 
@@ -219,7 +226,9 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #432 docs sync -> `686a4e8bf65a2b0b43075baa20c6fa6eccadb10d`; exact head `2507049a686e9a757838da2dbfce427580b8ad40`; CI #1208, Integration #463, Final Release #519, Offline #563 PASS;
 - #434 immutable snapshot metadata -> `78c162728af3249a4ce5905eb831b7a0f72dcd4d`; exact head `250d8490ad4ceaaede0fa4a9af7daadbb74ae655`; CI #1210, Final Release #521, Offline #565 PASS;
 - #436 docs sync -> `df3a5503eb274c4e9c5c5dccf6383b66138cec12`; exact head `352a670eb5b1d301ea8badccf71b6c2e35831286`; CI #1212, Integration #466, Final Release #523, Offline #567 PASS;
-- #438 output-parent snapshot revalidation -> `2b67f292d192b86f825e99860313978ee49dfb6f`; exact head `ca1c51df84ab96cf1b1ddfa2a0a53d20805a1e21`; CI #1214, Final Release #525, Offline #569 PASS.
+- #438 output-parent snapshot revalidation -> `2b67f292d192b86f825e99860313978ee49dfb6f`; exact head `ca1c51df84ab96cf1b1ddfa2a0a53d20805a1e21`; CI #1214, Final Release #525, Offline #569 PASS;
+- #440 docs sync -> `f58029610c5fc8e07c2cff467eae33490be6a92f`; exact head `1fe88eac56697e79dd548f4610e33f7c449bc4f0`; CI #1216, Integration #469, Final Release #527, Offline #571 PASS;
+- #442 temporary payload identity binding -> `13cc556d87652a9f0f30a8749f98ae823c9dbd9a`; final exact head `1632207cefd8e3ea2882b23962d9172609fef39b`; CI #1219, Final Release #530, Offline #574 PASS.
 
 ## Current guardrails
 
