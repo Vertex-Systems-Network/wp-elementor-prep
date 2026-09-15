@@ -17,20 +17,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Require merged PR association for main commit
+      - name: Require non-forced merged PR association for main commit
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
           COMMIT_SHA: ${{ github.sha }}
+          FORCED_UPDATE: ${{ github.event.forced }}
         run: |
           node <<'NODE'
           const repository = process.env.REPOSITORY ?? '';
           const sha = process.env.COMMIT_SHA ?? '';
           const token = process.env.GH_TOKEN ?? '';
+          const forcedUpdate = process.env.FORCED_UPDATE ?? '';
 
-          if (!repository.includes('/') || !sha || !token) {
+          if (!repository.includes('/') || !sha || !token || !['true', 'false'].includes(forcedUpdate)) {
             console.error('MAIN_PR_ORIGIN_AUDIT_ERROR: missing workflow context.');
             process.exit(2);
+          }
+
+          if (forcedUpdate === 'true') {
+            console.error('MAIN_PR_ORIGIN_AUDIT_FAILED: forced update to main detected.');
+            process.exit(1);
           }
 
           const url = `https://api.github.com/repos/${repository}/commits/${sha}/pulls`;
