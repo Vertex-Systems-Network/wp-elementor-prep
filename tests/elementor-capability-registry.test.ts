@@ -58,6 +58,16 @@ function template(): ElementorTemplateV04 {
             elements: [],
           },
           {
+            id: 'text1',
+            elType: 'widget',
+            widgetType: 'text-editor',
+            isInner: false,
+            settings: {
+              editor: '<p>Hello World.</p>',
+            },
+            elements: [],
+          },
+          {
             id: 'addon1',
             elType: 'widget',
             widgetType: 'custom-addon-widget',
@@ -78,6 +88,7 @@ describe('P15 Elementor capability registry and report', () => {
       'button',
       'heading',
       'image',
+      'text-editor',
     ]);
     for (const entry of ELEMENTOR_CORE_WIDGET_CAPABILITIES_V1) {
       expect(entry.classification).toBe('DOCUMENTED_CORE');
@@ -94,8 +105,8 @@ describe('P15 Elementor capability registry and report', () => {
     expect(report.targetCompatibilityClaim).toBe(false);
     expect(report.generationEnabled).toBe(false);
     expect(report.summary).toEqual({
-      totalWidgets: 4,
-      documentedCoreWidgets: 3,
+      totalWidgets: 5,
+      documentedCoreWidgets: 4,
       reviewRequiredWidgets: 1,
       widgetsWithResponsiveSettings: 2,
       widgetsWithGlobalReferences: 2,
@@ -105,6 +116,7 @@ describe('P15 Elementor capability registry and report', () => {
       { widgetType: 'custom-addon-widget', classification: 'REVIEW_REQUIRED', count: 1 },
       { widgetType: 'heading', classification: 'DOCUMENTED_CORE', count: 1 },
       { widgetType: 'image', classification: 'DOCUMENTED_CORE', count: 1 },
+      { widgetType: 'text-editor', classification: 'DOCUMENTED_CORE', count: 1 },
     ]);
   });
 

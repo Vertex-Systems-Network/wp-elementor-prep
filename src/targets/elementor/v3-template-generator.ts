@@ -6,13 +6,15 @@ import {
   P15_NEUTRAL_EXPORT_IR_VERSION,
   validateP15NeutralExportDocument,
   type P15NeutralAlignment,
+  type P15NeutralButtonNode,
   type P15NeutralContainerNode,
   type P15NeutralExportDocumentV1,
   type P15NeutralExportNode,
+  type P15NeutralExportValidationResult,
   type P15NeutralHeadingNode,
   type P15NeutralImageNode,
-  type P15NeutralButtonNode,
-  type P15NeutralExportValidationResult,
+  type P15NeutralTextAlignment,
+  type P15NeutralTextNode,
 } from './neutral-export-ir';
 import {
   ELEMENTOR_TEMPLATE_DATA_VERSION,
@@ -100,8 +102,22 @@ function mapJustification(value: P15NeutralContainerNode['justifyContent']): str
   return value;
 }
 
-function mapTextAlignment(value: P15NeutralAlignment | undefined): string | undefined {
+function mapTextAlignment(value: P15NeutralAlignment | P15NeutralTextAlignment | undefined): string | undefined {
   return value;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function textEditorHtml(value: string): string {
+  const normalized = value.replace(/\r\n?/g, '\n');
+  return `<p>${escapeHtml(normalized).replaceAll('\n', '<br>')}</p>`;
 }
 
 function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 {
@@ -135,6 +151,22 @@ function headingWidget(node: P15NeutralHeadingNode, state: GenerationState): Ele
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
     widgetType: 'heading',
+    isInner: false,
+    settings,
+    elements: [],
+  };
+}
+
+function textEditorWidget(node: P15NeutralTextNode, state: GenerationState): ElementorWidgetV04 {
+  const settings: Record<string, unknown> = {
+    editor: textEditorHtml(node.text),
+  };
+  const align = mapTextAlignment(node.align);
+  if (align !== undefined) settings.align = align;
+  return {
+    id: stableElementorId(node.kind, node.sourceNodeId, state),
+    elType: 'widget',
+    widgetType: 'text-editor',
     isInner: false,
     settings,
     elements: [],
@@ -193,6 +225,7 @@ function mapNode(
     return null;
   }
   if (node.kind === 'heading') return headingWidget(node, state);
+  if (node.kind === 'text') return textEditorWidget(node, state);
   if (node.kind === 'button') return buttonWidget(node, state);
   if (node.kind === 'image') return imageWidget(node, state);
 

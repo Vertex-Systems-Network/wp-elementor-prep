@@ -9,7 +9,7 @@ import {
 
 export const ELEMENTOR_CAPABILITY_REGISTRY_VERSION = 'elementor-core-widget-capabilities-v1' as const;
 
-export type ElementorDocumentedCoreWidgetV1 = 'button' | 'heading' | 'image';
+export type ElementorDocumentedCoreWidgetV1 = 'button' | 'heading' | 'image' | 'text-editor';
 export type ElementorWidgetCompatibilityClass = 'DOCUMENTED_CORE' | 'REVIEW_REQUIRED';
 
 export interface ElementorCoreWidgetCapabilityV1 {
@@ -37,6 +37,13 @@ export const ELEMENTOR_CORE_WIDGET_CAPABILITIES_V1: readonly ElementorCoreWidget
   }),
   Object.freeze({
     widgetType: 'image',
+    classification: 'DOCUMENTED_CORE',
+    generationEnabled: false,
+    availabilityClaim: false,
+    evidence: 'ELEMENTOR_WIDGET_ELEMENT_DOCUMENTATION',
+  }),
+  Object.freeze({
+    widgetType: 'text-editor',
     classification: 'DOCUMENTED_CORE',
     generationEnabled: false,
     availabilityClaim: false,
