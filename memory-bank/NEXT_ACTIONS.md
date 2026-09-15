@@ -1,6 +1,6 @@
 # Next Actions
 
-Last updated: 2026-09-15
+Last updated: 2026-09-16
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 and must fail closed on stale or mismatched registered artifacts.
 
@@ -13,13 +13,24 @@ P14 remains **CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED**.
 - Do not convert read-only review packets, candidate signals or persisted evidence into production mutation authority.
 - Any future mutation surface requires explicit recipe authorization, fresh exact evidence, candidate-only mutation, validation/re-score/source-immutability gates and fail-closed cleanup.
 
-## Priority 2 — P15 only where genuine trusted evidence permits
+## Priority 2 — continue P15 commercial-V1 deterministically/read-only
 
 P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**.
 
-The current Elementor evidence chain supports exact candidate/profile/import/reference binding, offline operator intake, sanitized pre-decision review and externally reported authentication-result binding.
+The existing Elementor evidence chain supports exact candidate/profile/import/reference binding, offline operator intake, sanitized pre-decision review and externally reported authentication-result binding.
 
-A caller-supplied/external PASS is not repository authentication. A stronger P15 internal decision requires genuine retained trusted evidence and a separate explicit decision path.
+The code-side V1 foundation now additionally supports:
+
+- a bounded target-neutral export IR with explicit container/heading/button/image/plain-text/REVIEW intents and no Elementor control names at the IR boundary;
+- deterministic local Elementor v0.4 Container/Widget Template JSON candidate generation, revalidated through the existing template/candidate contract;
+- read-only extraction from a selected Figma Frame for bounded HORIZONTAL/VERTICAL Auto Layout, padding/gap/alignment and visible plain TEXT;
+- generic plain text -> documented core Elementor `text-editor`, with HTML escaping and retained line breaks;
+- fail-closed REVIEW for manual/grid/wrapped layout, absolute children, image-backed content pending asset export, unsupported visible node/alignment states and depth/node bounds;
+- no heading/button semantic guessing from layer names and no partial candidate when REVIEW is present.
+
+Next bounded commercial-V1 work may expose this accepted local generation/extraction path through a **read-only plugin preview/export-report surface**. It must not enable download/transfer, assert target compatibility, claim import/editor/render validation or mutate Figma/WordPress.
+
+A caller-supplied/external PASS is not repository authentication. Any stronger P15 authority-bearing internal decision still requires genuinely retained trusted evidence and a separate explicit decision path.
 
 ## Parallel P16 state — bounded code-side foundation complete through output-destination state binding
 
@@ -196,7 +207,7 @@ Only deterministic/read-only/supporting work remains unblocked, such as further 
 - P17-P26 — PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED;
 - P27 — GATE DEFINED / EXECUTION DEFERRED (#182).
 
-Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine evidence permits -> bounded P16 support until genuine evidence exists -> P17 -> P18 -> P19 -> P20 -> P21 -> P22 -> P23 -> P24 -> P25 -> P26 -> P27.
+Future dependency order remains P14 -> R0/R1 as needed -> P15 deterministic/read-only commercial-V1 work while authority stays false -> bounded P16 support until genuine evidence exists -> P17 -> P18 -> P19 -> P20 -> P21 -> P22 -> P23 -> P24 -> P25 -> P26 -> P27.
 
 ## Latest retained proof
 
@@ -239,6 +250,8 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 - #446 non-recursive temp cleanup -> `0c9325fe995e983b4c904f59f788ac91167276aa`; exact head `efc6d1b34f238928635abb5eaa2d5afb20ff0b2b`; CI #1223, Final Release #534, Offline #578 PASS.
 - #448 docs sync -> `af517e1477d57753993f805ccb4d0f770fdf51d5`; exact head `875c1ab816f67761be11f032a87cd3a4ec6e4d57`; CI #1225, Integration #475, Final Release #536, Offline #580 PASS.
 - #452 output-destination state binding -> `f3306a3aba5b42544cbdabe950f975ce5ce338a9`; exact head `ae6fff73839f874ca5eb0b92d50e7632e74ce533`; CI #1231, Final Release #542, Offline #586 PASS.
+- #462 P15 bounded neutral IR + deterministic Elementor v0.4 Template JSON generation -> `673a366ad3da25c5d3a327ed87572bcdb2af408d`.
+- #464 P15 selected-Figma-Frame neutral extraction + `text-editor` mapping + node/depth fail-closed review -> `9d7718dd19d56c28a183023f347947bcdc3123c9`; exact head `a4eb7eddcb60bdb00a15483775c1bb75cbcc1410`; CI #1250, Final Release #561, Offline #605 PASS.
 
 ## Current guardrails
 
@@ -247,7 +260,7 @@ Future dependency order remains P14 -> R0/R1 as needed -> P15 only where genuine
 3. P14 real mutation remains blocked until #159 plus separate mutation authorization.
 4. P15/P16 caller-supplied evidence and external authentication reports remain non-authorizing until genuinely retained trusted evidence plus a separate explicit internal decision exists.
 5. No raw evidence references, source evidence-reference hashes, raw global values, raw asset URLs, supplied manifest payloads or raw native Gutenberg post content should leak into sanitized review/decision/requirements/export/validation artifacts.
-6. No Figma-to-Elementor/Gutenberg semantic generator or section transfer is accepted yet.
+6. P15 has an accepted bounded local Figma-to-neutral-IR-to-Elementor candidate path; it remains read-only/unwired in the plugin UI and does not establish target compatibility, import/editor/render validation, production acceptance or section-transfer/download authority.
 7. No WordPress target-environment/editor/import/render validation is accepted for P16 yet.
 8. #287 remains an admin-level repository protection residual until branch rules are actually enabled.
 9. P27 owns final production release and deferred live P12 evidence closure.
