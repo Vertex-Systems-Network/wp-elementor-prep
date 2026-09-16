@@ -22,7 +22,7 @@ Last updated: 2026-09-16
 | R1 | Reliability/compatibility gate | DEFINED / RECURRING | 100% | `██████████` | Execute TargetProfile/capability/validator/harness gate per adapter |
 | P13 | Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance |
 | P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review active; production registry empty; #159 before real mutation exposure |
-| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Neutral IR + v3 generator + selected-Frame extraction + sanitized preview + declared TargetProfile + mapping readiness + fresh locally validated Template JSON download exist; next minimum fidelity pack, then real import/editor/render proof |
+| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Neutral IR + v3 generator + selected-Frame extraction + preview/profile/readiness + fresh local Template JSON download + bounded solid-background/uniform-radius fidelity exist; next one controlled genuine import/editor/render proof |
 | P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 | HTML/CSS/JS export + code-to-design import | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
 | P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
@@ -52,7 +52,7 @@ P15 is **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**.
 
 Bounded code-side surfaces now include:
 
-- target-neutral export IR with explicit container/heading/button/image/plain-text/REVIEW intents;
+- target-neutral export IR with explicit container/heading/button/image/plain-text/REVIEW intents and optional bounded container background/radius facts;
 - deterministic local Elementor v0.4 Container/Widget Template JSON generation;
 - read-only selected-Figma-Frame extraction for bounded HORIZONTAL/VERTICAL Auto Layout, padding/gap/alignment and visible plain text;
 - sanitized normal/publishable plugin preview;
@@ -60,9 +60,13 @@ Bounded code-side surfaces now include:
 - deterministic compatibility categories `NATIVE`, `NATIVE_WITH_REVIEW`, `CONVERTIBLE`, `FALLBACK`, `UNSUPPORTED`, `UNKNOWN`;
 - categorical mapping-readiness states `READY`, `READY_WITH_REVIEW`, `NOT_READY`, `INSUFFICIENT_EVIDENCE`;
 - explicit fresh local Template JSON download gated by review-free `READY` mapping, generated-candidate readiness and an immediate second local candidate revalidation/match;
-- deterministic sanitized local-download receipt with source/generator identity, SHA-256 candidate/artifact fingerprints and hash-derived filename.
+- deterministic sanitized local-download receipt with source/generator identity, SHA-256 candidate/artifact fingerprints and hash-derived filename;
+- deterministic opaque single-`SOLID` container background extraction to canonical uppercase `#RRGGBB`;
+- deterministic bounded uniform pixel corner-radius extraction;
+- native Elementor container serialization through `background_background='classic'`, `background_color` and linked pixel `border_radius` dimensions;
+- explicit REVIEW boundaries for multiple/unsupported/translucent fills, invalid RGB states, partial/nonuniform/out-of-range radii and image asset closure.
 
-The explicit download surface is **local artifact transfer only**. It is not target compatibility or import proof.
+The explicit download surface is **local artifact transfer only**. The new style mappings are local deterministic fidelity only. Neither is target compatibility or import proof.
 
 On a successful fresh local-download result only, `fileDownload=true` is allowed and the UI says **LOCAL ARTIFACT VALIDATED / TARGET IMPORT NOT VERIFIED**. Existing candidate/preview/profile contracts remain non-download surfaces.
 
@@ -78,7 +82,9 @@ These facts stay authoritative:
 - no clipboard/section transfer;
 - no Figma mutation.
 
-The next bounded P15 slice is a minimum deterministic visual-fidelity mapping pack. After that, a controlled genuine Elementor import/editor/render proof is required before stronger target authority.
+Typography, gradients, opacity/effects, nonuniform-radius conversion and responsive behavior remain intentionally outside the accepted fidelity slice.
+
+The next bounded P15 objective is one controlled genuine Elementor import/editor/render proof for a known exact generated candidate. Stronger target authority requires retained real-environment observations; CI/local JSON validation cannot supply them.
 
 ## Current P16 implementation truth
 

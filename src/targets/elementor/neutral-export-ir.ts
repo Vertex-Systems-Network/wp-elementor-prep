@@ -1,9 +1,10 @@
-export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v1' as const;
+export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
 export const P15_NEUTRAL_EXPORT_MAX_DEPTH = 64;
 export const P15_NEUTRAL_EXPORT_MAX_TEXT_LENGTH = 20_000;
 export const P15_NEUTRAL_EXPORT_MAX_URL_LENGTH = 4_096;
 export const P15_NEUTRAL_EXPORT_MAX_SPACING_PX = 4_096;
+export const P15_NEUTRAL_EXPORT_MAX_RADIUS_PX = 4_096;
 
 export type P15NeutralDocumentType = 'page' | 'section';
 export type P15NeutralDirection = 'row' | 'column';
@@ -31,6 +32,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   paddingPx?: P15NeutralPaddingPx;
   alignItems?: P15NeutralCrossAlignment;
   justifyContent?: P15NeutralJustification;
+  backgroundColorHex?: string;
+  cornerRadiusPx?: number;
   children: P15NeutralExportNode[];
 }
 
@@ -76,6 +79,7 @@ export type P15NeutralExportNode =
   | P15NeutralImageNode
   | P15NeutralReviewNode;
 
+/** Schema version remains 1; irVersion v2 adds bounded optional container style facts. */
 export interface P15NeutralExportDocumentV1 {
   schemaVersion: 1;
   irVersion: typeof P15_NEUTRAL_EXPORT_IR_VERSION;
@@ -99,6 +103,8 @@ export type P15NeutralExportValidationCode =
   | 'P15_IR_CONTAINER_DIRECTION_INVALID'
   | 'P15_IR_CONTAINER_CHILDREN_INVALID'
   | 'P15_IR_SPACING_INVALID'
+  | 'P15_IR_COLOR_INVALID'
+  | 'P15_IR_RADIUS_INVALID'
   | 'P15_IR_ALIGNMENT_INVALID'
   | 'P15_IR_TEXT_INVALID'
   | 'P15_IR_HEADING_LEVEL_INVALID'
@@ -182,6 +188,10 @@ function validSpacing(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= P15_NEUTRAL_EXPORT_MAX_SPACING_PX;
 }
 
+function validRadius(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= P15_NEUTRAL_EXPORT_MAX_RADIUS_PX;
+}
+
 function validatePadding(value: unknown, path: string, state: ValidationState): void {
   if (!isRecord(value)) {
     pushIssue(state, 'P15_IR_SPACING_INVALID', path, 'paddingPx must be an object with top/right/bottom/left pixel values.');
@@ -246,7 +256,12 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   const kind = value.kind;
 
   if (kind === 'container') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'children'], path, state);
+    validateExactKeys(
+      value,
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'children'],
+      path,
+      state,
+    );
     if (value.direction !== 'row' && value.direction !== 'column') {
       pushIssue(state, 'P15_IR_CONTAINER_DIRECTION_INVALID', `${path}.direction`, 'Container direction must be row or column.');
     }
@@ -254,6 +269,13 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
       pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.gapPx`, `gapPx must be between 0 and ${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}.`);
     }
     if (value.paddingPx !== undefined) validatePadding(value.paddingPx, `${path}.paddingPx`, state);
+    if (value.backgroundColorHex !== undefined
+      && (typeof value.backgroundColorHex !== 'string' || !/^#[0-9A-F]{6}$/.test(value.backgroundColorHex))) {
+      pushIssue(state, 'P15_IR_COLOR_INVALID', `${path}.backgroundColorHex`, 'backgroundColorHex must be canonical uppercase #RRGGBB when provided.');
+    }
+    if (value.cornerRadiusPx !== undefined && !validRadius(value.cornerRadiusPx)) {
+      pushIssue(state, 'P15_IR_RADIUS_INVALID', `${path}.cornerRadiusPx`, `cornerRadiusPx must be between 0 and ${P15_NEUTRAL_EXPORT_MAX_RADIUS_PX}px.`);
+    }
     if (value.alignItems !== undefined && !['start', 'center', 'end', 'stretch'].includes(String(value.alignItems))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.alignItems`, 'alignItems is outside the bounded neutral alignment vocabulary.');
     }

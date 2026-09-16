@@ -25,7 +25,7 @@ import {
   type ElementorWidgetV04,
 } from './template-v04';
 
-export const P15_ELEMENTOR_V3_GENERATOR_VERSION = 'p15-elementor-v3-template-generator-v1' as const;
+export const P15_ELEMENTOR_V3_GENERATOR_VERSION = 'p15-elementor-v3-template-generator-v2' as const;
 
 export type P15ElementorV3GenerationStatus =
   | 'REJECTED_INVALID_IR'
@@ -137,6 +137,18 @@ function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 
   if (alignItems !== undefined) settings.flex_align_items = alignItems;
   const justifyContent = mapJustification(node.justifyContent);
   if (justifyContent !== undefined) settings.flex_justify_content = justifyContent;
+  if (node.backgroundColorHex !== undefined) {
+    settings.background_background = 'classic';
+    settings.background_color = node.backgroundColorHex;
+  }
+  if (node.cornerRadiusPx !== undefined) {
+    settings.border_radius = pxDimensions({
+      top: node.cornerRadiusPx,
+      right: node.cornerRadiusPx,
+      bottom: node.cornerRadiusPx,
+      left: node.cornerRadiusPx,
+    });
+  }
   return settings;
 }
 

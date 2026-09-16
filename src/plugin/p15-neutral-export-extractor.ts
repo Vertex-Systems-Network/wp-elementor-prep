@@ -2,6 +2,7 @@ import {
   P15_NEUTRAL_EXPORT_IR_VERSION,
   P15_NEUTRAL_EXPORT_MAX_DEPTH,
   P15_NEUTRAL_EXPORT_MAX_NODES,
+  P15_NEUTRAL_EXPORT_MAX_RADIUS_PX,
   P15_NEUTRAL_EXPORT_MAX_SPACING_PX,
   validateP15NeutralExportDocument,
   type P15NeutralContainerNode,
@@ -20,7 +21,7 @@ import {
   type P15ElementorV3GenerationResult,
 } from '../targets/elementor/v3-template-generator';
 
-export const P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION = 'p15-figma-neutral-export-extractor-v1' as const;
+export const P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION = 'p15-figma-neutral-export-extractor-v2' as const;
 
 export interface P15FigmaNeutralExtractionResult {
   schemaVersion: 1;
@@ -34,6 +35,14 @@ export interface P15FigmaNeutralExtractionResult {
 interface ExtractionState {
   visited: number;
   boundsExceeded: 'DEPTH_LIMIT_EXCEEDED' | 'NODE_LIMIT_EXCEEDED' | null;
+}
+
+interface ParsedContainerStyle<T> {
+  value?: T | undefined;
+  review?: {
+    reasonCode: string;
+    detail: string;
+  };
 }
 
 function recordOf(node: SceneNode): Record<string, unknown> {
@@ -69,6 +78,15 @@ function finiteSpacing(value: unknown): number | null {
     && Number.isFinite(value)
     && value >= 0
     && value <= P15_NEUTRAL_EXPORT_MAX_SPACING_PX
+    ? value
+    : null;
+}
+
+function finiteRadius(value: unknown): number | null {
+  return typeof value === 'number'
+    && Number.isFinite(value)
+    && value >= 0
+    && value <= P15_NEUTRAL_EXPORT_MAX_RADIUS_PX
     ? value
     : null;
 }
@@ -113,6 +131,139 @@ function boundedPadding(node: SceneNode): P15NeutralPaddingPx | null {
   const left = finiteSpacing(record.paddingLeft);
   if (top === null || right === null || bottom === null || left === null) return null;
   return { top, right, bottom, left };
+}
+
+function colorChannel(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1 ? value : null;
+}
+
+function byteHex(channel: number): string {
+  return Math.round(channel * 255).toString(16).padStart(2, '0').toUpperCase();
+}
+
+function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string> {
+  const fills = recordOf(node).fills;
+  if (fills === undefined) return {};
+  if (!Array.isArray(fills)) {
+    return {
+      review: {
+        reasonCode: 'UNSUPPORTED_CONTAINER_FILL_STATE',
+        detail: 'Container fills are mixed or otherwise unavailable as a bounded paint list.',
+      },
+    };
+  }
+
+  const visiblePaints = fills.filter((paint) => (
+    typeof paint !== 'object'
+    || paint === null
+    || (paint as { visible?: unknown }).visible !== false
+  ));
+  if (visiblePaints.length === 0) return {};
+  if (visiblePaints.length > 1) {
+    return {
+      review: {
+        reasonCode: 'MULTIPLE_VISIBLE_FILLS_REQUIRES_REVIEW',
+        detail: 'Multiple visible container fills require an explicit fidelity mapping decision.',
+      },
+    };
+  }
+
+  const paint = visiblePaints[0];
+  if (typeof paint !== 'object' || paint === null) {
+    return {
+      review: {
+        reasonCode: 'UNSUPPORTED_CONTAINER_FILL_STATE',
+        detail: 'Container fill is not a readable bounded Figma paint object.',
+      },
+    };
+  }
+  const paintRecord = paint as Record<string, unknown>;
+  if (paintRecord.type !== 'SOLID') {
+    return {
+      review: {
+        reasonCode: 'UNSUPPORTED_CONTAINER_FILL_REQUIRES_REVIEW',
+        detail: `Only one opaque SOLID container fill is mapped in this fidelity slice; observed ${String(paintRecord.type ?? 'UNKNOWN')}.`,
+      },
+    };
+  }
+  if (paintRecord.opacity !== undefined && paintRecord.opacity !== 1) {
+    return {
+      review: {
+        reasonCode: 'TRANSLUCENT_SOLID_FILL_REQUIRES_REVIEW',
+        detail: 'Translucent solid container fills require an explicit opacity mapping decision.',
+      },
+    };
+  }
+  const color = paintRecord.color;
+  if (typeof color !== 'object' || color === null || Array.isArray(color)) {
+    return {
+      review: {
+        reasonCode: 'UNSUPPORTED_CONTAINER_FILL_STATE',
+        detail: 'Solid container fill does not expose bounded RGB channels.',
+      },
+    };
+  }
+  const colorRecord = color as Record<string, unknown>;
+  const red = colorChannel(colorRecord.r);
+  const green = colorChannel(colorRecord.g);
+  const blue = colorChannel(colorRecord.b);
+  if (red === null || green === null || blue === null) {
+    return {
+      review: {
+        reasonCode: 'UNSUPPORTED_CONTAINER_FILL_STATE',
+        detail: 'Solid container RGB channels must be finite values between 0 and 1.',
+      },
+    };
+  }
+  return { value: `#${byteHex(red)}${byteHex(green)}${byteHex(blue)}` };
+}
+
+function parseContainerRadius(node: SceneNode): ParsedContainerStyle<number> {
+  const record = recordOf(node);
+  const keys = ['topLeftRadius', 'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius'] as const;
+  const provided = keys.map((key) => record[key] !== undefined);
+
+  if (provided.some(Boolean)) {
+    if (!provided.every(Boolean)) {
+      return {
+        review: {
+          reasonCode: 'UNSUPPORTED_CORNER_RADIUS_STATE',
+          detail: 'Container exposes only a partial set of individual corner radii.',
+        },
+      };
+    }
+    const values = keys.map((key) => finiteRadius(record[key]));
+    if (values.some((value) => value === null)) {
+      return {
+        review: {
+          reasonCode: 'CORNER_RADIUS_OUT_OF_RANGE',
+          detail: `Container corner radii must be finite values between 0 and ${P15_NEUTRAL_EXPORT_MAX_RADIUS_PX}px.`,
+        },
+      };
+    }
+    const [first, ...rest] = values as number[];
+    if (rest.some((value) => value !== first)) {
+      return {
+        review: {
+          reasonCode: 'NONUNIFORM_CORNER_RADIUS_REQUIRES_REVIEW',
+          detail: 'Non-uniform container corner radii require an explicit fidelity mapping decision.',
+        },
+      };
+    }
+    return first === 0 ? {} : { value: first };
+  }
+
+  if (record.cornerRadius === undefined) return {};
+  const radius = finiteRadius(record.cornerRadius);
+  if (radius === null) {
+    return {
+      review: {
+        reasonCode: 'CORNER_RADIUS_OUT_OF_RANGE',
+        detail: `Uniform container corner radius must be finite and between 0 and ${P15_NEUTRAL_EXPORT_MAX_RADIUS_PX}px.`,
+      },
+    };
+  }
+  return radius === 0 ? {} : { value: radius };
 }
 
 function extractText(node: SceneNode): P15NeutralExportNode {
@@ -163,6 +314,11 @@ function extractContainer(
     );
   }
 
+  const background = parseContainerBackground(node);
+  if (background.review) return review(node, background.review.reasonCode, background.review.detail);
+  const radius = parseContainerRadius(node);
+  if (radius.review) return review(node, radius.review.reasonCode, radius.review.detail);
+
   const children: P15NeutralExportNode[] = [];
   for (const child of childNodes(node)) {
     if (!visible(child)) continue;
@@ -179,6 +335,8 @@ function extractContainer(
     paddingPx,
     alignItems,
     justifyContent,
+    ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
+    ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
     children,
   };
   return container;
