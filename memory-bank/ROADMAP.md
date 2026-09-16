@@ -22,7 +22,7 @@ Last updated: 2026-09-16
 | R1 | Reliability/compatibility gate | DEFINED / RECURRING | 100% | `██████████` | Execute TargetProfile/capability/validator/harness gate per adapter |
 | P13 | Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance |
 | P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review active; production registry empty; #159 before real mutation exposure |
-| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Candidate/download + bounded fidelity + proof intake + #486/#487 environment qualification train; next #483 qualified real import/editor/render proof + separate review |
+| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Candidate/download + bounded fidelity + exact proof intake + environment qualification + exact environment/proof-chain binding; next #483 qualified real import/editor/render proof + separate review |
 | P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 | HTML/CSS/JS export + code-to-design import | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
 | P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
@@ -52,37 +52,27 @@ P15 is **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**.
 
 Bounded code-side surfaces now include:
 
-- target-neutral export IR with explicit container/heading/button/image/plain-text/REVIEW intents and optional bounded container background/radius facts;
-- deterministic local Elementor v0.4 Container/Widget Template JSON generation;
-- read-only selected-Figma-Frame extraction for bounded HORIZONTAL/VERTICAL Auto Layout, padding/gap/alignment and visible plain text;
-- sanitized normal/publishable plugin preview;
-- bounded user-declared WordPress/Elementor TargetProfile alignment preview;
-- deterministic compatibility categories `NATIVE`, `NATIVE_WITH_REVIEW`, `CONVERTIBLE`, `FALLBACK`, `UNSUPPORTED`, `UNKNOWN`;
-- categorical mapping-readiness states `READY`, `READY_WITH_REVIEW`, `NOT_READY`, `INSUFFICIENT_EVIDENCE`;
-- explicit fresh local Template JSON download gated by review-free `READY` mapping, generated-candidate readiness and an immediate second local candidate revalidation/match;
-- deterministic sanitized local-download receipt with source/generator identity, SHA-256 candidate/artifact fingerprints and hash-derived filename;
-- deterministic opaque single-`SOLID` container background extraction to canonical uppercase `#RRGGBB`;
-- deterministic bounded uniform pixel corner-radius extraction;
-- native Elementor container serialization through `background_background='classic'`, `background_color` and linked pixel `border_radius` dimensions;
-- explicit REVIEW boundaries for multiple/unsupported/translucent fills, invalid RGB states, partial/nonuniform/out-of-range radii and image asset closure;
-- versioned `elementor-target-proof-evidence-v1` for externally supplied observations bound to the exact canonical candidate identity and immutable declared TargetProfile fingerprint;
-- separate retention of actually observed WordPress/Elementor versions rather than treating declared versions as observed truth;
-- independent import/editor-open/render observations plus bounded current fidelity observations with fail-closed prerequisite sequencing;
-- deterministic proof classifications `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL`, `REJECTED`;
-- sanitized offline `p15:elementor-target-proof-intake` output with exact binding status and SHA-256 input fingerprints while omitting candidate/template contents;
-- versioned `elementor-target-environment-evidence-v1` and policy `elementor-target-environment-policy-2026-09-16-v1` for externally observed WordPress/Elementor/PHP/database/memory/browser environment facts;
-- deterministic environment classifications `QUALIFIED_FOR_BOUND_TARGET_PROOF`, `REVIEW_REQUIRED`, `NOT_QUALIFIED`, `REJECTED`;
-- fail-closed rejection/non-qualification for malformed versions, SQLite/unsupported DBs, below-minimum runtime requirements and unsupported/stale browsers;
-- review-required clean-Core policy when Elementor Pro or third-party Elementor addons are active;
-- sanitized offline `p15:elementor-target-environment-intake` output with evidence SHA-256 and explicit `importObserved=false`, `editorObserved=false`, `renderObserved=false`.
+- target-neutral export IR and deterministic local Elementor v0.4 Container/Widget Template JSON generation;
+- read-only selected-Figma-Frame extraction, compatibility/mapping-readiness states and fail-closed REVIEW handling;
+- explicit fresh local Template JSON download with immediate local candidate revalidation and sanitized receipt;
+- bounded deterministic opaque single-solid container background and uniform pixel radius extraction/serialization;
+- versioned `elementor-target-proof-evidence-v1` with exact candidate identity + TargetProfile fingerprint binding, observed import/editor/render/fidelity steps and proof classifications `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL`, `REJECTED`;
+- sanitized `p15:elementor-target-proof-intake` with candidate/profile/proof SHA-256 fingerprints;
+- versioned `elementor-target-environment-evidence-v1` and policy `elementor-target-environment-policy-2026-09-16-v1` for observed WordPress/Elementor/PHP/database/memory/browser facts;
+- environment classifications `QUALIFIED_FOR_BOUND_TARGET_PROOF`, `REVIEW_REQUIRED`, `NOT_QUALIFIED`, `REJECTED` with conservative minimums and clean-Core review boundaries;
+- sanitized `p15:elementor-target-environment-intake` with environment SHA-256 and explicit no-import/no-editor/no-render authority;
+- `elementor-target-proof-chain-v1` combined candidate/profile/environment/proof validation so qualified environment packets cannot be substituted across retained runs merely because WordPress/Elementor versions match;
+- exact environment/proof runtime-version equality, retained evidence-reference equality and chronology checks;
+- combined classifications `CHAIN_FULL_PASS`, `CHAIN_PARTIAL`, `CHAIN_FAIL`, `CHAIN_BLOCKED`, `REJECTED`;
+- sanitized `p15:elementor-target-proof-chain-intake` with candidate/profile/environment/proof SHA-256 fingerprints and no candidate/template content leakage.
 
-The explicit download surface is **local artifact transfer only**. Style mappings are local deterministic fidelity only. Environment qualification says only that one externally observed runtime satisfies bounded prerequisites for attempting the proof. Target-proof intake validates only the structure/binding of externally supplied observations. None of these alone is target compatibility, import authority or production acceptance.
+The explicit download surface is **local artifact transfer only**. Style mappings are local deterministic fidelity only. Environment qualification and combined chain validation are evidence-integrity gates only. Target-proof intake validates externally supplied observations only. None of these alone is target compatibility, import authority or production acceptance.
 
-On a successful fresh local-download result only, `fileDownload=true` is allowed and the UI says **LOCAL ARTIFACT VALIDATED / TARGET IMPORT NOT VERIFIED**. Existing candidate/preview/profile contracts remain non-download surfaces.
+On a successful fresh local-download result only, `fileDownload=true` is allowed and the UI says **LOCAL ARTIFACT VALIDATED / TARGET IMPORT NOT VERIFIED**.
 
 These facts stay authoritative:
 
-- `acceptanceAuthority=false` for environment qualification and target-proof intake;
+- `acceptanceAuthority=false` for environment qualification, target-proof intake and proof-chain intake;
 - `targetCompatibilityClaim=false`;
 - `productionAcceptance=false`;
 - `internalReviewRequired=true` for external environment/proof evidence;
@@ -94,85 +84,39 @@ These facts stay authoritative:
 - no clipboard/section transfer;
 - no Figma mutation.
 
-A qualified environment and complete exact-bound `BOUND_FULL_PASS` packet still require genuine retained real-environment observations plus separate internal review before stronger P15 authority can be considered.
+Even `CHAIN_FULL_PASS` requires genuine retained real-environment observations and separate internal review before stronger P15 authority can be considered.
 
 Typography, gradients, opacity/effects, nonuniform-radius conversion and responsive behavior remain intentionally outside the accepted fidelity slice.
 
-The next bounded P15 objective is #483: observe one exact generated candidate in a real qualified WordPress + Elementor environment, retain environment qualification evidence, perform Template JSON import/editor/render observation, run the exact-bound target-proof intake, preserve all identities/evidence and perform separate internal review. CI/local JSON validation cannot substitute for that observation.
+The next bounded P15 objective is #483: use one exact generated candidate in a real qualified WordPress + Elementor environment, retain qualification evidence, perform Template JSON import/editor/render observation, build/run the exact proof intake, run the combined chain intake, preserve all identities/fingerprints/evidence and perform separate internal review. CI/local JSON validation cannot substitute for that observation.
 
 ## Current P16 implementation truth
 
 P16 is **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
 
-The deterministic foundation includes normalized candidate/native-validation evidence contracts, immutable declared target profiles, exact candidate identity, offline receipt/evidence intake, sanitized review/decision prerequisites, genuine-evidence retention requirements, offline operator export/validation and hardened bounded local JSON I/O/output handling. This remains supporting evidence only: genuine authenticated evidence and real native target/editor/import/render validation are still required before stronger authority.
+The deterministic foundation includes normalized candidate/native-validation evidence contracts, immutable declared target profiles, exact candidate identity, offline receipt/evidence intake, sanitized review/decision prerequisites, genuine-evidence retention requirements, offline operator export/validation and hardened bounded local JSON I/O/output handling. Genuine authenticated evidence and real native target/editor/import/render validation are still required before stronger authority.
 
-## R0 — recurring market/platform intelligence
+## R0 / R1 recurring gates
 
-R0 is defined in `docs/MARKET_RESEARCH_PLAN.md`.
-
-Before major target-adapter implementation:
-
-1. refresh official platform docs;
-2. refresh competitor/market matrix;
-3. identify product gaps/differentiators;
-4. classify documented vs risky/undocumented target paths;
-5. review privacy/network/licensing constraints;
-6. update decisions/acceptance criteria.
-
-Research never grants runtime acceptance.
-
-## R1 — recurring reliability/compatibility gate
-
-R1 is defined in `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md`.
-
-Before implementing a target adapter, freeze:
-
-1. immutable versioned `TargetProfile`;
-2. machine-readable capability descriptor;
-3. UI dependency/reset rules that prevent stale invalid options;
-4. structured error/retry model;
-5. source fingerprint/staleness policy;
-6. atomic generation and checksum/receipt contract;
-7. schema/package/reference/assets validator;
-8. real import/build/render acceptance harness where applicable;
-9. precise readiness labels separating local artifact validation from observed target verification.
-
-No adapter may claim a live-site guarantee from local package validation alone.
+R0 refreshes official platform/market/privacy/licensing evidence before major externally evolving adapters. R1 freezes immutable profiles/capabilities, error/staleness/atomicity/validation/evidence contracts and real target harness expectations. Research or local validation never grants runtime acceptance.
 
 ## Current P12 truth
 
-The exact publishing-ID package under manual evaluation was produced from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with Figma-assigned ID `1680034649341961379` and Final Release Artifact #20. Static/offline verification passed, but P12 remains at 80% until live publisher/account/2FA/current-package evidence and final internal exit review are retained. Actual Community review/approval remains external.
-
-## P13-P27 dependency and release order
-
-1. P13 proves target/readiness risk evidence read-only.
-2. P14 can prepare only conditions already detectable/explainable.
-3. P15/P16 establish native WordPress builder adapters after R0/R1 and real target validation.
-4. P17 establishes generic web code export and safe static-first reverse import.
-5. P18 generalizes target code generation through adapter SDK/neutral component IR and pinned build matrices.
-6. P19 standardizes assets/fonts/tokens across targets with truthful stored-original/rendered semantics.
-7. P20 validates generated output visually and provides exact section portability/bridge.
-8. P21 packages deterministic handoff/client QA/advisories.
-9. P22 converts accepted structured evidence into configurable effort estimates.
-10. P23 adds agency/project/component-binding/change-only workflows.
-11. P24 adds dynamic/CMS/forms/interactions only after static output is stable.
-12. P25 defines commercial tiers/entitlements without changing correctness.
-13. P26 adds optional AI only after deterministic outputs exist.
-14. P27 performs the final production-release sequence, coordinates remaining live runtime/publisher/2FA evidence and preserves #84 as the P12 release-exit truth.
+The publishing-authoritative P12 candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with Figma-assigned plugin ID `1680034649341961379`. P12 remains at 80% until retained live package/publisher/account/2FA/final-exit evidence and internal review are complete. Community approval remains external.
 
 ## Runtime artifact registry
 
-The artifact is registered in `config/runtime-artifacts.json` schema v3 as the operational provenance contract for retained exact-build runtime artifacts.
+The artifact is registered in `config/runtime-artifacts.json` schema v3 as the machine-readable operational provenance authority for retained exact-build runtime artifacts.
 
 ## Execution policy
 
 1. Issues first.
 2. PR/MR second.
-3. R0 research refresh when required by the next external target.
+3. R0 refresh when required by an externally evolving target.
 4. R1 compatibility/reliability contract freeze.
 5. Highest-priority unblocked roadmap obligation.
-6. Use one focused release train for one acceptance objective; batch tightly related implementation/tests/UI/status-sync work rather than creating ceremonial micro-PRs.
-7. Use focused typecheck/tests/builds for fast branch feedback; require the full documented exact-head CI/release/offline gates at the integration/merge checkpoint.
-8. Synchronize canonical README/memory truth when status/authority/behavior actually changes, once per accepted release train when practical.
-9. No synthetic runtime/external evidence and no synthetic overall project percentage.
+6. One focused release train per acceptance objective.
+7. Focused checks during iteration; full exact-head CI/release/offline gates at merge.
+8. Canonical memory/README truth synchronized only when behavior/status/authority actually changes.
+9. No synthetic runtime/external evidence or synthetic overall project percentage.
 10. Implementation-complete and production-accepted remain separate.
