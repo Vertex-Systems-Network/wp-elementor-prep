@@ -1,5 +1,4 @@
 import { resolve } from 'node:path';
-import { sha256Hex } from '../core/sha256';
 import { validateElementorTargetEnvironmentEvidence } from '../targets/elementor/target-environment-evidence';
 import { outputAliasesAnyInput } from './p15-evidence-path-safety';
 import {
@@ -74,7 +73,7 @@ const report = {
   reviewCodes: [...validation.reviewCodes],
   issues: validation.issues.map((issue) => ({ ...issue })),
   inputs: {
-    evidenceSha256: `sha256:${sha256Hex(evidenceFile.raw)}`,
+    evidenceSha256: evidenceFile.contentSha256,
   },
   acceptanceAuthority: false,
   targetCompatibilityClaim: false,
