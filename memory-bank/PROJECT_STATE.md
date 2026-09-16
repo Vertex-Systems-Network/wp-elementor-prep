@@ -85,6 +85,8 @@ Accepted foundation now includes:
 - resolved `--out` paths rejected when they collide with consumed input paths;
 - shared local/offline filesystem-identity protection using canonical real paths and `dev + ino` identity where available so existing symlink/hardlink output aliases cannot overwrite retained evidence inputs;
 - stable opened-file snapshots with identity/metadata verification across reads and recheck before report commit for environment/proof/proof-chain plus the package-supported import/reference-closure operator surfaces;
+- every migrated operator input snapshot is additionally bound to the exact SHA-256 of the consumed bytes, with a streaming opened-file digest recheck at the final report-commit boundary so byte drift fails closed even when path/filesystem metadata still appears unchanged;
+- the digest recheck does not load deliberately unbounded raw reference-template inputs into memory a second time and does not introduce a new generic candidate/template byte ceiling;
 - a 1 MiB raw-input ceiling plus bounded JSON depth/value traversal for intrinsically small TargetProfile/environment/proof/import-receipt/reference-profile/reference-receipt packets;
 - no arbitrary low candidate byte ceiling: candidate outer JSON and embedded `templateJson` instead receive the accepted bounded nesting preflights while the existing 10,000-element/64-level target contract remains authoritative;
 - raw reference-closure template inputs use stable opened-file snapshots without a newly invented generic byte/depth/value ceiling because the accepted Elementor v0.4 settings contract remains target-owned and structurally open;
