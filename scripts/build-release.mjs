@@ -73,7 +73,7 @@ await rm(outRoot, { recursive: true, force: true });
 await mkdir(pluginDir, { recursive: true });
 
 await build({
-  entryPoints: ['src/plugin/main.ts'],
+  entryPoints: ['src/plugin/entry.ts'],
   bundle: true,
   outfile: resolve(pluginDir, 'code.js'),
   platform: 'browser',

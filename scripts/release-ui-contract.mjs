@@ -1,3 +1,4 @@
+import { extendP15LocalTemplateDownloadUi } from './p15-local-template-download-ui.mjs';
 import { buildSecureUi } from './ui-security-contract.mjs';
 
 function requireReplacement(source, from, to, label) {
@@ -17,6 +18,7 @@ function requireRegexReplacement(source, pattern, to, label) {
 const REQUIRED_PRODUCTION_TOKENS = [
   'id="audit"',
   'id="p15-preview"',
+  'id="p15-download"',
   'id="p15-profile"',
   'id="p15-wp-version"',
   'id="p15-elementor-version"',
@@ -38,6 +40,13 @@ const REQUIRED_PRODUCTION_TOKENS = [
   'UNKNOWN',
   'targetCompatibilityClaim=false · productionAcceptance=false · downloadEnabled=false · importValidationStatus=NOT_RUN',
   'targetCompatibilityClaim=false · productionAcceptance=false · importValidationStatus=NOT_RUN · targetEnvironmentValidationStatus=NOT_RUN · downloadEnabled=false',
+  "post('p15-elementor-local-template-download-request')",
+  "message.type === 'p15-elementor-local-template-download-result'",
+  "message.type === 'p15-elementor-local-template-download-unavailable'",
+  'LOCAL ARTIFACT VALIDATED',
+  'TARGET IMPORT NOT VERIFIED',
+  'LOCAL ARTIFACT GATE DID NOT PASS',
+  'downloadText(receipt.fileName, templateJson',
   "post('p15-elementor-target-profile-request'",
   "message.type === 'p15-elementor-target-profile-result'",
   "message.type === 'p15-elementor-target-profile-unavailable'",
@@ -98,12 +107,13 @@ export function assertReleaseUiCapabilities(source) {
 }
 
 export function buildReleaseUi(developmentUi) {
-  let releaseUi = buildSecureUi(developmentUi).replace(/\r\n/g, '\n');
+  const extendedDevelopmentUi = extendP15LocalTemplateDownloadUi(developmentUi);
+  let releaseUi = buildSecureUi(extendedDevelopmentUi).replace(/\r\n/g, '\n');
 
   releaseUi = requireReplacement(
     releaseUi,
     '<div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>',
-    '<div class="sub">Audit + actionable backlog + read-only Elementor preview + visual validation + safety-gated Safe Fix + sequential batch preparation</div>',
+    '<div class="sub">Audit + actionable backlog + Elementor preview + locally validated Elementor JSON download + visual validation + safety-gated Safe Fix + sequential batch preparation</div>',
     'development UI subtitle',
   );
   releaseUi = requireRegexReplacement(
@@ -133,7 +143,7 @@ export function buildReleaseUi(developmentUi) {
   releaseUi = requireReplacement(
     releaseUi,
     '<div id="root" class="empty">Select one Frame to audit/preview, two Frames to compare, or multiple Frames for P7 batch processing.</div>',
-    '<div id="root" class="empty">Select one Frame to audit, inspect for Elementor, or prepare safely; select two Frames to compare or multiple Frames for sequential batch preparation.</div>',
+    '<div id="root" class="empty">Select one Frame to audit, inspect/download locally validated Elementor JSON, or prepare safely; select two Frames to compare or multiple Frames for sequential batch preparation.</div>',
     'development UI initial guidance',
   );
   releaseUi = requireReplacement(

@@ -1,5 +1,6 @@
 import { build } from 'esbuild';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { extendP15LocalTemplateDownloadUi } from './p15-local-template-download-ui.mjs';
 import { buildSecureUi } from './ui-security-contract.mjs';
 
 const packageJson = JSON.parse(await readFile('package.json', 'utf8'));
@@ -20,7 +21,7 @@ const p7BuildDefines = {
 };
 
 await build({
-  entryPoints: ['src/plugin/main.ts'],
+  entryPoints: ['src/plugin/entry.ts'],
   bundle: true,
   outfile: 'dist/code.js',
   platform: 'browser',
@@ -67,7 +68,7 @@ await build({
   define: { ...provenanceDefines, ...p7BuildDefines },
 });
 
-const developmentUi = await readFile('src/ui/ui.html', 'utf8');
+const developmentUi = extendP15LocalTemplateDownloadUi(await readFile('src/ui/ui.html', 'utf8'));
 await writeFile('dist/ui.html', buildSecureUi(developmentUi), 'utf8');
 
 const template = await readFile('manifest.template.json', 'utf8');
