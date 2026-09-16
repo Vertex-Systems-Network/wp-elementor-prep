@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, linkSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
@@ -75,6 +76,26 @@ describe('P15 Elementor target-environment operator intake', () => {
     expect(report.editorObserved).toBe(false);
     expect(report.renderObserved).toBe(false);
     expect(raw).toMatch(/"evidenceSha256": "sha256:[0-9a-f]{64}"/);
+  });
+
+  it('reports the SHA-256 of the exact BOM-bearing input bytes', () => {
+    const dir = fixtureDir();
+    const evidencePath = join(dir, 'environment-with-bom.json');
+    const outPath = join(dir, 'report.json');
+    const serialized = Buffer.from(serializeElementorTargetEnvironmentEvidence(qualifiedEvidence()), 'utf8');
+    const inputBytes = Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), serialized]);
+    const expectedSha256 = `sha256:${createHash('sha256').update(inputBytes).digest('hex')}`;
+    writeFileSync(evidencePath, inputBytes);
+
+    const run = runIntake(evidencePath, outPath);
+    expect(run.status).toBe(0);
+    const report = JSON.parse(readFileSync(outPath, 'utf8')) as {
+      classification: string;
+      inputs: { evidenceSha256: string };
+    };
+
+    expect(report.classification).toBe('QUALIFIED_FOR_BOUND_TARGET_PROOF');
+    expect(report.inputs.evidenceSha256).toBe(expectedSha256);
   });
 
   it('returns nonzero NOT_QUALIFIED for SQLite evidence while retaining the observed runtime facts', () => {
