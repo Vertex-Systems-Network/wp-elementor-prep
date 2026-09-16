@@ -8,7 +8,7 @@ Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 an
 
 Prioritize one coherent Elementor commercial V1. Keep P16 stable unless a concrete shared blocker appears, and keep P17-P26 frozen during this window.
 
-Use focused typecheck/tests/builds while iterating. Before merge, the exact PR head must pass the repository's full CI / P12 Final Release Artifact / P12 Offline Acceptance gates. Canonical docs synchronize once per behavior-changing release train rather than in separate ceremonial docs PRs.
+Use focused typecheck/tests/builds while iterating. The exact integration head must pass the repository's full CI / P12 Final Release Artifact / P12 Offline Acceptance gates before merge. Canonical docs synchronize once per behavior-changing release train rather than in separate ceremonial docs PRs.
 
 ## Authority boundaries that must remain true
 
@@ -23,19 +23,13 @@ Use focused typecheck/tests/builds while iterating. Before merge, the exact PR h
 
 Never promote local artifact validation, environment qualification, deterministic style serialization, declared profile alignment, mapping readiness, caller-supplied evidence or CI success into real target compatibility/import/render/production authority.
 
-## Current P15 release train — issue #486 / PR #487
+## P15 environment-qualification release train — issue #486 / PR #487
 
-PR #487 adds a deterministic, non-authorizing qualification gate for the externally observed WordPress + Elementor runtime used by the future #483 proof.
+This release train adds a deterministic, non-authorizing qualification gate for the externally observed WordPress + Elementor runtime used by the future #483 proof.
 
-Implementation head `1872be59bcee3443d75ba7024e12714fdf7e4102` passed:
+Implementation feedback head `1872be59bcee3443d75ba7024e12714fdf7e4102` passed CI #1287, P12 Final Release Artifact #598 and P12 Offline Acceptance #642. The synchronized release candidate must still satisfy the exact-head gates at integration.
 
-- CI #1287 including status verification, typecheck, full tests, builds and release/community checks;
-- P12 Final Release Artifact #598;
-- P12 Offline Acceptance #642.
-
-The canonical docs commits move the PR head, so final exact-head gates must pass again before merge.
-
-Bounded behavior for this train:
+Bounded behavior:
 
 - `elementor-target-environment-evidence-v1` accepts only externally observed bounded runtime facts;
 - policy `elementor-target-environment-policy-2026-09-16-v1` uses conservative R0-qualified floors for WordPress, PHP, MySQL/MariaDB, memory and browser;
@@ -46,7 +40,7 @@ Bounded behavior for this train:
 - `p15:elementor-target-environment-intake` emits a sanitized report and SHA-256 input fingerprint;
 - the report explicitly keeps `importObserved=false`, `editorObserved=false`, `renderObserved=false`.
 
-This train does **not** change:
+This release train does **not** change:
 
 - `acceptanceAuthority=false`;
 - `targetCompatibilityClaim=false`;
@@ -59,13 +53,9 @@ This train does **not** change:
 - no section/clipboard transfer;
 - no Figma mutation.
 
-### Immediate action
-
-Run a final diff audit, resolve any review feedback, and require full CI / Final / Offline PASS on the exact post-doc-sync PR #487 head before merge.
-
 ## Next P15 acceptance action — issue #483 real controlled target proof
 
-After #487 merges, the first genuine target proof must use one exact known generated V1 candidate and one externally observed runtime.
+The first genuine target proof must use one exact known generated V1 candidate and one externally observed runtime.
 
 Required order:
 
@@ -82,11 +72,11 @@ Required order:
 
 If a genuine qualified operator/environment is not available, stop at the evidence-capture boundary. CI, local JSON validity, Playground/SQLite-only observations, unbound screenshots and user-declared versions cannot substitute for #483.
 
-## Immediate repository-side boundary after #487
+## Repository-side boundary while #483 is blocked
 
 Do not open additional P15 serializer/fidelity implementation merely to keep the queue moving while #483 is unproven. The next fidelity slice must be selected from a concrete gap exposed by the first real controlled target proof.
 
-While #483 is blocked, repository-side work is limited to:
+Repository-side work is limited to:
 
 - fixing concrete regressions discovered by CI/review;
 - maintaining the target-proof/environment qualification harness when platform evidence changes;
