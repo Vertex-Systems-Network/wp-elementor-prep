@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-16
+Last updated: 2026-09-17
 
 ## Product direction
 
@@ -8,11 +8,11 @@ WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving t
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
 
-## P15 proof-chain release train provenance
+## Accepted P15 implementation baseline
 
-Verified main entering issue #488 / PR #489:
+Most recent accepted P15 implementation baseline before this canonical-only sync:
 
-`dd281b8bea7670e252629e931129a5276d08bef3`
+`d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`
 
 Recent accepted P15 sequence:
 
@@ -20,17 +20,12 @@ Recent accepted P15 sequence:
 - PR #480 — bounded deterministic container solid-background + uniform-radius fidelity; merge `f568ec2236a1a0c7102a656368a7632ec8f581dd`;
 - PR #482 — exact-bound external Elementor target-proof evidence contract/intake; final head `500ce695d2392128dfd53d9d181dcf392ca64a57` passed CI #1281, Final #592 and Offline #636; merge `04c3710cab693c232e512e53de21b20f6f496555`;
 - PR #485 — canonical post-#482 state sync; merge `623b09277bc90d52b324468b0429e01671ac8520`;
-- PR #487 — observed target-environment qualification contract/intake; final head `d74b948401dbf4e4f15116cc9a57c8d8cabf7c18` passed CI #1294, Final #605 and Offline #649 on Ubuntu/Windows/macOS; merge `dd281b8bea7670e252629e931129a5276d08bef3`; issue #486 completed.
+- PR #487 — observed target-environment qualification contract/intake; final head `d74b948401dbf4e4f15116cc9a57c8d8cabf7c18` passed CI #1294, Final #605 and Offline #649 on Ubuntu/Windows/macOS; merge `dd281b8bea7670e252629e931129a5276d08bef3`; issue #486 completed;
+- PR #489 — exact candidate/profile/environment/proof chain binding; final head `6107a510fa3c97c939e5876c7e0d3e4bdd677b7c` passed CI #1303, Final #614 and Offline #658 on Ubuntu/macOS/Windows; merge `919e76249c110f92679be1a048bd53b366d10e86`; issue #488 completed;
+- PR #491 — evidence-intake duplicate-option and resolved output/input path hardening; final head `d820f2a8babfaa719b26ad39dd15e2165cb6a857` passed CI #1305, Final #616 and Offline #660 on Ubuntu/macOS/Windows; merge `926af2c0663717cf1a3085d3ed49cf1c121f5670`; issue #490 completed;
+- PR #493 — shared filesystem-identity guard rejecting symlink/hardlink output aliases; final head `4f03472868e0bd6b9a350d0f4a88240cfba5a05a` passed CI #1307, Final #618 and Offline #662 on Ubuntu/Windows/macOS; merge `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`; issue #492 completed.
 
-Issue #488 / PR #489 adds deterministic binding between the exact candidate/profile, qualified environment evidence and target-proof evidence. Implementation feedback head `c8e7e90150f629804ca4c2a158f0d81c526ad7ee` passed CI #1296, P12 Final Release Artifact #607 and P12 Offline Acceptance #651.
-
-Acceptance for this release train requires the repository's exact-head CI / Final Release / Offline Acceptance gates before merge. Merge acceptance is code-side evidence-integrity acceptance only; it never supplies runtime proof.
-
-P15 acceptance still depends on:
-
-- issue #483 — first controlled genuine Elementor Template JSON import/editor/render observation for one exact generated candidate;
-- state: **EXTERNAL/RUNTIME BLOCKED** pending a qualified controlled WordPress + Elementor environment and retained operator evidence;
-- no repository code/CI may synthesize the missing target observation.
+These accepted trains are code-side artifact/evidence integrity only. They do not supply a real WordPress/Elementor import, editor, render or compatibility observation.
 
 ## Persistent dependencies
 
@@ -61,7 +56,7 @@ Repository development remains issue-first, PR-second, R0/R1-aware and exact-hea
 
 P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** with `N/A` progress.
 
-Accepted foundation entering #488/#489 includes:
+Accepted foundation now includes:
 
 - target-neutral export IR;
 - deterministic local Elementor v0.4 Container/Widget Template JSON generation;
@@ -78,18 +73,14 @@ Accepted foundation entering #488/#489 includes:
 - `elementor-target-environment-evidence-v1` and policy `elementor-target-environment-policy-2026-09-16-v1`;
 - environment classifications `QUALIFIED_FOR_BOUND_TARGET_PROOF`, `REVIEW_REQUIRED`, `NOT_QUALIFIED`, `REJECTED`;
 - conservative runtime minimums and clean-Core review policy;
-- sanitized `p15:elementor-target-environment-intake` with explicit `importObserved=false`, `editorObserved=false`, `renderObserved=false`.
-
-The #488/#489 release train adds the missing deterministic evidence-chain binding without changing either accepted standalone v1 evidence contract:
-
-- `elementor-target-proof-chain-v1` evaluates exact candidate + TargetProfile + environment evidence + proof evidence together;
-- environment evidence must be structurally valid; the clean-Core full-pass path requires `QUALIFIED_FOR_BOUND_TARGET_PROOF`;
-- proof-observed WordPress and Elementor versions must exactly equal the environment evidence versions;
-- environment and proof must carry the same durable evidence/run reference so a qualified packet from one runtime cannot be paired with proof from another runtime that merely shares version strings;
-- proof observation time must be equal to or later than environment observation time;
-- existing candidate/profile replay failures remain rejected through the accepted proof validator;
-- combined classifications are `CHAIN_FULL_PASS`, `CHAIN_PARTIAL`, `CHAIN_FAIL`, `CHAIN_BLOCKED`, `REJECTED`;
-- `p15:elementor-target-proof-chain-intake` emits sanitized chain state and SHA-256 fingerprints for candidate/profile/environment/proof while omitting candidate/template content.
+- sanitized `p15:elementor-target-environment-intake` with explicit `importObserved=false`, `editorObserved=false`, `renderObserved=false`;
+- `elementor-target-proof-chain-v1` validating exact candidate + TargetProfile + environment evidence + proof evidence together;
+- exact environment/proof WordPress+Elementor equality, durable evidence/run-reference equality, chronology validation and existing candidate/profile replay protection;
+- combined classifications `CHAIN_FULL_PASS`, `CHAIN_PARTIAL`, `CHAIN_FAIL`, `CHAIN_BLOCKED`, `REJECTED`;
+- sanitized `p15:elementor-target-proof-chain-intake` with candidate/profile/environment/proof SHA-256 fingerprints and no template-content leakage;
+- duplicate CLI options rejected rather than silently last-write-wins;
+- resolved `--out` paths rejected when they collide with consumed input paths;
+- shared local/offline filesystem-identity protection using canonical real paths and `dev + ino` identity where available so existing symlink/hardlink output aliases cannot overwrite retained evidence inputs.
 
 User-facing local-download truth remains exactly bounded to:
 
@@ -112,7 +103,7 @@ Authority remains:
 
 A qualified environment plus `CHAIN_FULL_PASS` still means only that one genuine externally supplied candidate/profile/environment/proof evidence chain is internally consistent and complete for the bounded clean-Core policy. Separate retained operator evidence and internal review remain mandatory before any stronger P15 authority can be considered.
 
-Issue #483 owns the next P15 acceptance action once the chain gate is accepted on main. The real run must retain qualification evidence, perform actual candidate import/editor/render observation, build the exact proof packet, run standalone diagnostics, run the combined chain intake, retain all fingerprints/evidence together and then undergo separate internal review.
+Issue #483 is the current P15 acceptance action. The genuine run must retain qualification evidence, perform actual candidate Template Library JSON import/editor/render observation, build the exact proof packet, run standalone diagnostics, run the combined chain intake, retain all identities/fingerprints/evidence together and then undergo separate internal review.
 
 ## P16 state
 
