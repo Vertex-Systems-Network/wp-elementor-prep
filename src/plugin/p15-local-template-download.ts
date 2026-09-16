@@ -19,6 +19,7 @@ export type P15LocalTemplateDownloadStatus =
 
 export type P15LocalTemplateDownloadBlockReasonCode =
   | 'P15_DOWNLOAD_EXTRACTION_INVALID'
+  | 'P15_DOWNLOAD_EXTRACTION_REVIEW_PRESENT'
   | 'P15_DOWNLOAD_MAPPING_NOT_READY'
   | 'P15_DOWNLOAD_MAPPING_REVIEW_PRESENT'
   | 'P15_DOWNLOAD_GENERATION_NOT_READY'
@@ -123,9 +124,8 @@ export function buildP15LocalTemplateDownloadResult(
   const generationCandidate = extraction.generation.candidate;
   const reasons: P15LocalTemplateDownloadBlockReasonCode[] = [];
 
-  if (!extraction.validation.valid || extraction.validation.reviewNodeCount > 0) {
-    reasons.push('P15_DOWNLOAD_EXTRACTION_INVALID');
-  }
+  if (!extraction.validation.valid) reasons.push('P15_DOWNLOAD_EXTRACTION_INVALID');
+  if (extraction.validation.reviewNodeCount > 0) reasons.push('P15_DOWNLOAD_EXTRACTION_REVIEW_PRESENT');
   if (compatibility.status !== 'READY') reasons.push('P15_DOWNLOAD_MAPPING_NOT_READY');
   if (compatibility.blockers.length > 0 || compatibility.reviewItems.length > 0) {
     reasons.push('P15_DOWNLOAD_MAPPING_REVIEW_PRESENT');
