@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { sha256Hex } from '../core/sha256';
 import { validateElementorTargetEnvironmentEvidence } from '../targets/elementor/target-environment-evidence';
+import { outputAliasesAnyInput } from './p15-evidence-path-safety';
 
 const DEFAULT_OUT = 'dist-p15/elementor-target-environment-intake.json';
 
@@ -49,11 +50,16 @@ async function readJson(path: string): Promise<{ raw: string; value: unknown }> 
 const args = parseArgs(process.argv.slice(2));
 const evidencePath = resolve(required(args, 'evidence'));
 const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
-if (outPath === evidencePath) {
-  fail('--out must not overwrite the evidence input file.');
+const evidenceFile = await readJson(evidencePath);
+
+try {
+  if (await outputAliasesAnyInput(outPath, [evidencePath])) {
+    fail('--out must not overwrite or alias the evidence input file.');
+  }
+} catch (error) {
+  fail(`Unable to validate --out path safety: ${error instanceof Error ? error.message : String(error)}`);
 }
 
-const evidenceFile = await readJson(evidencePath);
 const validation = validateElementorTargetEnvironmentEvidence(evidenceFile.value);
 
 const report = {

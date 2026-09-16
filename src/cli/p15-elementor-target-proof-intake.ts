@@ -4,6 +4,7 @@ import { sha256Hex } from '../core/sha256';
 import type { ElementorTemplateCandidateArtifactV1 } from '../targets/elementor/candidate-artifact';
 import type { ElementorTargetProfileV1 } from '../targets/elementor/target-profile';
 import { validateElementorTargetProofEvidence } from '../targets/elementor/target-proof-evidence';
+import { outputAliasesAnyInput } from './p15-evidence-path-safety';
 
 const DEFAULT_OUT = 'dist-p15/elementor-target-proof-intake.json';
 
@@ -53,15 +54,19 @@ const candidatePath = resolve(required(args, 'candidate'));
 const profilePath = resolve(required(args, 'profile'));
 const proofPath = resolve(required(args, 'proof'));
 const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
-
 const inputPaths = [candidatePath, profilePath, proofPath];
-if (inputPaths.includes(outPath)) {
-  fail('--out must not overwrite a candidate, profile, or proof input file.');
-}
 
 const candidateFile = await readJson(candidatePath, 'candidate');
 const profileFile = await readJson(profilePath, 'profile');
 const proofFile = await readJson(proofPath, 'proof');
+
+try {
+  if (await outputAliasesAnyInput(outPath, inputPaths)) {
+    fail('--out must not overwrite or alias a candidate, profile, or proof input file.');
+  }
+} catch (error) {
+  fail(`Unable to validate --out path safety: ${error instanceof Error ? error.message : String(error)}`);
+}
 
 const validation = validateElementorTargetProofEvidence(
   proofFile.value,

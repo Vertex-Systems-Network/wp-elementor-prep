@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, linkSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -136,7 +136,33 @@ describe('P15 Elementor target-environment operator intake', () => {
 
     const run = runIntake(evidencePath, aliasOutPath);
     expect(run.status).toBe(2);
-    expect(run.stderr).toContain('--out must not overwrite the evidence input file.');
+    expect(run.stderr).toContain('--out must not overwrite or alias the evidence input file.');
     expect(readFileSync(evidencePath, 'utf8')).toBe(original);
+  });
+
+  it('rejects an existing hardlink output to the evidence input and preserves evidence bytes', () => {
+    const dir = fixtureDir();
+    const evidencePath = join(dir, 'environment.json');
+    const hardlinkOut = join(dir, 'hardlink-report.json');
+    const original = serializeElementorTargetEnvironmentEvidence(qualifiedEvidence());
+    writeFileSync(evidencePath, original);
+    linkSync(evidencePath, hardlinkOut);
+
+    const run = runIntake(evidencePath, hardlinkOut);
+    expect(run.status).toBe(2);
+    expect(run.stderr).toContain('--out must not overwrite or alias the evidence input file.');
+    expect(readFileSync(evidencePath, 'utf8')).toBe(original);
+  });
+
+  it('allows replacing an unrelated existing output file', () => {
+    const dir = fixtureDir();
+    const evidencePath = join(dir, 'environment.json');
+    const outPath = join(dir, 'report.json');
+    writeFileSync(evidencePath, serializeElementorTargetEnvironmentEvidence(qualifiedEvidence()));
+    writeFileSync(outPath, 'old-report');
+
+    const run = runIntake(evidencePath, outPath);
+    expect(run.status).toBe(0);
+    expect(JSON.parse(readFileSync(outPath, 'utf8')).classification).toBe('QUALIFIED_FOR_BOUND_TARGET_PROOF');
   });
 });

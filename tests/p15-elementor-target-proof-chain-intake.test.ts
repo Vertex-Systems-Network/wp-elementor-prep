@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, linkSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -176,7 +176,20 @@ describe('P15 Elementor target proof chain intake CLI', () => {
 
     const result = run(paths, aliasOut);
     expect(result.status).toBe(2);
-    expect(result.stderr).toContain('--out must not overwrite a candidate, profile, environment, or proof input file.');
+    expect(result.stderr).toContain('--out must not overwrite or alias a candidate, profile, environment, or proof input file.');
+    expect(readFileSync(paths.environment, 'utf8')).toBe(original);
+  });
+
+  it('rejects an existing hardlink output to environment evidence and preserves its bytes', () => {
+    const dir = fixtureDir();
+    const paths = writeFixtures(dir);
+    const hardlinkOut = join(dir, 'hardlink-chain-report.json');
+    const original = readFileSync(paths.environment, 'utf8');
+    linkSync(paths.environment, hardlinkOut);
+
+    const result = run(paths, hardlinkOut);
+    expect(result.status).toBe(2);
+    expect(result.stderr).toContain('--out must not overwrite or alias a candidate, profile, environment, or proof input file.');
     expect(readFileSync(paths.environment, 'utf8')).toBe(original);
   });
 });
