@@ -64,35 +64,40 @@ The stable-I/O evidence-integrity line does not change `acceptanceAuthority=fals
 - migrated P15 report `inputs.*Sha256` fields reuse those immutable exact raw-byte snapshot digests rather than re-hashing decoded `.raw` strings, so retained report fingerprints remain identical to file-byte fingerprints even across valid decoder representation edges such as a UTF-8 BOM;
 - raw reference-template digest rechecks are streaming and do not allocate a second complete in-memory copy or introduce a new generic byte limit;
 - migrated reports are committed via exclusive restrictive-permission temporary payload + rename, with output parent/destination/input snapshots rechecked immediately before commit and owned temporary artifacts cleaned on failure;
+- `p15:elementor-first-proof-vector` deterministically rebuilds the dedicated first-proof neutral IR through the accepted production generator, retains exact candidate identity/TargetProfile fingerprint/file hashes, writes a staged vector only when the destination is absent, and otherwise requires exact byte-for-byte verification without overwriting drift;
+- the first-proof vector remains entirely unobserved/non-authorizing: `importValidationStatus=NOT_RUN`, target/import/editor/render observations false, acceptance/compatibility/production authority false and internal review required;
 - repository code and CI never synthesize environment/import/editor/render observations.
 
 `CHAIN_FULL_PASS` is evidence-chain consistency only. It never grants compatibility, production acceptance or target authority.
 
 ## Next P15 acceptance action — issue #483 real controlled target proof
 
-The proof-chain gate and evidence-intake hardening are part of the P15 V1 evidence boundary. The next P15 acceptance action remains the first genuine target proof using one exact known generated V1 candidate and one exact externally observed runtime.
+The exact operator input set is now reproducible through the production generator path. The next P15 acceptance action remains the first genuine target proof against one real externally observed runtime.
 
 Required order:
 
-1. capture the real runtime facts for the exact environment intended for the proof;
-2. run `p15:elementor-target-environment-intake` and retain the environment report/fingerprint;
-3. proceed only with the clean-Core `QUALIFIED_FOR_BOUND_TARGET_PROOF` path unless a separate review explicitly allows a review-required environment;
-4. import the exact candidate through Elementor Template Library JSON;
-5. if import passes, open it in the Elementor editor;
-6. if editor-open passes, render/preview and observe only the currently supported bounded fidelity slice;
-7. build the exact-bound `elementor-target-proof-evidence-v1` packet from those genuine observations;
-8. run the standalone target-proof intake for bounded proof diagnostics;
-9. run `p15:elementor-target-proof-chain-intake` over the exact candidate/profile/environment/proof set;
-10. retain every input/report fingerprint plus the durable evidence reference together;
-11. perform separate internal review before changing any P15 authority/status.
+1. generate or verify the exact vector with `npm run p15:elementor-first-proof-vector -- --out-dir dist-p15/p15-elementor-first-proof-vector-v1` and retain `candidate.json`, `target-profile.json`, `template.json` and `manifest.json` unchanged;
+2. capture the real runtime facts for the exact environment intended for the proof;
+3. run `p15:elementor-target-environment-intake` and retain the environment report/fingerprint;
+4. proceed only with the clean-Core `QUALIFIED_FOR_BOUND_TARGET_PROOF` path unless a separate review explicitly allows a review-required environment;
+5. import the vector's exact `template.json` through Elementor Template Library JSON;
+6. if import passes, open it in the Elementor editor;
+7. if editor-open passes, render/preview and observe only the currently supported bounded fidelity slice;
+8. build the exact-bound `elementor-target-proof-evidence-v1` packet from those genuine observations and the vector's exact candidate/profile identities;
+9. run the standalone target-proof intake using the exact `candidate.json` and `target-profile.json`;
+10. run `p15:elementor-target-proof-chain-intake` over the exact candidate/profile/environment/proof set;
+11. retain every vector file, input/report fingerprint and durable evidence reference together;
+12. perform separate internal review before changing any P15 authority/status.
 
-If a genuine qualified operator/environment is not available, stop at the evidence-capture boundary. CI, local JSON validity, Playground/SQLite-only observations, unbound screenshots and user-declared versions cannot substitute for #483.
+The frozen profile's WordPress `6.8.0` and Elementor `4.2.4` values are declared target facts, not observed runtime facts. Never rewrite the real environment evidence merely to match them; an observed mismatch remains evidence and must flow through the existing review/partial semantics.
+
+If a genuine qualified operator/environment is not available, stop at the evidence-capture boundary. CI, local vector generation, local JSON validity, Playground/SQLite-only observations, unbound screenshots and user-declared versions cannot substitute for #483.
 
 ## Repository-side boundary while #483 is blocked
 
 Do not open additional P15 serializer/fidelity implementation merely to keep the queue moving while #483 is unproven. The next fidelity slice must be selected from a concrete gap exposed by the first real controlled target proof.
 
-Repository-side work is limited to concrete CI/review regressions, evidence-harness integrity, platform-evidence refreshes, canonical status truth and newly opened actionable issues.
+Repository-side work is limited to concrete CI/review regressions, evidence-harness/operator-integrity, platform-evidence refreshes, canonical status truth and newly opened actionable issues.
 
 ## P16 bounded retention evidence-integrity boundary
 
