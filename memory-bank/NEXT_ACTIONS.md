@@ -23,19 +23,17 @@ Use focused typecheck/tests/builds while iterating. Before merge, the exact PR h
 
 Never promote local artifact validation, deterministic style serialization, declared profile alignment, mapping readiness, caller-supplied evidence or CI success into real target compatibility/import/render/production authority.
 
-## Current P15 release train — issue #481 / PR #482
+## Most recently accepted P15 release train — issue #481 / PR #482
 
-PR #482 adds a bounded, non-authorizing intake for externally observed Elementor import/editor/render evidence. It does not manufacture target observations and does not itself validate Elementor compatibility.
+PR #482 merged as `04c3710cab693c232e512e53de21b20f6f496555` and issue #481 is complete.
 
-Implementation head `3c17c03e026e6d148ac1dd512f0ccd7c88df99b0` passed:
+Final exact PR head `500ce695d2392128dfd53d9d181dcf392ca64a57` passed:
 
-- CI #1278;
-- P12 Final Release Artifact #589;
-- P12 Offline Acceptance #633.
+- CI #1281;
+- P12 Final Release Artifact #592;
+- P12 Offline Acceptance #636 on Ubuntu, macOS and Windows.
 
-The canonical docs commit moves the PR head, so these are implementation-feedback proofs only. Final exact-head gates must pass again before merge.
-
-Accepted behavior for this train:
+Accepted behavior:
 
 - `elementor-target-proof-evidence-v1` binds one externally supplied observation packet to the exact canonical Elementor candidate identity and immutable declared TargetProfile fingerprint;
 - the actually observed WordPress/Elementor versions are retained separately from the declared TargetProfile instead of being silently rewritten;
@@ -47,7 +45,7 @@ Accepted behavior for this train:
 - the offline operator intake emits sanitized binding/status fields plus SHA-256 input fingerprints and does not emit candidate/template contents;
 - repository code and CI never synthesize a target PASS observation.
 
-This train does **not** change:
+This accepted train does **not** change:
 
 - `acceptanceAuthority=false`;
 - `targetCompatibilityClaim=false`;
@@ -59,15 +57,13 @@ This train does **not** change:
 - no section/clipboard transfer;
 - no Figma mutation.
 
-### Immediate action
+## Active P15 acceptance dependency — issue #483
 
-Run final diff audit and full exact-head CI / Final / Offline gates on PR #482 after this canonical docs sync. Merge only if all required checks pass on the same head.
+#483 owns the first controlled genuine Elementor import/editor/render observation for one exact known generated V1 candidate.
 
-## Next P15 acceptance action — capture one controlled real Elementor proof
+Current state: **EXTERNAL/RUNTIME BLOCKED** until a controlled real WordPress + Elementor environment and operator evidence are available.
 
-After #482 merges, exercise one exact known generated V1 candidate in a controlled real WordPress + Elementor environment and retain the operator-produced proof packet.
-
-The proof must remain explicit and narrow:
+The required proof remains explicit and narrow:
 
 - retain the exact generated candidate/artifact fingerprint used for the import;
 - retain the immutable declared TargetProfile identity;
@@ -83,6 +79,16 @@ If a genuine operator/environment is not available, stop at the evidence-capture
 
 Only evidence actually retained may change import/target/production states.
 
+## Immediate repository-side action
+
+Do not open additional P15 serializer/fidelity implementation merely to keep the queue moving while #483 is unproven. The next fidelity slice should be selected from gaps exposed by the first real controlled target proof.
+
+While #483 is blocked, repository-side work is limited to:
+
+- fixing concrete regressions discovered by CI/review;
+- keeping canonical status truth current;
+- processing newly opened actionable issues before unrelated roadmap expansion.
+
 ## Later fidelity expansion
 
 After the first controlled target proof exposes real gaps, add only the next evidenced high-value mappings. Typography, effects, gradients, opacity, responsive controls, width/min-height and media/reference closure should each remain bounded slices with documented target controls and focused regressions rather than one broad serializer expansion.
@@ -91,10 +97,11 @@ After the first controlled target proof exposes real gaps, add only the next evi
 
 When the required real environment/operator is available, these can proceed independently without blocking safe P15 code work:
 
+- #483 — controlled real Elementor import/editor/render evidence + separate internal review;
 - #159 — genuine Figma Desktop P13 runtime/parity evidence + separate internal review;
 - #84/#182 — remaining P12 package/publisher/account/2FA/final-exit evidence.
 
-Do not fabricate either from CI/repository metadata.
+Do not fabricate any of these from CI/repository metadata.
 
 ## AI-native speed rules
 
