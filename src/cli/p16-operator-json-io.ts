@@ -8,8 +8,11 @@ import {
   realpath,
   rename,
   rmdir,
+  unlink,
 } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
+import { observeP16StableInputContent } from './p16-input-content-digest';
+import { decodeP16StrictUtf8, sha256P16RawBytes } from './p16-raw-json-bytes';
 
 export const P16_OPERATOR_JSON_INPUT_MAX_BYTES = 1024 * 1024;
 export const P16_OPERATOR_JSON_INPUT_MAX_DEPTH = 64;
@@ -32,6 +35,7 @@ export type P16OperatorJsonInputSnapshot = {
   readonly value: unknown;
   readonly resolvedPath: string;
   readonly canonicalPath: string;
+  readonly contentSha256: string;
   readonly file: P16OperatorJsonFileSnapshot;
 };
 
@@ -117,7 +121,7 @@ function sameObservedFile(
   return sameFileMetadata(first, second);
 }
 
-async function inputPathMatchesSnapshot(
+async function inputMetadataMatchesSnapshot(
   snapshot: P16OperatorJsonInputSnapshot,
 ): Promise<boolean> {
   try {
@@ -131,6 +135,20 @@ async function inputPathMatchesSnapshot(
   } catch {
     return false;
   }
+}
+
+export async function p16OperatorInputMatchesSnapshot(
+  snapshot: P16OperatorJsonInputSnapshot,
+): Promise<boolean> {
+  if (!(await inputMetadataMatchesSnapshot(snapshot))) return false;
+
+  const observation = await observeP16StableInputContent(snapshot.resolvedPath);
+  if (!observation) return false;
+  if (comparisonPath(observation.canonicalPath) !== comparisonPath(snapshot.canonicalPath)) return false;
+  if (!sameObservedFile(snapshot.file, observation.handleBefore)) return false;
+  if (!sameObservedFile(snapshot.file, observation.handleAfter)) return false;
+  if (!sameObservedFile(snapshot.file, observation.pathAfter)) return false;
+  return observation.digest === snapshot.contentSha256;
 }
 
 function validateP16OperatorJsonStructure(
@@ -409,6 +427,34 @@ export async function removeP16OperatorTemporaryDirectoryIfOwned(
   }
 }
 
+async function removeTemporaryArtifactsIfOwned(
+  temporary: P16OperatorTemporaryDirectorySnapshot,
+  payload: P16OperatorTemporaryPayloadSnapshot | null,
+  parent: P16OperatorOutputParentSnapshot,
+): Promise<boolean> {
+  if (!(await p16OperatorOutputParentMatchesSnapshot(parent))) return false;
+  if (!(await p16OperatorTemporaryDirectoryMatchesSnapshot(temporary))) return false;
+
+  if (payload) {
+    if (await p16OperatorTemporaryPayloadMatchesSnapshot(payload)) {
+      try {
+        await unlink(payload.path);
+      } catch {
+        return false;
+      }
+    } else {
+      try {
+        await lstat(payload.path);
+        return false;
+      } catch (error) {
+        if (!isMissingPathError(error)) return false;
+      }
+    }
+  }
+
+  return removeP16OperatorTemporaryDirectoryIfOwned(temporary, parent);
+}
+
 export async function readP16OperatorJsonInput(
   path: string,
   label: string,
@@ -456,10 +502,10 @@ export async function readP16OperatorJsonInput(
       fail(`${label} input changed before it was read.`);
     }
 
-    let raw: string;
+    let bytes: Buffer;
     let after: Stats;
     try {
-      raw = await handle.readFile({ encoding: 'utf8' });
+      bytes = await handle.readFile();
       after = await handle.stat();
     } catch {
       fail(`Unable to read ${label} input.`);
@@ -469,13 +515,19 @@ export async function readP16OperatorJsonInput(
       fail(`${label} input changed while being read.`);
     }
 
-    const actualBytes = Buffer.byteLength(raw, 'utf8');
-    if (actualBytes === 0 || raw.trim().length === 0) {
+    const actualBytes = bytes.byteLength;
+    if (actualBytes === 0) {
       fail(`${label} input is empty.`);
     }
     if (actualBytes > P16_OPERATOR_JSON_INPUT_MAX_BYTES) {
       fail(`${label} input exceeds ${P16_OPERATOR_JSON_INPUT_MAX_BYTES}-byte limit.`);
     }
+
+    const raw = decodeP16StrictUtf8(bytes, label, fail);
+    if (raw.trim().length === 0) {
+      fail(`${label} input is empty.`);
+    }
+    const contentSha256 = sha256P16RawBytes(bytes);
 
     let pathInfoBeforeRealpath: Stats;
     let canonicalPath: string;
@@ -510,6 +562,7 @@ export async function readP16OperatorJsonInput(
       value: parsed,
       resolvedPath,
       canonicalPath,
+      contentSha256,
       file: toFileSnapshot(after),
     });
   } finally {
@@ -533,7 +586,7 @@ export async function writeP16OperatorJsonOutput(
   const canonicalOutputComparison = comparisonPath(canonicalOutput);
 
   for (const inputSnapshot of inputSnapshots) {
-    if (!(await inputPathMatchesSnapshot(inputSnapshot))) {
+    if (!(await inputMetadataMatchesSnapshot(inputSnapshot))) {
       fail('Input path changed after it was read.');
     }
     if (comparisonPath(inputSnapshot.canonicalPath) === canonicalOutputComparison) {
@@ -613,7 +666,7 @@ export async function writeP16OperatorJsonOutput(
 
         if (!temporaryPathChanged) {
           for (const inputSnapshot of inputSnapshots) {
-            if (!(await inputPathMatchesSnapshot(inputSnapshot))) {
+            if (!(await p16OperatorInputMatchesSnapshot(inputSnapshot))) {
               inputChanged = true;
               break;
             }
@@ -666,7 +719,11 @@ export async function writeP16OperatorJsonOutput(
     writeFailed = true;
   } finally {
     if (temporarySnapshot) {
-      await removeP16OperatorTemporaryDirectoryIfOwned(temporarySnapshot, parentSnapshot);
+      await removeTemporaryArtifactsIfOwned(
+        temporarySnapshot,
+        payloadSnapshot,
+        parentSnapshot,
+      );
     }
   }
 
