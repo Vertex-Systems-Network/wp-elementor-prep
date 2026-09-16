@@ -25,7 +25,7 @@ Never promote local artifact validation, environment qualification, evidence-cha
 
 ## Most recently accepted P15 code-side trains
 
-Current verified main is `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`.
+Most recent accepted P15 implementation baseline before this canonical-only sync is `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`.
 
 Accepted sequence relevant to the live proof boundary:
 
