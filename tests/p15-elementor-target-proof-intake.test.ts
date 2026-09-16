@@ -4,6 +4,10 @@ import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
+  P15_CANDIDATE_JSON_INPUT_MAX_DEPTH,
+  P15_SMALL_JSON_INPUT_MAX_BYTES,
+} from '../src/cli/p15-operator-json-io';
+import {
   buildElementorTemplateCandidateArtifact,
   serializeElementorTemplateCandidateArtifact,
 } from '../src/targets/elementor/candidate-artifact';
@@ -147,6 +151,29 @@ describe('P15 Elementor target-proof operator intake', () => {
     expect(report.proofValid).toBe(true);
     expect(report.declaredObservedEnvironmentMatches).toBe(false);
     expect(report.reviewCodes).toEqual(['P15_TARGET_PROOF_DECLARED_OBSERVED_MISMATCH']);
+  });
+
+  it('rejects an oversized profile packet before proof validation', () => {
+    const paths = writeFixtureFiles(fixtureDir());
+    writeFileSync(paths.profile, `{"padding":"${'x'.repeat(P15_SMALL_JSON_INPUT_MAX_BYTES)}"}\n`);
+
+    const run = runIntake(paths.candidate, paths.profile, paths.proof, paths.out);
+    expect(run.status).toBe(2);
+    expect(run.stderr).toContain(`profile input exceeds ${P15_SMALL_JSON_INPUT_MAX_BYTES}-byte limit`);
+    expect(existsSync(paths.out)).toBe(false);
+  });
+
+  it('rejects pathological outer candidate nesting before candidate identity work', () => {
+    const paths = writeFixtureFiles(fixtureDir());
+    writeFileSync(
+      paths.candidate,
+      `${'['.repeat(P15_CANDIDATE_JSON_INPUT_MAX_DEPTH + 1)}0${']'.repeat(P15_CANDIDATE_JSON_INPUT_MAX_DEPTH + 1)}\n`,
+    );
+
+    const run = runIntake(paths.candidate, paths.profile, paths.proof, paths.out);
+    expect(run.status).toBe(2);
+    expect(run.stderr).toContain(`candidate input exceeds ${P15_CANDIDATE_JSON_INPUT_MAX_DEPTH}-level nesting limit`);
+    expect(existsSync(paths.out)).toBe(false);
   });
 
   it('rejects duplicate output options before writing a report', () => {
