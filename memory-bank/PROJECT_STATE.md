@@ -14,7 +14,7 @@ Accepted implementation baseline immediately preceding the stable operator-I/O h
 
 `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`
 
-Recent accepted P15 sequence before that I/O hardening line:
+Recent accepted P15 sequence:
 
 - PR #478 — fresh locally validated Elementor Template JSON download; merge `e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`;
 - PR #480 — bounded deterministic container solid-background + uniform-radius fidelity; merge `f568ec2236a1a0c7102a656368a7632ec8f581dd`;
@@ -23,7 +23,10 @@ Recent accepted P15 sequence before that I/O hardening line:
 - PR #487 — observed target-environment qualification contract/intake; final head `d74b948401dbf4e4f15116cc9a57c8d8cabf7c18` passed CI #1294, Final #605 and Offline #649 on Ubuntu/Windows/macOS; merge `dd281b8bea7670e252629e931129a5276d08bef3`; issue #486 completed;
 - PR #489 — exact candidate/profile/environment/proof chain binding; final head `6107a510fa3c97c939e5876c7e0d3e4bdd677b7c` passed CI #1303, Final #614 and Offline #658 on Ubuntu/macOS/Windows; merge `919e76249c110f92679be1a048bd53b366d10e86`; issue #488 completed;
 - PR #491 — evidence-intake duplicate-option and resolved output/input path hardening; final head `d820f2a8babfaa719b26ad39dd15e2165cb6a857` passed CI #1305, Final #616 and Offline #660 on Ubuntu/macOS/Windows; merge `926af2c0663717cf1a3085d3ed49cf1c121f5670`; issue #490 completed;
-- PR #493 — shared filesystem-identity guard rejecting symlink/hardlink output aliases; final head `4f03472868e0bd6b9a350d0f4a88240cfba5a05a` passed CI #1307, Final #618 and Offline #662 on Ubuntu/Windows/macOS; merge `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`; issue #492 completed.
+- PR #493 — shared filesystem-identity guard rejecting symlink/hardlink output aliases; final head `4f03472868e0bd6b9a350d0f4a88240cfba5a05a` passed CI #1307, Final #618 and Offline #662 on Ubuntu/Windows/macOS; merge `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`; issue #492 completed;
+- PR #497 — stable opened-file snapshots, bounded small evidence packets and atomic TOCTOU-safe output for environment/proof/proof-chain intakes; final head `475a24ddcb4c12359b71b701e8b5654d1fe025ab` passed CI #1317, Final #628 and Offline #672 on Ubuntu/macOS/Windows; merge `0636cc478a9c4db8674710a49168c085c7436796`; issue #496 completed;
+- PR #499 — allocation-light lexical embedded `templateJson` depth preflight; final head `918b2968069503f5f049ef3fc9276a3911aeaa49` passed CI #1319, Final #630 and Offline #674 on Ubuntu/macOS/Windows; merge `9c5d7b6c49a9133f2cd42bda853ab4c4602788f0`; issue #498 completed;
+- PR #501 — retired the obsolete parse-based embedded `templateJson` depth helper/test path so the lexical scanner remains the sole embedded preflight; final head `c8537d324c1029ade785354ba796d087ab38da70` passed CI #1321, Final #632 and Offline #676 on Ubuntu/macOS/Windows; merge `351f6c9fa2c33b46e328db7bdce2980b3290a145`; issue #500 completed.
 
 Stable operator-I/O hardening builds on this provenance without changing P15 target authority. These code-side trains do not supply a real WordPress/Elementor import, editor, render or compatibility observation.
 
@@ -78,13 +81,14 @@ Accepted foundation now includes:
 - exact environment/proof WordPress+Elementor equality, durable evidence/run-reference equality, chronology validation and existing candidate/profile replay protection;
 - combined classifications `CHAIN_FULL_PASS`, `CHAIN_PARTIAL`, `CHAIN_FAIL`, `CHAIN_BLOCKED`, `REJECTED`;
 - sanitized `p15:elementor-target-proof-chain-intake` with candidate/profile/environment/proof SHA-256 fingerprints and no template-content leakage;
-- duplicate CLI options rejected rather than silently last-write-wins;
+- duplicate CLI options rejected rather than silently last-write-wins across the migrated P15 operator intake surfaces;
 - resolved `--out` paths rejected when they collide with consumed input paths;
 - shared local/offline filesystem-identity protection using canonical real paths and `dev + ino` identity where available so existing symlink/hardlink output aliases cannot overwrite retained evidence inputs;
-- stable opened-file snapshots for the three P15 operator evidence intakes, with identity/metadata verification across reads and recheck before report commit;
-- a 1 MiB raw-input ceiling plus bounded JSON depth/value traversal for intrinsically small TargetProfile/environment/proof packets;
-- no arbitrary low candidate byte ceiling: candidate outer JSON and embedded `templateJson` instead receive a generous non-recursive nesting preflight while the existing 10,000-element/64-level target contract remains authoritative;
-- atomic report output through an exclusive restrictive-permission temporary payload plus rename, with output-parent/destination/input snapshots rechecked before commit and owned temporary artifacts cleaned on failure.
+- stable opened-file snapshots with identity/metadata verification across reads and recheck before report commit for environment/proof/proof-chain plus the package-supported import/reference-closure operator surfaces;
+- a 1 MiB raw-input ceiling plus bounded JSON depth/value traversal for intrinsically small TargetProfile/environment/proof/import-receipt/reference-profile/reference-receipt packets;
+- no arbitrary low candidate byte ceiling: candidate outer JSON and embedded `templateJson` instead receive the accepted bounded nesting preflights while the existing 10,000-element/64-level target contract remains authoritative;
+- raw reference-closure template inputs use stable opened-file snapshots without a newly invented generic byte/depth/value ceiling because the accepted Elementor v0.4 settings contract remains target-owned and structurally open;
+- atomic report output through an exclusive restrictive-permission temporary payload plus rename, with output-parent/destination/input snapshots rechecked before commit and owned temporary artifacts cleaned on failure across the migrated P15 operator report surfaces.
 
 User-facing local-download truth remains exactly bounded to:
 
