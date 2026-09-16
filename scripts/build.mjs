@@ -20,7 +20,7 @@ const p7BuildDefines = {
 };
 
 await build({
-  entryPoints: ['src/plugin/main.ts'],
+  entryPoints: ['src/plugin/entry.ts'],
   bundle: true,
   outfile: 'dist/code.js',
   platform: 'browser',
