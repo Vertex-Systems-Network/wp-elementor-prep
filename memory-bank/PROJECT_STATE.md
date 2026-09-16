@@ -17,7 +17,7 @@ Current verified main before this P15 release train:
 That main includes:
 
 - PR #476 — AI-native release-train cadence, compact canonical context and refreshed roadmap truth; exact head `c7d9e65a190e9b16668bc0e64234663d7679fc27`; CI #1264, Final #575 and Offline #619 PASS; merge `95f3cb44f4637365db58aedca0b218da1fcd6c41`;
-- PR #478 — fresh locally validated Elementor Template JSON download; exact final head `085b34ff...`; CI #1269, Final #580 and Offline #624 PASS; merge `e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`.
+- PR #478 — fresh locally validated Elementor Template JSON download; exact final head `085b34ffdd16065dce218c9be5eb962e687c8e91`; CI #1269, Final #580 and Offline #624 PASS; merge `e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`.
 
 Active release train:
 
