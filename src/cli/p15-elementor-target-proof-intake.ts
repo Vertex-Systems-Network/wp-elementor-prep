@@ -10,9 +10,9 @@ import {
   P15_SMALL_JSON_INPUT_MAX_DEPTH,
   P15_SMALL_JSON_INPUT_MAX_VALUES,
   readP15OperatorJsonInput,
-  validateP15CandidateEmbeddedTemplateJsonDepth,
   writeP15OperatorJsonOutput,
 } from './p15-operator-json-io';
+import { validateP15CandidateTemplateJsonDepthLexically } from './p15-template-json-depth-scan';
 
 const DEFAULT_OUT = 'dist-p15/elementor-target-proof-intake.json';
 
@@ -56,7 +56,7 @@ const candidateFile = await readP15OperatorJsonInput(
   { maxDepth: P15_CANDIDATE_JSON_INPUT_MAX_DEPTH },
   fail,
 );
-validateP15CandidateEmbeddedTemplateJsonDepth(candidateFile.value, fail);
+validateP15CandidateTemplateJsonDepthLexically(candidateFile.value, fail);
 const profileFile = await readP15OperatorJsonInput(required(args, 'profile'), 'profile', smallJsonOptions, fail);
 const proofFile = await readP15OperatorJsonInput(required(args, 'proof'), 'proof', smallJsonOptions, fail);
 const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
