@@ -12,9 +12,9 @@ import {
   unlink,
 } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
-import { sha256Hex } from '../core/sha256';
 import { outputAliasesAnyInput } from './p15-evidence-path-safety';
 import { observeP15StableInputContent } from './p15-input-content-digest';
+import { decodeP15StrictUtf8, sha256P15RawBytes } from './p15-raw-json-bytes';
 
 export const P15_SMALL_JSON_INPUT_MAX_BYTES = 1024 * 1024;
 export const P15_SMALL_JSON_INPUT_MAX_DEPTH = 64;
@@ -257,10 +257,10 @@ export async function readP15OperatorJsonInput(
       fail(`${label} input changed before it was read.`);
     }
 
-    let raw: string;
+    let rawBytes: Buffer;
     let after: Stats;
     try {
-      raw = await handle.readFile({ encoding: 'utf8' });
+      rawBytes = await handle.readFile();
       after = await handle.stat();
     } catch {
       fail(`Unable to read ${label} input.`);
@@ -268,11 +268,14 @@ export async function readP15OperatorJsonInput(
 
     if (!sameObservedFile(before, after)) fail(`${label} input changed while being read.`);
 
-    const actualBytes = Buffer.byteLength(raw, 'utf8');
-    if (actualBytes === 0 || raw.trim().length === 0) fail(`${label} input is empty.`);
+    const actualBytes = rawBytes.byteLength;
+    if (actualBytes === 0) fail(`${label} input is empty.`);
     if (options.maxBytes !== undefined && actualBytes > options.maxBytes) {
       fail(`${label} input exceeds ${options.maxBytes}-byte limit.`);
     }
+
+    const raw = decodeP15StrictUtf8(rawBytes, label, fail);
+    if (raw.trim().length === 0) fail(`${label} input is empty.`);
 
     let pathInfoAfterRead: Stats;
     let canonicalAfterRead: string;
@@ -306,7 +309,7 @@ export async function readP15OperatorJsonInput(
       value: parsed,
       resolvedPath,
       canonicalPath: canonicalAfterRead,
-      contentSha256: `sha256:${sha256Hex(raw)}`,
+      contentSha256: sha256P15RawBytes(rawBytes),
       file: toFileSnapshot(after),
     });
   } finally {
