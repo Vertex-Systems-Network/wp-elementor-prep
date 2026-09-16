@@ -8,26 +8,22 @@ WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving t
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
 
-## Current repository line
+## P15 environment-qualification release train provenance
 
-Current verified main before the active P15 environment-qualification release train:
+Base main for issue #486 / PR #487:
 
 `623b09277bc90d52b324468b0429e01671ac8520`
 
-Recent accepted P15 sequence:
+Recent accepted P15 sequence before this train:
 
 - PR #478 — fresh locally validated Elementor Template JSON download; exact final head `085b34ffdd16065dce218c9be5eb962e687c8e91`; CI #1269, Final #580 and Offline #624 PASS; merge `e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`;
 - PR #480 — bounded deterministic container solid-background + uniform-radius fidelity; merge `f568ec2236a1a0c7102a656368a7632ec8f581dd` after required exact-head gates passed;
 - PR #482 — exact-bound external Elementor target-proof evidence contract and sanitized offline intake; final exact head `500ce695d2392128dfd53d9d181dcf392ca64a57` passed CI #1281, P12 Final Release Artifact #592 and P12 Offline Acceptance #636; merge `04c3710cab693c232e512e53de21b20f6f496555`; issue #481 completed;
 - PR #485 — synchronized canonical P15 state after #482; exact head `a7f5cda81c5303bb5b8473561e7b94db3cf41ea8` passed CI #1283, Final #594 and Offline #638; merge `623b09277bc90d52b324468b0429e01671ac8520`; issue #484 completed.
 
-Active P15 code-side release train:
+Issue #486 / PR #487 provides deterministic, non-authorizing Elementor target-environment qualification evidence and offline intake. Implementation feedback head `1872be59bcee3443d75ba7024e12714fdf7e4102` passed CI #1287, P12 Final Release Artifact #598 and P12 Offline Acceptance #642. The synchronized integration candidate remains subject to the repository's exact-head gates before merge.
 
-- issue #486 / PR #487 — deterministic, non-authorizing Elementor target-environment qualification evidence and offline intake;
-- implementation head `1872be59bcee3443d75ba7024e12714fdf7e4102` passed CI #1287, P12 Final Release Artifact #598 and P12 Offline Acceptance #642 before this canonical docs sync;
-- this docs sync moves the PR head, so full exact-head gates must pass again before merge.
-
-Active P15 acceptance dependency remains:
+P15 acceptance still depends on:
 
 - issue #483 — first controlled genuine Elementor Template JSON import/editor/render observation for one exact generated candidate;
 - state: **EXTERNAL/RUNTIME BLOCKED** pending a qualified controlled WordPress + Elementor environment and retained operator evidence;
@@ -68,7 +64,7 @@ The process is faster, but target/runtime authority is not weaker.
 
 P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** with `N/A` progress.
 
-Accepted main before PR #487 includes:
+P15 foundation entering #486/#487 includes:
 
 - target-neutral export IR;
 - deterministic local Elementor v0.4 Container/Widget Template JSON generation;
@@ -90,7 +86,7 @@ Accepted main before PR #487 includes:
 - evidence-only classifications `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL`, `REJECTED`;
 - sanitized offline `p15:elementor-target-proof-intake` output with candidate/profile/proof SHA-256 input fingerprints while omitting candidate/template contents.
 
-PR #487 adds a necessary-but-not-sufficient environment qualification layer for the eventual real #483 run:
+The #486/#487 release train adds a necessary-but-not-sufficient environment qualification layer for the eventual real #483 run:
 
 - versioned `elementor-target-environment-evidence-v1` retains observed WordPress, Elementor Core, PHP, database, WordPress memory and editor-browser facts plus clean-core dependency facts;
 - policy `elementor-target-environment-policy-2026-09-16-v1` conservatively requires WordPress `6.8+`, PHP `7.4+`, MySQL `5.6+` or MariaDB `10.5+`, WordPress memory `>=256 MB`, and the bounded current supported browser floors captured by the R0 refresh;
