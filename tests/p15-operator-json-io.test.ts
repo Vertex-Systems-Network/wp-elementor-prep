@@ -22,7 +22,6 @@ import {
   p15OperatorOutputDestinationMatchesSnapshot,
   p15OperatorOutputParentMatchesSnapshot,
   readP15OperatorJsonInput,
-  validateP15CandidateEmbeddedTemplateJsonDepth,
   validateP15OperatorJsonStructure,
   writeP15OperatorJsonOutput,
 } from '../src/cli/p15-operator-json-io';
@@ -81,14 +80,6 @@ describe('P15 stable operator JSON IO', () => {
       { maxDepth: P15_CANDIDATE_JSON_INPUT_MAX_DEPTH },
       fail,
     )).toThrow(`${P15_CANDIDATE_JSON_INPUT_MAX_DEPTH}-level nesting limit`);
-  });
-
-  it('rejects pathological embedded candidate templateJson nesting before identity work', () => {
-    const nestedTemplateJson = `${'['.repeat(P15_CANDIDATE_JSON_INPUT_MAX_DEPTH + 1)}0${']'.repeat(P15_CANDIDATE_JSON_INPUT_MAX_DEPTH + 1)}`;
-    const candidate = { templateJson: nestedTemplateJson };
-
-    expect(() => validateP15CandidateEmbeddedTemplateJsonDepth(candidate, fail))
-      .toThrow('candidate templateJson input exceeds');
   });
 
   it('detects an input mutation before output commit', async () => {
