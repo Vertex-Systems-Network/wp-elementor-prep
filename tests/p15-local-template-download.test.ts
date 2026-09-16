@@ -127,8 +127,12 @@ describe('P15 local Elementor Template JSON download contract', () => {
     const extraction = buildP15ElementorV1PreviewFromFigmaFrame(asFrame(frame));
     const result = buildP15LocalTemplateDownloadResult({ id: frame.id }, extraction);
 
+    expect(extraction.validation.valid).toBe(true);
+    expect(extraction.validation.reviewNodeCount).toBe(1);
     expect(result.status).toBe('DOWNLOAD_BLOCKED');
     expect(result.compatibility.status).toBe('INSUFFICIENT_EVIDENCE');
+    expect(result.blockReasonCodes).not.toContain('P15_DOWNLOAD_EXTRACTION_INVALID');
+    expect(result.blockReasonCodes).toContain('P15_DOWNLOAD_EXTRACTION_REVIEW_PRESENT');
     expect(result.blockReasonCodes).toContain('P15_DOWNLOAD_MAPPING_NOT_READY');
     expect(result.blockReasonCodes).toContain('P15_DOWNLOAD_MAPPING_REVIEW_PRESENT');
     expect(result.templateJson).toBeNull();
