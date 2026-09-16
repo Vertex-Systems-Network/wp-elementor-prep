@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   buildElementorTemplateCandidateArtifact,
@@ -168,9 +168,10 @@ describe('P15 Elementor target-proof operator intake', () => {
   });
 
   it('rejects an output path aliasing the candidate and preserves candidate bytes', () => {
-    const paths = writeFixtureFiles(fixtureDir());
+    const dir = fixtureDir();
+    const paths = writeFixtureFiles(dir);
     const original = readFileSync(paths.candidate, 'utf8');
-    const aliasOut = paths.candidate.replace('/candidate.json', '/./candidate.json');
+    const aliasOut = `${dir}${sep}.${sep}candidate.json`;
 
     const run = runIntake(paths.candidate, paths.profile, paths.proof, aliasOut);
     expect(run.status).toBe(2);
