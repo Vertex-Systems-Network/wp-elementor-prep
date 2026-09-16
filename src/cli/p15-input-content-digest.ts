@@ -3,6 +3,7 @@ import type { Stats } from 'node:fs';
 import type { FileHandle } from 'node:fs/promises';
 import { open, realpath, stat } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { TextDecoder } from 'node:util';
 
 export type P15StableContentObservation = {
   readonly digest: string;
@@ -16,6 +17,8 @@ type StableIdentity = {
   readonly dev: number;
   readonly ino: number;
 };
+
+type Fail = (message: string) => never;
 
 function comparisonPath(path: string): string {
   const resolved = resolve(path);
@@ -44,6 +47,26 @@ function sameObservedFile(first: Stats, second: Stats): boolean {
     return sameFileIdentity(first, second) && sameFileMetadata(first, second);
   }
   return sameFileMetadata(first, second);
+}
+
+export function sha256P15InputBytes(bytes: Uint8Array): string {
+  const hash = createHash('sha256');
+  hash.update(bytes);
+  return `sha256:${hash.digest('hex')}`;
+}
+
+export function decodeP15InputUtf8(
+  bytes: Uint8Array,
+  label: string,
+  fail: Fail,
+): string {
+  try {
+    // Preserve the previous BOM behavior while rejecting malformed UTF-8 instead of
+    // silently substituting U+FFFD into operator evidence before JSON validation.
+    return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+  } catch {
+    fail(`${label} input is not valid UTF-8.`);
+  }
 }
 
 async function digestHandle(handle: FileHandle): Promise<string> {
