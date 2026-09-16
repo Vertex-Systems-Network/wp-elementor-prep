@@ -1,5 +1,4 @@
-import { constants } from 'node:fs';
-import { access, lstat, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
+import { lstat, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
 import {
   P15_ELEMENTOR_FIRST_PROOF_VECTOR_FILENAMES,
@@ -32,12 +31,20 @@ function parseArgs(argv: string[]): { outDir: string } {
   return { outDir };
 }
 
+function isMissingPathError(error: unknown): boolean {
+  return typeof error === 'object'
+    && error !== null
+    && 'code' in error
+    && (error as { code?: unknown }).code === 'ENOENT';
+}
+
 async function pathExists(path: string): Promise<boolean> {
   try {
-    await access(path, constants.F_OK);
+    await lstat(path);
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    if (isMissingPathError(error)) return false;
+    throw error;
   }
 }
 
@@ -45,7 +52,10 @@ async function verifyExistingVector(
   outDir: string,
   expected: Readonly<Record<string, string>>,
 ): Promise<void> {
-  const info = await lstat(outDir).catch(() => null);
+  const info = await lstat(outDir).catch((error: unknown) => {
+    if (isMissingPathError(error)) return null;
+    throw error;
+  });
   if (!info || !info.isDirectory() || info.isSymbolicLink()) {
     fail('Existing --out-dir must be a real directory, not a file or symlink.');
   }
@@ -83,7 +93,7 @@ async function writeNewVector(
       });
     }
     if (await pathExists(outDir)) {
-      fail('Vector output appeared during generation; refusing to overwrite it.');
+      throw new Error('Vector output appeared during generation; refusing to overwrite it.');
     }
     await rename(temp, outDir);
     committed = true;
@@ -92,33 +102,41 @@ async function writeNewVector(
   }
 }
 
-const args = parseArgs(process.argv.slice(2));
-const outDir = resolve(args.outDir);
-const vector = buildP15ElementorFirstProofVector();
-let status: 'GENERATED' | 'VERIFIED_EXISTING';
+async function main(): Promise<void> {
+  const args = parseArgs(process.argv.slice(2));
+  const outDir = resolve(args.outDir);
+  const vector = buildP15ElementorFirstProofVector();
+  let status: 'GENERATED' | 'VERIFIED_EXISTING';
 
-if (await pathExists(outDir)) {
-  await verifyExistingVector(outDir, vector.files);
-  status = 'VERIFIED_EXISTING';
-} else {
-  await writeNewVector(outDir, vector.files);
-  status = 'GENERATED';
+  if (await pathExists(outDir)) {
+    await verifyExistingVector(outDir, vector.files);
+    status = 'VERIFIED_EXISTING';
+  } else {
+    await writeNewVector(outDir, vector.files);
+    status = 'GENERATED';
+  }
+
+  process.stdout.write(`${JSON.stringify({
+    outDir,
+    status,
+    vectorVersion: vector.manifest.vectorVersion,
+    candidateStatus: vector.manifest.candidateStatus,
+    importValidationStatus: vector.manifest.importValidationStatus,
+    candidateIdentity: vector.candidateIdentity.digest,
+    targetProfileFingerprint: vector.targetProfileFingerprint,
+    targetEnvironmentObserved: false,
+    importObserved: false,
+    editorObserved: false,
+    renderObserved: false,
+    acceptanceAuthority: false,
+    targetCompatibilityClaim: false,
+    productionAcceptance: false,
+    internalReviewRequired: true,
+  }, null, 2)}\n`);
 }
 
-process.stdout.write(`${JSON.stringify({
-  outDir,
-  status,
-  vectorVersion: vector.manifest.vectorVersion,
-  candidateStatus: vector.manifest.candidateStatus,
-  importValidationStatus: vector.manifest.importValidationStatus,
-  candidateIdentity: vector.candidateIdentity.digest,
-  targetProfileFingerprint: vector.targetProfileFingerprint,
-  targetEnvironmentObserved: false,
-  importObserved: false,
-  editorObserved: false,
-  renderObserved: false,
-  acceptanceAuthority: false,
-  targetCompatibilityClaim: false,
-  productionAcceptance: false,
-  internalReviewRequired: true,
-}, null, 2)}\n`);
+try {
+  await main();
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error));
+}
