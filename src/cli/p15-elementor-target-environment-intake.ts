@@ -20,6 +20,7 @@ function parseArgs(argv: string[]): Map<string, string> {
     const value = equals >= 0 ? token.slice(equals + 1) : argv[++index];
     if (!key || !value || value.startsWith('--')) fail(`--${key} requires a value.`);
     if (!['evidence', 'out'].includes(key)) fail(`Unsupported option: --${key}.`);
+    if (values.has(key)) fail(`Duplicate option: --${key}.`);
     values.set(key, value);
   }
   return values;
@@ -34,7 +35,7 @@ function required(values: Map<string, string>, key: string): string {
 async function readJson(path: string): Promise<{ raw: string; value: unknown }> {
   let raw: string;
   try {
-    raw = await readFile(resolve(path), 'utf8');
+    raw = await readFile(path, 'utf8');
   } catch (error) {
     fail(`Unable to read evidence ${path}: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -46,8 +47,12 @@ async function readJson(path: string): Promise<{ raw: string; value: unknown }> 
 }
 
 const args = parseArgs(process.argv.slice(2));
-const evidencePath = required(args, 'evidence');
+const evidencePath = resolve(required(args, 'evidence'));
 const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
+if (outPath === evidencePath) {
+  fail('--out must not overwrite the evidence input file.');
+}
+
 const evidenceFile = await readJson(evidencePath);
 const validation = validateElementorTargetEnvironmentEvidence(evidenceFile.value);
 
