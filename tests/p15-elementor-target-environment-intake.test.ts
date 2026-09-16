@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   buildElementorTargetEnvironmentEvidence,
@@ -130,7 +130,7 @@ describe('P15 Elementor target-environment operator intake', () => {
   it('rejects an output path that resolves to the evidence input and preserves the input bytes', () => {
     const dir = fixtureDir();
     const evidencePath = join(dir, 'environment.json');
-    const aliasOutPath = `${dir}/./environment.json`;
+    const aliasOutPath = `${dir}${sep}.${sep}environment.json`;
     const original = serializeElementorTargetEnvironmentEvidence(qualifiedEvidence());
     writeFileSync(evidencePath, original);
 
