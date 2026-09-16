@@ -3,6 +3,7 @@ import { existsSync, linkSync, mkdtempSync, readFileSync, rmSync, writeFileSync 
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { P15_SMALL_JSON_INPUT_MAX_BYTES } from '../src/cli/p15-operator-json-io';
 import {
   buildElementorTargetEnvironmentEvidence,
   serializeElementorTargetEnvironmentEvidence,
@@ -107,6 +108,18 @@ describe('P15 Elementor target-environment operator intake', () => {
     expect(report.classification).toBe('REJECTED');
     expect(report.evidenceValid).toBe(false);
     expect(raw).not.toContain('DO-NOT-ECHO-PRIVATE-OPERATOR-NOTE');
+  });
+
+  it('rejects an oversized environment packet before report creation', () => {
+    const dir = fixtureDir();
+    const evidencePath = join(dir, 'environment.json');
+    const outPath = join(dir, 'report.json');
+    writeFileSync(evidencePath, `{"padding":"${'x'.repeat(P15_SMALL_JSON_INPUT_MAX_BYTES)}"}\n`);
+
+    const run = runIntake(evidencePath, outPath);
+    expect(run.status).toBe(2);
+    expect(run.stderr).toContain(`${P15_SMALL_JSON_INPUT_MAX_BYTES}-byte limit`);
+    expect(existsSync(outPath)).toBe(false);
   });
 
   it('rejects duplicate options instead of silently using the last value', () => {
