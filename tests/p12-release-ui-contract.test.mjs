@@ -19,7 +19,7 @@ describe('P12 publishable release UI capability contract', () => {
     expect(releaseUi).toContain('BATCH PREP');
   });
 
-  it('retains bounded P15 local + mapping readiness + declared TargetProfile previews while stripping development-only P14 surfaces', async () => {
+  it('retains bounded P15 preview/readiness/profile plus explicit locally validated JSON download while stripping P14 surfaces', async () => {
     const developmentUi = await readFile('src/ui/ui.html', 'utf8');
     const releaseUi = buildReleaseUi(developmentUi);
 
@@ -39,6 +39,22 @@ describe('P12 publishable release UI capability contract', () => {
     expect(releaseUi).toContain('targetCompatibilityClaim=false · productionAcceptance=false · downloadEnabled=false · importValidationStatus=NOT_RUN');
     expect(releaseUi).toContain('targetCompatibilityClaim=false · productionAcceptance=false · importValidationStatus=NOT_RUN · targetEnvironmentValidationStatus=NOT_RUN · downloadEnabled=false');
 
+    expect(releaseUi).toContain('id="p15-download"');
+    expect(releaseUi).toContain('Download Elementor JSON');
+    expect(releaseUi).toContain("post('p15-elementor-local-template-download-request')");
+    expect(releaseUi).toContain("message.type === 'p15-elementor-local-template-download-result'");
+    expect(releaseUi).toContain("message.type === 'p15-elementor-local-template-download-unavailable'");
+    expect(releaseUi).toContain('function renderP15LocalTemplateDownload(message)');
+    expect(releaseUi).toContain('LOCAL ARTIFACT VALIDATED');
+    expect(releaseUi).toContain('TARGET IMPORT NOT VERIFIED');
+    expect(releaseUi).toContain('LOCAL ARTIFACT GATE DID NOT PASS');
+    expect(releaseUi).toContain("downloadText(receipt.fileName, templateJson, 'application/json;charset=utf-8')");
+    expect(releaseUi).toContain('authority.targetImport === false');
+    expect(releaseUi).toContain("authority.importValidationStatus === 'NOT_RUN'");
+    expect(releaseUi).toContain("authority.targetEnvironmentValidationStatus === 'NOT_RUN'");
+    expect(releaseUi).toContain('authority.environmentObserved === false');
+    expect(releaseUi).toContain('result.templateJson = null');
+
     expect(releaseUi).toContain('id="p15-profile"');
     expect(releaseUi).toContain('id="p15-wp-version"');
     expect(releaseUi).toContain('id="p15-elementor-version"');
@@ -57,10 +73,7 @@ describe('P12 publishable release UI capability contract', () => {
     expect(releaseUi).not.toContain('function renderP14PlanPreview(message)');
     expect(releaseUi).not.toContain('P14 GUIDED PREPARE PREVIEW');
     expect(releaseUi).not.toContain('p14-guided-prepare-review.json');
-
     expect(releaseUi).not.toContain('export-p15');
-    expect(releaseUi).not.toContain("downloadText('elementor");
-    expect(releaseUi).not.toContain('templateJson');
   });
 
   it('keeps developer-only closure/calibration entrypoints out of publishable UI', async () => {
