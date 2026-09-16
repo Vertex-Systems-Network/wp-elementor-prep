@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { buildElementorTemplateCandidateArtifact } from '../src/targets/elementor/candidate-artifact';
 import {
@@ -169,9 +169,10 @@ describe('P15 Elementor target proof chain intake CLI', () => {
   });
 
   it('rejects output aliasing the environment evidence and preserves its bytes', () => {
-    const paths = writeFixtures(fixtureDir());
+    const dir = fixtureDir();
+    const paths = writeFixtures(dir);
     const original = readFileSync(paths.environment, 'utf8');
-    const aliasOut = paths.environment.replace('/environment.json', '/./environment.json');
+    const aliasOut = `${dir}${sep}.${sep}environment.json`;
 
     const result = run(paths, aliasOut);
     expect(result.status).toBe(2);
