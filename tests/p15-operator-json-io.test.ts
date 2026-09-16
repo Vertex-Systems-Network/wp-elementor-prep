@@ -1,8 +1,10 @@
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
+  renameSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
@@ -15,8 +17,10 @@ import {
   P15_SMALL_JSON_INPUT_MAX_DEPTH,
   P15_SMALL_JSON_INPUT_MAX_VALUES,
   captureP15OperatorOutputDestinationSnapshot,
+  captureP15OperatorOutputParentSnapshot,
   p15OperatorInputMatchesSnapshot,
   p15OperatorOutputDestinationMatchesSnapshot,
+  p15OperatorOutputParentMatchesSnapshot,
   readP15OperatorJsonInput,
   validateP15CandidateEmbeddedTemplateJsonDepth,
   validateP15OperatorJsonStructure,
@@ -101,6 +105,19 @@ describe('P15 stable operator JSON IO', () => {
       .rejects.toThrow('Input path changed after it was read.');
     expect(existsSync(output)).toBe(false);
     expect(readdirSync(dir).some((name) => name.startsWith('.p15-output-'))).toBe(false);
+  });
+
+  it('detects output parent identity drift through its retained snapshot', async () => {
+    const dir = fixtureDir();
+    const parent = join(dir, 'out');
+    const moved = join(dir, 'out-old');
+    mkdirSync(parent);
+
+    const snapshot = await captureP15OperatorOutputParentSnapshot(parent, fail);
+    renameSync(parent, moved);
+    mkdirSync(parent);
+
+    expect(await p15OperatorOutputParentMatchesSnapshot(snapshot)).toBe(false);
   });
 
   it('detects existing destination drift through its retained snapshot', async () => {
