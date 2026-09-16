@@ -38,7 +38,7 @@ interface ExtractionState {
 }
 
 interface ParsedContainerStyle<T> {
-  value?: T;
+  value?: T | undefined;
   review?: {
     reasonCode: string;
     detail: string;
