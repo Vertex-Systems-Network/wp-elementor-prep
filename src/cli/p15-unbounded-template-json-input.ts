@@ -2,11 +2,11 @@ import type { Stats } from 'node:fs';
 import type { FileHandle } from 'node:fs/promises';
 import { open, realpath, stat } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { sha256Hex } from '../core/sha256';
 import type {
   P15OperatorJsonFileSnapshot,
   P15OperatorJsonInputSnapshot,
 } from './p15-operator-json-io';
+import { decodeP15StrictUtf8, sha256P15RawBytes } from './p15-raw-json-bytes';
 
 type Fail = (message: string) => never;
 
@@ -121,19 +121,20 @@ export async function readP15UnboundedTemplateJsonInput(
       fail(`${label} input changed before it was read.`);
     }
 
-    let raw: string;
+    let rawBytes: Buffer;
     let after: Stats;
     try {
-      raw = await handle.readFile({ encoding: 'utf8' });
+      rawBytes = await handle.readFile();
       after = await handle.stat();
     } catch {
       fail(`Unable to read ${label} input.`);
     }
 
     if (!sameObservedFile(before, after)) fail(`${label} input changed while being read.`);
-    if (Buffer.byteLength(raw, 'utf8') === 0 || raw.trim().length === 0) {
-      fail(`${label} input is empty.`);
-    }
+    if (rawBytes.byteLength === 0) fail(`${label} input is empty.`);
+
+    const raw = decodeP15StrictUtf8(rawBytes, label, fail);
+    if (raw.trim().length === 0) fail(`${label} input is empty.`);
 
     let pathInfoAfterRead: Stats;
     let canonicalAfterRead: string;
@@ -166,7 +167,7 @@ export async function readP15UnboundedTemplateJsonInput(
       value,
       resolvedPath,
       canonicalPath: canonicalAfterRead,
-      contentSha256: `sha256:${sha256Hex(raw)}`,
+      contentSha256: sha256P15RawBytes(rawBytes),
       file: toFileSnapshot(after),
     });
   } finally {
