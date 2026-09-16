@@ -142,6 +142,6 @@ Do not open future phases merely to increase parallelism while the bounded Eleme
 
 Complete the coherent Elementor-first internal V1 path:
 
-`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> observed target-environment qualification -> exact-bound target-proof intake -> controlled real Elementor import/editor/render observation (#483) -> retained evidence -> separate internal review`
+`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> observed target-environment qualification -> controlled real Elementor import/editor/render observation (#483) -> exact-bound target-proof intake -> retained evidence -> separate internal review`
 
 The locally validated artifact, environment qualification and proof-intake machinery must remain non-target-authorizing until genuine retained target observations and review change that truth.
