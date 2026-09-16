@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, linkSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -175,7 +175,20 @@ describe('P15 Elementor target-proof operator intake', () => {
 
     const run = runIntake(paths.candidate, paths.profile, paths.proof, aliasOut);
     expect(run.status).toBe(2);
-    expect(run.stderr).toContain('--out must not overwrite a candidate, profile, or proof input file.');
+    expect(run.stderr).toContain('--out must not overwrite or alias a candidate, profile, or proof input file.');
     expect(readFileSync(paths.candidate, 'utf8')).toBe(original);
+  });
+
+  it('rejects an existing hardlink output to the proof input and preserves proof bytes', () => {
+    const dir = fixtureDir();
+    const paths = writeFixtureFiles(dir);
+    const hardlinkOut = join(dir, 'hardlink-report.json');
+    const original = readFileSync(paths.proof, 'utf8');
+    linkSync(paths.proof, hardlinkOut);
+
+    const run = runIntake(paths.candidate, paths.profile, paths.proof, hardlinkOut);
+    expect(run.status).toBe(2);
+    expect(run.stderr).toContain('--out must not overwrite or alias a candidate, profile, or proof input file.');
+    expect(readFileSync(paths.proof, 'utf8')).toBe(original);
   });
 });
