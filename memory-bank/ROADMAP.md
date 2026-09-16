@@ -22,7 +22,7 @@ Last updated: 2026-09-16
 | R1 | Reliability/compatibility gate | DEFINED / RECURRING | 100% | `██████████` | Execute TargetProfile/capability/validator/harness gate per adapter |
 | P13 | Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance |
 | P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review active; production registry empty; #159 before real mutation exposure |
-| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Neutral IR + v3 generator + selected-Frame extraction + sanitized preview + declared TargetProfile + categorical mapping readiness exist; real import/editor/render and broader media/responsive mapping remain pending |
+| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Neutral IR + v3 generator + selected-Frame extraction + sanitized preview + declared TargetProfile + mapping readiness + fresh locally validated Template JSON download exist; next minimum fidelity pack, then real import/editor/render proof |
 | P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 | HTML/CSS/JS export + code-to-design import | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
 | P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
@@ -44,29 +44,47 @@ Last updated: 2026-09-16
 
 Overall project progress is intentionally not collapsed into one synthetic percentage. Implementation, runtime acceptance and external approval are separate evidence states.
 
-R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open. P14 is active with no stable numeric denominator and no production mutation authority. P15 and P16 now have substantial deterministic code-side foundations but remain target-import/target-validation unaccepted with `N/A` progress. P17-P26 remain preflight frozen/not started. P27 execution remains deferred. New scope does not retroactively lower completed-core progress.
+R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open. P14 is active with no stable numeric denominator and no production mutation authority. P15 and P16 have substantial deterministic code-side foundations but remain target-import/target-validation unaccepted with `N/A` progress. P17-P26 remain preflight frozen/not started. P27 execution remains deferred.
 
 ## Current P15 implementation truth
 
 P15 is **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**.
 
-Accepted bounded code-side surfaces now include:
+Bounded code-side surfaces now include:
 
 - target-neutral export IR with explicit container/heading/button/image/plain-text/REVIEW intents;
-- deterministic local Elementor v0.4 Container/Widget Template JSON candidate generation;
+- deterministic local Elementor v0.4 Container/Widget Template JSON generation;
 - read-only selected-Figma-Frame extraction for bounded HORIZONTAL/VERTICAL Auto Layout, padding/gap/alignment and visible plain text;
 - sanitized normal/publishable plugin preview;
 - bounded user-declared WordPress/Elementor TargetProfile alignment preview;
 - deterministic compatibility categories `NATIVE`, `NATIVE_WITH_REVIEW`, `CONVERTIBLE`, `FALLBACK`, `UNSUPPORTED`, `UNKNOWN`;
-- categorical mapping-readiness states `READY`, `READY_WITH_REVIEW`, `NOT_READY`, `INSUFFICIENT_EVIDENCE`, with unknown/unsupported nodes retained in the coverage denominator.
+- categorical mapping-readiness states `READY`, `READY_WITH_REVIEW`, `NOT_READY`, `INSUFFICIENT_EVIDENCE`;
+- explicit fresh local Template JSON download gated by review-free `READY` mapping, generated-candidate readiness and an immediate second local candidate revalidation/match;
+- deterministic sanitized local-download receipt with source/generator identity, SHA-256 candidate/artifact fingerprints and hash-derived filename.
 
-The mapping-readiness surface is explicitly **not target compatibility**. `targetCompatibilityClaim=false`, `productionAcceptance=false`, `downloadEnabled=false`, `importValidationStatus=NOT_RUN` and `targetEnvironmentValidationStatus=NOT_RUN` remain authoritative. No target observation, WordPress/Elementor network connection, import/editor/render execution, template download, section transfer or Figma mutation is granted by this state.
+The explicit download surface is **local artifact transfer only**. It is not target compatibility or import proof.
+
+On a successful fresh local-download result only, `fileDownload=true` is allowed and the UI says **LOCAL ARTIFACT VALIDATED / TARGET IMPORT NOT VERIFIED**. Existing candidate/preview/profile contracts remain non-download surfaces.
+
+These facts stay authoritative:
+
+- `targetCompatibilityClaim=false`;
+- `productionAcceptance=false`;
+- `importValidationStatus=NOT_RUN`;
+- `targetEnvironmentValidationStatus=NOT_RUN`;
+- `environmentObserved=false`;
+- no target observation or WordPress/Elementor network connection;
+- no import/editor/render execution;
+- no clipboard/section transfer;
+- no Figma mutation.
+
+The next bounded P15 slice is a minimum deterministic visual-fidelity mapping pack. After that, a controlled genuine Elementor import/editor/render proof is required before stronger target authority.
 
 ## Current P16 implementation truth
 
 P16 is **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
 
-The deterministic foundation already includes normalized candidate/native-validation evidence contracts, immutable declared target profiles, exact candidate identity, offline receipt/evidence intake, sanitized review/decision prerequisites, genuine-evidence retention requirements, offline operator export/validation and hardened bounded local JSON I/O/output handling. This remains supporting evidence only: genuine authenticated evidence and real native target/editor/import/render validation are still required before stronger authority.
+The deterministic foundation includes normalized candidate/native-validation evidence contracts, immutable declared target profiles, exact candidate identity, offline receipt/evidence intake, sanitized review/decision prerequisites, genuine-evidence retention requirements, offline operator export/validation and hardened bounded local JSON I/O/output handling. This remains supporting evidence only: genuine authenticated evidence and real native target/editor/import/render validation are still required before stronger authority.
 
 ## R0 — recurring market/platform intelligence
 
