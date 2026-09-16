@@ -1,5 +1,4 @@
 import { resolve } from 'node:path';
-import { sha256Hex } from '../core/sha256';
 import type { ElementorTemplateCandidateArtifactV1 } from '../targets/elementor/candidate-artifact';
 import type { ElementorTargetProfileV1 } from '../targets/elementor/target-profile';
 import { validateElementorTargetProofEvidence } from '../targets/elementor/target-proof-evidence';
@@ -91,9 +90,9 @@ const report = {
   reviewCodes: [...validation.reviewCodes],
   issues: validation.issues.map((issue) => ({ ...issue })),
   inputs: {
-    candidateSha256: `sha256:${sha256Hex(candidateFile.raw)}`,
-    profileSha256: `sha256:${sha256Hex(profileFile.raw)}`,
-    proofSha256: `sha256:${sha256Hex(proofFile.raw)}`,
+    candidateSha256: candidateFile.contentSha256,
+    profileSha256: profileFile.contentSha256,
+    proofSha256: proofFile.contentSha256,
   },
   acceptanceAuthority: false,
   targetCompatibilityClaim: false,
