@@ -1,10 +1,10 @@
 # Roadmap
 
-Last updated: 2026-09-12
+Last updated: 2026-09-16
 
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
-| AI-native governance/tooling | Memory-bank, issue/PR-first lifecycle, R0 research, R1 reliability, CI/provenance | COMPLETE | 100% | `██████████` | Keep status/research/reliability/evidence synchronized |
+| AI-native governance/tooling | Memory-bank, issue/PR-first lifecycle, R0 research, R1 reliability, CI/provenance | REPO-SIDE DETECTION COMPLETE / ADMIN ENFORCEMENT IN PROGRESS | N/A | `──────────` | Release-train cadence active; #287 admin branch/ruleset enforcement still required |
 | P0 | Specification, architecture, repository foundation | COMPLETE | 100% | `██████████` | None |
 | P1 | Audit-only scanner/discovery/scoring | COMPLETE | 100% | `██████████` | None |
 | P2 | Deterministic classifier semantics + evidence | COMPLETE | 100% | `██████████` | None |
@@ -18,12 +18,12 @@ Last updated: 2026-09-12
 | P10 | npm/Node CLI + source adapters | COMPLETE / P12 ACCEPTED | 100% | `██████████` | Real REST/auth/plugin parity retained |
 | P11 | Normal Figma plugin distribution | IMPLEMENTATION COMPLETE | 100% | `██████████` | Live publisher/install evidence remains in P12 |
 | P12 | Final integrated validation/release acceptance | IN PROGRESS | 80% | `████████░░` | Finish exact publish-ID package/account/2FA/exit review in #84 |
-| R0 | Market/platform research gate | PLANNING GATE | N/A | `──────────` | Refresh before major externally evolving adapters |
-| R1 | Reliability/compatibility gate | PLANNING GATE | N/A | `──────────` | Freeze TargetProfile/capabilities/errors/validators/acceptance harness before adapter implementation |
+| R0 | Market/platform research gate | DEFINED / RECURRING | 100% | `██████████` | Refresh before major externally evolving adapters |
+| R1 | Reliability/compatibility gate | DEFINED / RECURRING | 100% | `██████████` | Execute TargetProfile/capability/validator/harness gate per adapter |
 | P13 | Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance |
-| P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Continue pure-core hardening; production registry empty; #159 before real mutation exposure |
-| P15 | Elementor native export + import validation | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, versioned v3/v4 adapters, real import acceptance |
-| P16 | Gutenberg native export + section transfer | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, parse/serialize/editor validation |
+| P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review active; production registry empty; #159 before real mutation exposure |
+| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Neutral IR + v3 generator + selected-Frame extraction + sanitized preview + declared TargetProfile + categorical mapping readiness exist; real import/editor/render and broader media/responsive mapping remain pending |
+| P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 | HTML/CSS/JS export + code-to-design import | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
 | P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
 | P19 | Asset pack + font manifest + design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Stored-original vs rendered policy; font/API constraints |
@@ -42,7 +42,31 @@ Last updated: 2026-09-12
 
 **P12 final validation:** `████████░░ 80%`.
 
-R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open; P14 implementation is active with no stable numeric denominator while the pure-core safety surface is still being closed; P15-P26 implementation is not started; P27 execution is deferred. New scope does not retroactively lower completed-core progress.
+Overall project progress is intentionally not collapsed into one synthetic percentage. Implementation, runtime acceptance and external approval are separate evidence states.
+
+R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open. P14 is active with no stable numeric denominator and no production mutation authority. P15 and P16 now have substantial deterministic code-side foundations but remain target-import/target-validation unaccepted with `N/A` progress. P17-P26 remain preflight frozen/not started. P27 execution remains deferred. New scope does not retroactively lower completed-core progress.
+
+## Current P15 implementation truth
+
+P15 is **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**.
+
+Accepted bounded code-side surfaces now include:
+
+- target-neutral export IR with explicit container/heading/button/image/plain-text/REVIEW intents;
+- deterministic local Elementor v0.4 Container/Widget Template JSON candidate generation;
+- read-only selected-Figma-Frame extraction for bounded HORIZONTAL/VERTICAL Auto Layout, padding/gap/alignment and visible plain text;
+- sanitized normal/publishable plugin preview;
+- bounded user-declared WordPress/Elementor TargetProfile alignment preview;
+- deterministic compatibility categories `NATIVE`, `NATIVE_WITH_REVIEW`, `CONVERTIBLE`, `FALLBACK`, `UNSUPPORTED`, `UNKNOWN`;
+- categorical mapping-readiness states `READY`, `READY_WITH_REVIEW`, `NOT_READY`, `INSUFFICIENT_EVIDENCE`, with unknown/unsupported nodes retained in the coverage denominator.
+
+The mapping-readiness surface is explicitly **not target compatibility**. `targetCompatibilityClaim=false`, `productionAcceptance=false`, `downloadEnabled=false`, `importValidationStatus=NOT_RUN` and `targetEnvironmentValidationStatus=NOT_RUN` remain authoritative. No target observation, WordPress/Elementor network connection, import/editor/render execution, template download, section transfer or Figma mutation is granted by this state.
+
+## Current P16 implementation truth
+
+P16 is **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
+
+The deterministic foundation already includes normalized candidate/native-validation evidence contracts, immutable declared target profiles, exact candidate identity, offline receipt/evidence intake, sanitized review/decision prerequisites, genuine-evidence retention requirements, offline operator export/validation and hardened bounded local JSON I/O/output handling. This remains supporting evidence only: genuine authenticated evidence and real native target/editor/import/render validation are still required before stronger authority.
 
 ## R0 — recurring market/platform intelligence
 
@@ -109,7 +133,8 @@ The artifact is registered in `config/runtime-artifacts.json` schema v3 as the o
 3. R0 research refresh when required by the next external target.
 4. R1 compatibility/reliability contract freeze.
 5. Highest-priority unblocked roadmap obligation.
-6. Tests/target validation before acceptance claims.
-7. README + memory-bank same-cycle sync.
-8. No synthetic runtime/external evidence.
-9. Implementation-complete and production-accepted remain separate.
+6. Use one focused release train for one acceptance objective; batch tightly related implementation/tests/UI/status-sync work rather than creating ceremonial micro-PRs.
+7. Use focused typecheck/tests/builds for fast branch feedback; require the full documented exact-head CI/release/offline gates at the integration/merge checkpoint.
+8. Synchronize canonical README/memory truth when status/authority/behavior actually changes, once per accepted release train when practical.
+9. No synthetic runtime/external evidence and no synthetic overall project percentage.
+10. Implementation-complete and production-accepted remain separate.
