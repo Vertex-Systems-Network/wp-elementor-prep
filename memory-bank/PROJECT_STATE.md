@@ -10,21 +10,21 @@ WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving t
 
 ## Current repository line
 
-Current verified main before this P15 release train:
+Current verified main for the accepted P15 target-proof-intake line:
 
-`f568ec2236a1a0c7102a656368a7632ec8f581dd`
+`04c3710cab693c232e512e53de21b20f6f496555`
 
-That main includes:
+Recent accepted P15 sequence:
 
-- PR #476 — AI-native release-train cadence, compact canonical context and refreshed roadmap truth; exact head `c7d9e65a190e9b16668bc0e64234663d7679fc27`; CI #1264, Final #575 and Offline #619 PASS; merge `95f3cb44f4637365db58aedca0b218da1fcd6c41`;
 - PR #478 — fresh locally validated Elementor Template JSON download; exact final head `085b34ffdd16065dce218c9be5eb962e687c8e91`; CI #1269, Final #580 and Offline #624 PASS; merge `e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`;
-- PR #480 — bounded deterministic container solid-background + uniform-radius fidelity; exact final head passed the required CI / P12 Final Release Artifact / P12 Offline Acceptance gates; merge `f568ec2236a1a0c7102a656368a7632ec8f581dd`.
+- PR #480 — bounded deterministic container solid-background + uniform-radius fidelity; merge `f568ec2236a1a0c7102a656368a7632ec8f581dd` after required exact-head gates passed;
+- PR #482 — exact-bound external Elementor target-proof evidence contract and sanitized offline intake; final exact head `500ce695d2392128dfd53d9d181dcf392ca64a57` passed CI #1281, P12 Final Release Artifact #592 and P12 Offline Acceptance #636 on Ubuntu/macOS/Windows; merge `04c3710cab693c232e512e53de21b20f6f496555`; issue #481 completed.
 
-Active release train:
+Active P15 acceptance dependency:
 
-- issue #481 / PR #482 — exact-bound external Elementor target-proof evidence contract and sanitized offline intake;
-- implementation head `3c17c03e026e6d148ac1dd512f0ccd7c88df99b0` passed CI #1278, P12 Final Release Artifact #589 and P12 Offline Acceptance #633 before this canonical status-sync commit;
-- final acceptance must be rerun on the post-doc-sync exact PR head before merge.
+- issue #483 — first controlled genuine Elementor Template JSON import/editor/render observation for one exact generated candidate;
+- current state: **EXTERNAL/RUNTIME BLOCKED** pending a controlled real WordPress + Elementor environment and retained operator evidence;
+- no repository code/CI may synthesize the missing target observation.
 
 ## Persistent dependencies
 
@@ -32,7 +32,8 @@ Active release train:
 - #119 — P13-P27 commercial/multi-target roadmap owner;
 - #159 — genuine Figma Desktop P13 Build-Ready runtime/parity acceptance dependency;
 - #182 — P27 final production-release/evidence gate;
-- #287 — repository-admin branch protection/ruleset hardening residual.
+- #287 — repository-admin branch protection/ruleset hardening residual;
+- #483 — genuine controlled Elementor import/editor/render target proof.
 
 ## AI-native execution state
 
@@ -44,7 +45,7 @@ Active speed policy:
 - tightly related implementation/tests/UI/docs commits may stay in the same PR;
 - focused verification is used during iteration;
 - full CI / Final Release / Offline Acceptance gates are mandatory on the exact merge head;
-- canonical status is synchronized once per accepted behavior-changing train when practical;
+- canonical status is synchronized when status/authority/execution truth materially changes;
 - shared hotspots use one integrator and parallel work uses non-overlapping ownership;
 - no synthetic overall project percentage or fabricated runtime evidence.
 
@@ -60,7 +61,7 @@ The process is faster, but target/runtime authority is not weaker.
 
 P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** with `N/A` progress.
 
-Accepted/main foundation before PR #482 includes:
+Accepted/main foundation now includes:
 
 - target-neutral export IR;
 - deterministic local Elementor v0.4 Container/Widget Template JSON generation;
@@ -74,18 +75,13 @@ Accepted/main foundation before PR #482 includes:
 - deterministic opaque single-`SOLID` container background extraction to canonical uppercase `#RRGGBB`;
 - deterministic bounded uniform pixel corner-radius extraction;
 - native Elementor container serialization through `background_background='classic'`, `background_color` and linked pixel `border_radius` dimensions;
-- explicit REVIEW boundaries for multiple/unsupported/translucent fills, invalid RGB states, partial/nonuniform/out-of-range radii and image asset closure.
-
-PR #482 adds a bounded target-proof intake layer without changing target authority:
-
-- `elementor-target-proof-evidence-v1` binds an externally supplied proof packet to the exact canonical candidate identity and immutable declared TargetProfile fingerprint;
-- actually observed WordPress/Elementor versions remain separate from the declared profile;
-- an observed-version mismatch is retained as review-required partial evidence rather than silently normalized;
-- import, editor-open and render observations are independent, with fail-closed prerequisite sequencing;
-- bounded fidelity observations cover only the currently supported structure, solid-background and uniform-radius slice;
-- evidence classification is limited to `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL` or `REJECTED`;
-- the offline operator intake emits a sanitized report with candidate/profile/proof SHA-256 input fingerprints and does not emit template/candidate contents;
-- CI/repository code does not synthesize a target PASS observation.
+- explicit REVIEW boundaries for multiple/unsupported/translucent fills, invalid RGB states, partial/nonuniform/out-of-range radii and image asset closure;
+- versioned `elementor-target-proof-evidence-v1` bound to the exact canonical candidate identity and immutable declared TargetProfile fingerprint;
+- separate retention of actually observed WordPress/Elementor versions instead of treating declared versions as observed truth;
+- independent import/editor-open/render observations with fail-closed prerequisite sequencing;
+- bounded fidelity observation fields for structure, solid background and uniform radius;
+- evidence-only classifications `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL`, `REJECTED`;
+- sanitized offline `p15:elementor-target-proof-intake` output with candidate/profile/proof SHA-256 input fingerprints while omitting candidate/template contents.
 
 User-facing local-download truth remains exactly bounded to:
 
@@ -108,7 +104,7 @@ Authority remains:
 
 A `BOUND_FULL_PASS` intake result is not by itself production or compatibility authority. It means only that one externally supplied proof packet is structurally valid, exactly bound to its candidate/profile, observed on the declared environment versions, and contains a complete bounded PASS sequence. Genuine retained evidence still requires separate internal review before any stronger P15 status is justified.
 
-Next P15 acceptance action after PR #482 is to exercise one exact generated candidate in a controlled real WordPress + Elementor environment, produce the observation packet from that environment/operator, run the new intake, retain the resulting evidence, and perform the separate internal review.
+Issue #483 owns the next P15 acceptance action. Until that real target proof exists, do not open additional fidelity/serializer work merely to advance the roadmap mechanically. The first controlled proof should determine the next evidenced high-value fidelity gap.
 
 ## P16 state
 
@@ -129,6 +125,6 @@ Do not open future phases merely to increase parallelism while the bounded Eleme
 
 Complete the coherent Elementor-first internal V1 path:
 
-`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> exact-bound target-proof intake -> controlled real Elementor import/editor/render observation -> retained evidence -> separate internal review`
+`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> exact-bound target-proof intake -> controlled real Elementor import/editor/render observation (#483) -> retained evidence -> separate internal review`
 
 The locally validated artifact and the proof-intake machinery must remain labeled as non-target-authorizing until genuine retained target observations and review change that truth.
