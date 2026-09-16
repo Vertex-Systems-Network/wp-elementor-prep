@@ -1,5 +1,4 @@
 import { resolve } from 'node:path';
-import { sha256Hex } from '../core/sha256';
 import { validateElementorReferenceClosureEvidenceReceipt } from '../targets/elementor/reference-closure-evidence';
 import { outputAliasesAnyInput } from './p15-evidence-path-safety';
 import {
@@ -85,9 +84,9 @@ const report = {
   },
   allRequiredEvidenceReportsPass: validation.allRequiredEvidenceReportsPass,
   inputs: {
-    templateSha256: `sha256:${sha256Hex(templateFile.raw)}`,
-    profileSha256: `sha256:${sha256Hex(profileFile.raw)}`,
-    receiptSha256: `sha256:${sha256Hex(receiptFile.raw)}`,
+    templateSha256: templateFile.contentSha256,
+    profileSha256: profileFile.contentSha256,
+    receiptSha256: receiptFile.contentSha256,
   },
   issues: validation.issues.map((issue) => ({ ...issue })),
   acceptanceAuthority: false,
