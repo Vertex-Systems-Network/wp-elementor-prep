@@ -2,6 +2,7 @@ import type { Stats } from 'node:fs';
 import type { FileHandle } from 'node:fs/promises';
 import { open, realpath, stat } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { sha256Hex } from '../core/sha256';
 import type {
   P15OperatorJsonFileSnapshot,
   P15OperatorJsonInputSnapshot,
@@ -165,6 +166,7 @@ export async function readP15UnboundedTemplateJsonInput(
       value,
       resolvedPath,
       canonicalPath: canonicalAfterRead,
+      contentSha256: `sha256:${sha256Hex(raw)}`,
       file: toFileSnapshot(after),
     });
   } finally {
