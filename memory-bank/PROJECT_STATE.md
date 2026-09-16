@@ -8,22 +8,25 @@ WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving t
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
 
-## Current repository line
+## P15 environment-qualification release train provenance
 
-Current verified main for the accepted P15 target-proof-intake line:
+Base main for issue #486 / PR #487:
 
-`04c3710cab693c232e512e53de21b20f6f496555`
+`623b09277bc90d52b324468b0429e01671ac8520`
 
-Recent accepted P15 sequence:
+Recent accepted P15 sequence before this train:
 
 - PR #478 — fresh locally validated Elementor Template JSON download; exact final head `085b34ffdd16065dce218c9be5eb962e687c8e91`; CI #1269, Final #580 and Offline #624 PASS; merge `e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`;
 - PR #480 — bounded deterministic container solid-background + uniform-radius fidelity; merge `f568ec2236a1a0c7102a656368a7632ec8f581dd` after required exact-head gates passed;
-- PR #482 — exact-bound external Elementor target-proof evidence contract and sanitized offline intake; final exact head `500ce695d2392128dfd53d9d181dcf392ca64a57` passed CI #1281, P12 Final Release Artifact #592 and P12 Offline Acceptance #636 on Ubuntu/macOS/Windows; merge `04c3710cab693c232e512e53de21b20f6f496555`; issue #481 completed.
+- PR #482 — exact-bound external Elementor target-proof evidence contract and sanitized offline intake; final exact head `500ce695d2392128dfd53d9d181dcf392ca64a57` passed CI #1281, P12 Final Release Artifact #592 and P12 Offline Acceptance #636; merge `04c3710cab693c232e512e53de21b20f6f496555`; issue #481 completed;
+- PR #485 — synchronized canonical P15 state after #482; exact head `a7f5cda81c5303bb5b8473561e7b94db3cf41ea8` passed CI #1283, Final #594 and Offline #638; merge `623b09277bc90d52b324468b0429e01671ac8520`; issue #484 completed.
 
-Active P15 acceptance dependency:
+Issue #486 / PR #487 provides deterministic, non-authorizing Elementor target-environment qualification evidence and offline intake. Implementation feedback head `1872be59bcee3443d75ba7024e12714fdf7e4102` passed CI #1287, P12 Final Release Artifact #598 and P12 Offline Acceptance #642. The synchronized integration candidate remains subject to the repository's exact-head gates before merge.
+
+P15 acceptance still depends on:
 
 - issue #483 — first controlled genuine Elementor Template JSON import/editor/render observation for one exact generated candidate;
-- current state: **EXTERNAL/RUNTIME BLOCKED** pending a controlled real WordPress + Elementor environment and retained operator evidence;
+- state: **EXTERNAL/RUNTIME BLOCKED** pending a qualified controlled WordPress + Elementor environment and retained operator evidence;
 - no repository code/CI may synthesize the missing target observation.
 
 ## Persistent dependencies
@@ -61,7 +64,7 @@ The process is faster, but target/runtime authority is not weaker.
 
 P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** with `N/A` progress.
 
-Accepted/main foundation now includes:
+P15 foundation entering #486/#487 includes:
 
 - target-neutral export IR;
 - deterministic local Elementor v0.4 Container/Widget Template JSON generation;
@@ -83,6 +86,15 @@ Accepted/main foundation now includes:
 - evidence-only classifications `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL`, `REJECTED`;
 - sanitized offline `p15:elementor-target-proof-intake` output with candidate/profile/proof SHA-256 input fingerprints while omitting candidate/template contents.
 
+The #486/#487 release train adds a necessary-but-not-sufficient environment qualification layer for the eventual real #483 run:
+
+- versioned `elementor-target-environment-evidence-v1` retains observed WordPress, Elementor Core, PHP, database, WordPress memory and editor-browser facts plus clean-core dependency facts;
+- policy `elementor-target-environment-policy-2026-09-16-v1` conservatively requires WordPress `6.8+`, PHP `7.4+`, MySQL `5.6+` or MariaDB `10.5+`, WordPress memory `>=256 MB`, and the bounded current supported browser floors captured by the R0 refresh;
+- SQLite/other DBs, below-minimum runtime facts and unsupported/stale browsers classify `NOT_QUALIFIED`;
+- active Elementor Pro or third-party Elementor addons classify `REVIEW_REQUIRED` for the clean-Core first-proof policy rather than silently passing;
+- malformed/unknown/elevated-authority evidence classifies `REJECTED`;
+- sanitized `p15:elementor-target-environment-intake` emits qualification state plus the input SHA-256 and explicitly keeps `importObserved=false`, `editorObserved=false`, `renderObserved=false`.
+
 User-facing local-download truth remains exactly bounded to:
 
 - **LOCAL ARTIFACT VALIDATED**;
@@ -90,21 +102,22 @@ User-facing local-download truth remains exactly bounded to:
 
 Authority remains:
 
-- `acceptanceAuthority=false` for target-proof intake;
+- `acceptanceAuthority=false` for environment qualification and target-proof intake;
 - `targetCompatibilityClaim=false`;
 - `productionAcceptance=false`;
 - `importValidationStatus=NOT_RUN` until genuine retained target evidence is separately accepted into the relevant authority state;
-- `targetEnvironmentValidationStatus=NOT_RUN` until genuine retained target evidence and review support a change;
+- `targetEnvironmentValidationStatus=NOT_RUN` on the local generation/download path;
+- environment qualification means only that one externally observed runtime satisfies the bounded prerequisites for attempting the proof; it is not import/render verification;
 - `environmentObserved=false` for the local generation/download path;
-- `internalReviewRequired=true` for target-proof evidence;
+- `internalReviewRequired=true` for external environment/proof evidence;
 - no WordPress/Elementor network connection from the Figma core;
 - no automated target import/editor/render execution claim;
 - no clipboard/section transfer;
 - no Figma mutation.
 
-A `BOUND_FULL_PASS` intake result is not by itself production or compatibility authority. It means only that one externally supplied proof packet is structurally valid, exactly bound to its candidate/profile, observed on the declared environment versions, and contains a complete bounded PASS sequence. Genuine retained evidence still requires separate internal review before any stronger P15 status is justified.
+A qualified environment plus a `BOUND_FULL_PASS` target-proof packet still requires genuine retained real-environment observations and separate internal review before any stronger P15 authority can be considered.
 
-Issue #483 owns the next P15 acceptance action. Until that real target proof exists, do not open additional fidelity/serializer work merely to advance the roadmap mechanically. The first controlled proof should determine the next evidenced high-value fidelity gap.
+Issue #483 owns the next P15 acceptance action. The real run must first retain qualified environment evidence, then exercise the exact candidate import/editor/render path, then run the exact-bound proof intake. Until that real target proof exists, do not expand serializer/fidelity merely to advance the roadmap mechanically.
 
 ## P16 state
 
@@ -125,6 +138,6 @@ Do not open future phases merely to increase parallelism while the bounded Eleme
 
 Complete the coherent Elementor-first internal V1 path:
 
-`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> exact-bound target-proof intake -> controlled real Elementor import/editor/render observation (#483) -> retained evidence -> separate internal review`
+`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> observed target-environment qualification -> controlled real Elementor import/editor/render observation (#483) -> exact-bound target-proof intake -> retained evidence -> separate internal review`
 
-The locally validated artifact and the proof-intake machinery must remain labeled as non-target-authorizing until genuine retained target observations and review change that truth.
+The locally validated artifact, environment qualification and proof-intake machinery must remain non-target-authorizing until genuine retained target observations and review change that truth.

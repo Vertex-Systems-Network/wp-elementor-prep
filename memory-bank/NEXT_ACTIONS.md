@@ -8,7 +8,7 @@ Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 an
 
 Prioritize one coherent Elementor commercial V1. Keep P16 stable unless a concrete shared blocker appears, and keep P17-P26 frozen during this window.
 
-Use focused typecheck/tests/builds while iterating. Before merge, the exact PR head must pass the repository's full CI / P12 Final Release Artifact / P12 Offline Acceptance gates. Canonical docs synchronize once per behavior-changing release train rather than in separate ceremonial docs PRs.
+Use focused typecheck/tests/builds while iterating. The exact integration head must pass the repository's full CI / P12 Final Release Artifact / P12 Offline Acceptance gates before merge. Canonical docs synchronize once per behavior-changing release train rather than in separate ceremonial docs PRs.
 
 ## Authority boundaries that must remain true
 
@@ -21,83 +21,77 @@ Use focused typecheck/tests/builds while iterating. Before merge, the exact PR h
 - P27 — **GATE DEFINED / EXECUTION DEFERRED** under #182.
 - #287 remains repository-admin branch/ruleset enforcement work.
 
-Never promote local artifact validation, deterministic style serialization, declared profile alignment, mapping readiness, caller-supplied evidence or CI success into real target compatibility/import/render/production authority.
+Never promote local artifact validation, environment qualification, deterministic style serialization, declared profile alignment, mapping readiness, caller-supplied evidence or CI success into real target compatibility/import/render/production authority.
 
-## Most recently accepted P15 release train — issue #481 / PR #482
+## P15 environment-qualification release train — issue #486 / PR #487
 
-PR #482 merged as `04c3710cab693c232e512e53de21b20f6f496555` and issue #481 is complete.
+This release train adds a deterministic, non-authorizing qualification gate for the externally observed WordPress + Elementor runtime used by the future #483 proof.
 
-Final exact PR head `500ce695d2392128dfd53d9d181dcf392ca64a57` passed:
+Implementation feedback head `1872be59bcee3443d75ba7024e12714fdf7e4102` passed CI #1287, P12 Final Release Artifact #598 and P12 Offline Acceptance #642. The synchronized release candidate must still satisfy the exact-head gates at integration.
 
-- CI #1281;
-- P12 Final Release Artifact #592;
-- P12 Offline Acceptance #636 on Ubuntu, macOS and Windows.
+Bounded behavior:
 
-Accepted behavior:
+- `elementor-target-environment-evidence-v1` accepts only externally observed bounded runtime facts;
+- policy `elementor-target-environment-policy-2026-09-16-v1` uses conservative R0-qualified floors for WordPress, PHP, MySQL/MariaDB, memory and browser;
+- exact classifications are `QUALIFIED_FOR_BOUND_TARGET_PROOF`, `REVIEW_REQUIRED`, `NOT_QUALIFIED`, `REJECTED`;
+- SQLite/other DBs and below-minimum required runtime facts cannot qualify;
+- active Elementor Pro or third-party Elementor addons require review for the clean-Core first-proof policy;
+- malformed versions, unknown fields and elevated authority flags reject fail-closed;
+- `p15:elementor-target-environment-intake` emits a sanitized report and SHA-256 input fingerprint;
+- the report explicitly keeps `importObserved=false`, `editorObserved=false`, `renderObserved=false`.
 
-- `elementor-target-proof-evidence-v1` binds one externally supplied observation packet to the exact canonical Elementor candidate identity and immutable declared TargetProfile fingerprint;
-- the actually observed WordPress/Elementor versions are retained separately from the declared TargetProfile instead of being silently rewritten;
-- declared/observed target mismatch remains valid but review-required `BOUND_PARTIAL` evidence;
-- observed steps are independently retained for Template JSON import, Elementor editor open and render;
-- bounded current fidelity observations cover structure, solid background and uniform radius only;
-- prerequisite sequencing fails closed, so downstream PASS cannot follow an unproven/failed prerequisite;
-- classifications are evidence states only: `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL`, `REJECTED`;
-- the offline operator intake emits sanitized binding/status fields plus SHA-256 input fingerprints and does not emit candidate/template contents;
-- repository code and CI never synthesize a target PASS observation.
-
-This accepted train does **not** change:
+This release train does **not** change:
 
 - `acceptanceAuthority=false`;
 - `targetCompatibilityClaim=false`;
 - `productionAcceptance=false`;
 - `internalReviewRequired=true`;
-- P15 remains `TARGET IMPORT UNVALIDATED` until genuine retained target evidence and separate internal review support a status change;
-- no WordPress/Elementor connection/network from the Figma core;
-- no automated target import/editor/render execution claim;
+- P15 remains `TARGET IMPORT UNVALIDATED`;
+- no WordPress/Elementor network connection from the Figma core;
+- no automated target import/editor/render claim;
+- no Atomic-v4 acceptance;
 - no section/clipboard transfer;
 - no Figma mutation.
 
-## Active P15 acceptance dependency — issue #483
+## Next P15 acceptance action — issue #483 real controlled target proof
 
-#483 owns the first controlled genuine Elementor import/editor/render observation for one exact known generated V1 candidate.
+The first genuine target proof must use one exact known generated V1 candidate and one externally observed runtime.
 
-Current state: **EXTERNAL/RUNTIME BLOCKED** until a controlled real WordPress + Elementor environment and operator evidence are available.
+Required order:
 
-The required proof remains explicit and narrow:
+1. capture the real runtime facts from the exact environment intended for the proof;
+2. run `p15:elementor-target-environment-intake` and retain the evidence/report fingerprint;
+3. proceed only when the environment is `QUALIFIED_FOR_BOUND_TARGET_PROOF`; a review-required environment needs explicit review before it can substitute for the clean-Core first-proof matrix;
+4. import the exact candidate through Elementor Template Library JSON;
+5. if import passes, open it in the Elementor editor;
+6. if editor-open passes, render/preview and observe only the currently supported bounded fidelity slice;
+7. build the exact-bound proof packet from those genuine observations;
+8. run `p15:elementor-target-proof-intake`;
+9. retain candidate/profile/environment/proof/report identities and durable evidence together;
+10. perform separate internal review before changing any P15 authority/status.
 
-- retain the exact generated candidate/artifact fingerprint used for the import;
-- retain the immutable declared TargetProfile identity;
-- record the actually observed WordPress and Elementor versions separately;
-- record whether Elementor accepts the Template JSON import;
-- record whether the imported document opens in the Elementor editor;
-- record whether the bounded structure and currently supported container fidelity render as expected;
-- retain failure/review evidence if any step cannot be proven;
-- feed only genuine observations into `p15:elementor-target-proof-intake`;
-- preserve the resulting evidence packet for separate internal review before changing any compatibility/import/production authority.
+If a genuine qualified operator/environment is not available, stop at the evidence-capture boundary. CI, local JSON validity, Playground/SQLite-only observations, unbound screenshots and user-declared versions cannot substitute for #483.
 
-If a genuine operator/environment is not available, stop at the evidence-capture boundary. Do not synthesize a PASS result from CI, local JSON validity, screenshots without binding, or user-declared version strings.
+## Repository-side boundary while #483 is blocked
 
-Only evidence actually retained may change import/target/production states.
+Do not open additional P15 serializer/fidelity implementation merely to keep the queue moving while #483 is unproven. The next fidelity slice must be selected from a concrete gap exposed by the first real controlled target proof.
 
-## Immediate repository-side action
-
-Do not open additional P15 serializer/fidelity implementation merely to keep the queue moving while #483 is unproven. The next fidelity slice should be selected from gaps exposed by the first real controlled target proof.
-
-While #483 is blocked, repository-side work is limited to:
+Repository-side work is limited to:
 
 - fixing concrete regressions discovered by CI/review;
+- maintaining the target-proof/environment qualification harness when platform evidence changes;
 - keeping canonical status truth current;
 - processing newly opened actionable issues before unrelated roadmap expansion.
 
 ## Later fidelity expansion
 
-After the first controlled target proof exposes real gaps, add only the next evidenced high-value mappings. Typography, effects, gradients, opacity, responsive controls, width/min-height and media/reference closure should each remain bounded slices with documented target controls and focused regressions rather than one broad serializer expansion.
+After the first controlled target proof exposes real gaps, add only the next evidenced high-value mappings. Typography, effects, gradients, opacity, responsive controls, width/min-height and media/reference closure each remain bounded slices with documented target controls and focused regressions rather than one broad serializer expansion.
 
 ## Parallel operator/runtime evidence
 
-When the required real environment/operator is available, these can proceed independently without blocking safe P15 code work:
+When the required real environment/operator is available, these can proceed independently:
 
-- #483 — controlled real Elementor import/editor/render evidence + separate internal review;
+- #483 — qualified controlled real Elementor import/editor/render evidence + separate internal review;
 - #159 — genuine Figma Desktop P13 runtime/parity evidence + separate internal review;
 - #84/#182 — remaining P12 package/publisher/account/2FA/final-exit evidence.
 
