@@ -1,7 +1,15 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { sha256Hex } from '../core/sha256';
 import { validateElementorReferenceClosureEvidenceReceipt } from '../targets/elementor/reference-closure-evidence';
+import { outputAliasesAnyInput } from './p15-evidence-path-safety';
+import {
+  P15_SMALL_JSON_INPUT_MAX_BYTES,
+  P15_SMALL_JSON_INPUT_MAX_DEPTH,
+  P15_SMALL_JSON_INPUT_MAX_VALUES,
+  readP15OperatorJsonInput,
+  writeP15OperatorJsonOutput,
+} from './p15-operator-json-io';
+import { readP15UnboundedTemplateJsonInput } from './p15-unbounded-template-json-input';
 
 const DEFAULT_OUT = 'dist-p15/elementor-reference-closure-intake.json';
 
@@ -20,6 +28,7 @@ function parseArgs(argv: string[]): Map<string, string> {
     const value = equals >= 0 ? token.slice(equals + 1) : argv[++index];
     if (!key || !value || value.startsWith('--')) fail(`--${key} requires a value.`);
     if (!['template', 'profile', 'receipt', 'out'].includes(key)) fail(`Unsupported option: --${key}.`);
+    if (values.has(key)) fail(`Duplicate option: --${key}.`);
     values.set(key, value);
   }
   return values;
@@ -31,29 +40,26 @@ function required(values: Map<string, string>, key: string): string {
   return value;
 }
 
-async function readJson(path: string, label: string): Promise<{ raw: string; value: unknown }> {
-  let raw: string;
-  try {
-    raw = await readFile(resolve(path), 'utf8');
-  } catch (error) {
-    fail(`Unable to read ${label} ${path}: ${error instanceof Error ? error.message : String(error)}`);
-  }
-  try {
-    return { raw, value: JSON.parse(raw) as unknown };
-  } catch {
-    fail(`${label} ${path} is not valid JSON.`);
-  }
-}
+const smallJsonOptions = {
+  maxBytes: P15_SMALL_JSON_INPUT_MAX_BYTES,
+  maxDepth: P15_SMALL_JSON_INPUT_MAX_DEPTH,
+  maxValues: P15_SMALL_JSON_INPUT_MAX_VALUES,
+} as const;
 
 const args = parseArgs(process.argv.slice(2));
-const templatePath = required(args, 'template');
-const profilePath = required(args, 'profile');
-const receiptPath = required(args, 'receipt');
+const templateFile = await readP15UnboundedTemplateJsonInput(required(args, 'template'), 'template', fail);
+const profileFile = await readP15OperatorJsonInput(required(args, 'profile'), 'profile', smallJsonOptions, fail);
+const receiptFile = await readP15OperatorJsonInput(required(args, 'receipt'), 'receipt', smallJsonOptions, fail);
 const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
+const inputPaths = [templateFile.resolvedPath, profileFile.resolvedPath, receiptFile.resolvedPath];
 
-const templateFile = await readJson(templatePath, 'template');
-const profileFile = await readJson(profilePath, 'profile');
-const receiptFile = await readJson(receiptPath, 'receipt');
+try {
+  if (await outputAliasesAnyInput(outPath, inputPaths)) {
+    fail('--out must not overwrite or alias a template, profile, or receipt input file.');
+  }
+} catch (error) {
+  fail(`Unable to validate --out path safety: ${error instanceof Error ? error.message : String(error)}`);
+}
 
 const validation = validateElementorReferenceClosureEvidenceReceipt(
   receiptFile.value,
@@ -93,8 +99,12 @@ const report = {
   internalReviewRequired: true,
 };
 
-await mkdir(dirname(outPath), { recursive: true });
-await writeFile(outPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+await writeP15OperatorJsonOutput(
+  outPath,
+  [templateFile, profileFile, receiptFile],
+  `${JSON.stringify(report, null, 2)}\n`,
+  fail,
+);
 process.stdout.write(`${JSON.stringify({
   out: outPath,
   status,
