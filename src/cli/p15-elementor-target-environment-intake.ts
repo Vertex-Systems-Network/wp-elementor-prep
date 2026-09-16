@@ -1,8 +1,14 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { sha256Hex } from '../core/sha256';
 import { validateElementorTargetEnvironmentEvidence } from '../targets/elementor/target-environment-evidence';
 import { outputAliasesAnyInput } from './p15-evidence-path-safety';
+import {
+  P15_SMALL_JSON_INPUT_MAX_BYTES,
+  P15_SMALL_JSON_INPUT_MAX_DEPTH,
+  P15_SMALL_JSON_INPUT_MAX_VALUES,
+  readP15OperatorJsonInput,
+  writeP15OperatorJsonOutput,
+} from './p15-operator-json-io';
 
 const DEFAULT_OUT = 'dist-p15/elementor-target-environment-intake.json';
 
@@ -33,27 +39,21 @@ function required(values: Map<string, string>, key: string): string {
   return value;
 }
 
-async function readJson(path: string): Promise<{ raw: string; value: unknown }> {
-  let raw: string;
-  try {
-    raw = await readFile(path, 'utf8');
-  } catch (error) {
-    fail(`Unable to read evidence ${path}: ${error instanceof Error ? error.message : String(error)}`);
-  }
-  try {
-    return { raw, value: JSON.parse(raw) as unknown };
-  } catch {
-    fail(`Evidence ${path} is not valid JSON.`);
-  }
-}
-
 const args = parseArgs(process.argv.slice(2));
-const evidencePath = resolve(required(args, 'evidence'));
+const evidenceFile = await readP15OperatorJsonInput(
+  required(args, 'evidence'),
+  'evidence',
+  {
+    maxBytes: P15_SMALL_JSON_INPUT_MAX_BYTES,
+    maxDepth: P15_SMALL_JSON_INPUT_MAX_DEPTH,
+    maxValues: P15_SMALL_JSON_INPUT_MAX_VALUES,
+  },
+  fail,
+);
 const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
-const evidenceFile = await readJson(evidencePath);
 
 try {
-  if (await outputAliasesAnyInput(outPath, [evidencePath])) {
+  if (await outputAliasesAnyInput(outPath, [evidenceFile.resolvedPath])) {
     fail('--out must not overwrite or alias the evidence input file.');
   }
 } catch (error) {
@@ -85,8 +85,12 @@ const report = {
   renderObserved: false,
 };
 
-await mkdir(dirname(outPath), { recursive: true });
-await writeFile(outPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+await writeP15OperatorJsonOutput(
+  outPath,
+  [evidenceFile],
+  `${JSON.stringify(report, null, 2)}\n`,
+  fail,
+);
 process.stdout.write(`${JSON.stringify({
   out: outPath,
   classification: report.classification,
