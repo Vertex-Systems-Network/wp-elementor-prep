@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   buildElementorTargetEnvironmentEvidence,
@@ -107,5 +107,36 @@ describe('P15 Elementor target-environment operator intake', () => {
     expect(report.classification).toBe('REJECTED');
     expect(report.evidenceValid).toBe(false);
     expect(raw).not.toContain('DO-NOT-ECHO-PRIVATE-OPERATOR-NOTE');
+  });
+
+  it('rejects duplicate options instead of silently using the last value', () => {
+    const dir = fixtureDir();
+    const evidencePath = join(dir, 'environment.json');
+    const outPath = join(dir, 'report.json');
+    writeFileSync(evidencePath, serializeElementorTargetEnvironmentEvidence(qualifiedEvidence()));
+
+    const run = spawnSync(process.execPath, [
+      'scripts/p15-elementor-target-environment-intake.mjs',
+      '--evidence', evidencePath,
+      '--evidence', evidencePath,
+      '--out', outPath,
+    ], { cwd: process.cwd(), encoding: 'utf8' });
+
+    expect(run.status).toBe(2);
+    expect(run.stderr).toContain('Duplicate option: --evidence.');
+    expect(existsSync(outPath)).toBe(false);
+  });
+
+  it('rejects an output path that resolves to the evidence input and preserves the input bytes', () => {
+    const dir = fixtureDir();
+    const evidencePath = join(dir, 'environment.json');
+    const aliasOutPath = `${dir}${sep}.${sep}environment.json`;
+    const original = serializeElementorTargetEnvironmentEvidence(qualifiedEvidence());
+    writeFileSync(evidencePath, original);
+
+    const run = runIntake(evidencePath, aliasOutPath);
+    expect(run.status).toBe(2);
+    expect(run.stderr).toContain('--out must not overwrite the evidence input file.');
+    expect(readFileSync(evidencePath, 'utf8')).toBe(original);
   });
 });

@@ -22,6 +22,7 @@ function parseArgs(argv: string[]): Map<string, string> {
     const value = equals >= 0 ? token.slice(equals + 1) : argv[++index];
     if (!key || !value || value.startsWith('--')) fail(`--${key} requires a value.`);
     if (!['candidate', 'profile', 'proof', 'out'].includes(key)) fail(`Unsupported option: --${key}.`);
+    if (values.has(key)) fail(`Duplicate option: --${key}.`);
     values.set(key, value);
   }
   return values;
@@ -36,7 +37,7 @@ function required(values: Map<string, string>, key: string): string {
 async function readJson(path: string, label: string): Promise<{ raw: string; value: unknown }> {
   let raw: string;
   try {
-    raw = await readFile(resolve(path), 'utf8');
+    raw = await readFile(path, 'utf8');
   } catch (error) {
     fail(`Unable to read ${label} ${path}: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -48,10 +49,15 @@ async function readJson(path: string, label: string): Promise<{ raw: string; val
 }
 
 const args = parseArgs(process.argv.slice(2));
-const candidatePath = required(args, 'candidate');
-const profilePath = required(args, 'profile');
-const proofPath = required(args, 'proof');
+const candidatePath = resolve(required(args, 'candidate'));
+const profilePath = resolve(required(args, 'profile'));
+const proofPath = resolve(required(args, 'proof'));
 const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
+
+const inputPaths = [candidatePath, profilePath, proofPath];
+if (inputPaths.includes(outPath)) {
+  fail('--out must not overwrite a candidate, profile, or proof input file.');
+}
 
 const candidateFile = await readJson(candidatePath, 'candidate');
 const profileFile = await readJson(profilePath, 'profile');

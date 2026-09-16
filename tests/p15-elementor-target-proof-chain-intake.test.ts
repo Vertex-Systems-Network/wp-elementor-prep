@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { buildElementorTemplateCandidateArtifact } from '../src/targets/elementor/candidate-artifact';
 import {
@@ -101,14 +101,14 @@ function writeFixtures(dir: string, databaseEngine: 'MYSQL' | 'SQLITE' = 'MYSQL'
   return paths;
 }
 
-function run(paths: ReturnType<typeof writeFixtures>) {
+function run(paths: ReturnType<typeof writeFixtures>, outPath = paths.out) {
   return spawnSync(process.execPath, [
     'scripts/p15-elementor-target-proof-chain-intake.mjs',
     '--candidate', paths.candidate,
     '--profile', paths.profile,
     '--environment', paths.environment,
     '--proof', paths.proof,
-    '--out', paths.out,
+    '--out', outPath,
   ], { cwd: process.cwd(), encoding: 'utf8' });
 }
 
@@ -149,5 +149,34 @@ describe('P15 Elementor target proof chain intake CLI', () => {
     expect(result.status).toBe(2);
     const report = JSON.parse(readFileSync(paths.out, 'utf8')) as Record<string, unknown>;
     expect(report.classification).toBe('REJECTED');
+  });
+
+  it('rejects duplicate proof options before writing any report', () => {
+    const paths = writeFixtures(fixtureDir());
+    const result = spawnSync(process.execPath, [
+      'scripts/p15-elementor-target-proof-chain-intake.mjs',
+      '--candidate', paths.candidate,
+      '--profile', paths.profile,
+      '--environment', paths.environment,
+      '--proof', paths.proof,
+      '--proof', paths.proof,
+      '--out', paths.out,
+    ], { cwd: process.cwd(), encoding: 'utf8' });
+
+    expect(result.status).toBe(2);
+    expect(result.stderr).toContain('Duplicate option: --proof.');
+    expect(existsSync(paths.out)).toBe(false);
+  });
+
+  it('rejects output aliasing the environment evidence and preserves its bytes', () => {
+    const dir = fixtureDir();
+    const paths = writeFixtures(dir);
+    const original = readFileSync(paths.environment, 'utf8');
+    const aliasOut = `${dir}${sep}.${sep}environment.json`;
+
+    const result = run(paths, aliasOut);
+    expect(result.status).toBe(2);
+    expect(result.stderr).toContain('--out must not overwrite a candidate, profile, environment, or proof input file.');
+    expect(readFileSync(paths.environment, 'utf8')).toBe(original);
   });
 });

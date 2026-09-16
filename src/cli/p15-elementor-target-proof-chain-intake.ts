@@ -24,6 +24,7 @@ function parseArgs(argv: string[]): Map<string, string> {
     if (!['candidate', 'profile', 'environment', 'proof', 'out'].includes(key)) {
       fail(`Unsupported option: --${key}.`);
     }
+    if (values.has(key)) fail(`Duplicate option: --${key}.`);
     values.set(key, value);
   }
   return values;
@@ -38,7 +39,7 @@ function required(values: Map<string, string>, key: string): string {
 async function readJson(path: string, label: string): Promise<{ raw: string; value: unknown }> {
   let raw: string;
   try {
-    raw = await readFile(resolve(path), 'utf8');
+    raw = await readFile(path, 'utf8');
   } catch (error) {
     fail(`Unable to read ${label} ${path}: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -50,11 +51,21 @@ async function readJson(path: string, label: string): Promise<{ raw: string; val
 }
 
 const args = parseArgs(process.argv.slice(2));
-const candidateFile = await readJson(required(args, 'candidate'), 'candidate');
-const profileFile = await readJson(required(args, 'profile'), 'profile');
-const environmentFile = await readJson(required(args, 'environment'), 'environment');
-const proofFile = await readJson(required(args, 'proof'), 'proof');
+const candidatePath = resolve(required(args, 'candidate'));
+const profilePath = resolve(required(args, 'profile'));
+const environmentPath = resolve(required(args, 'environment'));
+const proofPath = resolve(required(args, 'proof'));
 const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
+
+const inputPaths = [candidatePath, profilePath, environmentPath, proofPath];
+if (inputPaths.includes(outPath)) {
+  fail('--out must not overwrite a candidate, profile, environment, or proof input file.');
+}
+
+const candidateFile = await readJson(candidatePath, 'candidate');
+const profileFile = await readJson(profilePath, 'profile');
+const environmentFile = await readJson(environmentPath, 'environment');
+const proofFile = await readJson(proofPath, 'proof');
 
 const validation = validateElementorTargetProofChain({
   candidate: candidateFile.value as ElementorTemplateCandidateArtifactV1,
