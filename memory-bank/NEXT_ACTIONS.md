@@ -38,7 +38,8 @@ Accepted sequence relevant to the live proof boundary:
 - PR #501 / issue #500 — removed the retired parse-based embedded depth helper/test path; merge `351f6c9fa2c33b46e328db7bdce2980b3290a145`; final head `c8537d324c1029ade785354ba796d087ab38da70` passed CI #1321, Final #632, Offline #676;
 - PR #503 / issue #502 — migrated the remaining package-supported import/reference-closure operator surfaces to stable snapshots and atomic report commit; merge `b40f2deaf986cb362f054ed226f718d3abf1bbd8`;
 - PR #505 / issue #504 — exact consumed-content SHA-256 snapshot binding plus streaming commit-time digest recheck; final head `f6431c95455d8d12ab78b3d67b83e701a86a27ad` passed CI #1329, Final #640, Offline #684 on Ubuntu/macOS/Windows; merge `ebf8e81b20fe7f919009d48b465b007b4e668cf1`;
-- PR #507 / issue #506 — raw-byte hashing plus fatal strict UTF-8 decoding before JSON parsing; final head `84cd08455aa7480bcf8875ea24d5b8474ee99063` passed CI #1333, Final #644, Offline #688 on Ubuntu/macOS/Windows; merge `048184222ed289abf3b399e21b3f97e31b3c12e7`.
+- PR #507 / issue #506 — raw-byte hashing plus fatal strict UTF-8 decoding before JSON parsing; final head `84cd08455aa7480bcf8875ea24d5b8474ee99063` passed CI #1333, Final #644, Offline #688 on Ubuntu/macOS/Windows; merge `048184222ed289abf3b399e21b3f97e31b3c12e7`;
+- PR #509 / issue #508 — retained P15 report fingerprints reuse exact raw-byte snapshot digests; final head `3196b227e6a026b4e26e05d57cf4ec797429b105` passed CI #1337, Final #648, Offline #692 on Ubuntu/macOS/Windows; merge `5c2c31097fcaeb43c9ee45176e6e185d176d6386`.
 
 The stable-I/O evidence-integrity line does not change `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, `internalReviewRequired=true`, or P15's `TARGET IMPORT UNVALIDATED` state.
 
@@ -92,6 +93,14 @@ If a genuine qualified operator/environment is not available, stop at the eviden
 Do not open additional P15 serializer/fidelity implementation merely to keep the queue moving while #483 is unproven. The next fidelity slice must be selected from a concrete gap exposed by the first real controlled target proof.
 
 Repository-side work is limited to concrete CI/review regressions, evidence-harness integrity, platform-evidence refreshes, canonical status truth and newly opened actionable issues.
+
+## P16 bounded retention evidence-integrity boundary
+
+The concrete shared blocker represented by #510 is limited to the already-bounded P16 retention operator surfaces. Those inputs retain the accepted 1 MiB / 64-level / 50,000-value policy, are consumed as raw bytes, retain exact SHA-256, reject malformed UTF-8 before JSON parsing, and are stream-rehashed through a stable opened-file identity immediately before atomic report commit. Same-size byte drift fails closed even if filesystem metadata still appears unchanged.
+
+Writer failure cleanup may remove only its own still-matching temporary payload; replaced or non-owned temporary content remains untouched. This hardening does not change P16's `TARGET VALIDATION UNWIRED` state or grant native-serialization/import/editor/render/compatibility/production authority.
+
+`p16:native-serialization-intake` remains explicitly outside that bounded reader until a document-size/resource policy is accepted. Do not silently impose the retention reader's 1 MiB ceiling on the Gutenberg source document merely to unify implementation paths.
 
 ## Parallel operator/runtime evidence
 
