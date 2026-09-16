@@ -23,65 +23,65 @@ Use focused typecheck/tests/builds while iterating. Before merge, the exact PR h
 
 Never promote local artifact validation, deterministic style serialization, declared profile alignment, mapping readiness, caller-supplied evidence or CI success into real target compatibility/import/render/production authority.
 
-## Current P15 release train — issue #479 / PR #480
+## Current P15 release train — issue #481 / PR #482
 
-PR #480 implements the first deliberately small deterministic visual-fidelity pack on top of the accepted fresh local Elementor Template JSON path.
+PR #482 adds a bounded, non-authorizing intake for externally observed Elementor import/editor/render evidence. It does not manufacture target observations and does not itself validate Elementor compatibility.
 
-Implementation head `bd0da362a2e73ab856e6068d65b4d581978ee155` passed:
+Implementation head `3c17c03e026e6d148ac1dd512f0ccd7c88df99b0` passed:
 
-- CI #1272;
-- P12 Final Release Artifact #583;
-- P12 Offline Acceptance #627.
+- CI #1278;
+- P12 Final Release Artifact #589;
+- P12 Offline Acceptance #633.
 
 The canonical docs commit moves the PR head, so these are implementation-feedback proofs only. Final exact-head gates must pass again before merge.
 
 Accepted behavior for this train:
 
-- neutral IR v2 adds only optional canonical `backgroundColorHex` and bounded `cornerRadiusPx` container facts;
-- exactly one visible opaque Figma `SOLID` fill maps deterministically to uppercase `#RRGGBB`;
-- only uniform bounded pixel corner radii map deterministically;
-- absent or zero style facts remain absent;
-- multiple visible fills, gradients/unsupported paints, translucent solids and malformed RGB states become REVIEW;
-- partial, nonuniform or out-of-range corner radii become REVIEW;
-- image-backed fills retain `IMAGE_ASSET_EXPORT_REQUIRED` and cannot be silently treated as a solid background;
-- generator v2 maps accepted background facts only to `background_background='classic'` plus `background_color` and uniform radius only to linked pixel `border_radius` dimensions;
-- deterministic candidate/local-download validation remains fail closed if any REVIEW state is present;
-- typography, opacity mapping, effects, gradients, nonuniform-radius conversion and responsive behavior remain out of scope.
+- `elementor-target-proof-evidence-v1` binds one externally supplied observation packet to the exact canonical Elementor candidate identity and immutable declared TargetProfile fingerprint;
+- the actually observed WordPress/Elementor versions are retained separately from the declared TargetProfile instead of being silently rewritten;
+- declared/observed target mismatch remains valid but review-required `BOUND_PARTIAL` evidence;
+- observed steps are independently retained for Template JSON import, Elementor editor open and render;
+- bounded current fidelity observations cover structure, solid background and uniform radius only;
+- prerequisite sequencing fails closed, so downstream PASS cannot follow an unproven/failed prerequisite;
+- classifications are evidence states only: `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL`, `REJECTED`;
+- the offline operator intake emits sanitized binding/status fields plus SHA-256 input fingerprints and does not emit candidate/template contents;
+- repository code and CI never synthesize a target PASS observation.
 
 This train does **not** change:
 
+- `acceptanceAuthority=false`;
 - `targetCompatibilityClaim=false`;
 - `productionAcceptance=false`;
-- `importValidationStatus=NOT_RUN`;
-- `targetEnvironmentValidationStatus=NOT_RUN`;
-- `environmentObserved=false`;
-- no WordPress/Elementor connection/network;
-- no target import/editor/render execution;
+- `internalReviewRequired=true`;
+- P15 remains `TARGET IMPORT UNVALIDATED` until genuine retained target evidence and separate internal review support a status change;
+- no WordPress/Elementor connection/network from the Figma core;
+- no automated target import/editor/render execution claim;
 - no section/clipboard transfer;
 - no Figma mutation.
 
 ### Immediate action
 
-Run final diff audit and full exact-head CI / Final / Offline gates on PR #480 after this canonical docs sync. Merge only if all required checks pass on the same head.
+Run final diff audit and full exact-head CI / Final / Offline gates on PR #482 after this canonical docs sync. Merge only if all required checks pass on the same head.
 
-## Next P15 slice — one controlled real Elementor import proof
+## Next P15 acceptance action — capture one controlled real Elementor proof
 
-After #480 merges, move from local structural validity to genuine target evidence for one known generated V1 fixture.
+After #482 merges, exercise one exact known generated V1 candidate in a controlled real WordPress + Elementor environment and retain the operator-produced proof packet.
 
-The proof must be explicit and narrow:
+The proof must remain explicit and narrow:
 
-- use a controlled real WordPress + Elementor target environment;
 - retain the exact generated candidate/artifact fingerprint used for the import;
-- retain declared and actually observed target/version identity separately;
+- retain the immutable declared TargetProfile identity;
+- record the actually observed WordPress and Elementor versions separately;
 - record whether Elementor accepts the Template JSON import;
 - record whether the imported document opens in the Elementor editor;
 - record whether the bounded structure and currently supported container fidelity render as expected;
 - retain failure/review evidence if any step cannot be proven;
-- bind evidence to the exact candidate/profile/observation rather than a generic environment claim.
+- feed only genuine observations into `p15:elementor-target-proof-intake`;
+- preserve the resulting evidence packet for separate internal review before changing any compatibility/import/production authority.
 
-If a genuine operator/environment is not available, code-side work may prepare a bounded evidence-capture/verification surface, but must not synthesize an import result.
+If a genuine operator/environment is not available, stop at the evidence-capture boundary. Do not synthesize a PASS result from CI, local JSON validity, screenshots without binding, or user-declared version strings.
 
-Only evidence actually retained may change import/target/production states. Local JSON validity, CI success and a user-declared version string are never enough.
+Only evidence actually retained may change import/target/production states.
 
 ## Later fidelity expansion
 

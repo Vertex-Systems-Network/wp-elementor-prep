@@ -12,17 +12,18 @@ WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving t
 
 Current verified main before this P15 release train:
 
-`e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`
+`f568ec2236a1a0c7102a656368a7632ec8f581dd`
 
 That main includes:
 
 - PR #476 — AI-native release-train cadence, compact canonical context and refreshed roadmap truth; exact head `c7d9e65a190e9b16668bc0e64234663d7679fc27`; CI #1264, Final #575 and Offline #619 PASS; merge `95f3cb44f4637365db58aedca0b218da1fcd6c41`;
-- PR #478 — fresh locally validated Elementor Template JSON download; exact final head `085b34ffdd16065dce218c9be5eb962e687c8e91`; CI #1269, Final #580 and Offline #624 PASS; merge `e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`.
+- PR #478 — fresh locally validated Elementor Template JSON download; exact final head `085b34ffdd16065dce218c9be5eb962e687c8e91`; CI #1269, Final #580 and Offline #624 PASS; merge `e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`;
+- PR #480 — bounded deterministic container solid-background + uniform-radius fidelity; exact final head passed the required CI / P12 Final Release Artifact / P12 Offline Acceptance gates; merge `f568ec2236a1a0c7102a656368a7632ec8f581dd`.
 
 Active release train:
 
-- issue #479 / PR #480 — bounded deterministic container background + uniform-radius fidelity;
-- implementation head `bd0da362a2e73ab856e6068d65b4d581978ee155` passed CI #1272, P12 Final Release Artifact #583 and P12 Offline Acceptance #627 before this canonical status-sync commit;
+- issue #481 / PR #482 — exact-bound external Elementor target-proof evidence contract and sanitized offline intake;
+- implementation head `3c17c03e026e6d148ac1dd512f0ccd7c88df99b0` passed CI #1278, P12 Final Release Artifact #589 and P12 Offline Acceptance #633 before this canonical status-sync commit;
 - final acceptance must be rerun on the post-doc-sync exact PR head before merge.
 
 ## Persistent dependencies
@@ -59,7 +60,7 @@ The process is faster, but target/runtime authority is not weaker.
 
 P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** with `N/A` progress.
 
-Accepted/main foundation before PR #480 includes:
+Accepted/main foundation before PR #482 includes:
 
 - target-neutral export IR;
 - deterministic local Elementor v0.4 Container/Widget Template JSON generation;
@@ -69,20 +70,22 @@ Accepted/main foundation before PR #480 includes:
 - bounded user-declared WordPress/Elementor TargetProfile alignment preview;
 - compatibility categories `NATIVE`, `NATIVE_WITH_REVIEW`, `CONVERTIBLE`, `FALLBACK`, `UNSUPPORTED`, `UNKNOWN`;
 - categorical mapping readiness `READY`, `READY_WITH_REVIEW`, `NOT_READY`, `INSUFFICIENT_EVIDENCE`;
-- explicit fresh local Template JSON download with immediate local candidate revalidation and sanitized deterministic receipt.
+- explicit fresh local Template JSON download with immediate local candidate revalidation and sanitized deterministic receipt;
+- deterministic opaque single-`SOLID` container background extraction to canonical uppercase `#RRGGBB`;
+- deterministic bounded uniform pixel corner-radius extraction;
+- native Elementor container serialization through `background_background='classic'`, `background_color` and linked pixel `border_radius` dimensions;
+- explicit REVIEW boundaries for multiple/unsupported/translucent fills, invalid RGB states, partial/nonuniform/out-of-range radii and image asset closure.
 
-PR #480 adds the first bounded visual-fidelity pack without changing target authority:
+PR #482 adds a bounded target-proof intake layer without changing target authority:
 
-- neutral IR v2 accepts only optional canonical uppercase `backgroundColorHex` and bounded `cornerRadiusPx` container facts;
-- extractor v2 maps exactly one visible opaque Figma `SOLID` fill to canonical `#RRGGBB` and maps only uniform bounded pixel corner radii;
-- absent/zero style facts remain absent rather than creating synthetic Elementor controls;
-- multiple fills, gradients/unsupported paints, translucent solids, invalid RGB states, partial/nonuniform radii and out-of-range radii become explicit REVIEW reasons rather than being silently dropped or approximated;
-- image-backed fills retain the existing `IMAGE_ASSET_EXPORT_REQUIRED` asset-closure boundary;
-- generator v2 serializes accepted background facts to documented/core `background_background='classic'` + `background_color`, and uniform radius to linked pixel `border_radius` dimensions;
-- focused regressions pin deterministic output, validation leakage refusal and the unchanged authority lock;
-- typography, effects, gradients, opacity mapping, responsive behavior and nonuniform-radius conversion remain intentionally out of scope.
-
-The fresh local-download gate automatically consumes these facts only when the whole extraction/mapping/generation path remains review-free and locally revalidates successfully.
+- `elementor-target-proof-evidence-v1` binds an externally supplied proof packet to the exact canonical candidate identity and immutable declared TargetProfile fingerprint;
+- actually observed WordPress/Elementor versions remain separate from the declared profile;
+- an observed-version mismatch is retained as review-required partial evidence rather than silently normalized;
+- import, editor-open and render observations are independent, with fail-closed prerequisite sequencing;
+- bounded fidelity observations cover only the currently supported structure, solid-background and uniform-radius slice;
+- evidence classification is limited to `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL` or `REJECTED`;
+- the offline operator intake emits a sanitized report with candidate/profile/proof SHA-256 input fingerprints and does not emit template/candidate contents;
+- CI/repository code does not synthesize a target PASS observation.
 
 User-facing local-download truth remains exactly bounded to:
 
@@ -91,19 +94,21 @@ User-facing local-download truth remains exactly bounded to:
 
 Authority remains:
 
+- `acceptanceAuthority=false` for target-proof intake;
 - `targetCompatibilityClaim=false`;
 - `productionAcceptance=false`;
-- `importValidationStatus=NOT_RUN`;
-- `targetEnvironmentValidationStatus=NOT_RUN`;
-- `environmentObserved=false`;
-- no WordPress/Elementor network connection;
-- no target import/editor/render execution;
+- `importValidationStatus=NOT_RUN` until genuine retained target evidence is separately accepted into the relevant authority state;
+- `targetEnvironmentValidationStatus=NOT_RUN` until genuine retained target evidence and review support a change;
+- `environmentObserved=false` for the local generation/download path;
+- `internalReviewRequired=true` for target-proof evidence;
+- no WordPress/Elementor network connection from the Figma core;
+- no automated target import/editor/render execution claim;
 - no clipboard/section transfer;
 - no Figma mutation.
 
-Only a fresh successful local-download result may set `fileDownload=true`. Local file validity and deterministic fidelity mapping are not target compatibility, import verification or production acceptance.
+A `BOUND_FULL_PASS` intake result is not by itself production or compatibility authority. It means only that one externally supplied proof packet is structurally valid, exactly bound to its candidate/profile, observed on the declared environment versions, and contains a complete bounded PASS sequence. Genuine retained evidence still requires separate internal review before any stronger P15 status is justified.
 
-Next P15 acceptance objective after PR #480 is one controlled genuine Elementor import/editor/render proof for a known generated fixture, retaining only observations actually produced by a real target environment.
+Next P15 acceptance action after PR #482 is to exercise one exact generated candidate in a controlled real WordPress + Elementor environment, produce the observation packet from that environment/operator, run the new intake, retain the resulting evidence, and perform the separate internal review.
 
 ## P16 state
 
@@ -124,6 +129,6 @@ Do not open future phases merely to increase parallelism while the bounded Eleme
 
 Complete the coherent Elementor-first internal V1 path:
 
-`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> controlled real Elementor import/editor/render evidence`
+`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> exact-bound target-proof intake -> controlled real Elementor import/editor/render observation -> retained evidence -> separate internal review`
 
-The locally validated artifact must remain labeled as local validation only until genuine target evidence changes that truth.
+The locally validated artifact and the proof-intake machinery must remain labeled as non-target-authorizing until genuine retained target observations and review change that truth.
