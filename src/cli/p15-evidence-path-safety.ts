@@ -1,4 +1,5 @@
-import { realpath, stat, type Stats } from 'node:fs/promises';
+import type { Stats } from 'node:fs';
+import { realpath, stat } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 function isNotFound(error: unknown): boolean {
