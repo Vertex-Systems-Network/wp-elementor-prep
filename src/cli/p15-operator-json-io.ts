@@ -9,8 +9,10 @@ import {
   rename,
   rmdir,
   stat,
+  unlink,
 } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
+import { outputAliasesAnyInput } from './p15-evidence-path-safety';
 
 export const P15_SMALL_JSON_INPUT_MAX_BYTES = 1024 * 1024;
 export const P15_SMALL_JSON_INPUT_MAX_DEPTH = 64;
@@ -132,10 +134,8 @@ export async function p15OperatorInputMatchesSnapshot(
   try {
     const currentInfo = await stat(snapshot.resolvedPath);
     if (!currentInfo.isFile()) return false;
-
     const currentCanonical = await realpath(snapshot.resolvedPath);
     if (comparisonPath(currentCanonical) !== comparisonPath(snapshot.canonicalPath)) return false;
-
     return sameObservedFile(snapshot.file, currentInfo);
   } catch {
     return false;
@@ -495,11 +495,31 @@ async function temporaryPayloadMatchesSnapshot(
   }
 }
 
-async function removeTemporaryDirectoryIfOwned(
+async function removeTemporaryArtifactsIfOwned(
   temporary: P15OperatorTemporaryDirectorySnapshot,
+  payload: P15OperatorTemporaryPayloadSnapshot | null,
   parent: P15OperatorOutputParentSnapshot,
 ): Promise<boolean> {
   if (!(await p15OperatorOutputParentMatchesSnapshot(parent))) return false;
+  if (!(await temporaryDirectoryMatchesSnapshot(temporary))) return false;
+
+  if (payload) {
+    if (await temporaryPayloadMatchesSnapshot(payload)) {
+      try {
+        await unlink(payload.path);
+      } catch {
+        return false;
+      }
+    } else {
+      try {
+        await lstat(payload.path);
+        return false;
+      } catch (error) {
+        if (!isMissingPathError(error)) return false;
+      }
+    }
+  }
+
   if (!(await temporaryDirectoryMatchesSnapshot(temporary))) return false;
   try {
     await rmdir(temporary.path);
@@ -516,9 +536,18 @@ export async function writeP15OperatorJsonOutput(
   fail: Fail,
 ): Promise<void> {
   const resolvedOutput = resolve(outputPath);
+  const inputPaths = inputSnapshots.map((snapshot) => snapshot.resolvedPath);
   const outputComparison = comparisonPath(resolvedOutput);
   if (inputSnapshots.some((snapshot) => comparisonPath(snapshot.resolvedPath) === outputComparison)) {
     fail('Output path must not resolve to an input path.');
+  }
+
+  try {
+    if (await outputAliasesAnyInput(resolvedOutput, inputPaths)) {
+      fail('Output path must not alias an input file.');
+    }
+  } catch {
+    fail('Unable to inspect output path safely.');
   }
 
   const parentSnapshot = await captureP15OperatorOutputParentSnapshot(dirname(resolvedOutput), fail);
@@ -646,7 +675,9 @@ export async function writeP15OperatorJsonOutput(
   } catch {
     writeFailed = true;
   } finally {
-    if (temporarySnapshot) await removeTemporaryDirectoryIfOwned(temporarySnapshot, parentSnapshot);
+    if (temporarySnapshot) {
+      await removeTemporaryArtifactsIfOwned(temporarySnapshot, payloadSnapshot, parentSnapshot);
+    }
   }
 
   if (inputChanged) fail('Input path changed after it was read.');
