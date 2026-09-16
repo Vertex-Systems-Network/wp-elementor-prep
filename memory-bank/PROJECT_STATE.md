@@ -29,7 +29,8 @@ Recent accepted P15 sequence:
 - PR #501 — retired the obsolete parse-based embedded `templateJson` depth helper/test path so the lexical scanner remains the sole embedded preflight; final head `c8537d324c1029ade785354ba796d087ab38da70` passed CI #1321, Final #632 and Offline #676 on Ubuntu/macOS/Windows; merge `351f6c9fa2c33b46e328db7bdce2980b3290a145`; issue #500 completed;
 - PR #503 — migrated the remaining package-supported import/reference-closure operator surfaces to stable snapshots and atomic report commit; merge `b40f2deaf986cb362f054ed226f718d3abf1bbd8`; issue #502 completed;
 - PR #505 — exact consumed-content SHA-256 snapshot binding plus streaming commit-time digest recheck; final head `f6431c95455d8d12ab78b3d67b83e701a86a27ad` passed CI #1329, Final #640 and Offline #684 on Ubuntu/macOS/Windows; merge `ebf8e81b20fe7f919009d48b465b007b4e668cf1`; issue #504 completed;
-- PR #507 — exact raw-byte hashing plus fatal strict UTF-8 decode before JSON parsing; final head `84cd08455aa7480bcf8875ea24d5b8474ee99063` passed CI #1333, Final #644 and Offline #688 on Ubuntu/macOS/Windows; merge `048184222ed289abf3b399e21b3f97e31b3c12e7`; issue #506 completed.
+- PR #507 — exact raw-byte hashing plus fatal strict UTF-8 decode before JSON parsing; final head `84cd08455aa7480bcf8875ea24d5b8474ee99063` passed CI #1333, Final #644 and Offline #688 on Ubuntu/macOS/Windows; merge `048184222ed289abf3b399e21b3f97e31b3c12e7`; issue #506 completed;
+- PR #509 — retained report input fingerprints reuse exact raw-byte snapshot digests instead of decoded-text rehashes; final head `3196b227e6a026b4e26e05d57cf4ec797429b105` passed CI #1337, Final #648 and Offline #692 on Ubuntu/macOS/Windows; merge `5c2c31097fcaeb43c9ee45176e6e185d176d6386`; issue #508 completed.
 
 Stable operator-I/O hardening builds on this provenance without changing P15 target authority. These code-side trains do not supply a real WordPress/Elementor import, editor, render or compatibility observation.
 
@@ -125,6 +126,12 @@ Issue #483 is the current P15 acceptance action. The genuine run must retain qua
 P16 remains **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
 The retained foundation includes normalized Gutenberg candidate/capability/profile contracts, exact candidate identity, external receipt/offline revalidation, sanitized review/decision prerequisites, genuine-evidence retention requirements, offline operator export/current-manifest validation and hardened bounded local JSON I/O/output handling.
+
+For the existing bounded P16 retention operator surfaces, JSON inputs keep the accepted 1 MiB / 64-level / 50,000-value policy, are read as raw bytes, retain exact SHA-256 snapshots, decode with fatal strict UTF-8 semantics, and are stream-rehashed through a stable opened-file identity immediately before atomic report commit. Same-size byte drift therefore fails closed even when path/filesystem metadata still appears unchanged. Failure cleanup removes only a writer-owned payload whose retained snapshot still matches; non-owned or replaced temporary content is preserved rather than recursively deleted.
+
+`p16:native-serialization-intake` remains on its separate direct read/write path. Do not route its Gutenberg source document through the bounded retention reader until an explicit document-size/resource policy is accepted; doing so today would silently introduce the retention reader's 1 MiB ceiling.
+
+These reliability controls do not validate Gutenberg target import/editor/render behavior and do not grant native-serialization, compatibility, production, generation or download authority.
 
 During the focused Elementor V1 window, keep P16 stable unless a concrete shared blocker appears.
 
