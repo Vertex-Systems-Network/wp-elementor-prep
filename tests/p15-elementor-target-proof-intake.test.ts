@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -85,6 +85,20 @@ function fixture(observedElementorVersion = '3.31.2') {
   return { candidate, profile, proof };
 }
 
+function writeFixtureFiles(dir: string, observedElementorVersion = '3.31.2') {
+  const { candidate, profile, proof } = fixture(observedElementorVersion);
+  const paths = {
+    candidate: join(dir, 'candidate.json'),
+    profile: join(dir, 'profile.json'),
+    proof: join(dir, 'proof.json'),
+    out: join(dir, 'report.json'),
+  };
+  writeFileSync(paths.candidate, serializeElementorTemplateCandidateArtifact(candidate));
+  writeFileSync(paths.profile, serializeElementorTargetProfile(profile));
+  writeFileSync(paths.proof, serializeElementorTargetProofEvidence(proof, candidate, profile));
+  return paths;
+}
+
 function runIntake(candidatePath: string, profilePath: string, proofPath: string, outPath: string) {
   return spawnSync(process.execPath, [
     'scripts/p15-elementor-target-proof-intake.mjs',
@@ -100,20 +114,11 @@ function runIntake(candidatePath: string, profilePath: string, proofPath: string
 
 describe('P15 Elementor target-proof operator intake', () => {
   it('emits a sanitized BOUND_FULL_PASS report for exact-bound complete observations', () => {
-    const dir = fixtureDir();
-    const { candidate, profile, proof } = fixture();
-    const candidatePath = join(dir, 'candidate.json');
-    const profilePath = join(dir, 'profile.json');
-    const proofPath = join(dir, 'proof.json');
-    const outPath = join(dir, 'report.json');
+    const paths = writeFixtureFiles(fixtureDir());
 
-    writeFileSync(candidatePath, serializeElementorTemplateCandidateArtifact(candidate));
-    writeFileSync(profilePath, serializeElementorTargetProfile(profile));
-    writeFileSync(proofPath, serializeElementorTargetProofEvidence(proof, candidate, profile));
-
-    const run = runIntake(candidatePath, profilePath, proofPath, outPath);
+    const run = runIntake(paths.candidate, paths.profile, paths.proof, paths.out);
     expect(run.status).toBe(0);
-    const raw = readFileSync(outPath, 'utf8');
+    const raw = readFileSync(paths.out, 'utf8');
     const report = JSON.parse(raw) as Record<string, unknown>;
 
     expect(report.classification).toBe('BOUND_FULL_PASS');
@@ -133,23 +138,43 @@ describe('P15 Elementor target-proof operator intake', () => {
   });
 
   it('retains a declared/observed version mismatch as nonzero BOUND_PARTIAL review evidence', () => {
-    const dir = fixtureDir();
-    const { candidate, profile, proof } = fixture('3.31.3');
-    const candidatePath = join(dir, 'candidate.json');
-    const profilePath = join(dir, 'profile.json');
-    const proofPath = join(dir, 'proof.json');
-    const outPath = join(dir, 'report.json');
+    const paths = writeFixtureFiles(fixtureDir(), '3.31.3');
 
-    writeFileSync(candidatePath, serializeElementorTemplateCandidateArtifact(candidate));
-    writeFileSync(profilePath, serializeElementorTargetProfile(profile));
-    writeFileSync(proofPath, serializeElementorTargetProofEvidence(proof, candidate, profile));
-
-    const run = runIntake(candidatePath, profilePath, proofPath, outPath);
+    const run = runIntake(paths.candidate, paths.profile, paths.proof, paths.out);
     expect(run.status).toBe(2);
-    const report = JSON.parse(readFileSync(outPath, 'utf8')) as Record<string, unknown>;
+    const report = JSON.parse(readFileSync(paths.out, 'utf8')) as Record<string, unknown>;
     expect(report.classification).toBe('BOUND_PARTIAL');
     expect(report.proofValid).toBe(true);
     expect(report.declaredObservedEnvironmentMatches).toBe(false);
     expect(report.reviewCodes).toEqual(['P15_TARGET_PROOF_DECLARED_OBSERVED_MISMATCH']);
+  });
+
+  it('rejects duplicate output options before writing a report', () => {
+    const paths = writeFixtureFiles(fixtureDir());
+    const otherOut = join(fixtureDir(), 'other-report.json');
+    const run = spawnSync(process.execPath, [
+      'scripts/p15-elementor-target-proof-intake.mjs',
+      '--candidate', paths.candidate,
+      '--profile', paths.profile,
+      '--proof', paths.proof,
+      '--out', paths.out,
+      '--out', otherOut,
+    ], { cwd: process.cwd(), encoding: 'utf8' });
+
+    expect(run.status).toBe(2);
+    expect(run.stderr).toContain('Duplicate option: --out.');
+    expect(existsSync(paths.out)).toBe(false);
+    expect(existsSync(otherOut)).toBe(false);
+  });
+
+  it('rejects an output path aliasing the candidate and preserves candidate bytes', () => {
+    const paths = writeFixtureFiles(fixtureDir());
+    const original = readFileSync(paths.candidate, 'utf8');
+    const aliasOut = paths.candidate.replace('/candidate.json', '/./candidate.json');
+
+    const run = runIntake(paths.candidate, paths.profile, paths.proof, aliasOut);
+    expect(run.status).toBe(2);
+    expect(run.stderr).toContain('--out must not overwrite a candidate, profile, or proof input file.');
+    expect(readFileSync(paths.candidate, 'utf8')).toBe(original);
   });
 });
