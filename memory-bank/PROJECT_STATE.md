@@ -96,7 +96,8 @@ Accepted foundation now includes:
 - a 1 MiB raw-input ceiling plus bounded JSON depth/value traversal for intrinsically small TargetProfile/environment/proof/import-receipt/reference-profile/reference-receipt packets;
 - no arbitrary low candidate byte ceiling: candidate outer JSON and embedded `templateJson` instead receive the accepted bounded nesting preflights while the existing 10,000-element/64-level target contract remains authoritative;
 - raw reference-closure template inputs use stable opened-file snapshots without a newly invented generic byte/depth/value ceiling because the accepted Elementor v0.4 settings contract remains target-owned and structurally open;
-- atomic report output through an exclusive restrictive-permission temporary payload plus rename, with output-parent/destination/input snapshots rechecked before commit and owned temporary artifacts cleaned on failure across the migrated P15 operator report surfaces.
+- atomic report output through an exclusive restrictive-permission temporary payload plus rename, with output-parent/destination/input snapshots rechecked before commit and owned temporary artifacts cleaned on failure across the migrated P15 operator report surfaces;
+- a reproducible non-authorizing first-proof operator vector generated only through the accepted neutral-IR -> production Elementor v3 generator path, retaining exact candidate identity, immutable declared TargetProfile fingerprint, exact file SHA-256 values and a byte-for-byte drift check while keeping all target/runtime observations false and `importValidationStatus=NOT_RUN`.
 
 User-facing local-download truth remains exactly bounded to:
 
@@ -119,7 +120,7 @@ Authority remains:
 
 A qualified environment plus `CHAIN_FULL_PASS` still means only that one genuine externally supplied candidate/profile/environment/proof evidence chain is internally consistent and complete for the bounded clean-Core policy. Separate retained operator evidence and internal review remain mandatory before any stronger P15 authority can be considered.
 
-Issue #483 is the current P15 acceptance action. The genuine run must retain qualification evidence, perform actual candidate Template Library JSON import/editor/render observation, build the exact proof packet, run standalone diagnostics, run the combined chain intake, retain all identities/fingerprints/evidence together and then undergo separate internal review.
+Issue #483 is the current P15 acceptance action. Generate or verify the exact non-authorizing operator inputs with `npm run p15:elementor-first-proof-vector -- --out-dir dist-p15/p15-elementor-first-proof-vector-v1`, retain that exact candidate/profile/template/manifest set, then capture genuine qualification evidence, perform the actual Template Library JSON import/editor/render observation, build the exact proof packet, run standalone diagnostics, run the combined chain intake, retain all identities/fingerprints/evidence together and undergo separate internal review. Local vector generation or verification is not target proof.
 
 ## P16 state
 
@@ -146,6 +147,6 @@ Do not open future phases merely to increase parallelism while the bounded Eleme
 
 Complete the coherent Elementor-first internal V1 path:
 
-`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> observed target-environment qualification -> controlled real Elementor import/editor/render observation (#483) -> exact-bound target-proof intake -> combined environment/proof-chain intake -> retained evidence -> separate internal review`
+`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> reproducible first-proof candidate/profile vector -> observed target-environment qualification -> controlled real Elementor import/editor/render observation (#483) -> exact-bound target-proof intake -> combined environment/proof-chain intake -> retained evidence -> separate internal review`
 
-The locally validated artifact, environment qualification, proof intake and chain intake remain non-target-authorizing until genuine retained target observations and review change that truth.
+The locally validated artifact, generated first-proof vector, environment qualification, proof intake and chain intake remain non-target-authorizing until genuine retained target observations and review change that truth.
