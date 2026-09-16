@@ -1,11 +1,20 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { sha256Hex } from '../core/sha256';
 import type { ElementorTemplateCandidateArtifactV1 } from '../targets/elementor/candidate-artifact';
 import {
   validateElementorImportValidationReceipt,
   type ElementorImportValidationReceiptResult,
 } from '../targets/elementor/import-validation-contract';
+import { outputAliasesAnyInput } from './p15-evidence-path-safety';
+import {
+  P15_CANDIDATE_JSON_INPUT_MAX_DEPTH,
+  P15_SMALL_JSON_INPUT_MAX_BYTES,
+  P15_SMALL_JSON_INPUT_MAX_DEPTH,
+  P15_SMALL_JSON_INPUT_MAX_VALUES,
+  readP15OperatorJsonInput,
+  writeP15OperatorJsonOutput,
+} from './p15-operator-json-io';
+import { validateP15CandidateTemplateJsonDepthLexically } from './p15-template-json-depth-scan';
 
 const DEFAULT_OUT = 'dist-p15/elementor-import-validation-intake.json';
 
@@ -28,6 +37,7 @@ function parseArgs(argv: string[]): Map<string, string> {
     const value = equals >= 0 ? token.slice(equals + 1) : argv[++index];
     if (!key || !value || value.startsWith('--')) fail(`--${key} requires a value.`);
     if (!['candidate', 'receipt', 'out'].includes(key)) fail(`Unsupported option: --${key}.`);
+    if (values.has(key)) fail(`Duplicate option: --${key}.`);
     values.set(key, value);
   }
   return values;
@@ -37,20 +47,6 @@ function required(values: Map<string, string>, key: string): string {
   const value = values.get(key);
   if (!value) fail(`Missing required --${key}.`);
   return value;
-}
-
-async function readJson(path: string, label: string): Promise<{ raw: string; value: unknown }> {
-  let raw: string;
-  try {
-    raw = await readFile(resolve(path), 'utf8');
-  } catch (error) {
-    fail(`Unable to read ${label} ${path}: ${error instanceof Error ? error.message : String(error)}`);
-  }
-  try {
-    return { raw, value: JSON.parse(raw) as unknown };
-  } catch {
-    fail(`${label} ${path} is not valid JSON.`);
-  }
 }
 
 function targetSnapshot(receipt: unknown, validation: ElementorImportValidationReceiptResult): {
@@ -72,13 +68,32 @@ function targetSnapshot(receipt: unknown, validation: ElementorImportValidationR
   };
 }
 
-const args = parseArgs(process.argv.slice(2));
-const candidatePath = required(args, 'candidate');
-const receiptPath = required(args, 'receipt');
-const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
+const smallJsonOptions = {
+  maxBytes: P15_SMALL_JSON_INPUT_MAX_BYTES,
+  maxDepth: P15_SMALL_JSON_INPUT_MAX_DEPTH,
+  maxValues: P15_SMALL_JSON_INPUT_MAX_VALUES,
+} as const;
 
-const candidateFile = await readJson(candidatePath, 'candidate');
-const receiptFile = await readJson(receiptPath, 'receipt');
+const args = parseArgs(process.argv.slice(2));
+const candidateFile = await readP15OperatorJsonInput(
+  required(args, 'candidate'),
+  'candidate',
+  { maxDepth: P15_CANDIDATE_JSON_INPUT_MAX_DEPTH },
+  fail,
+);
+validateP15CandidateTemplateJsonDepthLexically(candidateFile.value, fail);
+const receiptFile = await readP15OperatorJsonInput(required(args, 'receipt'), 'receipt', smallJsonOptions, fail);
+const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
+const inputPaths = [candidateFile.resolvedPath, receiptFile.resolvedPath];
+
+try {
+  if (await outputAliasesAnyInput(outPath, inputPaths)) {
+    fail('--out must not overwrite or alias a candidate or receipt input file.');
+  }
+} catch (error) {
+  fail(`Unable to validate --out path safety: ${error instanceof Error ? error.message : String(error)}`);
+}
+
 if (!isRecord(candidateFile.value)) fail('Candidate artifact must be a JSON object.');
 
 const validation = validateElementorImportValidationReceipt(
@@ -112,7 +127,11 @@ const report = {
   internalReviewRequired: true,
 };
 
-await mkdir(dirname(outPath), { recursive: true });
-await writeFile(outPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+await writeP15OperatorJsonOutput(
+  outPath,
+  [candidateFile, receiptFile],
+  `${JSON.stringify(report, null, 2)}\n`,
+  fail,
+);
 process.stdout.write(`${JSON.stringify({ out: outPath, status, receiptValid: report.receiptValid, bindingMatches: report.bindingMatches }, null, 2)}\n`);
 process.exitCode = status === 'BOUND_OBSERVED_PASS' ? 0 : 2;
