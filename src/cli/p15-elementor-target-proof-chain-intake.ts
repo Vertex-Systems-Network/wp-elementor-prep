@@ -1,5 +1,4 @@
 import { resolve } from 'node:path';
-import { sha256Hex } from '../core/sha256';
 import type { ElementorTemplateCandidateArtifactV1 } from '../targets/elementor/candidate-artifact';
 import type { ElementorTargetProfileV1 } from '../targets/elementor/target-profile';
 import { validateElementorTargetProofChain } from '../targets/elementor/target-proof-chain';
@@ -109,10 +108,10 @@ const report = {
   chainIssues: validation.chainIssues,
   proofIssues: validation.proofIssues,
   inputs: {
-    candidateSha256: `sha256:${sha256Hex(candidateFile.raw)}`,
-    profileSha256: `sha256:${sha256Hex(profileFile.raw)}`,
-    environmentSha256: `sha256:${sha256Hex(environmentFile.raw)}`,
-    proofSha256: `sha256:${sha256Hex(proofFile.raw)}`,
+    candidateSha256: candidateFile.contentSha256,
+    profileSha256: profileFile.contentSha256,
+    environmentSha256: environmentFile.contentSha256,
+    proofSha256: proofFile.contentSha256,
   },
   acceptanceAuthority: false,
   targetCompatibilityClaim: false,
