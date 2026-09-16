@@ -106,7 +106,7 @@ The publishing-authoritative P12 candidate remains Final Release Artifact #20 fr
 
 ## Runtime artifact registry
 
-`config/runtime-artifacts.json` schema v3 remains the machine-readable operational provenance authority for retained exact-build runtime artifacts.
+The artifact is registered in `config/runtime-artifacts.json` schema v3 as the machine-readable operational provenance authority for retained exact-build runtime artifacts.
 
 ## Execution policy
 
