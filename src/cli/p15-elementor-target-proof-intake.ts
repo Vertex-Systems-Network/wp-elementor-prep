@@ -1,10 +1,18 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { sha256Hex } from '../core/sha256';
 import type { ElementorTemplateCandidateArtifactV1 } from '../targets/elementor/candidate-artifact';
 import type { ElementorTargetProfileV1 } from '../targets/elementor/target-profile';
 import { validateElementorTargetProofEvidence } from '../targets/elementor/target-proof-evidence';
 import { outputAliasesAnyInput } from './p15-evidence-path-safety';
+import {
+  P15_CANDIDATE_JSON_INPUT_MAX_DEPTH,
+  P15_SMALL_JSON_INPUT_MAX_BYTES,
+  P15_SMALL_JSON_INPUT_MAX_DEPTH,
+  P15_SMALL_JSON_INPUT_MAX_VALUES,
+  readP15OperatorJsonInput,
+  validateP15CandidateEmbeddedTemplateJsonDepth,
+  writeP15OperatorJsonOutput,
+} from './p15-operator-json-io';
 
 const DEFAULT_OUT = 'dist-p15/elementor-target-proof-intake.json';
 
@@ -35,30 +43,24 @@ function required(values: Map<string, string>, key: string): string {
   return value;
 }
 
-async function readJson(path: string, label: string): Promise<{ raw: string; value: unknown }> {
-  let raw: string;
-  try {
-    raw = await readFile(path, 'utf8');
-  } catch (error) {
-    fail(`Unable to read ${label} ${path}: ${error instanceof Error ? error.message : String(error)}`);
-  }
-  try {
-    return { raw, value: JSON.parse(raw) as unknown };
-  } catch {
-    fail(`${label} ${path} is not valid JSON.`);
-  }
-}
+const smallJsonOptions = {
+  maxBytes: P15_SMALL_JSON_INPUT_MAX_BYTES,
+  maxDepth: P15_SMALL_JSON_INPUT_MAX_DEPTH,
+  maxValues: P15_SMALL_JSON_INPUT_MAX_VALUES,
+} as const;
 
 const args = parseArgs(process.argv.slice(2));
-const candidatePath = resolve(required(args, 'candidate'));
-const profilePath = resolve(required(args, 'profile'));
-const proofPath = resolve(required(args, 'proof'));
+const candidateFile = await readP15OperatorJsonInput(
+  required(args, 'candidate'),
+  'candidate',
+  { maxDepth: P15_CANDIDATE_JSON_INPUT_MAX_DEPTH },
+  fail,
+);
+validateP15CandidateEmbeddedTemplateJsonDepth(candidateFile.value, fail);
+const profileFile = await readP15OperatorJsonInput(required(args, 'profile'), 'profile', smallJsonOptions, fail);
+const proofFile = await readP15OperatorJsonInput(required(args, 'proof'), 'proof', smallJsonOptions, fail);
 const outPath = resolve(args.get('out') ?? DEFAULT_OUT);
-const inputPaths = [candidatePath, profilePath, proofPath];
-
-const candidateFile = await readJson(candidatePath, 'candidate');
-const profileFile = await readJson(profilePath, 'profile');
-const proofFile = await readJson(proofPath, 'proof');
+const inputPaths = [candidateFile.resolvedPath, profileFile.resolvedPath, proofFile.resolvedPath];
 
 try {
   if (await outputAliasesAnyInput(outPath, inputPaths)) {
@@ -99,8 +101,12 @@ const report = {
   internalReviewRequired: true,
 };
 
-await mkdir(dirname(outPath), { recursive: true });
-await writeFile(outPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+await writeP15OperatorJsonOutput(
+  outPath,
+  [candidateFile, profileFile, proofFile],
+  `${JSON.stringify(report, null, 2)}\n`,
+  fail,
+);
 process.stdout.write(`${JSON.stringify({
   out: outPath,
   classification: report.classification,

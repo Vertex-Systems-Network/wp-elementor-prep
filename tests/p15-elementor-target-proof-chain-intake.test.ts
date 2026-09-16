@@ -3,6 +3,10 @@ import { existsSync, linkSync, mkdtempSync, readFileSync, rmSync, writeFileSync 
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import {
+  P15_CANDIDATE_JSON_INPUT_MAX_DEPTH,
+  P15_SMALL_JSON_INPUT_MAX_BYTES,
+} from '../src/cli/p15-operator-json-io';
 import { buildElementorTemplateCandidateArtifact } from '../src/targets/elementor/candidate-artifact';
 import {
   buildElementorTargetEnvironmentEvidence,
@@ -149,6 +153,27 @@ describe('P15 Elementor target proof chain intake CLI', () => {
     expect(result.status).toBe(2);
     const report = JSON.parse(readFileSync(paths.out, 'utf8')) as Record<string, unknown>;
     expect(report.classification).toBe('REJECTED');
+  });
+
+  it('rejects an oversized proof packet before chain validation', () => {
+    const paths = writeFixtures(fixtureDir());
+    writeFileSync(paths.proof, `{"padding":"${'x'.repeat(P15_SMALL_JSON_INPUT_MAX_BYTES)}"}\n`);
+
+    const result = run(paths);
+    expect(result.status).toBe(2);
+    expect(result.stderr).toContain(`proof input exceeds ${P15_SMALL_JSON_INPUT_MAX_BYTES}-byte limit`);
+    expect(existsSync(paths.out)).toBe(false);
+  });
+
+  it('rejects pathological embedded candidate templateJson depth before chain identity work', () => {
+    const paths = writeFixtures(fixtureDir());
+    const nestedTemplateJson = `${'['.repeat(P15_CANDIDATE_JSON_INPUT_MAX_DEPTH + 1)}0${']'.repeat(P15_CANDIDATE_JSON_INPUT_MAX_DEPTH + 1)}`;
+    writeFileSync(paths.candidate, `${JSON.stringify({ templateJson: nestedTemplateJson })}\n`);
+
+    const result = run(paths);
+    expect(result.status).toBe(2);
+    expect(result.stderr).toContain(`candidate templateJson input exceeds ${P15_CANDIDATE_JSON_INPUT_MAX_DEPTH}-level nesting limit`);
+    expect(existsSync(paths.out)).toBe(false);
   });
 
   it('rejects duplicate proof options before writing any report', () => {

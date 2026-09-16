@@ -23,20 +23,20 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 
 Never promote local artifact validation, environment qualification, evidence-chain validation, deterministic style serialization, declared profile alignment, mapping readiness, caller-supplied evidence or CI success into real target compatibility/import/render/production authority.
 
-## Most recently accepted P15 code-side trains
+## P15 evidence-integrity provenance
 
-Most recent accepted P15 implementation baseline before this canonical-only sync is `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`.
+Accepted implementation baseline immediately preceding the stable operator-I/O hardening line is `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`.
 
-Accepted sequence relevant to the live proof boundary:
+Accepted sequence relevant to the live proof boundary before stable-I/O hardening:
 
 - PR #487 / issue #486 — environment qualification; merge `dd281b8bea7670e252629e931129a5276d08bef3`; final head passed CI #1294, Final #605, Offline #649;
 - PR #489 / issue #488 — exact environment-bound proof chain; merge `919e76249c110f92679be1a048bd53b366d10e86`; final head `6107a510fa3c97c939e5876c7e0d3e4bdd677b7c` passed CI #1303, Final #614, Offline #658;
 - PR #491 / issue #490 — duplicate-option and resolved output/input path hardening; merge `926af2c0663717cf1a3085d3ed49cf1c121f5670`; final head passed CI #1305, Final #616, Offline #660;
 - PR #493 / issue #492 — shared symlink/hardlink filesystem-alias protection for intake outputs; merge `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`; final head `4f03472868e0bd6b9a350d0f4a88240cfba5a05a` passed CI #1307, Final #618, Offline #662 on Ubuntu/Windows/macOS.
 
-These trains are accepted repository-side evidence-integrity work only. They do not change `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, `internalReviewRequired=true`, or P15's `TARGET IMPORT UNVALIDATED` state.
+Stable operator-I/O hardening extends this evidence-integrity line without changing `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, `internalReviewRequired=true`, or P15's `TARGET IMPORT UNVALIDATED` state.
 
-## P15 proof-chain behavior now accepted on main
+## P15 proof/evidence harness behavior for this release line
 
 - `elementor-target-proof-chain-v1` validates exact candidate + declared TargetProfile + observed environment + observed proof together;
 - existing candidate and TargetProfile replay protection remains authoritative;
@@ -48,13 +48,17 @@ These trains are accepted repository-side evidence-integrity work only. They do 
 - sanitized `p15:elementor-target-proof-chain-intake` fingerprints candidate/profile/environment/proof inputs without emitting template contents;
 - duplicate supported CLI options fail closed;
 - `--out` may not alias consumed inputs by resolved path, symlink/realpath or hardlink filesystem identity where available;
+- environment/profile/proof operator packets have a 1 MiB raw-input ceiling plus bounded parsed JSON depth/value traversal;
+- candidate input deliberately has no arbitrary low byte ceiling in this hardening line because the accepted generator envelope can legitimately be much larger; instead both candidate outer JSON and embedded `templateJson` receive a generous non-recursive nesting preflight before identity canonicalization;
+- all three evidence-intake commands read through stable opened-file snapshots and recheck consumed inputs before commit;
+- reports are committed via exclusive restrictive-permission temporary payload + rename, with output parent/destination/input snapshots rechecked immediately before commit and owned temporary artifacts cleaned on failure;
 - repository code and CI never synthesize environment/import/editor/render observations.
 
 `CHAIN_FULL_PASS` is evidence-chain consistency only. It never grants compatibility, production acceptance or target authority.
 
 ## Next P15 acceptance action — issue #483 real controlled target proof
 
-The proof-chain gate and evidence-intake hardening are accepted on main. The next P15 acceptance action is therefore the first genuine target proof using one exact known generated V1 candidate and one exact externally observed runtime.
+The proof-chain gate and evidence-intake hardening are part of the P15 V1 evidence boundary. The next P15 acceptance action remains the first genuine target proof using one exact known generated V1 candidate and one exact externally observed runtime.
 
 Required order:
 

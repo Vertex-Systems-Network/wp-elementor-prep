@@ -8,13 +8,13 @@ WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving t
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
 
-## Accepted P15 implementation baseline
+## P15 implementation provenance
 
-Most recent accepted P15 implementation baseline before this canonical-only sync:
+Accepted implementation baseline immediately preceding the stable operator-I/O hardening line:
 
 `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`
 
-Recent accepted P15 sequence:
+Recent accepted P15 sequence before that I/O hardening line:
 
 - PR #478 — fresh locally validated Elementor Template JSON download; merge `e03b7f3233b51d7c3f9f81a0dcd0a21db26cfc20`;
 - PR #480 — bounded deterministic container solid-background + uniform-radius fidelity; merge `f568ec2236a1a0c7102a656368a7632ec8f581dd`;
@@ -25,7 +25,7 @@ Recent accepted P15 sequence:
 - PR #491 — evidence-intake duplicate-option and resolved output/input path hardening; final head `d820f2a8babfaa719b26ad39dd15e2165cb6a857` passed CI #1305, Final #616 and Offline #660 on Ubuntu/macOS/Windows; merge `926af2c0663717cf1a3085d3ed49cf1c121f5670`; issue #490 completed;
 - PR #493 — shared filesystem-identity guard rejecting symlink/hardlink output aliases; final head `4f03472868e0bd6b9a350d0f4a88240cfba5a05a` passed CI #1307, Final #618 and Offline #662 on Ubuntu/Windows/macOS; merge `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`; issue #492 completed.
 
-These accepted trains are code-side artifact/evidence integrity only. They do not supply a real WordPress/Elementor import, editor, render or compatibility observation.
+Stable operator-I/O hardening builds on this provenance without changing P15 target authority. These code-side trains do not supply a real WordPress/Elementor import, editor, render or compatibility observation.
 
 ## Persistent dependencies
 
@@ -80,7 +80,11 @@ Accepted foundation now includes:
 - sanitized `p15:elementor-target-proof-chain-intake` with candidate/profile/environment/proof SHA-256 fingerprints and no template-content leakage;
 - duplicate CLI options rejected rather than silently last-write-wins;
 - resolved `--out` paths rejected when they collide with consumed input paths;
-- shared local/offline filesystem-identity protection using canonical real paths and `dev + ino` identity where available so existing symlink/hardlink output aliases cannot overwrite retained evidence inputs.
+- shared local/offline filesystem-identity protection using canonical real paths and `dev + ino` identity where available so existing symlink/hardlink output aliases cannot overwrite retained evidence inputs;
+- stable opened-file snapshots for the three P15 operator evidence intakes, with identity/metadata verification across reads and recheck before report commit;
+- a 1 MiB raw-input ceiling plus bounded JSON depth/value traversal for intrinsically small TargetProfile/environment/proof packets;
+- no arbitrary low candidate byte ceiling: candidate outer JSON and embedded `templateJson` instead receive a generous non-recursive nesting preflight while the existing 10,000-element/64-level target contract remains authoritative;
+- atomic report output through an exclusive restrictive-permission temporary payload plus rename, with output-parent/destination/input snapshots rechecked before commit and owned temporary artifacts cleaned on failure.
 
 User-facing local-download truth remains exactly bounded to:
 
