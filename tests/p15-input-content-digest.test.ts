@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import {
   existsSync,
   mkdtempSync,
@@ -58,6 +59,18 @@ function metadataAdjustedSnapshot(
   });
 }
 
+function sha256Bytes(bytes: Buffer): string {
+  return `sha256:${createHash('sha256').update(bytes).digest('hex')}`;
+}
+
+function malformedUtf8Json(): Buffer {
+  return Buffer.concat([
+    Buffer.from('{"value":"', 'utf8'),
+    Buffer.from([0xc3, 0x28]),
+    Buffer.from('"}\n', 'utf8'),
+  ]);
+}
+
 describe('P15 input content digest binding', () => {
   it('retains and verifies the exact bounded JSON bytes', async () => {
     const dir = fixtureDir();
@@ -67,6 +80,27 @@ describe('P15 input content digest binding', () => {
     const snapshot = await readP15OperatorJsonInput(input, 'evidence', smallOptions, fail);
     expect(snapshot.contentSha256).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(await p15OperatorInputMatchesSnapshot(snapshot)).toBe(true);
+  });
+
+  it('hashes the exact raw bytes for valid multibyte UTF-8 JSON', async () => {
+    const dir = fixtureDir();
+    const input = join(dir, 'multibyte.json');
+    const bytes = Buffer.from('{"city":"İstanbul","symbol":"€","check":"✓"}\n', 'utf8');
+    writeFileSync(input, bytes);
+
+    const snapshot = await readP15OperatorJsonInput(input, 'evidence', smallOptions, fail);
+    expect(snapshot.contentSha256).toBe(sha256Bytes(bytes));
+    expect(snapshot.value).toEqual({ city: 'İstanbul', symbol: '€', check: '✓' });
+    expect(await p15OperatorInputMatchesSnapshot(snapshot)).toBe(true);
+  });
+
+  it('rejects malformed UTF-8 bounded JSON before JSON semantic validation', async () => {
+    const dir = fixtureDir();
+    const input = join(dir, 'malformed-utf8.json');
+    writeFileSync(input, malformedUtf8Json());
+
+    await expect(readP15OperatorJsonInput(input, 'evidence', smallOptions, fail))
+      .rejects.toThrow('evidence input is not valid UTF-8.');
   });
 
   it('retains and stream-verifies an unbounded raw template without adding a byte ceiling', async () => {
@@ -84,6 +118,15 @@ describe('P15 input content digest binding', () => {
     const snapshot = await readP15UnboundedTemplateJsonInput(input, 'template', fail);
     expect(snapshot.contentSha256).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(await p15OperatorInputMatchesSnapshot(snapshot)).toBe(true);
+  });
+
+  it('rejects malformed UTF-8 raw reference-template input before JSON semantic validation', async () => {
+    const dir = fixtureDir();
+    const input = join(dir, 'malformed-template.json');
+    writeFileSync(input, malformedUtf8Json());
+
+    await expect(readP15UnboundedTemplateJsonInput(input, 'template', fail))
+      .rejects.toThrow('template input is not valid UTF-8.');
   });
 
   it('rejects changed same-size bytes even when supplied metadata matches the changed file', async () => {
