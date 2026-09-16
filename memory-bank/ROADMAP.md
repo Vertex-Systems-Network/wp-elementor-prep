@@ -22,7 +22,7 @@ Last updated: 2026-09-16
 | R1 | Reliability/compatibility gate | DEFINED / RECURRING | 100% | `██████████` | Execute TargetProfile/capability/validator/harness gate per adapter |
 | P13 | Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance |
 | P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review active; production registry empty; #159 before real mutation exposure |
-| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Local candidate/download + bounded container fidelity + exact-bound external target-proof intake exist; next capture one genuine controlled import/editor/render observation and perform separate internal review |
+| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Local candidate/download, bounded container fidelity, exact-bound proof intake and target-environment qualification exist/pending #487; next #483 qualified real import/editor/render proof + separate review |
 | P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 | HTML/CSS/JS export + code-to-design import | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
 | P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
@@ -68,31 +68,37 @@ Bounded code-side surfaces now include:
 - versioned `elementor-target-proof-evidence-v1` for externally supplied observations bound to the exact canonical candidate identity and immutable declared TargetProfile fingerprint;
 - separate retention of actually observed WordPress/Elementor versions rather than treating declared versions as observed truth;
 - independent import/editor-open/render observations plus bounded current fidelity observations with fail-closed prerequisite sequencing;
-- deterministic evidence-only classifications `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL`, `REJECTED`;
-- sanitized offline `p15:elementor-target-proof-intake` output with exact binding status and SHA-256 input fingerprints while omitting candidate/template contents.
+- deterministic proof classifications `BOUND_FULL_PASS`, `BOUND_PARTIAL`, `BOUND_FAIL`, `REJECTED`;
+- sanitized offline `p15:elementor-target-proof-intake` output with exact binding status and SHA-256 input fingerprints while omitting candidate/template contents;
+- versioned `elementor-target-environment-evidence-v1` and policy `elementor-target-environment-policy-2026-09-16-v1` for externally observed WordPress/Elementor/PHP/database/memory/browser environment facts;
+- deterministic environment classifications `QUALIFIED_FOR_BOUND_TARGET_PROOF`, `REVIEW_REQUIRED`, `NOT_QUALIFIED`, `REJECTED`;
+- fail-closed rejection/non-qualification for malformed versions, SQLite/unsupported DBs, below-minimum runtime requirements and unsupported/stale browsers;
+- review-required clean-Core policy when Elementor Pro or third-party Elementor addons are active;
+- sanitized offline `p15:elementor-target-environment-intake` output with evidence SHA-256 and explicit `importObserved=false`, `editorObserved=false`, `renderObserved=false`.
 
-The explicit download surface is **local artifact transfer only**. The style mappings are local deterministic fidelity only. The target-proof intake validates the structure and exact binding of externally supplied observations only. None of these alone is target compatibility, import authority or production acceptance.
+The explicit download surface is **local artifact transfer only**. Style mappings are local deterministic fidelity only. Environment qualification says only that one externally observed runtime satisfies bounded prerequisites for attempting the proof. Target-proof intake validates only the structure/binding of externally supplied observations. None of these alone is target compatibility, import authority or production acceptance.
 
 On a successful fresh local-download result only, `fileDownload=true` is allowed and the UI says **LOCAL ARTIFACT VALIDATED / TARGET IMPORT NOT VERIFIED**. Existing candidate/preview/profile contracts remain non-download surfaces.
 
 These facts stay authoritative:
 
-- `acceptanceAuthority=false` for target-proof intake;
+- `acceptanceAuthority=false` for environment qualification and target-proof intake;
 - `targetCompatibilityClaim=false`;
 - `productionAcceptance=false`;
-- `internalReviewRequired=true` for target-proof evidence;
+- `internalReviewRequired=true` for external environment/proof evidence;
 - local generation/download keeps `importValidationStatus=NOT_RUN`, `targetEnvironmentValidationStatus=NOT_RUN`, `environmentObserved=false`;
 - no target observation is synthesized by CI/repository code;
 - no WordPress/Elementor network connection from the Figma core;
 - no automated import/editor/render execution claim;
+- no Atomic-v4 acceptance from the Container proof path;
 - no clipboard/section transfer;
 - no Figma mutation.
 
-A complete exact-bound `BOUND_FULL_PASS` packet still requires genuine retained real-environment observations and a separate internal review before stronger P15 authority can be considered.
+A qualified environment and complete exact-bound `BOUND_FULL_PASS` packet still require genuine retained real-environment observations plus separate internal review before stronger P15 authority can be considered.
 
 Typography, gradients, opacity/effects, nonuniform-radius conversion and responsive behavior remain intentionally outside the accepted fidelity slice.
 
-The next bounded P15 objective is to exercise one known exact generated candidate in a controlled real WordPress + Elementor environment, retain the operator-produced observation packet, run the new intake, preserve the evidence and perform the separate internal review. CI/local JSON validation cannot substitute for that observation.
+The next bounded P15 objective is #483: observe one exact generated candidate in a real qualified WordPress + Elementor environment, retain environment qualification evidence, perform Template JSON import/editor/render observation, run the exact-bound target-proof intake, preserve all identities/evidence and perform separate internal review. CI/local JSON validation cannot substitute for that observation.
 
 ## Current P16 implementation truth
 
