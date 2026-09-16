@@ -104,6 +104,10 @@ R0 refreshes official platform/market/privacy/licensing evidence before major ex
 
 The publishing-authoritative P12 candidate remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with Figma-assigned plugin ID `1680034649341961379`. P12 remains at 80% until retained live package/publisher/account/2FA/final-exit evidence and internal review are complete. Community approval remains external.
 
+## Runtime artifact registry
+
+`config/runtime-artifacts.json` schema v3 remains the machine-readable operational provenance authority for retained exact-build runtime artifacts.
+
 ## Execution policy
 
 1. Issues first.
