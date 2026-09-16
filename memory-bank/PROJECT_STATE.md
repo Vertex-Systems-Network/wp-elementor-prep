@@ -8,9 +8,9 @@ WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving t
 
 `config/runtime-artifacts.json` is runtime artifact registry schema v3 and remains the machine-readable runtime artifact authority.
 
-## Current verified main
+## Accepted P15 implementation baseline
 
-Current verified main after the accepted P15 evidence-integrity hardening trains:
+Most recent accepted P15 implementation baseline before this canonical-only sync:
 
 `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`
 
