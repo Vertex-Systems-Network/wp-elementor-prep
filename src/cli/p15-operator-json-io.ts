@@ -183,29 +183,6 @@ export function validateP15OperatorJsonStructure(
   }
 }
 
-export function validateP15CandidateEmbeddedTemplateJsonDepth(
-  candidate: unknown,
-  fail: Fail,
-): void {
-  if (typeof candidate !== 'object' || candidate === null || Array.isArray(candidate)) return;
-  const templateJson = (candidate as Record<string, unknown>).templateJson;
-  if (typeof templateJson !== 'string') return;
-
-  let template: unknown;
-  try {
-    template = JSON.parse(templateJson) as unknown;
-  } catch {
-    return;
-  }
-
-  validateP15OperatorJsonStructure(
-    template,
-    'candidate templateJson',
-    { maxDepth: P15_CANDIDATE_JSON_INPUT_MAX_DEPTH },
-    fail,
-  );
-}
-
 export async function readP15OperatorJsonInput(
   path: string,
   label: string,
