@@ -1,5 +1,4 @@
 import { resolve } from 'node:path';
-import { sha256Hex } from '../core/sha256';
 import type { ElementorTemplateCandidateArtifactV1 } from '../targets/elementor/candidate-artifact';
 import {
   validateElementorImportValidationReceipt,
@@ -116,8 +115,8 @@ const report = {
   observedResult: validation.observedResult,
   target: targetSnapshot(receiptFile.value, validation),
   inputs: {
-    candidateSha256: `sha256:${sha256Hex(candidateFile.raw)}`,
-    receiptSha256: `sha256:${sha256Hex(receiptFile.raw)}`,
+    candidateSha256: candidateFile.contentSha256,
+    receiptSha256: receiptFile.contentSha256,
   },
   issues: validation.issues.map((issue) => ({ ...issue })),
   acceptanceAuthority: false,
