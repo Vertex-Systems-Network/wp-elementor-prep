@@ -12,7 +12,9 @@ import {
   unlink,
 } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
+import { sha256Hex } from '../core/sha256';
 import { outputAliasesAnyInput } from './p15-evidence-path-safety';
+import { observeP15StableInputContent } from './p15-input-content-digest';
 
 export const P15_SMALL_JSON_INPUT_MAX_BYTES = 1024 * 1024;
 export const P15_SMALL_JSON_INPUT_MAX_DEPTH = 64;
@@ -37,6 +39,7 @@ export type P15OperatorJsonInputSnapshot = {
   readonly value: unknown;
   readonly resolvedPath: string;
   readonly canonicalPath: string;
+  readonly contentSha256: string;
   readonly file: P15OperatorJsonFileSnapshot;
 };
 
@@ -128,7 +131,7 @@ function sameObservedFile(
   return sameFileMetadata(first, second);
 }
 
-export async function p15OperatorInputMatchesSnapshot(
+async function p15OperatorInputMetadataMatchesSnapshot(
   snapshot: P15OperatorJsonInputSnapshot,
 ): Promise<boolean> {
   try {
@@ -140,6 +143,20 @@ export async function p15OperatorInputMatchesSnapshot(
   } catch {
     return false;
   }
+}
+
+export async function p15OperatorInputMatchesSnapshot(
+  snapshot: P15OperatorJsonInputSnapshot,
+): Promise<boolean> {
+  if (!(await p15OperatorInputMetadataMatchesSnapshot(snapshot))) return false;
+
+  const observation = await observeP15StableInputContent(snapshot.resolvedPath);
+  if (!observation) return false;
+  if (comparisonPath(observation.canonicalPath) !== comparisonPath(snapshot.canonicalPath)) return false;
+  if (!sameObservedFile(snapshot.file, observation.handleBefore)) return false;
+  if (!sameObservedFile(snapshot.file, observation.handleAfter)) return false;
+  if (!sameObservedFile(snapshot.file, observation.pathAfter)) return false;
+  return observation.digest === snapshot.contentSha256;
 }
 
 export function validateP15OperatorJsonStructure(
@@ -289,6 +306,7 @@ export async function readP15OperatorJsonInput(
       value: parsed,
       resolvedPath,
       canonicalPath: canonicalAfterRead,
+      contentSha256: `sha256:${sha256Hex(raw)}`,
       file: toFileSnapshot(after),
     });
   } finally {
@@ -532,7 +550,7 @@ export async function writeP15OperatorJsonOutput(
   const canonicalOutputComparison = comparisonPath(canonicalOutput);
 
   for (const inputSnapshot of inputSnapshots) {
-    if (!(await p15OperatorInputMatchesSnapshot(inputSnapshot))) {
+    if (!(await p15OperatorInputMetadataMatchesSnapshot(inputSnapshot))) {
       fail('Input path changed after it was read.');
     }
     if (comparisonPath(inputSnapshot.canonicalPath) === canonicalOutputComparison) {
