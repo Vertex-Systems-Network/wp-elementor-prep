@@ -1,0 +1,39 @@
+name: P15 V2 Vector Artifact
+
+on:
+  push:
+    branches:
+      - evidence/p15-v2-vector-artifact-483
+
+permissions:
+  contents: read
+
+jobs:
+  build-vector:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate canonical P15 v2 vector
+        run: npm run p15:elementor-first-proof-vector -- --out-dir dist-p15/p15-elementor-first-proof-vector-v2
+
+      - name: Print SHA-256
+        run: sha256sum dist-p15/p15-elementor-first-proof-vector-v2/*.json
+
+      - name: Upload canonical vector
+        uses: actions/upload-artifact@v4
+        with:
+          name: p15-elementor-first-proof-vector-v2
+          path: dist-p15/p15-elementor-first-proof-vector-v2/
+          if-no-files-found: error
+          retention-days: 7
