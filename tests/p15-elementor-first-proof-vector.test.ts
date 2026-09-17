@@ -53,6 +53,7 @@ describe('P15 first controlled Elementor target-proof operator vector', () => {
   it('contains only the already-supported bounded Container fidelity slice with no asset dependency', () => {
     const vector = buildP15ElementorFirstProofVector();
     const template = JSON.parse(vector.files['template.json']) as {
+      type: string;
       content: Array<{
         elType: string;
         settings: Record<string, unknown>;
@@ -61,6 +62,7 @@ describe('P15 first controlled Elementor target-proof operator vector', () => {
     };
     const root = template.content[0];
 
+    expect(template.type).toBe('page');
     expect(root?.elType).toBe('container');
     expect(root?.settings.background_background).toBe('classic');
     expect(root?.settings.background_color).toBe('#336699');
