@@ -19,7 +19,7 @@ import {
 } from './v3-template-generator';
 import { serializeElementorTemplateCandidateArtifact } from './candidate-artifact';
 
-export const P15_ELEMENTOR_FIRST_PROOF_VECTOR_VERSION = 'p15-elementor-first-proof-vector-v1' as const;
+export const P15_ELEMENTOR_FIRST_PROOF_VECTOR_VERSION = 'p15-elementor-first-proof-vector-v2' as const;
 export const P15_ELEMENTOR_FIRST_PROOF_WORDPRESS_VERSION = '6.8.0' as const;
 export const P15_ELEMENTOR_FIRST_PROOF_ELEMENTOR_VERSION = '4.2.4' as const;
 
@@ -84,7 +84,7 @@ export function buildP15ElementorFirstProofNeutralIr(): P15NeutralExportDocument
     schemaVersion: 1,
     irVersion: P15_NEUTRAL_EXPORT_IR_VERSION,
     title: 'P15 First Controlled Target Proof Vector',
-    documentType: 'section',
+    documentType: 'page',
     nodes: [{
       kind: 'container',
       sourceNodeId: 'p15:first-proof:container',
