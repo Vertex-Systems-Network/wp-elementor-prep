@@ -6,6 +6,7 @@ const WORKFLOWS = [
   '.github/workflows/p12-final-release.yml',
   '.github/workflows/p12-offline-acceptance.yml',
   '.github/workflows/integration-readiness.yml',
+  '.github/workflows/codeql.yml',
 ];
 
 const INSTALL_WORKFLOWS = [
@@ -19,7 +20,7 @@ function read(path) {
 }
 
 function actionPins(workflow) {
-  return [...workflow.matchAll(/^\s*-?\s*uses:\s*(actions\/[^@\s]+)@([^\s#]+)/gm)]
+  return [...workflow.matchAll(/^\s*-?\s*uses:\s*([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)?)@([^\s#]+)/gm)]
     .map((match) => ({ action: match[1], ref: match[2] }));
 }
 
@@ -68,6 +69,15 @@ describe('security supply-chain contract', () => {
       expect(workflow).toMatch(/\bnpm ci\b/);
       expect(workflow).not.toMatch(/\bnpm install\b/);
     }
+  });
+
+  it('keeps CodeQL narrowly permissioned and scans JavaScript/TypeScript', () => {
+    const workflow = read('.github/workflows/codeql.yml');
+    expect(workflow).toContain('contents: read');
+    expect(workflow).toContain('security-events: write');
+    expect(workflow).toContain('languages: javascript-typescript');
+    expect(workflow).not.toMatch(/contents:\s*write/);
+    expect(workflow).not.toMatch(/pull-requests:\s*write/);
   });
 
   it('enables automated npm and GitHub Actions dependency update monitoring', () => {

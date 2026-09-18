@@ -1,9 +1,13 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import type { AuditNode, LayoutMode } from '../core/types';
 import { isGenericLayerName, normalizeLayoutMode } from '../core/scanner';
 
 export type CanonicalSnapshotSourceKind = 'figma-rest' | 'plugin-export' | 'adapter-export';
+
+export const CANONICAL_SNAPSHOT_MAX_BYTES = 64 * 1024 * 1024;
+export const CANONICAL_SNAPSHOT_MAX_DEPTH = 128;
+export const CANONICAL_SNAPSHOT_MAX_VALUES = 1_000_000;
 
 export interface CanonicalSnapshotSource {
   kind: CanonicalSnapshotSourceKind;
@@ -49,6 +53,55 @@ interface FigmaUrlResolution {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function validateCanonicalSnapshotResourceBounds(value: unknown): void {
+  const stack: Array<{ value: unknown; depth: number }> = [{ value, depth: 0 }];
+  const seen = new Set<object>();
+  let visited = 0;
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current) continue;
+    visited += 1;
+    if (visited > CANONICAL_SNAPSHOT_MAX_VALUES) {
+      throw new SourceAdapterError(
+        'SNAPSHOT_RESOURCE_LIMIT',
+        `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_VALUES}-value structural limit.`,
+        2,
+      );
+    }
+
+    if (current.value === null || typeof current.value !== 'object') continue;
+    const objectValue = current.value as object;
+    if (seen.has(objectValue)) {
+      throw new SourceAdapterError('INVALID_SNAPSHOT', 'Canonical snapshot must not contain cyclic object references.', 2);
+    }
+    seen.add(objectValue);
+
+    const nextDepth = current.depth + 1;
+    if (nextDepth > CANONICAL_SNAPSHOT_MAX_DEPTH) {
+      throw new SourceAdapterError(
+        'SNAPSHOT_RESOURCE_LIMIT',
+        `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_DEPTH}-level nesting limit.`,
+        2,
+      );
+    }
+
+    if (Array.isArray(current.value)) {
+      for (let index = current.value.length - 1; index >= 0; index -= 1) {
+        stack.push({ value: current.value[index], depth: nextDepth });
+      }
+      continue;
+    }
+
+    const record = current.value as Record<string, unknown>;
+    const keys = Object.keys(record);
+    for (let index = keys.length - 1; index >= 0; index -= 1) {
+      const key = keys[index];
+      if (key !== undefined) stack.push({ value: record[key], depth: nextDepth });
+    }
+  }
 }
 
 function asString(value: unknown, field: string): string {
@@ -160,6 +213,7 @@ function parseSource(value: unknown): CanonicalSnapshotSource {
 }
 
 export function parseCanonicalSnapshot(value: unknown): CanonicalSnapshot {
+  validateCanonicalSnapshotResourceBounds(value);
   if (!isRecord(value) || value['schemaVersion'] !== 1) {
     throw new SourceAdapterError('INVALID_SNAPSHOT', 'Canonical snapshot must be an object with schemaVersion 1.', 2);
   }
@@ -185,12 +239,47 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
     );
   }
 
-  let raw: string;
+  let info;
   try {
-    raw = await readFile(absolute, 'utf8');
+    info = await stat(absolute);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', `Unable to inspect canonical snapshot: ${detail}`, 2);
+  }
+  if (!info.isFile()) {
+    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot path must resolve to a regular file.', 2);
+  }
+  if (info.size <= 0) {
+    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot file is empty.', 2);
+  }
+  if (info.size > CANONICAL_SNAPSHOT_MAX_BYTES) {
+    throw new SourceAdapterError(
+      'SNAPSHOT_RESOURCE_LIMIT',
+      `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
+      2,
+    );
+  }
+
+  let bytes: Buffer;
+  try {
+    bytes = await readFile(absolute);
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
     throw new SourceAdapterError('SNAPSHOT_READ_FAILED', `Unable to read canonical snapshot: ${detail}`, 2);
+  }
+  if (bytes.byteLength > CANONICAL_SNAPSHOT_MAX_BYTES) {
+    throw new SourceAdapterError(
+      'SNAPSHOT_RESOURCE_LIMIT',
+      `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
+      2,
+    );
+  }
+
+  let raw: string;
+  try {
+    raw = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    throw new SourceAdapterError('INVALID_SNAPSHOT_JSON', 'Canonical snapshot is not valid UTF-8.', 2);
   }
 
   let parsed: unknown;

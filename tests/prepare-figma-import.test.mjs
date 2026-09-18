@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
@@ -47,6 +47,64 @@ describe('prepare-figma-import output safety', () => {
 
       expect(result.status).not.toBe(0);
       expect(`${result.stdout}\n${result.stderr}`).toContain('Unsafe path overlap');
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('rejects manifest targets that traverse outside the source artifact', () => {
+    const root = mkdtempSync(join(tmpdir(), 'prepare-figma-import-'));
+    try {
+      const source = makeSource(root);
+      writeFileSync(join(root, 'outside.js'), 'outside secret fixture\n');
+      const manifestPath = join(source, 'manifest.json');
+      const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+      manifest.main = '../outside.js';
+      writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+      const result = runHelper(source, join(root, 'artifact-local'));
+      expect(result.status).not.toBe(0);
+      expect(`${result.stdout}\n${result.stderr}`).toContain('escapes the source artifact');
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('rejects absolute manifest target paths', () => {
+    const root = mkdtempSync(join(tmpdir(), 'prepare-figma-import-'));
+    try {
+      const source = makeSource(root);
+      const outside = resolve(root, 'outside.js');
+      writeFileSync(outside, 'outside secret fixture\n');
+      const manifestPath = join(source, 'manifest.json');
+      const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+      manifest.main = outside;
+      writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+      const result = runHelper(source, join(root, 'artifact-local'));
+      expect(result.status).not.toBe(0);
+      expect(`${result.stdout}\n${result.stderr}`).toContain('must be relative to the source artifact');
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it.skipIf(process.platform === 'win32')('rejects manifest targets that are symbolic links', () => {
+    const root = mkdtempSync(join(tmpdir(), 'prepare-figma-import-'));
+    try {
+      const source = makeSource(root);
+      const outside = join(root, 'outside.js');
+      writeFileSync(outside, 'outside secret fixture\n');
+      const link = join(source, 'linked.js');
+      symlinkSync(outside, link);
+      const manifestPath = join(source, 'manifest.json');
+      const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+      manifest.main = 'linked.js';
+      writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+      const result = runHelper(source, join(root, 'artifact-local'));
+      expect(result.status).not.toBe(0);
+      expect(`${result.stdout}\n${result.stderr}`).toContain('non-symlink regular file');
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
