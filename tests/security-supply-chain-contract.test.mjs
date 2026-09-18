@@ -89,6 +89,13 @@ describe('security supply-chain contract', () => {
     expect(workflow).not.toMatch(/pull-requests:\s*write/);
   });
 
+  it('keeps Integration Readiness always-reporting on pull requests', () => {
+    const workflow = read('.github/workflows/integration-readiness.yml');
+    expect(workflow).toMatch(/\n  pull_request:\s*\n/);
+    expect(workflow).not.toMatch(/\n  pull_request:\s*\n\s+paths:/);
+    expect(workflow).not.toMatch(/\n  pull_request:\s*\n\s+paths-ignore:/);
+  });
+
   it('enables automated npm and GitHub Actions dependency update monitoring', () => {
     expect(existsSync('.github/dependabot.yml')).toBe(true);
     const dependabot = read('.github/dependabot.yml');
