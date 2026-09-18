@@ -37,6 +37,15 @@ describe('P10 npm CLI contract', () => {
     expect(adapters).toContain('Authorization: `Bearer ${token}`');
   });
 
+  it('bounds external Figma response and legacy CLI JSON resources', () => {
+    expect(adapters).toContain('FIGMA_REST_MAX_BYTES');
+    expect(adapters).toContain('FIGMA_REST_TIMEOUT_MS');
+    expect(adapters).toContain('AbortController');
+    expect(adapters).toContain('FIGMA_RESPONSE_TOO_LARGE');
+    expect(adapters).not.toContain('await response.json()');
+    expect(cli).toContain("readBoundedJsonFile(path, { label: path })");
+  });
+
   it('supports summary-only and CI fail thresholds without treating them as final product acceptance', () => {
     expect(cli).toContain("booleanFlags = new Set(['help', 'summary-only'])");
     expect(cli).toContain("--fail-on must be none, warning, or error");
