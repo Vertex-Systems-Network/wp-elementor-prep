@@ -35,7 +35,7 @@ jobs:
     env:
       P15_VECTOR_DIR: ${{ github.workspace }}/dist-p15/p15-elementor-first-proof-vector-v3
       P15_OUT_DIR: ${{ github.workspace }}/dist-p15/p15-v3-runtime-proof
-      P15_SITE_URL: http://127.0.0.1:8080
+      P15_SITE_URL: http://127.0.0.1:8080/p15-wp
       P15_ADMIN_USER: p15admin
       P15_ADMIN_PASSWORD: P15Proof-2026-Runtime
       P15_EVIDENCE_REFERENCE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
