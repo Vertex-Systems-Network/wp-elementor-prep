@@ -44,7 +44,8 @@
     "@types/node": "^20.17.0",
     "esbuild": "^0.25.0",
     "typescript": "^5.9.0",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "playwright-core": "1.55.0"
   },
   "engines": {
     "node": ">=20"
