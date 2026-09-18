@@ -1,10 +1,10 @@
 # P15 Elementor Native Export + Validation — Preflight Specification
 
-Status: PLANNING-ONLY / IMPLEMENTATION BLOCKED  
+Status: ACTIVE / BOUNDED V1 FOUNDATION — ONE CONTROLLED TARGET PROOF RETAINED  
 Owner roadmap issue: #119  
-Dependencies: #84 internal P12 exit, P13 production acceptance, P14 production acceptance  
-R0 source snapshot: `docs/R0_ELEMENTOR_ADAPTER_SNAPSHOT_2026-09-11.md`  
-Date: 2026-09-11
+Production-acceptance dependencies: #84/P27 final release exit plus applicable P13/P14 acceptance; bounded implementation may proceed under #119  
+R0 source snapshots: `docs/R0_ELEMENTOR_ADAPTER_SNAPSHOT_2026-09-11.md`, `docs/R0_ELEMENTOR_P15_2026-09-14.md`; official data-structure refresh reconfirmed 2026-09-19 in #545  
+Last status refresh: 2026-09-19
 
 ## 1. Purpose
 
@@ -810,14 +810,15 @@ Exact packaging/pricing remains a P25 decision informed by current market eviden
 
 ## 37. Current gate
 
-This document is planning-only.
+This specification now governs an active bounded V1 foundation.
 
-Do not begin P15 runtime implementation until:
+Current retained implementation/proof truth:
 
-- #84 internal P12 exit is accepted;
-- P13 is production accepted;
-- P14 is production accepted;
-- R0 source assumptions remain current at implementation time;
-- R1 TargetProfile/capability/schema/import-harness details are frozen in the focused implementation issue.
+- deterministic neutral IR -> Elementor v0.4 Container/Widget Template JSON exists;
+- selected-frame extraction, compatibility/readiness classification, declared TargetProfile assessment, local artifact validation/download and evidence intakes exist under fail-closed authority boundaries;
+- PR #518 / #483 retained one genuine controlled clean-Core observation on exact WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS plus bounded structure/solid-background/uniform-radius fidelity PASS;
+- #545 adds exact declared-profile alignment to that retained reference only;
+- the retained reference does not establish general Elementor-version compatibility, Atomic-v4, Pro/addon, responsive, media-closure, production or transfer authority;
+- P13/P14/P12/P27 production-acceptance dependencies remain applicable to stronger release states even though bounded P15 implementation may continue.
 
-Planning grants no P12/P13/P14/P15 runtime acceptance credit.
+R0/R1, exact-head CI/release/offline gates and evidence-scoped authority remain mandatory for each behavior-changing release train.
