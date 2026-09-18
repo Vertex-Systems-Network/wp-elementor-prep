@@ -248,14 +248,38 @@ function serializable(value: P15ElementorReferenceProofAlignmentV1): boolean {
   }
 
   if (value.status === 'EXACT_REFERENCE_PROFILE_MATCH') {
-    return value.exactVersionMatch === true
-      && value.referenceProof !== null
-      && value.referenceProof.acceptanceAuthority === false
-      && value.referenceProof.targetCompatibilityClaim === false
-      && value.referenceProof.productionAcceptance === false;
+    if (value.exactVersionMatch !== true || value.referenceProof === null || value.profileIssueCodes.length !== 0) {
+      return false;
+    }
+    const proof = P15_ELEMENTOR_REFERENCE_PROOFS_V1.find(
+      (entry) => entry.proofId === value.referenceProof?.proofId,
+    );
+    return proof !== undefined
+      && value.declaredTarget.source === 'DECLARED'
+      && value.declaredTarget.wordpressVersion === proof.wordpressVersion
+      && value.declaredTarget.elementorVersion === proof.elementorVersion
+      && JSON.stringify(value.referenceProof) === JSON.stringify(summary(proof));
   }
 
-  return value.exactVersionMatch === false && value.referenceProof === null;
+  if (value.status === 'NO_EXACT_REFERENCE_PROFILE') {
+    return value.exactVersionMatch === false
+      && value.referenceProof === null
+      && value.profileIssueCodes.length === 0
+      && value.declaredTarget.source === 'DECLARED'
+      && typeof value.declaredTarget.wordpressVersion === 'string'
+      && typeof value.declaredTarget.elementorVersion === 'string';
+  }
+
+  if (value.status === 'INVALID_DECLARED_PROFILE') {
+    return value.exactVersionMatch === false
+      && value.referenceProof === null
+      && value.profileIssueCodes.length > 0
+      && value.declaredTarget.source === 'DECLARED'
+      && value.declaredTarget.wordpressVersion === null
+      && value.declaredTarget.elementorVersion === null;
+  }
+
+  return false;
 }
 
 export function serializeP15ElementorReferenceProofAlignment(
