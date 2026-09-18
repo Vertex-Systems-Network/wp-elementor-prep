@@ -1,6 +1,13 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, relative, resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
+import {
+  readBoundedContainedFile,
+  readBoundedContainedJsonFile,
+  writeAtomicTextFile,
+} from './security-io.mjs';
+
+const MAX_RELEASE_FILE_BYTES = 128 * 1024 * 1024;
+const MAX_COMMUNITY_ASSET_BYTES = 32 * 1024 * 1024;
 
 function fail(message) {
   throw new Error(`Final release attestation failed: ${message}`);
@@ -20,8 +27,26 @@ function parseArgs(argv) {
   return values;
 }
 
-async function hashFile(path) {
-  return sha256(await readFile(path));
+function requireReleaseFilename(filename) {
+  if (
+    typeof filename !== 'string'
+    || filename.length === 0
+    || basename(filename) !== filename
+    || filename === '.'
+    || filename === '..'
+  ) {
+    fail(`releaseFiles entries must be plain filenames inside plugin/: ${String(filename)}.`);
+  }
+  return filename;
+}
+
+async function hashContained(root, reference, label, maxBytes) {
+  const file = await readBoundedContainedFile(root, reference, {
+    label,
+    maxBytes,
+    allowAbsolute: false,
+  });
+  return sha256(file.bytes);
 }
 
 const args = parseArgs(process.argv.slice(2));
@@ -30,8 +55,8 @@ const communityArg = args.get('community') ?? 'community/listing.publishable.jso
 const assetRootArg = args.get('asset-root') ?? '.';
 const outputArg = args.get('out') ?? 'FINAL_RELEASE_ATTESTATION.json';
 const releaseRoot = resolve(releaseArg);
-const communityListingPath = resolve(communityArg);
 const assetRoot = resolve(assetRootArg);
+const communityListingInput = resolve(communityArg);
 const outputPath = resolve(outputArg);
 const expectedPluginId = args.get('expected-plugin-id');
 const expectedSourceSha = args.get('source-sha')?.toLowerCase();
@@ -39,20 +64,54 @@ const expectedSourceSha = args.get('source-sha')?.toLowerCase();
 if (!expectedPluginId || !/^\d{10,30}$/.test(expectedPluginId)) fail('expected-plugin-id must be a real numeric Figma plugin ID.');
 if (!expectedSourceSha || !/^[0-9a-f]{40}$/.test(expectedSourceSha)) fail('source-sha must be a full 40-character Git SHA.');
 
-const releaseInfo = JSON.parse(await readFile(resolve(releaseRoot, 'RELEASE_INFO.json'), 'utf8'));
-const listing = JSON.parse(await readFile(communityListingPath, 'utf8'));
+let releaseInfoFile;
+let listingFile;
+try {
+  [releaseInfoFile, listingFile] = await Promise.all([
+    readBoundedContainedJsonFile(releaseRoot, 'RELEASE_INFO.json', {
+      label: 'RELEASE_INFO.json',
+      maxBytes: 4 * 1024 * 1024,
+    }),
+    readBoundedContainedJsonFile(assetRoot, communityListingInput, {
+      label: 'Community listing',
+      maxBytes: 4 * 1024 * 1024,
+      allowAbsolute: true,
+    }),
+  ]);
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error));
+}
+
+const releaseInfo = releaseInfoFile.value;
+const listing = listingFile.value;
+if (!releaseInfo || typeof releaseInfo !== 'object' || Array.isArray(releaseInfo)) fail('RELEASE_INFO.json root must be an object.');
+if (!listing || typeof listing !== 'object' || Array.isArray(listing)) fail('Community listing root must be an object.');
 if (releaseInfo.fixture === true) fail('fixture release cannot be attested as final.');
 if (releaseInfo.pluginId !== expectedPluginId) fail(`release plugin ID mismatch: ${releaseInfo.pluginId}.`);
 if (releaseInfo.sourceSha !== expectedSourceSha) fail(`release source SHA mismatch: ${releaseInfo.sourceSha}.`);
 if (listing.name !== releaseInfo.pluginName) fail('Community listing and release plugin names differ.');
 if (listing.publishTarget !== 'Community') fail('final Community listing must target Community.');
+if (!Array.isArray(releaseInfo.releaseFiles) || releaseInfo.releaseFiles.length === 0) {
+  fail('RELEASE_INFO releaseFiles must be a non-empty array.');
+}
 
 const releaseFiles = {};
-for (const filename of [...releaseInfo.releaseFiles].sort()) {
-  releaseFiles[`plugin/${filename}`] = await hashFile(resolve(releaseRoot, 'plugin', filename));
+for (const configuredName of [...releaseInfo.releaseFiles].sort()) {
+  const filename = requireReleaseFilename(configuredName);
+  releaseFiles[`plugin/${filename}`] = await hashContained(
+    releaseRoot,
+    `plugin/${filename}`,
+    `release plugin file ${filename}`,
+    MAX_RELEASE_FILE_BYTES,
+  );
 }
 for (const filename of ['RELEASE_INFO.json', 'SHA256SUMS.txt']) {
-  releaseFiles[filename] = await hashFile(resolve(releaseRoot, filename));
+  releaseFiles[filename] = await hashContained(
+    releaseRoot,
+    filename,
+    `release provenance file ${filename}`,
+    MAX_RELEASE_FILE_BYTES,
+  );
 }
 
 const communityAssets = {};
@@ -62,12 +121,13 @@ const assetPaths = [
   ...(listing.assets?.carousel?.paths ?? []),
 ].filter(Boolean);
 for (const path of assetPaths.sort()) {
-  communityAssets[path] = await hashFile(resolve(assetRoot, path));
-}
-
-const listingPath = relative(assetRoot, communityListingPath).replaceAll('\\', '/');
-if (!listingPath || listingPath.startsWith('../') || listingPath === '..') {
-  fail('Community listing must live inside the declared asset root.');
+  if (typeof path !== 'string' || path.length === 0) fail('Community asset paths must be non-empty strings.');
+  communityAssets[path] = await hashContained(
+    assetRoot,
+    path,
+    `Community asset ${path}`,
+    MAX_COMMUNITY_ASSET_BYTES,
+  );
 }
 
 const attestation = {
@@ -82,8 +142,8 @@ const attestation = {
   acceptedIntegratedCapabilities: releaseInfo.acceptedIntegratedCapabilities,
   releaseFiles,
   community: {
-    listingPath,
-    listingSha256: await hashFile(communityListingPath),
+    listingPath: listingFile.relativePath,
+    listingSha256: sha256(listingFile.bytes),
     publishTarget: listing.publishTarget,
     category: listing.category,
     supportContact: listing.supportContact,
@@ -91,8 +151,7 @@ const attestation = {
   },
 };
 
-await mkdir(dirname(outputPath), { recursive: true });
-await writeFile(outputPath, `${JSON.stringify(attestation, null, 2)}\n`, 'utf8');
+await writeAtomicTextFile(outputPath, `${JSON.stringify(attestation, null, 2)}\n`);
 console.log(`Final release attestation PASS: ${releaseInfo.pluginName} ${releaseInfo.packageVersion}`);
 console.log(`Plugin ID: ${releaseInfo.pluginId}`);
 console.log(`Source SHA: ${releaseInfo.sourceSha}`);

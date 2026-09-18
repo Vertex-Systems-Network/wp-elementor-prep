@@ -1,9 +1,11 @@
-import { mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   SecurityIoError,
+  readBoundedContainedFile,
+  readBoundedContainedJsonFile,
   readBoundedJsonFile,
   writeAtomicTextFile,
 } from '../scripts/security-io.mjs';
@@ -59,6 +61,53 @@ describe('scripts security I/O', () => {
 
     await expect(readBoundedJsonFile(path, { label: 'fixture' }))
       .rejects.toMatchObject({ name: 'SecurityIoError', kind: 'INVALID_UTF8' });
+  });
+
+  it('reads contained files and returns a root-relative canonical path', async () => {
+    const dir = await root();
+    const declared = join(dir, 'declared');
+    await mkdir(declared);
+    await writeFile(join(declared, 'input.json'), '{"ok":true}\n', 'utf8');
+
+    await expect(readBoundedContainedJsonFile(declared, 'input.json', {
+      label: 'contained fixture',
+      maxBytes: 64,
+      maxDepth: 8,
+      maxValues: 32,
+    })).resolves.toMatchObject({
+      value: { ok: true },
+      relativePath: 'input.json',
+    });
+  });
+
+  it('rejects traversal and absolute references outside a declared root', async () => {
+    const dir = await root();
+    const declared = join(dir, 'declared');
+    await mkdir(declared);
+    const outside = join(dir, 'outside.txt');
+    await writeFile(outside, 'outside\n', 'utf8');
+
+    await expect(readBoundedContainedFile(declared, '../outside.txt', { label: 'traversal fixture' }))
+      .rejects.toMatchObject({ name: 'SecurityIoError', kind: 'PATH_ESCAPE' });
+    await expect(readBoundedContainedFile(declared, outside, { label: 'absolute fixture' }))
+      .rejects.toMatchObject({ name: 'SecurityIoError', kind: 'PATH_ESCAPE' });
+  });
+
+  it.skipIf(process.platform === 'win32')('rejects final symlinks and parent-symlink escapes', async () => {
+    const dir = await root();
+    const declared = join(dir, 'declared');
+    const outsideDir = join(dir, 'outside');
+    await mkdir(declared);
+    await mkdir(outsideDir);
+    await writeFile(join(outsideDir, 'secret.txt'), 'secret\n', 'utf8');
+
+    await symlink(join(outsideDir, 'secret.txt'), join(declared, 'final-link.txt'));
+    await expect(readBoundedContainedFile(declared, 'final-link.txt', { label: 'final link' }))
+      .rejects.toMatchObject({ name: 'SecurityIoError', kind: 'UNSAFE_INPUT' });
+
+    await symlink(outsideDir, join(declared, 'parent-link'));
+    await expect(readBoundedContainedFile(declared, 'parent-link/secret.txt', { label: 'parent link' }))
+      .rejects.toMatchObject({ name: 'SecurityIoError', kind: 'PATH_ESCAPE' });
   });
 
   it.skipIf(process.platform === 'win32')('replaces a symlinked receipt path without modifying its target', async () => {

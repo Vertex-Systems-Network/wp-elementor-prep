@@ -1,5 +1,5 @@
 import { lstat, mkdir, mkdtemp, open, realpath, rename, rm } from 'node:fs/promises';
-import { basename, dirname, join, resolve } from 'node:path';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 
 export const SCRIPT_JSON_MAX_BYTES = 64 * 1024 * 1024;
 export const SCRIPT_JSON_MAX_DEPTH = 128;
@@ -166,6 +166,149 @@ export async function readBoundedJsonFile(inputPath, options = {}) {
 
   validateJsonStructure(value, { maxDepth, maxValues, label });
   return { raw, value };
+}
+
+
+function pathInside(root, candidate) {
+  const rel = relative(root, candidate);
+  return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel));
+}
+
+export async function readBoundedContainedFile(rootPath, reference, options = {}) {
+  const label = options.label ?? String(reference);
+  const maxBytes = positiveLimit(options.maxBytes, SCRIPT_JSON_MAX_BYTES, 'maxBytes');
+  const allowAbsolute = options.allowAbsolute === true;
+
+  if (typeof reference !== 'string' || reference.length === 0) {
+    throw new SecurityIoError('UNSAFE_INPUT', `${label} path must be a non-empty string.`);
+  }
+  if (isAbsolute(reference) && !allowAbsolute) {
+    throw new SecurityIoError('PATH_ESCAPE', `${label} must use a relative path inside its declared root.`);
+  }
+
+  let canonicalRoot;
+  try {
+    canonicalRoot = await realpath(resolve(rootPath));
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new SecurityIoError('READ_FAILED', `Unable to resolve ${label} root: ${detail}`);
+  }
+
+  const candidate = isAbsolute(reference) ? resolve(reference) : resolve(canonicalRoot, reference);
+  if (!pathInside(canonicalRoot, candidate)) {
+    throw new SecurityIoError('PATH_ESCAPE', `${label} escapes its declared root.`);
+  }
+
+  let handle;
+  const chunks = [];
+  let totalBytes = 0;
+
+  try {
+    handle = await open(candidate, 'r');
+    const opened = await handle.stat();
+    if (!opened.isFile()) {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} must be a regular file.`);
+    }
+    if (opened.size <= 0) {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} must not be empty.`);
+    }
+    if (opened.size > maxBytes) {
+      throw new SecurityIoError('JSON_RESOURCE_LIMIT', `${label} exceeds the ${maxBytes}-byte input limit.`);
+    }
+
+    let pathEntry;
+    let canonicalCandidate;
+    try {
+      [pathEntry, canonicalCandidate] = await Promise.all([lstat(candidate), realpath(candidate)]);
+    } catch {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} changed identity while being opened.`);
+    }
+    if (pathEntry.isSymbolicLink()) {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} must not be a symbolic link.`);
+    }
+    if (!pathEntry.isFile() || !sameFileIdentity(pathEntry, opened)) {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} changed identity while being opened.`);
+    }
+    if (!pathInside(canonicalRoot, canonicalCandidate)) {
+      throw new SecurityIoError('PATH_ESCAPE', `${label} resolves outside its declared root.`);
+    }
+
+    const stream = handle.createReadStream({ autoClose: false });
+    for await (const chunk of stream) {
+      const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+      totalBytes += bytes.byteLength;
+      if (totalBytes > maxBytes) {
+        stream.destroy();
+        throw new SecurityIoError(
+          'JSON_RESOURCE_LIMIT',
+          `${label} exceeds the ${maxBytes}-byte input limit.`,
+        );
+      }
+      chunks.push(bytes);
+    }
+
+    const after = await handle.stat();
+    let finalPathEntry;
+    let finalCanonicalCandidate;
+    try {
+      [finalPathEntry, finalCanonicalCandidate] = await Promise.all([lstat(candidate), realpath(candidate)]);
+    } catch {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} changed while it was being read.`);
+    }
+    if (
+      !sameFileIdentity(opened, after)
+      || after.size !== opened.size
+      || after.mtimeMs !== opened.mtimeMs
+      || after.ctimeMs !== opened.ctimeMs
+      || totalBytes !== after.size
+      || finalPathEntry.isSymbolicLink()
+      || !sameFileIdentity(finalPathEntry, opened)
+    ) {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} changed while it was being read.`);
+    }
+    if (!pathInside(canonicalRoot, finalCanonicalCandidate)) {
+      throw new SecurityIoError('PATH_ESCAPE', `${label} resolves outside its declared root.`);
+    }
+
+    return {
+      bytes: Buffer.concat(chunks, totalBytes),
+      size: totalBytes,
+      canonicalPath: finalCanonicalCandidate,
+      relativePath: relative(canonicalRoot, finalCanonicalCandidate).replaceAll('\\', '/'),
+    };
+  } catch (error) {
+    if (error instanceof SecurityIoError) throw error;
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new SecurityIoError('READ_FAILED', `Unable to read ${label}: ${detail}`);
+  } finally {
+    if (handle) await handle.close().catch(() => undefined);
+  }
+}
+
+export async function readBoundedContainedJsonFile(rootPath, reference, options = {}) {
+  const label = options.label ?? String(reference);
+  const file = await readBoundedContainedFile(rootPath, reference, options);
+
+  let raw;
+  try {
+    raw = new TextDecoder('utf-8', { fatal: true }).decode(file.bytes);
+  } catch {
+    throw new SecurityIoError('INVALID_UTF8', `${label} is not valid UTF-8.`);
+  }
+
+  let value;
+  try {
+    value = JSON.parse(raw);
+  } catch {
+    throw new SecurityIoError('INVALID_JSON', `${label} is not valid JSON.`);
+  }
+
+  validateJsonStructure(value, {
+    maxDepth: positiveLimit(options.maxDepth, SCRIPT_JSON_MAX_DEPTH, 'maxDepth'),
+    maxValues: positiveLimit(options.maxValues, SCRIPT_JSON_MAX_VALUES, 'maxValues'),
+    label,
+  });
+  return { ...file, raw, value };
 }
 
 export async function writeAtomicTextFile(outputPath, content) {
