@@ -1,13 +1,10 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-const WORKFLOWS = [
-  '.github/workflows/ci.yml',
-  '.github/workflows/p12-final-release.yml',
-  '.github/workflows/p12-offline-acceptance.yml',
-  '.github/workflows/integration-readiness.yml',
-  '.github/workflows/codeql.yml',
-];
+const WORKFLOWS = readdirSync('.github/workflows')
+  .filter((name) => /\.ya?ml$/i.test(name))
+  .map((name) => `.github/workflows/${name}`)
+  .sort();
 
 const INSTALL_WORKFLOWS = [
   '.github/workflows/ci.yml',
@@ -51,6 +48,17 @@ describe('security supply-chain contract', () => {
       expect(pins.length).toBeGreaterThan(0);
       for (const pin of pins) {
         expect(pin.ref, `${path}: ${pin.action}`).toMatch(/^[0-9a-f]{40}$/i);
+      }
+    }
+  });
+
+  it('rejects mutable dependency installs and mutable container service tags in every workflow', () => {
+    for (const path of WORKFLOWS) {
+      const workflow = read(path);
+      expect(workflow, `${path}: mutable npm install`).not.toMatch(/\bnpm install\b/);
+
+      for (const match of workflow.matchAll(/^\s*image:\s*([^\s#]+)/gm)) {
+        expect(match[1], `${path}: container image`).toMatch(/@sha256:[0-9a-f]{64}$/i);
       }
     }
   });
