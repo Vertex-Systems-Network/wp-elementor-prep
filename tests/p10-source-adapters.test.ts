@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, truncateSync } from 'node:fs';
+import { mkdtempSync, rmSync, truncateSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -113,6 +113,7 @@ describe('P10 source adapters', () => {
     const root = mkdtempSync(join(tmpdir(), 'p10-snapshot-limit-'));
     try {
       const path = join(root, 'oversized.json');
+      writeFileSync(path, '');
       truncateSync(path, CANONICAL_SNAPSHOT_MAX_BYTES + 1);
       await expect(loadCanonicalSnapshot(path)).rejects.toMatchObject({
         code: 'SNAPSHOT_RESOURCE_LIMIT',
