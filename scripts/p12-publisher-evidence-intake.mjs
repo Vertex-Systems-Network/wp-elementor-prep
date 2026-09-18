@@ -1,7 +1,8 @@
 import { createHash } from 'node:crypto';
-import { lstat, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
-import { basename, dirname, resolve } from 'node:path';
+import { lstat, readFile, readdir } from 'node:fs/promises';
+import { basename, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { readBoundedJsonFile, writeAtomicTextFile } from './security-io.mjs';
 
 const DEFAULT_CONFIG = 'config/p12-publisher-candidate.json';
 const MAX_EVIDENCE_BYTES = 25 * 1024 * 1024;
@@ -113,20 +114,24 @@ async function validatePackageDirectory(packageDir, candidate) {
   if (unexpected.length > 0) fail(`package directory contains unexpected files: ${unexpected.join(', ')}`);
 
   const files = {};
+  let manifestBytes = null;
   for (const name of expectedFiles) {
     const evidence = await readRegularFile(resolve(root, name), `package file ${name}`, MAX_PACKAGE_BYTES);
     const expectedSha = candidate.importPackage.files[name];
     if (evidence.sha256 !== expectedSha) {
       fail(`package file hash mismatch for ${name}: expected ${expectedSha}, got ${evidence.sha256}`);
     }
+    if (name === 'manifest.json') manifestBytes = evidence.bytes;
     files[name] = { sha256: evidence.sha256, size: evidence.size };
   }
 
+  if (!manifestBytes) fail('package manifest.json bytes were not captured.');
   let manifest;
   try {
-    manifest = JSON.parse((await readFile(resolve(root, 'manifest.json'))).toString('utf8'));
+    const rawManifest = new TextDecoder('utf-8', { fatal: true }).decode(manifestBytes);
+    manifest = JSON.parse(rawManifest);
   } catch (error) {
-    fail(`manifest.json is not valid JSON: ${error instanceof Error ? error.message : String(error)}`);
+    fail(`manifest.json is not valid strict UTF-8 JSON: ${error instanceof Error ? error.message : String(error)}`);
   }
 
   const expectedManifest = candidate.expectedManifest ?? {};
@@ -285,7 +290,7 @@ export async function runPublisherEvidenceIntake(argv = process.argv.slice(2)) {
   const configPath = resolve(args.get('config') ?? DEFAULT_CONFIG);
   let candidate;
   try {
-    candidate = JSON.parse(await readFile(configPath, 'utf8'));
+    candidate = (await readBoundedJsonFile(configPath, { label: 'candidate config' })).value;
   } catch (error) {
     fail(`unable to read candidate config: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -316,8 +321,7 @@ export async function runPublisherEvidenceIntake(argv = process.argv.slice(2)) {
 
     const outPath = resolve(args.get('out') ?? 'dist-p12/p12-publisher-package-preflight.json');
     const receipt = await collectPublisherPackagePreflight({ candidate, packageDir, packageZipPath });
-    await mkdir(dirname(outPath), { recursive: true });
-    await writeFile(outPath, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
+    await writeAtomicTextFile(outPath, `${JSON.stringify(receipt, null, 2)}\n`);
     console.log(`P12 publisher package preflight PASS: ${candidate.pluginName} ${candidate.packageVersion}`);
     console.log(`Plugin ID: ${candidate.pluginId}`);
     console.log(`Source SHA: ${candidate.sourceSha}`);
@@ -349,8 +353,7 @@ export async function runPublisherEvidenceIntake(argv = process.argv.slice(2)) {
     evidencePaths,
     attestations,
   });
-  await mkdir(dirname(outPath), { recursive: true });
-  await writeFile(outPath, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
+  await writeAtomicTextFile(outPath, `${JSON.stringify(receipt, null, 2)}\n`);
   console.log(`P12 publisher evidence intake PASS: ${candidate.pluginName} ${candidate.packageVersion}`);
   console.log(`Plugin ID: ${candidate.pluginId}`);
   console.log(`Source SHA: ${candidate.sourceSha}`);

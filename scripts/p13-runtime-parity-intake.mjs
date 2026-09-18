@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { resolve } from 'node:path';
+import { readBoundedJsonFile, writeAtomicTextFile } from './security-io.mjs';
 
 const CURRENT_BUILD_READY_ANALYZER_VERSION = 'p13-core-v2';
 
@@ -30,16 +30,10 @@ function required(values, key) {
 }
 
 async function readJson(path) {
-  let raw;
   try {
-    raw = await readFile(resolve(path), 'utf8');
+    return await readBoundedJsonFile(path, { label: path });
   } catch (error) {
-    fail(`Unable to read ${path}: ${error instanceof Error ? error.message : String(error)}`);
-  }
-  try {
-    return { raw, value: JSON.parse(raw) };
-  } catch {
-    fail(`${path} is not valid JSON.`);
+    fail(error instanceof Error ? error.message : String(error));
   }
 }
 
@@ -240,7 +234,6 @@ const receipt = {
     && mismatches.length === 0,
 };
 
-await mkdir(dirname(outPath), { recursive: true });
-await writeFile(outPath, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
+await writeAtomicTextFile(outPath, `${JSON.stringify(receipt, null, 2)}\n`);
 process.stdout.write(`${JSON.stringify({ out: outPath, parityCandidateAccepted: receipt.parityCandidateAccepted, mismatchCount: receipt.mismatchCount }, null, 2)}\n`);
 process.exitCode = receipt.parityCandidateAccepted ? 0 : 2;

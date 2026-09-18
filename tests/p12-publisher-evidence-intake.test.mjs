@@ -212,6 +212,14 @@ describe('P12 publisher evidence intake', () => {
     await expect(collectPublisherEvidence(fixture)).rejects.toThrow(/twoFactorEnabledObserved/);
   });
 
+  it('routes candidate config and receipt output through the security I/O boundary', async () => {
+    const source = await readFile('scripts/p12-publisher-evidence-intake.mjs', 'utf8');
+    expect(source).toContain("readBoundedJsonFile(configPath, { label: 'candidate config' })");
+    expect(source.match(/writeAtomicTextFile\(outPath/g)?.length).toBe(2);
+    expect(source).not.toContain("JSON.parse(await readFile(configPath, 'utf8'))");
+    expect(source).not.toContain("writeFile(outPath");
+  });
+
   it('validates manifest semantics independently of pinned file hashes', async () => {
     const fixture = await makeFixture({ manifestId: '1680034649341961379', expectedManifestId: '9999999999999999999' });
 
