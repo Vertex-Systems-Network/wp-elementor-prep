@@ -173,6 +173,51 @@ describe('P10 source adapters', () => {
     expect(JSON.stringify(snapshot)).not.toContain('super-secret-token');
   });
 
+  it('rejects Figma REST responses above the configured byte ceiling', async () => {
+    const fetchImpl = (async () => new Response(JSON.stringify({
+      name: 'x'.repeat(256),
+    }), { status: 200, headers: { 'content-type': 'application/json' } })) as typeof fetch;
+
+    await expect(new FigmaRestSourceAdapter().load({
+      fileKey: 'file-key',
+      token: 'token',
+      authMode: 'personal',
+      fetchImpl,
+      maxResponseBytes: 64,
+    })).rejects.toMatchObject({ code: 'FIGMA_RESPONSE_TOO_LARGE' });
+  });
+
+  it('times out stalled Figma REST requests without exposing credentials', async () => {
+    const fetchImpl = ((_: RequestInfo | URL, init?: RequestInit) => new Promise<Response>((_resolve, reject) => {
+      const signal = init?.signal;
+      if (!signal) {
+        reject(new Error('missing abort signal'));
+        return;
+      }
+      if (signal.aborted) {
+        reject(new Error('aborted'));
+        return;
+      }
+      signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
+    })) as typeof fetch;
+
+    let error: unknown;
+    try {
+      await new FigmaRestSourceAdapter().load({
+        fileKey: 'file-key',
+        token: 'super-secret-token',
+        authMode: 'personal',
+        fetchImpl,
+        requestTimeoutMs: 5,
+      });
+    } catch (caught) {
+      error = caught;
+    }
+
+    expect(error).toMatchObject({ code: 'FIGMA_TIMEOUT' });
+    expect(String((error as Error)?.message ?? error)).not.toContain('super-secret-token');
+  });
+
   it('refuses ambiguous full-file selection instead of guessing a frame', async () => {
     const fetchImpl = (async () => new Response(JSON.stringify({
       name: 'Website',
