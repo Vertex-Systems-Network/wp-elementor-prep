@@ -76,6 +76,10 @@ jobs:
           curl --retry 3 --fail --silent --show-error \
             https://wordpress.org/wordpress-6.8.tar.gz \
             -o "$RUNNER_TEMP/wordpress-6.8.tar.gz"
+          printf '%s  %s\n' \
+            'f7dbedc423ddb3f2f3e98e9140f1720bfd6d4a8f4873c85da2e62f6a078de10a' \
+            "$RUNNER_TEMP/wordpress-6.8.tar.gz" \
+            | sha256sum --check --strict -
           WORDPRESS_ARCHIVE_SHA256="$(sha256sum "$RUNNER_TEMP/wordpress-6.8.tar.gz" | awk '{print $1}')"
           tar -xzf "$RUNNER_TEMP/wordpress-6.8.tar.gz" -C "$RUNNER_TEMP"
           mv "$RUNNER_TEMP/wordpress" "$WP_ROOT"
@@ -138,6 +142,10 @@ jobs:
           curl --retry 3 --fail --silent --show-error \
             https://downloads.wordpress.org/plugin/elementor.4.2.4.zip \
             -o "$RUNNER_TEMP/elementor.4.2.4.zip"
+          printf '%s  %s\n' \
+            'eaff579f54079b72063c4ee67e607228eeb5d7eaff4cb13e889a262a1d3ca7a3' \
+            "$RUNNER_TEMP/elementor.4.2.4.zip" \
+            | sha256sum --check --strict -
           ELEMENTOR_ARCHIVE_SHA256="$(sha256sum "$RUNNER_TEMP/elementor.4.2.4.zip" | awk '{print $1}')"
           printf '%s\n' \
             "{\"wordpress68TarGz\":\"$WORDPRESS_ARCHIVE_SHA256\",\"elementor424Zip\":\"$ELEMENTOR_ARCHIVE_SHA256\"}" \
