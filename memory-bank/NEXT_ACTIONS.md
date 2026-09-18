@@ -78,7 +78,7 @@ Issue #545 / PR #546 is the next focused slice:
 
 1. bind the exact #483 proof into a versioned immutable reference-proof registry;
 2. compare only immutable DECLARED TargetProfiles against exact retained WordPress/Elementor/Container/Template JSON facts;
-3. expose `EXACT_REFERENCE_PROOF_MATCH` only for the exact retained envelope and `NO_EXACT_REFERENCE_PROOF` otherwise;
+3. expose `EXACT_REFERENCE_PROFILE_MATCH` only for the exact retained profile envelope and `NO_EXACT_REFERENCE_PROFILE` otherwise, with `candidateBinding=NOT_ASSESSED`;
 4. treat absence of an exact proof as absence of reference evidence, never as an incompatibility verdict;
 5. keep the user-declared environment `environmentObserved=false`;
 6. explicitly exclude Atomic-v4, Elementor Pro, third-party addons, responsive mapping, media closure and general version compatibility from the retained proof scope;
