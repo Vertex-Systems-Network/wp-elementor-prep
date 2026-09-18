@@ -74,8 +74,9 @@ describe('P15 declared TargetProfile plugin preview report', () => {
     expect(report.assessment?.status).toBe('PROFILE_ALIGNED_REFERENCE_REVIEW_PENDING');
     expect(report.assessment?.profileFingerprint).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(report.assessment?.candidateFingerprint).toMatch(/^sha256:[0-9a-f]{64}$/);
-    expect(report.assessment?.referenceProof.status).toBe('NO_EXACT_REFERENCE_PROOF');
+    expect(report.assessment?.referenceProof.status).toBe('NO_EXACT_REFERENCE_PROFILE');
     expect(report.assessment?.referenceProof.referenceProof).toBeNull();
+    expect(report.assessment?.referenceProof.candidateBinding).toBe('NOT_ASSESSED');
     expect(report.assessment?.referenceProof.environmentObserved).toBe(false);
     expect(report.assessment?.referenceClosureStatus).toBe('NOT_RUN');
     expect(report.assessment?.targetEnvironmentValidationStatus).toBe('NOT_RUN');
@@ -103,7 +104,7 @@ describe('P15 declared TargetProfile plugin preview report', () => {
       { wordpressVersion: '6.8', elementorVersion: '4.2.4' },
     );
 
-    expect(report.assessment?.referenceProof.status).toBe('EXACT_REFERENCE_PROOF_MATCH');
+    expect(report.assessment?.referenceProof.status).toBe('EXACT_REFERENCE_PROFILE_MATCH');
     expect(report.assessment?.referenceProof.exactVersionMatch).toBe(true);
     expect(report.assessment?.referenceProof.referenceProof).toEqual(expect.objectContaining({
       proofId: 'p15-wp6.8-elementor4.2.4-container-proof-v1',
@@ -113,6 +114,7 @@ describe('P15 declared TargetProfile plugin preview report', () => {
       targetCompatibilityClaim: false,
       productionAcceptance: false,
     }));
+    expect(report.assessment?.referenceProof.candidateBinding).toBe('NOT_ASSESSED');
     expect(report.assessment?.referenceProof.environmentObserved).toBe(false);
     expect(report.assessment?.targetEnvironmentValidationStatus).toBe('NOT_RUN');
     expect(report.authority.environmentObserved).toBe(false);
