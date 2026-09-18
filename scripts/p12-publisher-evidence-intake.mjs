@@ -114,18 +114,21 @@ async function validatePackageDirectory(packageDir, candidate) {
   if (unexpected.length > 0) fail(`package directory contains unexpected files: ${unexpected.join(', ')}`);
 
   const files = {};
+  let manifestBytes = null;
   for (const name of expectedFiles) {
     const evidence = await readRegularFile(resolve(root, name), `package file ${name}`, MAX_PACKAGE_BYTES);
     const expectedSha = candidate.importPackage.files[name];
     if (evidence.sha256 !== expectedSha) {
       fail(`package file hash mismatch for ${name}: expected ${expectedSha}, got ${evidence.sha256}`);
     }
+    if (name === 'manifest.json') manifestBytes = evidence.bytes;
     files[name] = { sha256: evidence.sha256, size: evidence.size };
   }
 
+  if (!manifestBytes) fail('package manifest.json bytes were not captured.');
   let manifest;
   try {
-    const rawManifest = new TextDecoder('utf-8', { fatal: true }).decode(files['manifest.json'].bytes);
+    const rawManifest = new TextDecoder('utf-8', { fatal: true }).decode(manifestBytes);
     manifest = JSON.parse(rawManifest);
   } catch (error) {
     fail(`manifest.json is not valid strict UTF-8 JSON: ${error instanceof Error ? error.message : String(error)}`);
