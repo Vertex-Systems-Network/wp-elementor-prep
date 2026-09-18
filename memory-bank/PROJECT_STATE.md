@@ -121,7 +121,7 @@ Authority remains:
 
 The retained #483 proof establishes only one exact clean-Core reference observation. It does not make arbitrary locally generated candidates imported, does not observe a user's declared environment and does not change `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false` or `internalReviewRequired=true`.
 
-Issue #545 / PR #546 binds declared TargetProfiles to that retained reference by exact WordPress + Elementor + Container/Template JSON envelope. `EXACT_REFERENCE_PROOF_MATCH` means only that the registry contains that exact retained proof; `NO_EXACT_REFERENCE_PROOF` is not an incompatibility verdict. Local/download UI truth remains non-authorizing and current-candidate import validation stays separate from reference evidence.
+Issue #545 / PR #546 binds declared TargetProfiles to that retained reference by exact WordPress + Elementor + Container/Template JSON envelope. `EXACT_REFERENCE_PROFILE_MATCH` means only that the declared profile envelope matches one retained proof reference while `candidateBinding=NOT_ASSESSED`; `NO_EXACT_REFERENCE_PROFILE` is not an incompatibility verdict. Local/download UI truth remains non-authorizing and current-candidate import validation stays separate from reference evidence.
 
 
 ## P16 state
