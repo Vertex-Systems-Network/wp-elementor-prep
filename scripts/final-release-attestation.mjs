@@ -56,6 +56,7 @@ const assetRootArg = args.get('asset-root') ?? '.';
 const outputArg = args.get('out') ?? 'FINAL_RELEASE_ATTESTATION.json';
 const releaseRoot = resolve(releaseArg);
 const assetRoot = resolve(assetRootArg);
+const communityListingInput = resolve(communityArg);
 const outputPath = resolve(outputArg);
 const expectedPluginId = args.get('expected-plugin-id');
 const expectedSourceSha = args.get('source-sha')?.toLowerCase();
@@ -71,7 +72,7 @@ try {
       label: 'RELEASE_INFO.json',
       maxBytes: 4 * 1024 * 1024,
     }),
-    readBoundedContainedJsonFile(assetRoot, communityArg, {
+    readBoundedContainedJsonFile(assetRoot, communityListingInput, {
       label: 'Community listing',
       maxBytes: 4 * 1024 * 1024,
       allowAbsolute: true,
