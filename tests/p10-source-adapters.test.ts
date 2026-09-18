@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import {
   CANONICAL_SNAPSHOT_MAX_BYTES,
   CANONICAL_SNAPSHOT_MAX_DEPTH,
+  FIGMA_REST_MAX_NODE_DEPTH,
   FigmaRestSourceAdapter,
   SourceAdapterError,
   auditNodeFromFigmaRest,
@@ -76,6 +77,30 @@ describe('P10 source adapters', () => {
     expect(node.childIds).toEqual(['1:3', '1:4']);
     expect(node.children[0]).toMatchObject({ isText: true, textLength: 5, textAutoResize: 'HEIGHT' });
     expect(node.children[1]).toMatchObject({ isImageLike: true, absolutePositioned: true });
+  });
+
+  it('fails closed on Figma REST node trees beyond the recursion budget', () => {
+    let node: Record<string, unknown> = {
+      id: 'leaf',
+      name: 'Leaf',
+      type: 'FRAME',
+      children: [],
+    };
+    for (let depth = 0; depth <= FIGMA_REST_MAX_NODE_DEPTH; depth += 1) {
+      node = {
+        id: `node-${depth}`,
+        name: `Node ${depth}`,
+        type: 'FRAME',
+        children: [node],
+      };
+    }
+
+    expect(() => auditNodeFromFigmaRest(node)).toThrowError(/nesting limit/);
+    try {
+      auditNodeFromFigmaRest(node);
+    } catch (error) {
+      expect(error).toMatchObject({ code: 'FIGMA_RESPONSE_RESOURCE_LIMIT' });
+    }
   });
 
   it('accepts owned canonical schema-v1 snapshots and recomputes childIds from children', () => {
