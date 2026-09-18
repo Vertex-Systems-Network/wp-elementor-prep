@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-19 — P15 retained Elementor reference-proof alignment
+
+- Closed the stale #483 execution gap through merged PR #518: exact head `4f09efda101e5a2771df9bfc3ac8960a43655e96` retained P15 Real Elementor Target Proof run `35403469986`, artifact `10570709987` and digest `sha256:206b703ab8185f1e5b1a83346074accb23cc458b9fdcb94f5eaad0c4752e33aa`.
+- The retained runtime was WordPress `6.8` + Elementor `4.2.4` with PHP `8.3.6`, MariaDB `11.4.13`, 256 MB WordPress memory and Chrome `152.0.0.0`; import/editor/render and bounded structure/solid-background/uniform-radius fidelity all passed through qualified/full/full environment/proof/chain intake.
+- Opened issue #545 and PR #546 to turn that exact observation into a machine-readable reference-proof registry instead of leaving proof provenance only in issue/PR evidence.
+- Added exact declared-profile reference alignment: only the retained WordPress/Elementor/Container/Template JSON envelope can report `EXACT_REFERENCE_PROOF_MATCH`; other declared versions report `NO_EXACT_REFERENCE_PROOF`, which is explicitly not an incompatibility verdict.
+- Exposed the sanitized reference result through the declared TargetProfile preview while preserving `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required.
+- Explicitly excluded Atomic-v4, Elementor Pro, third-party addons, responsive mapping, media-asset closure and general version compatibility from the retained proof scope.
+- Refreshed current official Elementor data-structure evidence: version `0.4` and modern nested Container/Widget JSON remain documented; this research does not expand runtime authority.
+- P15 remains `N/A` progress with one controlled reference proof retained; P16 stays stable and P17-P26 remain frozen during the focused Elementor V1 window.
+
 ## 2026-09-12 — P14 adapter callback input isolation
 
 - Opened authoritative issue #229 and focused PR #230 (`fix/p14-adapter-input-isolation-229`) after a fresh post-#226 P14 adapter-boundary audit.
