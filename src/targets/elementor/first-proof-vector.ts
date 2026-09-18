@@ -19,8 +19,8 @@ import {
 } from './v3-template-generator';
 import { serializeElementorTemplateCandidateArtifact } from './candidate-artifact';
 
-export const P15_ELEMENTOR_FIRST_PROOF_VECTOR_VERSION = 'p15-elementor-first-proof-vector-v2' as const;
-export const P15_ELEMENTOR_FIRST_PROOF_WORDPRESS_VERSION = '6.8.0' as const;
+export const P15_ELEMENTOR_FIRST_PROOF_VECTOR_VERSION = 'p15-elementor-first-proof-vector-v3' as const;
+export const P15_ELEMENTOR_FIRST_PROOF_WORDPRESS_VERSION = '6.8' as const;
 export const P15_ELEMENTOR_FIRST_PROOF_ELEMENTOR_VERSION = '4.2.4' as const;
 
 export const P15_ELEMENTOR_FIRST_PROOF_VECTOR_FILENAMES = [
