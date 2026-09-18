@@ -33,6 +33,16 @@ function runVector(outDir: string) {
 }
 
 describe('P15 first controlled Elementor target-proof operator vector', () => {
+  it('diagnostic: emits exact canonical v2 template bytes for issue 483 and is never merged', () => {
+    const vector = buildP15ElementorFirstProofVector();
+    const template = vector.files['template.json'];
+    console.log('P15_V2_TEMPLATE_BASE64=' + Buffer.from(template, 'utf8').toString('base64'));
+    console.log('P15_V2_TEMPLATE_SHA256=' + vector.manifest.fileSha256.template);
+    console.log('P15_V2_CANDIDATE_DIGEST=' + vector.candidateIdentity.digest);
+    console.log('P15_V2_TARGET_PROFILE_FINGERPRINT=' + vector.targetProfileFingerprint);
+    expect(template.length).toBeGreaterThan(0);
+  });
+
   it('rebuilds the exact candidate/profile/template file set deterministically through production helpers', () => {
     const first = buildP15ElementorFirstProofVector();
     const second = buildP15ElementorFirstProofVector();
