@@ -1,4 +1,3 @@
-import { createReadStream } from 'node:fs';
 import { lstat, mkdir, mkdtemp, open, realpath, rename, rm } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
 
@@ -81,27 +80,6 @@ export async function readBoundedJsonFile(inputPath, options = {}) {
   const maxDepth = positiveLimit(options.maxDepth, SCRIPT_JSON_MAX_DEPTH, 'maxDepth');
   const maxValues = positiveLimit(options.maxValues, SCRIPT_JSON_MAX_VALUES, 'maxValues');
 
-  let before;
-  try {
-    before = await lstat(absolute);
-  } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error);
-    throw new SecurityIoError('READ_FAILED', `Unable to read ${label}: ${detail}`);
-  }
-
-  if (before.isSymbolicLink()) {
-    throw new SecurityIoError('UNSAFE_INPUT', `${label} must not be a symbolic link.`);
-  }
-  if (!before.isFile()) {
-    throw new SecurityIoError('UNSAFE_INPUT', `${label} must be a regular file.`);
-  }
-  if (before.size <= 0) {
-    throw new SecurityIoError('INVALID_JSON', `${label} is empty.`);
-  }
-  if (before.size > maxBytes) {
-    throw new SecurityIoError('JSON_RESOURCE_LIMIT', `${label} exceeds the ${maxBytes}-byte JSON input limit.`);
-  }
-
   let handle;
   const chunks = [];
   let totalBytes = 0;
@@ -109,11 +87,30 @@ export async function readBoundedJsonFile(inputPath, options = {}) {
   try {
     handle = await open(absolute, 'r');
     const opened = await handle.stat();
-    if (!opened.isFile() || !sameFileIdentity(before, opened)) {
+    if (!opened.isFile()) {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} must be a regular file.`);
+    }
+    if (opened.size <= 0) {
+      throw new SecurityIoError('INVALID_JSON', `${label} is empty.`);
+    }
+    if (opened.size > maxBytes) {
+      throw new SecurityIoError('JSON_RESOURCE_LIMIT', `${label} exceeds the ${maxBytes}-byte JSON input limit.`);
+    }
+
+    let pathEntry;
+    try {
+      pathEntry = await lstat(absolute);
+    } catch {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} changed identity while being opened.`);
+    }
+    if (pathEntry.isSymbolicLink()) {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} must not be a symbolic link.`);
+    }
+    if (!pathEntry.isFile() || !sameFileIdentity(pathEntry, opened)) {
       throw new SecurityIoError('UNSAFE_INPUT', `${label} changed identity while being opened.`);
     }
 
-    const stream = createReadStream(absolute, { fd: handle.fd, autoClose: false });
+    const stream = handle.createReadStream({ autoClose: false });
     for await (const chunk of stream) {
       const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
       totalBytes += bytes.byteLength;
@@ -128,7 +125,21 @@ export async function readBoundedJsonFile(inputPath, options = {}) {
     }
 
     const after = await handle.stat();
-    if (!sameFileIdentity(opened, after) || after.size !== opened.size || totalBytes !== after.size) {
+    let finalPathEntry;
+    try {
+      finalPathEntry = await lstat(absolute);
+    } catch {
+      throw new SecurityIoError('UNSAFE_INPUT', `${label} changed while it was being read.`);
+    }
+    if (
+      !sameFileIdentity(opened, after)
+      || after.size !== opened.size
+      || after.mtimeMs !== opened.mtimeMs
+      || after.ctimeMs !== opened.ctimeMs
+      || totalBytes !== after.size
+      || finalPathEntry.isSymbolicLink()
+      || !sameFileIdentity(finalPathEntry, opened)
+    ) {
       throw new SecurityIoError('UNSAFE_INPUT', `${label} changed while it was being read.`);
     }
   } catch (error) {
