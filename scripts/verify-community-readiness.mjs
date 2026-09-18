@@ -1,5 +1,11 @@
-import { access, readFile } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
+import {
+  readBoundedContainedFile,
+  readBoundedContainedJsonFile,
+} from './security-io.mjs';
+
+const PROJECT_ROOT = resolve('.');
+const MAX_COMMUNITY_ASSET_BYTES = 32 * 1024 * 1024;
 
 function fail(message) {
   throw new Error(`Community readiness verification failed: ${message}`);
@@ -10,8 +16,22 @@ function isContact(value) {
 }
 
 async function readPngDimensions(path) {
-  if (extname(path).toLowerCase() !== '.png') fail(`final Community asset must be PNG: ${path}.`);
-  const bytes = await readFile(resolve(path));
+  if (typeof path !== 'string' || extname(path).toLowerCase() !== '.png') {
+    fail(`final Community asset must be PNG: ${String(path)}.`);
+  }
+
+  let file;
+  try {
+    file = await readBoundedContainedFile(PROJECT_ROOT, path, {
+      label: `Community asset ${path}`,
+      maxBytes: MAX_COMMUNITY_ASSET_BYTES,
+      allowAbsolute: false,
+    });
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error));
+  }
+
+  const bytes = file.bytes;
   if (bytes.length < 24 || bytes.toString('hex', 0, 8) !== '89504e470d0a1a0a' || bytes.toString('ascii', 12, 16) !== 'IHDR') {
     fail(`invalid PNG asset: ${path}.`);
   }
@@ -22,7 +42,6 @@ async function readPngDimensions(path) {
 }
 
 async function requirePngSize(path, width, height, label) {
-  await access(resolve(path));
   const actual = await readPngDimensions(path);
   if (actual.width !== width || actual.height !== height) {
     fail(`${label} must be exactly ${width}×${height}; got ${actual.width}×${actual.height}.`);
@@ -36,8 +55,19 @@ if (templateMode === publishableMode) {
   fail('choose exactly one of --template or --publishable.');
 }
 const path = args.find((value) => !value.startsWith('--')) ?? 'community/listing.template.json';
-const listing = JSON.parse(await readFile(resolve(path), 'utf8'));
 
+let listing;
+try {
+  listing = (await readBoundedContainedJsonFile(PROJECT_ROOT, path, {
+    label: 'Community listing',
+    maxBytes: 4 * 1024 * 1024,
+    allowAbsolute: true,
+  })).value;
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error));
+}
+
+if (!listing || typeof listing !== 'object' || Array.isArray(listing)) fail('Community listing root must be an object.');
 if (listing.schemaVersion !== 1) fail('unsupported listing schemaVersion.');
 for (const field of ['name', 'tagline', 'description']) {
   if (typeof listing[field] !== 'string' || listing[field].trim().length < 8) fail(`${field} is missing or too short.`);
@@ -53,8 +83,25 @@ if (listing.assets?.thumbnail?.recommendedWidth !== 1920 || listing.assets?.thum
 }
 if (listing.assets?.carousel?.maxItems !== 9) fail('carousel maxItems must remain 9.');
 
-await access(resolve(listing.privacyPolicy));
-const releaseManifest = JSON.parse(await readFile('manifest.release.template.json', 'utf8'));
+try {
+  await readBoundedContainedFile(PROJECT_ROOT, listing.privacyPolicy, {
+    label: 'Community privacy policy',
+    maxBytes: 4 * 1024 * 1024,
+    allowAbsolute: false,
+  });
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error));
+}
+
+let releaseManifest;
+try {
+  releaseManifest = (await readBoundedContainedJsonFile(PROJECT_ROOT, 'manifest.release.template.json', {
+    label: 'release manifest template',
+    maxBytes: 4 * 1024 * 1024,
+  })).value;
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error));
+}
 if (releaseManifest.networkAccess?.allowedDomains?.length !== 1 || releaseManifest.networkAccess.allowedDomains[0] !== 'none') {
   fail('release plugin network declaration must remain offline.');
 }
