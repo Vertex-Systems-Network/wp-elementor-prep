@@ -49,6 +49,13 @@ describe('P10 npm CLI contract', () => {
     expect(cli).toContain("readBoundedJsonFile(path, { label: path })");
   });
 
+  it('writes reports through the atomic safe-output boundary', () => {
+    expect(cli).toContain("prepareSafeOutputDirectory(option(args, 'out') ?? DEFAULT_OUT_DIR)");
+    expect(cli).toContain("writeAtomicOutputFile(outDir, 'audit-report.json'");
+    expect(cli).toContain("writeAtomicOutputFile(outDir, 'backlog.json'");
+    expect(cli).not.toContain("writeFile(resolve(outDir");
+  });
+
   it('supports summary-only and CI fail thresholds without treating them as final product acceptance', () => {
     expect(cli).toContain("booleanFlags = new Set(['help', 'summary-only'])");
     expect(cli).toContain("--fail-on must be none, warning, or error");

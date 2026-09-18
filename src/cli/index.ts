@@ -1,5 +1,3 @@
-import { mkdir, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
 import { buildBuildReadyReport, serializeBuildReadyReportJson } from '../core/build-ready';
 import type { BuildReadyReportV2 } from '../core/build-ready-types';
 import { buildAuditReport } from '../core/scoring';
@@ -7,6 +5,7 @@ import { generateBacklog, serializeBacklogJson, serializeBacklogMarkdown, type B
 import { serializeAuditReportJson, serializeAuditReportMarkdown } from '../core/report-serialization';
 import type { AuditReport } from '../core/types';
 import { BoundedJsonReadError, readBoundedJsonFile } from './bounded-json';
+import { prepareSafeOutputDirectory, writeAtomicOutputFile } from './safe-output';
 import {
   CanonicalSnapshotSourceAdapter,
   FigmaRestSourceAdapter,
@@ -227,17 +226,16 @@ async function writeAuditOutputs(
     return;
   }
 
-  const outDir = resolve(option(args, 'out') ?? DEFAULT_OUT_DIR);
-  await mkdir(outDir, { recursive: true });
+  const outDir = await prepareSafeOutputDirectory(option(args, 'out') ?? DEFAULT_OUT_DIR);
   const writes: Array<Promise<void>> = [
-    writeFile(resolve(outDir, 'audit-report.json'), serializeAuditReportJson(report), 'utf8'),
-    writeFile(resolve(outDir, 'audit-report.md'), serializeAuditReportMarkdown(report), 'utf8'),
-    writeFile(resolve(outDir, 'backlog.json'), serializeBacklogJson(backlog), 'utf8'),
-    writeFile(resolve(outDir, 'backlog.md'), serializeBacklogMarkdown(backlog), 'utf8'),
-    writeFile(resolve(outDir, 'build-ready-report.json'), serializeBuildReadyReportJson(buildReady), 'utf8'),
+    writeAtomicOutputFile(outDir, 'audit-report.json', serializeAuditReportJson(report)),
+    writeAtomicOutputFile(outDir, 'audit-report.md', serializeAuditReportMarkdown(report)),
+    writeAtomicOutputFile(outDir, 'backlog.json', serializeBacklogJson(backlog)),
+    writeAtomicOutputFile(outDir, 'backlog.md', serializeBacklogMarkdown(backlog)),
+    writeAtomicOutputFile(outDir, 'build-ready-report.json', serializeBuildReadyReportJson(buildReady)),
   ];
   if (snapshot) {
-    writes.push(writeFile(resolve(outDir, 'source-snapshot.json'), `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8'));
+    writes.push(writeAtomicOutputFile(outDir, 'source-snapshot.json', `${JSON.stringify(snapshot, null, 2)}\n`));
   }
   await Promise.all(writes);
   process.stdout.write(`${JSON.stringify({ outDir, ...summaryPayload(report, backlog, buildReady) }, null, 2)}\n`);
@@ -299,11 +297,10 @@ async function generateBacklogCommand(args: ParsedArgs): Promise<number> {
   if (args.flags.has('summary-only')) {
     process.stdout.write(`${JSON.stringify(backlog.summary, null, 2)}\n`);
   } else {
-    const outDir = resolve(option(args, 'out') ?? DEFAULT_OUT_DIR);
-    await mkdir(outDir, { recursive: true });
+    const outDir = await prepareSafeOutputDirectory(option(args, 'out') ?? DEFAULT_OUT_DIR);
     await Promise.all([
-      writeFile(resolve(outDir, 'backlog.json'), serializeBacklogJson(backlog), 'utf8'),
-      writeFile(resolve(outDir, 'backlog.md'), serializeBacklogMarkdown(backlog), 'utf8'),
+      writeAtomicOutputFile(outDir, 'backlog.json', serializeBacklogJson(backlog)),
+      writeAtomicOutputFile(outDir, 'backlog.md', serializeBacklogMarkdown(backlog)),
     ]);
     process.stdout.write(`${JSON.stringify({ outDir, summary: backlog.summary }, null, 2)}\n`);
   }
