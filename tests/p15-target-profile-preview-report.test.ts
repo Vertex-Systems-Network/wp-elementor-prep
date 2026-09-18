@@ -77,6 +77,7 @@ describe('P15 declared TargetProfile plugin preview report', () => {
     expect(report.assessment?.referenceProof.status).toBe('NO_EXACT_REFERENCE_PROFILE');
     expect(report.assessment?.referenceProof.referenceProof).toBeNull();
     expect(report.assessment?.referenceProof.candidateBinding).toBe('NOT_ASSESSED');
+    expect(report.assessment?.referenceProof.currentCandidateIdentityDigest).toBeNull();
     expect(report.assessment?.referenceProof.environmentObserved).toBe(false);
     expect(report.assessment?.referenceClosureStatus).toBe('NOT_RUN');
     expect(report.assessment?.targetEnvironmentValidationStatus).toBe('NOT_RUN');
@@ -114,7 +115,10 @@ describe('P15 declared TargetProfile plugin preview report', () => {
       targetCompatibilityClaim: false,
       productionAcceptance: false,
     }));
-    expect(report.assessment?.referenceProof.candidateBinding).toBe('NOT_ASSESSED');
+    expect(report.assessment?.referenceProof.candidateBinding).toBe('REFERENCE_CANDIDATE_MISMATCH');
+    expect(report.assessment?.referenceProof.currentCandidateIdentityDigest).toMatch(/^sha256:[0-9a-f]{64}$/);
+    expect(report.assessment?.referenceProof.currentCandidateIdentityDigest)
+      .not.toBe(report.assessment?.referenceProof.referenceProof?.retainedCandidateIdentityDigest);
     expect(report.assessment?.referenceProof.environmentObserved).toBe(false);
     expect(report.assessment?.targetEnvironmentValidationStatus).toBe('NOT_RUN');
     expect(report.authority.environmentObserved).toBe(false);
