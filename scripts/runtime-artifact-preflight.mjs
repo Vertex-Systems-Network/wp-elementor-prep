@@ -4,6 +4,11 @@ import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PLACEHOLDER_PLUGIN_ID = '000000000000000000';
+export const RUNTIME_ARTIFACT_MAX_ARCHIVE_BYTES = 256 * 1024 * 1024;
+export const RUNTIME_ARTIFACT_MAX_FILE_BYTES = 128 * 1024 * 1024;
+export const RUNTIME_ARTIFACT_MAX_MANIFEST_BYTES = 4 * 1024 * 1024;
+export const RUNTIME_ARTIFACT_MAX_JSON_DEPTH = 128;
+export const RUNTIME_ARTIFACT_MAX_JSON_VALUES = 1_000_000;
 const registryPath = fileURLToPath(new URL('../config/runtime-artifacts.json', import.meta.url));
 
 function loadRegistry() {
@@ -50,13 +55,67 @@ export function manifestSemanticSha256(manifest) {
   return sha256Bytes(Buffer.from(JSON.stringify(canonicalizeJson(withoutPluginId)), 'utf8'));
 }
 
-function readJsonBytes(bytes, errors, label) {
+function decodeStrictUtf8(bytes, errors, label) {
   try {
-    return JSON.parse(bytes.toString('utf8'));
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    errors.push(`${label} is not valid UTF-8.`);
+    return null;
+  }
+}
+
+function validateJsonStructure(value, errors, label, maxDepth, maxValues) {
+  const stack = [{ value, depth: 0 }];
+  let visited = 0;
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current) continue;
+
+    visited += 1;
+    if (visited > maxValues) {
+      errors.push(`${label} exceeds the ${maxValues}-value JSON structural limit.`);
+      return false;
+    }
+
+    if (current.value === null || typeof current.value !== 'object') continue;
+    const nextDepth = current.depth + 1;
+    if (nextDepth > maxDepth) {
+      errors.push(`${label} exceeds the ${maxDepth}-level JSON nesting limit.`);
+      return false;
+    }
+
+    if (Array.isArray(current.value)) {
+      for (let index = current.value.length - 1; index >= 0; index -= 1) {
+        stack.push({ value: current.value[index], depth: nextDepth });
+      }
+      continue;
+    }
+
+    const keys = Object.keys(current.value);
+    for (let index = keys.length - 1; index >= 0; index -= 1) {
+      const key = keys[index];
+      if (key !== undefined) stack.push({ value: current.value[key], depth: nextDepth });
+    }
+  }
+
+  return true;
+}
+
+function readJsonBytes(bytes, errors, label, { maxDepth, maxValues }) {
+  const text = decodeStrictUtf8(bytes, errors, label);
+  if (text === null) return null;
+
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
   } catch (error) {
     errors.push(`${label} is missing or invalid JSON: ${error.message}`);
     return null;
   }
+
+  if (!validateJsonStructure(parsed, errors, label, maxDepth, maxValues)) return null;
+  return parsed;
 }
 
 function sameFileIdentity(before, opened) {
@@ -78,7 +137,8 @@ function readRequiredFile(
     fstatSyncImpl = fstatSync,
     readFileSyncImpl = readFileSync,
     closeSyncImpl = closeSync
-  }
+  },
+  maxBytes = RUNTIME_ARTIFACT_MAX_FILE_BYTES
 ) {
   const path = join(dir, name);
   if (!existsSyncImpl(path)) {
@@ -93,6 +153,10 @@ function readRequiredFile(
   }
   if (!metadata.isFile()) {
     errors.push(`Missing required artifact file: ${name}`);
+    return null;
+  }
+  if (metadata.size > maxBytes) {
+    errors.push(`Required artifact file exceeds ${maxBytes}-byte limit: ${name}`);
     return null;
   }
 
@@ -133,7 +197,8 @@ function readArtifactArchive(
     fstatSyncImpl = fstatSync,
     readFileSyncImpl = readFileSync,
     closeSyncImpl = closeSync
-  }
+  },
+  maxBytes = RUNTIME_ARTIFACT_MAX_ARCHIVE_BYTES
 ) {
   const path = resolve(archivePath);
   if (!existsSyncImpl(path)) {
@@ -148,6 +213,10 @@ function readArtifactArchive(
   }
   if (!metadata.isFile()) {
     errors.push(`Artifact archive is not a regular file: ${path}`);
+    return null;
+  }
+  if (metadata.size > maxBytes) {
+    errors.push(`Artifact archive exceeds ${maxBytes}-byte limit: ${path}`);
     return null;
   }
 
@@ -194,7 +263,12 @@ export function inspectRuntimeArtifact(
     openSyncImpl = openSync,
     fstatSyncImpl = fstatSync,
     readFileSyncImpl = readFileSync,
-    closeSyncImpl = closeSync
+    closeSyncImpl = closeSync,
+    maxRequiredFileBytes = RUNTIME_ARTIFACT_MAX_FILE_BYTES,
+    maxManifestBytes = RUNTIME_ARTIFACT_MAX_MANIFEST_BYTES,
+    maxArchiveBytes = RUNTIME_ARTIFACT_MAX_ARCHIVE_BYTES,
+    maxJsonDepth = RUNTIME_ARTIFACT_MAX_JSON_DEPTH,
+    maxJsonValues = RUNTIME_ARTIFACT_MAX_JSON_VALUES
   } = {}
 ) {
   const normalizedTrack = String(trackName).toLowerCase();
@@ -239,7 +313,7 @@ export function inspectRuntimeArtifact(
     if (!/^[a-f0-9]{64}$/.test(expectedArchiveSha256)) {
       errors.push(`Registry artifact digest is invalid for ${normalizedTrack}: ${track.digest ?? '<missing>'}`);
     } else {
-      const archive = readArtifactArchive(archivePath, errors, fileOps);
+      const archive = readArtifactArchive(archivePath, errors, fileOps, maxArchiveBytes);
       if (archive) {
         archiveIntegrity.observedSha256 = sha256Bytes(archive.bytes);
         archiveIntegrity.matched = archiveIntegrity.observedSha256 === expectedArchiveSha256;
@@ -252,11 +326,15 @@ export function inspectRuntimeArtifact(
 
   const requiredFiles = ['BUILD_INFO.txt', 'manifest.json', 'code.js', 'ui.html', 'prepare-figma-import.mjs', track.verifier];
   const files = {};
-  for (const name of requiredFiles) files[name] = readRequiredFile(dir, name, errors, fileOps);
+  for (const name of requiredFiles) {
+    const maxBytes = name === 'manifest.json' ? maxManifestBytes : maxRequiredFileBytes;
+    files[name] = readRequiredFile(dir, name, errors, fileOps, maxBytes);
+  }
 
   let buildInfo = {};
   if (files['BUILD_INFO.txt']) {
-    buildInfo = parseBuildInfo(files['BUILD_INFO.txt'].bytes.toString('utf8'));
+    const buildInfoText = decodeStrictUtf8(files['BUILD_INFO.txt'].bytes, errors, 'BUILD_INFO.txt');
+    if (buildInfoText !== null) buildInfo = parseBuildInfo(buildInfoText);
     const expectedIdentity = {
       source_sha: track.sourceSha,
       workflow_sha: track.sourceSha,
@@ -287,7 +365,7 @@ export function inspectRuntimeArtifact(
 
       const file = Object.prototype.hasOwnProperty.call(files, name)
         ? files[name]
-        : readRequiredFile(dir, name, errors, fileOps);
+        : readRequiredFile(dir, name, errors, fileOps, maxRequiredFileBytes);
       if (!file) continue;
 
       immutableFilesChecked += 1;
@@ -301,7 +379,10 @@ export function inspectRuntimeArtifact(
     }
   }
 
-  const manifest = files['manifest.json'] ? readJsonBytes(files['manifest.json'].bytes, errors, 'manifest.json') : null;
+  const manifest = files['manifest.json'] ? readJsonBytes(files['manifest.json'].bytes, errors, 'manifest.json', {
+    maxDepth: maxJsonDepth,
+    maxValues: maxJsonValues,
+  }) : null;
   const manifestSemanticPinRequired = Number(registry.schemaVersion) >= 3;
   const expectedManifestSemanticSha256 = normalizeExpectedSha256(track.manifestSemanticSha256);
   const manifestSemanticIntegrity = {
