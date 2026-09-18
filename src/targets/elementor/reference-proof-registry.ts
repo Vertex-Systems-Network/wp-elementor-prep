@@ -16,6 +16,14 @@ export type P15ElementorReferenceProofScope =
   | 'FIDELITY_SOLID_BACKGROUND'
   | 'FIDELITY_UNIFORM_RADIUS';
 
+export type P15ElementorReferenceProofExcludedScope =
+  | 'ATOMIC_V4'
+  | 'ELEMENTOR_PRO'
+  | 'THIRD_PARTY_ADDONS'
+  | 'RESPONSIVE_MAPPING'
+  | 'MEDIA_ASSET_CLOSURE'
+  | 'GENERAL_VERSION_COMPATIBILITY';
+
 export interface P15ElementorReferenceProofV1 {
   proofId: typeof P15_ELEMENTOR_WP68_E424_PROOF_ID;
   architecture: 'CONTAINER';
@@ -36,14 +44,7 @@ export interface P15ElementorReferenceProofV1 {
     chain: 'CHAIN_FULL_PASS';
   };
   verifiedScope: readonly P15ElementorReferenceProofScope[];
-  excludedScope: readonly [
-    'ATOMIC_V4',
-    'ELEMENTOR_PRO',
-    'THIRD_PARTY_ADDONS',
-    'RESPONSIVE_MAPPING',
-    'MEDIA_ASSET_CLOSURE',
-    'GENERAL_VERSION_COMPATIBILITY',
-  ];
+  excludedScope: readonly P15ElementorReferenceProofExcludedScope[];
   acceptanceAuthority: false;
   targetCompatibilityClaim: false;
   productionAcceptance: false;
@@ -110,7 +111,7 @@ export interface P15ElementorReferenceProofSummaryV1 {
   artifactDigest: string;
   evidenceReference: string;
   verifiedScope: P15ElementorReferenceProofScope[];
-  excludedScope: string[];
+  excludedScope: P15ElementorReferenceProofExcludedScope[];
   acceptanceAuthority: false;
   targetCompatibilityClaim: false;
   productionAcceptance: false;
