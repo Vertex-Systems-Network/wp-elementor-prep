@@ -22,7 +22,7 @@ Last updated: 2026-09-19
 | R1 | Reliability/compatibility gate | DEFINED / RECURRING | 100% | `██████████` | Execute TargetProfile/capability/validator/harness gate per adapter |
 | P13 | Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance |
 | P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review active; production registry empty; #159 before real mutation exposure |
-| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact WP 6.8 + Elementor 4.2.4 Container proof retained; #545 binds declared profiles to that reference while broader semantic/media/responsive coverage and additional target evidence remain pending |
+| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact WP 6.8 + Elementor 4.2.4 proof retained; #546 binds the exact TargetProfile and #548 binds the exact candidate identity while broader semantic/media/responsive coverage remains pending |
 | P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 | HTML/CSS/JS export + code-to-design import | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
 | P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
@@ -88,7 +88,7 @@ Even `CHAIN_FULL_PASS` requires genuine retained real-environment observations a
 
 Typography, gradients, opacity/effects, nonuniform-radius conversion and responsive behavior remain intentionally outside the accepted fidelity slice.
 
-PR #518 / #483 retained that first bounded observation on exact WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/background/radius fidelity PASS and qualified/full/full environment/proof/chain classifications. The next bounded objective is #545: machine-readably align immutable declared profiles to that exact retained reference without treating a match as observed user-environment compatibility or a mismatch as incompatibility. Broader semantic/media/responsive mapping and any additional claimed target matrix coverage still require their own implementation and evidence.
+PR #518 / #483 retained that first bounded observation on exact WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/background/radius fidelity PASS and qualified/full/full environment/proof/chain classifications. PR #546 / #545 machine-readably bound the exact TargetProfile fingerprint to that reference; PR #548 / #547 binds the current canonical candidate to the exact candidate identity observed in #483. A candidate mismatch remains only a reference mismatch, not incompatibility. Broader semantic/media/responsive mapping and any additional claimed target matrix coverage still require their own implementation and evidence.
 
 ## Current P16 implementation truth
 
