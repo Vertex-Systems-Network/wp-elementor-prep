@@ -8,6 +8,8 @@ export type CanonicalSnapshotSourceKind = 'figma-rest' | 'plugin-export' | 'adap
 export const CANONICAL_SNAPSHOT_MAX_BYTES = 64 * 1024 * 1024;
 export const CANONICAL_SNAPSHOT_MAX_DEPTH = 128;
 export const CANONICAL_SNAPSHOT_MAX_VALUES = 1_000_000;
+export const FIGMA_REST_MAX_BYTES = 128 * 1024 * 1024;
+export const FIGMA_REST_TIMEOUT_MS = 30_000;
 
 export interface CanonicalSnapshotSource {
   kind: CanonicalSnapshotSourceKind;
@@ -44,6 +46,8 @@ export interface FigmaRestOptions {
   authMode: 'personal' | 'oauth';
   nodeId?: string;
   fetchImpl?: typeof fetch;
+  maxResponseBytes?: number;
+  requestTimeoutMs?: number;
 }
 
 interface FigmaUrlResolution {
@@ -427,24 +431,74 @@ function authHeaders(token: string, mode: 'personal' | 'oauth'): Record<string, 
     : { 'X-Figma-Token': token };
 }
 
-async function fetchJson(url: string, options: FigmaRestOptions): Promise<Record<string, unknown>> {
-  const fetcher = options.fetchImpl ?? fetch;
-  let response: Response;
-  try {
-    response = await fetcher(url, { headers: authHeaders(options.token, options.authMode) });
-  } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error);
-    throw new SourceAdapterError('FIGMA_NETWORK_ERROR', `Figma API request failed: ${detail}`);
+function positiveBound(value: number | undefined, fallback: number, label: string): number {
+  if (value === undefined) return fallback;
+  if (!Number.isSafeInteger(value) || value <= 0) {
+    throw new SourceAdapterError('INVALID_FIGMA_OPTIONS', `${label} must be a positive safe integer.`, 2);
+  }
+  return value;
+}
+
+async function readBoundedResponseJson(response: Response, maxBytes: number): Promise<Record<string, unknown>> {
+  const declaredLength = response.headers.get('content-length');
+  if (declaredLength !== null) {
+    const parsedLength = Number(declaredLength);
+    if (Number.isFinite(parsedLength) && parsedLength > maxBytes) {
+      throw new SourceAdapterError(
+        'FIGMA_RESPONSE_TOO_LARGE',
+        `Figma API response exceeds the ${maxBytes}-byte response limit.`,
+      );
+    }
   }
 
-  if (!response.ok) {
-    const code = response.status === 401 || response.status === 403 ? 'FIGMA_AUTH_FAILED' : 'FIGMA_HTTP_ERROR';
-    throw new SourceAdapterError(code, `Figma API returned HTTP ${response.status}.`);
+  if (!response.body) {
+    throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma API response body was empty.');
+  }
+
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+      totalBytes += value.byteLength;
+      if (totalBytes > maxBytes) {
+        await reader.cancel().catch(() => undefined);
+        throw new SourceAdapterError(
+          'FIGMA_RESPONSE_TOO_LARGE',
+          `Figma API response exceeds the ${maxBytes}-byte response limit.`,
+        );
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+
+  if (totalBytes === 0) {
+    throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma API response body was empty.');
+  }
+
+  const bytes = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  let raw: string;
+  try {
+    raw = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma API response was not valid UTF-8.');
   }
 
   let payload: unknown;
   try {
-    payload = await response.json();
+    payload = JSON.parse(raw);
   } catch {
     throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma API response was not valid JSON.');
   }
@@ -452,6 +506,37 @@ async function fetchJson(url: string, options: FigmaRestOptions): Promise<Record
     throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma API response root was not an object.');
   }
   return payload;
+}
+
+async function fetchJson(url: string, options: FigmaRestOptions): Promise<Record<string, unknown>> {
+  const fetcher = options.fetchImpl ?? fetch;
+  const maxBytes = positiveBound(options.maxResponseBytes, FIGMA_REST_MAX_BYTES, 'maxResponseBytes');
+  const timeoutMs = positiveBound(options.requestTimeoutMs, FIGMA_REST_TIMEOUT_MS, 'requestTimeoutMs');
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetcher(url, {
+      headers: authHeaders(options.token, options.authMode),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      const code = response.status === 401 || response.status === 403 ? 'FIGMA_AUTH_FAILED' : 'FIGMA_HTTP_ERROR';
+      throw new SourceAdapterError(code, `Figma API returned HTTP ${response.status}.`);
+    }
+
+    return await readBoundedResponseJson(response, maxBytes);
+  } catch (error) {
+    if (error instanceof SourceAdapterError) throw error;
+    if (controller.signal.aborted) {
+      throw new SourceAdapterError('FIGMA_TIMEOUT', `Figma API request exceeded the ${timeoutMs} ms timeout.`);
+    }
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new SourceAdapterError('FIGMA_NETWORK_ERROR', `Figma API request failed: ${detail}`);
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export class FigmaRestSourceAdapter {
