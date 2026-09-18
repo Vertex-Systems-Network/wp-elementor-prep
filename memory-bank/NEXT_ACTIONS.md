@@ -74,18 +74,17 @@ The stable-I/O evidence-integrity line does not change `acceptanceAuthority=fals
 
 #483 is complete. PR #518 retained the first exact clean-Core proof on WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/solid-background/uniform-radius fidelity PASS, and qualified/full/full environment/proof/chain classifications. That result remains non-production-authorizing.
 
-Issue #545 / PR #546 is the next focused slice:
+PR #546 / #545 completed the immutable exact declared-profile reference registry. Issue #547 / PR #548 is the current focused slice:
 
-1. bind the exact #483 proof into a versioned immutable reference-proof registry;
-2. compare only immutable DECLARED TargetProfiles against exact retained WordPress/Elementor/Container/Template JSON facts;
-3. expose `EXACT_REFERENCE_PROFILE_MATCH` only for the exact retained profile envelope and `NO_EXACT_REFERENCE_PROFILE` otherwise, with `candidateBinding=NOT_ASSESSED`;
-4. treat absence of an exact proof as absence of reference evidence, never as an incompatibility verdict;
-5. keep the user-declared environment `environmentObserved=false`;
-6. explicitly exclude Atomic-v4, Elementor Pro, third-party addons, responsive mapping, media closure and general version compatibility from the retained proof scope;
-7. preserve `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required;
-8. after this alignment slice, continue only concrete P15 commercial-V1 gaps: broader deterministic semantic/media/responsive mapping, reference/asset closure, and additional controlled target observations when those claims require evidence.
+1. retain the exact #483 candidate identity, TargetProfile fingerprint and template SHA-256 in the reference record;
+2. require the exact immutable TargetProfile fingerprint before reporting `EXACT_REFERENCE_PROFILE_MATCH`;
+3. compare a current canonical candidate through the existing `elementor-template-candidate-identity-v1` contract;
+4. report `EXACT_REFERENCE_CANDIDATE_MATCH` only for the exact candidate observed in #483;
+5. report `REFERENCE_CANDIDATE_MISMATCH` only as evidence that the current candidate is different, never as an incompatibility verdict;
+6. keep `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required;
+7. continue after #548 only into concrete semantic/media/responsive mapping, reference/asset closure and additional controlled target observations required by new claims.
 
-Do not reopen serializer/fidelity work merely to add breadth without an identified mapping or proof gap. The retained reference proof is evidence for one exact envelope, not a blanket support matrix.
+Do not reopen serializer/fidelity breadth without an identified mapping or proof gap. The retained proof remains evidence for one exact profile + candidate pair, not a blanket support matrix.
 
 
 ## P16 bounded retention evidence-integrity boundary

@@ -10,7 +10,7 @@ import {
 import type { P15FigmaNeutralExtractionResult } from './p15-neutral-export-extractor';
 import type { P15PluginPreviewFrameIdentity, P15PluginPreviewReviewEntry } from './p15-plugin-preview-report';
 
-export const P15_TARGET_PROFILE_PREVIEW_REPORT_VERSION = 'p15-elementor-target-profile-preview-report-v2' as const;
+export const P15_TARGET_PROFILE_PREVIEW_REPORT_VERSION = 'p15-elementor-target-profile-preview-report-v3' as const;
 export const P15_DECLARED_VERSION_MAX_LENGTH = 64 as const;
 
 export type P15TargetProfilePreviewStatus =
@@ -158,7 +158,7 @@ export function buildP15TargetProfilePreviewReport(
 
   const profile = buildElementorTargetProfile({ wordpressVersion, elementorVersion });
   const assessment = assessElementorTargetProfileCompatibility(template, profile);
-  const referenceProof = assessP15ElementorReferenceProofAlignment(profile);
+  const referenceProof = assessP15ElementorReferenceProofAlignment(profile, result.generation.candidate);
   if (!assessment.profileIdentity
     || !assessment.candidateFingerprint
     || !assessment.candidateStatus

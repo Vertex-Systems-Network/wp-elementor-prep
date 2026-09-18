@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-19 — P15 exact retained candidate binding
+
+- Opened issue #547 and PR #548 after #546/#545 merged the exact retained TargetProfile reference registry.
+- Bound retained #483 proof evidence to candidate identity `sha256:96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26`, TargetProfile fingerprint `sha256:8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676` and template SHA-256 `sha256:bf2c229441f93486af7152f9196c265f09ee9e3cefab67d11ecb6765f583e4ad`.
+- Exact reference-profile alignment now requires the retained TargetProfile fingerprint, not only matching version labels.
+- A supplied canonical current candidate is compared through the existing candidate-identity contract and reports `EXACT_REFERENCE_CANDIDATE_MATCH` only for the exact retained candidate. A different canonical candidate reports `REFERENCE_CANDIDATE_MISMATCH`, which is explicitly not an incompatibility verdict.
+- Plugin-facing output remains sanitized to hashes/status/proof metadata; template/design contents remain absent.
+- `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required remain unchanged.
+- README now visibly lists #546 merged and #548/#547 candidate binding in the recent P15 sequence, module row, current boundary and immediate execution order.
+
 ## 2026-09-19 — P15 retained Elementor reference-proof alignment
 
 - Closed the stale #483 execution gap through merged PR #518: exact head `4f09efda101e5a2771df9bfc3ac8960a43655e96` retained P15 Real Elementor Target Proof run `35403469986`, artifact `10570709987` and digest `sha256:206b703ab8185f1e5b1a83346074accb23cc458b9fdcb94f5eaad0c4752e33aa`.

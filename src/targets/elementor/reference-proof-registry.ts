@@ -1,11 +1,17 @@
+import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
+  buildElementorTemplateCandidateIdentity,
+  type ElementorTemplateCandidateIdentityV1,
+} from './import-validation-contract';
+import {
+  fingerprintElementorTargetProfile,
   validateElementorTargetProfile,
   type ElementorTargetProfileIssueCode,
   type ElementorTargetProfileV1,
 } from './target-profile';
 
-export const P15_ELEMENTOR_REFERENCE_PROOF_REGISTRY_VERSION = 'p15-elementor-reference-proof-registry-v1' as const;
-export const P15_ELEMENTOR_REFERENCE_PROOF_ALIGNMENT_VERSION = 'p15-elementor-reference-proof-alignment-v1' as const;
+export const P15_ELEMENTOR_REFERENCE_PROOF_REGISTRY_VERSION = 'p15-elementor-reference-proof-registry-v2' as const;
+export const P15_ELEMENTOR_REFERENCE_PROOF_ALIGNMENT_VERSION = 'p15-elementor-reference-proof-alignment-v2' as const;
 export const P15_ELEMENTOR_WP68_E424_PROOF_ID = 'p15-wp6.8-elementor4.2.4-container-proof-v1' as const;
 
 export type P15ElementorReferenceProofScope =
@@ -31,6 +37,11 @@ export interface P15ElementorReferenceProofV1 {
   documentDataVersion: '0.4';
   wordpressVersion: '6.8';
   elementorVersion: '4.2.4';
+  retainedBinding: {
+    candidateIdentity: ElementorTemplateCandidateIdentityV1;
+    targetProfileFingerprint: 'sha256:8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676';
+    templateSha256: 'sha256:bf2c229441f93486af7152f9196c265f09ee9e3cefab67d11ecb6765f583e4ad';
+  };
   evidence: {
     exactHeadSha: '4f09efda101e5a2771df9bfc3ac8960a43655e96';
     workflowRunId: 35403469986;
@@ -57,6 +68,19 @@ const REFERENCE_PROOF: P15ElementorReferenceProofV1 = Object.freeze({
   documentDataVersion: '0.4',
   wordpressVersion: '6.8',
   elementorVersion: '4.2.4',
+  retainedBinding: Object.freeze({
+    candidateIdentity: Object.freeze({
+      schemaVersion: 1,
+      identityVersion: 'elementor-template-candidate-identity-v1',
+      candidateVersion: 'elementor-template-candidate-v1',
+      targetContractVersion: 'elementor-template-v0.4-container-v1',
+      capabilityRegistryVersion: 'elementor-core-widget-capabilities-v1',
+      algorithm: 'SHA-256',
+      digest: 'sha256:96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26',
+    }),
+    targetProfileFingerprint: 'sha256:8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676',
+    templateSha256: 'sha256:bf2c229441f93486af7152f9196c265f09ee9e3cefab67d11ecb6765f583e4ad',
+  }),
   evidence: Object.freeze({
     exactHeadSha: '4f09efda101e5a2771df9bfc3ac8960a43655e96',
     workflowRunId: 35403469986,
@@ -110,6 +134,9 @@ export interface P15ElementorReferenceProofSummaryV1 {
   artifactId: number;
   artifactDigest: string;
   evidenceReference: string;
+  retainedCandidateIdentityDigest: string;
+  retainedTargetProfileFingerprint: string;
+  retainedTemplateSha256: string;
   verifiedScope: P15ElementorReferenceProofScope[];
   excludedScope: P15ElementorReferenceProofExcludedScope[];
   acceptanceAuthority: false;
@@ -130,7 +157,12 @@ export interface P15ElementorReferenceProofAlignmentV1 {
   profileIssueCodes: ElementorTargetProfileIssueCode[];
   exactVersionMatch: boolean;
   referenceProof: P15ElementorReferenceProofSummaryV1 | null;
-  candidateBinding: 'NOT_ASSESSED';
+  candidateBinding:
+    | 'NOT_ASSESSED'
+    | 'EXACT_REFERENCE_CANDIDATE_MATCH'
+    | 'REFERENCE_CANDIDATE_MISMATCH'
+    | 'CURRENT_CANDIDATE_NOT_READY';
+  currentCandidateIdentityDigest: string | null;
   environmentObserved: false;
   targetCompatibilityClaim: false;
   productionAcceptance: false;
@@ -147,7 +179,8 @@ function matchesReference(
     && profile.outputMode === proof.outputMode
     && profile.documentDataVersion === proof.documentDataVersion
     && profile.environment.wordpressVersion === proof.wordpressVersion
-    && profile.environment.elementorVersion === proof.elementorVersion;
+    && profile.environment.elementorVersion === proof.elementorVersion
+    && fingerprintElementorTargetProfile(profile) === proof.retainedBinding.targetProfileFingerprint;
 }
 
 function summary(proof: P15ElementorReferenceProofV1): P15ElementorReferenceProofSummaryV1 {
@@ -162,6 +195,9 @@ function summary(proof: P15ElementorReferenceProofV1): P15ElementorReferenceProo
     artifactId: proof.evidence.artifactId,
     artifactDigest: proof.evidence.artifactDigest,
     evidenceReference: proof.evidence.evidenceReference,
+    retainedCandidateIdentityDigest: proof.retainedBinding.candidateIdentity.digest,
+    retainedTargetProfileFingerprint: proof.retainedBinding.targetProfileFingerprint,
+    retainedTemplateSha256: proof.retainedBinding.templateSha256,
     verifiedScope: [...proof.verifiedScope],
     excludedScope: [...proof.excludedScope],
     acceptanceAuthority: false,
@@ -173,14 +209,16 @@ function summary(proof: P15ElementorReferenceProofV1): P15ElementorReferenceProo
 /**
  * Compare one immutable DECLARED profile to retained reference proof records.
  *
- * An exact profile match means only that the same declared WordPress/Elementor/container envelope has
- * one retained proof run. This function does not compare the current candidate to the retained proof
- * candidate, so candidateBinding remains NOT_ASSESSED. A profile mismatch means only that this registry
- * has no exact retained reference profile. Neither state observes the user's target environment or
- * grants compatibility/production authority.
+ * An exact profile match means only that the same immutable declared TargetProfile fingerprint
+ * belongs to one retained proof run. When a canonical current candidate is supplied, its existing
+ * candidate identity is compared to the exact retained proof identity. Candidate mismatch means only
+ * that this is not the exact candidate observed by that proof; it is not an incompatibility verdict.
+ * Neither profile nor candidate binding observes the user's target environment or grants
+ * compatibility/production authority.
  */
 export function assessP15ElementorReferenceProofAlignment(
   profileValue: unknown,
+  candidate?: ElementorTemplateCandidateArtifactV1 | null,
 ): P15ElementorReferenceProofAlignmentV1 {
   const validation = validateElementorTargetProfile(profileValue);
   if (!validation.valid || validation.profile === null) {
@@ -198,6 +236,7 @@ export function assessP15ElementorReferenceProofAlignment(
       exactVersionMatch: false,
       referenceProof: null,
       candidateBinding: 'NOT_ASSESSED',
+      currentCandidateIdentityDigest: null,
       environmentObserved: false,
       targetCompatibilityClaim: false,
       productionAcceptance: false,
@@ -209,6 +248,28 @@ export function assessP15ElementorReferenceProofAlignment(
 
   const profile = validation.profile;
   const match = P15_ELEMENTOR_REFERENCE_PROOFS_V1.find((proof) => matchesReference(profile, proof)) ?? null;
+
+  let candidateBinding: P15ElementorReferenceProofAlignmentV1['candidateBinding'] = 'NOT_ASSESSED';
+  let currentCandidateIdentityDigest: string | null = null;
+  if (match && candidate) {
+    try {
+      const currentIdentity = buildElementorTemplateCandidateIdentity(candidate);
+      currentCandidateIdentityDigest = currentIdentity.digest;
+      const retainedIdentity = match.retainedBinding.candidateIdentity;
+      const exactIdentityMatch = currentIdentity.schemaVersion === retainedIdentity.schemaVersion
+        && currentIdentity.identityVersion === retainedIdentity.identityVersion
+        && currentIdentity.candidateVersion === retainedIdentity.candidateVersion
+        && currentIdentity.targetContractVersion === retainedIdentity.targetContractVersion
+        && currentIdentity.capabilityRegistryVersion === retainedIdentity.capabilityRegistryVersion
+        && currentIdentity.algorithm === retainedIdentity.algorithm
+        && currentIdentity.digest === retainedIdentity.digest;
+      candidateBinding = exactIdentityMatch
+        ? 'EXACT_REFERENCE_CANDIDATE_MATCH'
+        : 'REFERENCE_CANDIDATE_MISMATCH';
+    } catch {
+      candidateBinding = 'CURRENT_CANDIDATE_NOT_READY';
+    }
+  }
 
   return {
     schemaVersion: 1,
@@ -223,7 +284,8 @@ export function assessP15ElementorReferenceProofAlignment(
     profileIssueCodes: [],
     exactVersionMatch: match !== null,
     referenceProof: match ? summary(match) : null,
-    candidateBinding: 'NOT_ASSESSED',
+    candidateBinding,
+    currentCandidateIdentityDigest,
     environmentObserved: false,
     targetCompatibilityClaim: false,
     productionAcceptance: false,
@@ -237,7 +299,12 @@ function serializable(value: P15ElementorReferenceProofAlignmentV1): boolean {
   if (value.schemaVersion !== 1
     || value.reportVersion !== P15_ELEMENTOR_REFERENCE_PROOF_ALIGNMENT_VERSION
     || value.registryVersion !== P15_ELEMENTOR_REFERENCE_PROOF_REGISTRY_VERSION
-    || value.candidateBinding !== 'NOT_ASSESSED'
+    || ![
+      'NOT_ASSESSED',
+      'EXACT_REFERENCE_CANDIDATE_MATCH',
+      'REFERENCE_CANDIDATE_MISMATCH',
+      'CURRENT_CANDIDATE_NOT_READY',
+    ].includes(value.candidateBinding)
     || value.environmentObserved !== false
     || value.targetCompatibilityClaim !== false
     || value.productionAcceptance !== false
@@ -254,16 +321,33 @@ function serializable(value: P15ElementorReferenceProofAlignmentV1): boolean {
     const proof = P15_ELEMENTOR_REFERENCE_PROOFS_V1.find(
       (entry) => entry.proofId === value.referenceProof?.proofId,
     );
-    return proof !== undefined
-      && value.declaredTarget.source === 'DECLARED'
-      && value.declaredTarget.wordpressVersion === proof.wordpressVersion
-      && value.declaredTarget.elementorVersion === proof.elementorVersion
-      && JSON.stringify(value.referenceProof) === JSON.stringify(summary(proof));
+    if (proof === undefined
+      || value.declaredTarget.source !== 'DECLARED'
+      || value.declaredTarget.wordpressVersion !== proof.wordpressVersion
+      || value.declaredTarget.elementorVersion !== proof.elementorVersion
+      || JSON.stringify(value.referenceProof) !== JSON.stringify(summary(proof))) {
+      return false;
+    }
+
+    if (value.candidateBinding === 'NOT_ASSESSED' || value.candidateBinding === 'CURRENT_CANDIDATE_NOT_READY') {
+      return value.currentCandidateIdentityDigest === null;
+    }
+    if (typeof value.currentCandidateIdentityDigest !== 'string'
+      || !/^sha256:[0-9a-f]{64}$/.test(value.currentCandidateIdentityDigest)) {
+      return false;
+    }
+    if (value.candidateBinding === 'EXACT_REFERENCE_CANDIDATE_MATCH') {
+      return value.currentCandidateIdentityDigest === proof.retainedBinding.candidateIdentity.digest;
+    }
+    return value.candidateBinding === 'REFERENCE_CANDIDATE_MISMATCH'
+      && value.currentCandidateIdentityDigest !== proof.retainedBinding.candidateIdentity.digest;
   }
 
   if (value.status === 'NO_EXACT_REFERENCE_PROFILE') {
     return value.exactVersionMatch === false
       && value.referenceProof === null
+      && value.candidateBinding === 'NOT_ASSESSED'
+      && value.currentCandidateIdentityDigest === null
       && value.profileIssueCodes.length === 0
       && value.declaredTarget.source === 'DECLARED'
       && typeof value.declaredTarget.wordpressVersion === 'string'
@@ -273,6 +357,8 @@ function serializable(value: P15ElementorReferenceProofAlignmentV1): boolean {
   if (value.status === 'INVALID_DECLARED_PROFILE') {
     return value.exactVersionMatch === false
       && value.referenceProof === null
+      && value.candidateBinding === 'NOT_ASSESSED'
+      && value.currentCandidateIdentityDigest === null
       && value.profileIssueCodes.length > 0
       && value.declaredTarget.source === 'DECLARED'
       && value.declaredTarget.wordpressVersion === null

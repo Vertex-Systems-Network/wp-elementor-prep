@@ -121,7 +121,7 @@ Authority remains:
 
 The retained #483 proof establishes only one exact clean-Core reference observation. It does not make arbitrary locally generated candidates imported, does not observe a user's declared environment and does not change `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false` or `internalReviewRequired=true`.
 
-Issue #545 / PR #546 binds declared TargetProfiles to that retained reference by exact WordPress + Elementor + Container/Template JSON envelope. `EXACT_REFERENCE_PROFILE_MATCH` means only that the declared profile envelope matches one retained proof reference while `candidateBinding=NOT_ASSESSED`; `NO_EXACT_REFERENCE_PROFILE` is not an incompatibility verdict. Local/download UI truth remains non-authorizing and current-candidate import validation stays separate from reference evidence.
+PR #546 / #545 binds declared TargetProfiles to that retained reference by exact immutable TargetProfile fingerprint. PR #548 / #547 extends the same registry to the exact retained candidate identity `sha256:96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26`. `EXACT_REFERENCE_CANDIDATE_MATCH` means only that the current canonical candidate is byte-identical under the existing candidate-identity contract to the candidate observed in #483; `REFERENCE_CANDIDATE_MISMATCH` means only that it is a different candidate and is not an incompatibility verdict. Local/download UI truth remains non-authorizing.
 
 
 ## P16 state
@@ -149,6 +149,6 @@ Do not open future phases merely to increase parallelism while the bounded Eleme
 
 Continue the coherent Elementor-first internal V1 from the retained controlled proof:
 
-`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation/download -> exact declared TargetProfile -> retained-reference alignment -> reference/media/responsive closure work -> additional controlled target observations where evidence is required -> bounded handoff`
+`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation/download -> exact declared TargetProfile -> exact retained profile/candidate reference binding -> reference/media/responsive closure work -> additional controlled target observations where evidence is required -> bounded handoff`
 
 The retained WordPress `6.8` + Elementor `4.2.4` proof is a reference point, not broad version support. Keep P16 stable unless a concrete shared blocker appears, keep P17-P26 frozen during this Elementor V1 window, and preserve false compatibility/production/download authority until the applicable evidence and release gates explicitly change it.
