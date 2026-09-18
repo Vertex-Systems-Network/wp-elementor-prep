@@ -90,5 +90,14 @@ describe('P15 retained Elementor reference-proof alignment', () => {
     } as unknown as P15ElementorReferenceProofAlignmentV1;
     expect(() => serializeP15ElementorReferenceProofAlignment(inflated))
       .toThrow(/authority-inflated/);
+
+    const tampered = {
+      ...result,
+      referenceProof: result.referenceProof
+        ? { ...result.referenceProof, workflowRunId: 1 }
+        : null,
+    } as P15ElementorReferenceProofAlignmentV1;
+    expect(() => serializeP15ElementorReferenceProofAlignment(tampered))
+      .toThrow(/authority-inflated/);
   });
 });
