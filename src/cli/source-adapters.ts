@@ -1,4 +1,5 @@
-import { readFile, stat } from 'node:fs/promises';
+import type { FileHandle } from 'node:fs/promises';
+import { open } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import type { AuditNode, LayoutMode } from '../core/types';
 import { isGenericLayerName, normalizeLayoutMode } from '../core/scanner';
@@ -239,34 +240,53 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
     );
   }
 
-  let info;
+  let handle: FileHandle;
   try {
-    info = await stat(absolute);
+    handle = await open(absolute, 'r');
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
-    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', `Unable to inspect canonical snapshot: ${detail}`, 2);
-  }
-  if (!info.isFile()) {
-    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot path must resolve to a regular file.', 2);
-  }
-  if (info.size <= 0) {
-    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot file is empty.', 2);
-  }
-  if (info.size > CANONICAL_SNAPSHOT_MAX_BYTES) {
-    throw new SourceAdapterError(
-      'SNAPSHOT_RESOURCE_LIMIT',
-      `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
-      2,
-    );
+    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', `Unable to open canonical snapshot: ${detail}`, 2);
   }
 
   let bytes: Buffer;
   try {
-    bytes = await readFile(absolute);
+    const before = await handle.stat();
+    if (!before.isFile()) {
+      throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot must be a regular file.', 2);
+    }
+    if (before.size <= 0) {
+      throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot file is empty.', 2);
+    }
+    if (before.size > CANONICAL_SNAPSHOT_MAX_BYTES) {
+      throw new SourceAdapterError(
+        'SNAPSHOT_RESOURCE_LIMIT',
+        `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
+        2,
+      );
+    }
+
+    bytes = await handle.readFile();
+    const after = await handle.stat();
+    const stableIdentity = before.ino === 0 || after.ino === 0
+      ? before.size === after.size
+        && before.mtimeMs === after.mtimeMs
+        && before.ctimeMs === after.ctimeMs
+      : before.dev === after.dev
+        && before.ino === after.ino
+        && before.size === after.size
+        && before.mtimeMs === after.mtimeMs
+        && before.ctimeMs === after.ctimeMs;
+    if (!stableIdentity) {
+      throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot changed while it was being read.', 2);
+    }
   } catch (error) {
+    if (error instanceof SourceAdapterError) throw error;
     const detail = error instanceof Error ? error.message : String(error);
     throw new SourceAdapterError('SNAPSHOT_READ_FAILED', `Unable to read canonical snapshot: ${detail}`, 2);
+  } finally {
+    await handle.close().catch(() => undefined);
   }
+
   if (bytes.byteLength > CANONICAL_SNAPSHOT_MAX_BYTES) {
     throw new SourceAdapterError(
       'SNAPSHOT_RESOURCE_LIMIT',
