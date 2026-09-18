@@ -76,6 +76,7 @@ describe('security supply-chain contract', () => {
     expect(workflow).toContain('contents: read');
     expect(workflow).toContain('security-events: write');
     expect(workflow).toContain('languages: javascript-typescript');
+    expect(workflow).toMatch(/\bnpm audit --audit-level=moderate\b/);
     expect(workflow).not.toMatch(/contents:\s*write/);
     expect(workflow).not.toMatch(/pull-requests:\s*write/);
   });
