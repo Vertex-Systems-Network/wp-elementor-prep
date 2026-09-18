@@ -1,5 +1,9 @@
+import { mkdtempSync, rmSync, truncateSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
+  CANONICAL_SNAPSHOT_MAX_BYTES,
+  CANONICAL_SNAPSHOT_MAX_DEPTH,
   FigmaRestSourceAdapter,
   SourceAdapterError,
   auditNodeFromFigmaRest,
@@ -102,6 +106,39 @@ describe('P10 source adapters', () => {
       code: 'UNSUPPORTED_FIG_LOCAL_FILE',
       exitCode: 2,
     });
+  });
+
+  it('fails before reading canonical snapshot files above the raw byte ceiling', async () => {
+    const root = mkdtempSync(join(process.cwd(), '.p10-snapshot-limit-'));
+    try {
+      const path = join(root, 'oversized.json');
+      writeFileSync(path, '');
+      truncateSync(path, CANONICAL_SNAPSHOT_MAX_BYTES + 1);
+      await expect(loadCanonicalSnapshot(path)).rejects.toMatchObject({
+        code: 'SNAPSHOT_RESOURCE_LIMIT',
+        exitCode: 2,
+      });
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('rejects deeply nested snapshot structures before recursive node parsing', () => {
+    const root = auditNodeFromFigmaRest(restFrame());
+    const snapshot: Record<string, unknown> = {
+      schemaVersion: 1,
+      capturedAt: '2026-09-10T00:00:00.000Z',
+      source: { kind: 'adapter-export' },
+      root,
+    };
+    let cursor: Record<string, unknown> = snapshot;
+    for (let index = 0; index <= CANONICAL_SNAPSHOT_MAX_DEPTH; index += 1) {
+      const next: Record<string, unknown> = {};
+      cursor['resourceBomb'] = next;
+      cursor = next;
+    }
+
+    expect(() => parseCanonicalSnapshot(snapshot)).toThrowError(/nesting limit/);
   });
 
   it('loads a single requested Figma frame without serializing credentials into the snapshot', async () => {

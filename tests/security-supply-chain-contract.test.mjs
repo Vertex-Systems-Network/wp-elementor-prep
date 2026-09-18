@@ -1,12 +1,10 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-const WORKFLOWS = [
-  '.github/workflows/ci.yml',
-  '.github/workflows/p12-final-release.yml',
-  '.github/workflows/p12-offline-acceptance.yml',
-  '.github/workflows/integration-readiness.yml',
-];
+const WORKFLOWS = readdirSync('.github/workflows')
+  .filter((name) => /\.ya?ml$/i.test(name))
+  .map((name) => `.github/workflows/${name}`)
+  .sort();
 
 const INSTALL_WORKFLOWS = [
   '.github/workflows/ci.yml',
@@ -19,7 +17,7 @@ function read(path) {
 }
 
 function actionPins(workflow) {
-  return [...workflow.matchAll(/^\s*-?\s*uses:\s*(actions\/[^@\s]+)@([^\s#]+)/gm)]
+  return [...workflow.matchAll(/^\s*-?\s*uses:\s*([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)?)@([^\s#]+)/gm)]
     .map((match) => ({ action: match[1], ref: match[2] }));
 }
 
@@ -47,17 +45,28 @@ describe('security supply-chain contract', () => {
       expect(workflow).not.toMatch(/contents:\s*write/);
 
       const pins = actionPins(workflow);
-      expect(pins.length).toBeGreaterThan(0);
       for (const pin of pins) {
         expect(pin.ref, `${path}: ${pin.action}`).toMatch(/^[0-9a-f]{40}$/i);
       }
     }
   });
 
+  it('rejects mutable dependency installs and mutable container service tags in every workflow', () => {
+    for (const path of WORKFLOWS) {
+      const workflow = read(path);
+      expect(workflow, `${path}: mutable npm install`).not.toMatch(/\bnpm install\b/);
+
+      for (const match of workflow.matchAll(/^\s*image:\s*([^\s#]+)/gm)) {
+        expect(match[1], `${path}: container image`).toMatch(/@sha256:[0-9a-f]{64}$/i);
+      }
+    }
+  });
+
   it('does not persist checkout credentials into later build steps', () => {
     for (const path of WORKFLOWS) {
-      const step = checkoutStep(read(path));
-      expect(step, `${path}: checkout step`).toContain('uses: actions/checkout@');
+      const workflow = read(path);
+      if (!workflow.includes('uses: actions/checkout@')) continue;
+      const step = checkoutStep(workflow);
       expect(step, `${path}: checkout credentials`).toContain('persist-credentials: false');
     }
   });
@@ -68,6 +77,16 @@ describe('security supply-chain contract', () => {
       expect(workflow).toMatch(/\bnpm ci\b/);
       expect(workflow).not.toMatch(/\bnpm install\b/);
     }
+  });
+
+  it('keeps CodeQL narrowly permissioned and scans JavaScript/TypeScript', () => {
+    const workflow = read('.github/workflows/codeql.yml');
+    expect(workflow).toContain('contents: read');
+    expect(workflow).toContain('security-events: write');
+    expect(workflow).toContain('languages: javascript-typescript');
+    expect(workflow).toMatch(/\bnpm audit --audit-level=moderate\b/);
+    expect(workflow).not.toMatch(/contents:\s*write/);
+    expect(workflow).not.toMatch(/pull-requests:\s*write/);
   });
 
   it('enables automated npm and GitHub Actions dependency update monitoring', () => {

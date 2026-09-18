@@ -1,0 +1,16 @@
+# Default maintainer review
+* @wpessential
+
+# Security-sensitive repository surfaces
+/.github/workflows/ @wpessential
+/.github/dependabot.yml @wpessential
+/.github/CODEOWNERS @wpessential
+/SECURITY.md @wpessential
+/package.json @wpessential
+/package-lock.json @wpessential
+/scripts/ @wpessential
+/src/cli/ @wpessential
+/src/plugin/ @wpessential
+/src/ui/ @wpessential
+/tests/security-supply-chain-contract.test.mjs @wpessential
+/tests/ui-security-contract.test.mjs @wpessential
