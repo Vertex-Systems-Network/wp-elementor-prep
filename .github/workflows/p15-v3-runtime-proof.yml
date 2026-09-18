@@ -114,6 +114,8 @@ jobs:
           CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || true)"
           test -n "$CHROME_BIN"
           test -x "$CHROME_BIN"
+          CHROME_VERSION="$("$CHROME_BIN" --version | grep -oE '[0-9]+(\.[0-9]+){1,3}' | head -n 1)"
+          [[ "$CHROME_VERSION" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]]
 
           {
             echo "P15_WP_VERSION=$WP_VERSION"
@@ -122,6 +124,7 @@ jobs:
             echo "P15_DB_VERSION=$DB_VERSION"
             echo "P15_WP_MEMORY_MB=256"
             echo "P15_CHROME_BIN=$CHROME_BIN"
+            echo "P15_CHROME_VERSION=$CHROME_VERSION"
           } >> "$GITHUB_ENV"
 
           {
@@ -132,8 +135,72 @@ jobs:
             echo "memory=$MEMORY_RAW"
             echo "home=$(php /tmp/wp --path=/tmp/p15-wp eval 'echo home_url();')"
             echo "siteurl=$(php /tmp/wp --path=/tmp/p15-wp eval 'echo site_url();')"
-            "$CHROME_BIN" --version
+            echo "chrome=$CHROME_VERSION"
           } | tee "$P15_OUT_DIR/runtime-versions.txt"
+
+      - name: Capture and qualify environment before import
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const outDir = process.env.P15_OUT_DIR;
+          const observedAt = new Date().toISOString();
+          const environment = {
+            schemaVersion: 1,
+            evidenceVersion: 'elementor-target-environment-evidence-v1',
+            source: 'OBSERVED',
+            wordpressVersion: process.env.P15_WP_VERSION,
+            elementorVersion: process.env.P15_ELEMENTOR_VERSION,
+            phpVersion: process.env.P15_PHP_VERSION,
+            database: {
+              engine: 'MYSQL',
+              version: process.env.P15_DB_VERSION,
+            },
+            wordpressMemoryLimitMb: Number(process.env.P15_WP_MEMORY_MB),
+            browser: {
+              family: 'CHROME',
+              version: process.env.P15_CHROME_VERSION,
+            },
+            elementorProActive: false,
+            thirdPartyElementorAddonsActive: false,
+            observedAt,
+            evidenceReference: process.env.P15_EVIDENCE_REFERENCE,
+            acceptanceAuthority: false,
+            targetCompatibilityClaim: false,
+            productionAcceptance: false,
+            internalReviewRequired: true,
+          };
+          fs.writeFileSync(path.join(outDir, 'environment.json'), JSON.stringify(environment, null, 2) + '\n');
+          NODE
+
+          npm run p15:elementor-target-environment-intake -- \
+            --evidence "$P15_OUT_DIR/environment.json" \
+            --out "$P15_OUT_DIR/environment-intake.json" \
+            > "$P15_OUT_DIR/environment-intake.stdout.log" \
+            2> "$P15_OUT_DIR/environment-intake.stderr.log"
+
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const outDir = process.env.P15_OUT_DIR;
+          const report = JSON.parse(fs.readFileSync(path.join(outDir, 'environment-intake.json'), 'utf8'));
+          const ok =
+            report.classification === 'QUALIFIED_FOR_BOUND_TARGET_PROOF'
+            && report.evidenceValid === true
+            && Array.isArray(report.failures) && report.failures.length === 0
+            && Array.isArray(report.reviewCodes) && report.reviewCodes.length === 0
+            && Array.isArray(report.issues) && report.issues.length === 0;
+          console.log(JSON.stringify({
+            classification: report.classification,
+            evidenceValid: report.evidenceValid,
+            failures: report.failures,
+            reviewCodes: report.reviewCodes,
+            qualifiedBeforeImport: ok,
+          }, null, 2));
+          if (!ok) process.exit(1);
+          NODE
 
       - name: Import exact v3 template through Elementor Template Library
         shell: bash
@@ -190,8 +257,6 @@ jobs:
           IMPORT_EXIT=0
           PROOF_EXIT=0
           CHAIN_EXIT=0
-
-          npm run p15:elementor-target-environment-intake --             --evidence "$P15_OUT_DIR/environment.json"             --out "$P15_OUT_DIR/environment-intake.json"             > "$P15_OUT_DIR/environment-intake.stdout.log"             2> "$P15_OUT_DIR/environment-intake.stderr.log" || ENV_EXIT=$?
 
           npm run p15:elementor-import-intake --             --candidate "$P15_VECTOR_DIR/candidate.json"             --receipt "$P15_OUT_DIR/import-receipt.json"             --out "$P15_OUT_DIR/import-intake.json"             > "$P15_OUT_DIR/import-intake.stdout.log"             2> "$P15_OUT_DIR/import-intake.stderr.log" || IMPORT_EXIT=$?
 
