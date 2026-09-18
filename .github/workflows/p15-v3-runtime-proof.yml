@@ -1,0 +1,269 @@
+name: P15 V3 Qualified Runtime Proof
+
+on:
+  push:
+    branches:
+      - evidence/p15-v3-runtime-proof-483
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p15-v3-runtime-proof-483
+  cancel-in-progress: true
+
+jobs:
+  controlled-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress
+          MYSQL_USER: wp
+          MYSQL_PASSWORD: wp
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      P15_VECTOR_DIR: ${{ github.workspace }}/dist-p15/p15-elementor-first-proof-vector-v3
+      P15_OUT_DIR: ${{ github.workspace }}/dist-p15/p15-v3-runtime-proof
+      P15_SITE_URL: http://127.0.0.1:8080
+      P15_ADMIN_USER: p15admin
+      P15_ADMIN_PASSWORD: P15Proof-2026-Runtime
+      P15_EVIDENCE_REFERENCE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+    steps:
+      - name: Checkout exact evidence branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install repository dependencies
+        run: npm ci
+
+      - name: Generate exact canonical v3 vector
+        run: npm run p15:elementor-first-proof-vector -- --out-dir "$P15_VECTOR_DIR"
+
+      - name: Bind runtime to retained v3 byte identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$P15_VECTOR_DIR"
+          printf '%s  %s\n' '96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26' 'candidate.json' | sha256sum -c -
+          printf '%s  %s\n' '2d467d9501675ee1b3d6bfdd497baf65ee34353520d5c1cd5779b9ba779ae167' 'manifest.json' | sha256sum -c -
+          printf '%s  %s\n' '9c0587981ad70be88c4e8666888a088eb93c75676a5704cfd2bc9232271a1eb0' 'neutral-ir.json' | sha256sum -c -
+          printf '%s  %s\n' '8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676' 'target-profile.json' | sha256sum -c -
+          printf '%s  %s\n' 'bf2c229441f93486af7152f9196c265f09ee9e3cefab67d11ecb6765f583e4ad' 'template.json' | sha256sum -c -
+
+      - name: Prepare clean WordPress 6.8 and Elementor 4.2.4 target
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$P15_OUT_DIR" /tmp/p15-wp
+
+          curl -fsSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /tmp/wp
+          chmod +x /tmp/wp
+          php /tmp/wp --info | tee "$P15_OUT_DIR/wp-cli-info.txt"
+
+          php /tmp/wp core download             --version=6.8             --locale=en_US             --path=/tmp/p15-wp             --force
+
+          php /tmp/wp --path=/tmp/p15-wp config create             --dbname=wordpress             --dbuser=wp             --dbpass=wp             --dbhost=127.0.0.1:3306             --skip-check
+
+          php /tmp/wp --path=/tmp/p15-wp config set WP_MEMORY_LIMIT 256M --type=constant
+          php /tmp/wp --path=/tmp/p15-wp config set WP_MAX_MEMORY_LIMIT 256M --type=constant
+
+          php /tmp/wp --path=/tmp/p15-wp core install             --url="$P15_SITE_URL"             --title='P15 Controlled Runtime Proof'             --admin_user="$P15_ADMIN_USER"             --admin_password="$P15_ADMIN_PASSWORD"             --admin_email='p15-runtime@example.invalid'             --skip-email
+
+          php /tmp/wp --path=/tmp/p15-wp plugin install             https://downloads.wordpress.org/plugin/elementor.4.2.4.zip             --activate
+
+          WP_VERSION="$(php /tmp/wp --path=/tmp/p15-wp core version)"
+          ELEMENTOR_VERSION="$(php /tmp/wp --path=/tmp/p15-wp plugin get elementor --field=version)"
+          PHP_VERSION="$(php -r 'echo PHP_VERSION;')"
+          DB_VERSION="$(php -r '$m=new mysqli("127.0.0.1","wp","wp","wordpress",3306); if ($m->connect_errno) { fwrite(STDERR,$m->connect_error); exit(1); } $r=$m->query("SELECT VERSION() AS v")->fetch_assoc(); echo $r["v"];')"
+          MEMORY_RAW="$(php /tmp/wp --path=/tmp/p15-wp eval 'echo WP_MEMORY_LIMIT;')"
+
+          test "$WP_VERSION" = '6.8'
+          test "$ELEMENTOR_VERSION" = '4.2.4'
+          test "$MEMORY_RAW" = '256M'
+          [[ "$PHP_VERSION" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]]
+          [[ "$DB_VERSION" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]]
+
+          mapfile -t ACTIVE_PLUGINS < <(php /tmp/wp --path=/tmp/p15-wp plugin list --status=active --field=name)
+          printf 'Active plugins:\n%s\n' "${ACTIVE_PLUGINS[*]}" | tee "$P15_OUT_DIR/active-plugins.txt"
+          test "${#ACTIVE_PLUGINS[@]}" -eq 1
+          test "${ACTIVE_PLUGINS[0]}" = 'elementor'
+
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || true)"
+          test -n "$CHROME_BIN"
+          test -x "$CHROME_BIN"
+
+          {
+            echo "P15_WP_VERSION=$WP_VERSION"
+            echo "P15_ELEMENTOR_VERSION=$ELEMENTOR_VERSION"
+            echo "P15_PHP_VERSION=$PHP_VERSION"
+            echo "P15_DB_VERSION=$DB_VERSION"
+            echo "P15_WP_MEMORY_MB=256"
+            echo "P15_CHROME_BIN=$CHROME_BIN"
+          } >> "$GITHUB_ENV"
+
+          {
+            echo "wordpress=$WP_VERSION"
+            echo "elementor=$ELEMENTOR_VERSION"
+            echo "php=$PHP_VERSION"
+            echo "mysql=$DB_VERSION"
+            echo "memory=$MEMORY_RAW"
+            "$CHROME_BIN" --version
+          } | tee "$P15_OUT_DIR/runtime-versions.txt"
+
+      - name: Import exact v3 template through Elementor Template Library
+        shell: bash
+        run: |
+          set -euo pipefail
+          export P15_TEMPLATE_PATH="$P15_VECTOR_DIR/template.json"
+          export P15_TEMPLATE_ID_FILE=/tmp/p15-template-id
+          export P15_IMPORT_AT_FILE=/tmp/p15-import-at
+
+          php /tmp/wp --path=/tmp/p15-wp eval-file             "$GITHUB_WORKSPACE/scripts/p15-v3-runtime-import.php"             | tee "$P15_OUT_DIR/import-runtime.log"
+
+          P15_TEMPLATE_ID="$(cat /tmp/p15-template-id)"
+          P15_IMPORT_OBSERVED_AT="$(cat /tmp/p15-import-at)"
+
+          [[ "$P15_TEMPLATE_ID" =~ ^[0-9]+$ ]]
+          node -e "const v=process.argv[1]; if(new Date(v).toISOString()!==v) process.exit(1)" "$P15_IMPORT_OBSERVED_AT"
+
+          {
+            echo "P15_TEMPLATE_ID=$P15_TEMPLATE_ID"
+            echo "P15_IMPORT_OBSERVED_AT=$P15_IMPORT_OBSERVED_AT"
+          } >> "$GITHUB_ENV"
+
+      - name: Start disposable WordPress frontend
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/p15-wp/wp-content/mu-plugins
+          cp "$GITHUB_WORKSPACE/scripts/p15-v3-runtime-probe.php"             /tmp/p15-wp/wp-content/mu-plugins/p15-v3-runtime-probe.php
+
+          nohup php -S 127.0.0.1:8080 -t /tmp/p15-wp             > "$P15_OUT_DIR/php-server.log" 2>&1 &
+          echo $! > /tmp/p15-php-server.pid
+
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl -fsS "$P15_SITE_URL/wp-login.php" > /dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          test "$ready" -eq 1
+
+      - name: Install browser driver library only
+        run: npm install --no-save --package-lock=false puppeteer-core@24.22.3
+
+      - name: Observe editor and frontend in real Chrome
+        run: node scripts/p15-v3-runtime-proof-ci.mjs
+
+      - name: Run official P15 environment/import/proof/chain intakes
+        shell: bash
+        run: |
+          set -u
+          ENV_EXIT=0
+          IMPORT_EXIT=0
+          PROOF_EXIT=0
+          CHAIN_EXIT=0
+
+          npm run p15:elementor-target-environment-intake --             --evidence "$P15_OUT_DIR/environment.json"             --out "$P15_OUT_DIR/environment-intake.json"             > "$P15_OUT_DIR/environment-intake.stdout.log"             2> "$P15_OUT_DIR/environment-intake.stderr.log" || ENV_EXIT=$?
+
+          npm run p15:elementor-import-intake --             --candidate "$P15_VECTOR_DIR/candidate.json"             --receipt "$P15_OUT_DIR/import-receipt.json"             --out "$P15_OUT_DIR/import-intake.json"             > "$P15_OUT_DIR/import-intake.stdout.log"             2> "$P15_OUT_DIR/import-intake.stderr.log" || IMPORT_EXIT=$?
+
+          npm run p15:elementor-target-proof-intake --             --candidate "$P15_VECTOR_DIR/candidate.json"             --profile "$P15_VECTOR_DIR/target-profile.json"             --proof "$P15_OUT_DIR/proof.json"             --out "$P15_OUT_DIR/proof-intake.json"             > "$P15_OUT_DIR/proof-intake.stdout.log"             2> "$P15_OUT_DIR/proof-intake.stderr.log" || PROOF_EXIT=$?
+
+          npm run p15:elementor-target-proof-chain-intake --             --candidate "$P15_VECTOR_DIR/candidate.json"             --profile "$P15_VECTOR_DIR/target-profile.json"             --environment "$P15_OUT_DIR/environment.json"             --proof "$P15_OUT_DIR/proof.json"             --out "$P15_OUT_DIR/chain-intake.json"             > "$P15_OUT_DIR/chain-intake.stdout.log"             2> "$P15_OUT_DIR/chain-intake.stderr.log" || CHAIN_EXIT=$?
+
+          node - "$P15_OUT_DIR/intake-exit-codes.json" "$ENV_EXIT" "$IMPORT_EXIT" "$PROOF_EXIT" "$CHAIN_EXIT" <<'NODE'
+          const fs = require('fs');
+          const [path, envExit, importExit, proofExit, chainExit] = process.argv.slice(2);
+          fs.writeFileSync(path, JSON.stringify({
+            environment: Number(envExit),
+            import: Number(importExit),
+            proof: Number(proofExit),
+            chain: Number(chainExit),
+          }, null, 2) + '\n');
+          NODE
+
+      - name: Require the bounded full-pass evidence chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const path = process.env.P15_OUT_DIR;
+          const read = (name) => JSON.parse(fs.readFileSync(`${path}/${name}`, 'utf8'));
+
+          const exits = read('intake-exit-codes.json');
+          const environment = read('environment-intake.json');
+          const imported = read('import-intake.json');
+          const proof = read('proof-intake.json');
+          const chain = read('chain-intake.json');
+          const raw = read('raw-runtime-observation.json');
+
+          const checks = {
+            intakeExitCodesZero: Object.values(exits).every((value) => value === 0),
+            environmentQualified: environment.classification === 'QUALIFIED_FOR_BOUND_TARGET_PROOF',
+            environmentReviewFree: Array.isArray(environment.reviewCodes) && environment.reviewCodes.length === 0,
+            importBoundPass: imported.status === 'BOUND_OBSERVED_PASS',
+            proofFullPass: proof.classification === 'BOUND_FULL_PASS',
+            proofExactBindings: proof.candidateBindingMatches === true && proof.profileBindingMatches === true,
+            proofDeclaredObservedMatch: proof.declaredObservedEnvironmentMatches === true,
+            proofReviewFree: Array.isArray(proof.reviewCodes) && proof.reviewCodes.length === 0,
+            chainFullPass: chain.classification === 'CHAIN_FULL_PASS',
+            chainValid: chain.chainValid === true,
+            sameRuntime: chain.runtimeBindingMatches === true,
+            sameEvidenceReference: chain.evidenceReferenceMatches === true,
+            chronologyValid: chain.chronologyValid === true,
+            renderStructurePass: raw.derivedStepResults?.fidelity?.structure === 'PASS',
+            renderBackgroundPass: raw.derivedStepResults?.fidelity?.solidBackground === 'PASS',
+            renderRadiusPass: raw.derivedStepResults?.fidelity?.uniformRadius === 'PASS',
+          };
+
+          fs.writeFileSync(
+            `${path}/final-gate.json`,
+            JSON.stringify({
+              schemaVersion: 1,
+              gate: 'p15-v3-qualified-runtime-proof-final-gate-v1',
+              checks,
+              passed: Object.values(checks).every(Boolean),
+              acceptanceAuthority: false,
+              targetCompatibilityClaim: false,
+              productionAcceptance: false,
+              internalReviewRequired: true,
+            }, null, 2) + '\n',
+          );
+
+          console.log(JSON.stringify(checks, null, 2));
+          if (!Object.values(checks).every(Boolean)) process.exit(1);
+          NODE
+
+      - name: Upload retained runtime evidence bundle
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: p15-v3-qualified-runtime-proof-${{ github.run_id }}
+          path: |
+            dist-p15/p15-v3-runtime-proof/
+            dist-p15/p15-elementor-first-proof-vector-v3/
+          if-no-files-found: warn
+          retention-days: 14
