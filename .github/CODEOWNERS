@@ -12,5 +12,6 @@
 /src/cli/ @wpessential
 /src/plugin/ @wpessential
 /src/ui/ @wpessential
+/tests/ai-security-boundary-contract.test.mjs @wpessential
 /tests/security-supply-chain-contract.test.mjs @wpessential
 /tests/ui-security-contract.test.mjs @wpessential
