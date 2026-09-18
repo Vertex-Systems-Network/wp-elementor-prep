@@ -33,13 +33,15 @@ The vector intentionally exercises only already accepted bounded P15 behavior:
 
 The immutable declared TargetProfile records the frozen first-proof target selected from the 2026-09-16 R0 boundary:
 
-- WordPress `6.8.0`;
+- WordPress `6.8`;
 - Elementor `4.2.4`;
 - architecture `CONTAINER`;
 - output mode `TEMPLATE_JSON`;
 - Atomic elements `UNSUPPORTED`.
 
 These are **declared target versions**, not observed environment facts. The real environment packet for #483 must record what is actually observed and must not rewrite those observations to match this profile.
+
+PR #518 subsequently retained the first genuine observation for this vector on WordPress `6.8` + Elementor `4.2.4`. That retained reference does not retroactively turn declared profile fields into observed environment data and does not grant general version compatibility or production authority.
 
 ## Files and operator use
 
