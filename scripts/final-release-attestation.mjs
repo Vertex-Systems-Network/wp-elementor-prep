@@ -154,4 +154,4 @@ await writeAtomicTextFile(outputPath, `${JSON.stringify(attestation, null, 2)}\n
 console.log(`Final release attestation PASS: ${releaseInfo.pluginName} ${releaseInfo.packageVersion}`);
 console.log(`Plugin ID: ${releaseInfo.pluginId}`);
 console.log(`Source SHA: ${releaseInfo.sourceSha}`);
-console.log(`Attestation: ${outputArg.replaceAll('\\\\', '/')}`);
+console.log(`Attestation: ${outputArg.replaceAll('\\', '/')}`);
