@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { buildBuildReadyReport, serializeBuildReadyReportJson } from '../core/build-ready';
 import type { BuildReadyReportV2 } from '../core/build-ready-types';
@@ -6,6 +6,7 @@ import { buildAuditReport } from '../core/scoring';
 import { generateBacklog, serializeBacklogJson, serializeBacklogMarkdown, type BacklogDocument } from '../core/backlog';
 import { serializeAuditReportJson, serializeAuditReportMarkdown } from '../core/report-serialization';
 import type { AuditReport } from '../core/types';
+import { BoundedJsonReadError, readBoundedJsonFile } from './bounded-json';
 import {
   CanonicalSnapshotSourceAdapter,
   FigmaRestSourceAdapter,
@@ -149,17 +150,14 @@ function parseAuditReport(value: unknown): AuditReport {
 }
 
 async function readJsonFile(path: string, code: string): Promise<unknown> {
-  let raw: string;
   try {
-    raw = await readFile(resolve(path), 'utf8');
+    return await readBoundedJsonFile(path, { label: path });
   } catch (error) {
+    if (error instanceof BoundedJsonReadError) {
+      throw new CliError(code, error.message);
+    }
     const detail = error instanceof Error ? error.message : String(error);
     throw new CliError(code, `Unable to read ${path}: ${detail}`);
-  }
-  try {
-    return JSON.parse(raw) as unknown;
-  } catch {
-    throw new CliError(code, `${path} is not valid JSON.`);
   }
 }
 
