@@ -137,60 +137,81 @@ try {
   }
 
   const editorUrl = `${siteUrl}/wp-admin/post.php?post=${encodeURIComponent(templateId)}&action=elementor`;
-  await page.goto(editorUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
-
-  editorOpen = await frameContainsText(page, 'P15 First Controlled Target Proof', 90000);
-  editorDetail = {
-    url: page.url(),
-    exactHeadingVisibleInEditorFrame: editorOpen,
-    frameUrls: page.frames().map((frame) => frame.url()),
-  };
+  try {
+    await page.goto(editorUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    editorOpen = await frameContainsText(page, 'P15 First Controlled Target Proof', 90000);
+    editorDetail = {
+      url: page.url(),
+      exactHeadingVisibleInEditorFrame: editorOpen,
+      frameUrls: page.frames().map((frame) => frame.url()),
+    };
+  } catch (error) {
+    editorOpen = false;
+    editorDetail = {
+      url: page.url(),
+      exactHeadingVisibleInEditorFrame: false,
+      frameUrls: page.frames().map((frame) => frame.url()),
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
 
   await page.screenshot({ path: join(outDir, 'editor.png'), fullPage: true });
 
   if (editorOpen) {
     const renderUrl = `${siteUrl}/?p15_runtime_probe=1`;
-    await page.goto(renderUrl, { waitUntil: 'networkidle2', timeout: 60000 });
-    await page.waitForFunction(
-      () => Array.from(document.querySelectorAll('h1,h2,h3,h4,h5,h6'))
-        .some((el) => (el.textContent || '').trim() === 'P15 First Controlled Target Proof'),
-      { timeout: 60000 },
-    );
+    try {
+      await page.goto(renderUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+      await page.waitForFunction(
+        () => Array.from(document.querySelectorAll('h1,h2,h3,h4,h5,h6'))
+          .some((el) => (el.textContent || '').trim() === 'P15 First Controlled Target Proof'),
+        { timeout: 60000 },
+      );
 
-    renderDetail = await page.evaluate(() => {
-      const heading = Array.from(document.querySelectorAll('h1,h2,h3,h4,h5,h6'))
-        .find((el) => (el.textContent || '').trim() === 'P15 First Controlled Target Proof');
-      const container = heading
-        ? (heading.closest('.e-con') || heading.closest('.elementor-element'))
-        : null;
+      renderDetail = await page.evaluate(() => {
+        const heading = Array.from(document.querySelectorAll('h1,h2,h3,h4,h5,h6'))
+          .find((el) => (el.textContent || '').trim() === 'P15 First Controlled Target Proof');
+        const container = heading
+          ? (heading.closest('.e-con') || heading.closest('.elementor-element'))
+          : null;
 
-      if (!heading || !container) {
+        if (!heading || !container) {
+          return {
+            headingFound: Boolean(heading),
+            structureTextFound: false,
+            containerClass: '',
+            matchesECon: false,
+            computedBackground: '',
+            computedRadii: [],
+          };
+        }
+
+        const style = getComputedStyle(container);
         return {
-          headingFound: Boolean(heading),
-          structureTextFound: false,
-          containerClass: '',
-          matchesECon: false,
-          computedBackground: '',
-          computedRadii: [],
+          headingFound: true,
+          structureTextFound: (container.textContent || '')
+            .includes('Deterministic Container V1 operator vector.'),
+          containerClass: String(container.className || ''),
+          matchesECon: container.matches('.e-con'),
+          computedBackground: style.backgroundColor,
+          computedRadii: [
+            style.borderTopLeftRadius,
+            style.borderTopRightRadius,
+            style.borderBottomRightRadius,
+            style.borderBottomLeftRadius,
+          ],
         };
-      }
-
-      const style = getComputedStyle(container);
-      return {
-        headingFound: true,
-        structureTextFound: (container.textContent || '')
-          .includes('Deterministic Container V1 operator vector.'),
-        containerClass: String(container.className || ''),
-        matchesECon: container.matches('.e-con'),
-        computedBackground: style.backgroundColor,
-        computedRadii: [
-          style.borderTopLeftRadius,
-          style.borderTopRightRadius,
-          style.borderBottomRightRadius,
-          style.borderBottomLeftRadius,
-        ],
+      });
+    } catch (error) {
+      renderDetail = {
+        headingFound: false,
+        structureTextFound: false,
+        containerClass: '',
+        matchesECon: false,
+        computedBackground: '',
+        computedRadii: [],
+        error: error instanceof Error ? error.message : String(error),
       };
-    });
+    }
 
     await page.screenshot({ path: join(outDir, 'render.png'), fullPage: true });
   }
