@@ -17,7 +17,7 @@ describe('P15 retained Elementor reference-proof alignment', () => {
 
     expect(result.reportVersion).toBe(P15_ELEMENTOR_REFERENCE_PROOF_ALIGNMENT_VERSION);
     expect(result.registryVersion).toBe(P15_ELEMENTOR_REFERENCE_PROOF_REGISTRY_VERSION);
-    expect(result.status).toBe('EXACT_REFERENCE_PROOF_MATCH');
+    expect(result.status).toBe('EXACT_REFERENCE_PROFILE_MATCH');
     expect(result.exactVersionMatch).toBe(true);
     expect(result.referenceProof).toEqual(expect.objectContaining({
       proofId: P15_ELEMENTOR_WP68_E424_PROOF_ID,
@@ -42,6 +42,7 @@ describe('P15 retained Elementor reference-proof alignment', () => {
       'FIDELITY_UNIFORM_RADIUS',
     ]);
     expect(result.referenceProof?.excludedScope).toContain('GENERAL_VERSION_COMPATIBILITY');
+    expect(result.candidateBinding).toBe('NOT_ASSESSED');
     expect(result.environmentObserved).toBe(false);
     expect(result.targetCompatibilityClaim).toBe(false);
     expect(result.productionAcceptance).toBe(false);
@@ -55,7 +56,7 @@ describe('P15 retained Elementor reference-proof alignment', () => {
       buildElementorTargetProfile({ wordpressVersion: '6.8.1', elementorVersion: '4.2.4' }),
     );
 
-    expect(result.status).toBe('NO_EXACT_REFERENCE_PROOF');
+    expect(result.status).toBe('NO_EXACT_REFERENCE_PROFILE');
     expect(result.exactVersionMatch).toBe(false);
     expect(result.referenceProof).toBeNull();
     expect(result.profileIssueCodes).toEqual([]);
