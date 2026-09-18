@@ -40,6 +40,9 @@ describe('P10 npm CLI contract', () => {
   it('bounds external Figma response and legacy CLI JSON resources', () => {
     expect(adapters).toContain('FIGMA_REST_MAX_BYTES');
     expect(adapters).toContain('FIGMA_REST_TIMEOUT_MS');
+    expect(adapters).toContain('FIGMA_REST_MAX_NODE_DEPTH');
+    expect(adapters).toContain('FIGMA_REST_MAX_NODES');
+    expect(adapters).toContain('FIGMA_RESPONSE_RESOURCE_LIMIT');
     expect(adapters).toContain('AbortController');
     expect(adapters).toContain('FIGMA_RESPONSE_TOO_LARGE');
     expect(adapters).not.toContain('await response.json()');
