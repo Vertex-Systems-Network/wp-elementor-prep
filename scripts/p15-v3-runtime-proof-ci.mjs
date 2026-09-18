@@ -90,33 +90,30 @@ try {
   }
   const browserVersion = exactNumericVersion(browserVersionMatch[1], 'Chrome version');
 
-  const environmentObservedAt = new Date().toISOString();
-  environment = {
-    schemaVersion: 1,
-    evidenceVersion: 'elementor-target-environment-evidence-v1',
-    source: 'OBSERVED',
-    wordpressVersion: wpVersion,
-    elementorVersion,
-    phpVersion,
-    database: {
-      engine: 'MYSQL',
-      version: dbVersion,
-    },
-    wordpressMemoryLimitMb: memoryMb,
-    browser: {
-      family: 'CHROME',
-      version: browserVersion,
-    },
-    elementorProActive: false,
-    thirdPartyElementorAddonsActive: false,
-    observedAt: environmentObservedAt,
-    evidenceReference,
-    acceptanceAuthority: false,
-    targetCompatibilityClaim: false,
-    productionAcceptance: false,
-    internalReviewRequired: true,
-  };
-  writeJson(join(outDir, 'environment.json'), environment);
+  environment = JSON.parse(readFileSync(join(outDir, 'environment.json'), 'utf8'));
+  const environmentMatchesPrequalifiedRuntime =
+    environment?.schemaVersion === 1
+    && environment?.evidenceVersion === 'elementor-target-environment-evidence-v1'
+    && environment?.source === 'OBSERVED'
+    && environment?.wordpressVersion === wpVersion
+    && environment?.elementorVersion === elementorVersion
+    && environment?.phpVersion === phpVersion
+    && environment?.database?.engine === 'MYSQL'
+    && environment?.database?.version === dbVersion
+    && environment?.wordpressMemoryLimitMb === memoryMb
+    && environment?.browser?.family === 'CHROME'
+    && environment?.browser?.version === browserVersion
+    && environment?.elementorProActive === false
+    && environment?.thirdPartyElementorAddonsActive === false
+    && environment?.evidenceReference === evidenceReference
+    && environment?.acceptanceAuthority === false
+    && environment?.targetCompatibilityClaim === false
+    && environment?.productionAcceptance === false
+    && environment?.internalReviewRequired === true;
+
+  if (!environmentMatchesPrequalifiedRuntime) {
+    throw new Error('Browser/runtime no longer matches the pre-import qualified environment evidence.');
+  }
 
   page = await browser.newPage();
   page.setDefaultTimeout(90000);
