@@ -1,4 +1,5 @@
-import { isAbsolute, relative, resolve, sep } from 'node:path';
+import { lstat, realpath } from 'node:fs/promises';
+import { basename, dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 
 const PROTECTED_DIRECTORIES = Object.freeze([
   '.git',
@@ -53,4 +54,49 @@ export function assertSafeReleaseOutput(outputPath, cwd = process.cwd()) {
   }
 
   return outRoot;
+}
+
+async function canonicalizeOutputParent(parentPath) {
+  let current = resolve(parentPath);
+  const missingSegments = [];
+
+  while (true) {
+    try {
+      const metadata = await lstat(current);
+      if (!metadata.isDirectory() && !metadata.isSymbolicLink()) {
+        throw new Error(`Release output parent is not a directory: ${current}`);
+      }
+      const canonicalExistingParent = await realpath(current);
+      return resolve(canonicalExistingParent, ...missingSegments.reverse());
+    } catch (error) {
+      if (error?.code !== 'ENOENT') throw error;
+      const parent = dirname(current);
+      if (parent === current) {
+        throw new Error(`Unable to resolve an existing parent for release output: ${parentPath}`);
+      }
+      missingSegments.push(basename(current));
+      current = parent;
+    }
+  }
+}
+
+export async function assertSafeReleaseOutputOnDisk(outputPath, cwd = process.cwd()) {
+  const lexicalOutRoot = assertSafeReleaseOutput(outputPath, cwd);
+
+  let canonicalRepoRoot;
+  try {
+    canonicalRepoRoot = await realpath(resolve(cwd));
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(`Unable to resolve repository root before release cleanup: ${detail}`);
+  }
+
+  const effectiveParent = await canonicalizeOutputParent(dirname(lexicalOutRoot));
+  const effectiveOutRoot = resolve(effectiveParent, basename(lexicalOutRoot));
+
+  // Re-apply all protected-path rules against the on-disk effective path.
+  // This catches parent-directory symlinks such as artifacts -> src before
+  // build-release reaches recursive rm()/mkdir().
+  assertSafeReleaseOutput(effectiveOutRoot, canonicalRepoRoot);
+  return lexicalOutRoot;
 }
