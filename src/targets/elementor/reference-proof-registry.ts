@@ -76,7 +76,7 @@ const REFERENCE_PROOF: P15ElementorReferenceProofV1 = Object.freeze({
     'FIDELITY_STRUCTURE',
     'FIDELITY_SOLID_BACKGROUND',
     'FIDELITY_UNIFORM_RADIUS',
-  ]),
+  ] as P15ElementorReferenceProofScope[]),
   excludedScope: Object.freeze([
     'ATOMIC_V4',
     'ELEMENTOR_PRO',
@@ -84,7 +84,7 @@ const REFERENCE_PROOF: P15ElementorReferenceProofV1 = Object.freeze({
     'RESPONSIVE_MAPPING',
     'MEDIA_ASSET_CLOSURE',
     'GENERAL_VERSION_COMPATIBILITY',
-  ]),
+  ] as P15ElementorReferenceProofExcludedScope[]),
   acceptanceAuthority: false,
   targetCompatibilityClaim: false,
   productionAcceptance: false,
