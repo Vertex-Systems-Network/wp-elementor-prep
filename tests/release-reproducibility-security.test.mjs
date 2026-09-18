@@ -29,7 +29,7 @@ describe('release reproducibility filesystem security', () => {
     const { left, right } = await pairedTrees();
     const result = await verifyReleaseReproducibility(left, right);
 
-    expect(result.files).toEqual(['plugin/code.js', 'RELEASE_INFO.json'].sort());
+    expect(result.files.slice().sort()).toEqual(['plugin/code.js', 'RELEASE_INFO.json'].sort());
     expect(Object.keys(result.hashes).sort()).toEqual(result.files.slice().sort());
   });
 
