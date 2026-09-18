@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdtemp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
+import { writeAtomicTextFile } from './security-io.mjs';
 
 function fail(message) {
   throw new Error(`P12 offline acceptance failed: ${message}`);
@@ -264,8 +265,7 @@ try {
     },
   };
 
-  await mkdir(dirname(reportPath), { recursive: true });
-  await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  await writeAtomicTextFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
   process.stdout.write(`P12 offline acceptance PASS on ${process.platform}/${process.arch}\n`);
   process.stdout.write(`Evidence: ${reportPath}\n`);
 } finally {
