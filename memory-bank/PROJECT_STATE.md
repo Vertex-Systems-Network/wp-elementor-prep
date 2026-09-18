@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-17
+Last updated: 2026-09-19
 
 ## Product direction
 
@@ -31,8 +31,9 @@ Recent accepted P15 sequence:
 - PR #505 — exact consumed-content SHA-256 snapshot binding plus streaming commit-time digest recheck; final head `f6431c95455d8d12ab78b3d67b83e701a86a27ad` passed CI #1329, Final #640 and Offline #684 on Ubuntu/macOS/Windows; merge `ebf8e81b20fe7f919009d48b465b007b4e668cf1`; issue #504 completed;
 - PR #507 — exact raw-byte hashing plus fatal strict UTF-8 decode before JSON parsing; final head `84cd08455aa7480bcf8875ea24d5b8474ee99063` passed CI #1333, Final #644 and Offline #688 on Ubuntu/macOS/Windows; merge `048184222ed289abf3b399e21b3f97e31b3c12e7`; issue #506 completed;
 - PR #509 — retained report input fingerprints reuse exact raw-byte snapshot digests instead of decoded-text rehashes; final head `3196b227e6a026b4e26e05d57cf4ec797429b105` passed CI #1337, Final #648 and Offline #692 on Ubuntu/macOS/Windows; merge `5c2c31097fcaeb43c9ee45176e6e185d176d6386`; issue #508 completed.
+- PR #518 / issue #483 — first genuine controlled Elementor target proof; exact head `4f09efda101e5a2771df9bfc3ac8960a43655e96` passed CI, Integration Readiness, Final, Offline, CodeQL and P15 Real Elementor Target Proof run `35403469986`; retained artifact `10570709987` digest `sha256:206b703ab8185f1e5b1a83346074accb23cc458b9fdcb94f5eaad0c4752e33aa`; observed WordPress `6.8`, Elementor `4.2.4`, PHP `8.3.6`, MariaDB `11.4.13`, memory `256 MB`, Chrome `152.0.0.0`; import/editor/render and bounded structure/background/radius fidelity all PASS; merge `326494a3ee917de985a628cb0ecc7ebe91c1c8e5`; authority remained false.
 
-Stable operator-I/O hardening builds on this provenance without changing P15 target authority. These code-side trains do not supply a real WordPress/Elementor import, editor, render or compatibility observation.
+Stable operator-I/O hardening builds on this provenance without changing P15 target authority. PR #518 is the first retained real WordPress/Elementor import/editor/render observation, but it is one exact bounded reference proof rather than a general compatibility, production or download authorization.
 
 ## Persistent dependencies
 
@@ -41,7 +42,6 @@ Stable operator-I/O hardening builds on this provenance without changing P15 tar
 - #159 — genuine Figma Desktop P13 Build-Ready runtime/parity acceptance dependency;
 - #182 — P27 final production-release/evidence gate;
 - #287 — repository-admin branch protection/ruleset hardening residual;
-- #483 — genuine controlled Elementor import/editor/render target proof.
 
 ## AI-native execution state
 
@@ -61,7 +61,7 @@ Repository development remains issue-first, PR-second, R0/R1-aware and exact-hea
 
 ## P15 state
 
-P15 remains **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED** with `N/A` progress.
+P15 remains **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED** with `N/A` progress.
 
 Accepted foundation now includes:
 
@@ -98,6 +98,7 @@ Accepted foundation now includes:
 - raw reference-closure template inputs use stable opened-file snapshots without a newly invented generic byte/depth/value ceiling because the accepted Elementor v0.4 settings contract remains target-owned and structurally open;
 - atomic report output through an exclusive restrictive-permission temporary payload plus rename, with output-parent/destination/input snapshots rechecked before commit and owned temporary artifacts cleaned on failure across the migrated P15 operator report surfaces;
 - a reproducible non-authorizing first-proof operator vector generated only through the accepted neutral-IR -> production Elementor v3 generator path, retaining exact candidate identity, immutable declared TargetProfile fingerprint, exact file SHA-256 values and a byte-for-byte drift check while keeping all target/runtime observations false and `importValidationStatus=NOT_RUN`.
+- one retained clean-Core controlled reference proof on exact WordPress `6.8` + Elementor `4.2.4` Container/Template JSON data `0.4`, with `QUALIFIED_FOR_BOUND_TARGET_PROOF` + `BOUND_FULL_PASS` + `CHAIN_FULL_PASS`, import/editor/render PASS and bounded structure/solid-background/uniform-radius fidelity PASS; this reference excludes Atomic-v4, Elementor Pro, third-party addons, responsive mapping, media-asset closure and general version compatibility.
 
 User-facing local-download truth remains exactly bounded to:
 
@@ -118,9 +119,10 @@ Authority remains:
 - no clipboard/section transfer;
 - no Figma mutation.
 
-A qualified environment plus `CHAIN_FULL_PASS` still means only that one genuine externally supplied candidate/profile/environment/proof evidence chain is internally consistent and complete for the bounded clean-Core policy. Separate retained operator evidence and internal review remain mandatory before any stronger P15 authority can be considered.
+The retained #483 proof establishes only one exact clean-Core reference observation. It does not make arbitrary locally generated candidates imported, does not observe a user's declared environment and does not change `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false` or `internalReviewRequired=true`.
 
-Issue #483 is the current P15 acceptance action. Generate or verify the exact non-authorizing operator inputs with `npm run p15:elementor-first-proof-vector -- --out-dir dist-p15/p15-elementor-first-proof-vector-v1`, retain that exact candidate/profile/template/manifest set, then capture genuine qualification evidence, perform the actual Template Library JSON import/editor/render observation, build the exact proof packet, run standalone diagnostics, run the combined chain intake, retain all identities/fingerprints/evidence together and undergo separate internal review. Local vector generation or verification is not target proof.
+Issue #545 / PR #546 binds declared TargetProfiles to that retained reference by exact WordPress + Elementor + Container/Template JSON envelope. `EXACT_REFERENCE_PROFILE_MATCH` means only that the declared profile envelope matches one retained proof reference while `candidateBinding=NOT_ASSESSED`; `NO_EXACT_REFERENCE_PROFILE` is not an incompatibility verdict. Local/download UI truth remains non-authorizing and current-candidate import validation stays separate from reference evidence.
+
 
 ## P16 state
 
@@ -145,8 +147,8 @@ Do not open future phases merely to increase parallelism while the bounded Eleme
 
 ## Immediate execution target
 
-Complete the coherent Elementor-first internal V1 path:
+Continue the coherent Elementor-first internal V1 from the retained controlled proof:
 
-`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation -> explicit Template JSON download -> bounded deterministic container fidelity -> reproducible first-proof candidate/profile vector -> observed target-environment qualification -> controlled real Elementor import/editor/render observation (#483) -> exact-bound target-proof intake -> combined environment/proof-chain intake -> retained evidence -> separate internal review`
+`selected Figma Frame -> deterministic extraction -> mapping readiness -> fresh candidate -> local artifact validation/download -> exact declared TargetProfile -> retained-reference alignment -> reference/media/responsive closure work -> additional controlled target observations where evidence is required -> bounded handoff`
 
-The locally validated artifact, generated first-proof vector, environment qualification, proof intake and chain intake remain non-target-authorizing until genuine retained target observations and review change that truth.
+The retained WordPress `6.8` + Elementor `4.2.4` proof is a reference point, not broad version support. Keep P16 stable unless a concrete shared blocker appears, keep P17-P26 frozen during this Elementor V1 window, and preserve false compatibility/production/download authority until the applicable evidence and release gates explicitly change it.

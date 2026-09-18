@@ -1,6 +1,6 @@
 # Next Actions
 
-Last updated: 2026-09-17
+Last updated: 2026-09-19
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 and must fail closed on stale or mismatched registered artifacts.
 
@@ -15,7 +15,7 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 - P12 — **IN PROGRESS / 80%**; historical publishing authority remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`, plugin ID `1680034649341961379`.
 - P13 — **IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING**; #159 requires genuine Figma Desktop evidence.
 - P14 — **CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED**; `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
-- P15 — **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**.
+- P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**.
 - P16 — **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
 - P17-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
 - P27 — **GATE DEFINED / EXECUTION DEFERRED** under #182.
@@ -41,7 +41,7 @@ Accepted sequence relevant to the live proof boundary:
 - PR #507 / issue #506 — raw-byte hashing plus fatal strict UTF-8 decoding before JSON parsing; final head `84cd08455aa7480bcf8875ea24d5b8474ee99063` passed CI #1333, Final #644, Offline #688 on Ubuntu/macOS/Windows; merge `048184222ed289abf3b399e21b3f97e31b3c12e7`;
 - PR #509 / issue #508 — retained P15 report fingerprints reuse exact raw-byte snapshot digests; final head `3196b227e6a026b4e26e05d57cf4ec797429b105` passed CI #1337, Final #648, Offline #692 on Ubuntu/macOS/Windows; merge `5c2c31097fcaeb43c9ee45176e6e185d176d6386`.
 
-The stable-I/O evidence-integrity line does not change `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, `internalReviewRequired=true`, or P15's `TARGET IMPORT UNVALIDATED` state.
+The stable-I/O evidence-integrity line does not change `acceptanceAuthority=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false` or `internalReviewRequired=true`. PR #518 subsequently retained one exact controlled target proof without converting that observation into broad target authority.
 
 ## P15 proof/evidence harness behavior for this release line
 
@@ -70,34 +70,23 @@ The stable-I/O evidence-integrity line does not change `acceptanceAuthority=fals
 
 `CHAIN_FULL_PASS` is evidence-chain consistency only. It never grants compatibility, production acceptance or target authority.
 
-## Next P15 acceptance action — issue #483 real controlled target proof
+## Next P15 development action — retained-reference alignment and bounded coverage
 
-The exact operator input set is now reproducible through the production generator path. The next P15 acceptance action remains the first genuine target proof against one real externally observed runtime.
+#483 is complete. PR #518 retained the first exact clean-Core proof on WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/solid-background/uniform-radius fidelity PASS, and qualified/full/full environment/proof/chain classifications. That result remains non-production-authorizing.
 
-Required order:
+Issue #545 / PR #546 is the next focused slice:
 
-1. generate or verify the exact vector with `npm run p15:elementor-first-proof-vector -- --out-dir dist-p15/p15-elementor-first-proof-vector-v1` and retain `candidate.json`, `target-profile.json`, `template.json` and `manifest.json` unchanged;
-2. capture the real runtime facts for the exact environment intended for the proof;
-3. run `p15:elementor-target-environment-intake` and retain the environment report/fingerprint;
-4. proceed only with the clean-Core `QUALIFIED_FOR_BOUND_TARGET_PROOF` path unless a separate review explicitly allows a review-required environment;
-5. import the vector's exact `template.json` through Elementor Template Library JSON;
-6. if import passes, open it in the Elementor editor;
-7. if editor-open passes, render/preview and observe only the currently supported bounded fidelity slice;
-8. build the exact-bound `elementor-target-proof-evidence-v1` packet from those genuine observations and the vector's exact candidate/profile identities;
-9. run the standalone target-proof intake using the exact `candidate.json` and `target-profile.json`;
-10. run `p15:elementor-target-proof-chain-intake` over the exact candidate/profile/environment/proof set;
-11. retain every vector file, input/report fingerprint and durable evidence reference together;
-12. perform separate internal review before changing any P15 authority/status.
+1. bind the exact #483 proof into a versioned immutable reference-proof registry;
+2. compare only immutable DECLARED TargetProfiles against exact retained WordPress/Elementor/Container/Template JSON facts;
+3. expose `EXACT_REFERENCE_PROFILE_MATCH` only for the exact retained profile envelope and `NO_EXACT_REFERENCE_PROFILE` otherwise, with `candidateBinding=NOT_ASSESSED`;
+4. treat absence of an exact proof as absence of reference evidence, never as an incompatibility verdict;
+5. keep the user-declared environment `environmentObserved=false`;
+6. explicitly exclude Atomic-v4, Elementor Pro, third-party addons, responsive mapping, media closure and general version compatibility from the retained proof scope;
+7. preserve `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required;
+8. after this alignment slice, continue only concrete P15 commercial-V1 gaps: broader deterministic semantic/media/responsive mapping, reference/asset closure, and additional controlled target observations when those claims require evidence.
 
-The frozen profile's WordPress `6.8.0` and Elementor `4.2.4` values are declared target facts, not observed runtime facts. Never rewrite the real environment evidence merely to match them; an observed mismatch remains evidence and must flow through the existing review/partial semantics.
+Do not reopen serializer/fidelity work merely to add breadth without an identified mapping or proof gap. The retained reference proof is evidence for one exact envelope, not a blanket support matrix.
 
-If a genuine qualified operator/environment is not available, stop at the evidence-capture boundary. CI, local vector generation, local JSON validity, Playground/SQLite-only observations, unbound screenshots and user-declared versions cannot substitute for #483.
-
-## Repository-side boundary while #483 is blocked
-
-Do not open additional P15 serializer/fidelity implementation merely to keep the queue moving while #483 is unproven. The next fidelity slice must be selected from a concrete gap exposed by the first real controlled target proof.
-
-Repository-side work is limited to concrete CI/review regressions, evidence-harness/operator-integrity, platform-evidence refreshes, canonical status truth and newly opened actionable issues.
 
 ## P16 bounded retention evidence-integrity boundary
 
@@ -111,7 +100,7 @@ Writer failure cleanup may remove only its own still-matching temporary payload;
 
 When the required real environment/operator is available, these can proceed independently:
 
-- #483 — qualified and chain-bound real Elementor import/editor/render evidence + separate internal review;
+- #483 is retained/completed; future P15 target observations must be opened only for concrete new coverage claims;
 - #159 — genuine Figma Desktop P13 runtime/parity evidence + separate internal review;
 - #84/#182 — remaining P12 package/publisher/account/2FA/final-exit evidence.
 

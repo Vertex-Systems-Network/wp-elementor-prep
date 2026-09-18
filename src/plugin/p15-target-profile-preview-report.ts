@@ -3,10 +3,14 @@ import {
   type ElementorTargetProfileCompatibilityAssessmentV1,
 } from '../targets/elementor/target-profile-assessment';
 import { buildElementorTargetProfile } from '../targets/elementor/target-profile';
+import {
+  assessP15ElementorReferenceProofAlignment,
+  type P15ElementorReferenceProofAlignmentV1,
+} from '../targets/elementor/reference-proof-registry';
 import type { P15FigmaNeutralExtractionResult } from './p15-neutral-export-extractor';
 import type { P15PluginPreviewFrameIdentity, P15PluginPreviewReviewEntry } from './p15-plugin-preview-report';
 
-export const P15_TARGET_PROFILE_PREVIEW_REPORT_VERSION = 'p15-elementor-target-profile-preview-report-v1' as const;
+export const P15_TARGET_PROFILE_PREVIEW_REPORT_VERSION = 'p15-elementor-target-profile-preview-report-v2' as const;
 export const P15_DECLARED_VERSION_MAX_LENGTH = 64 as const;
 
 export type P15TargetProfilePreviewStatus =
@@ -29,6 +33,7 @@ export interface P15TargetProfileAssessmentSummary {
   reviewWidgetTypes: string[];
   profileIssueCodes: string[];
   templateIssueCodes: string[];
+  referenceProof: P15ElementorReferenceProofAlignmentV1;
   referenceClosureStatus: 'NOT_RUN';
   targetEnvironmentValidationStatus: 'NOT_RUN';
   targetCompatibilityClaim: false;
@@ -153,6 +158,7 @@ export function buildP15TargetProfilePreviewReport(
 
   const profile = buildElementorTargetProfile({ wordpressVersion, elementorVersion });
   const assessment = assessElementorTargetProfileCompatibility(template, profile);
+  const referenceProof = assessP15ElementorReferenceProofAlignment(profile);
   if (!assessment.profileIdentity
     || !assessment.candidateFingerprint
     || !assessment.candidateStatus
@@ -183,6 +189,7 @@ export function buildP15TargetProfilePreviewReport(
       reviewWidgetTypes: [...assessment.reviewWidgetTypes],
       profileIssueCodes: assessment.profileIssues.map((issue) => issue.code),
       templateIssueCodes: assessment.templateIssues.map((issue) => issue.code),
+      referenceProof,
       referenceClosureStatus: 'NOT_RUN',
       targetEnvironmentValidationStatus: 'NOT_RUN',
       targetCompatibilityClaim: false,
