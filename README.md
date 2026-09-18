@@ -230,7 +230,7 @@ P12 remains at the retained **80%** release-exit state. The publishing-authorita
 ## Immediate execution order
 
 1. keep P14 non-authorizing while #159 genuine Figma evidence remains pending;
-2. complete exact retained-candidate binding in #547/#548, then continue P15 commercial-V1 through concrete semantic/media/responsive mapping and reference/asset closure gaps; keep target-compatibility/production/download authority false unless separate evidence explicitly changes it;
+2. continue P15 commercial-V1 after completed #547/#548 through concrete semantic/media/responsive mapping and reference/asset closure gaps; open additional target-proof work only for specific new coverage claims, and keep target-compatibility/production/download authority false unless separate evidence explicitly changes it;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17-P26 only in retained dependency order;
