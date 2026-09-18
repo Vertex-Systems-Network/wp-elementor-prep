@@ -1,5 +1,4 @@
 import { mkdtempSync, rmSync, truncateSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -110,7 +109,7 @@ describe('P10 source adapters', () => {
   });
 
   it('fails before reading canonical snapshot files above the raw byte ceiling', async () => {
-    const root = mkdtempSync(join(tmpdir(), 'p10-snapshot-limit-'));
+    const root = mkdtempSync(join(process.cwd(), '.p10-snapshot-limit-'));
     try {
       const path = join(root, 'oversized.json');
       writeFileSync(path, '');
