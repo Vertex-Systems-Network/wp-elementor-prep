@@ -196,6 +196,14 @@ describe('P13 runtime parity intake CLI', () => {
     });
   });
 
+  it('routes operator JSON and receipt output through the security I/O boundary', async () => {
+    const source = await readFile('scripts/p13-runtime-parity-intake.mjs', 'utf8');
+    expect(source).toContain("readBoundedJsonFile(path, { label: path })");
+    expect(source).toContain('writeAtomicTextFile(outPath');
+    expect(source).not.toContain("readFile(resolve(path), 'utf8')");
+    expect(source).not.toContain("writeFile(outPath");
+  });
+
   it('keeps the offline analyzer constant aligned with the core identity contract', async () => {
     const [coreSource, intakeSource] = await Promise.all([
       readFile('src/core/build-ready-identity.ts', 'utf8'),
