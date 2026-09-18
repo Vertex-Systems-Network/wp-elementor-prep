@@ -1,7 +1,6 @@
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -39,7 +38,7 @@ function runHelper(source, output) {
 
 describe('prepare-figma-import output safety', () => {
   it('rejects an output directory nested inside the source artifact', () => {
-    const root = mkdtempSync(join(tmpdir(), 'prepare-figma-import-'));
+    const root = mkdtempSync(join(process.cwd(), '.prepare-figma-import-'));
     try {
       const source = makeSource(root);
       const output = join(source, 'dist-local');
@@ -53,7 +52,7 @@ describe('prepare-figma-import output safety', () => {
   });
 
   it('rejects manifest targets that traverse outside the source artifact', () => {
-    const root = mkdtempSync(join(tmpdir(), 'prepare-figma-import-'));
+    const root = mkdtempSync(join(process.cwd(), '.prepare-figma-import-'));
     try {
       const source = makeSource(root);
       writeFileSync(join(root, 'outside.js'), 'outside secret fixture\n');
@@ -71,7 +70,7 @@ describe('prepare-figma-import output safety', () => {
   });
 
   it('rejects absolute manifest target paths', () => {
-    const root = mkdtempSync(join(tmpdir(), 'prepare-figma-import-'));
+    const root = mkdtempSync(join(process.cwd(), '.prepare-figma-import-'));
     try {
       const source = makeSource(root);
       const outside = resolve(root, 'outside.js');
@@ -90,7 +89,7 @@ describe('prepare-figma-import output safety', () => {
   });
 
   it.skipIf(process.platform === 'win32')('rejects manifest targets that are symbolic links', () => {
-    const root = mkdtempSync(join(tmpdir(), 'prepare-figma-import-'));
+    const root = mkdtempSync(join(process.cwd(), '.prepare-figma-import-'));
     try {
       const source = makeSource(root);
       const outside = join(root, 'outside.js');
@@ -111,7 +110,7 @@ describe('prepare-figma-import output safety', () => {
   });
 
   it('prepares a sibling output with compiled bytes unchanged and manifest id only rebound', () => {
-    const root = mkdtempSync(join(tmpdir(), 'prepare-figma-import-'));
+    const root = mkdtempSync(join(process.cwd(), '.prepare-figma-import-'));
     try {
       const source = makeSource(root);
       const output = join(dirname(source), 'artifact-local');
