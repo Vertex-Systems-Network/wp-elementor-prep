@@ -197,6 +197,77 @@ describe('runtime artifact preflight', () => {
     });
   });
 
+  it('fails closed before reading a required artifact file above the configured byte ceiling', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      writeFileSync(join(dir, 'code.js'), 'x'.repeat(2048));
+
+      const result = inspectRuntimeArtifact('p5', dir, {
+        intent: 'final-closure',
+        registry,
+        maxRequiredFileBytes: 1024,
+      });
+
+      expect(result.ok).toBe(false);
+      expect(result.errors.join('\n')).toContain('Required artifact file exceeds 1024-byte limit: code.js');
+    });
+  });
+
+  it('fails closed before reading a supplied archive above the configured byte ceiling', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const archivePath = `${dir}.zip`;
+      try {
+        writeFileSync(archivePath, Buffer.alloc(128, 0x61));
+        registry.tracks.p5.digest = `sha256:${fileSha256(archivePath)}`;
+
+        const result = inspectRuntimeArtifact('p5', dir, {
+          intent: 'final-closure',
+          registry,
+          archivePath,
+          maxArchiveBytes: 64,
+        });
+
+        expect(result.ok).toBe(false);
+        expect(result.archiveIntegrity.matched).toBe(null);
+        expect(result.errors.join('\n')).toContain('Artifact archive exceeds 64-byte limit');
+      } finally {
+        rmSync(archivePath, { force: true });
+      }
+    });
+  });
+
+  it('fails closed on a manifest beyond the configured JSON nesting limit before semantic hashing', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const manifestPath = join(dir, 'manifest.json');
+      const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+      manifest.untrusted = { a: { b: { c: { d: true } } } };
+      writeFileSync(manifestPath, JSON.stringify(manifest));
+
+      const result = inspectRuntimeArtifact('p5', dir, {
+        intent: 'final-closure',
+        registry,
+        maxJsonDepth: 3,
+      });
+
+      expect(result.ok).toBe(false);
+      expect(result.errors.join('\n')).toContain('manifest.json exceeds the 3-level JSON nesting limit');
+      expect(result.manifestSemanticIntegrity.observedSha256).toBe(null);
+    });
+  });
+
+  it('rejects malformed UTF-8 in the mutable manifest before JSON parsing', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      writeFileSync(join(dir, 'manifest.json'), Buffer.from([0xc3, 0x28]));
+
+      const result = inspectRuntimeArtifact('p5', dir, {
+        intent: 'final-closure',
+        registry,
+      });
+
+      expect(result.ok).toBe(false);
+      expect(result.errors.join('\n')).toContain('manifest.json is not valid UTF-8');
+    });
+  });
+
   it('allows a numeric manifest plugin-id rebind because manifest is intentionally not hash pinned', () => {
     withArtifact('p5', P5, { pluginId: '12345678901234567890' }, { finalClosureEligible: true }, (dir, registry) => {
       const result = inspectRuntimeArtifact('p5', dir, { intent: 'final-closure', registry });
