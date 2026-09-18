@@ -74,7 +74,7 @@ The stable-I/O evidence-integrity line does not change `acceptanceAuthority=fals
 
 #483 is complete. PR #518 retained the first exact clean-Core proof on WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/solid-background/uniform-radius fidelity PASS, and qualified/full/full environment/proof/chain classifications. That result remains non-production-authorizing.
 
-PR #546 / #545 completed the immutable exact declared-profile reference registry. Issue #547 / PR #548 is the current focused slice:
+PR #546 / #545 completed the immutable exact declared-profile reference registry, and PR #548 / #547 completed exact retained-candidate identity binding. The next focused P15 work is concrete semantic/media/responsive mapping and reference/asset closure:
 
 1. retain the exact #483 candidate identity, TargetProfile fingerprint and template SHA-256 in the reference record;
 2. require the exact immutable TargetProfile fingerprint before reporting `EXACT_REFERENCE_PROFILE_MATCH`;
