@@ -1,6 +1,8 @@
+import { mkdir, mkdtemp, rm, symlink } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { resolve } from 'node:path';
-import { assertSafeReleaseOutput, isSameOrInside } from '../scripts/release-path-safety.mjs';
+import { assertSafeReleaseOutput, assertSafeReleaseOutputOnDisk, isSameOrInside } from '../scripts/release-path-safety.mjs';
 
 const repo = '/workspace/wp-elementor-prep';
 
@@ -27,6 +29,45 @@ describe('P11 release output path safety', () => {
 
     for (const path of ['package.json', 'package-lock.json', 'README.md', 'manifest.release.template.json']) {
       expect(() => assertSafeReleaseOutput(path, repo)).toThrow(/overlaps protected repository file/);
+    }
+  });
+
+  it('allows a normal on-disk release directory under a safe parent', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'release-path-safe-'));
+    const repoRoot = join(root, 'repo');
+    try {
+      await mkdir(join(repoRoot, 'src'), { recursive: true });
+      await mkdir(join(repoRoot, 'artifacts'), { recursive: true });
+      await expect(assertSafeReleaseOutputOnDisk('artifacts/release', repoRoot))
+        .resolves.toBe(resolve(repoRoot, 'artifacts/release'));
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it.skipIf(process.platform === 'win32')('rejects a symlinked output parent that resolves into protected source', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'release-path-symlink-'));
+    const repoRoot = join(root, 'repo');
+    try {
+      await mkdir(join(repoRoot, 'src'), { recursive: true });
+      await symlink(join(repoRoot, 'src'), join(repoRoot, 'artifacts'));
+      await expect(assertSafeReleaseOutputOnDisk('artifacts/release', repoRoot))
+        .rejects.toThrow(/protected repository directory src/);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it.skipIf(process.platform === 'win32')('rejects a lexical sibling whose parent symlink resolves back into protected source', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'release-path-sibling-'));
+    const repoRoot = join(root, 'repo');
+    try {
+      await mkdir(join(repoRoot, 'src'), { recursive: true });
+      await symlink(join(repoRoot, 'src'), join(root, 'shared-output'));
+      await expect(assertSafeReleaseOutputOnDisk('../shared-output/release', repoRoot))
+        .rejects.toThrow(/protected repository directory src/);
+    } finally {
+      await rm(root, { recursive: true, force: true });
     }
   });
 
