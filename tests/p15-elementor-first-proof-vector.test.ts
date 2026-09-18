@@ -43,6 +43,7 @@ describe('P15 first controlled Elementor target-proof operator vector', () => {
     expect(first.manifest.importValidationStatus).toBe('NOT_RUN');
     expect(first.candidateIdentity.digest).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(first.targetProfileFingerprint).toMatch(/^sha256:[0-9a-f]{64}$/);
+    expect(P15_ELEMENTOR_FIRST_PROOF_WORDPRESS_VERSION).toBe('6.8');
     expect(first.profile.environment).toEqual({
       source: 'DECLARED',
       wordpressVersion: P15_ELEMENTOR_FIRST_PROOF_WORDPRESS_VERSION,
