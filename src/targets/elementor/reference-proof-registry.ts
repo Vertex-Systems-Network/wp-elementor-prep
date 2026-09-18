@@ -96,8 +96,8 @@ export const P15_ELEMENTOR_REFERENCE_PROOFS_V1: readonly P15ElementorReferencePr
 
 export type P15ElementorReferenceProofAlignmentStatus =
   | 'INVALID_DECLARED_PROFILE'
-  | 'EXACT_REFERENCE_PROOF_MATCH'
-  | 'NO_EXACT_REFERENCE_PROOF';
+  | 'EXACT_REFERENCE_PROFILE_MATCH'
+  | 'NO_EXACT_REFERENCE_PROFILE';
 
 export interface P15ElementorReferenceProofSummaryV1 {
   proofId: P15ElementorReferenceProofV1['proofId'];
@@ -130,6 +130,7 @@ export interface P15ElementorReferenceProofAlignmentV1 {
   profileIssueCodes: ElementorTargetProfileIssueCode[];
   exactVersionMatch: boolean;
   referenceProof: P15ElementorReferenceProofSummaryV1 | null;
+  candidateBinding: 'NOT_ASSESSED';
   environmentObserved: false;
   targetCompatibilityClaim: false;
   productionAcceptance: false;
@@ -172,9 +173,11 @@ function summary(proof: P15ElementorReferenceProofV1): P15ElementorReferenceProo
 /**
  * Compare one immutable DECLARED profile to retained reference proof records.
  *
- * An exact match means only that the same declared WordPress/Elementor/container envelope has one
- * retained proof run. A mismatch means only that this registry has no exact retained reference.
- * Neither state observes the user's target environment or grants compatibility/production authority.
+ * An exact profile match means only that the same declared WordPress/Elementor/container envelope has
+ * one retained proof run. This function does not compare the current candidate to the retained proof
+ * candidate, so candidateBinding remains NOT_ASSESSED. A profile mismatch means only that this registry
+ * has no exact retained reference profile. Neither state observes the user's target environment or
+ * grants compatibility/production authority.
  */
 export function assessP15ElementorReferenceProofAlignment(
   profileValue: unknown,
@@ -194,6 +197,7 @@ export function assessP15ElementorReferenceProofAlignment(
       profileIssueCodes: validation.issues.map((issue) => issue.code),
       exactVersionMatch: false,
       referenceProof: null,
+      candidateBinding: 'NOT_ASSESSED',
       environmentObserved: false,
       targetCompatibilityClaim: false,
       productionAcceptance: false,
@@ -210,7 +214,7 @@ export function assessP15ElementorReferenceProofAlignment(
     schemaVersion: 1,
     reportVersion: P15_ELEMENTOR_REFERENCE_PROOF_ALIGNMENT_VERSION,
     registryVersion: P15_ELEMENTOR_REFERENCE_PROOF_REGISTRY_VERSION,
-    status: match ? 'EXACT_REFERENCE_PROOF_MATCH' : 'NO_EXACT_REFERENCE_PROOF',
+    status: match ? 'EXACT_REFERENCE_PROFILE_MATCH' : 'NO_EXACT_REFERENCE_PROFILE',
     declaredTarget: {
       source: 'DECLARED',
       wordpressVersion: profile.environment.wordpressVersion,
@@ -219,6 +223,7 @@ export function assessP15ElementorReferenceProofAlignment(
     profileIssueCodes: [],
     exactVersionMatch: match !== null,
     referenceProof: match ? summary(match) : null,
+    candidateBinding: 'NOT_ASSESSED',
     environmentObserved: false,
     targetCompatibilityClaim: false,
     productionAcceptance: false,
@@ -232,6 +237,7 @@ function serializable(value: P15ElementorReferenceProofAlignmentV1): boolean {
   if (value.schemaVersion !== 1
     || value.reportVersion !== P15_ELEMENTOR_REFERENCE_PROOF_ALIGNMENT_VERSION
     || value.registryVersion !== P15_ELEMENTOR_REFERENCE_PROOF_REGISTRY_VERSION
+    || value.candidateBinding !== 'NOT_ASSESSED'
     || value.environmentObserved !== false
     || value.targetCompatibilityClaim !== false
     || value.productionAcceptance !== false
@@ -241,7 +247,7 @@ function serializable(value: P15ElementorReferenceProofAlignmentV1): boolean {
     return false;
   }
 
-  if (value.status === 'EXACT_REFERENCE_PROOF_MATCH') {
+  if (value.status === 'EXACT_REFERENCE_PROFILE_MATCH') {
     return value.exactVersionMatch === true
       && value.referenceProof !== null
       && value.referenceProof.acceptanceAuthority === false
