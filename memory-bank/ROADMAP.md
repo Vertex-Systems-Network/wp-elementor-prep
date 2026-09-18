@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-09-16
+Last updated: 2026-09-19
 
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
@@ -22,7 +22,7 @@ Last updated: 2026-09-16
 | R1 | Reliability/compatibility gate | DEFINED / RECURRING | 100% | `██████████` | Execute TargetProfile/capability/validator/harness gate per adapter |
 | P13 | Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance |
 | P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review active; production registry empty; #159 before real mutation exposure |
-| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED | N/A | `──────────` | Candidate/download + bounded fidelity + exact proof intake + environment qualification + exact environment/proof-chain binding; next #483 qualified real import/editor/render proof + separate review |
+| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact WP 6.8 + Elementor 4.2.4 Container proof retained; #545 binds declared profiles to that reference while broader semantic/media/responsive coverage and additional target evidence remain pending |
 | P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 | HTML/CSS/JS export + code-to-design import | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
 | P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
@@ -44,11 +44,11 @@ Last updated: 2026-09-16
 
 Overall project progress is intentionally not collapsed into one synthetic percentage. Implementation, runtime acceptance and external approval are separate evidence states.
 
-R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open. P14 is active with no stable numeric denominator and no production mutation authority. P15 and P16 have substantial deterministic code-side foundations but remain target-import/target-validation unaccepted with `N/A` progress. P17-P26 remain preflight frozen/not started. P27 execution remains deferred.
+R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open. P14 is active with no stable numeric denominator and no production mutation authority. P15 has one retained controlled target proof but no broad compatibility/production authority; P16 remains target-validation unwired. Both remain `N/A` progress. P17-P26 remain preflight frozen/not started. P27 execution remains deferred.
 
 ## Current P15 implementation truth
 
-P15 is **CORE FOUNDATION IN PROGRESS / TARGET IMPORT UNVALIDATED**.
+P15 is **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**.
 
 Bounded code-side surfaces now include:
 
@@ -88,7 +88,7 @@ Even `CHAIN_FULL_PASS` requires genuine retained real-environment observations a
 
 Typography, gradients, opacity/effects, nonuniform-radius conversion and responsive behavior remain intentionally outside the accepted fidelity slice.
 
-The next bounded P15 objective is #483: use one exact generated candidate in a real qualified WordPress + Elementor environment, retain qualification evidence, perform Template JSON import/editor/render observation, build/run the exact proof intake, run the combined chain intake, preserve all identities/fingerprints/evidence and perform separate internal review. CI/local JSON validation cannot substitute for that observation.
+PR #518 / #483 retained that first bounded observation on exact WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/background/radius fidelity PASS and qualified/full/full environment/proof/chain classifications. The next bounded objective is #545: machine-readably align immutable declared profiles to that exact retained reference without treating a match as observed user-environment compatibility or a mismatch as incompatibility. Broader semantic/media/responsive mapping and any additional claimed target matrix coverage still require their own implementation and evidence.
 
 ## Current P16 implementation truth
 
