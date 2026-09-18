@@ -35,7 +35,7 @@ jobs:
     env:
       P15_VECTOR_DIR: ${{ github.workspace }}/dist-p15/p15-elementor-first-proof-vector-v3
       P15_OUT_DIR: ${{ github.workspace }}/dist-p15/p15-v3-runtime-proof
-      P15_SITE_URL: http://127.0.0.1:8080/p15-wp
+      P15_SITE_URL: http://127.0.0.1:8080
       P15_ADMIN_USER: p15admin
       P15_ADMIN_PASSWORD: P15Proof-2026-Runtime
       P15_EVIDENCE_REFERENCE: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -85,6 +85,8 @@ jobs:
 
           php /tmp/wp --path=/tmp/p15-wp config set WP_MEMORY_LIMIT 256M --type=constant
           php /tmp/wp --path=/tmp/p15-wp config set WP_MAX_MEMORY_LIMIT 256M --type=constant
+          php /tmp/wp --path=/tmp/p15-wp config set WP_HOME "$P15_SITE_URL" --type=constant
+          php /tmp/wp --path=/tmp/p15-wp config set WP_SITEURL "$P15_SITE_URL" --type=constant
 
           php /tmp/wp --path=/tmp/p15-wp core install             --url="$P15_SITE_URL"             --title='P15 Controlled Runtime Proof'             --admin_user="$P15_ADMIN_USER"             --admin_password="$P15_ADMIN_PASSWORD"             --admin_email='p15-runtime@example.invalid'             --skip-email
 
@@ -99,6 +101,8 @@ jobs:
           test "$WP_VERSION" = '6.8'
           test "$ELEMENTOR_VERSION" = '4.2.4'
           test "$MEMORY_RAW" = '256M'
+          test "$(php /tmp/wp --path=/tmp/p15-wp eval 'echo home_url();')" = "$P15_SITE_URL"
+          test "$(php /tmp/wp --path=/tmp/p15-wp eval 'echo site_url();')" = "$P15_SITE_URL"
           [[ "$PHP_VERSION" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]]
           [[ "$DB_VERSION" =~ ^[0-9]+(\.[0-9]+){1,3}$ ]]
 
@@ -126,6 +130,8 @@ jobs:
             echo "php=$PHP_VERSION"
             echo "mysql=$DB_VERSION"
             echo "memory=$MEMORY_RAW"
+            echo "home=$(php /tmp/wp --path=/tmp/p15-wp eval 'echo home_url();')"
+            echo "siteurl=$(php /tmp/wp --path=/tmp/p15-wp eval 'echo site_url();')"
             "$CHROME_BIN" --version
           } | tee "$P15_OUT_DIR/runtime-versions.txt"
 
