@@ -1,7 +1,8 @@
 import { createHash } from 'node:crypto';
-import { readFile, readdir } from 'node:fs/promises';
+import { lstat, readFile, readdir } from 'node:fs/promises';
 import { basename, resolve } from 'node:path';
 import { assertReleaseUiCapabilities } from './release-ui-contract.mjs';
+import { readBoundedContainedFile, readBoundedContainedJsonFile } from './security-io.mjs';
 
 function sha256(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
@@ -9,6 +10,14 @@ function sha256(bytes) {
 
 function fail(message) {
   throw new Error(`Release package verification failed: ${message}`);
+}
+
+function strictUtf8(bytes, label) {
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    fail(`${label} is not valid UTF-8.`);
+  }
 }
 
 function stableCommands(menu) {
@@ -30,9 +39,41 @@ const pluginDir = resolve(root, 'plugin');
 
 const releaseConfig = JSON.parse(await readFile('config/plugin-release.json', 'utf8'));
 const packageJson = JSON.parse(await readFile('package.json', 'utf8'));
-const releaseInfo = JSON.parse(await readFile(resolve(root, 'RELEASE_INFO.json'), 'utf8'));
-const manifest = JSON.parse(await readFile(resolve(pluginDir, 'manifest.json'), 'utf8'));
-const releaseUi = await readFile(resolve(pluginDir, 'ui.html'), 'utf8');
+
+let pluginMetadata;
+try {
+  pluginMetadata = await lstat(pluginDir);
+} catch (error) {
+  fail(`plugin directory is missing: ${error instanceof Error ? error.message : String(error)}`);
+}
+if (pluginMetadata.isSymbolicLink()) fail('plugin directory must not be a symbolic link.');
+if (!pluginMetadata.isDirectory()) fail('plugin entry must be a directory.');
+
+let releaseInfoFile;
+let manifestFile;
+let uiFile;
+try {
+  [releaseInfoFile, manifestFile, uiFile] = await Promise.all([
+    readBoundedContainedJsonFile(root, 'RELEASE_INFO.json', {
+      label: 'RELEASE_INFO.json',
+      maxBytes: 4 * 1024 * 1024,
+    }),
+    readBoundedContainedJsonFile(root, 'plugin/manifest.json', {
+      label: 'plugin/manifest.json',
+      maxBytes: 4 * 1024 * 1024,
+    }),
+    readBoundedContainedFile(root, 'plugin/ui.html', {
+      label: 'plugin/ui.html',
+      maxBytes: 64 * 1024 * 1024,
+    }),
+  ]);
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error));
+}
+
+const releaseInfo = releaseInfoFile.value;
+const manifest = manifestFile.value;
+const releaseUi = strictUtf8(uiFile.bytes, 'plugin/ui.html');
 
 if (releaseInfo.schemaVersion !== 1) fail('unsupported RELEASE_INFO schemaVersion.');
 if (releaseInfo.fixture === true && !allowFixture) fail('fixture package cannot be treated as publishable.');
@@ -78,12 +119,29 @@ if (JSON.stringify(actualFiles) !== JSON.stringify(expectedFiles)) {
 }
 
 for (const filename of expectedFiles) {
-  const bytes = await readFile(resolve(pluginDir, filename));
-  const actual = sha256(bytes);
+  let file;
+  try {
+    file = await readBoundedContainedFile(root, `plugin/${filename}`, {
+      label: `plugin/${filename}`,
+      maxBytes: 128 * 1024 * 1024,
+    });
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error));
+  }
+  const actual = sha256(file.bytes);
   if (releaseInfo.fileHashes?.[filename] !== actual) fail(`${filename} SHA-256 mismatch.`);
 }
 
-const sums = await readFile(resolve(root, 'SHA256SUMS.txt'), 'utf8');
+let sumsFile;
+try {
+  sumsFile = await readBoundedContainedFile(root, 'SHA256SUMS.txt', {
+    label: 'SHA256SUMS.txt',
+    maxBytes: 4 * 1024 * 1024,
+  });
+} catch (error) {
+  fail(error instanceof Error ? error.message : String(error));
+}
+const sums = strictUtf8(sumsFile.bytes, 'SHA256SUMS.txt');
 const expectedSums = `${expectedFiles.map((filename) => `${releaseInfo.fileHashes[filename]}  plugin/${filename}`).join('\n')}\n`;
 if (sums !== expectedSums) fail('SHA256SUMS.txt is not byte-exact for the release files.');
 
