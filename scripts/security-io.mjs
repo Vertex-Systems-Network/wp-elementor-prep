@@ -274,7 +274,7 @@ export async function readBoundedContainedFile(rootPath, reference, options = {}
       bytes: Buffer.concat(chunks, totalBytes),
       size: totalBytes,
       canonicalPath: finalCanonicalCandidate,
-      relativePath: relative(canonicalRoot, finalCanonicalCandidate).replaceAll('\\\\', '/'),
+      relativePath: relative(canonicalRoot, finalCanonicalCandidate).replaceAll('\\', '/'),
     };
   } catch (error) {
     if (error instanceof SecurityIoError) throw error;
