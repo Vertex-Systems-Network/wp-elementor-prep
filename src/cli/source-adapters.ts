@@ -10,6 +10,8 @@ export const CANONICAL_SNAPSHOT_MAX_DEPTH = 128;
 export const CANONICAL_SNAPSHOT_MAX_VALUES = 1_000_000;
 export const FIGMA_REST_MAX_BYTES = 128 * 1024 * 1024;
 export const FIGMA_REST_TIMEOUT_MS = 30_000;
+export const FIGMA_REST_MAX_NODE_DEPTH = 256;
+export const FIGMA_REST_MAX_NODES = 1_000_000;
 
 export interface CanonicalSnapshotSource {
   kind: CanonicalSnapshotSourceKind;
@@ -370,7 +372,32 @@ function geometryFromRest(node: Record<string, unknown>): AuditNode['geometry'] 
   };
 }
 
-export function auditNodeFromFigmaRest(value: unknown): AuditNode {
+interface FigmaRestTraversalState {
+  visited: number;
+  maxDepth: number;
+  maxNodes: number;
+}
+
+function auditNodeFromFigmaRestBounded(
+  value: unknown,
+  state: FigmaRestTraversalState,
+  depth: number,
+): AuditNode {
+  if (depth > state.maxDepth) {
+    throw new SourceAdapterError(
+      'FIGMA_RESPONSE_RESOURCE_LIMIT',
+      `Figma node tree exceeds the ${state.maxDepth}-level nesting limit.`,
+    );
+  }
+
+  state.visited += 1;
+  if (state.visited > state.maxNodes) {
+    throw new SourceAdapterError(
+      'FIGMA_RESPONSE_RESOURCE_LIMIT',
+      `Figma node tree exceeds the ${state.maxNodes}-node traversal limit.`,
+    );
+  }
+
   if (!isRecord(value)) {
     throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma API node is not an object.');
   }
@@ -382,7 +409,7 @@ export function auditNodeFromFigmaRest(value: unknown): AuditNode {
     throw new SourceAdapterError('INVALID_FIGMA_RESPONSE', 'Figma API node is missing id, name or type.');
   }
 
-  const children = restChildren(value).map(auditNodeFromFigmaRest);
+  const children = restChildren(value).map((child) => auditNodeFromFigmaRestBounded(child, state, depth + 1));
   const layoutMode = normalizeLayoutMode(value['layoutMode']);
   const isText = type === 'TEXT';
   const text = isText ? restString(value['characters']) : '';
@@ -412,6 +439,14 @@ export function auditNodeFromFigmaRest(value: unknown): AuditNode {
     childIds: children.map((child) => child.id),
     children,
   };
+}
+
+export function auditNodeFromFigmaRest(value: unknown): AuditNode {
+  return auditNodeFromFigmaRestBounded(value, {
+    visited: 0,
+    maxDepth: FIGMA_REST_MAX_NODE_DEPTH,
+    maxNodes: FIGMA_REST_MAX_NODES,
+  }, 0);
 }
 
 function collectTopLevelFrames(document: Record<string, unknown>): Array<{ page: Record<string, unknown>; frame: Record<string, unknown> }> {
