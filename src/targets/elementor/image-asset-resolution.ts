@@ -549,7 +549,29 @@ export function resolveP15ElementorImageAssets(
 export function serializeP15ElementorImageAssetResolutionSummary(
   result: P15ElementorImageAssetResolutionResultV1,
 ): string {
-  if (result.networkAccess !== false
+  const validStatus = result.status === 'BLOCKED_INVALID_SOURCE_IR'
+    || result.status === 'REJECTED_INVALID_MANIFEST'
+    || result.status === 'NO_IMAGE_ASSET_REVIEWS'
+    || result.status === 'IMAGE_ASSETS_RESOLVED';
+  const validCounts = Number.isSafeInteger(result.imageReviewCount)
+    && result.imageReviewCount >= 0
+    && Number.isSafeInteger(result.resolvedImageCount)
+    && result.resolvedImageCount >= 0
+    && result.resolvedImageCount <= result.imageReviewCount
+    && Number.isSafeInteger(result.remainingReviewCount)
+    && result.remainingReviewCount >= 0;
+  const validReferences = result.resolvedReferences.every((entry) => (
+    validSourceNodeId(entry.sourceNodeId) && validFingerprint(entry.urlFingerprint)
+  ));
+  const validSourceFingerprint = result.status === 'BLOCKED_INVALID_SOURCE_IR'
+    ? result.sourceIrFingerprint === null
+    : validFingerprint(result.sourceIrFingerprint);
+
+  if (!validStatus
+    || !validCounts
+    || !validReferences
+    || !validSourceFingerprint
+    || result.networkAccess !== false
     || result.assetUploadPerformed !== false
     || result.assetReferenceClosureClaim !== false
     || result.targetCompatibilityClaim !== false
@@ -568,7 +590,7 @@ export function serializeP15ElementorImageAssetResolutionSummary(
     resolvedImageCount: result.resolvedImageCount,
     remainingReviewCount: result.remainingReviewCount,
     resolvedReferences: result.resolvedReferences.map((entry) => ({ ...entry })),
-    issues: result.issues.map((issue) => ({ ...issue })),
+    issues: result.issues.map((issue) => ({ code: issue.code, path: issue.path })),
     networkAccess: false,
     assetUploadPerformed: false,
     assetReferenceClosureClaim: false,
