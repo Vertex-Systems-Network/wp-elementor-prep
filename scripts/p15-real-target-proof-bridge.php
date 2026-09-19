@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'P15_PROOF_TITLE', 'P15 First Controlled Target Proof Vector' );
+define( 'P15_ASSET_PROOF_TITLE', 'P15 URL-only Image Asset Proof Vector' );
 
 function p15_proof_env_value( $name ) {
     $value = getenv( $name );
@@ -47,6 +48,24 @@ function p15_proof_find_template_id() {
         'orderby' => 'ID',
         'order' => 'DESC',
         'title' => P15_PROOF_TITLE,
+        'fields' => 'ids',
+    ) );
+    foreach ( $ids as $id ) {
+        if ( 'page' === (string) get_post_meta( $id, '_elementor_template_type', true ) ) {
+            return (int) $id;
+        }
+    }
+    return 0;
+}
+
+function p15_asset_proof_find_template_id() {
+    $ids = get_posts( array(
+        'post_type' => 'elementor_library',
+        'post_status' => 'any',
+        'numberposts' => 10,
+        'orderby' => 'ID',
+        'order' => 'DESC',
+        'title' => P15_ASSET_PROOF_TITLE,
         'fields' => 'ids',
     ) );
     foreach ( $ids as $id ) {
@@ -131,6 +150,81 @@ function p15_proof_import_once() {
     wp_set_current_user( $previous_user ?: 0 );
 }
 add_action( 'init', 'p15_proof_import_once', 99 );
+
+function p15_asset_proof_import_once() {
+    if ( get_option( 'p15_asset_proof_import_done' ) ) {
+        return;
+    }
+
+    if ( ! defined( 'ELEMENTOR_VERSION' ) || ! class_exists( '\\Elementor\\Plugin' ) ) {
+        update_option( 'p15_asset_proof_import_result', 'ELEMENTOR_NOT_READY', false );
+        return;
+    }
+
+    if ( '4.2.4' !== (string) ELEMENTOR_VERSION ) {
+        update_option( 'p15_asset_proof_import_result', 'ELEMENTOR_VERSION_MISMATCH:' . ELEMENTOR_VERSION, false );
+        return;
+    }
+
+    $path = p15_proof_env_value( 'P15_ASSET_VECTOR_PATH' );
+    if ( $path === '' || ! is_file( $path ) || ! is_readable( $path ) ) {
+        update_option( 'p15_asset_proof_import_result', 'VECTOR_UNAVAILABLE', false );
+        return;
+    }
+
+    $actual_sha = 'sha256:' . hash_file( 'sha256', $path );
+    $expected_sha = p15_proof_env_value( 'P15_ASSET_TEMPLATE_SHA256' );
+    update_option( 'p15_asset_proof_template_sha256', $actual_sha, false );
+    if ( $expected_sha !== '' && ! hash_equals( $expected_sha, $actual_sha ) ) {
+        update_option( 'p15_asset_proof_import_result', 'VECTOR_SHA256_MISMATCH', false );
+        return;
+    }
+
+    $existing = p15_asset_proof_find_template_id();
+    if ( $existing ) {
+        update_option( 'p15_asset_proof_template_id', $existing, false );
+        update_option( 'p15_asset_proof_import_result', 'PASS_EXISTING_PAGE_TEMPLATE', false );
+        update_option( 'p15_asset_proof_import_done', 1, false );
+        return;
+    }
+
+    $admin_id = p15_proof_admin_id();
+    if ( ! $admin_id ) {
+        update_option( 'p15_asset_proof_import_result', 'NO_ADMIN_USER', false );
+        return;
+    }
+
+    $previous_user = get_current_user_id();
+    wp_set_current_user( $admin_id );
+
+    try {
+        $source = \Elementor\Plugin::$instance->templates_manager->get_source( 'local' );
+        $result = $source->import_template( basename( $path ), $path, 'match_site' );
+
+        if ( is_wp_error( $result ) ) {
+            update_option(
+                'p15_asset_proof_import_result',
+                'FAIL:' . $result->get_error_code() . ':' . $result->get_error_message(),
+                false
+            );
+        } else {
+            $template_id = p15_asset_proof_find_template_id();
+            if ( $template_id ) {
+                update_option( 'p15_asset_proof_template_id', $template_id, false );
+                update_option( 'p15_asset_proof_import_result', 'PASS', false );
+                update_option( 'p15_asset_proof_import_observed_at', p15_proof_iso_now(), false );
+                update_option( 'p15_asset_proof_import_done', 1, false );
+            } else {
+                update_option( 'p15_asset_proof_import_result', 'FAIL:NO_IMPORTED_TEMPLATE_ID', false );
+            }
+        }
+    } catch ( Throwable $error ) {
+        update_option( 'p15_asset_proof_import_result', 'FAIL:EXCEPTION:' . $error->getMessage(), false );
+    }
+
+    wp_set_current_user( $previous_user ?: 0 );
+}
+add_action( 'init', 'p15_asset_proof_import_once', 100 );
 
 function p15_proof_database_observation() {
     global $wpdb;
@@ -222,6 +316,60 @@ function p15_proof_environment_observation() {
 
 function p15_proof_template_redirect() {
     $template_id = (int) get_option( 'p15_proof_template_id', 0 );
+    $asset_template_id = (int) get_option( 'p15_asset_proof_template_id', 0 );
+
+    if ( isset( $_GET['p15_asset_fixture'] ) && '1' === (string) $_GET['p15_asset_fixture'] ) {
+        nocache_headers();
+        header( 'Content-Type: image/png' );
+        header( 'X-Content-Type-Options: nosniff' );
+        echo base64_decode( 'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFElEQVR42mNkYPj/n4GBgYGJAQoAHgQCAH6Jx6QAAAAASUVORK5CYII=' );
+        exit;
+    }
+
+    if ( p15_proof_token_ok( 'p15_asset_proof_observe' ) ) {
+        nocache_headers();
+        header( 'Content-Type: application/json; charset=utf-8' );
+        echo wp_json_encode(
+            array(
+                'schema' => 'p15-real-asset-runtime-observation-v1',
+                'observedAt' => p15_proof_iso_now(),
+                'evidenceReference' => p15_proof_env_value( 'P15_EVIDENCE_REFERENCE' ),
+                'environment' => p15_proof_environment_observation(),
+                'importResult' => get_option( 'p15_asset_proof_import_result', 'NOT_RUN' ),
+                'importObservedAt' => get_option( 'p15_asset_proof_import_observed_at', 'NOT_RUN' ),
+                'templateId' => $asset_template_id,
+                'templateTitle' => $asset_template_id ? get_the_title( $asset_template_id ) : '',
+                'templateType' => $asset_template_id ? get_post_meta( $asset_template_id, '_elementor_template_type', true ) : '',
+                'templateSha256' => get_option( 'p15_asset_proof_template_sha256', '' ),
+                'renderUrl' => home_url( '/?p15_asset_proof_render=' . rawurlencode( p15_proof_env_value( 'P15_PROOF_TOKEN' ) ) ),
+            ),
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+        );
+        exit;
+    }
+
+    if ( p15_proof_token_ok( 'p15_asset_proof_render' ) ) {
+        if ( ! $asset_template_id || ! class_exists( '\\Elementor\\Plugin' ) ) {
+            status_header( 409 );
+            exit( 'P15 asset render unavailable.' );
+        }
+
+        $content = \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $asset_template_id, true );
+        nocache_headers();
+        ?><!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>P15 URL-only Image Asset Render</title>
+<?php wp_head(); ?>
+</head>
+<body>
+<main id="p15-asset-proof-root"><?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></main>
+<?php wp_footer(); ?>
+</body>
+</html><?php
+        exit;
+    }
 
     if ( p15_proof_token_ok( 'p15_proof_observe' ) ) {
         nocache_headers();
