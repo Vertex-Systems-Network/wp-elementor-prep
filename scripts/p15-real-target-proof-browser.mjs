@@ -417,6 +417,13 @@ try {
       templateTitle: assetServer.templateTitle,
       templateType: assetServer.templateType,
       templateSha256: assetServer.templateSha256,
+      importedMedia: {
+        mediaReferenceFound: assetServer.importedMedia?.mediaReferenceFound === true,
+        mediaIdPresent: assetServer.importedMedia?.mediaIdPresent === true,
+        mediaUrlFingerprint: assetServer.importedMedia?.mediaUrlFingerprint || null,
+        sourceUrlFingerprint: assetServer.importedMedia?.sourceUrlFingerprint || null,
+        sourceProvenanceMatches: assetServer.importedMedia?.sourceProvenanceMatches === true,
+      },
     };
 
     if (assetServer.importResult !== 'PASS') {
@@ -431,6 +438,23 @@ try {
     if (assetServer.environment.wordpressVersion !== assetProfile.environment.wordpressVersion
       || assetServer.environment.elementorVersion !== assetProfile.environment.elementorVersion) {
       throw new Error('Observed asset target versions do not match the declared asset profile.');
+    }
+
+    const importedMedia = assetRaw.server.importedMedia;
+    const targetManagedMediaResult = importedMedia.mediaReferenceFound
+      && importedMedia.mediaIdPresent
+      && /^sha256:[0-9a-f]{64}$/.test(importedMedia.mediaUrlFingerprint || '')
+      ? 'PASS'
+      : 'FAIL';
+    const sourceProvenanceResult = targetManagedMediaResult === 'PASS'
+      ? (importedMedia.sourceProvenanceMatches
+          && importedMedia.sourceUrlFingerprint === assetManifest.assetUrlFingerprint
+        ? 'PASS'
+        : 'FAIL')
+      : 'NOT_RUN';
+
+    if (targetManagedMediaResult !== 'PASS' || sourceProvenanceResult !== 'PASS') {
+      throw new Error('Asset import did not retain exact source provenance into target-managed media.');
     }
 
     await page.goto(assetServer.renderUrl, {
@@ -462,7 +486,7 @@ try {
       ? 'sha256:' + createHash('sha256').update(imageObservation.renderedUrl).digest('hex')
       : null;
     const imageReferenceResult = imageObservation.imagePresent
-      && renderedImageUrlFingerprint === assetManifest.assetUrlFingerprint
+      && renderedImageUrlFingerprint === importedMedia.mediaUrlFingerprint
       ? 'PASS'
       : 'FAIL';
     const browserImageLoadResult = imageReferenceResult === 'PASS'
@@ -490,6 +514,10 @@ try {
 
     const assetSteps = {
       importResult: 'PASS',
+      targetManagedMediaResult,
+      sourceProvenanceResult,
+      sourceAssetUrlFingerprint: importedMedia.sourceUrlFingerprint,
+      targetManagedMediaUrlFingerprint: importedMedia.mediaUrlFingerprint,
       renderResult: assetRaw.render.result,
       renderedImageReferenceResult: assetRaw.render.result === 'PASS'
         ? imageReferenceResult
@@ -534,10 +562,13 @@ try {
 
     assetProofFullPass = (
       assetSteps.importResult === 'PASS'
+      && assetSteps.targetManagedMediaResult === 'PASS'
+      && assetSteps.sourceProvenanceResult === 'PASS'
+      && assetSteps.sourceAssetUrlFingerprint === assetManifest.assetUrlFingerprint
       && assetSteps.renderResult === 'PASS'
       && assetSteps.renderedImageReferenceResult === 'PASS'
       && assetSteps.browserImageLoadResult === 'PASS'
-      && assetSteps.renderedImageUrlFingerprint === assetManifest.assetUrlFingerprint
+      && assetSteps.renderedImageUrlFingerprint === assetSteps.targetManagedMediaUrlFingerprint
     );
   } catch (error) {
     assetRaw.render.error = error instanceof Error ? error.message : String(error);
@@ -558,6 +589,8 @@ try {
     assetProof: {
       classificationReady: assetProofEvidence !== null,
       importResult: assetProofEvidence?.steps.importResult ?? 'NOT_RUN',
+      targetManagedMediaResult: assetProofEvidence?.steps.targetManagedMediaResult ?? 'NOT_RUN',
+      sourceProvenanceResult: assetProofEvidence?.steps.sourceProvenanceResult ?? 'NOT_RUN',
       renderResult: assetProofEvidence?.steps.renderResult ?? 'NOT_RUN',
       renderedImageReferenceResult: assetProofEvidence?.steps.renderedImageReferenceResult ?? 'NOT_RUN',
       browserImageLoadResult: assetProofEvidence?.steps.browserImageLoadResult ?? 'NOT_RUN',
