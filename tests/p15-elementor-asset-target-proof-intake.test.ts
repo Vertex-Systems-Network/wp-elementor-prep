@@ -53,10 +53,14 @@ describe('P15 asset target proof intake CLI', () => {
       evidenceReference: 'retained-evidence://p15/asset-proof-cli',
       steps: {
         importResult: 'PASS',
+        targetManagedMediaResult: 'PASS',
+        sourceProvenanceResult: 'PASS',
+        sourceAssetUrlFingerprint: vector.assetUrlFingerprint,
+        targetManagedMediaUrlFingerprint: 'sha256:' + 'a'.repeat(64),
         renderResult: 'PASS',
         renderedImageReferenceResult: 'PASS',
         browserImageLoadResult: 'PASS',
-        renderedImageUrlFingerprint: vector.assetUrlFingerprint,
+        renderedImageUrlFingerprint: 'sha256:' + 'a'.repeat(64),
       },
       assetReferenceClosureClaim: false,
       acceptanceAuthority: false,
@@ -87,6 +91,8 @@ describe('P15 asset target proof intake CLI', () => {
     expect(report.candidateBindingMatches).toBe(true);
     expect(report.profileBindingMatches).toBe(true);
     expect(report.referenceReviewBindingMatches).toBe(true);
+    expect(report.sourceAssetBindingMatches).toBe(true);
+    expect(report.targetManagedRenderBindingMatches).toBe(true);
     expect(report.imageReferenceBindingMatches).toBe(true);
     expect(report.assetReferenceClosureClaim).toBe(false);
     expect(reportRaw).not.toContain(P15_ELEMENTOR_ASSET_PROOF_FIXTURE_URL);
@@ -125,10 +131,14 @@ describe('P15 asset target proof intake CLI', () => {
       evidenceReference: 'retained-evidence://p15/asset-proof-cli-stale',
       steps: {
         importResult: 'PASS',
+        targetManagedMediaResult: 'PASS',
+        sourceProvenanceResult: 'PASS',
+        sourceAssetUrlFingerprint: vector.assetUrlFingerprint,
+        targetManagedMediaUrlFingerprint: 'sha256:' + 'a'.repeat(64),
         renderResult: 'PASS',
         renderedImageReferenceResult: 'PASS',
         browserImageLoadResult: 'PASS',
-        renderedImageUrlFingerprint: vector.assetUrlFingerprint,
+        renderedImageUrlFingerprint: 'sha256:' + 'a'.repeat(64),
       },
       assetReferenceClosureClaim: false,
       acceptanceAuthority: false,
