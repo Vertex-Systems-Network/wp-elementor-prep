@@ -74,17 +74,17 @@ The stable-I/O evidence-integrity line does not change `acceptanceAuthority=fals
 
 #483 is complete. PR #518 retained the first exact clean-Core proof on WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/solid-background/uniform-radius fidelity PASS, and qualified/full/full environment/proof/chain classifications. That result remains non-production-authorizing.
 
-PR #546 / #545 completed the immutable exact declared-profile reference registry, PR #548 / #547 completed exact retained-candidate identity binding, and PR #552 / #551 closes the first concrete media-mapping gap by resolving only exact `IMAGE_ASSET_EXPORT_REQUIRED` nodes through a source-bound URL-only manifest.
+PR #546 / #545 completed the exact declared-profile registry, PR #548 / #547 completed exact retained-candidate binding, PR #552 / #551 added source-bound image-reference resolution, and PR #554 / #553 adds explicit source-bound Heading/Button semantic promotion for already-extracted neutral text.
 
-1. keep image resolution fail-closed on stale source fingerprints, missing/extra/duplicate entries, unsafe URLs and authority inflation;
-2. preserve URL-only resolution as preparation, not asset closure: no network/upload, no target attachment-ID invention and downstream asset-reference status remains `NOT_VERIFIED`;
-3. preserve unrelated review nodes exactly so image resolution cannot hide manual/grid/wrap/absolute/semantic blockers;
-4. next, implement one concrete remaining semantic or responsive mapping gap rather than broadening unsupported source inference;
-5. add real reference/asset closure evidence only when a generated candidate actually requires it;
-6. keep `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required;
-7. open additional target observations only for specific new coverage claims.
+1. keep semantic resolution explicit: never infer Heading/Button from layer names, font size, typography, components or visual style;
+2. keep the manifest bound to the exact canonical neutral IR; stale, duplicate, non-text, unsafe or authority-inflated mappings fail closed;
+3. preserve unlisted text, source copy and unrelated review nodes exactly; reject justified Heading/Button promotion instead of silently changing alignment;
+4. keep image URL resolution as preparation rather than closure: no upload/network/target attachment-ID invention and asset-reference status remains `NOT_VERIFIED`;
+5. next, implement one concrete responsive mapping gap with the same explicit/fail-closed discipline;
+6. add real reference/asset closure evidence only when a generated candidate actually requires it;
+7. preserve `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required.
 
-Do not reopen serializer/fidelity breadth without an identified mapping or proof gap. The retained proof remains evidence for one exact profile + candidate pair, and URL resolution remains a reference-preparation step rather than a blanket media compatibility claim.
+Do not broaden semantics through heuristics merely to increase coverage. New semantic mappings must be explicit and source-bound, while responsive and real reference/asset closure remain the next concrete gaps.
 
 
 ## P16 bounded retention evidence-integrity boundary
