@@ -212,6 +212,23 @@ export function assessElementorObservedAssetReferenceEvidence(
     );
   }
 
+  const referenceReviewIdentityDigest = scope.digest;
+  if (referenceReviewIdentityDigest === null) {
+    return baseAssessment(
+      'REJECTED_REFERENCE_SCOPE',
+      proof.valid,
+      proof.classification,
+      false,
+      false,
+      null,
+      [{
+        code: 'P15_OBSERVED_ASSET_REFERENCE_SCOPE_INVALID',
+        path: '$.referenceScope',
+        message: 'Observed asset evidence bridge requires an exact current reference-review digest.',
+      }],
+    );
+  }
+
   let serializedProof: string;
   try {
     serializedProof = serializeElementorAssetTargetProofEvidence(
@@ -240,7 +257,7 @@ export function assessElementorObservedAssetReferenceEvidence(
     schemaVersion: 1,
     evidenceVersion: ELEMENTOR_OBSERVED_ASSET_REFERENCE_EVIDENCE_VERSION,
     status: 'OBSERVED_ASSET_EVIDENCE_BOUND',
-    referenceReviewIdentityDigest: scope.digest,
+    referenceReviewIdentityDigest,
     candidateIdentityDigest: proof.candidateIdentity.digest,
     targetProfileFingerprint: proof.targetProfileFingerprint,
     sourceProofSha256: sha256(serializedProof),
