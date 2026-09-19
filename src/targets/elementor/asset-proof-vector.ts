@@ -29,7 +29,7 @@ export const P15_ELEMENTOR_ASSET_PROOF_VECTOR_VERSION = 'p15-elementor-asset-pro
 export const P15_ELEMENTOR_ASSET_PROOF_WORDPRESS_VERSION = '6.8' as const;
 export const P15_ELEMENTOR_ASSET_PROOF_ELEMENTOR_VERSION = '4.2.4' as const;
 export const P15_ELEMENTOR_ASSET_PROOF_FIXTURE_URL =
-  'http://127.0.0.1:8080/?p15_asset_fixture=1' as const;
+  'http://127.0.0.1:8080/p15-asset-fixture.png' as const;
 
 export const P15_ELEMENTOR_ASSET_PROOF_VECTOR_FILENAMES = [
   'neutral-ir.json',
