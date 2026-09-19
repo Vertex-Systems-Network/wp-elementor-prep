@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-19 — P15 controlled URL-only Image asset proof
+
+- Continued issue #563 through PR #564 as the first genuine controlled asset-reference observation, separate from the retained #483 first-proof candidate.
+- Added deterministic `p15-elementor-asset-proof-vector-v1` through the production neutral-IR → Elementor generator. The vector contains one exact core Image URL-only MEDIA reference to a deterministic disposable localhost PNG fixture.
+- Bound the asset vector to exact candidate identity, exact WordPress `6.8` + Elementor `4.2.4` TargetProfile, exact reference-review identity digest and exact URL fingerprint. Existing #483 first-proof candidate/profile/template hashes are regression-locked unchanged.
+- Added dedicated `elementor-asset-target-proof-evidence-v1` validation and sanitized intake. Exact full pass requires candidate/profile/reference-review bindings, declared/observed environment match, import PASS, render PASS, rendered URL fingerprint match and browser image load PASS.
+- Impossible step ordering, malformed fingerprints, stale identities, contradictory PASS claims, unknown fields and authority inflation fail closed. CLI/report surfaces retain fingerprints only and never emit the raw asset URL.
+- Extended the disposable real-target bridge with a deterministic PNG endpoint plus independent asset-template import/render path, and extended the browser harness to retain only rendered URL fingerprint, image-presence/load state and natural dimensions.
+- The P15 real-target workflow now requires both the historical first controlled proof chain and the new exact asset proof to pass on the same controlled environment.
+- `ASSET_BOUND_FULL_PASS` is evidence for one exact controlled localhost URL-only candidate only. `assetReferenceClosureClaim=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false` and internal review remain mandatory; no arbitrary-host portability, media upload, attachment-ID portability or P19 expansion is claimed.
+
 ## 2026-09-19 — P15 exact responsive container padding overrides
 
 - Opened issue #561 and PR #562 for the fourth bounded responsive-mapping slice after direction, linked-px gap and flex alignment.
