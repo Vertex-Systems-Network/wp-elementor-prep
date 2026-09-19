@@ -44,6 +44,10 @@ export interface ElementorAssetTargetProofObservedTargetV1 {
 
 export interface ElementorAssetTargetProofStepsV1 {
   importResult: 'PASS' | 'FAIL';
+  targetManagedMediaResult: ElementorAssetTargetProofStepResult;
+  sourceProvenanceResult: ElementorAssetTargetProofStepResult;
+  sourceAssetUrlFingerprint: string | null;
+  targetManagedMediaUrlFingerprint: string | null;
   renderResult: ElementorAssetTargetProofStepResult;
   renderedImageReferenceResult: ElementorAssetTargetProofStepResult;
   browserImageLoadResult: ElementorAssetTargetProofStepResult;
@@ -84,7 +88,8 @@ export type ElementorAssetTargetProofIssueCode =
   | 'P15_ASSET_PROOF_EVIDENCE_REFERENCE_INVALID'
   | 'P15_ASSET_PROOF_STEPS_INVALID'
   | 'P15_ASSET_PROOF_SEQUENCE_INVALID'
-  | 'P15_ASSET_PROOF_IMAGE_REFERENCE_BINDING_INVALID'
+  | 'P15_ASSET_PROOF_SOURCE_REFERENCE_BINDING_INVALID'
+  | 'P15_ASSET_PROOF_TARGET_MANAGED_BINDING_INVALID'
   | 'P15_ASSET_PROOF_AUTHORITY_FLAGS_INVALID';
 
 export type ElementorAssetTargetProofReviewCode =
@@ -103,6 +108,8 @@ export interface ElementorAssetTargetProofValidationResultV1 {
   profileBindingMatches: boolean;
   referenceReviewBindingMatches: boolean;
   declaredObservedEnvironmentMatches: boolean;
+  sourceAssetBindingMatches: boolean;
+  targetManagedRenderBindingMatches: boolean;
   imageReferenceBindingMatches: boolean;
   candidateIdentity: ElementorTemplateCandidateIdentityV1 | null;
   targetProfileFingerprint: string | null;
@@ -153,6 +160,10 @@ const STEPS_KEYS = [
   'renderedImageReferenceResult',
   'renderedImageUrlFingerprint',
   'renderResult',
+  'sourceAssetUrlFingerprint',
+  'sourceProvenanceResult',
+  'targetManagedMediaResult',
+  'targetManagedMediaUrlFingerprint',
 ] as const;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -245,18 +256,30 @@ function isStepResult(value: unknown): value is ElementorAssetTargetProofStepRes
   return value === 'PASS' || value === 'FAIL' || value === 'NOT_RUN';
 }
 
+function nullableFingerprint(value: unknown): value is string | null {
+  return value === null || validFingerprint(value);
+}
+
 function snapshotSteps(value: unknown): ElementorAssetTargetProofStepsV1 | null {
   if (!isRecord(value)
     || !exactKeys(value, STEPS_KEYS)
     || (value.importResult !== 'PASS' && value.importResult !== 'FAIL')
+    || !isStepResult(value.targetManagedMediaResult)
+    || !isStepResult(value.sourceProvenanceResult)
+    || !nullableFingerprint(value.sourceAssetUrlFingerprint)
+    || !nullableFingerprint(value.targetManagedMediaUrlFingerprint)
     || !isStepResult(value.renderResult)
     || !isStepResult(value.renderedImageReferenceResult)
     || !isStepResult(value.browserImageLoadResult)
-    || !(value.renderedImageUrlFingerprint === null || validFingerprint(value.renderedImageUrlFingerprint))) {
+    || !nullableFingerprint(value.renderedImageUrlFingerprint)) {
     return null;
   }
   return {
     importResult: value.importResult,
+    targetManagedMediaResult: value.targetManagedMediaResult,
+    sourceProvenanceResult: value.sourceProvenanceResult,
+    sourceAssetUrlFingerprint: value.sourceAssetUrlFingerprint,
+    targetManagedMediaUrlFingerprint: value.targetManagedMediaUrlFingerprint,
     renderResult: value.renderResult,
     renderedImageReferenceResult: value.renderedImageReferenceResult,
     browserImageLoadResult: value.browserImageLoadResult,
@@ -264,44 +287,95 @@ function snapshotSteps(value: unknown): ElementorAssetTargetProofStepsV1 | null 
   };
 }
 
+function allDownstreamNotRun(steps: ElementorAssetTargetProofStepsV1): boolean {
+  return steps.targetManagedMediaResult === 'NOT_RUN'
+    && steps.sourceProvenanceResult === 'NOT_RUN'
+    && steps.sourceAssetUrlFingerprint === null
+    && steps.targetManagedMediaUrlFingerprint === null
+    && steps.renderResult === 'NOT_RUN'
+    && steps.renderedImageReferenceResult === 'NOT_RUN'
+    && steps.browserImageLoadResult === 'NOT_RUN'
+    && steps.renderedImageUrlFingerprint === null;
+}
+
 function sequenceValid(steps: ElementorAssetTargetProofStepsV1): boolean {
-  if (steps.importResult === 'FAIL') {
+  if (steps.importResult === 'FAIL') return allDownstreamNotRun(steps);
+
+  if (steps.targetManagedMediaResult === 'NOT_RUN') {
+    return steps.sourceProvenanceResult === 'NOT_RUN'
+      && steps.sourceAssetUrlFingerprint === null
+      && steps.targetManagedMediaUrlFingerprint === null
+      && steps.renderResult === 'NOT_RUN'
+      && steps.renderedImageReferenceResult === 'NOT_RUN'
+      && steps.browserImageLoadResult === 'NOT_RUN'
+      && steps.renderedImageUrlFingerprint === null;
+  }
+
+  if (steps.targetManagedMediaResult === 'FAIL') {
+    return steps.sourceProvenanceResult === 'NOT_RUN'
+      && steps.sourceAssetUrlFingerprint === null
+      && steps.targetManagedMediaUrlFingerprint === null
+      && steps.renderResult === 'NOT_RUN'
+      && steps.renderedImageReferenceResult === 'NOT_RUN'
+      && steps.browserImageLoadResult === 'NOT_RUN'
+      && steps.renderedImageUrlFingerprint === null;
+  }
+
+  if (steps.sourceProvenanceResult === 'NOT_RUN'
+    || steps.sourceAssetUrlFingerprint === null
+    || steps.targetManagedMediaUrlFingerprint === null) {
+    return false;
+  }
+
+  if (steps.sourceProvenanceResult === 'FAIL') {
     return steps.renderResult === 'NOT_RUN'
       && steps.renderedImageReferenceResult === 'NOT_RUN'
       && steps.browserImageLoadResult === 'NOT_RUN'
       && steps.renderedImageUrlFingerprint === null;
   }
+
   if (steps.renderResult !== 'PASS') {
     return steps.renderedImageReferenceResult === 'NOT_RUN'
       && steps.browserImageLoadResult === 'NOT_RUN'
       && steps.renderedImageUrlFingerprint === null;
   }
+
   if (steps.renderedImageReferenceResult === 'NOT_RUN') {
     return steps.browserImageLoadResult === 'NOT_RUN'
       && steps.renderedImageUrlFingerprint === null;
   }
+
   if (steps.renderedImageReferenceResult === 'FAIL') {
-    return steps.browserImageLoadResult === 'NOT_RUN';
+    return steps.browserImageLoadResult === 'NOT_RUN'
+      && steps.renderedImageUrlFingerprint !== null;
   }
-  return steps.renderedImageUrlFingerprint !== null;
+
+  return steps.renderedImageUrlFingerprint !== null
+    && steps.browserImageLoadResult !== 'NOT_RUN';
 }
 
 function classify(
   valid: boolean,
   steps: ElementorAssetTargetProofStepsV1 | null,
   environmentMatches: boolean,
-  imageReferenceMatches: boolean,
+  sourceAssetBindingMatches: boolean,
+  targetManagedRenderBindingMatches: boolean,
 ): ElementorAssetTargetProofClassification {
   if (!valid || !steps) return 'REJECTED';
   if (steps.importResult === 'FAIL'
+    || steps.targetManagedMediaResult === 'FAIL'
+    || steps.sourceProvenanceResult === 'FAIL'
     || steps.renderResult === 'FAIL'
     || steps.renderedImageReferenceResult === 'FAIL'
     || steps.browserImageLoadResult === 'FAIL') {
     return 'ASSET_BOUND_FAIL';
   }
   if (environmentMatches
-    && imageReferenceMatches
+    && sourceAssetBindingMatches
+    && targetManagedRenderBindingMatches
     && steps.importResult === 'PASS'
+    && steps.targetManagedMediaResult === 'PASS'
+    && steps.sourceProvenanceResult === 'PASS'
     && steps.renderResult === 'PASS'
     && steps.renderedImageReferenceResult === 'PASS'
     && steps.browserImageLoadResult === 'PASS') {
@@ -390,7 +464,8 @@ export function validateElementorAssetTargetProofEvidence(
   let profileBindingMatches = false;
   let referenceReviewBindingMatches = false;
   let declaredObservedEnvironmentMatches = false;
-  let imageReferenceBindingMatches = false;
+  let sourceAssetBindingMatches = false;
+  let targetManagedRenderBindingMatches = false;
   let observedTarget: ElementorAssetTargetProofObservedTargetV1 | null = null;
   let steps: ElementorAssetTargetProofStepsV1 | null = null;
 
@@ -502,18 +577,29 @@ export function validateElementorAssetTargetProofEvidence(
         path: '$.steps',
         message: 'Asset proof ordering is impossible or claims downstream evidence after an unproven/failed prerequisite.',
       });
-    } else if (steps.renderedImageReferenceResult === 'PASS') {
-      imageReferenceBindingMatches = expectedReference !== null
-        && steps.renderedImageUrlFingerprint === expectedReference.assetUrlFingerprint;
-      if (!imageReferenceBindingMatches) {
+    } else {
+      sourceAssetBindingMatches = steps.sourceProvenanceResult === 'PASS'
+        && expectedReference !== null
+        && steps.sourceAssetUrlFingerprint === expectedReference.assetUrlFingerprint;
+      if (steps.sourceProvenanceResult === 'PASS' && !sourceAssetBindingMatches) {
         issues.push({
-          code: 'P15_ASSET_PROOF_IMAGE_REFERENCE_BINDING_INVALID',
-          path: '$.steps.renderedImageUrlFingerprint',
-          message: 'PASS image-reference observation must exactly match the candidate URL-only MEDIA fingerprint.',
+          code: 'P15_ASSET_PROOF_SOURCE_REFERENCE_BINDING_INVALID',
+          path: '$.steps.sourceAssetUrlFingerprint',
+          message: 'PASS source provenance must bind to the exact URL-only candidate MEDIA fingerprint.',
         });
       }
-    } else if (steps.renderedImageUrlFingerprint !== null && expectedReference) {
-      imageReferenceBindingMatches = steps.renderedImageUrlFingerprint === expectedReference.assetUrlFingerprint;
+
+      targetManagedRenderBindingMatches = steps.renderedImageReferenceResult === 'PASS'
+        && steps.targetManagedMediaResult === 'PASS'
+        && steps.targetManagedMediaUrlFingerprint !== null
+        && steps.renderedImageUrlFingerprint === steps.targetManagedMediaUrlFingerprint;
+      if (steps.renderedImageReferenceResult === 'PASS' && !targetManagedRenderBindingMatches) {
+        issues.push({
+          code: 'P15_ASSET_PROOF_TARGET_MANAGED_BINDING_INVALID',
+          path: '$.steps.renderedImageUrlFingerprint',
+          message: 'PASS rendered Image reference must match the observed target-managed MEDIA URL fingerprint.',
+        });
+      }
     }
 
     if (value.assetReferenceClosureClaim !== false
@@ -530,18 +616,22 @@ export function validateElementorAssetTargetProofEvidence(
   }
 
   const valid = issues.length === 0;
+  const imageReferenceBindingMatches = sourceAssetBindingMatches && targetManagedRenderBindingMatches;
   return {
     valid,
     classification: classify(
       valid,
       steps,
       declaredObservedEnvironmentMatches,
-      imageReferenceBindingMatches,
+      sourceAssetBindingMatches,
+      targetManagedRenderBindingMatches,
     ),
     candidateBindingMatches,
     profileBindingMatches,
     referenceReviewBindingMatches,
     declaredObservedEnvironmentMatches,
+    sourceAssetBindingMatches,
+    targetManagedRenderBindingMatches,
     imageReferenceBindingMatches,
     candidateIdentity: expectedCandidateIdentity,
     targetProfileFingerprint: expectedProfileFingerprint,
