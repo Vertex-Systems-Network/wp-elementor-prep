@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-19 — P15 source-bound image asset resolution
+
+- Opened issue #551 and PR #552 for the first concrete post-proof media mapping gap.
+- Added a versioned image-asset resolution manifest bound to a deterministic canonical fingerprint of the exact neutral IR.
+- Only existing `IMAGE_ASSET_EXPORT_REQUIRED` review nodes can be resolved, using bounded absolute HTTP(S) URLs without credentials. Stale fingerprints, missing/extra/duplicate resolutions, unsafe URLs and authority-inflated manifests fail closed.
+- Resolved nodes become native neutral `image` nodes for the existing Elementor v0.4 generator. No target attachment ID is invented; the generated Elementor MEDIA setting remains URL-only with `id: 0`.
+- Unrelated review nodes are preserved, so resolving an image cannot conceal manual/grid/wrap/absolute or other unresolved mapping work.
+- Sanitized resolution serialization retains source IDs + URL SHA-256 fingerprints but omits transformed IR and raw asset URLs.
+- Existing Elementor asset-reference review deliberately remains `EXTERNAL_ASSET_CLOSURE_REQUIRED` / `NOT_VERIFIED`; no network access, asset upload, asset-closure claim, target-compatibility claim, production acceptance or download authority is introduced.
+
 ## 2026-09-19 — P15 exact retained candidate binding
 
 - Opened issue #547 and PR #548 after #546/#545 merged the exact retained TargetProfile reference registry.
