@@ -230,6 +230,28 @@ describe('P15 source-bound image asset resolution', () => {
     expect(serialized).not.toContain('"document"');
     expect(serialized).toContain(result.resolvedReferences[0]?.urlFingerprint ?? 'missing');
 
+    const mutatedIssue = {
+      ...resolveP15ElementorImageAssets(source, {
+        ...manifest(source, [{ sourceNodeId: 'image-fill', url: rawUrl }]),
+        sourceIrFingerprint: 'sha256:' + '0'.repeat(64),
+      }),
+    };
+    mutatedIssue.issues = mutatedIssue.issues.map((issue) => ({
+      ...issue,
+      message: rawUrl,
+    }));
+    expect(serializeP15ElementorImageAssetResolutionSummary(mutatedIssue)).not.toContain(rawUrl);
+
+    const invalidFingerprint = {
+      ...result,
+      resolvedReferences: result.resolvedReferences.map((entry) => ({
+        ...entry,
+        urlFingerprint: rawUrl,
+      })),
+    } as P15ElementorImageAssetResolutionResultV1;
+    expect(() => serializeP15ElementorImageAssetResolutionSummary(invalidFingerprint))
+      .toThrow(/authority-inflated/);
+
     const inflated = {
       ...result,
       productionAcceptance: true,
