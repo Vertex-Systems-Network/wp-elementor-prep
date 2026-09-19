@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-19 — P15 exact responsive container gap overrides
+
+- Opened issue #557 and PR #558 for the second bounded responsive-mapping slice after exact container direction.
+- Extracted the neutral-source → deterministic generated-container tree binding from the direction resolver into one shared non-authorizing helper, preserving the #556 structural checks.
+- Verified exact Elementor `4.2.4` evidence: flex-container `gap` is a responsive GAPS control, and Elementor's own upgrade tests assert `flex_gap_tablet` / `flex_gap_mobile` objects with unit/column/row/isLinked fields.
+- Added a source-IR + exact base-candidate-bound manifest for explicit `tabletGapPx` / `mobileGapPx` decisions on existing neutral containers.
+- Desktop `flex_gap` remains untouched. Each supplied px value maps only to a linked px GAPS object at the requested default breakpoint; missing breakpoints are not invented.
+- Zero and the existing neutral spacing maximum are accepted; duplicate/non-container/empty/non-finite/out-of-range/unknown-field/stale/authority-inflated mappings fail closed.
+- Review-bearing source IR, generated-tree binding drift and requested-key conflicts cannot produce a partial responsive candidate.
+- Sanitized summaries omit source content, template JSON and candidate bytes. No responsive inference, unit conversion, unlinked row/column gap, additional breakpoint, closure, compatibility, production or transfer authority is introduced.
+
 ## 2026-09-19 — P15 exact responsive container direction overrides
 
 - Opened issue #555 and PR #556 for the first bounded responsive-mapping slice after exact text semantics.
