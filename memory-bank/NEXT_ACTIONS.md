@@ -74,17 +74,17 @@ The stable-I/O evidence-integrity line does not change `acceptanceAuthority=fals
 
 #483 is complete. PR #518 retained the first exact clean-Core proof on WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/solid-background/uniform-radius fidelity PASS, and qualified/full/full environment/proof/chain classifications. That result remains non-production-authorizing.
 
-PR #546 / #545 completed the exact declared-profile registry, PR #548 / #547 completed exact retained-candidate binding, PR #552 / #551 added source-bound image-reference resolution, and PR #554 / #553 adds explicit source-bound Heading/Button semantic promotion for already-extracted neutral text.
+PR #546 / #545 completed the exact declared-profile registry, PR #548 / #547 completed exact retained-candidate binding, PR #552 / #551 added source-bound image-reference resolution, PR #554 / #553 added explicit source-bound Heading/Button semantic promotion, and PR #556 / #555 adds exact source/candidate-bound tablet/mobile container-direction overrides verified against Elementor `4.2.4`.
 
 1. keep semantic resolution explicit: never infer Heading/Button from layer names, font size, typography, components or visual style;
-2. keep the manifest bound to the exact canonical neutral IR; stale, duplicate, non-text, unsafe or authority-inflated mappings fail closed;
-3. preserve unlisted text, source copy and unrelated review nodes exactly; reject justified Heading/Button promotion instead of silently changing alignment;
+2. keep responsive decisions explicit and exact-source-bound: #556 may write only default tablet/mobile direction overrides and must preserve desktop direction;
+3. keep source IR and base-candidate identity binding fail closed so stale generator/source state cannot replay responsive decisions;
 4. keep image URL resolution as preparation rather than closure: no upload/network/target attachment-ID invention and asset-reference status remains `NOT_VERIFIED`;
-5. next, implement one concrete responsive mapping gap with the same explicit/fail-closed discipline;
+5. next responsive work must be one separately bounded documented control gap (for example gap/padding/alignment) rather than a blanket responsive claim;
 6. add real reference/asset closure evidence only when a generated candidate actually requires it;
 7. preserve `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required.
 
-Do not broaden semantics through heuristics merely to increase coverage. New semantic mappings must be explicit and source-bound, while responsive and real reference/asset closure remain the next concrete gaps.
+Do not broaden semantics or responsive behavior through heuristics merely to increase coverage. #556 is one explicit default-breakpoint direction slice; broader responsive and real reference/asset closure remain concrete gaps.
 
 
 ## P16 bounded retention evidence-integrity boundary
