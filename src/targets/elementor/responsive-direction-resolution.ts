@@ -10,15 +10,14 @@ import {
 } from './neutral-export-ir-identity';
 import {
   validateP15NeutralExportDocument,
-  type P15NeutralContainerNode,
   type P15NeutralExportDocumentV1,
-  type P15NeutralExportNode,
 } from './neutral-export-ir';
 import {
-  type ElementorContainerV04,
-  type ElementorElementV04,
-  type ElementorTemplateV04,
-} from './template-v04';
+  bindP15NeutralSourceToGeneratedContainers,
+  cloneP15ReadyElementorTemplate,
+  collectP15NeutralContainerNodes,
+} from './responsive-container-binding';
+import type { ElementorTemplateV04 } from './template-v04';
 import { generateElementorV3TemplateCandidate } from './v3-template-generator';
 
 export const P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION =
@@ -201,95 +200,6 @@ function validDirection(value: unknown): value is P15ElementorResponsiveDirectio
   return typeof value === 'string' && DIRECTIONS.includes(value as P15ElementorResponsiveDirection);
 }
 
-function expectedWidgetType(node: Exclude<P15NeutralExportNode, P15NeutralContainerNode>): string | null {
-  if (node.kind === 'heading') return 'heading';
-  if (node.kind === 'text') return 'text-editor';
-  if (node.kind === 'button') return 'button';
-  if (node.kind === 'image') return 'image';
-  return null;
-}
-
-function collectSourceContainers(
-  nodes: readonly P15NeutralExportNode[],
-  containers: Map<string, P15NeutralContainerNode>,
-): void {
-  for (const node of nodes) {
-    if (node.kind !== 'container') continue;
-    containers.set(node.sourceNodeId, node);
-    collectSourceContainers(node.children, containers);
-  }
-}
-
-function bindingIssue(
-  issues: P15ElementorResponsiveDirectionIssueV1[],
-  path: string,
-  message: string,
-): void {
-  issues.push({
-    code: 'P15_RESPONSIVE_GENERATOR_BINDING_MISMATCH',
-    path,
-    message,
-  });
-}
-
-function bindGeneratedContainers(
-  sourceNodes: readonly P15NeutralExportNode[],
-  targetElements: readonly ElementorElementV04[],
-  targets: Map<string, ElementorContainerV04>,
-  issues: P15ElementorResponsiveDirectionIssueV1[],
-  targetPath: string,
-): void {
-  if (sourceNodes.length !== targetElements.length) {
-    bindingIssue(
-      issues,
-      targetPath,
-      'Generated Elementor tree length does not match the exact review-free neutral source tree.',
-    );
-    return;
-  }
-
-  for (let index = 0; index < sourceNodes.length; index += 1) {
-    const source = sourceNodes[index];
-    const target = targetElements[index];
-    if (!source || !target) {
-      bindingIssue(issues, `${targetPath}[${index}]`, 'Generated source/target element pair is missing.');
-      continue;
-    }
-
-    const path = `${targetPath}[${index}]`;
-    if (source.kind === 'review') {
-      bindingIssue(issues, path, 'Review nodes cannot participate in responsive candidate binding.');
-      continue;
-    }
-
-    if (source.kind === 'container') {
-      if (target.elType !== 'container') {
-        bindingIssue(issues, path, 'Neutral container did not bind to a generated Elementor container.');
-        continue;
-      }
-      if (!isRecord(target.settings) || target.settings.flex_direction !== source.direction) {
-        bindingIssue(issues, `${path}.settings.flex_direction`, 'Generated container base direction drifted from the neutral source.');
-        continue;
-      }
-      targets.set(source.sourceNodeId, target);
-      bindGeneratedContainers(source.children, target.elements, targets, issues, `${path}.elements`);
-      continue;
-    }
-
-    const widgetType = expectedWidgetType(source);
-    if (target.elType !== 'widget' || target.widgetType !== widgetType) {
-      bindingIssue(issues, path, 'Neutral widget did not bind to the expected generated Elementor core widget.');
-    }
-  }
-}
-
-function cloneTemplateFromCandidate(candidate: ElementorTemplateCandidateArtifactV1): ElementorTemplateV04 {
-  if (candidate.status !== 'READY_FOR_TARGET_IMPORT_VALIDATION' || typeof candidate.templateJson !== 'string') {
-    throw new Error('Responsive direction resolver received a non-ready base candidate.');
-  }
-  return JSON.parse(candidate.templateJson) as ElementorTemplateV04;
-}
-
 function baseResult(
   status: P15ElementorResponsiveDirectionStatus,
   sourceIrFingerprint: string | null,
@@ -356,8 +266,7 @@ export function resolveP15ElementorResponsiveContainerDirections(
 
   const source = sourceValue as P15NeutralExportDocumentV1;
   const sourceIrFingerprint = fingerprintP15NeutralExportDocument(source);
-  const sourceContainers = new Map<string, P15NeutralContainerNode>();
-  collectSourceContainers(source.nodes, sourceContainers);
+  const sourceContainers = collectP15NeutralContainerNodes(source);
 
   const baseGeneration = generateElementorV3TemplateCandidate(source);
   if (baseGeneration.status !== 'GENERATED_LOCAL_CANDIDATE'
@@ -543,11 +452,9 @@ export function resolveP15ElementorResponsiveContainerDirections(
     );
   }
 
-  const template = cloneTemplateFromCandidate(baseGeneration.candidate);
-  const targetContainers = new Map<string, ElementorContainerV04>();
-  const bindingIssues: P15ElementorResponsiveDirectionIssueV1[] = [];
-  bindGeneratedContainers(source.nodes, template.content, targetContainers, bindingIssues, '$.content');
-  if (bindingIssues.length > 0) {
+  const template = cloneP15ReadyElementorTemplate(baseGeneration.candidate);
+  const binding = bindP15NeutralSourceToGeneratedContainers(source, template);
+  if (binding.issues.length > 0) {
     return baseResult(
       'REJECTED_INVALID_MANIFEST',
       sourceIrFingerprint,
@@ -555,16 +462,26 @@ export function resolveP15ElementorResponsiveContainerDirections(
       null,
       sourceContainers.size,
       [],
-      bindingIssues,
+      binding.issues.map((issue) => ({
+        code: 'P15_RESPONSIVE_GENERATOR_BINDING_MISMATCH' as const,
+        path: issue.path,
+        message: issue.message,
+      })),
       null,
       null,
     );
   }
+  const targetContainers = binding.containers;
+  const bindingIssues: P15ElementorResponsiveDirectionIssueV1[] = [];
 
   for (const [sourceNodeId, resolution] of resolutions) {
     const target = targetContainers.get(sourceNodeId);
     if (!target || !isRecord(target.settings)) {
-      bindingIssue(bindingIssues, '$.content', `Generated container binding missing for sourceNodeId ${sourceNodeId}.`);
+      bindingIssues.push({
+        code: 'P15_RESPONSIVE_GENERATOR_BINDING_MISMATCH',
+        path: '$.content',
+        message: `Generated container binding missing for sourceNodeId ${sourceNodeId}.`,
+      });
       continue;
     }
     if (resolution.tabletDirection !== undefined
