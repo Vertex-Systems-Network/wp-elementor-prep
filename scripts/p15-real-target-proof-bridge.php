@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: P15 Real Elementor Target Proof Bridge
- * Description: Disposable non-authorizing runtime bridge for issue #483.
- * Version: 1.0.0
+ * Description: Disposable non-authorizing runtime bridge for controlled P15 target proofs.
+ * Version: 1.1.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'P15_PROOF_TITLE', 'P15 First Controlled Target Proof Vector' );
+define( 'P15_ASSET_PROOF_TITLE', 'P15 Controlled URL-Only Asset Proof Vector' );
+define( 'P15_ASSET_FIXTURE_VALUE', 'p15-url-only-v1' );
 
 function p15_proof_env_value( $name ) {
     $value = getenv( $name );
@@ -39,14 +41,14 @@ function p15_proof_admin_id() {
     return empty( $ids ) ? 0 : (int) $ids[0];
 }
 
-function p15_proof_find_template_id() {
+function p15_proof_find_template_id_by_title( $title ) {
     $ids = get_posts( array(
         'post_type' => 'elementor_library',
         'post_status' => 'any',
-        'numberposts' => 10,
+        'numberposts' => 20,
         'orderby' => 'ID',
         'order' => 'DESC',
-        'title' => P15_PROOF_TITLE,
+        'title' => $title,
         'fields' => 'ids',
     ) );
     foreach ( $ids as $id ) {
@@ -57,46 +59,54 @@ function p15_proof_find_template_id() {
     return 0;
 }
 
-function p15_proof_import_once() {
-    if ( get_option( 'p15_proof_import_done' ) ) {
+function p15_proof_find_template_id() {
+    return p15_proof_find_template_id_by_title( P15_PROOF_TITLE );
+}
+
+function p15_asset_proof_find_template_id() {
+    return p15_proof_find_template_id_by_title( P15_ASSET_PROOF_TITLE );
+}
+
+function p15_proof_import_vector_once( $option_prefix, $title, $path_env, $sha_env ) {
+    if ( get_option( $option_prefix . '_import_done' ) ) {
         return;
     }
 
     if ( ! defined( 'ELEMENTOR_VERSION' ) || ! class_exists( '\\Elementor\\Plugin' ) ) {
-        update_option( 'p15_proof_import_result', 'ELEMENTOR_NOT_READY', false );
+        update_option( $option_prefix . '_import_result', 'ELEMENTOR_NOT_READY', false );
         return;
     }
 
     if ( '4.2.4' !== (string) ELEMENTOR_VERSION ) {
-        update_option( 'p15_proof_import_result', 'ELEMENTOR_VERSION_MISMATCH:' . ELEMENTOR_VERSION, false );
+        update_option( $option_prefix . '_import_result', 'ELEMENTOR_VERSION_MISMATCH:' . ELEMENTOR_VERSION, false );
         return;
     }
 
-    $path = p15_proof_env_value( 'P15_VECTOR_PATH' );
+    $path = p15_proof_env_value( $path_env );
     if ( $path === '' || ! is_file( $path ) || ! is_readable( $path ) ) {
-        update_option( 'p15_proof_import_result', 'VECTOR_UNAVAILABLE', false );
+        update_option( $option_prefix . '_import_result', 'VECTOR_UNAVAILABLE', false );
         return;
     }
 
     $actual_sha = 'sha256:' . hash_file( 'sha256', $path );
-    $expected_sha = p15_proof_env_value( 'P15_TEMPLATE_SHA256' );
-    update_option( 'p15_proof_template_sha256', $actual_sha, false );
+    $expected_sha = p15_proof_env_value( $sha_env );
+    update_option( $option_prefix . '_template_sha256', $actual_sha, false );
     if ( $expected_sha !== '' && ! hash_equals( $expected_sha, $actual_sha ) ) {
-        update_option( 'p15_proof_import_result', 'VECTOR_SHA256_MISMATCH', false );
+        update_option( $option_prefix . '_import_result', 'VECTOR_SHA256_MISMATCH', false );
         return;
     }
 
-    $existing = p15_proof_find_template_id();
+    $existing = p15_proof_find_template_id_by_title( $title );
     if ( $existing ) {
-        update_option( 'p15_proof_template_id', $existing, false );
-        update_option( 'p15_proof_import_result', 'PASS_EXISTING_PAGE_TEMPLATE', false );
-        update_option( 'p15_proof_import_done', 1, false );
+        update_option( $option_prefix . '_template_id', $existing, false );
+        update_option( $option_prefix . '_import_result', 'PASS_EXISTING_PAGE_TEMPLATE', false );
+        update_option( $option_prefix . '_import_done', 1, false );
         return;
     }
 
     $admin_id = p15_proof_admin_id();
     if ( ! $admin_id ) {
-        update_option( 'p15_proof_import_result', 'NO_ADMIN_USER', false );
+        update_option( $option_prefix . '_import_result', 'NO_ADMIN_USER', false );
         return;
     }
 
@@ -109,28 +119,47 @@ function p15_proof_import_once() {
 
         if ( is_wp_error( $result ) ) {
             update_option(
-                'p15_proof_import_result',
+                $option_prefix . '_import_result',
                 'FAIL:' . $result->get_error_code() . ':' . $result->get_error_message(),
                 false
             );
         } else {
-            $template_id = p15_proof_find_template_id();
+            $template_id = p15_proof_find_template_id_by_title( $title );
             if ( $template_id ) {
-                update_option( 'p15_proof_template_id', $template_id, false );
-                update_option( 'p15_proof_import_result', 'PASS', false );
-                update_option( 'p15_proof_import_observed_at', p15_proof_iso_now(), false );
-                update_option( 'p15_proof_import_done', 1, false );
+                update_option( $option_prefix . '_template_id', $template_id, false );
+                update_option( $option_prefix . '_import_result', 'PASS', false );
+                update_option( $option_prefix . '_import_observed_at', p15_proof_iso_now(), false );
+                update_option( $option_prefix . '_import_done', 1, false );
             } else {
-                update_option( 'p15_proof_import_result', 'FAIL:NO_IMPORTED_TEMPLATE_ID', false );
+                update_option( $option_prefix . '_import_result', 'FAIL:NO_IMPORTED_TEMPLATE_ID', false );
             }
         }
     } catch ( Throwable $error ) {
-        update_option( 'p15_proof_import_result', 'FAIL:EXCEPTION:' . $error->getMessage(), false );
+        update_option( $option_prefix . '_import_result', 'FAIL:EXCEPTION:' . $error->getMessage(), false );
     }
 
     wp_set_current_user( $previous_user ?: 0 );
 }
+
+function p15_proof_import_once() {
+    p15_proof_import_vector_once(
+        'p15_proof',
+        P15_PROOF_TITLE,
+        'P15_VECTOR_PATH',
+        'P15_TEMPLATE_SHA256'
+    );
+}
 add_action( 'init', 'p15_proof_import_once', 99 );
+
+function p15_asset_proof_import_once() {
+    p15_proof_import_vector_once(
+        'p15_asset_proof',
+        P15_ASSET_PROOF_TITLE,
+        'P15_ASSET_VECTOR_PATH',
+        'P15_ASSET_TEMPLATE_SHA256'
+    );
+}
+add_action( 'init', 'p15_asset_proof_import_once', 100 );
 
 function p15_proof_database_observation() {
     global $wpdb;
@@ -220,15 +249,32 @@ function p15_proof_environment_observation() {
     );
 }
 
+function p15_asset_fixture_requested() {
+    return isset( $_GET['p15_asset_fixture'] )
+        && is_string( $_GET['p15_asset_fixture'] )
+        && hash_equals(
+            P15_ASSET_FIXTURE_VALUE,
+            sanitize_text_field( wp_unslash( $_GET['p15_asset_fixture'] ) )
+        );
+}
+
 function p15_proof_template_redirect() {
+    if ( p15_asset_fixture_requested() ) {
+        nocache_headers();
+        header( 'Content-Type: image/svg+xml; charset=utf-8' );
+        echo '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="48" viewBox="0 0 64 48"><rect width="64" height="48" fill="#336699"/><circle cx="32" cy="24" r="12" fill="#ffffff"/></svg>';
+        exit;
+    }
+
     $template_id = (int) get_option( 'p15_proof_template_id', 0 );
+    $asset_template_id = (int) get_option( 'p15_asset_proof_template_id', 0 );
 
     if ( p15_proof_token_ok( 'p15_proof_observe' ) ) {
         nocache_headers();
         header( 'Content-Type: application/json; charset=utf-8' );
         echo wp_json_encode(
             array(
-                'schema' => 'p15-real-runtime-observation-v1',
+                'schema' => 'p15-real-runtime-observation-v2',
                 'observedAt' => p15_proof_iso_now(),
                 'evidenceReference' => p15_proof_env_value( 'P15_EVIDENCE_REFERENCE' ),
                 'environment' => p15_proof_environment_observation(),
@@ -241,6 +287,13 @@ function p15_proof_template_redirect() {
                 'renderUrl' => home_url( '/?p15_proof_render=' . rawurlencode( p15_proof_env_value( 'P15_PROOF_TOKEN' ) ) ),
                 'editorLoginUrl' => home_url( '/?p15_proof_login=' . rawurlencode( p15_proof_env_value( 'P15_PROOF_TOKEN' ) ) ),
                 'editorUrl' => admin_url( 'post.php?post=' . $template_id . '&action=elementor' ),
+                'assetImportResult' => get_option( 'p15_asset_proof_import_result', 'NOT_RUN' ),
+                'assetImportObservedAt' => get_option( 'p15_asset_proof_import_observed_at', 'NOT_RUN' ),
+                'assetTemplateId' => $asset_template_id,
+                'assetTemplateTitle' => $asset_template_id ? get_the_title( $asset_template_id ) : '',
+                'assetTemplateType' => $asset_template_id ? get_post_meta( $asset_template_id, '_elementor_template_type', true ) : '',
+                'assetTemplateSha256' => get_option( 'p15_asset_proof_template_sha256', '' ),
+                'assetRenderUrl' => home_url( '/?p15_asset_proof_render=' . rawurlencode( p15_proof_env_value( 'P15_PROOF_TOKEN' ) ) ),
             ),
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         );
@@ -282,6 +335,29 @@ function p15_proof_template_redirect() {
 </head>
 <body>
 <main id="p15-proof-root"><?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></main>
+<?php wp_footer(); ?>
+</body>
+</html><?php
+        exit;
+    }
+
+    if ( p15_proof_token_ok( 'p15_asset_proof_render' ) ) {
+        if ( ! $asset_template_id || ! class_exists( '\\Elementor\\Plugin' ) ) {
+            status_header( 409 );
+            exit( 'P15 asset render unavailable.' );
+        }
+
+        $content = \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $asset_template_id, true );
+        nocache_headers();
+        ?><!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>P15 Real Asset Target Render</title>
+<?php wp_head(); ?>
+</head>
+<body>
+<main id="p15-asset-proof-root"><?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></main>
 <?php wp_footer(); ?>
 </body>
 </html><?php
