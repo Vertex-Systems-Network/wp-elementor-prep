@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-19 — P15 exact source-bound text semantics
+
+- Opened issue #553 and PR #554 for the first explicit semantic-mapping slice after image-reference resolution.
+- Extracted canonical neutral-IR serialization/fingerprinting into a shared `p15-neutral-export-ir-identity-v1` contract; the #552 image resolver delegates to the same fingerprint without changing its source-binding behavior.
+- Added a versioned semantic manifest bound to the exact canonical neutral IR. Only explicitly named existing neutral text source IDs may be promoted to native `heading` or `button` nodes.
+- No semantic inference is performed from Figma layer names, font size, typography, component names or visual style. Unlisted text remains text and source copy is preserved exactly.
+- Heading promotion requires an explicit supported level. Button promotion supports only bounded safe URL/openInNewTab/nofollow fields under the existing neutral URL policy.
+- Justified text cannot be silently promoted because Heading/Button alignment does not support `justify`; that mapping fails closed.
+- Sanitized semantic summaries expose source IDs, resolved kinds, heading levels and URL fingerprints only; raw source text, raw button URLs, transformed IR and caller-mutated issue messages are omitted.
+- Existing generator/readiness paths recognize promoted Heading/Button nodes as documented native mappings while compatibility/production/download authority remains false.
+
 ## 2026-09-19 — P15 source-bound image asset resolution
 
 - Opened issue #551 and PR #552 for the first concrete post-proof media mapping gap.
