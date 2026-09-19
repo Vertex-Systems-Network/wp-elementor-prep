@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { chromium } from 'playwright-core';
@@ -84,6 +85,7 @@ async function headingPresentInEditor(page, expectedText, timeoutMs) {
 const baseUrl = required('P15_BASE_URL').replace(/\/$/, '');
 const token = required('P15_PROOF_TOKEN');
 const vectorDir = required('P15_VECTOR_DIR');
+const assetVectorDir = required('P15_ASSET_VECTOR_DIR');
 const evidenceReference = required('P15_EVIDENCE_REFERENCE');
 const chromePath = required('P15_CHROME_PATH');
 const outDir = process.env.P15_PROOF_OUT_DIR || 'dist-p15/p15-real-target-proof';
@@ -92,6 +94,11 @@ await mkdir(outDir, { recursive: true });
 const manifest = JSON.parse(await readFile(join(vectorDir, 'manifest.json'), 'utf8'));
 const profile = JSON.parse(await readFile(join(vectorDir, 'target-profile.json'), 'utf8'));
 const expectedTemplateSha = manifest.fileSha256.template;
+const assetManifest = JSON.parse(await readFile(join(assetVectorDir, 'manifest.json'), 'utf8'));
+const assetProfile = JSON.parse(await readFile(join(assetVectorDir, 'target-profile.json'), 'utf8'));
+const assetReferenceIdentity = JSON.parse(
+  await readFile(join(assetVectorDir, 'reference-review-identity.json'), 'utf8'),
+);
 
 const raw = {
   schema: 'p15-real-target-proof-runtime-bundle-v1',
@@ -117,6 +124,22 @@ const raw = {
     matchesECon: false,
     computedBackground: '',
     computedRadii: [],
+    error: '',
+  },
+};
+
+const assetRaw = {
+  schema: 'p15-real-asset-target-proof-runtime-bundle-v1',
+  evidenceReference,
+  server: null,
+  render: {
+    result: 'NOT_RUN',
+    imagePresent: false,
+    renderedImageUrlFingerprint: null,
+    imageReferenceResult: 'NOT_RUN',
+    browserImageLoadResult: 'NOT_RUN',
+    naturalWidth: 0,
+    naturalHeight: 0,
     error: '',
   },
 };
@@ -366,7 +389,7 @@ try {
   await writeJson(join(outDir, 'proof-evidence.json'), proofEvidence);
   await writeJson(join(outDir, 'raw-runtime-observation.json'), raw);
 
-  const fullPass = (
+  const firstProofFullPass = (
     steps.importResult === 'PASS'
     && steps.editorOpenResult === 'PASS'
     && steps.renderResult === 'PASS'
@@ -374,6 +397,154 @@ try {
     && steps.fidelity.solidBackground === 'PASS'
     && steps.fidelity.uniformRadius === 'PASS'
   );
+
+  let assetProofEvidence = null;
+  let assetProofFullPass = false;
+  try {
+    await page.goto(baseUrl + '/?p15_asset_proof_observe=' + encodeURIComponent(token), {
+      waitUntil: 'domcontentloaded',
+      timeout: 60000,
+    });
+    const assetServer = await bodyJson(page);
+    assetRaw.server = {
+      schema: assetServer.schema,
+      observedAt: assetServer.observedAt,
+      evidenceReference: assetServer.evidenceReference,
+      environment: assetServer.environment,
+      importResult: assetServer.importResult,
+      importObservedAt: assetServer.importObservedAt,
+      templateId: assetServer.templateId,
+      templateTitle: assetServer.templateTitle,
+      templateType: assetServer.templateType,
+      templateSha256: assetServer.templateSha256,
+    };
+
+    if (assetServer.importResult !== 'PASS') {
+      throw new Error('Asset Template Library import did not PASS: ' + assetServer.importResult);
+    }
+    if (assetServer.templateType !== 'page') {
+      throw new Error('Imported asset template type is not page: ' + assetServer.templateType);
+    }
+    if (assetServer.templateSha256 !== assetManifest.fileSha256.template) {
+      throw new Error('Imported asset template SHA-256 does not match canonical asset vector.');
+    }
+    if (assetServer.environment.wordpressVersion !== assetProfile.environment.wordpressVersion
+      || assetServer.environment.elementorVersion !== assetProfile.environment.elementorVersion) {
+      throw new Error('Observed asset target versions do not match the declared asset profile.');
+    }
+
+    await page.goto(assetServer.renderUrl, {
+      waitUntil: 'networkidle',
+      timeout: 90000,
+    });
+    const imageObservation = await page.evaluate(() => {
+      const root = document.querySelector('#p15-asset-proof-root');
+      const image = root ? root.querySelector('img') : null;
+      if (!image) {
+        return {
+          imagePresent: false,
+          renderedUrl: '',
+          complete: false,
+          naturalWidth: 0,
+          naturalHeight: 0,
+        };
+      }
+      return {
+        imagePresent: true,
+        renderedUrl: image.currentSrc || image.src || image.getAttribute('src') || '',
+        complete: image.complete,
+        naturalWidth: image.naturalWidth,
+        naturalHeight: image.naturalHeight,
+      };
+    });
+
+    const renderedImageUrlFingerprint = imageObservation.renderedUrl
+      ? 'sha256:' + createHash('sha256').update(imageObservation.renderedUrl).digest('hex')
+      : null;
+    const imageReferenceResult = imageObservation.imagePresent
+      && renderedImageUrlFingerprint === assetManifest.assetUrlFingerprint
+      ? 'PASS'
+      : 'FAIL';
+    const browserImageLoadResult = imageReferenceResult === 'PASS'
+      ? (imageObservation.complete
+          && imageObservation.naturalWidth > 0
+          && imageObservation.naturalHeight > 0
+        ? 'PASS'
+        : 'FAIL')
+      : 'NOT_RUN';
+
+    assetRaw.render = {
+      result: imageObservation.imagePresent ? 'PASS' : 'FAIL',
+      imagePresent: imageObservation.imagePresent,
+      renderedImageUrlFingerprint,
+      imageReferenceResult,
+      browserImageLoadResult,
+      naturalWidth: imageObservation.naturalWidth,
+      naturalHeight: imageObservation.naturalHeight,
+      error: '',
+    };
+    await page.screenshot({
+      path: join(outDir, 'asset-render.png'),
+      fullPage: true,
+    });
+
+    const assetSteps = {
+      importResult: 'PASS',
+      renderResult: assetRaw.render.result,
+      renderedImageReferenceResult: assetRaw.render.result === 'PASS'
+        ? imageReferenceResult
+        : 'NOT_RUN',
+      browserImageLoadResult: assetRaw.render.result === 'PASS'
+        ? browserImageLoadResult
+        : 'NOT_RUN',
+      renderedImageUrlFingerprint: assetRaw.render.result === 'PASS'
+        ? renderedImageUrlFingerprint
+        : null,
+    };
+
+    assetProofEvidence = {
+      schemaVersion: 1,
+      evidenceVersion: 'elementor-asset-target-proof-evidence-v1',
+      candidateIdentity: assetManifest.candidateIdentity,
+      targetProfileIdentity: {
+        profileVersion: assetProfile.profileVersion,
+        fingerprint: assetManifest.targetProfileFingerprint,
+      },
+      referenceReviewIdentity: {
+        identityVersion: assetReferenceIdentity.identityVersion,
+        digest: assetManifest.referenceReviewIdentityDigest,
+      },
+      observedTarget: {
+        source: 'OBSERVED',
+        wordpressVersion: assetServer.environment.wordpressVersion,
+        elementorVersion: assetServer.environment.elementorVersion,
+        importSurface: 'TEMPLATE_LIBRARY_JSON',
+      },
+      observedAt: new Date().toISOString(),
+      evidenceReference,
+      steps: assetSteps,
+      assetReferenceClosureClaim: false,
+      acceptanceAuthority: false,
+      targetCompatibilityClaim: false,
+      productionAcceptance: false,
+      internalReviewRequired: true,
+    };
+    await writeJson(join(outDir, 'asset-proof-evidence.json'), assetProofEvidence);
+    await writeJson(join(outDir, 'asset-raw-runtime-observation.json'), assetRaw);
+
+    assetProofFullPass = (
+      assetSteps.importResult === 'PASS'
+      && assetSteps.renderResult === 'PASS'
+      && assetSteps.renderedImageReferenceResult === 'PASS'
+      && assetSteps.browserImageLoadResult === 'PASS'
+      && assetSteps.renderedImageUrlFingerprint === assetManifest.assetUrlFingerprint
+    );
+  } catch (error) {
+    assetRaw.render.error = error instanceof Error ? error.message : String(error);
+    await writeJson(join(outDir, 'asset-raw-runtime-observation.json'), assetRaw);
+  }
+
+  const fullPass = firstProofFullPass && assetProofFullPass;
 
   process.stdout.write(JSON.stringify({
     browser: raw.browser,
@@ -383,6 +554,16 @@ try {
     editorOpenResult: steps.editorOpenResult,
     renderResult: steps.renderResult,
     fidelity: steps.fidelity,
+    firstProofFullPass,
+    assetProof: {
+      classificationReady: assetProofEvidence !== null,
+      importResult: assetProofEvidence?.steps.importResult ?? 'NOT_RUN',
+      renderResult: assetProofEvidence?.steps.renderResult ?? 'NOT_RUN',
+      renderedImageReferenceResult: assetProofEvidence?.steps.renderedImageReferenceResult ?? 'NOT_RUN',
+      browserImageLoadResult: assetProofEvidence?.steps.browserImageLoadResult ?? 'NOT_RUN',
+      assetUrlFingerprint: assetProofEvidence?.steps.renderedImageUrlFingerprint ?? null,
+      fullPass: assetProofFullPass,
+    },
     fullPass,
   }, null, 2) + '\n');
 
@@ -390,6 +571,8 @@ try {
 } catch (error) {
   raw.fatalError = error instanceof Error ? error.message : String(error);
   await writeJson(join(outDir, 'raw-runtime-observation.json'), raw);
+  assetRaw.fatalError = raw.fatalError;
+  await writeJson(join(outDir, 'asset-raw-runtime-observation.json'), assetRaw);
   process.stderr.write('P15_REAL_TARGET_PROOF_BROWSER_FAILED: ' + raw.fatalError + '\n');
   process.exitCode = 2;
 } finally {
