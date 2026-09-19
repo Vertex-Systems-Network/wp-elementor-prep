@@ -312,6 +312,17 @@ describe('P15 exact source-bound semantic resolution', () => {
 
     const buttonEntry = result.resolvedSemantics.find((entry) => entry.targetKind === 'button');
     expect(buttonEntry?.targetKind).toBe('button');
+    const extraFieldLeakAttempt = {
+      ...result,
+      resolvedSemantics: result.resolvedSemantics.map((entry) => (
+        entry.targetKind === 'heading'
+          ? { ...entry, rawText }
+          : entry
+      )),
+    } as unknown as P15ElementorSemanticResolutionResultV1;
+    expect(() => serializeP15ElementorSemanticResolutionSummary(extraFieldLeakAttempt))
+      .toThrow(/authority-inflated/);
+
     const invalidFingerprint = {
       ...result,
       resolvedSemantics: result.resolvedSemantics.map((entry) => (
@@ -321,6 +332,15 @@ describe('P15 exact source-bound semantic resolution', () => {
       )),
     } as P15ElementorSemanticResolutionResultV1;
     expect(() => serializeP15ElementorSemanticResolutionSummary(invalidFingerprint))
+      .toThrow(/authority-inflated/);
+
+    const duplicateSummary = {
+      ...result,
+      resolvedSemanticCount: 3,
+      remainingTextCount: 0,
+      resolvedSemantics: [...result.resolvedSemantics, result.resolvedSemantics[0]!],
+    } as P15ElementorSemanticResolutionResultV1;
+    expect(() => serializeP15ElementorSemanticResolutionSummary(duplicateSummary))
       .toThrow(/authority-inflated/);
 
     const inflated = {
