@@ -2,16 +2,13 @@ import {
   buildElementorTemplateCandidateArtifact,
   type ElementorTemplateCandidateArtifactV1,
 } from './candidate-artifact';
+import { buildElementorTemplateCandidateIdentity } from './import-validation-contract';
 import {
-  buildElementorTemplateCandidateIdentity,
-} from './import-validation-contract';
-import {
-  fingerprintP15NeutralExportDocument,
-} from './neutral-export-ir-identity';
-import {
+  P15_NEUTRAL_EXPORT_MAX_SPACING_PX,
   validateP15NeutralExportDocument,
   type P15NeutralExportDocumentV1,
 } from './neutral-export-ir';
+import { fingerprintP15NeutralExportDocument } from './neutral-export-ir-identity';
 import {
   bindP15NeutralSourceToGeneratedContainers,
   cloneP15ReadyElementorTemplate,
@@ -20,39 +17,36 @@ import {
 import type { ElementorTemplateV04 } from './template-v04';
 import { generateElementorV3TemplateCandidate } from './v3-template-generator';
 
-export const P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION =
-  'p15-elementor-responsive-direction-manifest-v1' as const;
-export const P15_ELEMENTOR_RESPONSIVE_DIRECTION_RESULT_VERSION =
-  'p15-elementor-responsive-direction-result-v1' as const;
-export const P15_ELEMENTOR_RESPONSIVE_DIRECTION_MAX_ENTRIES = 10_000 as const;
-export const P15_ELEMENTOR_RESPONSIVE_DIRECTION_EVIDENCE = Object.freeze({
+export const P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION =
+  'p15-elementor-responsive-gap-manifest-v1' as const;
+export const P15_ELEMENTOR_RESPONSIVE_GAP_RESULT_VERSION =
+  'p15-elementor-responsive-gap-result-v1' as const;
+export const P15_ELEMENTOR_RESPONSIVE_GAP_MAX_ENTRIES = 10_000 as const;
+export const P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE = Object.freeze({
   elementorVersion: '4.2.4',
   flexContainerSourcePath: 'includes/controls/groups/flex-container.php',
   flexContainerSourceBlobSha: 'ce9e412e31b7710f33129ae35634ecb51e580d38',
+  upgradeTestSourcePath: 'tests/phpunit/elementor/core/upgrade/test-upgrades.php',
+  upgradeTestSourceBlobSha: 'ca26af25b0e35d24303a771eb3a85dc1fee21b89',
   groupName: 'flex',
-  controlName: 'direction',
-  tabletSettingKey: 'flex_direction_tablet',
-  mobileSettingKey: 'flex_direction_mobile',
+  controlName: 'gap',
+  desktopSettingKey: 'flex_gap',
+  tabletSettingKey: 'flex_gap_tablet',
+  mobileSettingKey: 'flex_gap_mobile',
 });
 
-export type P15ElementorResponsiveDirection =
-  | 'row'
-  | 'column'
-  | 'row-reverse'
-  | 'column-reverse';
-
-export interface P15ElementorResponsiveDirectionEntryV1 {
+export interface P15ElementorResponsiveGapEntryV1 {
   sourceNodeId: string;
-  tabletDirection?: P15ElementorResponsiveDirection;
-  mobileDirection?: P15ElementorResponsiveDirection;
+  tabletGapPx?: number;
+  mobileGapPx?: number;
 }
 
-export interface P15ElementorResponsiveDirectionManifestV1 {
+export interface P15ElementorResponsiveGapManifestV1 {
   schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION;
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION;
   sourceIrFingerprint: string;
   baseCandidateIdentityDigest: string;
-  containers: P15ElementorResponsiveDirectionEntryV1[];
+  containers: P15ElementorResponsiveGapEntryV1[];
   responsiveInferencePerformed: false;
   figmaMutation: false;
   networkAccess: false;
@@ -62,57 +56,57 @@ export interface P15ElementorResponsiveDirectionManifestV1 {
   downloadEnabled: false;
 }
 
-export type P15ElementorResponsiveDirectionIssueCode =
-  | 'P15_RESPONSIVE_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_RESPONSIVE_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_SOURCE_NOT_CONTAINER'
-  | 'P15_RESPONSIVE_DIRECTION_INVALID'
-  | 'P15_RESPONSIVE_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_RESOLVED_CANDIDATE_INVALID';
+export type P15ElementorResponsiveGapIssueCode =
+  | 'P15_RESPONSIVE_GAP_SOURCE_IR_INVALID'
+  | 'P15_RESPONSIVE_GAP_UPSTREAM_GENERATION_NOT_READY'
+  | 'P15_RESPONSIVE_GAP_MANIFEST_NOT_OBJECT'
+  | 'P15_RESPONSIVE_GAP_MANIFEST_FIELDS_INVALID'
+  | 'P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID'
+  | 'P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_INVALID'
+  | 'P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_MISMATCH'
+  | 'P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_INVALID'
+  | 'P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_MISMATCH'
+  | 'P15_RESPONSIVE_GAP_ENTRIES_INVALID'
+  | 'P15_RESPONSIVE_GAP_ENTRY_INVALID'
+  | 'P15_RESPONSIVE_GAP_DUPLICATE_SOURCE_ID'
+  | 'P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER'
+  | 'P15_RESPONSIVE_GAP_VALUE_INVALID'
+  | 'P15_RESPONSIVE_GAP_OVERRIDE_REQUIRED'
+  | 'P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID'
+  | 'P15_RESPONSIVE_GAP_GENERATOR_BINDING_MISMATCH'
+  | 'P15_RESPONSIVE_GAP_EXISTING_OVERRIDE_CONFLICT'
+  | 'P15_RESPONSIVE_GAP_RESOLVED_CANDIDATE_INVALID';
 
-export interface P15ElementorResponsiveDirectionIssueV1 {
-  code: P15ElementorResponsiveDirectionIssueCode;
+export interface P15ElementorResponsiveGapIssueV1 {
+  code: P15ElementorResponsiveGapIssueCode;
   path: string;
   message: string;
 }
 
-export type P15ElementorResponsiveDirectionStatus =
+export type P15ElementorResponsiveGapStatus =
   | 'BLOCKED_INVALID_SOURCE_IR'
   | 'BLOCKED_UPSTREAM_GENERATION'
   | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_OVERRIDES'
-  | 'RESPONSIVE_DIRECTIONS_RESOLVED';
+  | 'NO_RESPONSIVE_GAP_OVERRIDES'
+  | 'RESPONSIVE_GAPS_RESOLVED';
 
-export interface P15ElementorResponsiveDirectionSummaryEntryV1 {
+export interface P15ElementorResponsiveGapSummaryEntryV1 {
   sourceNodeId: string;
-  tabletDirection: P15ElementorResponsiveDirection | null;
-  mobileDirection: P15ElementorResponsiveDirection | null;
+  tabletGapPx: number | null;
+  mobileGapPx: number | null;
 }
 
-export interface P15ElementorResponsiveDirectionResultV1 {
+export interface P15ElementorResponsiveGapResultV1 {
   schemaVersion: 1;
-  resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_DIRECTION_RESULT_VERSION;
-  status: P15ElementorResponsiveDirectionStatus;
+  resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_GAP_RESULT_VERSION;
+  status: P15ElementorResponsiveGapStatus;
   sourceIrFingerprint: string | null;
   baseCandidateIdentityDigest: string | null;
   resolvedCandidateIdentityDigest: string | null;
   sourceContainerCount: number;
   resolvedContainerCount: number;
-  resolvedDirections: P15ElementorResponsiveDirectionSummaryEntryV1[];
-  issues: P15ElementorResponsiveDirectionIssueV1[];
+  resolvedGaps: P15ElementorResponsiveGapSummaryEntryV1[];
+  issues: P15ElementorResponsiveGapIssueV1[];
   template: ElementorTemplateV04 | null;
   candidate: ElementorTemplateCandidateArtifactV1 | null;
   responsiveInferencePerformed: false;
@@ -139,35 +133,28 @@ const MANIFEST_KEYS = [
   'sourceIrFingerprint',
   'targetCompatibilityClaim',
 ] as const;
+const ENTRY_KEYS = ['mobileGapPx', 'sourceNodeId', 'tabletGapPx'] as const;
 
-const ENTRY_KEYS = ['mobileDirection', 'sourceNodeId', 'tabletDirection'] as const;
-const DIRECTIONS: readonly P15ElementorResponsiveDirection[] = [
-  'row',
-  'column',
-  'row-reverse',
-  'column-reverse',
-];
-
-const ISSUE_CODES: readonly P15ElementorResponsiveDirectionIssueCode[] = [
-  'P15_RESPONSIVE_SOURCE_IR_INVALID',
-  'P15_RESPONSIVE_UPSTREAM_GENERATION_NOT_READY',
-  'P15_RESPONSIVE_MANIFEST_NOT_OBJECT',
-  'P15_RESPONSIVE_MANIFEST_FIELDS_INVALID',
-  'P15_RESPONSIVE_MANIFEST_VERSION_INVALID',
-  'P15_RESPONSIVE_SOURCE_FINGERPRINT_INVALID',
-  'P15_RESPONSIVE_SOURCE_FINGERPRINT_MISMATCH',
-  'P15_RESPONSIVE_BASE_CANDIDATE_IDENTITY_INVALID',
-  'P15_RESPONSIVE_BASE_CANDIDATE_IDENTITY_MISMATCH',
-  'P15_RESPONSIVE_ENTRIES_INVALID',
-  'P15_RESPONSIVE_ENTRY_INVALID',
-  'P15_RESPONSIVE_DUPLICATE_SOURCE_ID',
-  'P15_RESPONSIVE_SOURCE_NOT_CONTAINER',
-  'P15_RESPONSIVE_DIRECTION_INVALID',
-  'P15_RESPONSIVE_OVERRIDE_REQUIRED',
-  'P15_RESPONSIVE_AUTHORITY_FLAGS_INVALID',
-  'P15_RESPONSIVE_GENERATOR_BINDING_MISMATCH',
-  'P15_RESPONSIVE_EXISTING_OVERRIDE_CONFLICT',
-  'P15_RESPONSIVE_RESOLVED_CANDIDATE_INVALID',
+const ISSUE_CODES: readonly P15ElementorResponsiveGapIssueCode[] = [
+  'P15_RESPONSIVE_GAP_SOURCE_IR_INVALID',
+  'P15_RESPONSIVE_GAP_UPSTREAM_GENERATION_NOT_READY',
+  'P15_RESPONSIVE_GAP_MANIFEST_NOT_OBJECT',
+  'P15_RESPONSIVE_GAP_MANIFEST_FIELDS_INVALID',
+  'P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID',
+  'P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_INVALID',
+  'P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_MISMATCH',
+  'P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_INVALID',
+  'P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_MISMATCH',
+  'P15_RESPONSIVE_GAP_ENTRIES_INVALID',
+  'P15_RESPONSIVE_GAP_ENTRY_INVALID',
+  'P15_RESPONSIVE_GAP_DUPLICATE_SOURCE_ID',
+  'P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER',
+  'P15_RESPONSIVE_GAP_VALUE_INVALID',
+  'P15_RESPONSIVE_GAP_OVERRIDE_REQUIRED',
+  'P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID',
+  'P15_RESPONSIVE_GAP_GENERATOR_BINDING_MISMATCH',
+  'P15_RESPONSIVE_GAP_EXISTING_OVERRIDE_CONFLICT',
+  'P15_RESPONSIVE_GAP_RESOLVED_CANDIDATE_INVALID',
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -196,31 +183,43 @@ function validSourceNodeId(value: unknown): value is string {
     && value.trim() === value;
 }
 
-function validDirection(value: unknown): value is P15ElementorResponsiveDirection {
-  return typeof value === 'string' && DIRECTIONS.includes(value as P15ElementorResponsiveDirection);
+function validGapPx(value: unknown): value is number {
+  return typeof value === 'number'
+    && Number.isFinite(value)
+    && value >= 0
+    && value <= P15_NEUTRAL_EXPORT_MAX_SPACING_PX;
+}
+
+function gapValue(value: number): Record<string, unknown> {
+  return {
+    unit: 'px',
+    column: String(value),
+    row: String(value),
+    isLinked: true,
+  };
 }
 
 function baseResult(
-  status: P15ElementorResponsiveDirectionStatus,
+  status: P15ElementorResponsiveGapStatus,
   sourceIrFingerprint: string | null,
   baseCandidateIdentityDigest: string | null,
   resolvedCandidateIdentityDigest: string | null,
   sourceContainerCount: number,
-  resolvedDirections: P15ElementorResponsiveDirectionSummaryEntryV1[],
-  issues: P15ElementorResponsiveDirectionIssueV1[],
+  resolvedGaps: P15ElementorResponsiveGapSummaryEntryV1[],
+  issues: P15ElementorResponsiveGapIssueV1[],
   template: ElementorTemplateV04 | null,
   candidate: ElementorTemplateCandidateArtifactV1 | null,
-): P15ElementorResponsiveDirectionResultV1 {
+): P15ElementorResponsiveGapResultV1 {
   return {
     schemaVersion: 1,
-    resultVersion: P15_ELEMENTOR_RESPONSIVE_DIRECTION_RESULT_VERSION,
+    resultVersion: P15_ELEMENTOR_RESPONSIVE_GAP_RESULT_VERSION,
     status,
     sourceIrFingerprint,
     baseCandidateIdentityDigest,
     resolvedCandidateIdentityDigest,
     sourceContainerCount,
-    resolvedContainerCount: resolvedDirections.length,
-    resolvedDirections: resolvedDirections.map((entry) => ({ ...entry })),
+    resolvedContainerCount: resolvedGaps.length,
+    resolvedGaps: resolvedGaps.map((entry) => ({ ...entry })),
     issues: issues.map((issue) => ({ ...issue })),
     template,
     candidate,
@@ -236,15 +235,15 @@ function baseResult(
 }
 
 /**
- * Apply explicit default-breakpoint direction overrides to exact generated container bindings.
+ * Apply exact explicit px gap overrides to default tablet/mobile Elementor container controls.
  *
- * The manifest is bound to both the canonical neutral source and the exact base candidate identity.
- * No responsive values are inferred; omitted breakpoint keys remain omitted.
+ * This contract never infers a responsive value, changes the desktop gap, converts units,
+ * unlinks row/column gaps or claims responsive closure.
  */
-export function resolveP15ElementorResponsiveContainerDirections(
+export function resolveP15ElementorResponsiveContainerGaps(
   sourceValue: unknown,
   manifestValue: unknown,
-): P15ElementorResponsiveDirectionResultV1 {
+): P15ElementorResponsiveGapResultV1 {
   const validation = validateP15NeutralExportDocument(sourceValue);
   if (!validation.valid) {
     return baseResult(
@@ -255,7 +254,7 @@ export function resolveP15ElementorResponsiveContainerDirections(
       0,
       [],
       validation.issues.map((issue) => ({
-        code: 'P15_RESPONSIVE_SOURCE_IR_INVALID' as const,
+        code: 'P15_RESPONSIVE_GAP_SOURCE_IR_INVALID' as const,
         path: issue.path,
         message: issue.message,
       })),
@@ -267,8 +266,8 @@ export function resolveP15ElementorResponsiveContainerDirections(
   const source = sourceValue as P15NeutralExportDocumentV1;
   const sourceIrFingerprint = fingerprintP15NeutralExportDocument(source);
   const sourceContainers = collectP15NeutralContainerNodes(source);
-
   const baseGeneration = generateElementorV3TemplateCandidate(source);
+
   if (baseGeneration.status !== 'GENERATED_LOCAL_CANDIDATE'
     || baseGeneration.template === null
     || baseGeneration.candidate === null) {
@@ -280,9 +279,9 @@ export function resolveP15ElementorResponsiveContainerDirections(
       sourceContainers.size,
       [],
       [{
-        code: 'P15_RESPONSIVE_UPSTREAM_GENERATION_NOT_READY',
+        code: 'P15_RESPONSIVE_GAP_UPSTREAM_GENERATION_NOT_READY',
         path: '$source',
-        message: 'Responsive direction resolution requires an existing review-free generated local candidate.',
+        message: 'Responsive gap resolution requires an existing review-free generated local candidate.',
       }],
       null,
       null,
@@ -290,53 +289,53 @@ export function resolveP15ElementorResponsiveContainerDirections(
   }
 
   const baseIdentity = buildElementorTemplateCandidateIdentity(baseGeneration.candidate);
-  const issues: P15ElementorResponsiveDirectionIssueV1[] = [];
-  const resolutions = new Map<string, P15ElementorResponsiveDirectionEntryV1>();
+  const issues: P15ElementorResponsiveGapIssueV1[] = [];
+  const resolutions = new Map<string, P15ElementorResponsiveGapEntryV1>();
 
   if (!isRecord(manifestValue)) {
     issues.push({
-      code: 'P15_RESPONSIVE_MANIFEST_NOT_OBJECT',
+      code: 'P15_RESPONSIVE_GAP_MANIFEST_NOT_OBJECT',
       path: '$manifest',
-      message: 'Responsive direction manifest must be an object.',
+      message: 'Responsive gap manifest must be an object.',
     });
   } else {
     if (!exactKeys(manifestValue, MANIFEST_KEYS)) {
       issues.push({
-        code: 'P15_RESPONSIVE_MANIFEST_FIELDS_INVALID',
+        code: 'P15_RESPONSIVE_GAP_MANIFEST_FIELDS_INVALID',
         path: '$manifest',
-        message: 'Responsive direction manifest contains unknown or missing fields.',
+        message: 'Responsive gap manifest contains unknown or missing fields.',
       });
     }
     if (manifestValue.schemaVersion !== 1
-      || manifestValue.manifestVersion !== P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION) {
+      || manifestValue.manifestVersion !== P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION) {
       issues.push({
-        code: 'P15_RESPONSIVE_MANIFEST_VERSION_INVALID',
+        code: 'P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID',
         path: '$manifest.manifestVersion',
-        message: 'Responsive direction manifest schema/version is unsupported.',
+        message: 'Responsive gap manifest schema/version is unsupported.',
       });
     }
     if (!validFingerprint(manifestValue.sourceIrFingerprint)) {
       issues.push({
-        code: 'P15_RESPONSIVE_SOURCE_FINGERPRINT_INVALID',
+        code: 'P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_INVALID',
         path: '$manifest.sourceIrFingerprint',
         message: 'sourceIrFingerprint must be a SHA-256 fingerprint.',
       });
     } else if (manifestValue.sourceIrFingerprint !== sourceIrFingerprint) {
       issues.push({
-        code: 'P15_RESPONSIVE_SOURCE_FINGERPRINT_MISMATCH',
+        code: 'P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_MISMATCH',
         path: '$manifest.sourceIrFingerprint',
         message: 'Manifest is not bound to the exact current neutral IR.',
       });
     }
     if (!validFingerprint(manifestValue.baseCandidateIdentityDigest)) {
       issues.push({
-        code: 'P15_RESPONSIVE_BASE_CANDIDATE_IDENTITY_INVALID',
+        code: 'P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_INVALID',
         path: '$manifest.baseCandidateIdentityDigest',
         message: 'baseCandidateIdentityDigest must be a SHA-256 candidate identity digest.',
       });
     } else if (manifestValue.baseCandidateIdentityDigest !== baseIdentity.digest) {
       issues.push({
-        code: 'P15_RESPONSIVE_BASE_CANDIDATE_IDENTITY_MISMATCH',
+        code: 'P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_MISMATCH',
         path: '$manifest.baseCandidateIdentityDigest',
         message: 'Manifest is not bound to the exact current base candidate identity.',
       });
@@ -349,18 +348,18 @@ export function resolveP15ElementorResponsiveContainerDirections(
       || manifestValue.productionAcceptance !== false
       || manifestValue.downloadEnabled !== false) {
       issues.push({
-        code: 'P15_RESPONSIVE_AUTHORITY_FLAGS_INVALID',
+        code: 'P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID',
         path: '$manifest',
-        message: 'Responsive direction resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority.',
+        message: 'Responsive gap resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority.',
       });
     }
 
     if (!Array.isArray(manifestValue.containers)
-      || manifestValue.containers.length > P15_ELEMENTOR_RESPONSIVE_DIRECTION_MAX_ENTRIES) {
+      || manifestValue.containers.length > P15_ELEMENTOR_RESPONSIVE_GAP_MAX_ENTRIES) {
       issues.push({
-        code: 'P15_RESPONSIVE_ENTRIES_INVALID',
+        code: 'P15_RESPONSIVE_GAP_ENTRIES_INVALID',
         path: '$manifest.containers',
-        message: `containers must be an array of at most ${P15_ELEMENTOR_RESPONSIVE_DIRECTION_MAX_ENTRIES} entries.`,
+        message: `containers must be an array of at most ${P15_ELEMENTOR_RESPONSIVE_GAP_MAX_ENTRIES} entries.`,
       });
     } else {
       for (let index = 0; index < manifestValue.containers.length; index += 1) {
@@ -370,9 +369,9 @@ export function resolveP15ElementorResponsiveContainerDirections(
           || !onlyAllowedKeys(raw, ENTRY_KEYS)
           || !validSourceNodeId(raw.sourceNodeId)) {
           issues.push({
-            code: 'P15_RESPONSIVE_ENTRY_INVALID',
+            code: 'P15_RESPONSIVE_GAP_ENTRY_INVALID',
             path,
-            message: 'Each responsive entry may contain only sourceNodeId plus tablet/mobile direction overrides.',
+            message: 'Each responsive gap entry may contain only sourceNodeId plus tablet/mobile px gaps.',
           });
           continue;
         }
@@ -380,45 +379,45 @@ export function resolveP15ElementorResponsiveContainerDirections(
         const sourceNodeId = raw.sourceNodeId;
         if (resolutions.has(sourceNodeId)) {
           issues.push({
-            code: 'P15_RESPONSIVE_DUPLICATE_SOURCE_ID',
+            code: 'P15_RESPONSIVE_GAP_DUPLICATE_SOURCE_ID',
             path: `${path}.sourceNodeId`,
-            message: 'Responsive sourceNodeId must be unique.',
+            message: 'Responsive gap sourceNodeId must be unique.',
           });
           continue;
         }
         if (!sourceContainers.has(sourceNodeId)) {
           issues.push({
-            code: 'P15_RESPONSIVE_SOURCE_NOT_CONTAINER',
+            code: 'P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER',
             path: `${path}.sourceNodeId`,
-            message: 'Responsive sourceNodeId must identify an existing neutral container node.',
+            message: 'Responsive gap sourceNodeId must identify an existing neutral container node.',
           });
           continue;
         }
 
-        const tabletProvided = raw.tabletDirection !== undefined;
-        const mobileProvided = raw.mobileDirection !== undefined;
+        const tabletProvided = raw.tabletGapPx !== undefined;
+        const mobileProvided = raw.mobileGapPx !== undefined;
         if (!tabletProvided && !mobileProvided) {
           issues.push({
-            code: 'P15_RESPONSIVE_OVERRIDE_REQUIRED',
+            code: 'P15_RESPONSIVE_GAP_OVERRIDE_REQUIRED',
             path,
-            message: 'Each responsive entry must explicitly provide tabletDirection and/or mobileDirection.',
+            message: 'Each responsive gap entry must provide tabletGapPx and/or mobileGapPx.',
           });
           continue;
         }
-        if ((tabletProvided && !validDirection(raw.tabletDirection))
-          || (mobileProvided && !validDirection(raw.mobileDirection))) {
+        if ((tabletProvided && !validGapPx(raw.tabletGapPx))
+          || (mobileProvided && !validGapPx(raw.mobileGapPx))) {
           issues.push({
-            code: 'P15_RESPONSIVE_DIRECTION_INVALID',
+            code: 'P15_RESPONSIVE_GAP_VALUE_INVALID',
             path,
-            message: 'Responsive direction must be row, column, row-reverse or column-reverse.',
+            message: `Responsive gap px values must be finite and between 0 and ${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}.`,
           });
           continue;
         }
 
         resolutions.set(sourceNodeId, {
           sourceNodeId,
-          ...(tabletProvided ? { tabletDirection: raw.tabletDirection as P15ElementorResponsiveDirection } : {}),
-          ...(mobileProvided ? { mobileDirection: raw.mobileDirection as P15ElementorResponsiveDirection } : {}),
+          ...(tabletProvided ? { tabletGapPx: raw.tabletGapPx as number } : {}),
+          ...(mobileProvided ? { mobileGapPx: raw.mobileGapPx as number } : {}),
         });
       }
     }
@@ -440,7 +439,7 @@ export function resolveP15ElementorResponsiveContainerDirections(
 
   if (resolutions.size === 0) {
     return baseResult(
-      'NO_RESPONSIVE_OVERRIDES',
+      'NO_RESPONSIVE_GAP_OVERRIDES',
       sourceIrFingerprint,
       baseIdentity.digest,
       baseIdentity.digest,
@@ -463,7 +462,7 @@ export function resolveP15ElementorResponsiveContainerDirections(
       sourceContainers.size,
       [],
       binding.issues.map((issue) => ({
-        code: 'P15_RESPONSIVE_GENERATOR_BINDING_MISMATCH' as const,
+        code: 'P15_RESPONSIVE_GAP_GENERATOR_BINDING_MISMATCH' as const,
         path: issue.path,
         message: issue.message,
       })),
@@ -471,47 +470,45 @@ export function resolveP15ElementorResponsiveContainerDirections(
       null,
     );
   }
-  const targetContainers = binding.containers;
-  const bindingIssues: P15ElementorResponsiveDirectionIssueV1[] = [];
 
   for (const [sourceNodeId, resolution] of resolutions) {
-    const target = targetContainers.get(sourceNodeId);
+    const target = binding.containers.get(sourceNodeId);
     if (!target || !isRecord(target.settings)) {
-      bindingIssues.push({
-        code: 'P15_RESPONSIVE_GENERATOR_BINDING_MISMATCH',
+      issues.push({
+        code: 'P15_RESPONSIVE_GAP_GENERATOR_BINDING_MISMATCH',
         path: '$.content',
         message: `Generated container binding missing for sourceNodeId ${sourceNodeId}.`,
       });
       continue;
     }
-    if (resolution.tabletDirection !== undefined
-      && Object.prototype.hasOwnProperty.call(target.settings, P15_ELEMENTOR_RESPONSIVE_DIRECTION_EVIDENCE.tabletSettingKey)) {
+    if (resolution.tabletGapPx !== undefined
+      && Object.prototype.hasOwnProperty.call(target.settings, P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.tabletSettingKey)) {
       issues.push({
-        code: 'P15_RESPONSIVE_EXISTING_OVERRIDE_CONFLICT',
+        code: 'P15_RESPONSIVE_GAP_EXISTING_OVERRIDE_CONFLICT',
         path: `$source.${sourceNodeId}`,
-        message: 'Generated base candidate already contains a tablet direction override.',
+        message: 'Generated base candidate already contains a tablet gap override.',
       });
       continue;
     }
-    if (resolution.mobileDirection !== undefined
-      && Object.prototype.hasOwnProperty.call(target.settings, P15_ELEMENTOR_RESPONSIVE_DIRECTION_EVIDENCE.mobileSettingKey)) {
+    if (resolution.mobileGapPx !== undefined
+      && Object.prototype.hasOwnProperty.call(target.settings, P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.mobileSettingKey)) {
       issues.push({
-        code: 'P15_RESPONSIVE_EXISTING_OVERRIDE_CONFLICT',
+        code: 'P15_RESPONSIVE_GAP_EXISTING_OVERRIDE_CONFLICT',
         path: `$source.${sourceNodeId}`,
-        message: 'Generated base candidate already contains a mobile direction override.',
+        message: 'Generated base candidate already contains a mobile gap override.',
       });
       continue;
     }
 
-    if (resolution.tabletDirection !== undefined) {
-      target.settings[P15_ELEMENTOR_RESPONSIVE_DIRECTION_EVIDENCE.tabletSettingKey] = resolution.tabletDirection;
+    if (resolution.tabletGapPx !== undefined) {
+      target.settings[P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.tabletSettingKey] = gapValue(resolution.tabletGapPx);
     }
-    if (resolution.mobileDirection !== undefined) {
-      target.settings[P15_ELEMENTOR_RESPONSIVE_DIRECTION_EVIDENCE.mobileSettingKey] = resolution.mobileDirection;
+    if (resolution.mobileGapPx !== undefined) {
+      target.settings[P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.mobileSettingKey] = gapValue(resolution.mobileGapPx);
     }
   }
 
-  if (bindingIssues.length > 0 || issues.length > 0) {
+  if (issues.length > 0) {
     return baseResult(
       'REJECTED_INVALID_MANIFEST',
       sourceIrFingerprint,
@@ -519,7 +516,7 @@ export function resolveP15ElementorResponsiveContainerDirections(
       null,
       sourceContainers.size,
       [],
-      [...issues, ...bindingIssues],
+      issues,
       null,
       null,
     );
@@ -537,9 +534,9 @@ export function resolveP15ElementorResponsiveContainerDirections(
       sourceContainers.size,
       [],
       [{
-        code: 'P15_RESPONSIVE_RESOLVED_CANDIDATE_INVALID',
+        code: 'P15_RESPONSIVE_GAP_RESOLVED_CANDIDATE_INVALID',
         path: '$resolvedCandidate',
-        message: 'Responsive override output did not rebuild into a canonical ready Elementor candidate.',
+        message: 'Responsive gap output did not rebuild into a canonical ready Elementor candidate.',
       }],
       null,
       null,
@@ -547,62 +544,62 @@ export function resolveP15ElementorResponsiveContainerDirections(
   }
 
   const resolvedIdentity = buildElementorTemplateCandidateIdentity(candidate);
-  const resolvedDirections = [...resolutions.values()]
+  const resolvedGaps = [...resolutions.values()]
     .map((entry) => ({
       sourceNodeId: entry.sourceNodeId,
-      tabletDirection: entry.tabletDirection ?? null,
-      mobileDirection: entry.mobileDirection ?? null,
+      tabletGapPx: entry.tabletGapPx ?? null,
+      mobileGapPx: entry.mobileGapPx ?? null,
     }))
     .sort((left, right) => left.sourceNodeId.localeCompare(right.sourceNodeId));
 
   return baseResult(
-    'RESPONSIVE_DIRECTIONS_RESOLVED',
+    'RESPONSIVE_GAPS_RESOLVED',
     sourceIrFingerprint,
     baseIdentity.digest,
     resolvedIdentity.digest,
     sourceContainers.size,
-    resolvedDirections,
+    resolvedGaps,
     [],
     template,
     candidate,
   );
 }
 
-function validIssue(issue: P15ElementorResponsiveDirectionIssueV1): boolean {
+function validIssue(issue: P15ElementorResponsiveGapIssueV1): boolean {
   return isRecord(issue)
     && typeof issue.code === 'string'
-    && ISSUE_CODES.includes(issue.code as P15ElementorResponsiveDirectionIssueCode)
+    && ISSUE_CODES.includes(issue.code as P15ElementorResponsiveGapIssueCode)
     && typeof issue.path === 'string'
     && issue.path.length > 0
     && issue.path.length <= 1024;
 }
 
-function validSummaryEntry(entry: P15ElementorResponsiveDirectionSummaryEntryV1): boolean {
+function validSummaryEntry(entry: P15ElementorResponsiveGapSummaryEntryV1): boolean {
   return isRecord(entry)
-    && exactKeys(entry, ['mobileDirection', 'sourceNodeId', 'tabletDirection'])
+    && exactKeys(entry, ['mobileGapPx', 'sourceNodeId', 'tabletGapPx'])
     && validSourceNodeId(entry.sourceNodeId)
-    && (entry.tabletDirection === null || validDirection(entry.tabletDirection))
-    && (entry.mobileDirection === null || validDirection(entry.mobileDirection))
-    && (entry.tabletDirection !== null || entry.mobileDirection !== null);
+    && (entry.tabletGapPx === null || validGapPx(entry.tabletGapPx))
+    && (entry.mobileGapPx === null || validGapPx(entry.mobileGapPx))
+    && (entry.tabletGapPx !== null || entry.mobileGapPx !== null);
 }
 
-/** Serialize only sanitized responsive metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorResponsiveDirectionSummary(
-  result: P15ElementorResponsiveDirectionResultV1,
+/** Serialize only sanitized responsive-gap metadata; source content, template JSON and candidate bytes are omitted. */
+export function serializeP15ElementorResponsiveGapSummary(
+  result: P15ElementorResponsiveGapResultV1,
 ): string {
   const validStatus = result.status === 'BLOCKED_INVALID_SOURCE_IR'
     || result.status === 'BLOCKED_UPSTREAM_GENERATION'
     || result.status === 'REJECTED_INVALID_MANIFEST'
-    || result.status === 'NO_RESPONSIVE_OVERRIDES'
-    || result.status === 'RESPONSIVE_DIRECTIONS_RESOLVED';
+    || result.status === 'NO_RESPONSIVE_GAP_OVERRIDES'
+    || result.status === 'RESPONSIVE_GAPS_RESOLVED';
   const validCounts = Number.isSafeInteger(result.sourceContainerCount)
     && result.sourceContainerCount >= 0
     && Number.isSafeInteger(result.resolvedContainerCount)
     && result.resolvedContainerCount >= 0
     && result.resolvedContainerCount <= result.sourceContainerCount
-    && result.resolvedContainerCount === result.resolvedDirections.length;
-  const uniqueIds = new Set(result.resolvedDirections.map((entry) => entry.sourceNodeId)).size
-    === result.resolvedDirections.length;
+    && result.resolvedContainerCount === result.resolvedGaps.length;
+  const uniqueIds = new Set(result.resolvedGaps.map((entry) => entry.sourceNodeId)).size
+    === result.resolvedGaps.length;
   const validSourceFingerprint = result.status === 'BLOCKED_INVALID_SOURCE_IR'
     ? result.sourceIrFingerprint === null
     : validFingerprint(result.sourceIrFingerprint);
@@ -611,15 +608,15 @@ export function serializeP15ElementorResponsiveDirectionSummary(
   const validBaseDigest = baseDigestRequired
     ? validFingerprint(result.baseCandidateIdentityDigest)
     : result.baseCandidateIdentityDigest === null;
-  const resolvedDigestRequired = result.status === 'NO_RESPONSIVE_OVERRIDES'
-    || result.status === 'RESPONSIVE_DIRECTIONS_RESOLVED';
+  const resolvedDigestRequired = result.status === 'NO_RESPONSIVE_GAP_OVERRIDES'
+    || result.status === 'RESPONSIVE_GAPS_RESOLVED';
   const validResolvedDigest = resolvedDigestRequired
     ? validFingerprint(result.resolvedCandidateIdentityDigest)
     : result.resolvedCandidateIdentityDigest === null;
-  const statusShapeValid = result.status === 'RESPONSIVE_DIRECTIONS_RESOLVED'
+  const statusShapeValid = result.status === 'RESPONSIVE_GAPS_RESOLVED'
     ? result.resolvedContainerCount > 0
       && result.baseCandidateIdentityDigest !== result.resolvedCandidateIdentityDigest
-    : result.status === 'NO_RESPONSIVE_OVERRIDES'
+    : result.status === 'NO_RESPONSIVE_GAP_OVERRIDES'
       ? result.resolvedContainerCount === 0
         && result.baseCandidateIdentityDigest === result.resolvedCandidateIdentityDigest
       : result.resolvedContainerCount === 0;
@@ -631,7 +628,7 @@ export function serializeP15ElementorResponsiveDirectionSummary(
     || !validBaseDigest
     || !validResolvedDigest
     || !statusShapeValid
-    || !result.resolvedDirections.every(validSummaryEntry)
+    || !result.resolvedGaps.every(validSummaryEntry)
     || !result.issues.every(validIssue)
     || result.responsiveInferencePerformed !== false
     || result.figmaMutation !== false
@@ -641,21 +638,21 @@ export function serializeP15ElementorResponsiveDirectionSummary(
     || result.productionAcceptance !== false
     || result.downloadEnabled !== false
     || result.internalReviewRequired !== true) {
-    throw new Error('Invalid or authority-inflated P15 responsive-direction result.');
+    throw new Error('Invalid or authority-inflated P15 responsive-gap result.');
   }
 
   return `${JSON.stringify({
     schemaVersion: 1,
-    resultVersion: P15_ELEMENTOR_RESPONSIVE_DIRECTION_RESULT_VERSION,
+    resultVersion: P15_ELEMENTOR_RESPONSIVE_GAP_RESULT_VERSION,
     status: result.status,
     sourceIrFingerprint: result.sourceIrFingerprint,
     baseCandidateIdentityDigest: result.baseCandidateIdentityDigest,
     resolvedCandidateIdentityDigest: result.resolvedCandidateIdentityDigest,
     sourceContainerCount: result.sourceContainerCount,
     resolvedContainerCount: result.resolvedContainerCount,
-    resolvedDirections: result.resolvedDirections.map((entry) => ({ ...entry })),
+    resolvedGaps: result.resolvedGaps.map((entry) => ({ ...entry })),
     issues: result.issues.map((issue) => ({ code: issue.code, path: issue.path })),
-    evidence: P15_ELEMENTOR_RESPONSIVE_DIRECTION_EVIDENCE,
+    evidence: P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE,
     responsiveInferencePerformed: false,
     figmaMutation: false,
     networkAccess: false,

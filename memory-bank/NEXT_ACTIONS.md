@@ -74,17 +74,17 @@ The stable-I/O evidence-integrity line does not change `acceptanceAuthority=fals
 
 #483 is complete. PR #518 retained the first exact clean-Core proof on WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/solid-background/uniform-radius fidelity PASS, and qualified/full/full environment/proof/chain classifications. That result remains non-production-authorizing.
 
-PR #546 / #545 completed the exact declared-profile registry, PR #548 / #547 completed exact retained-candidate binding, PR #552 / #551 added source-bound image-reference resolution, PR #554 / #553 added explicit source-bound Heading/Button semantic promotion, and PR #556 / #555 adds exact source/candidate-bound tablet/mobile container-direction overrides verified against Elementor `4.2.4`.
+PR #546 / #545 completed the exact declared-profile registry, PR #548 / #547 completed exact retained-candidate binding, PR #552 / #551 added source-bound image-reference resolution, PR #554 / #553 added explicit source-bound Heading/Button semantic promotion, PR #556 / #555 added exact tablet/mobile container-direction overrides, and PR #558 / #557 adds exact linked-px tablet/mobile container-gap overrides using the same shared structural binding.
 
 1. keep semantic resolution explicit: never infer Heading/Button from layer names, font size, typography, components or visual style;
-2. keep responsive decisions explicit and exact-source-bound: #556 may write only default tablet/mobile direction overrides and must preserve desktop direction;
-3. keep source IR and base-candidate identity binding fail closed so stale generator/source state cannot replay responsive decisions;
+2. keep responsive decisions explicit and exact-source/candidate-bound: #556 may write only default tablet/mobile direction overrides and #558 only linked-px gap overrides; desktop values remain preserved;
+3. keep shared source→generated-container structural binding plus source IR/base-candidate identity fail closed so stale or drifted generator/source state cannot replay responsive decisions;
 4. keep image URL resolution as preparation rather than closure: no upload/network/target attachment-ID invention and asset-reference status remains `NOT_VERIFIED`;
-5. next responsive work must be one separately bounded documented control gap (for example gap/padding/alignment) rather than a blanket responsive claim;
+5. next responsive work must be one separately bounded documented control gap (for example padding/alignment) rather than a blanket responsive claim;
 6. add real reference/asset closure evidence only when a generated candidate actually requires it;
 7. preserve `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required.
 
-Do not broaden semantics or responsive behavior through heuristics merely to increase coverage. #556 is one explicit default-breakpoint direction slice; broader responsive and real reference/asset closure remain concrete gaps.
+Do not broaden semantics or responsive behavior through heuristics merely to increase coverage. #556/#558 are explicit default-breakpoint direction + linked-px gap slices; broader responsive and real reference/asset closure remain concrete gaps.
 
 
 ## P16 bounded retention evidence-integrity boundary
