@@ -34,7 +34,7 @@ export const P15_ELEMENTOR_RESPONSIVE_DIRECTION_EVIDENCE = Object.freeze({
   controlName: 'direction',
   tabletSettingKey: 'flex_direction_tablet',
   mobileSettingKey: 'flex_direction_mobile',
-}) as const;
+});
 
 export type P15ElementorResponsiveDirection =
   | 'row'
