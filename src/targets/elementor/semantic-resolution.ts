@@ -226,12 +226,13 @@ function headingFromText(
   node: P15NeutralTextNode,
   entry: P15ElementorHeadingSemanticResolutionV1,
 ): P15NeutralHeadingNode {
+  const align = node.align === 'justify' ? undefined : node.align;
   return {
     kind: 'heading',
     sourceNodeId: node.sourceNodeId,
     text: node.text,
     level: entry.level,
-    ...(node.align ? { align: node.align } : {}),
+    ...(align ? { align } : {}),
   };
 }
 
@@ -239,6 +240,7 @@ function buttonFromText(
   node: P15NeutralTextNode,
   entry: P15ElementorButtonSemanticResolutionV1,
 ): P15NeutralButtonNode {
+  const align = node.align === 'justify' ? undefined : node.align;
   return {
     kind: 'button',
     sourceNodeId: node.sourceNodeId,
@@ -246,7 +248,7 @@ function buttonFromText(
     ...(entry.url !== undefined ? { url: entry.url } : {}),
     ...(entry.openInNewTab !== undefined ? { openInNewTab: entry.openInNewTab } : {}),
     ...(entry.nofollow !== undefined ? { nofollow: entry.nofollow } : {}),
-    ...(node.align ? { align: node.align } : {}),
+    ...(align ? { align } : {}),
   };
 }
 
