@@ -74,17 +74,17 @@ The stable-I/O evidence-integrity line does not change `acceptanceAuthority=fals
 
 #483 is complete. PR #518 retained the first exact clean-Core proof on WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/solid-background/uniform-radius fidelity PASS, and qualified/full/full environment/proof/chain classifications. That result remains non-production-authorizing.
 
-PR #546 / #545 completed the exact declared-profile registry, PR #548 / #547 completed exact retained-candidate binding, PR #552 / #551 added source-bound image-reference resolution, PR #554 / #553 added explicit source-bound Heading/Button semantic promotion, PR #556 / #555 added exact tablet/mobile container-direction overrides, PR #558 / #557 added exact linked-px tablet/mobile container-gap overrides, PR #560 / #559 added exact tablet/mobile flex align/justify overrides, and PR #562 / #561 adds exact tablet/mobile px padding overrides using the same shared structural binding.
+PR #546 / #545 completed the exact declared-profile registry, PR #548 / #547 completed exact retained-candidate binding, PR #552 / #551 added source-bound image-reference resolution, PR #554 / #553 added explicit Heading/Button semantic promotion, PR #556 / #555 added tablet/mobile direction, PR #558 / #557 linked-px gap, PR #560 / #559 flex align/justify, PR #562 / #561 px padding, and PR #564 / #563 adds one separate controlled URL-only Image target observation bound to exact candidate/profile/reference-review identity.
 
 1. keep semantic resolution explicit: never infer Heading/Button from layer names, font size, typography, components or visual style;
 2. keep responsive decisions explicit and exact-source/candidate-bound: #556 writes only direction, #558 linked-px gap, #560 verified flex align/justify, and #562 px padding default-breakpoint overrides; desktop values remain preserved and omitted responsive controls remain omitted;
 3. keep shared source→generated-container structural binding plus source IR/base-candidate identity fail closed so stale or drifted generator/source state cannot replay responsive decisions;
-4. keep image URL resolution as preparation rather than closure: no upload/network/target attachment-ID invention and asset-reference status remains `NOT_VERIFIED`;
-5. do not add more responsive controls as a blanket claim; any next responsive control must have a separately documented exact target key/value contract, while real reference/asset closure is the higher-priority concrete gap;
-6. add real reference/asset closure evidence only when a generated candidate actually requires it;
-7. preserve `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required.
+4. keep ordinary image URL resolution as preparation rather than closure: no upload/network/target attachment-ID invention and ordinary asset-reference status remains `NOT_VERIFIED`;
+5. treat #564 only as one exact controlled localhost URL-only Image observation; do not generalize it to arbitrary external hosts, media-library upload, attachment-ID portability or user-target asset closure;
+6. next asset/reference work must target a separately specified target-managed closure gap with exact evidence; do not add more responsive controls as a blanket claim;
+7. preserve `environmentObserved=false` for user-declared preview state, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false, `assetReferenceClosureClaim=false` and internal review required.
 
-Do not broaden semantics or responsive behavior through heuristics merely to increase coverage. #556/#558/#560/#562 are explicit default-breakpoint direction + linked-px gap + flex alignment + px-padding slices; broader responsive behavior remains unclosed, while real reference/asset closure is now the primary concrete gap.
+Do not broaden semantics, responsive behavior or asset portability through heuristics merely to increase coverage. #556/#558/#560/#562 are bounded responsive slices and #564 is one bounded URL-only asset observation; general asset/reference closure remains the primary concrete gap.
 
 
 ## P16 bounded retention evidence-integrity boundary
