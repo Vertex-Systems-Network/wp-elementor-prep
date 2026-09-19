@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-19 — P15 observed asset reference evidence bridge
+
+- Continued issue #565 through PR #566 after the real controlled asset proof retained in #563/#564.
+- Added `elementor-observed-asset-reference-evidence-v1`, which accepts only a valid exact-bound `ASSET_BOUND_FULL_PASS` for an asset-only current `EXTERNAL_CLOSURE_REQUIRED` reference identity.
+- The bridge binds the current reference-review digest, canonical candidate identity and TargetProfile fingerprint, then retains only SHA-256 of the canonical source proof and its retained evidence reference plus sanitized source/target/render URL fingerprints.
+- Mixed global+asset closure scope, stale profile/candidate/reference binding, partial/fail proof, malformed proof and authority inflation fail closed.
+- Added a sanitized CLI and wired the real P15 target-proof workflow so the genuine #564 asset observation must also produce `OBSERVED_ASSET_EVIDENCE_BOUND` with `OBSERVED_PROOF_VALIDATED`.
+- The new evidence explicitly keeps `internalDecisionStatus=NOT_RUN`, `authenticationAuthority=false`, `referenceClosureClaim=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false` and generation/download authority false. It does not establish attachment-ID portability, arbitrary-host portability or general media-library closure.
+
 ## 2026-09-19 — P15 controlled URL-only Image asset proof
 
 - Continued issue #563 through PR #564 as the first genuine controlled asset-reference observation, separate from the retained #483 first-proof candidate.

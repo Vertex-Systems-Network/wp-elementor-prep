@@ -39,7 +39,8 @@
     "integration:readiness": "node scripts/check-integration-readiness.mjs",
     "status:verify": "node scripts/verify-readme-progress.mjs",
     "p15:elementor-asset-proof-vector": "node scripts/p15-elementor-asset-proof-vector.mjs",
-    "p15:elementor-asset-target-proof-intake": "node scripts/p15-elementor-asset-target-proof-intake.mjs"
+    "p15:elementor-asset-target-proof-intake": "node scripts/p15-elementor-asset-target-proof-intake.mjs",
+    "p15:observed-asset-reference-evidence": "node scripts/p15-observed-asset-reference-evidence.mjs"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.117.0",
