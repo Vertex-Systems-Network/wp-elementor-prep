@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-19 — P15 target-managed media content-integrity evidence
+
+- Continued issue #567 through PR #568 after the controlled managed-media observation (#564) and sanitized observed-reference binding (#566).
+- Added `elementor-target-managed-media-integrity-evidence-v1` plus a bounded intake CLI.
+- The disposable target bridge now observes the imported attachment original file without exposing its path or numeric attachment ID: attachment post type, file existence, exact SHA-256, MIME and image dimensions only.
+- The workflow hashes the exact controlled PNG fixture before import and passes that digest into the isolated proof bridge. `TARGET_MANAGED_CONTENT_INTEGRITY_PASS` requires a valid exact `ASSET_BOUND_FULL_PASS` prerequisite, exact candidate/profile/reference/target/evidence-reference binding, source fixture SHA-256 equal to imported original-file SHA-256, attachment post type, `image/png` and positive dimensions.
+- Exact-bound digest mismatch is retained as `TARGET_MANAGED_CONTENT_INTEGRITY_FAIL`; malformed metadata, stale proof/profile/reference state and authority inflation are rejected.
+- This proves bytes for one controlled imported file only. Attachment-ID portability, arbitrary-host portability, general media-library compatibility, reference closure, compatibility, production, generation and download authority remain false/unclaimed.
+
 ## 2026-09-19 — P15 observed asset reference evidence bridge
 
 - Continued issue #565 through PR #566 after the real controlled asset proof retained in #563/#564.

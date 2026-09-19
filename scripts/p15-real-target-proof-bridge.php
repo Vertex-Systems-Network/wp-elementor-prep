@@ -381,6 +381,34 @@ function p15_asset_proof_source_fingerprint() {
     return '';
 }
 
+function p15_asset_content_integrity_observation( $media_id ) {
+    $source_sha = p15_proof_env_value( 'P15_ASSET_FIXTURE_SHA256' );
+    $file = $media_id > 0 ? get_attached_file( $media_id, true ) : '';
+    $file_exists = is_string( $file ) && $file !== '' && is_file( $file ) && is_readable( $file );
+    $target_sha = $file_exists ? hash_file( 'sha256', $file ) : false;
+    $mime = $media_id > 0 ? get_post_mime_type( $media_id ) : false;
+    $metadata = $media_id > 0 ? wp_get_attachment_metadata( $media_id ) : false;
+    $width = is_array( $metadata ) && isset( $metadata['width'] ) ? (int) $metadata['width'] : 0;
+    $height = is_array( $metadata ) && isset( $metadata['height'] ) ? (int) $metadata['height'] : 0;
+    $target_fingerprint = is_string( $target_sha ) && $target_sha !== ''
+        ? 'sha256:' . $target_sha
+        : '';
+
+    return array(
+        'attachmentPostType' => $media_id > 0 ? (string) get_post_type( $media_id ) : '',
+        'fileExists' => $file_exists,
+        'sourceFixtureSha256' => $source_sha,
+        'targetFileSha256' => $target_fingerprint,
+        'contentSha256Matches' => $source_sha !== ''
+            && $target_fingerprint !== ''
+            && hash_equals( $source_sha, $target_fingerprint ),
+        'mimeType' => is_string( $mime ) ? $mime : '',
+        'width' => $width,
+        'height' => $height,
+        'imageDimensionsObserved' => $width > 0 && $height > 0,
+    );
+}
+
 function p15_asset_proof_imported_media_observation( $template_id ) {
     $empty = array(
         'mediaReferenceFound' => false,
@@ -388,6 +416,7 @@ function p15_asset_proof_imported_media_observation( $template_id ) {
         'mediaUrlFingerprint' => '',
         'sourceUrlFingerprint' => '',
         'sourceProvenanceMatches' => false,
+        'contentIntegrity' => p15_asset_content_integrity_observation( 0 ),
     );
     if ( ! $template_id ) {
         return $empty;
@@ -422,6 +451,7 @@ function p15_asset_proof_imported_media_observation( $template_id ) {
                 'sourceUrlFingerprint' => p15_asset_proof_source_fingerprint(),
                 'sourceProvenanceMatches' => $source_hash !== ''
                     && hash_equals( sha1( p15_asset_fixture_url() ), $source_hash ),
+                'contentIntegrity' => p15_asset_content_integrity_observation( $media_id ),
             );
         }
 
