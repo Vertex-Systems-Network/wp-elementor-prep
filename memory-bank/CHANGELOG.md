@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-19 — P15 exact responsive container direction overrides
+
+- Opened issue #555 and PR #556 for the first bounded responsive-mapping slice after exact text semantics.
+- Verified the direction control against official Elementor `4.2.4`: flex-container group field `direction` is responsive, the container registers that group as `flex`, and the accepted values are `row`, `column`, `row-reverse` and `column-reverse`.
+- Added a versioned responsive manifest bound to both the exact canonical neutral-IR fingerprint and exact current base-candidate identity so source or generator drift fails closed.
+- Existing neutral containers may receive explicit `tabletDirection` and/or `mobileDirection`; desktop `flex_direction` is preserved and only `flex_direction_tablet` / `flex_direction_mobile` are added.
+- Nested source containers bind to their deterministic generated container tree; shape drift, duplicate/non-container IDs, empty/invalid mappings, stale bindings and authority inflation reject without a partial candidate.
+- Review-bearing source IR is blocked before responsive resolution rather than generating a partial target candidate.
+- Sanitized summaries retain only source IDs, direction decisions, candidate/source fingerprints and exact evidence metadata; source content, template JSON and candidate bytes are omitted.
+- This remains responsive preparation only: no responsive inference, closure claim, target compatibility, production acceptance, download/transfer authority or additional-breakpoint claim is introduced.
+
 ## 2026-09-19 — P15 exact source-bound text semantics
 
 - Opened issue #553 and PR #554 for the first explicit semantic-mapping slice after image-reference resolution.
