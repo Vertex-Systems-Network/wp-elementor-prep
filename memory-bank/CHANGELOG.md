@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-19 — P15 exact responsive container padding overrides
+
+- Opened issue #561 and PR #562 for the fourth bounded responsive-mapping slice after direction, linked-px gap and flex alignment.
+- Verified exact Elementor `4.2.4` evidence: Container registers `padding` through `add_responsive_control` with `Controls_Manager::DIMENSIONS`, and official fixtures retain `padding_tablet` / `padding_mobile` dimension objects.
+- Added a source-IR + exact base-candidate-bound manifest for explicit tablet/mobile four-side px padding decisions on existing neutral containers.
+- Desktop `padding` remains unchanged. Requested breakpoints map only to px DIMENSIONS objects with string top/right/bottom/left values; `isLinked` is derived from side equality, never caller-supplied.
+- Caller padding objects are snapshotted before application/reporting. Missing/extra sides, non-finite/out-of-range/negative values, duplicate/non-container/empty/unknown-field/stale/conflicting/authority-inflated mappings fail closed.
+- Shared source→generated-container binding is reused; review-bearing source IR or structural drift cannot produce a partial responsive candidate.
+- Sanitized summaries omit source content, template JSON and candidate bytes. No unit conversion, margin/width/height/widget-spacing, custom-breakpoint, responsive-closure, compatibility, production or transfer authority is introduced.
+
 ## 2026-09-19 — P15 exact responsive container alignment overrides
 
 - Opened issue #559 and PR #560 for the third bounded responsive-mapping slice after container direction and linked-px gap.
