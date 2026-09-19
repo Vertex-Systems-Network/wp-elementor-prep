@@ -118,6 +118,23 @@ jobs:
           require_once ABSPATH . 'wp-settings.php';
           PHP
 
+          ASSET_FIXTURE_DIR="$RUNNER_TEMP/p15-asset-fixture"
+          mkdir -p "$ASSET_FIXTURE_DIR"
+          printf '%s' 'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFElEQVR42mNkYPj/n4GBgYGJAQoAHgQCAH6Jx6QAAAAASUVORK5CYII=' \
+            | base64 --decode > "$ASSET_FIXTURE_DIR/p15-asset-fixture.png"
+          nohup python3 -m http.server 8081 --bind 127.0.0.1 --directory "$ASSET_FIXTURE_DIR" \
+            > "$P15_PROOF_OUT_DIR/asset-fixture-server.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/p15-asset-fixture-server.pid"
+
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent --show-error \
+              http://127.0.0.1:8081/p15-asset-fixture.png \
+              > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
           nohup php -S 127.0.0.1:8080 -t "$WP_ROOT" \
             > "$P15_PROOF_OUT_DIR/php-server.log" 2>&1 &
           echo $! > "$RUNNER_TEMP/p15-php-server.pid"
@@ -211,6 +228,14 @@ jobs:
             "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
           jq -e --arg sha "$P15_ASSET_TEMPLATE_SHA256" '.templateSha256 == $sha' \
             "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
+          ASSET_SOURCE_FINGERPRINT="$(jq -r '.assetUrlFingerprint' "$P15_ASSET_VECTOR_DIR/manifest.json")"
+          jq -e --arg source "$ASSET_SOURCE_FINGERPRINT" '
+            .importedMedia.mediaReferenceFound == true
+            and .importedMedia.mediaIdPresent == true
+            and .importedMedia.sourceProvenanceMatches == true
+            and .importedMedia.sourceUrlFingerprint == $source
+            and (.importedMedia.mediaUrlFingerprint | test("^sha256:[0-9a-f]{64}$"))
+          ' "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
 
       - name: Resolve policy-supported Chrome
         run: |
@@ -319,7 +344,7 @@ jobs:
           jq -e '.environmentQualified == true and .runtimeBindingMatches == true and .evidenceReferenceMatches == true and .chronologyValid == true' \
             "$P15_PROOF_OUT_DIR/chain-intake.json"
 
-          jq -e '.candidateBindingMatches == true and .profileBindingMatches == true and .referenceReviewBindingMatches == true and .declaredObservedEnvironmentMatches == true and .imageReferenceBindingMatches == true' \
+          jq -e '.candidateBindingMatches == true and .profileBindingMatches == true and .referenceReviewBindingMatches == true and .declaredObservedEnvironmentMatches == true and .sourceAssetBindingMatches == true and .targetManagedRenderBindingMatches == true and .imageReferenceBindingMatches == true' \
             "$P15_PROOF_OUT_DIR/asset-proof-intake.json"
           jq -e '.assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false' \
             "$P15_PROOF_OUT_DIR/asset-proof-intake.json"
