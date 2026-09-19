@@ -84,6 +84,8 @@ const report = {
   profileBindingMatches: validation.profileBindingMatches,
   referenceReviewBindingMatches: validation.referenceReviewBindingMatches,
   declaredObservedEnvironmentMatches: validation.declaredObservedEnvironmentMatches,
+  sourceAssetBindingMatches: validation.sourceAssetBindingMatches,
+  targetManagedRenderBindingMatches: validation.targetManagedRenderBindingMatches,
   imageReferenceBindingMatches: validation.imageReferenceBindingMatches,
   candidateIdentity: validation.candidateIdentity,
   targetProfileFingerprint: validation.targetProfileFingerprint,
@@ -119,6 +121,8 @@ process.stdout.write(`${JSON.stringify({
   profileBindingMatches: report.profileBindingMatches,
   referenceReviewBindingMatches: report.referenceReviewBindingMatches,
   declaredObservedEnvironmentMatches: report.declaredObservedEnvironmentMatches,
+  sourceAssetBindingMatches: report.sourceAssetBindingMatches,
+  targetManagedRenderBindingMatches: report.targetManagedRenderBindingMatches,
   imageReferenceBindingMatches: report.imageReferenceBindingMatches,
 }, null, 2)}\n`);
 process.exitCode = report.classification === 'ASSET_BOUND_FULL_PASS' ? 0 : 2;
