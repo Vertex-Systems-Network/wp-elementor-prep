@@ -33,13 +33,37 @@ function p15_asset_fixture_url() {
     return 'http://127.0.0.1:8081/p15-asset-fixture.png';
 }
 
+function p15_asset_is_exact_controlled_fixture_url( $host, $url ) {
+    $parts = wp_parse_url( (string) $url );
+    return is_array( $parts )
+        && '127.0.0.1' === (string) $host
+        && isset( $parts['scheme'], $parts['host'], $parts['port'], $parts['path'] )
+        && 'http' === strtolower( (string) $parts['scheme'] )
+        && '127.0.0.1' === (string) $parts['host']
+        && 8081 === (int) $parts['port']
+        && '/p15-asset-fixture.png' === (string) $parts['path']
+        && empty( $parts['query'] )
+        && empty( $parts['fragment'] );
+}
+
 function p15_asset_allow_controlled_loopback( $external, $host, $url ) {
-    if ( '127.0.0.1' === (string) $host && p15_asset_fixture_url() === (string) $url ) {
+    if ( p15_asset_is_exact_controlled_fixture_url( $host, $url ) ) {
         return true;
     }
     return $external;
 }
 add_filter( 'http_request_host_is_external', 'p15_asset_allow_controlled_loopback', 10, 3 );
+
+function p15_asset_allow_controlled_safe_port( $ports, $host, $url ) {
+    if ( p15_asset_is_exact_controlled_fixture_url( $host, $url ) ) {
+        $ports = is_array( $ports ) ? $ports : array( 80, 443, 8080 );
+        if ( ! in_array( 8081, $ports, true ) ) {
+            $ports[] = 8081;
+        }
+    }
+    return $ports;
+}
+add_filter( 'http_allowed_safe_ports', 'p15_asset_allow_controlled_safe_port', 10, 3 );
 
 function p15_proof_admin_id() {
     $ids = get_users( array(
