@@ -135,6 +135,25 @@ const HEADING_LEVELS: readonly P15NeutralHeadingLevel[] = [
   'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p',
 ];
 
+const SEMANTIC_ISSUE_CODES: readonly P15ElementorSemanticResolutionIssueCode[] = [
+  'P15_SEMANTIC_SOURCE_IR_INVALID',
+  'P15_SEMANTIC_MANIFEST_NOT_OBJECT',
+  'P15_SEMANTIC_MANIFEST_FIELDS_INVALID',
+  'P15_SEMANTIC_MANIFEST_VERSION_INVALID',
+  'P15_SEMANTIC_SOURCE_FINGERPRINT_INVALID',
+  'P15_SEMANTIC_SOURCE_FINGERPRINT_MISMATCH',
+  'P15_SEMANTIC_ENTRIES_INVALID',
+  'P15_SEMANTIC_ENTRY_INVALID',
+  'P15_SEMANTIC_DUPLICATE_SOURCE_ID',
+  'P15_SEMANTIC_SOURCE_NOT_TEXT',
+  'P15_SEMANTIC_HEADING_LEVEL_INVALID',
+  'P15_SEMANTIC_BUTTON_URL_INVALID',
+  'P15_SEMANTIC_BUTTON_BOOLEAN_INVALID',
+  'P15_SEMANTIC_JUSTIFY_ALIGNMENT_UNSUPPORTED',
+  'P15_SEMANTIC_AUTHORITY_FLAGS_INVALID',
+  'P15_SEMANTIC_RESOLVED_IR_INVALID',
+];
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -587,13 +606,50 @@ export function resolveP15ElementorTextSemantics(
 }
 
 function validSummaryEntry(entry: P15ElementorSemanticResolutionSummaryEntryV1): boolean {
-  if (!validSourceNodeId(entry.sourceNodeId)) return false;
-  if (entry.targetKind === 'heading') return validHeadingLevel(entry.level);
+  if (!isRecord(entry) || !validSourceNodeId(entry.sourceNodeId)) return false;
+  if (entry.targetKind === 'heading') {
+    return exactKeys(entry, ['level', 'sourceNodeId', 'targetKind'])
+      && validHeadingLevel(entry.level);
+  }
+  if (entry.targetKind !== 'button'
+    || !exactKeys(entry, ['nofollow', 'openInNewTab', 'sourceNodeId', 'targetKind', 'urlFingerprint', 'urlPresent'])) {
+    return false;
+  }
   return typeof entry.urlPresent === 'boolean'
     && entry.urlPresent === (entry.urlFingerprint !== null)
     && (entry.urlFingerprint === null || validFingerprint(entry.urlFingerprint))
     && typeof entry.openInNewTab === 'boolean'
     && typeof entry.nofollow === 'boolean';
+}
+
+function validSummaryIssue(issue: P15ElementorSemanticResolutionIssueV1): boolean {
+  return isRecord(issue)
+    && typeof issue.code === 'string'
+    && SEMANTIC_ISSUE_CODES.includes(issue.code as P15ElementorSemanticResolutionIssueCode)
+    && typeof issue.path === 'string'
+    && issue.path.length > 0
+    && issue.path.length <= 1024
+    && /^\$[A-Za-z0-9_.\[\]-]*$/.test(issue.path);
+}
+
+function sanitizedSummaryEntry(
+  entry: P15ElementorSemanticResolutionSummaryEntryV1,
+): P15ElementorSemanticResolutionSummaryEntryV1 {
+  if (entry.targetKind === 'heading') {
+    return {
+      sourceNodeId: entry.sourceNodeId,
+      targetKind: 'heading',
+      level: entry.level,
+    };
+  }
+  return {
+    sourceNodeId: entry.sourceNodeId,
+    targetKind: 'button',
+    urlPresent: entry.urlPresent,
+    urlFingerprint: entry.urlFingerprint,
+    openInNewTab: entry.openInNewTab,
+    nofollow: entry.nofollow,
+  };
 }
 
 /** Serialize only sanitized semantic metadata; source text, raw URLs and transformed IR are omitted. */
@@ -606,16 +662,24 @@ export function serializeP15ElementorSemanticResolutionSummary(
     || result.status === 'SEMANTICS_RESOLVED';
   const validCounts = [result.eligibleTextCount, result.resolvedSemanticCount, result.remainingTextCount, result.remainingReviewCount]
     .every((value) => Number.isSafeInteger(value) && value >= 0)
-    && result.resolvedSemanticCount <= result.eligibleTextCount
-    && result.remainingTextCount <= result.eligibleTextCount;
+    && result.eligibleTextCount === result.resolvedSemanticCount + result.remainingTextCount
+    && result.resolvedSemanticCount === result.resolvedSemantics.length;
+  const uniqueResolvedIds = new Set(result.resolvedSemantics.map((entry) => entry.sourceNodeId)).size
+    === result.resolvedSemantics.length;
   const validSourceFingerprint = result.status === 'BLOCKED_INVALID_SOURCE_IR'
     ? result.sourceIrFingerprint === null
     : validFingerprint(result.sourceIrFingerprint);
+  const statusShapeValid = result.status === 'SEMANTICS_RESOLVED'
+    ? result.resolvedSemanticCount > 0
+    : result.resolvedSemanticCount === 0 && result.resolvedSemantics.length === 0;
 
   if (!validStatus
     || !validCounts
+    || !uniqueResolvedIds
     || !validSourceFingerprint
+    || !statusShapeValid
     || !result.resolvedSemantics.every(validSummaryEntry)
+    || !result.issues.every(validSummaryIssue)
     || result.semanticInferencePerformed !== false
     || result.figmaMutation !== false
     || result.networkAccess !== false
@@ -635,7 +699,7 @@ export function serializeP15ElementorSemanticResolutionSummary(
     resolvedSemanticCount: result.resolvedSemanticCount,
     remainingTextCount: result.remainingTextCount,
     remainingReviewCount: result.remainingReviewCount,
-    resolvedSemantics: result.resolvedSemantics.map((entry) => ({ ...entry })),
+    resolvedSemantics: result.resolvedSemantics.map(sanitizedSummaryEntry),
     issues: result.issues.map((issue) => ({ code: issue.code, path: issue.path })),
     semanticInferencePerformed: false,
     figmaMutation: false,
