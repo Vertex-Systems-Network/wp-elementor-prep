@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-19 — P15 exact responsive container alignment overrides
+
+- Opened issue #559 and PR #560 for the third bounded responsive-mapping slice after container direction and linked-px gap.
+- Verified exact Elementor `4.2.4` evidence: flex-container `justify_content` and `align_items` are responsive controls, and Elementor's own container mock exposes the exact tablet/mobile keys plus accepted options.
+- Added a source-IR + exact base-candidate-bound manifest for explicit tablet/mobile `alignItems` and `justifyContent` decisions on existing neutral containers.
+- Neutral `start` / `end` map only to Elementor `flex-start` / `flex-end`; `center`, `stretch`, `space-between`, `space-around` and `space-evenly` are preserved where accepted by the target control.
+- Desktop `flex_align_items` / `flex_justify_content` remain unchanged. Omitted controls/breakpoints remain absent; no responsive inheritance value is synthesized.
+- Shared source→generated-container binding from #558 is reused. Review-bearing source IR, stale bindings, duplicates, non-container IDs, empty/invalid/unknown entries, requested-key conflicts and authority inflation fail closed without a partial candidate.
+- Sanitized summaries omit source content, template JSON and candidate bytes. No wrap/align-content, padding, custom-breakpoint, widget-alignment, responsive-closure, compatibility, production or transfer authority is introduced.
+
 ## 2026-09-19 — P15 exact responsive container gap overrides
 
 - Opened issue #557 and PR #558 for the second bounded responsive-mapping slice after exact container direction.
