@@ -44,10 +44,12 @@ jobs:
       - name: Install repository dependencies
         run: npm ci
 
-      - name: Freeze exact canonical P15 v3 vector
+      - name: Freeze exact canonical P15 proof vectors
         run: |
           npm run p15:elementor-first-proof-vector -- \
             --out-dir dist-p15/p15-elementor-first-proof-vector-v3
+          npm run p15:elementor-asset-proof-vector -- \
+            --out-dir dist-p15/p15-elementor-asset-proof-vector-v1
 
       - name: Prepare proof identity and output paths
         run: |
@@ -58,6 +60,9 @@ jobs:
           echo "P15_VECTOR_DIR=$GITHUB_WORKSPACE/dist-p15/p15-elementor-first-proof-vector-v3" >> "$GITHUB_ENV"
           echo "P15_VECTOR_PATH=$GITHUB_WORKSPACE/dist-p15/p15-elementor-first-proof-vector-v3/template.json" >> "$GITHUB_ENV"
           echo "P15_TEMPLATE_SHA256=$(jq -r '.fileSha256.template' dist-p15/p15-elementor-first-proof-vector-v3/manifest.json)" >> "$GITHUB_ENV"
+          echo "P15_ASSET_VECTOR_DIR=$GITHUB_WORKSPACE/dist-p15/p15-elementor-asset-proof-vector-v1" >> "$GITHUB_ENV"
+          echo "P15_ASSET_VECTOR_PATH=$GITHUB_WORKSPACE/dist-p15/p15-elementor-asset-proof-vector-v1/template.json" >> "$GITHUB_ENV"
+          echo "P15_ASSET_TEMPLATE_SHA256=$(jq -r '.fileSha256.template' dist-p15/p15-elementor-asset-proof-vector-v1/manifest.json)" >> "$GITHUB_ENV"
           echo "P15_PROOF_OUT_DIR=$GITHUB_WORKSPACE/dist-p15/p15-real-target-proof" >> "$GITHUB_ENV"
           echo "P15_BASE_URL=http://127.0.0.1:8080" >> "$GITHUB_ENV"
 
@@ -192,6 +197,21 @@ jobs:
           jq -e '.templateType == "page"' \
             "$P15_PROOF_OUT_DIR/pre-browser-server-observation.json"
 
+          curl --fail --silent --show-error \
+            "$P15_BASE_URL/?p15_asset_proof_observe=$P15_PROOF_TOKEN" \
+            -o "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
+
+          jq -e '.importResult == "PASS"' \
+            "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
+          jq -e '.environment.wordpressVersion == "6.8"' \
+            "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
+          jq -e '.environment.elementorVersion == "4.2.4"' \
+            "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
+          jq -e '.templateType == "page"' \
+            "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
+          jq -e --arg sha "$P15_ASSET_TEMPLATE_SHA256" '.templateSha256 == $sha' \
+            "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
+
       - name: Resolve policy-supported Chrome
         run: |
           set -euo pipefail
@@ -217,6 +237,7 @@ jobs:
           ENV_CODE=99
           PROOF_CODE=99
           CHAIN_CODE=99
+          ASSET_PROOF_CODE=99
 
           if [ -f "$P15_PROOF_OUT_DIR/environment-evidence.json" ]; then
             npm run p15:elementor-target-environment-intake -- \
@@ -242,9 +263,19 @@ jobs:
             CHAIN_CODE=$?
           fi
 
+          if [ -f "$P15_PROOF_OUT_DIR/asset-proof-evidence.json" ]; then
+            npm run p15:elementor-asset-target-proof-intake -- \
+              --candidate "$P15_ASSET_VECTOR_DIR/candidate.json" \
+              --profile "$P15_ASSET_VECTOR_DIR/target-profile.json" \
+              --proof "$P15_PROOF_OUT_DIR/asset-proof-evidence.json" \
+              --out "$P15_PROOF_OUT_DIR/asset-proof-intake.json"
+            ASSET_PROOF_CODE=$?
+          fi
+
           echo "P15_ENV_INTAKE_CODE=$ENV_CODE" >> "$GITHUB_ENV"
           echo "P15_PROOF_INTAKE_CODE=$PROOF_CODE" >> "$GITHUB_ENV"
           echo "P15_CHAIN_INTAKE_CODE=$CHAIN_CODE" >> "$GITHUB_ENV"
+          echo "P15_ASSET_PROOF_INTAKE_CODE=$ASSET_PROOF_CODE" >> "$GITHUB_ENV"
           exit 0
 
       - name: Retain server diagnostics
@@ -260,6 +291,7 @@ jobs:
           name: p15-real-elementor-target-proof
           path: |
             dist-p15/p15-elementor-first-proof-vector-v3/
+            dist-p15/p15-elementor-asset-proof-vector-v1/
             dist-p15/p15-real-target-proof/
           if-no-files-found: error
 
@@ -270,6 +302,7 @@ jobs:
           test "$P15_ENV_INTAKE_CODE" = "0"
           test "$P15_PROOF_INTAKE_CODE" = "0"
           test "$P15_CHAIN_INTAKE_CODE" = "0"
+          test "$P15_ASSET_PROOF_INTAKE_CODE" = "0"
 
           jq -e '.classification == "QUALIFIED_FOR_BOUND_TARGET_PROOF"' \
             "$P15_PROOF_OUT_DIR/environment-intake.json"
@@ -278,7 +311,15 @@ jobs:
           jq -e '.classification == "CHAIN_FULL_PASS"' \
             "$P15_PROOF_OUT_DIR/chain-intake.json"
 
+          jq -e '.classification == "ASSET_BOUND_FULL_PASS"' \
+            "$P15_PROOF_OUT_DIR/asset-proof-intake.json"
+
           jq -e '.candidateBindingMatches == true and .profileBindingMatches == true' \
             "$P15_PROOF_OUT_DIR/proof-intake.json"
           jq -e '.environmentQualified == true and .runtimeBindingMatches == true and .evidenceReferenceMatches == true and .chronologyValid == true' \
             "$P15_PROOF_OUT_DIR/chain-intake.json"
+
+          jq -e '.candidateBindingMatches == true and .profileBindingMatches == true and .referenceReviewBindingMatches == true and .declaredObservedEnvironmentMatches == true and .imageReferenceBindingMatches == true' \
+            "$P15_PROOF_OUT_DIR/asset-proof-intake.json"
+          jq -e '.assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false' \
+            "$P15_PROOF_OUT_DIR/asset-proof-intake.json"
