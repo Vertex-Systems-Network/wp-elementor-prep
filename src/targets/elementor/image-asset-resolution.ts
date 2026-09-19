@@ -274,7 +274,7 @@ function cloneNodeWithResolutions(
   if (node.kind === 'container') {
     return {
       ...node,
-      paddingPx: node.paddingPx ? { ...node.paddingPx } : undefined,
+      ...(node.paddingPx ? { paddingPx: { ...node.paddingPx } } : {}),
       children: node.children.map((child) => cloneNodeWithResolutions(child, resolutions)),
     };
   }
