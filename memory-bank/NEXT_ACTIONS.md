@@ -74,17 +74,17 @@ The stable-I/O evidence-integrity line does not change `acceptanceAuthority=fals
 
 #483 is complete. PR #518 retained the first exact clean-Core proof on WordPress `6.8` + Elementor `4.2.4`: import/editor/render PASS, bounded structure/solid-background/uniform-radius fidelity PASS, and qualified/full/full environment/proof/chain classifications. That result remains non-production-authorizing.
 
-PR #546 / #545 completed the immutable exact declared-profile reference registry, and PR #548 / #547 completed exact retained-candidate identity binding. The next focused P15 work is concrete semantic/media/responsive mapping and reference/asset closure:
+PR #546 / #545 completed the immutable exact declared-profile reference registry, PR #548 / #547 completed exact retained-candidate identity binding, and PR #552 / #551 closes the first concrete media-mapping gap by resolving only exact `IMAGE_ASSET_EXPORT_REQUIRED` nodes through a source-bound URL-only manifest.
 
-1. retain the exact #483 candidate identity, TargetProfile fingerprint and template SHA-256 in the reference record;
-2. require the exact immutable TargetProfile fingerprint before reporting `EXACT_REFERENCE_PROFILE_MATCH`;
-3. compare a current canonical candidate through the existing `elementor-template-candidate-identity-v1` contract;
-4. report `EXACT_REFERENCE_CANDIDATE_MATCH` only for the exact candidate observed in #483;
-5. report `REFERENCE_CANDIDATE_MISMATCH` only as evidence that the current candidate is different, never as an incompatibility verdict;
+1. keep image resolution fail-closed on stale source fingerprints, missing/extra/duplicate entries, unsafe URLs and authority inflation;
+2. preserve URL-only resolution as preparation, not asset closure: no network/upload, no target attachment-ID invention and downstream asset-reference status remains `NOT_VERIFIED`;
+3. preserve unrelated review nodes exactly so image resolution cannot hide manual/grid/wrap/absolute/semantic blockers;
+4. next, implement one concrete remaining semantic or responsive mapping gap rather than broadening unsupported source inference;
+5. add real reference/asset closure evidence only when a generated candidate actually requires it;
 6. keep `environmentObserved=false`, `targetCompatibilityClaim=false`, `productionAcceptance=false`, generation/download authority false and internal review required;
-7. continue after #548 only into concrete semantic/media/responsive mapping, reference/asset closure and additional controlled target observations required by new claims.
+7. open additional target observations only for specific new coverage claims.
 
-Do not reopen serializer/fidelity breadth without an identified mapping or proof gap. The retained proof remains evidence for one exact profile + candidate pair, not a blanket support matrix.
+Do not reopen serializer/fidelity breadth without an identified mapping or proof gap. The retained proof remains evidence for one exact profile + candidate pair, and URL resolution remains a reference-preparation step rather than a blanket media compatibility claim.
 
 
 ## P16 bounded retention evidence-integrity boundary
