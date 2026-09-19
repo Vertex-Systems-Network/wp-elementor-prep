@@ -20,12 +20,17 @@ function vectorInputs() {
 }
 
 function fullPassSteps(assetUrlFingerprint: string): ElementorAssetTargetProofStepsV1 {
+  const targetManagedFingerprint = 'sha256:' + 'a'.repeat(64);
   return {
     importResult: 'PASS',
+    targetManagedMediaResult: 'PASS',
+    sourceProvenanceResult: 'PASS',
+    sourceAssetUrlFingerprint: assetUrlFingerprint,
+    targetManagedMediaUrlFingerprint: targetManagedFingerprint,
     renderResult: 'PASS',
     renderedImageReferenceResult: 'PASS',
     browserImageLoadResult: 'PASS',
-    renderedImageUrlFingerprint: assetUrlFingerprint,
+    renderedImageUrlFingerprint: targetManagedFingerprint,
   };
 }
 
@@ -58,6 +63,8 @@ describe('P15 controlled URL-only Image asset target proof evidence', () => {
     expect(validation.profileBindingMatches).toBe(true);
     expect(validation.referenceReviewBindingMatches).toBe(true);
     expect(validation.declaredObservedEnvironmentMatches).toBe(true);
+    expect(validation.sourceAssetBindingMatches).toBe(true);
+    expect(validation.targetManagedRenderBindingMatches).toBe(true);
     expect(validation.imageReferenceBindingMatches).toBe(true);
     expect(validation.referenceReviewIdentityDigest)
       .toBe(vector.referenceReviewIdentity.digest);
@@ -113,7 +120,17 @@ describe('P15 controlled URL-only Image asset target proof evidence', () => {
     const mismatchValidation = validateElementorAssetTargetProofEvidence(mismatch, candidate, profile);
     expect(mismatchValidation.valid).toBe(false);
     expect(mismatchValidation.issues.map((issue) => issue.code))
-      .toContain('P15_ASSET_PROOF_IMAGE_REFERENCE_BINDING_INVALID');
+      .toContain('P15_ASSET_PROOF_TARGET_MANAGED_BINDING_INVALID');
+  });
+
+  it('rejects a PASS source-provenance claim bound to a different candidate URL fingerprint', () => {
+    const { candidate, profile, evidence } = proof();
+    const mismatch = structuredClone(evidence) as ElementorAssetTargetProofEvidenceV1;
+    mismatch.steps.sourceAssetUrlFingerprint = 'sha256:' + '3'.repeat(64);
+    const validation = validateElementorAssetTargetProofEvidence(mismatch, candidate, profile);
+    expect(validation.valid).toBe(false);
+    expect(validation.issues.map((issue) => issue.code))
+      .toContain('P15_ASSET_PROOF_SOURCE_REFERENCE_BINDING_INVALID');
   });
 
   it('rejects impossible step ordering after failed/unproven prerequisites', () => {
@@ -140,11 +157,8 @@ describe('P15 controlled URL-only Image asset target proof evidence', () => {
       observedAt: '2026-09-19T08:45:00.000Z',
       evidenceReference: 'retained-evidence://p15/controlled-url-only-image-fail',
       steps: {
-        importResult: 'PASS',
-        renderResult: 'PASS',
-        renderedImageReferenceResult: 'PASS',
+        ...fullPassSteps(vector.assetUrlFingerprint),
         browserImageLoadResult: 'FAIL',
-        renderedImageUrlFingerprint: vector.assetUrlFingerprint,
       },
     });
     const validation = validateElementorAssetTargetProofEvidence(evidence, candidate, profile);
