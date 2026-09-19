@@ -29,6 +29,18 @@ function p15_proof_iso_now() {
     return gmdate( 'Y-m-d\TH:i:s.000\Z' );
 }
 
+function p15_asset_fixture_url() {
+    return 'http://127.0.0.1:8081/p15-asset-fixture.png';
+}
+
+function p15_asset_allow_controlled_loopback( $external, $host, $url ) {
+    if ( '127.0.0.1' === (string) $host && p15_asset_fixture_url() === (string) $url ) {
+        return true;
+    }
+    return $external;
+}
+add_filter( 'http_request_host_is_external', 'p15_asset_allow_controlled_loopback', 10, 3 );
+
 function p15_proof_admin_id() {
     $ids = get_users( array(
         'role' => 'administrator',
@@ -314,17 +326,94 @@ function p15_proof_environment_observation() {
     );
 }
 
+function p15_asset_proof_source_fingerprint() {
+    $path = p15_proof_env_value( 'P15_ASSET_VECTOR_PATH' );
+    if ( $path === '' || ! is_file( $path ) || ! is_readable( $path ) ) {
+        return '';
+    }
+    $raw = file_get_contents( $path );
+    $template = is_string( $raw ) ? json_decode( $raw, true ) : null;
+    if ( ! is_array( $template ) || empty( $template['content'] ) ) {
+        return '';
+    }
+
+    $stack = $template['content'];
+    while ( ! empty( $stack ) ) {
+        $element = array_shift( $stack );
+        if ( ! is_array( $element ) ) {
+            continue;
+        }
+        if ( isset( $element['widgetType'] ) && 'image' === $element['widgetType']
+            && isset( $element['settings']['image']['url'] )
+            && is_string( $element['settings']['image']['url'] ) ) {
+            return 'sha256:' . hash( 'sha256', $element['settings']['image']['url'] );
+        }
+        if ( isset( $element['elements'] ) && is_array( $element['elements'] ) ) {
+            foreach ( $element['elements'] as $child ) {
+                $stack[] = $child;
+            }
+        }
+    }
+    return '';
+}
+
+function p15_asset_proof_imported_media_observation( $template_id ) {
+    $empty = array(
+        'mediaReferenceFound' => false,
+        'mediaIdPresent' => false,
+        'mediaUrlFingerprint' => '',
+        'sourceUrlFingerprint' => '',
+        'sourceProvenanceMatches' => false,
+    );
+    if ( ! $template_id ) {
+        return $empty;
+    }
+
+    $raw = get_post_meta( $template_id, '_elementor_data', true );
+    $data = is_string( $raw ) ? json_decode( $raw, true ) : $raw;
+    if ( ! is_array( $data ) ) {
+        return $empty;
+    }
+
+    $stack = $data;
+    while ( ! empty( $stack ) ) {
+        $element = array_shift( $stack );
+        if ( ! is_array( $element ) ) {
+            continue;
+        }
+
+        if ( isset( $element['widgetType'] ) && 'image' === $element['widgetType'] ) {
+            $image = isset( $element['settings']['image'] ) && is_array( $element['settings']['image'] )
+                ? $element['settings']['image']
+                : array();
+            $media_id = isset( $image['id'] ) ? (int) $image['id'] : 0;
+            $media_url = isset( $image['url'] ) && is_string( $image['url'] ) ? $image['url'] : '';
+            $source_hash = $media_id > 0
+                ? (string) get_post_meta( $media_id, '_elementor_source_image_hash', true )
+                : '';
+            return array(
+                'mediaReferenceFound' => $media_url !== '',
+                'mediaIdPresent' => $media_id > 0,
+                'mediaUrlFingerprint' => $media_url !== '' ? 'sha256:' . hash( 'sha256', $media_url ) : '',
+                'sourceUrlFingerprint' => p15_asset_proof_source_fingerprint(),
+                'sourceProvenanceMatches' => $source_hash !== ''
+                    && hash_equals( sha1( p15_asset_fixture_url() ), $source_hash ),
+            );
+        }
+
+        if ( isset( $element['elements'] ) && is_array( $element['elements'] ) ) {
+            foreach ( $element['elements'] as $child ) {
+                $stack[] = $child;
+            }
+        }
+    }
+
+    return $empty;
+}
+
 function p15_proof_template_redirect() {
     $template_id = (int) get_option( 'p15_proof_template_id', 0 );
     $asset_template_id = (int) get_option( 'p15_asset_proof_template_id', 0 );
-
-    if ( isset( $_GET['p15_asset_fixture'] ) && '1' === (string) $_GET['p15_asset_fixture'] ) {
-        nocache_headers();
-        header( 'Content-Type: image/png' );
-        header( 'X-Content-Type-Options: nosniff' );
-        echo base64_decode( 'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFElEQVR42mNkYPj/n4GBgYGJAQoAHgQCAH6Jx6QAAAAASUVORK5CYII=' );
-        exit;
-    }
 
     if ( p15_proof_token_ok( 'p15_asset_proof_observe' ) ) {
         nocache_headers();
@@ -341,6 +430,7 @@ function p15_proof_template_redirect() {
                 'templateTitle' => $asset_template_id ? get_the_title( $asset_template_id ) : '',
                 'templateType' => $asset_template_id ? get_post_meta( $asset_template_id, '_elementor_template_type', true ) : '',
                 'templateSha256' => get_option( 'p15_asset_proof_template_sha256', '' ),
+                'importedMedia' => p15_asset_proof_imported_media_observation( $asset_template_id ),
                 'renderUrl' => home_url( '/?p15_asset_proof_render=' . rawurlencode( p15_proof_env_value( 'P15_PROOF_TOKEN' ) ) ),
             ),
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
