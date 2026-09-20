@@ -8,7 +8,6 @@ import {
   realpath,
   rename,
   rmdir,
-  stat,
   unlink,
 } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
@@ -135,7 +134,7 @@ async function p15OperatorInputMetadataMatchesSnapshot(
   snapshot: P15OperatorJsonInputSnapshot,
 ): Promise<boolean> {
   try {
-    const currentInfo = await stat(snapshot.resolvedPath);
+    const currentInfo = await lstat(snapshot.resolvedPath);
     if (!currentInfo.isFile()) return false;
     const currentCanonical = await realpath(snapshot.resolvedPath);
     if (comparisonPath(currentCanonical) !== comparisonPath(snapshot.canonicalPath)) return false;
@@ -213,13 +212,13 @@ export async function readP15OperatorJsonInput(
   try {
     [canonicalBeforeOpen, initialPathInfo] = await Promise.all([
       realpath(resolvedPath),
-      stat(resolvedPath),
+      lstat(resolvedPath),
     ]);
   } catch {
     fail(`Unable to inspect ${label} input.`);
   }
 
-  if (!initialPathInfo.isFile()) fail(`${label} input must resolve to a regular file.`);
+  if (!initialPathInfo.isFile()) fail(`${label} input must be a regular file.`);
   if (initialPathInfo.size === 0) fail(`${label} input is empty.`);
   if (options.maxBytes !== undefined && initialPathInfo.size > options.maxBytes) {
     fail(`${label} input exceeds ${options.maxBytes}-byte limit.`);
@@ -239,7 +238,7 @@ export async function readP15OperatorJsonInput(
     try {
       [before, pathInfoBeforeRead, canonicalBeforeRead] = await Promise.all([
         handle.stat(),
-        stat(resolvedPath),
+        lstat(resolvedPath),
         realpath(resolvedPath),
       ]);
     } catch {
@@ -247,7 +246,7 @@ export async function readP15OperatorJsonInput(
     }
 
     if (!before.isFile() || !pathInfoBeforeRead.isFile()) {
-      fail(`${label} input must resolve to a regular file.`);
+      fail(`${label} input must be a regular file.`);
     }
     if (
       !sameObservedFile(initialPathInfo, before)
@@ -281,7 +280,7 @@ export async function readP15OperatorJsonInput(
     let canonicalAfterRead: string;
     try {
       [pathInfoAfterRead, canonicalAfterRead] = await Promise.all([
-        stat(resolvedPath),
+        lstat(resolvedPath),
         realpath(resolvedPath),
       ]);
     } catch {

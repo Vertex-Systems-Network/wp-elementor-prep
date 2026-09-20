@@ -147,7 +147,7 @@ PR #546 / #545 binds declared TargetProfiles to that retained reference by exact
 
 P16 remains **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
 
-The retained foundation includes normalized Gutenberg candidate/capability/profile contracts, exact candidate identity, external receipt/offline revalidation, sanitized review/decision prerequisites, genuine-evidence retention requirements, offline operator export/current-manifest validation and hardened bounded local JSON I/O/output handling.
+The retained foundation includes normalized Gutenberg candidate/capability/profile contracts, exact candidate identity, external receipt/offline revalidation, sanitized review/decision prerequisites, genuine-evidence retention requirements, offline operator export/current-manifest validation and hardened bounded local JSON I/O/output handling. P15 and P16 operator JSON pathname boundaries reject symbolic-link inputs and revalidate regular-file identity/content before atomic report commit.
 
 For the existing bounded P16 retention operator surfaces, JSON inputs keep the accepted 1 MiB / 64-level / 50,000-value policy, are read as raw bytes, retain exact SHA-256 snapshots, decode with fatal strict UTF-8 semantics, and are stream-rehashed through a stable opened-file identity immediately before atomic report commit. Same-size byte drift therefore fails closed even when path/filesystem metadata still appears unchanged. Failure cleanup removes only a writer-owned payload whose retained snapshot still matches; non-owned or replaced temporary content is preserved rather than recursively deleted.
 

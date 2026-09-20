@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-20 — P15 operator-input symlink hardening (#593)
+
+- Security audit found an inconsistent filesystem boundary: P16 operator JSON intake rejected symlink path entries, while the shared P15 operator intake followed them before applying canonical-path/file-identity/content-digest checks.
+- P15 pathname observations now use `lstat()` and require a regular non-symlink file before open, around the read, and during later snapshot/content-digest revalidation.
+- Initial symlink inputs and post-read pathname replacement with a symlink fail closed before report commit; existing strict UTF-8, byte/depth/value limits, canonical-path binding, file metadata/identity checks and SHA-256 revalidation remain in force.
+- No evidence schema, product authority, network behavior or compatibility/production claim changes.
+
+
 ## 2026-09-20 — P15 bounded responsive Container margin
 
 - Continued issue #591 through PR #592 as the next independently evidenced responsive slice after Button alignment.

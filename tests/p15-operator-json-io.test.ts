@@ -6,6 +6,7 @@ import {
   readdirSync,
   renameSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -59,6 +60,34 @@ describe('P15 stable operator JSON IO', () => {
     expect(snapshot.raw).toBe(raw);
     expect(snapshot.value).toEqual({ schemaVersion: 1, source: 'OBSERVED' });
     expect(await p15OperatorInputMatchesSnapshot(snapshot)).toBe(true);
+  });
+
+  it('rejects a symbolic-link operator input instead of following its target', async () => {
+    const dir = fixtureDir();
+    const target = join(dir, 'target.json');
+    const input = join(dir, 'input.json');
+    writeFileSync(target, '{"safe":true}\n');
+    symlinkSync(target, input, 'file');
+
+    await expect(readP15OperatorJsonInput(input, 'evidence', smallOptions, fail))
+      .rejects.toThrow('evidence input must be a regular file.');
+  });
+
+  it('rejects a pathname replaced by a symbolic link after the read snapshot', async () => {
+    const dir = fixtureDir();
+    const input = join(dir, 'input.json');
+    const original = join(dir, 'original.json');
+    const output = join(dir, 'report.json');
+    writeFileSync(input, '{"value":1}\n');
+
+    const snapshot = await readP15OperatorJsonInput(input, 'evidence', smallOptions, fail);
+    renameSync(input, original);
+    symlinkSync(original, input, 'file');
+
+    expect(await p15OperatorInputMatchesSnapshot(snapshot)).toBe(false);
+    await expect(writeP15OperatorJsonOutput(output, [snapshot], '{"report":true}\n', fail))
+      .rejects.toThrow('Input path changed after it was read.');
+    expect(existsSync(output)).toBe(false);
   });
 
   it('rejects an oversized small evidence packet before JSON validation', async () => {
