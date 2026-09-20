@@ -35,6 +35,13 @@ Recent accepted P15 sequence:
 
 Stable operator-I/O hardening builds on this provenance without changing P15 target authority. PR #518 is the first retained real WordPress/Elementor import/editor/render observation, but it is one exact bounded reference proof rather than a general compatibility, production or download authorization.
 
+## Security hardening
+
+- #579 closes a repository-side audit train covering proof-token containment, controlled-loopback proof navigation, generic atomic output replacement and duplicate CLI option rejection.
+- The P15 disposable target-proof token is not part of retained evidence: bridge payloads do not return token-bearing navigation URLs and retained proof artifacts/logs are sanitized and checked before upload.
+- Generic CLI/script output replacement no longer unlinks an existing destination before same-directory rename.
+- #287 remains the separate repository-admin branch/ruleset enforcement dependency; code-side controls do not substitute for repository settings.
+
 ## Persistent dependencies
 
 - #84 — P12 final integrated validation/release exit; retained at 80%;
