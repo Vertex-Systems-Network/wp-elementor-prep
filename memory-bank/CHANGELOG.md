@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-20 — P15 security-bounded responsive Container z-index
+
+- Continued issue #599 after merged PR #598 / issue #597 as the next independently evidenced responsive slice.
+- Exact Elementor `4.2.4` Container blob `3486766b9565af99536ae205ed1936bb155daed0` registers responsive `z_index` as NUMBER with minimum `0`; Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` anchors default responsive suffixing. Exact Container Playwright blob `1cdbc387887abea49d4e8477b1b3a684c5149c9e` uses numeric `z_index=50`, and responsive-number fixture blob `20f71a3e127ac3806446c95b313abff01e4b97c2` retains tablet/mobile z-index lineage.
+- The resolver accepts only explicit integer values `0..9999` for `z_index_tablet` / `z_index_mobile`; the upper bound is a deliberate repository safety cap rather than a claim that Elementor imposes that maximum.
+- Strings/CSS expressions, negative/fractional/non-finite/out-of-range values, stale bindings, conflicts and authority inflation fail closed. Desktop `z_index` remains untouched and sanitized summaries exclude source/template/candidate content.
+
+
 ## 2026-09-20 — P15 condition-bound responsive Container boxed width
 
 - Continued issue #597 as the next independently evidenced responsive slice after merged PR #596 / issue #595.
