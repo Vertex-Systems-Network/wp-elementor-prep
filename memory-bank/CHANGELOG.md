@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-20 — P15 exact responsive Heading/Text alignment
+
+- Continued issue #585 through PR #586 as the next independently evidenced bounded responsive slice after container border radius.
+- Verified exact Elementor `4.2.4` source: Heading blob `5b193f958ba34d8d4a24d165a9114f9bc3ef2561` and Text Editor blob `72ff868493a3c0f27c6305794ffcff9cf217c9ea` both register `align` through `add_responsive_control`; Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` establishes default non-desktop `<id>_<device>` naming.
+- Added an exact neutral-source fingerprint + exact base-candidate identity manifest for explicit `tabletAlign` / `mobileAlign` on existing neutral Heading/Text nodes.
+- Heading accepts only its neutral `start|center|end`; Text additionally accepts `justify`. Button is intentionally excluded pending separate exact trait-level evidence.
+- The resolver lockstep-binds the review-free neutral tree to generated core widgets, validates widget type and desktop alignment before applying only `align_tablet` / `align_mobile`, preserves desktop `align`, and leaves omitted breakpoints absent.
+- Stale source/candidate bindings, duplicates, non-text nodes, invalid values, structural/widget drift, existing-key conflicts and authority inflation fail closed.
+- Sanitized summaries omit source copy, template JSON and candidate bytes. No semantic/responsive inference, custom breakpoints, responsive closure, compatibility, production, generation/download, transfer, Figma mutation or network authority is introduced.
+
+
 ## 2026-09-20 — P15 exact responsive container border-radius overrides
 
 - Continued issue #581 through PR #582 as the next independently evidenced bounded responsive container slice after wrap-conditioned align-content.
