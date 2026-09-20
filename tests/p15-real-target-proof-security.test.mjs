@@ -24,6 +24,16 @@ describe('P15 real-target proof security boundary', () => {
     expect(bridge).toContain("'editorUrl' => admin_url(");
   });
 
+  it('masks the generated proof token before persisting it into the Actions environment', () => {
+    const generateIndex = workflow.indexOf('P15_PROOF_TOKEN_VALUE="$(openssl rand -hex 24)"');
+    const maskIndex = workflow.indexOf('echo "::add-mask::$P15_PROOF_TOKEN_VALUE"');
+    const persistIndex = workflow.indexOf('echo "P15_PROOF_TOKEN=$P15_PROOF_TOKEN_VALUE" >> "$GITHUB_ENV"');
+    expect(generateIndex).toBeGreaterThan(-1);
+    expect(maskIndex).toBeGreaterThan(generateIndex);
+    expect(persistIndex).toBeGreaterThan(maskIndex);
+    expect(workflow).not.toContain('echo "P15_PROOF_TOKEN=$(openssl rand -hex 24)" >> "$GITHUB_ENV"');
+  });
+
   it('redacts the exact ephemeral proof token before artifact upload and fails if it remains', () => {
     const sanitizeIndex = workflow.indexOf('- name: Sanitize retained proof diagnostics');
     const uploadIndex = workflow.indexOf('uses: actions/upload-artifact@');
