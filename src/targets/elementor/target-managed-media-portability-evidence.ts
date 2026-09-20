@@ -81,6 +81,7 @@ export type ElementorTargetManagedMediaPortabilityIssueCode =
   | 'P15_MEDIA_PORTABILITY_SEQUENCE_INVALID'
   | 'P15_MEDIA_PORTABILITY_SOURCE_PROVENANCE_INVALID'
   | 'P15_MEDIA_PORTABILITY_DESTINATION_MEDIA_INVALID'
+  | 'P15_MEDIA_PORTABILITY_ATTACHMENT_INVALID'
   | 'P15_MEDIA_PORTABILITY_CONTENT_INTEGRITY_INVALID'
   | 'P15_MEDIA_PORTABILITY_AUTHORITY_FLAGS_INVALID';
 
@@ -313,7 +314,8 @@ function inspectExport(
 } {
   if (!isRecord(exportedTemplateValue)
     || !Array.isArray(exportedTemplateValue.content)
-    || !isRecord(exportedTemplateValue.page_settings)
+    || !('page_settings' in exportedTemplateValue)
+    || !(Array.isArray(exportedTemplateValue.page_settings) || isRecord(exportedTemplateValue.page_settings))
     || !boundedString(exportedTemplateValue.version, 32)
     || !boundedString(exportedTemplateValue.title, 256)
     || exportedTemplateValue.type !== 'page'
@@ -595,7 +597,7 @@ export function validateElementorTargetManagedMediaPortabilityEvidence(
     attachment = attachmentSnapshot(evidenceValue.attachment);
     if (!attachment.valid) {
       issues.push({
-        code: 'P15_MEDIA_PORTABILITY_CONTENT_INTEGRITY_INVALID',
+        code: 'P15_MEDIA_PORTABILITY_ATTACHMENT_INVALID',
         path: '$.attachment',
         message: 'Target-B attachment integrity metadata is malformed.',
       });
