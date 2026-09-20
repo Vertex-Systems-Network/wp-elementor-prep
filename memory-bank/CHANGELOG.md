@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 security-bounded responsive Container min-height
+
+- Continued issue #595 as the next independently evidenced responsive slice after Container margin and the P15 operator-input symlink hardening.
+- Exact Elementor `4.2.4` Container blob `3486766b9565af99536ae205ed1936bb155daed0` registers responsive `min_height` as a Slider with px max `1440`; Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d`, Slider blob `f56798bd5e0a2bee5a7c3a7771ecbaf2af87fb7f` and exact converter fixture blob `27c8d0eadae77a9c4e33258111829f47ed9e217b` lock the setting names and persisted Slider shape.
+- The resolver accepts only explicit integer px values `0..1440` for `min_height_tablet` / `min_height_mobile`; desktop min-height is untouched and omitted breakpoints remain absent.
+- `vh`, `em`, `rem`, custom/CSS strings, expressions, negative/fractional/non-finite/out-of-range values and unknown fields fail closed.
+- Exact source/base-candidate binding, generator structural binding, existing-override conflict rejection and false authority flags remain mandatory. Sanitized summaries omit source content/template/candidate bytes.
+
+
 ## 2026-09-20 — P15 operator-input symlink hardening (#593)
 
 - Security audit found an inconsistent filesystem boundary: P16 operator JSON intake rejected symlink path entries, while the shared P15 operator intake followed them before applying canonical-path/file-identity/content-digest checks.
