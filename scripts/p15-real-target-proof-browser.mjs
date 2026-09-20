@@ -35,6 +35,18 @@ function proofUrl(baseUrl, key) {
   return baseUrl + '/?' + key + '=1';
 }
 
+async function gotoProof(page, url, token, options) {
+  await page.route(url, async (route) => {
+    await route.continue({
+      headers: {
+        ...route.request().headers(),
+        'x-p15-proof-token': token,
+      },
+    });
+  }, { times: 1 });
+  return page.goto(url, options);
+}
+
 function numericVersion(value) {
   const match = String(value).match(/(\d+(?:\.\d+){1,3})/);
   if (!match) throw new Error('Unable to extract numeric dotted version from: ' + value);
@@ -231,13 +243,10 @@ try {
   const browserVersion = browser.version();
   const context = await browser.newContext({
     viewport: { width: 1440, height: 1100 },
-    extraHTTPHeaders: {
-      'X-P15-Proof-Token': token,
-    },
   });
   page = await context.newPage();
 
-  await page.goto(proofUrl(baseUrl, 'p15_proof_observe'), {
+  await gotoProof(page, proofUrl(baseUrl, 'p15_proof_observe'), token, {
     waitUntil: 'domcontentloaded',
     timeout: 60000,
   });
@@ -291,7 +300,7 @@ try {
   await writeJson(join(outDir, 'environment-evidence.json'), environmentEvidence);
 
   try {
-    await page.goto(proofUrl(baseUrl, 'p15_proof_login'), {
+    await gotoProof(page, proofUrl(baseUrl, 'p15_proof_login'), token, {
       waitUntil: 'domcontentloaded',
       timeout: 90000,
     });
@@ -328,7 +337,7 @@ try {
 
   if (raw.editor.result === 'PASS') {
     try {
-      await page.goto(proofUrl(baseUrl, 'p15_proof_render'), {
+      await gotoProof(page, proofUrl(baseUrl, 'p15_proof_render'), token, {
         waitUntil: 'networkidle',
         timeout: 90000,
       });
@@ -477,7 +486,7 @@ try {
   let assetProofFullPass = false;
   let assetServer = null;
   try {
-    await page.goto(proofUrl(baseUrl, 'p15_asset_proof_observe'), {
+    await gotoProof(page, proofUrl(baseUrl, 'p15_asset_proof_observe'), token, {
       waitUntil: 'domcontentloaded',
       timeout: 60000,
     });
@@ -546,7 +555,7 @@ try {
       throw new Error('Asset import did not retain exact source provenance into target-managed media.');
     }
 
-    await page.goto(proofUrl(baseUrl, 'p15_asset_proof_render'), {
+    await gotoProof(page, proofUrl(baseUrl, 'p15_asset_proof_render'), token, {
       waitUntil: 'networkidle',
       timeout: 90000,
     });
@@ -713,7 +722,10 @@ try {
     try {
       const exportResponse = await context.request.get(
         proofUrl(baseUrl, 'p15_asset_proof_export'),
-        { timeout: 60000 },
+        {
+          timeout: 60000,
+          headers: { 'X-P15-Proof-Token': token },
+        },
       );
       if (!exportResponse.ok()) {
         throw new Error('Target-A Elementor export failed with HTTP ' + exportResponse.status());
@@ -745,7 +757,7 @@ try {
         targetManagedMediaUrlFingerprint: assetProofEvidence.steps.targetManagedMediaUrlFingerprint,
       };
 
-      await page.goto(proofUrl(secondBaseUrl, 'p15_cross_target_observe'), {
+      await gotoProof(page, proofUrl(secondBaseUrl, 'p15_cross_target_observe'), token, {
         waitUntil: 'domcontentloaded',
         timeout: 90000,
       });
@@ -815,7 +827,7 @@ try {
         throw new Error('Target-B attachment content integrity does not match the canonical controlled PNG.');
       }
 
-      await page.goto(proofUrl(secondBaseUrl, 'p15_cross_target_render'), {
+      await gotoProof(page, proofUrl(secondBaseUrl, 'p15_cross_target_render'), token, {
         waitUntil: 'networkidle',
         timeout: 90000,
       });
