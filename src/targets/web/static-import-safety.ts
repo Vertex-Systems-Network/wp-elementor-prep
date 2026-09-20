@@ -379,6 +379,29 @@ function stripQuotes(value: string): string {
   return trimmed;
 }
 
+function hasUnsafeAsciiControl(value: string): boolean {
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code <= 0x1f || code === 0x7f) return true;
+  }
+  return false;
+}
+
+function hasCharacterReferenceInPrefix(value: string): boolean {
+  const boundaries = [value.indexOf('/'), value.indexOf('?'), value.indexOf('#')]
+    .filter((index) => index >= 0);
+  const limit = boundaries.length > 0 ? Math.min(...boundaries) : value.length;
+
+  for (let index = 0; index < limit; index += 1) {
+    if (value[index] !== '&') continue;
+    const semicolon = value.indexOf(';', index + 1);
+    if (semicolon < 0 || semicolon >= limit || semicolon - index > 40) continue;
+    const body = value.slice(index + 1, semicolon);
+    if (/^(?:#[0-9]+|#x[0-9a-f]+|[a-z][a-z0-9]+)$/i.test(body)) return true;
+  }
+  return false;
+}
+
 function explicitScheme(value: string): string | null | 'INVALID' {
   const colon = value.indexOf(':');
   if (colon < 0) return null;
@@ -403,6 +426,11 @@ function classifyNavigationHref(
 ): void {
   const value = stripQuotes(rawValue);
   if (value.length === 0) return;
+
+  if (hasUnsafeAsciiControl(value) || hasCharacterReferenceInPrefix(value)) {
+    addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
+    return;
+  }
 
   if (value.startsWith('//')) {
     addDiagnostic(state, 'P17_IMPORT_REMOTE_RESOURCE_BLOCKED', 'BLOCK', sourcePath);
@@ -436,6 +464,10 @@ function classifyResourceValue(
 ): void {
   const value = stripQuotes(rawValue);
   if (value.length === 0) return;
+  if (hasUnsafeAsciiControl(value) || hasCharacterReferenceInPrefix(value)) {
+    addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
+    return;
+  }
 
   if (value.startsWith('//')) {
     addDiagnostic(state, 'P17_IMPORT_REMOTE_RESOURCE_BLOCKED', 'BLOCK', sourcePath);
