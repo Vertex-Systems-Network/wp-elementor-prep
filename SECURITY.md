@@ -24,7 +24,7 @@ The Figma Community core is intentionally offline and keeps `networkAccess.allow
 
 Generated target artifacts, CI success, local validation, and AI analysis do not by themselves grant runtime, import, compatibility, mutation, or production authority. Runtime evidence must follow the repository's retained evidence contracts.
 
-Disposable controlled-target proof credentials are ephemeral security material. The P15 proof browser may send its token only to the exact loopback origins declared by the proof harness, bridge observations must not reflect token-bearing navigation URLs, and retained proof artifacts/logs must be sanitized and verified token-free before upload.
+Disposable controlled-target proof credentials are ephemeral security material. The P15 proof browser may send its token only to the exact loopback origins declared by the proof harness, generated proof credentials must be registered with the CI log masker before persistence into the Actions environment, bridge observations must not reflect token-bearing navigation URLs, and retained proof artifacts/logs must be sanitized and verified token-free before upload.
 
 ## AI-specific security reports
 

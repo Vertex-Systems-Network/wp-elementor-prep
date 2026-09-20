@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 generated proof-token log masking (#583)
+
+- Follow-up log audit found that #580 removed token-bearing bridge payloads and sanitized retained artifacts, but the generated `P15_PROOF_TOKEN` still appeared in GitHub Actions step environment logging after persistence through `$GITHUB_ENV`.
+- The proof workflow now generates the token into a shell-local variable, registers the exact value with GitHub Actions `::add-mask::`, and only then persists it to `$GITHUB_ENV`.
+- Existing exact-loopback token routing and pre-upload artifact redaction/absence verification remain mandatory.
+- Added a regression contract that locks generation → mask → environment-persistence ordering and rejects the previous direct generated-token persistence pattern.
+- This change affects credential handling only; no target compatibility, production, generation/download, transfer or acceptance authority changes.
+
+
 ## 2026-09-20 — Security boundary hardening (#579)
 
 - deep-audited current repository trust boundaries after P15 #578, including CI permissions/action pinning, Figma REST credential/response handling, operator filesystem I/O, disposable WordPress/Elementor proof endpoints and retained proof artifacts;
