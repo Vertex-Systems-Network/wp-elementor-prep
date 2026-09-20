@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-20 — P15 raw-template pathname hardening (#601)
+
+- Security audit found that the intentional unbounded raw Elementor-template reader still used pathname `stat()` and could follow an operator-supplied symbolic link even though the main P15/P16 operator JSON boundary had already moved to non-symlink `lstat()` checks.
+- The raw-template reader now requires the supplied pathname itself to remain a regular non-symlink file before open, before read and after read, while preserving opened-handle identity/metadata, canonical-path and exact raw-byte SHA-256 checks.
+- Direct regressions cover stable regular-file intake, initial symlink rejection and unchanged strict JSON parsing.
+- The template resource-policy contract is intentionally unchanged: this issue does not add a generic byte/depth/value ceiling or any product authority.
+
+
 ## 2026-09-20 — P15 security-bounded responsive Container z-index
 
 - Continued issue #599 after merged PR #598 / issue #597 as the next independently evidenced responsive slice.
