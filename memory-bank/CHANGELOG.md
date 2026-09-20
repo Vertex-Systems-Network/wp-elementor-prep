@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-20 — P15 exact responsive container border-radius overrides
+
+- Continued issue #581 through PR #582 as the next independently evidenced bounded responsive container slice after wrap-conditioned align-content.
+- Verified exact Elementor `4.2.4` source: Container registers `border_radius` through `add_responsive_control` in blob `3486766b9565af99536ae205ed1936bb155daed0`, while Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` derives non-desktop responsive names as `<id>_<device>`, establishing `border_radius_tablet` / `border_radius_mobile` for the default profile.
+- Added an exact neutral-source fingerprint + exact base-candidate identity manifest for explicit uniform integer px `tabletCornerRadiusPx` / `mobileCornerRadiusPx` on existing neutral containers.
+- Desktop `border_radius` remains unchanged; requested breakpoint values map only to linked px DIMENSIONS objects, zero is retained as a real override, and omitted breakpoints remain absent with no inheritance synthesis.
+- Stale source/candidate bindings, duplicates, non-container IDs, empty/unknown entries, fractional/non-finite/negative/out-of-range values, generator drift, existing-key conflicts and authority inflation fail closed.
+- Sanitized summaries omit source text, template JSON and candidate bytes. No custom breakpoints, responsive inference/closure, target compatibility, production, generation/download, transfer, Figma mutation or network authority is introduced.
+
+
 ## 2026-09-20 — P15 generated proof-token log masking (#583)
 
 - Follow-up log audit found that #580 removed token-bearing bridge payloads and sanitized retained artifacts, but the generated `P15_PROOF_TOKEN` still appeared in GitHub Actions step environment logging after persistence through `$GITHUB_ENV`.
