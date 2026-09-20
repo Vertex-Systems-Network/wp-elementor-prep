@@ -18,6 +18,13 @@ describe('P15 real-target proof security boundary', () => {
     expect(browser).not.toContain('page.goto(destinationServer.renderUrl');
   });
 
+  it('waits boundedly for the exact Elementor onboarding Skip control and still fails closed', () => {
+    expect(browser).toContain("page.getByText('Skip', { exact: true })");
+    expect(browser).toContain("waitFor({ state: 'visible', timeout: 15000 })");
+    expect(browser).toContain('did not become visible within 15000 ms');
+    expect(browser).toContain("skip.first().click({ timeout: 15000 })");
+  });
+
   it('does not reflect proof-token-bearing navigation URLs into retained bridge observations', () => {
     expect(bridge).not.toMatch(/['"]renderUrl['"]\s*=>/);
     expect(bridge).not.toMatch(/['"]editorLoginUrl['"]\s*=>/);
