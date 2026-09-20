@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { fstatSync, lstatSync, mkdtempSync, openSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { appendFileSync, fstatSync, lstatSync, mkdtempSync, openSync, readFileSync, readSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inspectRuntimeArtifact } from '../scripts/runtime-artifact-preflight.mjs';
@@ -197,6 +197,35 @@ describe('runtime artifact preflight', () => {
     });
   });
 
+  it('fails closed if a required artifact file grows beyond the byte ceiling during descriptor read', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const codePath = join(dir, 'code.js');
+      let codeFd = null;
+      let grew = false;
+
+      const result = inspectRuntimeArtifact('p5', dir, {
+        intent: 'final-closure',
+        registry,
+        maxRequiredFileBytes: 64,
+        openSyncImpl: (path, flags) => {
+          const fd = openSync(path, flags);
+          if (path === codePath) codeFd = fd;
+          return fd;
+        },
+        readSyncImpl: (fd, buffer, offset, length, position) => {
+          if (!grew && fd === codeFd) {
+            appendFileSync(codePath, 'x'.repeat(128));
+            grew = true;
+          }
+          return readSync(fd, buffer, offset, length, position);
+        }
+      });
+
+      expect(result.ok).toBe(false);
+      expect(result.errors.join('\n')).toContain('Required artifact file exceeds 64-byte limit during read: code.js');
+    });
+  });
+
   it('fails closed before reading a required artifact file above the configured byte ceiling', () => {
     withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
       writeFileSync(join(dir, 'code.js'), 'x'.repeat(2048));
@@ -209,6 +238,43 @@ describe('runtime artifact preflight', () => {
 
       expect(result.ok).toBe(false);
       expect(result.errors.join('\n')).toContain('Required artifact file exceeds 1024-byte limit: code.js');
+    });
+  });
+
+  it('fails closed if a supplied archive grows beyond the byte ceiling during descriptor read', () => {
+    withArtifact('p5', P5, {}, { finalClosureEligible: true }, (dir, registry) => {
+      const archivePath = `${dir}.zip`;
+      try {
+        writeFileSync(archivePath, Buffer.from('small archive'));
+        registry.tracks.p5.digest = `sha256:${fileSha256(archivePath)}`;
+        let archiveFd = null;
+        let grew = false;
+
+        const result = inspectRuntimeArtifact('p5', dir, {
+          intent: 'final-closure',
+          registry,
+          archivePath,
+          maxArchiveBytes: 64,
+          openSyncImpl: (path, flags) => {
+            const fd = openSync(path, flags);
+            if (path === archivePath) archiveFd = fd;
+            return fd;
+          },
+          readSyncImpl: (fd, buffer, offset, length, position) => {
+            if (!grew && fd === archiveFd) {
+              appendFileSync(archivePath, 'y'.repeat(128));
+              grew = true;
+            }
+            return readSync(fd, buffer, offset, length, position);
+          }
+        });
+
+        expect(result.ok).toBe(false);
+        expect(result.archiveIntegrity.matched).toBe(null);
+        expect(result.errors.join('\n')).toContain('Artifact archive exceeds 64-byte limit during read');
+      } finally {
+        rmSync(archivePath, { force: true });
+      }
     });
   });
 
