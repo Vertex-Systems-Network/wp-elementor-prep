@@ -27,10 +27,18 @@ function p15_cross_target_export_path() {
 
 function p15_proof_token_ok( $key ) {
     $expected = p15_proof_env_value( 'P15_PROOF_TOKEN' );
+    $provided = isset( $_SERVER['HTTP_X_P15_PROOF_TOKEN'] )
+        && is_string( $_SERVER['HTTP_X_P15_PROOF_TOKEN'] )
+        ? wp_unslash( $_SERVER['HTTP_X_P15_PROOF_TOKEN'] )
+        : '';
+    $action = isset( $_GET[ $key ] ) && is_string( $_GET[ $key ] )
+        ? wp_unslash( $_GET[ $key ] )
+        : '';
+
     return $expected !== ''
-        && isset( $_GET[ $key ] )
-        && is_string( $_GET[ $key ] )
-        && hash_equals( $expected, sanitize_text_field( wp_unslash( $_GET[ $key ] ) ) );
+        && $provided !== ''
+        && '1' === $action
+        && hash_equals( $expected, $provided );
 }
 
 function p15_proof_iso_now() {
