@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 exact responsive container wrap overrides
+
+- Continued issue #575 through draft PR #576 as the fifth bounded responsive container slice after direction, linked-px gap, flex alignment and px padding.
+- Verified exact Elementor `4.2.4` evidence: `includes/controls/groups/flex-container.php` marks `wrap` responsive, while exact QUnit container fixture blob `f06c5f60afa8fbef34ed922af419284cece09692` exposes `flex_wrap_tablet` and `flex_wrap_mobile`.
+- Added a versioned source-IR + exact base-candidate-bound manifest for explicit `tabletWrap` / `mobileWrap`. This slice accepts only current source-level `nowrap` / `wrap`; `wrap-reverse` is deliberately not broadened from fixture-only shape.
+- Desktop `flex_wrap` remains untouched, only explicitly requested default-breakpoint keys are written, and omitted breakpoints remain absent with no inheritance synthesis.
+- Stale source/candidate bindings, duplicate/non-container/empty/unknown entries, unsupported values, generator drift, existing-key conflicts and authority inflation fail closed. Sanitized summaries omit source text, template JSON and candidate bytes.
+- No geometry/viewport/layer-name inference, custom breakpoints, `align_content` coupling, responsive closure, target compatibility, production, generation/download, network or Figma mutation authority is introduced.
+
 ## 2026-09-20 — P15 exact-bound managed-media internal decision contract
 
 - Continued issue #573 through draft PR #574 after the exact #570 internal-review prerequisite and #572 controlled cross-target portability proof.
