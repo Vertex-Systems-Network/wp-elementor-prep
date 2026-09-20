@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 wrap-conditioned responsive container align-content
+
+- Continued issue #577 through draft PR #578 after #576 established exact default-breakpoint wrap overrides.
+- Verified exact Elementor `4.2.4` evidence: `align_content` is responsive and source-conditioned on `wrap=wrap`; exact QUnit fixture blob `f06c5f60afa8fbef34ed922af419284cece09692` exposes `container_align_content_tablet` / `container_align_content_mobile` and the six accepted values.
+- Added a composition resolver that first runs the exact #576 wrap contract, then binds a separate align-content manifest to the neutral-source fingerprint plus exact wrapped-candidate identity.
+- Every requested tablet/mobile align-content value requires explicit `wrap` for the same container and breakpoint. Missing wrap or `nowrap` rejects; inheritance is never synthesized and wrap is never promoted implicitly.
+- Desktop `container_align_content` is preserved. Only requested tablet/mobile keys are written, with stale source/wrapped-candidate bindings, malformed/duplicate/non-container entries, invalid values, generator drift, conflicts and authority inflation failing closed.
+- Sanitized summaries omit source text, template JSON and candidate bytes. No custom breakpoints, responsive closure, target compatibility, production, generation/download, network or Figma-mutation authority is introduced.
+
 ## 2026-09-20 — P15 exact responsive container wrap overrides
 
 - Continued issue #575 through draft PR #576 as the fifth bounded responsive container slice after direction, linked-px gap, flex alignment and px padding.
