@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-20 — Credentialed Figma REST redirect hardening (#605)
+
+- Security audit found that the fixed `https://api.figma.com` adapter still relied on Fetch's default redirect-following behavior while attaching OAuth Authorization or personal `X-Figma-Token` credentials.
+- Redirects are not part of the supported adapter contract, so Figma REST requests now set `redirect: 'error'` and fail closed instead of following an unexpected redirect chain.
+- Regression coverage verifies the fixed API endpoint, credential header, fail-closed redirect mode and absence of token material from the returned canonical snapshot.
+- Timeout, response-byte limits, strict UTF-8/JSON parsing, node traversal limits and authentication-mode semantics remain unchanged.
+
+
 ## 2026-09-20 — Canonical snapshot local-file hardening (#603)
 
 - Security audit found that `loadCanonicalSnapshot()` still streamed directly from an operator pathname, so symbolic links were followed and the stream was not bound to a stable opened-file identity/canonical path.
