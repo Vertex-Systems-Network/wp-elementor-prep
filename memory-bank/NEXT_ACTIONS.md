@@ -4,7 +4,7 @@ Last updated: 2026-09-19
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 and must fail closed on stale or mismatched registered artifacts.
 
-Security audit train #579 hardens exact-loopback proof-token use/retention, atomic output replacement and duplicate CLI options. #603/#604 hardens canonical snapshot local-file identity, #605/#606 blocks credentialed Figma REST redirects, and #607 hardens runtime artifact byte ceilings during descriptor reads with post-read identity revalidation. #287 remains repository-admin branch/ruleset enforcement work and must not be represented as code-complete.
+Security audit train #579 hardens exact-loopback proof-token use/retention, atomic output replacement and duplicate CLI options. #603/#604 hardens canonical snapshot local-file identity, #605/#606 blocks credentialed Figma REST redirects, #607/#608 hardens runtime artifact byte ceilings during descriptor reads with post-read identity revalidation, and #609 extends the same bounded-read/post-read identity rule to runtime-closure evidence and same-artifact verifier rereads. #287 remains repository-admin branch/ruleset enforcement work and must not be represented as code-complete.
 
 ## Execution mode — focused Elementor V1 release train
 

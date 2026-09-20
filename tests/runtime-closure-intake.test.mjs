@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
-import { mkdirSync, mkdtempSync, openSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, mkdtempSync, openSync, readFileSync, readSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inspectRuntimeClosureIntake } from '../scripts/runtime-closure-intake.mjs';
@@ -263,6 +263,73 @@ describe('runtime closure intake', () => {
       expect(result.evidence.utf8Valid).toBe(false);
       expect(result.evidence.jsonObject).toBe(false);
       expect(result.errors.join('\n')).toContain('Evidence is not valid UTF-8');
+    });
+  });
+
+  it('fails closed if evidence grows beyond the intake ceiling during descriptor read', () => {
+    withFixture({}, ({ artifactDir, evidencePath, registry }) => {
+      writeFileSync(evidencePath, JSON.stringify({ accepted: true }));
+      let evidenceFd = null;
+      let grew = false;
+
+      const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, {
+        registry,
+        maxEvidenceBytes: 64,
+        openSyncImpl: (path, flags) => {
+          const fd = openSync(path, flags);
+          if (path === evidencePath) evidenceFd = fd;
+          return fd;
+        },
+        readSyncImpl: (fd, buffer, offset, length, position) => {
+          if (!grew && fd === evidenceFd) {
+            appendFileSync(evidencePath, 'x'.repeat(128));
+            grew = true;
+          }
+          return readSync(fd, buffer, offset, length, position);
+        },
+        spawnSyncImpl: () => { throw new Error('verifier must not run'); }
+      });
+
+      expect(result.ok).toBe(false);
+      expect(result.stage).toBe('evidence');
+      expect(result.verifier.executed).toBe(false);
+      expect(result.errors.join('\n')).toContain('Evidence file exceeds the 64-byte intake limit during read.');
+    });
+  });
+
+  it('fails closed if the same-artifact verifier grows beyond its reread ceiling', () => {
+    withFixture({}, ({ artifactDir, evidencePath, registry }) => {
+      writeFileSync(evidencePath, JSON.stringify({ accepted: true }));
+      const verifierPath = join(artifactDir, P5.verifier);
+      const originalVerifierBytes = readFileSync(verifierPath);
+      const maxVerifierBytes = originalVerifierBytes.length + 16;
+      let verifierFd = null;
+      let grew = false;
+
+      const result = inspectRuntimeClosureIntake('p5', artifactDir, evidencePath, {
+        registry,
+        maxVerifierBytes,
+        openSyncImpl: (path, flags) => {
+          const fd = openSync(path, flags);
+          if (path === verifierPath) verifierFd = fd;
+          return fd;
+        },
+        readSyncImpl: (fd, buffer, offset, length, position) => {
+          if (!grew && fd === verifierFd) {
+            appendFileSync(verifierPath, 'y'.repeat(128));
+            grew = true;
+          }
+          return readSync(fd, buffer, offset, length, position);
+        },
+        spawnSyncImpl: () => { throw new Error('grown verifier must not run'); }
+      });
+
+      expect(result.ok).toBe(false);
+      expect(result.stage).toBe('verifier');
+      expect(result.verifier.executed).toBe(false);
+      expect(result.errors.join('\n')).toContain(
+        `Same-artifact verifier exceeds the ${maxVerifierBytes}-byte runtime artifact limit during read: ${P5.verifier}`
+      );
     });
   });
 

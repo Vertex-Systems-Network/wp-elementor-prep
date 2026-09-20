@@ -1,10 +1,10 @@
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { closeSync, existsSync, fstatSync, lstatSync, mkdtempSync, openSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { closeSync, existsSync, fstatSync, lstatSync, mkdtempSync, openSync, readSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { inspectRuntimeArtifact } from './runtime-artifact-preflight.mjs';
+import { inspectRuntimeArtifact, RUNTIME_ARTIFACT_MAX_FILE_BYTES } from './runtime-artifact-preflight.mjs';
 
 export const DEFAULT_MAX_EVIDENCE_BYTES = 5 * 1024 * 1024;
 export const DEFAULT_VERIFIER_TIMEOUT_MS = 30_000;
@@ -61,11 +61,34 @@ function sameFileIdentity(before, opened) {
     && before.ctimeMs === opened.ctimeMs;
 }
 
+function readBoundedDescriptor(fd, maxBytes, readSyncImpl = readSync) {
+  const chunks = [];
+  let totalBytes = 0;
+  const scratch = Buffer.allocUnsafe(Math.min(64 * 1024, Math.max(1, maxBytes + 1)));
+
+  while (true) {
+    const remainingProbe = maxBytes - totalBytes + 1;
+    const bytesRead = readSyncImpl(
+      fd,
+      scratch,
+      0,
+      Math.min(scratch.byteLength, Math.max(1, remainingProbe)),
+      null
+    );
+    if (bytesRead === 0) return { bytes: Buffer.concat(chunks, totalBytes), exceeded: false };
+
+    totalBytes += bytesRead;
+    if (totalBytes > maxBytes) return { bytes: null, exceeded: true };
+    chunks.push(Buffer.from(scratch.subarray(0, bytesRead)));
+  }
+}
+
 function readStableVerifierBytes(
   verifierPath,
   verifierName,
   preflight,
-  { openSyncImpl, fstatSyncImpl, readFileSyncImpl, closeSyncImpl }
+  { openSyncImpl, fstatSyncImpl, readSyncImpl, closeSyncImpl },
+  maxBytes = RUNTIME_ARTIFACT_MAX_FILE_BYTES
 ) {
   const errors = [];
   if (!existsSync(verifierPath)) {
@@ -82,6 +105,10 @@ function readStableVerifierBytes(
     errors.push(`Same-artifact verifier is no longer a regular file after preflight: ${verifierName}`);
     return { bytes: null, sha256: null, errors };
   }
+  if (verifierStat.size > maxBytes) {
+    errors.push(`Same-artifact verifier exceeds the ${maxBytes}-byte runtime artifact limit: ${verifierName}`);
+    return { bytes: null, sha256: null, errors };
+  }
 
   let verifierFd = null;
   let verifierBytes = null;
@@ -93,7 +120,20 @@ function readStableVerifierBytes(
     } else if (!sameFileIdentity(verifierStat, openedStat)) {
       errors.push(`Same-artifact verifier changed between validation and open: ${verifierName}`);
     } else {
-      verifierBytes = readFileSyncImpl(verifierFd);
+      const bounded = readBoundedDescriptor(verifierFd, maxBytes, readSyncImpl);
+      if (bounded.exceeded) {
+        errors.push(`Same-artifact verifier exceeds the ${maxBytes}-byte runtime artifact limit during read: ${verifierName}`);
+      } else {
+        const afterStat = fstatSyncImpl(verifierFd);
+        const finalPathStat = lstatSync(verifierPath);
+        if (!afterStat.isFile() || !finalPathStat.isFile() || finalPathStat.isSymbolicLink()) {
+          errors.push(`Same-artifact verifier changed while it was being read: ${verifierName}`);
+        } else if (!sameFileIdentity(openedStat, afterStat) || !sameFileIdentity(afterStat, finalPathStat)) {
+          errors.push(`Same-artifact verifier changed while it was being read: ${verifierName}`);
+        } else {
+          verifierBytes = bounded.bytes;
+        }
+      }
     }
   } catch (error) {
     errors.push(`Same-artifact verifier could not be opened safely: ${verifierName}: ${error.message}`);
@@ -134,9 +174,10 @@ export function inspectRuntimeClosureIntake(
     spawnSyncImpl = spawnSync,
     openSyncImpl = openSync,
     fstatSyncImpl = fstatSync,
-    readFileSyncImpl = readFileSync,
+    readSyncImpl = readSync,
     closeSyncImpl = closeSync,
     maxEvidenceBytes = DEFAULT_MAX_EVIDENCE_BYTES,
+    maxVerifierBytes = RUNTIME_ARTIFACT_MAX_FILE_BYTES,
     verifierTimeoutMs = DEFAULT_VERIFIER_TIMEOUT_MS,
     verifierOutputBytes = DEFAULT_VERIFIER_OUTPUT_BYTES
   } = {}
@@ -204,7 +245,20 @@ export function inspectRuntimeClosureIntake(
     } else if (!sameFileIdentity(evidenceStat, openedStat)) {
       evidenceErrors.push(`Evidence file changed between validation and open: ${resolvedEvidencePath}`);
     } else {
-      evidenceBytes = readFileSyncImpl(evidenceFd);
+      const bounded = readBoundedDescriptor(evidenceFd, maxEvidenceBytes, readSyncImpl);
+      if (bounded.exceeded) {
+        evidenceErrors.push(`Evidence file exceeds the ${maxEvidenceBytes}-byte intake limit during read.`);
+      } else {
+        const afterStat = fstatSyncImpl(evidenceFd);
+        const finalPathStat = lstatSync(resolvedEvidencePath);
+        if (!afterStat.isFile() || !finalPathStat.isFile() || finalPathStat.isSymbolicLink()) {
+          evidenceErrors.push(`Evidence file changed while it was being read: ${resolvedEvidencePath}`);
+        } else if (!sameFileIdentity(openedStat, afterStat) || !sameFileIdentity(afterStat, finalPathStat)) {
+          evidenceErrors.push(`Evidence file changed while it was being read: ${resolvedEvidencePath}`);
+        } else {
+          evidenceBytes = bounded.bytes;
+        }
+      }
     }
   } catch (error) {
     evidenceErrors.push(`Evidence file could not be opened safely: ${error.message}`);
@@ -262,9 +316,9 @@ export function inspectRuntimeClosureIntake(
   const stableVerifier = readStableVerifierBytes(verifierPath, preflight.verifier, preflight, {
     openSyncImpl,
     fstatSyncImpl,
-    readFileSyncImpl,
+    readSyncImpl,
     closeSyncImpl
-  });
+  }, maxVerifierBytes);
 
   if (stableVerifier.errors.length > 0 || !stableVerifier.bytes || !stableVerifier.sha256) {
     return {
