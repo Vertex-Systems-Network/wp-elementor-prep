@@ -311,13 +311,16 @@ export function resolveP15ElementorResponsiveContainerAlignContent(
   const sourceIrFingerprint = fingerprintP15NeutralExportDocument(source);
   const sourceContainers = collectP15NeutralContainerNodes(source);
   const wrapResult = resolveP15ElementorResponsiveContainerWraps(source, wrapManifestValue);
+  const wrappedCandidate = wrapResult.candidate;
+  const wrappedTemplate = wrapResult.template;
+  const wrappedDigest = wrapResult.resolvedCandidateIdentityDigest;
   const wrapReady = (wrapResult.status === 'NO_RESPONSIVE_WRAP_OVERRIDES'
       || wrapResult.status === 'RESPONSIVE_WRAPS_RESOLVED')
-    && wrapResult.candidate !== null
-    && wrapResult.template !== null
-    && validFingerprint(wrapResult.resolvedCandidateIdentityDigest);
+    && wrappedCandidate !== null
+    && wrappedTemplate !== null
+    && validFingerprint(wrappedDigest);
 
-  if (!wrapReady) {
+  if (!wrapReady || wrappedCandidate === null || wrappedTemplate === null || !validFingerprint(wrappedDigest)) {
     return baseResult(
       'BLOCKED_WRAP_PREREQUISITE',
       wrapResult.status,
@@ -336,7 +339,7 @@ export function resolveP15ElementorResponsiveContainerAlignContent(
     );
   }
 
-  const wrappedCandidateIdentityDigest = wrapResult.resolvedCandidateIdentityDigest as string;
+  const wrappedCandidateIdentityDigest = wrappedDigest;
   const issues: P15ElementorResponsiveAlignContentIssueV1[] = [];
   const resolutions = new Map<string, P15ElementorResponsiveAlignContentEntryV1>();
 
@@ -523,12 +526,12 @@ export function resolveP15ElementorResponsiveContainerAlignContent(
       sourceContainers.size,
       [],
       [],
-      wrapResult.template,
-      wrapResult.candidate,
+      wrappedTemplate,
+      wrappedCandidate,
     );
   }
 
-  const template = cloneP15ReadyElementorTemplate(wrapResult.candidate);
+  const template = cloneP15ReadyElementorTemplate(wrappedCandidate);
   const binding = bindP15NeutralSourceToGeneratedContainers(source, template);
   if (binding.issues.length > 0) {
     return baseResult(
