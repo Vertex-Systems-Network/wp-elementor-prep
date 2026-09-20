@@ -386,5 +386,5 @@ jobs:
 
           jq -e '.classification == "TARGET_MANAGED_CONTENT_INTEGRITY_PASS" and .evidenceValid == true and .assetProofValid == true and .assetProofClassification == "ASSET_BOUND_FULL_PASS" and .candidateBindingMatches == true and .profileBindingMatches == true and .referenceReviewBindingMatches == true and .observedTargetMatches == true and .evidenceReferenceMatches == true and .sourceFixtureMatchesCanonical == true and .contentDigestMatches == true and .attachmentMetadataValid == true' \
             "$P15_PROOF_OUT_DIR/asset-content-integrity-intake.json"
-          jq -e '.mimeType == "image/png" and (.width > 0) and (.height > 0) and .assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false' \
+          jq -e '.mimeType == "image/png" and (.width > 0) and (.height > 0) and .referenceClosureClaim == false and .assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false' \
             "$P15_PROOF_OUT_DIR/asset-content-integrity-intake.json"
