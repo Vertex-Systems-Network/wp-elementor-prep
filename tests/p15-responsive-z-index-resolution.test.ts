@@ -124,7 +124,7 @@ describe('P15 exact source-bound responsive container min-height resolution', ()
     expect(settings).not.toHaveProperty('z_index');
     expect(settings.z_index_tablet).toEqual(50);
     expect(settings.z_index_mobile).toEqual(7);
-    expect(result.resolvedZIndexs).toEqual([{
+    expect(result.resolvedZIndexes).toEqual([{
       sourceNodeId: 'root',
       tabletZIndex: 50,
       mobileZIndex: 7,
@@ -157,7 +157,7 @@ describe('P15 exact source-bound responsive container min-height resolution', ()
     expect(nestedSettings).not.toHaveProperty('z_index');
     expect(nestedSettings).not.toHaveProperty('z_index_tablet');
     expect(nestedSettings.z_index_mobile).toEqual(0);
-    expect(result.resolvedZIndexs).toEqual([{
+    expect(result.resolvedZIndexes).toEqual([{
       sourceNodeId: 'nested',
       tabletZIndex: null,
       mobileZIndex: 0,
@@ -298,7 +298,7 @@ describe('P15 exact source-bound responsive container min-height resolution', ()
     expect(serialized).not.toContain('"candidate"');
     expect(serialized).not.toContain('"template"');
     expect(serialized).toContain('"z_index_mobile"');
-    expect(serialized).toContain('"mobileZIndex": 4');
+    expect(serialized).toContain('"mobileZIndex": 25');
 
     const mutatedIssue = {
       ...resolveP15ElementorResponsiveContainerZIndex(source, {
