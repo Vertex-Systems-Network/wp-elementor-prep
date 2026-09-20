@@ -243,6 +243,39 @@ describe('P10 source adapters', () => {
     expect(JSON.stringify(snapshot)).not.toContain('super-secret-token');
   });
 
+  it('blocks redirects on credentialed Figma REST requests', async () => {
+    const token = 'redirect-bound-secret';
+    const fetchImpl = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      expect(String(input)).toMatch(/^https:\/\/api\.figma\.com\/v1\/files\//);
+      expect(init?.redirect).toBe('error');
+      const headers = init?.headers as Record<string, string>;
+      expect(headers['X-Figma-Token']).toBe(token);
+      return new Response(JSON.stringify({
+        name: 'Redirect-safe file',
+        lastModified: '2026-09-20T00:00:00.000Z',
+        version: 'redirect-safe',
+        nodes: {
+          '1:2': { document: restFrame() },
+        },
+      }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }) as typeof fetch;
+
+    const snapshot = await new FigmaRestSourceAdapter().load({
+      fileKey: 'RedirectSafeKey',
+      nodeId: '1:2',
+      token,
+      authMode: 'personal',
+      fetchImpl,
+    });
+
+    expect(snapshot.source).toMatchObject({
+      kind: 'figma-rest',
+      fileKey: 'RedirectSafeKey',
+      revision: 'redirect-safe',
+    });
+    expect(JSON.stringify(snapshot)).not.toContain(token);
+  });
+
   it('rejects Figma REST responses above the configured byte ceiling', async () => {
     const fetchImpl = (async () => new Response(JSON.stringify({
       name: 'x'.repeat(256),
