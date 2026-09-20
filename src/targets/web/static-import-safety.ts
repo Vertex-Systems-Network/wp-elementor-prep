@@ -53,6 +53,7 @@ export type P17StaticImportDiagnosticCode =
   | 'P17_IMPORT_FORM_SURFACE_BLOCKED'
   | 'P17_IMPORT_META_REFRESH_BLOCKED'
   | 'P17_IMPORT_BASE_ELEMENT_BLOCKED'
+  | 'P17_IMPORT_MALFORMED_HTML_BLOCKED'
   | 'P17_IMPORT_EXECUTABLE_URL_BLOCKED'
   | 'P17_IMPORT_REMOTE_RESOURCE_BLOCKED'
   | 'P17_IMPORT_CSS_IMPORT_BLOCKED'
@@ -516,64 +517,140 @@ function scanCssContent(content: string, sourcePath: string, state: DiagnosticSt
   urlPattern.lastIndex = 0;
 }
 
-function scanMetaRefresh(html: string, sourcePath: string, state: DiagnosticState): void {
-  const tagPattern = /<\s*meta\b[^>]{0,8192}>/gi;
-  let match: RegExpExecArray | null;
-  let count = 0;
-  while ((match = tagPattern.exec(html)) !== null) {
-    const tag = match[0].toLowerCase();
-    if (tag.includes('http-equiv') && tag.includes('refresh')) count += 1;
-    if (count > P17_STATIC_IMPORT_MAX_DIAGNOSTICS) break;
-  }
-  tagPattern.lastIndex = 0;
-  if (count > 0) {
-    addDiagnostic(state, 'P17_IMPORT_META_REFRESH_BLOCKED', 'BLOCK', sourcePath, count);
-  }
+interface HtmlTagToken {
+  name: string;
+  closing: boolean;
+  attributes: ResourceAttribute[];
+  nextIndex: number;
 }
 
-function extractResourceAttributes(html: string): ResourceAttribute[] {
-  const results: ResourceAttribute[] = [];
-  const tagPattern = /<\s*([a-z][a-z0-9:-]*)\b([^>]{0,16384})>/gi;
-  let tagMatch: RegExpExecArray | null;
+function isAsciiSpace(char: string | undefined): boolean {
+  return char === ' ' || char === '\t' || char === '\n' || char === '\r' || char === '\f';
+}
 
-  while ((tagMatch = tagPattern.exec(html)) !== null) {
-    const tag = (tagMatch[1] ?? '').toLowerCase();
-    const attributes = tagMatch[2] ?? '';
-    const attributePattern = /\b(src|srcset|poster|action|formaction|href|xlink:href|style)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>\x60]+))/gi;
-    let attributeMatch: RegExpExecArray | null;
+function isTagNameChar(char: string | undefined): boolean {
+  return char !== undefined && /[A-Za-z0-9:-]/.test(char);
+}
 
-    while ((attributeMatch = attributePattern.exec(attributes)) !== null) {
-      const attribute = (attributeMatch[1] ?? '').toLowerCase();
-      const value = attributeMatch[2] ?? attributeMatch[3] ?? attributeMatch[4] ?? '';
-      results.push({ tag, attribute, value });
-      if (results.length > P17_STATIC_IMPORT_MAX_DIAGNOSTICS * 8) return results;
+function isAttributeNameChar(char: string | undefined): boolean {
+  return char !== undefined
+    && !isAsciiSpace(char)
+    && char !== '='
+    && char !== '>'
+    && char !== '/'
+    && char !== '"'
+    && char !== "'"
+    && char !== '<';
+}
+
+function parseHtmlTag(html: string, startIndex: number): HtmlTagToken | null | 'MALFORMED' {
+  if (html[startIndex] !== '<') return null;
+  let index = startIndex + 1;
+  let closing = false;
+
+  if (html[index] === '/') {
+    closing = true;
+    index += 1;
+  }
+
+  if (!/[A-Za-z]/.test(html[index] ?? '')) return null;
+
+  const nameStart = index;
+  while (isTagNameChar(html[index])) index += 1;
+  const name = html.slice(nameStart, index).toLowerCase();
+
+  const attributes: ResourceAttribute[] = [];
+  while (index < html.length) {
+    if (index - startIndex > 16_384) return 'MALFORMED';
+    while (isAsciiSpace(html[index])) index += 1;
+
+    if (html[index] === '>') {
+      return { name, closing, attributes, nextIndex: index + 1 };
     }
-    attributePattern.lastIndex = 0;
+
+    if (html[index] === '/' && html[index + 1] === '>') {
+      return { name, closing, attributes, nextIndex: index + 2 };
+    }
+
+    if (closing) {
+      if (html[index] === '>') {
+        return { name, closing, attributes, nextIndex: index + 1 };
+      }
+      return 'MALFORMED';
+    }
+
+    const attributeStart = index;
+    while (isAttributeNameChar(html[index])) index += 1;
+    if (index === attributeStart) return 'MALFORMED';
+    const attribute = html.slice(attributeStart, index).toLowerCase();
+
+    while (isAsciiSpace(html[index])) index += 1;
+    let value = '';
+    if (html[index] === '=') {
+      index += 1;
+      while (isAsciiSpace(html[index])) index += 1;
+
+      const quote = html[index];
+      if (quote === '"' || quote === "'") {
+        index += 1;
+        const valueStart = index;
+        while (index < html.length && html[index] !== quote) {
+          if (index - startIndex > 16_384) return 'MALFORMED';
+          index += 1;
+        }
+        if (index >= html.length) return 'MALFORMED';
+        value = html.slice(valueStart, index);
+        index += 1;
+      } else {
+        const valueStart = index;
+        while (index < html.length
+          && !isAsciiSpace(html[index])
+          && html[index] !== '>'
+          && !(html[index] === '/' && html[index + 1] === '>')) {
+          if (html[index] === '<' || html[index] === '"' || html[index] === "'" || html[index] === '=') {
+            return 'MALFORMED';
+          }
+          if (index - startIndex > 16_384) return 'MALFORMED';
+          index += 1;
+        }
+        if (index === valueStart) return 'MALFORMED';
+        value = html.slice(valueStart, index);
+      }
+    }
+
+    attributes.push({ tag: name, attribute, value });
+    if (attributes.length > 1_024) return 'MALFORMED';
   }
-  tagPattern.lastIndex = 0;
-  return results;
+
+  return 'MALFORMED';
 }
 
-function scanHtmlContent(html: string, sourcePath: string, state: DiagnosticState): void {
-  const scriptCount = matchCount(html, /<\s*script(?:\s|>|\/)/gi);
-  if (scriptCount > 0) addDiagnostic(state, 'P17_IMPORT_SCRIPT_ELEMENT_BLOCKED', 'BLOCK', sourcePath, scriptCount);
+function findRawTextClose(lowerHtml: string, tagName: string, fromIndex: number): number {
+  const needle = `</${tagName}`;
+  let index = lowerHtml.indexOf(needle, fromIndex);
+  while (index >= 0) {
+    const boundary = lowerHtml[index + needle.length];
+    if (boundary === '>' || boundary === '/' || isAsciiSpace(boundary)) return index;
+    index = lowerHtml.indexOf(needle, index + 1);
+  }
+  return -1;
+}
 
-  const eventCount = matchCount(html, /\bon[a-z][a-z0-9_-]*\s*=/gi);
-  if (eventCount > 0) addDiagnostic(state, 'P17_IMPORT_INLINE_EVENT_HANDLER_BLOCKED', 'BLOCK', sourcePath, eventCount);
+function scanHtmlAttributes(
+  token: HtmlTagToken,
+  sourcePath: string,
+  state: DiagnosticState,
+): void {
+  let httpEquiv = '';
 
-  const embedCount = matchCount(html, /<\s*(?:iframe|object|embed)\b/gi);
-  if (embedCount > 0) addDiagnostic(state, 'P17_IMPORT_EMBEDDED_DOCUMENT_BLOCKED', 'BLOCK', sourcePath, embedCount);
+  for (const item of token.attributes) {
+    if (item.attribute.startsWith('on') && item.attribute.length > 2) {
+      addDiagnostic(state, 'P17_IMPORT_INLINE_EVENT_HANDLER_BLOCKED', 'BLOCK', sourcePath);
+    }
 
-  const formCount = matchCount(html, /<\s*form\b/gi);
-  if (formCount > 0) addDiagnostic(state, 'P17_IMPORT_FORM_SURFACE_BLOCKED', 'BLOCK', sourcePath, formCount);
-
-  const baseCount = matchCount(html, /<\s*base\b/gi);
-  if (baseCount > 0) addDiagnostic(state, 'P17_IMPORT_BASE_ELEMENT_BLOCKED', 'BLOCK', sourcePath, baseCount);
-
-  scanMetaRefresh(html, sourcePath, state);
-
-  for (const item of extractResourceAttributes(html)) {
-    if (state.overflow) break;
+    if (token.name === 'meta' && item.attribute === 'http-equiv') {
+      httpEquiv = item.value.trim().toLowerCase();
+    }
 
     if (item.attribute === 'style') {
       scanCssContent(item.value, sourcePath, state);
@@ -585,15 +662,11 @@ function scanHtmlContent(html: string, sourcePath: string, state: DiagnosticStat
       continue;
     }
 
-    if (item.attribute === 'href') {
-      if (item.tag === 'link' || item.tag === 'base') {
+    if (item.attribute === 'href' || item.attribute === 'xlink:href') {
+      if (token.name === 'link' || token.name === 'base') {
         classifyResourceValue(item.value, sourcePath, state, true);
       } else {
-        const lower = stripQuotes(item.value).toLowerCase();
-        if (lower.startsWith('javascript:') || lower.startsWith('vbscript:')
-          || lower.startsWith('data:text/html') || lower.startsWith('data:application/javascript')) {
-          addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
-        }
+        classifyNavigationHref(item.value, sourcePath, state);
       }
       continue;
     }
@@ -606,16 +679,88 @@ function scanHtmlContent(html: string, sourcePath: string, state: DiagnosticStat
       continue;
     }
 
-    classifyResourceValue(item.value, sourcePath, state, true);
+    if (item.attribute === 'src' || item.attribute === 'poster') {
+      classifyResourceValue(item.value, sourcePath, state, true);
+    }
   }
 
-  const stylePattern = /<\s*style\b[^>]{0,8192}>([\s\S]*?)<\s*\/\s*style\s*>/gi;
-  let styleMatch: RegExpExecArray | null;
-  while ((styleMatch = stylePattern.exec(html)) !== null) {
-    scanCssContent(styleMatch[1] ?? '', sourcePath, state);
-    if (state.overflow) break;
+  if (token.name === 'meta' && httpEquiv === 'refresh') {
+    addDiagnostic(state, 'P17_IMPORT_META_REFRESH_BLOCKED', 'BLOCK', sourcePath);
   }
-  stylePattern.lastIndex = 0;
+}
+
+function scanHtmlContent(html: string, sourcePath: string, state: DiagnosticState): void {
+  const lowerHtml = html.toLowerCase();
+  let index = 0;
+
+  while (index < html.length && !state.overflow) {
+    const open = html.indexOf('<', index);
+    if (open < 0) break;
+
+    if (html.startsWith('<!--', open)) {
+      const commentEnd = html.indexOf('-->', open + 4);
+      if (commentEnd < 0) {
+        addDiagnostic(state, 'P17_IMPORT_MALFORMED_HTML_BLOCKED', 'BLOCK', sourcePath);
+        break;
+      }
+      index = commentEnd + 3;
+      continue;
+    }
+
+    if (lowerHtml.startsWith('<!doctype', open)) {
+      const declarationEnd = html.indexOf('>', open + 9);
+      if (declarationEnd < 0 || declarationEnd - open > 8_192) {
+        addDiagnostic(state, 'P17_IMPORT_MALFORMED_HTML_BLOCKED', 'BLOCK', sourcePath);
+        break;
+      }
+      index = declarationEnd + 1;
+      continue;
+    }
+
+    if (html[open + 1] === '!' || html[open + 1] === '?') {
+      addDiagnostic(state, 'P17_IMPORT_MALFORMED_HTML_BLOCKED', 'BLOCK', sourcePath);
+      index = open + 2;
+      continue;
+    }
+
+    const token = parseHtmlTag(html, open);
+    if (token === 'MALFORMED') {
+      addDiagnostic(state, 'P17_IMPORT_MALFORMED_HTML_BLOCKED', 'BLOCK', sourcePath);
+      index = open + 1;
+      continue;
+    }
+    if (token === null) {
+      index = open + 1;
+      continue;
+    }
+
+    index = token.nextIndex;
+    if (token.closing) continue;
+
+    if (token.name === 'script') {
+      addDiagnostic(state, 'P17_IMPORT_SCRIPT_ELEMENT_BLOCKED', 'BLOCK', sourcePath);
+    } else if (token.name === 'iframe' || token.name === 'object' || token.name === 'embed') {
+      addDiagnostic(state, 'P17_IMPORT_EMBEDDED_DOCUMENT_BLOCKED', 'BLOCK', sourcePath);
+    } else if (token.name === 'form') {
+      addDiagnostic(state, 'P17_IMPORT_FORM_SURFACE_BLOCKED', 'BLOCK', sourcePath);
+    } else if (token.name === 'base') {
+      addDiagnostic(state, 'P17_IMPORT_BASE_ELEMENT_BLOCKED', 'BLOCK', sourcePath);
+    }
+
+    scanHtmlAttributes(token, sourcePath, state);
+
+    if (token.name === 'style' || token.name === 'script' || token.name === 'textarea' || token.name === 'title') {
+      const closeIndex = findRawTextClose(lowerHtml, token.name, token.nextIndex);
+      if (closeIndex < 0) {
+        addDiagnostic(state, 'P17_IMPORT_MALFORMED_HTML_BLOCKED', 'BLOCK', sourcePath);
+        break;
+      }
+      if (token.name === 'style') {
+        scanCssContent(html.slice(token.nextIndex, closeIndex), sourcePath, state);
+      }
+      index = closeIndex;
+    }
+  }
 }
 
 function sortedDiagnostics(state: DiagnosticState): P17StaticImportDiagnostic[] {
