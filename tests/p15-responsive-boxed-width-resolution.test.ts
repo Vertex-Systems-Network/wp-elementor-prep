@@ -206,7 +206,7 @@ describe('P15 exact source-bound responsive container min-height resolution', ()
   it('fails closed for stale source/candidate replay and invalid entries', () => {
     const source = sourceDocument();
     const valid = manifest(source, [
-      { sourceNodeId: 'root', mobileBoxedWidthPx: 4 },
+      { sourceNodeId: 'root', mobileBoxedWidthPx: 700 },
     ]);
 
     const staleSource = resolveP15ElementorResponsiveContainerBoxedWidth(source, {
@@ -224,14 +224,14 @@ describe('P15 exact source-bound responsive container min-height resolution', ()
       .toContain('P15_RESPONSIVE_BOXED_WIDTH_BASE_CANDIDATE_IDENTITY_MISMATCH');
 
     const duplicate = resolveP15ElementorResponsiveContainerBoxedWidth(source, manifest(source, [
-      { sourceNodeId: 'root', mobileBoxedWidthPx: 1 },
-      { sourceNodeId: 'root', tabletBoxedWidthPx: 2 },
+      { sourceNodeId: 'root', mobileBoxedWidthPx: 700 },
+      { sourceNodeId: 'root', tabletBoxedWidthPx: 800 },
     ]));
     expect(duplicate.issues.map((issue) => issue.code))
       .toContain('P15_RESPONSIVE_BOXED_WIDTH_DUPLICATE_SOURCE_ID');
 
     const nonContainer = resolveP15ElementorResponsiveContainerBoxedWidth(source, manifest(source, [
-      { sourceNodeId: 'copy', mobileBoxedWidthPx: 1 },
+      { sourceNodeId: 'copy', mobileBoxedWidthPx: 700 },
     ]));
     expect(nonContainer.issues.map((issue) => issue.code))
       .toContain('P15_RESPONSIVE_BOXED_WIDTH_SOURCE_NOT_CONTAINER');
@@ -266,7 +266,7 @@ describe('P15 exact source-bound responsive container min-height resolution', ()
       ...manifest(source, []),
       containers: [{
         sourceNodeId: 'root',
-        mobileBoxedWidthPx: 4,
+        mobileBoxedWidthPx: 700,
         unit: 'vw',
       }],
     });
@@ -301,7 +301,7 @@ describe('P15 exact source-bound responsive container min-height resolution', ()
     ]);
 
     const source = sourceDocument();
-    const raw = manifest(source, [{ sourceNodeId: 'root', mobileBoxedWidthPx: 4 }]);
+    const raw = manifest(source, [{ sourceNodeId: 'root', mobileBoxedWidthPx: 700 }]);
     const inflated = resolveP15ElementorResponsiveContainerBoxedWidth(source, {
       ...raw,
       responsiveClosureClaim: true,
@@ -312,7 +312,7 @@ describe('P15 exact source-bound responsive container min-height resolution', ()
 
   it('serializes only sanitized boxed width metadata and refuses authority-inflated results', () => {
     const source = sourceDocument();
-    const raw = manifest(source, [{ sourceNodeId: 'root', mobileBoxedWidthPx: 4 }]);
+    const raw = manifest(source, [{ sourceNodeId: 'root', mobileBoxedWidthPx: 700 }]);
     const result = resolveP15ElementorResponsiveContainerBoxedWidth(source, raw);
     const serialized = serializeP15ElementorResponsiveBoxedWidthSummary(result);
 
@@ -321,7 +321,7 @@ describe('P15 exact source-bound responsive container min-height resolution', ()
     expect(serialized).not.toContain('"candidate"');
     expect(serialized).not.toContain('"template"');
     expect(serialized).toContain('"boxed_width_mobile"');
-    expect(serialized).toContain('"mobileBoxedWidthPx": 4');
+    expect(serialized).toContain('"mobileBoxedWidthPx": 700');
 
     const mutatedIssue = {
       ...resolveP15ElementorResponsiveContainerBoxedWidth(source, {
