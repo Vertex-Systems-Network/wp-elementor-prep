@@ -102,6 +102,7 @@ async function headingPresentInEditor(page, expectedText, timeoutMs) {
 const baseUrl = required('P15_BASE_URL').replace(/\/$/, '');
 const secondBaseUrl = required('P15_SECOND_BASE_URL').replace(/\/$/, '');
 const crossTargetExportPath = required('P15_CROSS_TARGET_EXPORT_PATH');
+const assetFixtureSha256 = required('P15_ASSET_FIXTURE_SHA256');
 const token = required('P15_PROOF_TOKEN');
 const vectorDir = required('P15_VECTOR_DIR');
 const assetVectorDir = required('P15_ASSET_VECTOR_DIR');
@@ -438,12 +439,13 @@ try {
 
   let assetProofEvidence = null;
   let assetProofFullPass = false;
+  let assetServer = null;
   try {
     await page.goto(baseUrl + '/?p15_asset_proof_observe=' + encodeURIComponent(token), {
       waitUntil: 'domcontentloaded',
       timeout: 60000,
     });
-    const assetServer = await bodyJson(page);
+    assetServer = await bodyJson(page);
     assetRaw.server = {
       schema: assetServer.schema,
       observedAt: assetServer.observedAt,
@@ -768,8 +770,8 @@ try {
       }
 
       const destinationIntegrity = destinationMedia?.contentIntegrity;
-      if (destinationIntegrity?.sourceFixtureSha256 !== process.env.P15_ASSET_FIXTURE_SHA256
-        || destinationIntegrity?.targetFileSha256 !== process.env.P15_ASSET_FIXTURE_SHA256
+      if (destinationIntegrity?.sourceFixtureSha256 !== assetFixtureSha256
+        || destinationIntegrity?.targetFileSha256 !== assetFixtureSha256
         || destinationIntegrity?.contentSha256Matches !== true
         || destinationIntegrity?.mimeType !== 'image/png'
         || Number(destinationIntegrity?.width || 0) <= 0
@@ -886,7 +888,7 @@ try {
         && crossTargetRaw.render.result === 'PASS'
         && destinationImageReferenceResult === 'PASS'
         && destinationBrowserImageLoadResult === 'PASS'
-        && destinationIntegrity.targetFileSha256 === process.env.P15_ASSET_FIXTURE_SHA256
+        && destinationIntegrity.targetFileSha256 === assetFixtureSha256
       );
     } catch (error) {
       crossTargetRaw.fatalError = error instanceof Error ? error.message : String(error);
