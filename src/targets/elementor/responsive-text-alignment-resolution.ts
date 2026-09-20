@@ -726,13 +726,13 @@ function validIssue(issue: P15ElementorResponsiveTextAlignmentIssueV1): boolean 
 }
 
 function validSummaryEntry(entry: P15ElementorResponsiveTextAlignmentSummaryEntryV1): boolean {
+  if (!isRecord(entry)) return false;
   const nodeKindValid = entry.nodeKind === 'heading' || entry.nodeKind === 'text';
   const tabletValid = entry.tabletAlign === null
     || (validAlignment(entry.tabletAlign) && (entry.nodeKind === 'text' || entry.tabletAlign !== 'justify'));
   const mobileValid = entry.mobileAlign === null
     || (validAlignment(entry.mobileAlign) && (entry.nodeKind === 'text' || entry.mobileAlign !== 'justify'));
-  return isRecord(entry)
-    && exactKeys(entry, ['mobileAlign', 'nodeKind', 'sourceNodeId', 'tabletAlign'])
+  return exactKeys(entry, ['mobileAlign', 'nodeKind', 'sourceNodeId', 'tabletAlign'])
     && validSourceNodeId(entry.sourceNodeId)
     && nodeKindValid
     && tabletValid
