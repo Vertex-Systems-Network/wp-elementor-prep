@@ -111,7 +111,7 @@ export interface P15ElementorResponsiveZIndexResultV1 {
   resolvedCandidateIdentityDigest: string | null;
   sourceContainerCount: number;
   resolvedContainerCount: number;
-  resolvedZIndexs: P15ElementorResponsiveZIndexSummaryEntryV1[];
+  resolvedZIndexes: P15ElementorResponsiveZIndexSummaryEntryV1[];
   issues: P15ElementorResponsiveZIndexIssueV1[];
   template: ElementorTemplateV04 | null;
   candidate: ElementorTemplateCandidateArtifactV1 | null;
@@ -217,7 +217,7 @@ function baseResult(
   baseCandidateIdentityDigest: string | null,
   resolvedCandidateIdentityDigest: string | null,
   sourceContainerCount: number,
-  resolvedZIndexs: P15ElementorResponsiveZIndexSummaryEntryV1[],
+  resolvedZIndexes: P15ElementorResponsiveZIndexSummaryEntryV1[],
   issues: P15ElementorResponsiveZIndexIssueV1[],
   template: ElementorTemplateV04 | null,
   candidate: ElementorTemplateCandidateArtifactV1 | null,
@@ -230,8 +230,8 @@ function baseResult(
     baseCandidateIdentityDigest,
     resolvedCandidateIdentityDigest,
     sourceContainerCount,
-    resolvedContainerCount: resolvedZIndexs.length,
-    resolvedZIndexs: resolvedZIndexs.map(cloneSummaryEntry),
+    resolvedContainerCount: resolvedZIndexes.length,
+    resolvedZIndexes: resolvedZIndexes.map(cloneSummaryEntry),
     issues: issues.map((issue) => ({ ...issue })),
     template,
     candidate,
@@ -572,7 +572,7 @@ export function resolveP15ElementorResponsiveContainerZIndex(
   }
 
   const resolvedIdentity = buildElementorTemplateCandidateIdentity(candidate);
-  const resolvedZIndexs = [...resolutions.values()]
+  const resolvedZIndexes = [...resolutions.values()]
     .map((entry) => ({
       sourceNodeId: entry.sourceNodeId,
       tabletZIndex: entry.tabletZIndex === undefined ? null : snapshotZIndex(entry.tabletZIndex),
@@ -586,7 +586,7 @@ export function resolveP15ElementorResponsiveContainerZIndex(
     baseIdentity.digest,
     resolvedIdentity.digest,
     sourceContainers.size,
-    resolvedZIndexs,
+    resolvedZIndexes,
     [],
     template,
     candidate,
@@ -625,9 +625,9 @@ export function serializeP15ElementorResponsiveZIndexSummary(
     && Number.isSafeInteger(result.resolvedContainerCount)
     && result.resolvedContainerCount >= 0
     && result.resolvedContainerCount <= result.sourceContainerCount
-    && result.resolvedContainerCount === result.resolvedZIndexs.length;
-  const uniqueIds = new Set(result.resolvedZIndexs.map((entry) => entry.sourceNodeId)).size
-    === result.resolvedZIndexs.length;
+    && result.resolvedContainerCount === result.resolvedZIndexes.length;
+  const uniqueIds = new Set(result.resolvedZIndexes.map((entry) => entry.sourceNodeId)).size
+    === result.resolvedZIndexes.length;
   const validSourceFingerprint = result.status === 'BLOCKED_INVALID_SOURCE_IR'
     ? result.sourceIrFingerprint === null
     : validFingerprint(result.sourceIrFingerprint);
@@ -656,7 +656,7 @@ export function serializeP15ElementorResponsiveZIndexSummary(
     || !validBaseDigest
     || !validResolvedDigest
     || !statusShapeValid
-    || !result.resolvedZIndexs.every(validSummaryEntry)
+    || !result.resolvedZIndexes.every(validSummaryEntry)
     || !result.issues.every(validIssue)
     || result.responsiveInferencePerformed !== false
     || result.figmaMutation !== false
@@ -678,7 +678,7 @@ export function serializeP15ElementorResponsiveZIndexSummary(
     resolvedCandidateIdentityDigest: result.resolvedCandidateIdentityDigest,
     sourceContainerCount: result.sourceContainerCount,
     resolvedContainerCount: result.resolvedContainerCount,
-    resolvedZIndexs: result.resolvedZIndexs.map(cloneSummaryEntry),
+    resolvedZIndexes: result.resolvedZIndexes.map(cloneSummaryEntry),
     issues: result.issues.map((issue) => ({ code: issue.code, path: issue.path })),
     evidence: P15_ELEMENTOR_RESPONSIVE_Z_INDEX_EVIDENCE,
     responsiveInferencePerformed: false,
