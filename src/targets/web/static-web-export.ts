@@ -330,7 +330,7 @@ function validLanguage(value: unknown): value is string {
 
 function validLinkHref(value: unknown): value is string {
   if (typeof value !== 'string' || value.length === 0 || value.length > P17_STATIC_WEB_MAX_URL_LENGTH) return false;
-  if (/[ -]/.test(value)) return false;
+  for (let index = 0; index < value.length; index += 1) { const code = value.charCodeAt(index); if (code <= 0x1f || code === 0x7f) return false; }
   if (value.startsWith('/') && !value.startsWith('//')) return true;
   if (value.startsWith('#')) return true;
   try {
