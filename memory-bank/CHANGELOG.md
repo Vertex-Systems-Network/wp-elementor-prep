@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 bounded responsive Container margin
+
+- Continued issue #591 through PR #592 as the next independently evidenced responsive slice after Button alignment.
+- Exact Elementor `4.2.4` Container blob `3486766b9565af99536ae205ed1936bb155daed0` registers `margin` as responsive `DIMENSIONS`; Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` establishes `margin_tablet` / `margin_mobile`, and Dimensions blob `7de34809d407e5fa208935b77a6b6648c72d3c5d` locks the four-side value shape.
+- The resolver is exact neutral-source + base-candidate bound and writes only explicit default-breakpoint margin keys for existing Container IDs.
+- Security boundary is intentionally narrower than Elementor's full control: only finite non-negative px numbers up to the existing neutral spacing maximum are accepted; negative margins, CSS strings, custom units, expressions and unit conversion fail closed. `isLinked` is derived from side equality.
+- Sanitized summaries omit source copy, template JSON and candidate bytes. No responsive inference, custom breakpoints, compatibility, production, generation/download, transfer, Figma mutation or network authority is introduced.
+
+
 ## 2026-09-20 — P15 exact responsive Button alignment
 
 - Continued issue #589 through PR #590 after #588 normalized Button desktop alignment into the exact Elementor target vocabulary.
