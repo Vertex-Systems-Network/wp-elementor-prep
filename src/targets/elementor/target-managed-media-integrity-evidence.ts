@@ -14,6 +14,7 @@ import {
   ELEMENTOR_CANDIDATE_IDENTITY_VERSION,
   type ElementorTemplateCandidateIdentityV1,
 } from './import-validation-contract';
+import { P15_ELEMENTOR_ASSET_PROOF_FIXTURE_SHA256 } from './asset-proof-vector';
 
 export const ELEMENTOR_TARGET_MANAGED_MEDIA_INTEGRITY_EVIDENCE_VERSION =
   'elementor-target-managed-media-integrity-evidence-v1' as const;
@@ -74,6 +75,7 @@ export type ElementorTargetManagedMediaIntegrityIssueCode =
   | 'P15_MEDIA_INTEGRITY_EVIDENCE_REFERENCE_INVALID'
   | 'P15_MEDIA_INTEGRITY_EVIDENCE_REFERENCE_MISMATCH'
   | 'P15_MEDIA_INTEGRITY_ATTACHMENT_INVALID'
+  | 'P15_MEDIA_INTEGRITY_SOURCE_FIXTURE_MISMATCH'
   | 'P15_MEDIA_INTEGRITY_CONTENT_MISMATCH'
   | 'P15_MEDIA_INTEGRITY_AUTHORITY_FLAGS_INVALID';
 
@@ -93,6 +95,7 @@ export interface ElementorTargetManagedMediaIntegrityValidationResultV1 {
   referenceReviewBindingMatches: boolean;
   observedTargetMatches: boolean;
   evidenceReferenceMatches: boolean;
+  sourceFixtureMatchesCanonical: boolean;
   contentDigestMatches: boolean;
   attachmentMetadataValid: boolean;
   sourceFixtureSha256: string | null;
@@ -256,6 +259,7 @@ export function validateElementorTargetManagedMediaIntegrityEvidence(
   let referenceReviewBindingMatches = false;
   let observedTargetMatches = false;
   let evidenceReferenceMatches = false;
+  let sourceFixtureMatchesCanonical = false;
   let contentDigestMatches = false;
   let attachmentMetadataValid = false;
   let sourceFixtureSha256: string | null = null;
@@ -385,10 +389,20 @@ export function validateElementorTargetManagedMediaIntegrityEvidence(
         message: 'Target-managed attachment must be an observed image/png attachment with positive bounded dimensions and SHA-256 digests.',
       });
     } else {
+      sourceFixtureMatchesCanonical =
+        attachment.sourceFixtureSha256 === P15_ELEMENTOR_ASSET_PROOF_FIXTURE_SHA256;
       contentDigestMatches = attachment.sourceFixtureSha256 === attachment.targetFileSha256;
     }
 
-    if (attachment.valid && !contentDigestMatches) {
+    if (attachment.valid && !sourceFixtureMatchesCanonical) {
+      issues.push({
+        code: 'P15_MEDIA_INTEGRITY_SOURCE_FIXTURE_MISMATCH',
+        path: '$.attachment.sourceFixtureSha256',
+        message: 'Integrity evidence is not bound to the exact deterministic controlled PNG fixture bytes.',
+      });
+    }
+
+    if (attachment.valid && sourceFixtureMatchesCanonical && !contentDigestMatches) {
       issues.push({
         code: 'P15_MEDIA_INTEGRITY_CONTENT_MISMATCH',
         path: '$.attachment.targetFileSha256',
@@ -421,6 +435,7 @@ export function validateElementorTargetManagedMediaIntegrityEvidence(
         && observedTargetMatches
         && evidenceReferenceMatches
         && attachmentMetadataValid
+        && sourceFixtureMatchesCanonical
         && !contentDigestMatches
       ? 'TARGET_MANAGED_CONTENT_INTEGRITY_FAIL'
       : 'REJECTED')
@@ -436,6 +451,7 @@ export function validateElementorTargetManagedMediaIntegrityEvidence(
     referenceReviewBindingMatches,
     observedTargetMatches,
     evidenceReferenceMatches,
+    sourceFixtureMatchesCanonical,
     contentDigestMatches,
     attachmentMetadataValid,
     sourceFixtureSha256,
