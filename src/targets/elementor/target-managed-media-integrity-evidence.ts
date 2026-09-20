@@ -52,6 +52,8 @@ export interface ElementorTargetManagedMediaIntegrityEvidenceV1 {
     width: number;
     height: number;
   };
+  referenceClosureClaim: false;
+  referenceClosureClaim: false;
   assetReferenceClosureClaim: false;
   acceptanceAuthority: false;
   targetCompatibilityClaim: false;
@@ -126,6 +128,7 @@ const EVIDENCE_KEYS = [
   'observedAt',
   'observedTarget',
   'productionAcceptance',
+  'referenceClosureClaim',
   'referenceReviewIdentity',
   'schemaVersion',
   'targetCompatibilityClaim',
@@ -410,7 +413,8 @@ export function validateElementorTargetManagedMediaIntegrityEvidence(
       });
     }
 
-    if (evidenceValue.assetReferenceClosureClaim !== false
+    if (evidenceValue.referenceClosureClaim !== false
+      || evidenceValue.assetReferenceClosureClaim !== false
       || evidenceValue.acceptanceAuthority !== false
       || evidenceValue.targetCompatibilityClaim !== false
       || evidenceValue.productionAcceptance !== false
@@ -460,6 +464,7 @@ export function validateElementorTargetManagedMediaIntegrityEvidence(
     width,
     height,
     issues,
+    referenceClosureClaim: false,
     assetReferenceClosureClaim: false,
     acceptanceAuthority: false,
     targetCompatibilityClaim: false,
