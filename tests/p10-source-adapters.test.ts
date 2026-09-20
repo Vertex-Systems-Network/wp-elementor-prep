@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, truncateSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, symlinkSync, truncateSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -131,6 +131,51 @@ describe('P10 source adapters', () => {
       code: 'UNSUPPORTED_FIG_LOCAL_FILE',
       exitCode: 2,
     });
+  });
+
+  it('loads a stable regular canonical snapshot file through the hardened local-file boundary', async () => {
+    const dir = mkdtempSync(join(process.cwd(), '.p10-snapshot-stable-'));
+    try {
+      const path = join(dir, 'snapshot.json');
+      const root = auditNodeFromFigmaRest(restFrame());
+      writeFileSync(path, JSON.stringify({
+        schemaVersion: 1,
+        capturedAt: '2026-09-20T00:00:00.000Z',
+        source: { kind: 'adapter-export', fileKey: 'stable-file', nodeId: root.id },
+        root,
+      }));
+
+      const snapshot = await loadCanonicalSnapshot(path);
+      expect(snapshot.schemaVersion).toBe(1);
+      expect(snapshot.source).toMatchObject({ kind: 'adapter-export', fileKey: 'stable-file' });
+      expect(snapshot.root.id).toBe(root.id);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it('rejects a symlinked canonical snapshot path instead of following its target', async () => {
+    const dir = mkdtempSync(join(process.cwd(), '.p10-snapshot-symlink-'));
+    try {
+      const target = join(dir, 'target.json');
+      const input = join(dir, 'snapshot.json');
+      const root = auditNodeFromFigmaRest(restFrame());
+      writeFileSync(target, JSON.stringify({
+        schemaVersion: 1,
+        capturedAt: '2026-09-20T00:00:00.000Z',
+        source: { kind: 'adapter-export' },
+        root,
+      }));
+      symlinkSync(target, input, 'file');
+
+      await expect(loadCanonicalSnapshot(input)).rejects.toMatchObject({
+        code: 'SNAPSHOT_READ_FAILED',
+        exitCode: 2,
+      });
+      await expect(loadCanonicalSnapshot(input)).rejects.toThrow(/regular non-symlink file/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   it('fails before reading canonical snapshot files above the raw byte ceiling', async () => {

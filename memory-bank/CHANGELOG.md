@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-20 — Canonical snapshot local-file hardening (#603)
+
+- Security audit found that `loadCanonicalSnapshot()` still streamed directly from an operator pathname, so symbolic links were followed and the stream was not bound to a stable opened-file identity/canonical path.
+- Canonical snapshot intake now requires a regular non-symlink pathname, opens once, streams from that exact file handle, and compares file identity/metadata plus canonical path before and after the bounded read.
+- The existing 64 MiB raw-byte ceiling, strict UTF-8/JSON validation and depth/value structural limits remain unchanged; file growth/drift fails closed.
+- Regression coverage locks stable regular-file loading and symbolic-link rejection. No Figma REST/network authority, schema or product compatibility behavior changed.
+
+
 ## 2026-09-20 — P15 raw-template pathname hardening (#601)
 
 - Security audit found that the intentional unbounded raw Elementor-template reader still used pathname `stat()` and could follow an operator-supplied symbolic link even though the main P15/P16 operator JSON boundary had already moved to non-symlink `lstat()` checks.
