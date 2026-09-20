@@ -56,6 +56,12 @@ describe('P10 npm CLI contract', () => {
     expect(cli).not.toContain("writeFile(resolve(outDir");
   });
 
+  it('rejects duplicate CLI flags and valued options instead of last-write-wins shadowing', () => {
+    expect(cli).toContain("CliError('DUPLICATE_OPTION'");
+    expect(cli).toContain('if (flags.has(rawKey))');
+    expect(cli).toContain('if (values.has(rawKey))');
+  });
+
   it('supports summary-only and CI fail thresholds without treating them as final product acceptance', () => {
     expect(cli).toContain("booleanFlags = new Set(['help', 'summary-only'])");
     expect(cli).toContain("--fail-on must be none, warning, or error");

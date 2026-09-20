@@ -9,6 +9,32 @@ function required(name) {
   return value;
 }
 
+function controlledLoopbackBaseUrl(name, value, expectedPort) {
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error(name + ' must be a valid controlled loopback URL.');
+  }
+  if (
+    url.protocol !== 'http:'
+    || url.hostname !== '127.0.0.1'
+    || url.port !== String(expectedPort)
+    || (url.pathname !== '/' && url.pathname !== '')
+    || url.username !== ''
+    || url.password !== ''
+    || url.search !== ''
+    || url.hash !== ''
+  ) {
+    throw new Error(name + ' must be exactly http://127.0.0.1:' + expectedPort + '.');
+  }
+  return 'http://127.0.0.1:' + expectedPort;
+}
+
+function proofUrl(baseUrl, key, token) {
+  return baseUrl + '/?' + key + '=' + encodeURIComponent(token);
+}
+
 function numericVersion(value) {
   const match = String(value).match(/(\d+(?:\.\d+){1,3})/);
   if (!match) throw new Error('Unable to extract numeric dotted version from: ' + value);
@@ -99,8 +125,8 @@ async function headingPresentInEditor(page, expectedText, timeoutMs) {
   return { present: false, frameUrl: '' };
 }
 
-const baseUrl = required('P15_BASE_URL').replace(/\/$/, '');
-const secondBaseUrl = required('P15_SECOND_BASE_URL').replace(/\/$/, '');
+const baseUrl = controlledLoopbackBaseUrl('P15_BASE_URL', required('P15_BASE_URL'), 8080);
+const secondBaseUrl = controlledLoopbackBaseUrl('P15_SECOND_BASE_URL', required('P15_SECOND_BASE_URL'), 8082);
 const crossTargetExportPath = required('P15_CROSS_TARGET_EXPORT_PATH');
 const assetFixtureSha256 = required('P15_ASSET_FIXTURE_SHA256');
 const token = required('P15_PROOF_TOKEN');
@@ -201,7 +227,7 @@ try {
   });
   page = await context.newPage();
 
-  await page.goto(baseUrl + '/?p15_proof_observe=' + encodeURIComponent(token), {
+  await page.goto(proofUrl(baseUrl, 'p15_proof_observe', token), {
     waitUntil: 'domcontentloaded',
     timeout: 60000,
   });
@@ -255,7 +281,7 @@ try {
   await writeJson(join(outDir, 'environment-evidence.json'), environmentEvidence);
 
   try {
-    await page.goto(server.editorLoginUrl, {
+    await page.goto(proofUrl(baseUrl, 'p15_proof_login', token), {
       waitUntil: 'domcontentloaded',
       timeout: 90000,
     });
@@ -292,7 +318,7 @@ try {
 
   if (raw.editor.result === 'PASS') {
     try {
-      await page.goto(server.renderUrl, {
+      await page.goto(proofUrl(baseUrl, 'p15_proof_render', token), {
         waitUntil: 'networkidle',
         timeout: 90000,
       });
@@ -441,7 +467,7 @@ try {
   let assetProofFullPass = false;
   let assetServer = null;
   try {
-    await page.goto(baseUrl + '/?p15_asset_proof_observe=' + encodeURIComponent(token), {
+    await page.goto(proofUrl(baseUrl, 'p15_asset_proof_observe', token), {
       waitUntil: 'domcontentloaded',
       timeout: 60000,
     });
@@ -510,7 +536,7 @@ try {
       throw new Error('Asset import did not retain exact source provenance into target-managed media.');
     }
 
-    await page.goto(assetServer.renderUrl, {
+    await page.goto(proofUrl(baseUrl, 'p15_asset_proof_render', token), {
       waitUntil: 'networkidle',
       timeout: 90000,
     });
@@ -676,7 +702,7 @@ try {
   if (assetProofFullPass && assetProofEvidence) {
     try {
       const exportResponse = await context.request.get(
-        baseUrl + '/?p15_asset_proof_export=' + encodeURIComponent(token),
+        proofUrl(baseUrl, 'p15_asset_proof_export', token),
         { timeout: 60000 },
       );
       if (!exportResponse.ok()) {
@@ -709,7 +735,7 @@ try {
         targetManagedMediaUrlFingerprint: assetProofEvidence.steps.targetManagedMediaUrlFingerprint,
       };
 
-      await page.goto(secondBaseUrl + '/?p15_cross_target_observe=' + encodeURIComponent(token), {
+      await page.goto(proofUrl(secondBaseUrl, 'p15_cross_target_observe', token), {
         waitUntil: 'domcontentloaded',
         timeout: 90000,
       });
@@ -779,7 +805,7 @@ try {
         throw new Error('Target-B attachment content integrity does not match the canonical controlled PNG.');
       }
 
-      await page.goto(destinationServer.renderUrl, {
+      await page.goto(proofUrl(secondBaseUrl, 'p15_cross_target_render', token), {
         waitUntil: 'networkidle',
         timeout: 90000,
       });

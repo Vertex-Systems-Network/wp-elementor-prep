@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-20 — Security boundary hardening (#579)
+
+- deep-audited current repository trust boundaries after P15 #578, including CI permissions/action pinning, Figma REST credential/response handling, operator filesystem I/O, disposable WordPress/Elementor proof endpoints and retained proof artifacts;
+- bound the P15 browser proof token to exact controlled loopback origins `http://127.0.0.1:8080` and `http://127.0.0.1:8082` before any token-bearing navigation;
+- stopped the disposable proof bridge from reflecting token-bearing render/login URLs and added pre-upload retained-artifact token redaction plus a fail-closed absence check;
+- removed pre-rename destination unlinking from shared CLI/script atomic output writers so supported replacement uses a direct same-directory rename without an unlink/rename race gap;
+- changed the main P10 CLI parser from duplicate-option last-write-wins behavior to deterministic `DUPLICATE_OPTION` rejection;
+- added security regression contracts for proof-token containment, output replacement and duplicate CLI options;
+- repository-admin main branch/ruleset enforcement remains separately tracked in #287 and is not claimed fixed by repository code.
+
+
 ## 2026-09-20 — P15 wrap-conditioned responsive container align-content
 
 - Continued issue #577 through draft PR #578 after #576 established exact default-breakpoint wrap overrides.

@@ -497,6 +497,56 @@ jobs:
           cp "$P15_PROOF_OUT_DIR/php-server-target-b.log" \
             "$P15_PROOF_OUT_DIR/php-server-target-b-final.log" 2>/dev/null || true
 
+      - name: Sanitize retained proof diagnostics
+        if: always()
+        run: |
+          set -euo pipefail
+
+          for pid_file in \
+            "$RUNNER_TEMP/p15-php-server.pid" \
+            "$RUNNER_TEMP/p15-php-server-target-b.pid" \
+            "$RUNNER_TEMP/p15-asset-fixture-server.pid"; do
+            if [ -f "$pid_file" ]; then
+              kill "$(cat "$pid_file")" 2>/dev/null || true
+            fi
+          done
+
+          P15_RETAINED_ARTIFACT_ROOT="$GITHUB_WORKSPACE/dist-p15" \
+          P15_REDACTION_TOKEN="$P15_PROOF_TOKEN" \
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          root = Path(os.environ["P15_RETAINED_ARTIFACT_ROOT"])
+          token = os.environ["P15_REDACTION_TOKEN"].encode("utf-8")
+          replacement = b"[REDACTED_P15_PROOF_TOKEN]"
+
+          if not token:
+              raise SystemExit("P15 retained-artifact sanitizer received an empty proof token.")
+
+          redacted = []
+          for path in root.rglob("*"):
+              if not path.is_file():
+                  continue
+              payload = path.read_bytes()
+              if token in payload:
+                  path.write_bytes(payload.replace(token, replacement))
+                  redacted.append(path.relative_to(root).as_posix())
+
+          offenders = []
+          for path in root.rglob("*"):
+              if path.is_file() and token in path.read_bytes():
+                  offenders.append(path.relative_to(root).as_posix())
+
+          if offenders:
+              print("P15 proof-token redaction failed for retained artifact files:", file=os.sys.stderr)
+              for path in offenders:
+                  print(path, file=os.sys.stderr)
+              raise SystemExit(1)
+
+          print(f"P15 retained-artifact sanitizer redacted {len(redacted)} file(s); exact proof token absent.")
+          PY
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: always()
         with:

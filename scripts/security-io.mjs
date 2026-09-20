@@ -344,7 +344,8 @@ export async function writeAtomicTextFile(outputPath, content) {
       if (error?.code !== 'ENOENT') throw error;
     }
 
-    await rm(target, { force: true });
+    // Replace the destination directly with the same-directory temporary payload.
+    // Do not unlink first: that would create an avoidable race window.
     await rename(tempPath, target);
     return target;
   } finally {

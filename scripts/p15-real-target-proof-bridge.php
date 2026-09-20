@@ -665,7 +665,6 @@ function p15_proof_template_redirect() {
                 'templateType' => $asset_template_id ? get_post_meta( $asset_template_id, '_elementor_template_type', true ) : '',
                 'templateSha256' => get_option( 'p15_asset_proof_template_sha256', '' ),
                 'importedMedia' => p15_asset_proof_imported_media_observation( $asset_template_id ),
-                'renderUrl' => home_url( '/?p15_asset_proof_render=' . rawurlencode( p15_proof_env_value( 'P15_PROOF_TOKEN' ) ) ),
             ),
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         );
@@ -708,7 +707,6 @@ function p15_proof_template_redirect() {
                 'templateType' => $cross_template_id ? get_post_meta( $cross_template_id, '_elementor_template_type', true ) : '',
                 'exportedTemplateSha256' => get_option( 'p15_cross_target_export_sha256', '' ),
                 'importedMedia' => p15_cross_target_imported_media_observation( $cross_template_id ),
-                'renderUrl' => home_url( '/?p15_cross_target_render=' . rawurlencode( p15_proof_env_value( 'P15_PROOF_TOKEN' ) ) ),
             ),
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         );
@@ -777,8 +775,6 @@ function p15_proof_template_redirect() {
                 'templateTitle' => $template_id ? get_the_title( $template_id ) : '',
                 'templateType' => $template_id ? get_post_meta( $template_id, '_elementor_template_type', true ) : '',
                 'templateSha256' => get_option( 'p15_proof_template_sha256', '' ),
-                'renderUrl' => home_url( '/?p15_proof_render=' . rawurlencode( p15_proof_env_value( 'P15_PROOF_TOKEN' ) ) ),
-                'editorLoginUrl' => home_url( '/?p15_proof_login=' . rawurlencode( p15_proof_env_value( 'P15_PROOF_TOKEN' ) ) ),
                 'editorUrl' => admin_url( 'post.php?post=' . $template_id . '&action=elementor' ),
             ),
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES

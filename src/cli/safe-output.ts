@@ -51,9 +51,9 @@ export async function writeAtomicOutputFile(
       if (code !== 'ENOENT') throw error;
     }
 
-    // rm() unlinks the directory entry itself. For symlinks/hardlinks this does
-    // not write through to the linked target/inode before the atomic rename.
-    await rm(target, { force: true });
+    // Same-directory rename replaces an existing non-directory entry atomically on
+    // supported filesystems. Avoid unlinking first, which would create a replacement
+    // gap where another process could race a new destination entry into place.
     await rename(tempPath, target);
   } finally {
     if (handle) {

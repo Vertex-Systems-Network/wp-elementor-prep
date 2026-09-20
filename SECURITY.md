@@ -24,6 +24,8 @@ The Figma Community core is intentionally offline and keeps `networkAccess.allow
 
 Generated target artifacts, CI success, local validation, and AI analysis do not by themselves grant runtime, import, compatibility, mutation, or production authority. Runtime evidence must follow the repository's retained evidence contracts.
 
+Disposable controlled-target proof credentials are ephemeral security material. The P15 proof browser may send its token only to the exact loopback origins declared by the proof harness, bridge observations must not reflect token-bearing navigation URLs, and retained proof artifacts/logs must be sanitized and verified token-free before upload.
+
 ## AI-specific security reports
 
 The current deterministic core must not silently gain connected-model authority or provider credential handling. Treat the following as security-relevant and report them through the same private vulnerability path:
