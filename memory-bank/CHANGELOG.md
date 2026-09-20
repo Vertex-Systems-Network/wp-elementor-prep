@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 exact responsive Button alignment
+
+- Continued issue #589 through PR #590 after #588 normalized Button desktop alignment into the exact Elementor target vocabulary.
+- Exact Elementor `4.2.4` Button Trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5` registers responsive `align` with target values `left|center|right|justify`; the retained Controls Stack suffix contract establishes `align_tablet` / `align_mobile`.
+- Added an exact neutral-source + base-candidate-bound manifest for existing neutral Button source IDs only; stale source/candidate bindings, duplicate/non-Button IDs, malformed values, existing override conflicts and generator binding drift fail closed.
+- Normalized desktop Button `align` from #588 is preserved exactly; only explicitly supplied default tablet/mobile keys are written and omitted breakpoints remain absent.
+- Sanitized summaries omit source copy, template JSON and candidate bytes. No responsive inference, custom breakpoints, responsive closure, compatibility, production, generation/download, transfer, Figma mutation or network authority is introduced.
+
+
 ## 2026-09-20 — P15 Button target-alignment vocabulary correction
 
 - Follow-up audit while preparing responsive Button work found that exact Elementor `4.2.4` Button Trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5` accepts Button `align` values `left|center|right|justify`, while the current generator emitted neutral `start|end` directly.
