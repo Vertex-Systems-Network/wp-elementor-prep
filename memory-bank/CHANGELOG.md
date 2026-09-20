@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — Runtime artifact descriptor-read hardening (#607)
+
+- Security audit found that runtime artifact preflight checked required-file/archive size before open but then used whole-descriptor reads, so growth after validation could exceed configured byte ceilings before the limit was enforced.
+- Required files and supplied archives now read from the already-open descriptor through a bounded max+1 probe, failing closed before accepting bytes beyond the configured ceiling.
+- After a bounded read, the opened descriptor and pathname are revalidated with `fstat` / `lstat`; symlink replacement, identity or metadata drift fails closed.
+- Deterministic regression tests grow a required runtime file and supplied archive during the descriptor read and verify the configured limits remain authoritative.
+- Existing pre-open symlink/identity checks, immutable SHA-256 pins, archive digest semantics, strict UTF-8/JSON/resource limits and product authority remain unchanged.
+
+
 ## 2026-09-20 — Credentialed Figma REST redirect hardening (#605)
 
 - Security audit found that the fixed `https://api.figma.com` adapter still relied on Fetch's default redirect-following behavior while attaching OAuth Authorization or personal `X-Figma-Token` credentials.

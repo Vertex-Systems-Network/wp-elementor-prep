@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { closeSync, existsSync, fstatSync, lstatSync, openSync, readFileSync } from 'node:fs';
+import { closeSync, existsSync, fstatSync, lstatSync, openSync, readFileSync, readSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -126,6 +126,32 @@ function sameFileIdentity(before, opened) {
     && before.ctimeMs === opened.ctimeMs;
 }
 
+function readBoundedDescriptor(fd, maxBytes, readSyncImpl = readSync) {
+  const chunks = [];
+  let totalBytes = 0;
+  const scratch = Buffer.allocUnsafe(Math.min(64 * 1024, Math.max(1, maxBytes + 1)));
+
+  while (true) {
+    const remainingProbe = maxBytes - totalBytes + 1;
+    const bytesRead = readSyncImpl(
+      fd,
+      scratch,
+      0,
+      Math.min(scratch.byteLength, Math.max(1, remainingProbe)),
+      null
+    );
+    if (bytesRead === 0) {
+      return { bytes: Buffer.concat(chunks, totalBytes), exceeded: false };
+    }
+
+    totalBytes += bytesRead;
+    if (totalBytes > maxBytes) {
+      return { bytes: null, exceeded: true };
+    }
+    chunks.push(Buffer.from(scratch.subarray(0, bytesRead)));
+  }
+}
+
 function readRequiredFile(
   dir,
   name,
@@ -135,7 +161,7 @@ function readRequiredFile(
     lstatSyncImpl = lstatSync,
     openSyncImpl = openSync,
     fstatSyncImpl = fstatSync,
-    readFileSyncImpl = readFileSync,
+    readSyncImpl = readSync,
     closeSyncImpl = closeSync
   },
   maxBytes = RUNTIME_ARTIFACT_MAX_FILE_BYTES
@@ -170,7 +196,20 @@ function readRequiredFile(
     } else if (!sameFileIdentity(metadata, openedMetadata)) {
       errors.push(`Required artifact file changed between validation and open: ${name}`);
     } else {
-      bytes = readFileSyncImpl(fd);
+      const bounded = readBoundedDescriptor(fd, maxBytes, readSyncImpl);
+      if (bounded.exceeded) {
+        errors.push(`Required artifact file exceeds ${maxBytes}-byte limit during read: ${name}`);
+      } else {
+        const after = fstatSyncImpl(fd);
+        const finalPathMetadata = lstatSyncImpl(path);
+        if (!after.isFile() || !finalPathMetadata.isFile() || finalPathMetadata.isSymbolicLink()) {
+          errors.push(`Required artifact file changed while it was being read: ${name}`);
+        } else if (!sameFileIdentity(openedMetadata, after) || !sameFileIdentity(after, finalPathMetadata)) {
+          errors.push(`Required artifact file changed while it was being read: ${name}`);
+        } else {
+          bytes = bounded.bytes;
+        }
+      }
     }
   } catch (error) {
     errors.push(`Required artifact file could not be opened safely: ${name}: ${error.message}`);
@@ -195,7 +234,7 @@ function readArtifactArchive(
     lstatSyncImpl = lstatSync,
     openSyncImpl = openSync,
     fstatSyncImpl = fstatSync,
-    readFileSyncImpl = readFileSync,
+    readSyncImpl = readSync,
     closeSyncImpl = closeSync
   },
   maxBytes = RUNTIME_ARTIFACT_MAX_ARCHIVE_BYTES
@@ -230,7 +269,20 @@ function readArtifactArchive(
     } else if (!sameFileIdentity(metadata, openedMetadata)) {
       errors.push(`Artifact archive changed between validation and open: ${path}`);
     } else {
-      bytes = readFileSyncImpl(fd);
+      const bounded = readBoundedDescriptor(fd, maxBytes, readSyncImpl);
+      if (bounded.exceeded) {
+        errors.push(`Artifact archive exceeds ${maxBytes}-byte limit during read: ${path}`);
+      } else {
+        const after = fstatSyncImpl(fd);
+        const finalPathMetadata = lstatSyncImpl(path);
+        if (!after.isFile() || !finalPathMetadata.isFile() || finalPathMetadata.isSymbolicLink()) {
+          errors.push(`Artifact archive changed while it was being read: ${path}`);
+        } else if (!sameFileIdentity(openedMetadata, after) || !sameFileIdentity(after, finalPathMetadata)) {
+          errors.push(`Artifact archive changed while it was being read: ${path}`);
+        } else {
+          bytes = bounded.bytes;
+        }
+      }
     }
   } catch (error) {
     errors.push(`Artifact archive could not be opened safely: ${path}: ${error.message}`);
@@ -262,7 +314,7 @@ export function inspectRuntimeArtifact(
     lstatSyncImpl = lstatSync,
     openSyncImpl = openSync,
     fstatSyncImpl = fstatSync,
-    readFileSyncImpl = readFileSync,
+    readSyncImpl = readSync,
     closeSyncImpl = closeSync,
     maxRequiredFileBytes = RUNTIME_ARTIFACT_MAX_FILE_BYTES,
     maxManifestBytes = RUNTIME_ARTIFACT_MAX_MANIFEST_BYTES,
@@ -299,7 +351,7 @@ export function inspectRuntimeArtifact(
     return { ok: false, track: normalizedTrack, intent, artifactDir: dir, errors: [`Artifact directory does not exist: ${dir}`], warnings };
   }
 
-  const fileOps = { existsSyncImpl, lstatSyncImpl, openSyncImpl, fstatSyncImpl, readFileSyncImpl, closeSyncImpl };
+  const fileOps = { existsSyncImpl, lstatSyncImpl, openSyncImpl, fstatSyncImpl, readSyncImpl, closeSyncImpl };
   const expectedArchiveSha256 = normalizeExpectedSha256(track.digest);
   const archiveIntegrity = {
     supplied: Boolean(archivePath),
