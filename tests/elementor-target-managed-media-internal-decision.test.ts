@@ -44,7 +44,7 @@ afterEach(() => {
   for (const dir of tempDirs.splice(0)) rmSync(dir, { recursive: true, force: true });
 });
 
-function sha256(value: string | Buffer): string {
+function sha256(value: string): string {
   return `sha256:${sha256Hex(value)}`;
 }
 
