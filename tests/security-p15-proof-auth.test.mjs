@@ -12,8 +12,11 @@ describe('P15 proof bearer-token security', () => {
     expect(bridge).toContain("'1' === $action");
     expect(bridge).not.toContain("sanitize_text_field( wp_unslash( $_GET[ $key ] ) )");
 
-    expect(browser).toContain("'X-P15-Proof-Token': token");
+    expect(browser).toContain("'x-p15-proof-token': token");
+    expect(browser).toContain("headers: { 'X-P15-Proof-Token': token }");
     expect(browser).toContain("return baseUrl + '/?' + key + '=1';");
+    expect(browser).toContain('async function gotoProof(page, url, token, options)');
+    expect(browser).not.toContain('extraHTTPHeaders');
     expect(browser).not.toMatch(/proofUrl\([^\n]*token/);
 
     expect(workflow).toContain('-H "X-P15-Proof-Token: $P15_PROOF_TOKEN"');
