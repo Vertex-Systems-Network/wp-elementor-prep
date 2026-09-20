@@ -116,6 +116,7 @@ const report = {
     assetProofSha256: proofFile.contentSha256,
     integrityEvidenceSha256: integrityFile.contentSha256,
   },
+  referenceClosureClaim: false,
   assetReferenceClosureClaim: false,
   acceptanceAuthority: false,
   targetCompatibilityClaim: false,
