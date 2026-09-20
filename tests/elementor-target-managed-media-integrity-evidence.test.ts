@@ -9,6 +9,7 @@ import {
   type ElementorAssetTargetProofStepsV1,
 } from '../src/targets/elementor/asset-target-proof-evidence';
 import {
+  P15_ELEMENTOR_ASSET_PROOF_FIXTURE_SHA256,
   P15_ELEMENTOR_ASSET_PROOF_FIXTURE_URL,
   buildP15ElementorAssetProofVector,
 } from '../src/targets/elementor/asset-proof-vector';
@@ -21,7 +22,7 @@ import {
 import { buildElementorTargetProfile } from '../src/targets/elementor/target-profile';
 
 const tempDirs: string[] = [];
-const SOURCE_SHA = 'sha256:' + '7'.repeat(64);
+const SOURCE_SHA = P15_ELEMENTOR_ASSET_PROOF_FIXTURE_SHA256;
 const TARGET_MEDIA_URL_SHA = 'sha256:' + '8'.repeat(64);
 const EVIDENCE_REFERENCE = 'retained-evidence://p15/media-integrity-private';
 
@@ -123,6 +124,7 @@ describe('P15 target-managed media content-integrity evidence', () => {
     expect(result.referenceReviewBindingMatches).toBe(true);
     expect(result.observedTargetMatches).toBe(true);
     expect(result.evidenceReferenceMatches).toBe(true);
+    expect(result.sourceFixtureMatchesCanonical).toBe(true);
     expect(result.contentDigestMatches).toBe(true);
     expect(result.attachmentMetadataValid).toBe(true);
     expect(result.mimeType).toBe('image/png');
@@ -139,6 +141,26 @@ describe('P15 target-managed media content-integrity evidence', () => {
       proof,
     );
     expect(JSON.parse(serialized)).toEqual(evidence);
+  });
+
+  it('rejects wrong-but-equal source/target digests that are not the canonical fixture bytes', () => {
+    const { vector, candidate, proof, evidence } = fixture();
+    evidence.attachment.sourceFixtureSha256 = 'sha256:' + '6'.repeat(64);
+    evidence.attachment.targetFileSha256 = evidence.attachment.sourceFixtureSha256;
+
+    const result = validateElementorTargetManagedMediaIntegrityEvidence(
+      evidence,
+      candidate,
+      vector.profile,
+      proof,
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.classification).toBe('REJECTED');
+    expect(result.sourceFixtureMatchesCanonical).toBe(false);
+    expect(result.contentDigestMatches).toBe(true);
+    expect(result.issues.map((issue) => issue.code))
+      .toContain('P15_MEDIA_INTEGRITY_SOURCE_FIXTURE_MISMATCH');
   });
 
   it('classifies exact-bound byte mismatch as genuine integrity FAIL', () => {
@@ -280,6 +302,7 @@ describe('P15 target-managed media content-integrity evidence', () => {
     const reportText = readFileSync(outPath, 'utf8');
     const report = JSON.parse(reportText);
     expect(report.classification).toBe('TARGET_MANAGED_CONTENT_INTEGRITY_PASS');
+    expect(report.sourceFixtureMatchesCanonical).toBe(true);
     expect(report.contentDigestMatches).toBe(true);
     expect(report.sourceFixtureSha256).toBe(SOURCE_SHA);
     expect(report.targetFileSha256).toBe(SOURCE_SHA);
