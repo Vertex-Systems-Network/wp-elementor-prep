@@ -599,6 +599,7 @@ try {
         width: contentIntegrity.width,
         height: contentIntegrity.height,
       },
+      referenceClosureClaim: false,
       assetReferenceClosureClaim: false,
       acceptanceAuthority: false,
       targetCompatibilityClaim: false,
