@@ -14,7 +14,7 @@ concurrency:
 jobs:
   real-target-proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     services:
       mariadb:
@@ -65,6 +65,8 @@ jobs:
           echo "P15_ASSET_TEMPLATE_SHA256=$(jq -r '.fileSha256.template' dist-p15/p15-elementor-asset-proof-vector-v1/manifest.json)" >> "$GITHUB_ENV"
           echo "P15_PROOF_OUT_DIR=$GITHUB_WORKSPACE/dist-p15/p15-real-target-proof" >> "$GITHUB_ENV"
           echo "P15_BASE_URL=http://127.0.0.1:8080" >> "$GITHUB_ENV"
+          echo "P15_SECOND_BASE_URL=http://127.0.0.1:8082" >> "$GITHUB_ENV"
+          echo "P15_CROSS_TARGET_EXPORT_PATH=$RUNNER_TEMP/p15-target-a-managed-media-export.json" >> "$GITHUB_ENV"
 
       - name: Install PHP runtime extensions
         run: |
@@ -139,7 +141,7 @@ jobs:
             sleep 1
           done
 
-          nohup php -S 127.0.0.1:8080 -t "$WP_ROOT" \
+          P15_TARGET_ROLE=A nohup php -S 127.0.0.1:8080 -t "$WP_ROOT" \
             > "$P15_PROOF_OUT_DIR/php-server.log" 2>&1 &
           echo $! > "$RUNNER_TEMP/p15-php-server.pid"
 
@@ -241,6 +243,125 @@ jobs:
             and (.importedMedia.mediaUrlFingerprint | test("^sha256:[0-9a-f]{64}$"))
           ' "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
 
+
+      - name: Provision fresh second WordPress 6.8 and Elementor 4.2.4 target
+        run: |
+          set -euo pipefail
+
+          rm -f "$P15_CROSS_TARGET_EXPORT_PATH"
+
+          P15_DB_HOST=127.0.0.1 P15_DB_PORT=3306 P15_DB_ROOT_PASSWORD=root php -r '
+          $pdo = new PDO(
+              "mysql:host=" . getenv("P15_DB_HOST") . ";port=" . getenv("P15_DB_PORT"),
+              "root",
+              getenv("P15_DB_ROOT_PASSWORD"),
+              array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+          );
+          $pdo->exec("DROP DATABASE IF EXISTS wordpress_b");
+          $pdo->exec("CREATE DATABASE wordpress_b CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+          $pdo->exec("GRANT ALL PRIVILEGES ON wordpress_b.* TO \\'wordpress\\'@\\'%\\' IDENTIFIED BY \\'wordpress\\'");
+          $pdo->exec("FLUSH PRIVILEGES");
+          '
+
+          WP_ROOT_B="$RUNNER_TEMP/p15-wordpress-b"
+          EXTRACT_B="$RUNNER_TEMP/p15-wordpress-b-extract"
+          rm -rf "$WP_ROOT_B" "$EXTRACT_B"
+          mkdir -p "$EXTRACT_B"
+          tar -xzf "$RUNNER_TEMP/wordpress-6.8.tar.gz" -C "$EXTRACT_B"
+          mv "$EXTRACT_B/wordpress" "$WP_ROOT_B"
+          rm -rf "$EXTRACT_B"
+
+          cat > "$WP_ROOT_B/wp-config.php" <<'PHP'
+          <?php
+          define( 'DB_NAME', 'wordpress_b' );
+          define( 'DB_USER', 'wordpress' );
+          define( 'DB_PASSWORD', 'wordpress' );
+          define( 'DB_HOST', '127.0.0.1:3306' );
+          define( 'DB_CHARSET', 'utf8mb4' );
+          define( 'DB_COLLATE', '' );
+          define( 'AUTH_KEY', 'p15-proof-b-auth-key' );
+          define( 'SECURE_AUTH_KEY', 'p15-proof-b-secure-auth-key' );
+          define( 'LOGGED_IN_KEY', 'p15-proof-b-logged-in-key' );
+          define( 'NONCE_KEY', 'p15-proof-b-nonce-key' );
+          define( 'AUTH_SALT', 'p15-proof-b-auth-salt' );
+          define( 'SECURE_AUTH_SALT', 'p15-proof-b-secure-auth-salt' );
+          define( 'LOGGED_IN_SALT', 'p15-proof-b-logged-in-salt' );
+          define( 'NONCE_SALT', 'p15-proof-b-nonce-salt' );
+          define( 'WP_MEMORY_LIMIT', '256M' );
+          define( 'WP_MAX_MEMORY_LIMIT', '256M' );
+          define( 'WP_DEBUG', false );
+          define( 'DISABLE_WP_CRON', true );
+          define( 'WP_HOME', 'http://127.0.0.1:8082' );
+          define( 'WP_SITEURL', 'http://127.0.0.1:8082' );
+          $table_prefix = 'wp_';
+          if ( ! defined( 'ABSPATH' ) ) {
+              define( 'ABSPATH', __DIR__ . '/' );
+          }
+          require_once ABSPATH . 'wp-settings.php';
+          PHP
+
+          unzip -q "$RUNNER_TEMP/elementor.4.2.4.zip" -d "$WP_ROOT_B/wp-content/plugins"
+          mkdir -p "$WP_ROOT_B/wp-content/plugins/p15-real-target-proof-bridge"
+          cp scripts/p15-real-target-proof-bridge.php \
+            "$WP_ROOT_B/wp-content/plugins/p15-real-target-proof-bridge/p15-real-target-proof-bridge.php"
+
+          P15_TARGET_ROLE=B P15_CROSS_TARGET_EXPORT_PATH="$P15_CROSS_TARGET_EXPORT_PATH" \
+            nohup php -S 127.0.0.1:8082 -t "$WP_ROOT_B" \
+            > "$P15_PROOF_OUT_DIR/php-server-target-b.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/p15-php-server-target-b.pid"
+
+          for attempt in $(seq 1 40); do
+            if curl --fail --silent --show-error \
+              http://127.0.0.1:8082/wp-admin/install.php \
+              > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          ADMIN_PASSWORD_B="$(openssl rand -hex 24)"
+          curl --fail --silent --show-error --location \
+            --request POST \
+            --data-urlencode "weblog_title=P15 Cross Target B" \
+            --data-urlencode "user_name=p15proofadminb" \
+            --data-urlencode "admin_password=$ADMIN_PASSWORD_B" \
+            --data-urlencode "admin_password2=$ADMIN_PASSWORD_B" \
+            --data-urlencode "admin_email=p15-proof-b@example.invalid" \
+            --data-urlencode "blog_public=0" \
+            --data-urlencode "Submit=Install WordPress" \
+            "http://127.0.0.1:8082/wp-admin/install.php?step=2" \
+            -o "$P15_PROOF_OUT_DIR/wordpress-target-b-install-response.html"
+
+          P15_TARGET_ROLE=B P15_CROSS_TARGET_EXPORT_PATH="$P15_CROSS_TARGET_EXPORT_PATH" \
+            P15_WP_ROOT="$WP_ROOT_B" php -r '
+          require getenv("P15_WP_ROOT") . "/wp-load.php";
+          require_once ABSPATH . "wp-admin/includes/plugin.php";
+          foreach ( array(
+              "elementor/elementor.php",
+              "p15-real-target-proof-bridge/p15-real-target-proof-bridge.php",
+          ) as $plugin ) {
+              if ( ! is_plugin_active( $plugin ) ) {
+                  $result = activate_plugin( $plugin, "", false, false );
+                  if ( is_wp_error( $result ) ) {
+                      fwrite( STDERR, "P15 target-B activation failed for " . $plugin . ": " . $result->get_error_message() . PHP_EOL );
+                      exit( 2 );
+                  }
+              }
+          }
+          $kit_id = (int) get_option( "elementor_active_kit", 0 );
+          if ( $kit_id <= 0 ) {
+              fwrite( STDERR, "Target-B Elementor activation did not create a default kit." . PHP_EOL );
+              exit( 3 );
+          }
+          if ( get_option( "p15_asset_proof_import_done" ) ) {
+              fwrite( STDERR, "Target-B must not pre-import the original asset proof vector." . PHP_EOL );
+              exit( 4 );
+          }
+          fwrite( STDOUT, "target_b_elementor_active_kit=" . $kit_id . PHP_EOL );
+          '
+
+          test ! -e "$P15_CROSS_TARGET_EXPORT_PATH"
+
       - name: Resolve policy-supported Chrome
         run: |
           set -euo pipefail
@@ -270,6 +391,7 @@ jobs:
           OBSERVED_ASSET_REFERENCE_CODE=99
           MEDIA_INTEGRITY_CODE=99
           MEDIA_REVIEW_PREREQUISITE_CODE=99
+          MEDIA_PORTABILITY_CODE=99
 
           if [ -f "$P15_PROOF_OUT_DIR/environment-evidence.json" ]; then
             npm run p15:elementor-target-environment-intake -- \
@@ -335,6 +457,21 @@ jobs:
             MEDIA_REVIEW_PREREQUISITE_CODE=$?
           fi
 
+          if [ -f "$P15_PROOF_OUT_DIR/asset-proof-evidence.json" ] \
+            && [ -f "$P15_PROOF_OUT_DIR/asset-content-integrity-evidence.json" ] \
+            && [ -f "$P15_PROOF_OUT_DIR/cross-target-media-portability-evidence.json" ] \
+            && [ -f "$P15_CROSS_TARGET_EXPORT_PATH" ]; then
+            npm run p15:target-managed-media-portability -- \
+              --candidate "$P15_ASSET_VECTOR_DIR/candidate.json" \
+              --profile "$P15_ASSET_VECTOR_DIR/target-profile.json" \
+              --asset-proof "$P15_PROOF_OUT_DIR/asset-proof-evidence.json" \
+              --integrity-evidence "$P15_PROOF_OUT_DIR/asset-content-integrity-evidence.json" \
+              --exported-template "$P15_CROSS_TARGET_EXPORT_PATH" \
+              --portability-evidence "$P15_PROOF_OUT_DIR/cross-target-media-portability-evidence.json" \
+              --out "$P15_PROOF_OUT_DIR/cross-target-media-portability-intake.json"
+            MEDIA_PORTABILITY_CODE=$?
+          fi
+
           echo "P15_ENV_INTAKE_CODE=$ENV_CODE" >> "$GITHUB_ENV"
           echo "P15_PROOF_INTAKE_CODE=$PROOF_CODE" >> "$GITHUB_ENV"
           echo "P15_CHAIN_INTAKE_CODE=$CHAIN_CODE" >> "$GITHUB_ENV"
@@ -342,6 +479,7 @@ jobs:
           echo "P15_OBSERVED_ASSET_REFERENCE_CODE=$OBSERVED_ASSET_REFERENCE_CODE" >> "$GITHUB_ENV"
           echo "P15_MEDIA_INTEGRITY_CODE=$MEDIA_INTEGRITY_CODE" >> "$GITHUB_ENV"
           echo "P15_MEDIA_REVIEW_PREREQUISITE_CODE=$MEDIA_REVIEW_PREREQUISITE_CODE" >> "$GITHUB_ENV"
+          echo "P15_MEDIA_PORTABILITY_CODE=$MEDIA_PORTABILITY_CODE" >> "$GITHUB_ENV"
           exit 0
 
       - name: Retain server diagnostics
@@ -350,6 +488,8 @@ jobs:
           set +e
           cp "$P15_PROOF_OUT_DIR/php-server.log" \
             "$P15_PROOF_OUT_DIR/php-server-final.log" 2>/dev/null || true
+          cp "$P15_PROOF_OUT_DIR/php-server-target-b.log" \
+            "$P15_PROOF_OUT_DIR/php-server-target-b-final.log" 2>/dev/null || true
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: always()
@@ -372,6 +512,7 @@ jobs:
           test "$P15_OBSERVED_ASSET_REFERENCE_CODE" = "0"
           test "$P15_MEDIA_INTEGRITY_CODE" = "0"
           test "$P15_MEDIA_REVIEW_PREREQUISITE_CODE" = "0"
+          test "$P15_MEDIA_PORTABILITY_CODE" = "0"
 
           jq -e '.classification == "QUALIFIED_FOR_BOUND_TARGET_PROOF"' \
             "$P15_PROOF_OUT_DIR/environment-intake.json"
@@ -409,3 +550,11 @@ jobs:
             "$P15_PROOF_OUT_DIR/asset-media-review-prerequisite.json"
           jq -e '.authenticationAuthority == false and .acceptanceAuthority == false and .referenceClosureClaim == false and .assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false and .generationEnabled == false and .downloadEnabled == false and .internalReviewRequired == true' \
             "$P15_PROOF_OUT_DIR/asset-media-review-prerequisite.json"
+
+          jq -e '.classification == "CONTROLLED_CROSS_TARGET_MEDIA_PORTABILITY_PASS" and .evidenceValid == true and .reviewPrerequisiteReady == true and .exportBindingMatches == true and .sourceTargetMatches == true and .destinationTargetMatches == true and .evidenceReferenceMatches == true and .sourceProvenanceMatches == true and .destinationMediaBindingMatches == true and .contentIntegrityMatches == true and .destinationManagedMediaTargetLocal == true' \
+            "$P15_PROOF_OUT_DIR/cross-target-media-portability-intake.json"
+          jq -e '.sourceFixtureSha256 == "sha256:65cbaae5caf987301a644dbad6b783476a2e39b2980425a0c57a6505a1c7e5a8" and .targetFileSha256 == .sourceFixtureSha256 and .mimeType == "image/png" and (.width > 0) and (.height > 0)' \
+            "$P15_PROOF_OUT_DIR/cross-target-media-portability-intake.json"
+          jq -e '.internalDecisionStatus == "NOT_RUN" and .authenticationAuthority == false and .acceptanceAuthority == false and .referenceClosureClaim == false and .assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false and .generationEnabled == false and .downloadEnabled == false and .internalReviewRequired == true' \
+            "$P15_PROOF_OUT_DIR/cross-target-media-portability-intake.json"
+          test ! -f "$P15_PROOF_OUT_DIR/p15-target-a-managed-media-export.json"
