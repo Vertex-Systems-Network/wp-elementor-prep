@@ -88,6 +88,7 @@ function fixture() {
       width: 2,
       height: 2,
     },
+    referenceClosureClaim: false,
     assetReferenceClosureClaim: false,
     acceptanceAuthority: false,
     targetCompatibilityClaim: false,
@@ -130,6 +131,7 @@ describe('P15 target-managed media content-integrity evidence', () => {
     expect(result.mimeType).toBe('image/png');
     expect(result.width).toBe(2);
     expect(result.height).toBe(2);
+    expect(result.referenceClosureClaim).toBe(false);
     expect(result.assetReferenceClosureClaim).toBe(false);
     expect(result.targetCompatibilityClaim).toBe(false);
     expect(result.productionAcceptance).toBe(false);
@@ -262,7 +264,7 @@ describe('P15 target-managed media content-integrity evidence', () => {
 
     const inflated = {
       ...fixture().evidence,
-      assetReferenceClosureClaim: true,
+      referenceClosureClaim: true,
     };
     const inflation = validateElementorTargetManagedMediaIntegrityEvidence(
       inflated,
