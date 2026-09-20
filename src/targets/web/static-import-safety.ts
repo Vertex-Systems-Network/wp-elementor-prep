@@ -378,6 +378,55 @@ function stripQuotes(value: string): string {
   return trimmed;
 }
 
+function explicitScheme(value: string): string | null | 'INVALID' {
+  const colon = value.indexOf(':');
+  if (colon < 0) return null;
+
+  const slash = value.indexOf('/');
+  const query = value.indexOf('?');
+  const fragment = value.indexOf('#');
+  const earlierBoundary = [slash, query, fragment]
+    .filter((index) => index >= 0)
+    .some((index) => index < colon);
+  if (earlierBoundary) return null;
+
+  const candidate = value.slice(0, colon);
+  if (!/^[A-Za-z][A-Za-z0-9+.-]*$/.test(candidate)) return 'INVALID';
+  return candidate.toLowerCase();
+}
+
+function classifyNavigationHref(
+  rawValue: string,
+  sourcePath: string,
+  state: DiagnosticState,
+): void {
+  const value = stripQuotes(rawValue);
+  if (value.length === 0) return;
+
+  if (value.startsWith('//')) {
+    addDiagnostic(state, 'P17_IMPORT_REMOTE_RESOURCE_BLOCKED', 'BLOCK', sourcePath);
+    return;
+  }
+
+  const scheme = explicitScheme(value);
+  if (scheme === 'INVALID') {
+    addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
+    return;
+  }
+
+  if (scheme !== null) {
+    if (scheme === 'http' || scheme === 'https' || scheme === 'mailto' || scheme === 'tel') return;
+    addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
+    return;
+  }
+
+  const pathOnly = value.split(/[?#]/, 1)[0] ?? '';
+  if (pathOnly.includes('\\') || pathOnly.includes('%')
+    || pathOnly.split('/').some((segment) => segment === '..')) {
+    addDiagnostic(state, 'P17_IMPORT_RESOURCE_TRAVERSAL_BLOCKED', 'BLOCK', sourcePath);
+  }
+}
+
 function classifyResourceValue(
   rawValue: string,
   sourcePath: string,
@@ -385,36 +434,49 @@ function classifyResourceValue(
   localResourceIsReview: boolean,
 ): void {
   const value = stripQuotes(rawValue);
-  const lower = value.toLowerCase();
+  if (value.length === 0) return;
 
-  if (lower.startsWith('javascript:') || lower.startsWith('vbscript:')) {
-    addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
-    return;
-  }
-
-  if (lower.startsWith('data:')) {
-    if (lower.startsWith('data:text/html')
-      || lower.startsWith('data:application/javascript')
-      || lower.startsWith('data:text/javascript')) {
-      addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
-    } else {
-      addDiagnostic(state, 'P17_IMPORT_DATA_RESOURCE_REVIEW', 'REVIEW', sourcePath);
-    }
-    return;
-  }
-
-  if (lower.startsWith('http://') || lower.startsWith('https://') || lower.startsWith('//')) {
+  if (value.startsWith('//')) {
     addDiagnostic(state, 'P17_IMPORT_REMOTE_RESOURCE_BLOCKED', 'BLOCK', sourcePath);
     return;
   }
 
-  if (lower.startsWith('/')) {
+  if (value.startsWith('/')) {
     addDiagnostic(state, 'P17_IMPORT_ROOT_RESOURCE_REVIEW', 'REVIEW', sourcePath);
     return;
   }
 
+  const scheme = explicitScheme(value);
+  if (scheme === 'INVALID') {
+    addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
+    return;
+  }
+
+  if (scheme !== null) {
+    if (scheme === 'data') {
+      const mediaType = value.slice(value.indexOf(':') + 1).split(/[;,]/, 1)[0]?.trim().toLowerCase() ?? '';
+      if (mediaType === 'text/html'
+        || mediaType === 'application/javascript'
+        || mediaType === 'text/javascript') {
+        addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
+      } else {
+        addDiagnostic(state, 'P17_IMPORT_DATA_RESOURCE_REVIEW', 'REVIEW', sourcePath);
+      }
+      return;
+    }
+
+    if (scheme === 'http' || scheme === 'https') {
+      addDiagnostic(state, 'P17_IMPORT_REMOTE_RESOURCE_BLOCKED', 'BLOCK', sourcePath);
+      return;
+    }
+
+    addDiagnostic(state, 'P17_IMPORT_EXECUTABLE_URL_BLOCKED', 'BLOCK', sourcePath);
+    return;
+  }
+
   const pathOnly = value.split(/[?#]/, 1)[0] ?? '';
-  if (pathOnly.split('/').some((segment) => segment === '..')) {
+  if (pathOnly.includes('\\') || pathOnly.includes('%')
+    || pathOnly.split('/').some((segment) => segment === '..')) {
     addDiagnostic(state, 'P17_IMPORT_RESOURCE_TRAVERSAL_BLOCKED', 'BLOCK', sourcePath);
     return;
   }
