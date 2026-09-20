@@ -26,7 +26,7 @@ Generated target artifacts, CI success, local validation, and AI analysis do not
 
 Disposable controlled-target proof credentials are ephemeral security material. The P15 proof browser may send its token only to the exact loopback origins declared by the proof harness, generated proof credentials must be registered with the CI log masker before persistence into the Actions environment, bridge observations must not reflect token-bearing navigation URLs, and retained proof artifacts/logs must be sanitized and verified token-free before upload.
 
-Operator-supplied P15/P16 evidence inputs are local trust-boundary data. Supported JSON intake paths must remain regular non-symlink files through read and pre-commit revalidation; bounded size/structure, strict UTF-8, stable file identity, canonical-path binding and content-digest checks fail closed on drift. The separately intentional unbounded P15 raw Elementor-template reader follows the same non-symlink pathname rule while retaining its distinct resource-policy contract.
+Operator-supplied local JSON inputs are trust-boundary data. P15/P16 evidence paths and canonical snapshot paths must remain regular non-symlink files through their read boundary; bounded inputs use byte/structure limits, strict UTF-8, stable opened-file identity and canonical-path checks that fail closed on drift. The separately intentional unbounded P15 raw Elementor-template reader follows the same non-symlink pathname rule while retaining its distinct resource-policy contract.
 
 ## AI-specific security reports
 
