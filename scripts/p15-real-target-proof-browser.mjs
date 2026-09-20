@@ -70,21 +70,28 @@ async function bodyJson(page) {
 }
 
 async function handleElementorOnboarding(page) {
-  const onboardingRoute = page.url().includes('page=elementor-app')
-    && page.url().includes('onboarding');
+  const interceptedUrl = page.url();
+  const onboardingRoute = interceptedUrl.includes('page=elementor-app')
+    && interceptedUrl.includes('onboarding');
   const skip = page.getByText('Skip', { exact: true });
-  const skipCount = await skip.count();
 
-  if (!onboardingRoute && skipCount === 0) {
-    return { result: 'NOT_NEEDED', interceptedUrl: page.url(), finalUrl: page.url() };
+  if (!onboardingRoute && await skip.count() === 0) {
+    return { result: 'NOT_NEEDED', interceptedUrl, finalUrl: interceptedUrl };
   }
-  if (skipCount === 0) {
-    throw new Error('Elementor onboarding intercepted the editor but the Skip control was unavailable.');
+
+  if (await skip.count() === 0) {
+    try {
+      await skip.first().waitFor({ state: 'visible', timeout: 15000 });
+    } catch {
+      throw new Error(
+        'Elementor onboarding intercepted the editor but the exact Skip control did not become visible within 15000 ms.',
+      );
+    }
   }
 
   await skip.first().click({ timeout: 15000 });
   await page.waitForTimeout(1500);
-  return { result: 'SKIPPED', interceptedUrl: page.url(), finalUrl: page.url() };
+  return { result: 'SKIPPED', interceptedUrl, finalUrl: page.url() };
 }
 
 function collectImageUrls(elements, urls = []) {
