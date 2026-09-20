@@ -59,6 +59,7 @@ function parseArgs(argv: string[]): ParsedArgs {
 
     if (booleanFlags.has(rawKey)) {
       if (equals >= 0) throw new CliError('INVALID_ARGUMENT', `--${rawKey} does not take a value.`);
+      if (flags.has(rawKey)) throw new CliError('DUPLICATE_OPTION', `Duplicate option: --${rawKey}.`);
       flags.add(rawKey);
       continue;
     }
@@ -68,6 +69,7 @@ function parseArgs(argv: string[]): ParsedArgs {
     if (!nextValue || (inlineValue === undefined && nextValue.startsWith('--'))) {
       throw new CliError('MISSING_ARGUMENT_VALUE', `--${rawKey} requires a value.`);
     }
+    if (values.has(rawKey)) throw new CliError('DUPLICATE_OPTION', `Duplicate option: --${rawKey}.`);
     values.set(rawKey, nextValue);
     if (inlineValue === undefined) index += 1;
   }
