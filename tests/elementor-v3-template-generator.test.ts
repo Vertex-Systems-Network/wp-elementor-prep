@@ -5,6 +5,7 @@ import {
   type P15NeutralExportDocumentV1,
 } from '../src/targets/elementor/neutral-export-ir';
 import {
+  P15_ELEMENTOR_BUTTON_ALIGNMENT_EVIDENCE,
   P15_ELEMENTOR_V3_GENERATOR_VERSION,
   generateElementorV3TemplateCandidate,
   serializeP15ElementorV3GenerationResult,
@@ -110,7 +111,7 @@ describe('P15 V1 neutral export IR and Elementor v3 generator', () => {
       widgetType: 'button',
       settings: {
         text: 'Start now',
-        align: 'start',
+        align: 'left',
         link: { url: '/start', is_external: '', nofollow: '', custom_attributes: '' },
       },
     }));
@@ -119,6 +120,45 @@ describe('P15 V1 neutral export IR and Elementor v3 generator', () => {
       widgetType: 'image',
       settings: { image: { id: 42, url: 'https://example.com/hero.webp' } },
     }));
+  });
+
+  it('maps neutral Button alignment into the exact Elementor 4.2.4 target vocabulary', () => {
+    expect(P15_ELEMENTOR_BUTTON_ALIGNMENT_EVIDENCE).toEqual({
+      elementorVersion: '4.2.4',
+      sourcePath: 'includes/widgets/traits/button-trait.php',
+      sourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5',
+      controlName: 'align',
+      targetValues: ['left', 'center', 'right', 'justify'],
+    });
+
+    const input = fixture();
+    const root = input.nodes[0];
+    if (!root || root.kind !== 'container') throw new Error('fixture invariant');
+    const copy = root.children[0];
+    if (!copy || copy.kind !== 'container') throw new Error('fixture invariant');
+    const button = copy.children[1];
+    if (!button || button.kind !== 'button') throw new Error('fixture invariant');
+
+    const start = generateElementorV3TemplateCandidate(input);
+    const startButton = start.template?.content[0]?.elements[0]?.elements[1];
+    expect(startButton && startButton.elType === 'widget' ? startButton.settings : null)
+      .toEqual(expect.objectContaining({ align: 'left' }));
+
+    button.align = 'center';
+    const center = generateElementorV3TemplateCandidate(input);
+    const centerButton = center.template?.content[0]?.elements[0]?.elements[1];
+    expect(centerButton && centerButton.elType === 'widget' ? centerButton.settings : null)
+      .toEqual(expect.objectContaining({ align: 'center' }));
+
+    button.align = 'end';
+    const end = generateElementorV3TemplateCandidate(input);
+    const endButton = end.template?.content[0]?.elements[0]?.elements[1];
+    expect(endButton && endButton.elType === 'widget' ? endButton.settings : null)
+      .toEqual(expect.objectContaining({ align: 'right' }));
+
+    const endSettings = endButton && endButton.elType === 'widget' ? endButton.settings : null;
+    expect(endSettings).not.toEqual(expect.objectContaining({ align: 'start' }));
+    expect(endSettings).not.toEqual(expect.objectContaining({ align: 'end' }));
   });
 
   it('derives stable unique ids and byte-identical output for the same neutral input', () => {
