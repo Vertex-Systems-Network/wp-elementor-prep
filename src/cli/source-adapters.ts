@@ -1,5 +1,5 @@
 import type { Stats } from 'node:fs';
-import { lstat, open, realpath } from 'node:fs/promises';
+import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import type { AuditNode, LayoutMode } from '../core/types';
 import { isGenericLayerName, normalizeLayoutMode } from '../core/scanner';
@@ -290,7 +290,7 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
     );
   }
 
-  let handle;
+  let handle: FileHandle;
   try {
     handle = await open(absolute, 'r');
   } catch {
