@@ -123,6 +123,7 @@ jobs:
           printf '%s' 'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFElEQVR42mNkYPj/n4GBgYGJAQoAHgQCAH6Jx6QAAAAASUVORK5CYII=' \
             | base64 --decode > "$ASSET_FIXTURE_DIR/p15-asset-fixture.png"
           P15_ASSET_FIXTURE_SHA256_VALUE="sha256:$(sha256sum "$ASSET_FIXTURE_DIR/p15-asset-fixture.png" | awk '{print $1}')"
+          test "$P15_ASSET_FIXTURE_SHA256_VALUE" = "sha256:65cbaae5caf987301a644dbad6b783476a2e39b2980425a0c57a6505a1c7e5a8"
           export P15_ASSET_FIXTURE_SHA256="$P15_ASSET_FIXTURE_SHA256_VALUE"
           echo "P15_ASSET_FIXTURE_SHA256=$P15_ASSET_FIXTURE_SHA256_VALUE" >> "$GITHUB_ENV"
           nohup python3 -m http.server 8081 --bind 127.0.0.1 --directory "$ASSET_FIXTURE_DIR" \
@@ -383,7 +384,7 @@ jobs:
           jq -e '.evidence.evidenceAuthenticationStatus == "OBSERVED_PROOF_VALIDATED" and .evidence.internalDecisionStatus == "NOT_RUN" and .authenticationAuthority == false and .referenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false' \
             "$P15_PROOF_OUT_DIR/observed-asset-reference-evidence.json"
 
-          jq -e '.classification == "TARGET_MANAGED_CONTENT_INTEGRITY_PASS" and .evidenceValid == true and .assetProofValid == true and .assetProofClassification == "ASSET_BOUND_FULL_PASS" and .candidateBindingMatches == true and .profileBindingMatches == true and .referenceReviewBindingMatches == true and .observedTargetMatches == true and .evidenceReferenceMatches == true and .contentDigestMatches == true and .attachmentMetadataValid == true' \
+          jq -e '.classification == "TARGET_MANAGED_CONTENT_INTEGRITY_PASS" and .evidenceValid == true and .assetProofValid == true and .assetProofClassification == "ASSET_BOUND_FULL_PASS" and .candidateBindingMatches == true and .profileBindingMatches == true and .referenceReviewBindingMatches == true and .observedTargetMatches == true and .evidenceReferenceMatches == true and .sourceFixtureMatchesCanonical == true and .contentDigestMatches == true and .attachmentMetadataValid == true' \
             "$P15_PROOF_OUT_DIR/asset-content-integrity-intake.json"
           jq -e '.mimeType == "image/png" and (.width > 0) and (.height > 0) and .assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false' \
             "$P15_PROOF_OUT_DIR/asset-content-integrity-intake.json"
