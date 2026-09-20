@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 exact-bound managed-media internal decision contract
+
+- Continued issue #573 through draft PR #574 after the exact #570 internal-review prerequisite and #572 controlled cross-target portability proof.
+- Added versioned `elementor-target-managed-media-internal-decision-v1` plus a sanitized intake CLI. It recomputes `READY_FOR_INTERNAL_REVIEW`, revalidates `CONTROLLED_CROSS_TARGET_MEDIA_PORTABILITY_PASS`, then validates only an explicit operator-supplied bounded APPROVE / REJECT / DEFER record.
+- Decision records are exact-bound to candidate identity, TargetProfile fingerprint, deterministic review-prerequisite SHA-256, exact consumed portability-evidence SHA-256, exported-template SHA-256 and retained evidence-reference SHA-256. The opaque decision reference is emitted only as SHA-256.
+- Stale profile/candidate/evidence/export bindings, changed portability bytes, pre-evidence decision timestamps, malformed references and authority-boundary inflation fail closed. Sanitized output omits raw evidence references, raw media URLs, exported template content, filesystem paths and numeric attachment IDs.
+- Synthetic tests exercise all outcomes, including bounded APPROVE, but repository/CI/runtime does not create a real approval. The retained runtime evidence remains `internalDecisionStatus=NOT_RUN` until a separate explicit operator record is supplied.
+- A valid explicit APPROVE can set only the bounded asset-reference closure claim for the exact reviewed chain. Global reference closure, arbitrary-host/general media portability, attachment-ID portability, target compatibility, production acceptance, generation and download authority remain false.
+
 ## 2026-09-20 — P15 controlled cross-target managed-media portability
 
 - Continued issue #571 through draft PR #572 after the exact `READY_FOR_INTERNAL_REVIEW` prerequisite in #570.
