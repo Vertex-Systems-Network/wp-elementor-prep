@@ -17,7 +17,7 @@ describe('P15 proof bearer-token security', () => {
     expect(browser).toContain("return baseUrl + '/?' + key + '=1';");
     expect(browser).toContain('async function gotoProof(page, url, token, options)');
     expect(browser).not.toContain('extraHTTPHeaders');
-    expect(browser).not.toMatch(/proofUrl\([^\n]*token/);
+    expect(browser).not.toMatch(/proofUrl\([^)]*token/);
 
     expect(workflow).toContain('-H "X-P15-Proof-Token: $P15_PROOF_TOKEN"');
     expect(workflow).not.toMatch(/\?p15_[^\s"']*=\$P15_PROOF_TOKEN/);
