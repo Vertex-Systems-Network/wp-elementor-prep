@@ -116,6 +116,9 @@ function fixture() {
     internalReviewRequired: true,
   };
 
+  if (typeof candidate.templateJson !== 'string') {
+    throw new Error('Asset proof candidate must retain template JSON.');
+  }
   const exportedTemplate = JSON.parse(candidate.templateJson) as Record<string, unknown>;
   expect(replaceImageUrl(exportedTemplate.content, SOURCE_MANAGED_URL)).toBe(true);
   const exportedRaw = JSON.stringify(exportedTemplate, null, 2) + '\n';
