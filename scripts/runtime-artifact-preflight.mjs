@@ -161,7 +161,6 @@ function readRequiredFile(
     lstatSyncImpl = lstatSync,
     openSyncImpl = openSync,
     fstatSyncImpl = fstatSync,
-    readFileSyncImpl = readFileSync,
     readSyncImpl = readSync,
     closeSyncImpl = closeSync
   },
@@ -235,7 +234,6 @@ function readArtifactArchive(
     lstatSyncImpl = lstatSync,
     openSyncImpl = openSync,
     fstatSyncImpl = fstatSync,
-    readFileSyncImpl = readFileSync,
     readSyncImpl = readSync,
     closeSyncImpl = closeSync
   },
@@ -316,7 +314,6 @@ export function inspectRuntimeArtifact(
     lstatSyncImpl = lstatSync,
     openSyncImpl = openSync,
     fstatSyncImpl = fstatSync,
-    readFileSyncImpl = readFileSync,
     readSyncImpl = readSync,
     closeSyncImpl = closeSync,
     maxRequiredFileBytes = RUNTIME_ARTIFACT_MAX_FILE_BYTES,
@@ -354,7 +351,7 @@ export function inspectRuntimeArtifact(
     return { ok: false, track: normalizedTrack, intent, artifactDir: dir, errors: [`Artifact directory does not exist: ${dir}`], warnings };
   }
 
-  const fileOps = { existsSyncImpl, lstatSyncImpl, openSyncImpl, fstatSyncImpl, readFileSyncImpl, readSyncImpl, closeSyncImpl };
+  const fileOps = { existsSyncImpl, lstatSyncImpl, openSyncImpl, fstatSyncImpl, readSyncImpl, closeSyncImpl };
   const expectedArchiveSha256 = normalizeExpectedSha256(track.digest);
   const archiveIntegrity = {
     supplied: Boolean(archivePath),
