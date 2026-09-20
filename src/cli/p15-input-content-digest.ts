@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { Stats } from 'node:fs';
 import type { FileHandle } from 'node:fs/promises';
-import { open, realpath, stat } from 'node:fs/promises';
+import { lstat, open, realpath } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 export type P15StableContentObservation = {
@@ -57,7 +57,7 @@ async function digestHandle(handle: FileHandle): Promise<string> {
  * Stream-hash one current input through an opened file handle without loading the file into
  * memory a second time. Path/canonical identity and file metadata are checked around the hash
  * so replacement/retarget races fail closed before the caller compares the digest to retained
- * read-time evidence.
+ * read-time evidence. The pathname itself must remain a regular non-symlink entry throughout.
  */
 export async function observeP15StableInputContent(
   path: string,
@@ -65,9 +65,9 @@ export async function observeP15StableInputContent(
   const resolvedPath = resolve(path);
   let handle: FileHandle | null = null;
   try {
-    const canonicalBefore = await realpath(resolvedPath);
-    const pathBefore = await stat(resolvedPath);
+    const pathBefore = await lstat(resolvedPath);
     if (!pathBefore.isFile()) return null;
+    const canonicalBefore = await realpath(resolvedPath);
 
     handle = await open(resolvedPath, 'r');
     const handleBefore = await handle.stat();
@@ -79,7 +79,7 @@ export async function observeP15StableInputContent(
 
     const [canonicalAfter, pathAfter] = await Promise.all([
       realpath(resolvedPath),
-      stat(resolvedPath),
+      lstat(resolvedPath),
     ]);
     if (!pathAfter.isFile()) return null;
     if (comparisonPath(canonicalBefore) !== comparisonPath(canonicalAfter)) return null;
