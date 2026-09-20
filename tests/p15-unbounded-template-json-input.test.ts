@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -32,7 +32,7 @@ describe('P15 unbounded template JSON input path safety', () => {
     expect(snapshot.raw).toBe(raw);
     expect(snapshot.value).toEqual({ version: '0.4', title: 'Stable fixture' });
     expect(snapshot.resolvedPath).toBe(input);
-    expect(snapshot.canonicalPath).toBe(input);
+    expect(snapshot.canonicalPath).toBe(realpathSync(input));
     expect(snapshot.file.size).toBe(Buffer.byteLength(raw));
     expect(snapshot.contentSha256).toMatch(/^sha256:[0-9a-f]{64}$/);
   });
