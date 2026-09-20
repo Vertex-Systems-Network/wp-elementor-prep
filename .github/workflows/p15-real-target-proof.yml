@@ -259,7 +259,13 @@ jobs:
           );
           $pdo->exec("DROP DATABASE IF EXISTS wordpress_b");
           $pdo->exec("CREATE DATABASE wordpress_b CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-          $pdo->exec("GRANT ALL PRIVILEGES ON wordpress_b.* TO \\'wordpress\\'@\\'%\\' IDENTIFIED BY \\'wordpress\\'");
+          $quote = chr(39);
+          $pdo->exec(
+              "GRANT ALL PRIVILEGES ON wordpress_b.* TO "
+              . $quote . "wordpress" . $quote
+              . "@" . $quote . "%" . $quote
+              . " IDENTIFIED BY " . $quote . "wordpress" . $quote
+          );
           $pdo->exec("FLUSH PRIVILEGES");
           '
 
