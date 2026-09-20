@@ -661,6 +661,7 @@ async function fetchJson(url: string, options: FigmaRestOptions): Promise<Record
   try {
     const response = await fetcher(url, {
       headers: authHeaders(options.token, options.authMode),
+      redirect: 'error',
       signal: controller.signal,
     });
 
