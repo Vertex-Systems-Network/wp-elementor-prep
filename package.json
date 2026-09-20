@@ -42,7 +42,8 @@
     "p15:elementor-asset-target-proof-intake": "node scripts/p15-elementor-asset-target-proof-intake.mjs",
     "p15:observed-asset-reference-evidence": "node scripts/p15-observed-asset-reference-evidence.mjs",
     "p15:target-managed-media-integrity": "node scripts/p15-target-managed-media-integrity-intake.mjs",
-    "p15:target-managed-media-review-prerequisite": "node scripts/p15-target-managed-media-review-prerequisite.mjs"
+    "p15:target-managed-media-review-prerequisite": "node scripts/p15-target-managed-media-review-prerequisite.mjs",
+    "p15:target-managed-media-portability": "node scripts/p15-target-managed-media-portability-intake.mjs"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.117.0",
