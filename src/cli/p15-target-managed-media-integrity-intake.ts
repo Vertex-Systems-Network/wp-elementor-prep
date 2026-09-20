@@ -101,6 +101,7 @@ const report = {
   referenceReviewBindingMatches: validation.referenceReviewBindingMatches,
   observedTargetMatches: validation.observedTargetMatches,
   evidenceReferenceMatches: validation.evidenceReferenceMatches,
+  sourceFixtureMatchesCanonical: validation.sourceFixtureMatchesCanonical,
   contentDigestMatches: validation.contentDigestMatches,
   attachmentMetadataValid: validation.attachmentMetadataValid,
   sourceFixtureSha256: validation.sourceFixtureSha256,
@@ -136,6 +137,7 @@ process.stdout.write(`${JSON.stringify({
   classification: report.classification,
   evidenceValid: report.evidenceValid,
   assetProofClassification: report.assetProofClassification,
+  sourceFixtureMatchesCanonical: report.sourceFixtureMatchesCanonical,
   contentDigestMatches: report.contentDigestMatches,
   attachmentMetadataValid: report.attachmentMetadataValid,
 }, null, 2)}\n`);
