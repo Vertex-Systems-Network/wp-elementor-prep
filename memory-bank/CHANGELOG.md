@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 controlled cross-target managed-media portability
+
+- Continued issue #571 through draft PR #572 after the exact `READY_FOR_INTERNAL_REVIEW` prerequisite in #570.
+- Added versioned `elementor-target-managed-media-portability-evidence-v1` plus a sanitized intake that recomputes the existing managed-media review prerequisite from the exact candidate/TargetProfile/asset-proof/integrity inputs before considering portability.
+- The disposable real-target harness now keeps Target A on WordPress `6.8` + Elementor `4.2.4`, exports the already-imported asset template through Elementor's real local-template export path only after managed-media/source-provenance/content-integrity checks, SHA-256 binds the exact exported JSON bytes, and keeps those raw bytes under the runner temporary directory rather than uploaded proof artifacts.
+- A fresh second WordPress `6.8` + Elementor `4.2.4` target is provisioned with a separate database and site URL. It must import those exact Target-A JSON bytes through Elementor's real local-template import path, prove the imported image source provenance matches Target A's managed-media URL fingerprint, create a distinct Target-B-local managed-media URL, preserve canonical PNG digest `sha256:65cbaae5caf987301a644dbad6b783476a2e39b2980425a0c57a6505a1c7e5a8` with `image/png` and positive dimensions, and render/load that Target-B media.
+- Stale/tampered export bytes, TargetProfile/prerequisite replay, Target-A media identity reused as Target-B identity, canonical file-digest mismatch and authority inflation fail closed. Retained intake output contains hashes/fingerprints/version metadata only; it omits raw Target-A media URLs, filesystem paths and numeric attachment IDs.
+- `CONTROLLED_CROSS_TARGET_MEDIA_PORTABILITY_PASS` is bounded to these exact disposable targets/versions and does not establish arbitrary-host portability, portable attachment IDs, general media-library compatibility, P19 expansion or an internal closure decision. `internalDecisionStatus=NOT_RUN`, reference/asset closure false, compatibility/production false and generation/download false remain mandatory.
+
 ## 2026-09-20 — P15 target-managed media internal-review prerequisite
 
 - Continued issue #569 through PR #570 after observed asset-reference evidence (#566) and canonical imported-file integrity (#568).
