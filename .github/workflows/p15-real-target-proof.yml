@@ -55,7 +55,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$GITHUB_WORKSPACE/dist-p15/p15-real-target-proof"
-          echo "P15_PROOF_TOKEN=$(openssl rand -hex 24)" >> "$GITHUB_ENV"
+          P15_PROOF_TOKEN_VALUE="$(openssl rand -hex 24)"
+          echo "::add-mask::$P15_PROOF_TOKEN_VALUE"
+          echo "P15_PROOF_TOKEN=$P15_PROOF_TOKEN_VALUE" >> "$GITHUB_ENV"
           echo "P15_EVIDENCE_REFERENCE=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> "$GITHUB_ENV"
           echo "P15_VECTOR_DIR=$GITHUB_WORKSPACE/dist-p15/p15-elementor-first-proof-vector-v3" >> "$GITHUB_ENV"
           echo "P15_VECTOR_PATH=$GITHUB_WORKSPACE/dist-p15/p15-elementor-first-proof-vector-v3/template.json" >> "$GITHUB_ENV"
