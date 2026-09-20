@@ -1,6 +1,6 @@
 import type { Stats } from 'node:fs';
 import type { FileHandle } from 'node:fs/promises';
-import { open, realpath, stat } from 'node:fs/promises';
+import { lstat, open, realpath } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type {
   P15OperatorJsonFileSnapshot,
@@ -63,6 +63,7 @@ function toFileSnapshot(info: Stats): P15OperatorJsonFileSnapshot {
 /**
  * Read a raw Elementor template through the same stable opened-file identity boundary used
  * by P15 operator evidence I/O, without adding a new generic byte/depth/value ceiling.
+ * The supplied pathname itself must remain a regular non-symlink file throughout observation.
  *
  * The classic Elementor v0.4 contract intentionally treats populated settings as target-owned
  * objects and does not bound arbitrary nested setting keys/values. Resource-policy changes for
@@ -80,13 +81,13 @@ export async function readP15UnboundedTemplateJsonInput(
   try {
     [canonicalBeforeOpen, initialPathInfo] = await Promise.all([
       realpath(resolvedPath),
-      stat(resolvedPath),
+      lstat(resolvedPath),
     ]);
   } catch {
     fail(`Unable to inspect ${label} input.`);
   }
 
-  if (!initialPathInfo.isFile()) fail(`${label} input must resolve to a regular file.`);
+  if (!initialPathInfo.isFile()) fail(`${label} input must be a regular file.`);
   if (initialPathInfo.size === 0) fail(`${label} input is empty.`);
 
   let handle: FileHandle;
@@ -103,7 +104,7 @@ export async function readP15UnboundedTemplateJsonInput(
     try {
       [before, pathInfoBeforeRead, canonicalBeforeRead] = await Promise.all([
         handle.stat(),
-        stat(resolvedPath),
+        lstat(resolvedPath),
         realpath(resolvedPath),
       ]);
     } catch {
@@ -111,7 +112,7 @@ export async function readP15UnboundedTemplateJsonInput(
     }
 
     if (!before.isFile() || !pathInfoBeforeRead.isFile()) {
-      fail(`${label} input must resolve to a regular file.`);
+      fail(`${label} input must be a regular file.`);
     }
     if (
       !sameObservedFile(initialPathInfo, before)
@@ -140,7 +141,7 @@ export async function readP15UnboundedTemplateJsonInput(
     let canonicalAfterRead: string;
     try {
       [pathInfoAfterRead, canonicalAfterRead] = await Promise.all([
-        stat(resolvedPath),
+        lstat(resolvedPath),
         realpath(resolvedPath),
       ]);
     } catch {
