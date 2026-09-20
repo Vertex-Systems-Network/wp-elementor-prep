@@ -4,6 +4,8 @@ Last updated: 2026-09-19
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 and must fail closed on stale or mismatched registered artifacts.
 
+Security audit train #579 hardens exact-loopback proof-token use/retention, atomic output replacement and duplicate CLI options. #287 remains repository-admin branch/ruleset enforcement work and must not be represented as code-complete.
+
 ## Execution mode — focused Elementor V1 release train
 
 Prioritize one coherent Elementor commercial V1. Keep P16 stable unless a concrete shared blocker appears, and keep P17-P26 frozen during this window.
