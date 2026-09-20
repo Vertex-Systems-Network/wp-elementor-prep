@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 target-managed media internal-review prerequisite
+
+- Continued issue #569 through PR #570 after observed asset-reference evidence (#566) and canonical imported-file integrity (#568).
+- Added deterministic `elementor-target-managed-media-review-prerequisite-v1`, recomputed directly from the exact candidate, TargetProfile, asset proof and integrity evidence rather than trusting prior report files.
+- `READY_FOR_INTERNAL_REVIEW` requires exact `OBSERVED_ASSET_EVIDENCE_BOUND` plus exact `TARGET_MANAGED_CONTENT_INTEGRITY_PASS`, then cross-binds candidate identity, TargetProfile fingerprint, reference-review identity, observed target and retained evidence-reference SHA-256.
+- The sanitized prerequisite retains canonical proof/evidence hashes, URL fingerprints, canonical source/target file digests, MIME and bounded dimensions while omitting raw asset URLs, raw evidence-reference text, filesystem paths and numeric attachment IDs.
+- Readiness does not perform the internal decision: `internalDecisionStatus=NOT_RUN`, `referenceClosureClaim=false`, `assetReferenceClosureClaim=false`, authentication/acceptance authority false, target compatibility/production false and generation/download false remain mandatory.
+- The real Elementor proof workflow now requires this review prerequisite after the existing observed-reference and content-integrity gates. Durable media portability and any actual internal closure decision remain separate future evidence/decision work.
+
 ## 2026-09-19 — P15 target-managed media content-integrity evidence
 
 - Continued issue #567 through PR #568 after the controlled managed-media observation (#564) and sanitized observed-reference binding (#566).

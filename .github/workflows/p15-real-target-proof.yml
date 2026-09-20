@@ -269,6 +269,7 @@ jobs:
           ASSET_PROOF_CODE=99
           OBSERVED_ASSET_REFERENCE_CODE=99
           MEDIA_INTEGRITY_CODE=99
+          MEDIA_REVIEW_PREREQUISITE_CODE=99
 
           if [ -f "$P15_PROOF_OUT_DIR/environment-evidence.json" ]; then
             npm run p15:elementor-target-environment-intake -- \
@@ -323,12 +324,24 @@ jobs:
             MEDIA_INTEGRITY_CODE=$?
           fi
 
+          if [ -f "$P15_PROOF_OUT_DIR/asset-proof-evidence.json" ] \
+            && [ -f "$P15_PROOF_OUT_DIR/asset-content-integrity-evidence.json" ]; then
+            npm run p15:target-managed-media-review-prerequisite -- \
+              --candidate "$P15_ASSET_VECTOR_DIR/candidate.json" \
+              --profile "$P15_ASSET_VECTOR_DIR/target-profile.json" \
+              --asset-proof "$P15_PROOF_OUT_DIR/asset-proof-evidence.json" \
+              --integrity-evidence "$P15_PROOF_OUT_DIR/asset-content-integrity-evidence.json" \
+              --out "$P15_PROOF_OUT_DIR/asset-media-review-prerequisite.json"
+            MEDIA_REVIEW_PREREQUISITE_CODE=$?
+          fi
+
           echo "P15_ENV_INTAKE_CODE=$ENV_CODE" >> "$GITHUB_ENV"
           echo "P15_PROOF_INTAKE_CODE=$PROOF_CODE" >> "$GITHUB_ENV"
           echo "P15_CHAIN_INTAKE_CODE=$CHAIN_CODE" >> "$GITHUB_ENV"
           echo "P15_ASSET_PROOF_INTAKE_CODE=$ASSET_PROOF_CODE" >> "$GITHUB_ENV"
           echo "P15_OBSERVED_ASSET_REFERENCE_CODE=$OBSERVED_ASSET_REFERENCE_CODE" >> "$GITHUB_ENV"
           echo "P15_MEDIA_INTEGRITY_CODE=$MEDIA_INTEGRITY_CODE" >> "$GITHUB_ENV"
+          echo "P15_MEDIA_REVIEW_PREREQUISITE_CODE=$MEDIA_REVIEW_PREREQUISITE_CODE" >> "$GITHUB_ENV"
           exit 0
 
       - name: Retain server diagnostics
@@ -358,6 +371,7 @@ jobs:
           test "$P15_ASSET_PROOF_INTAKE_CODE" = "0"
           test "$P15_OBSERVED_ASSET_REFERENCE_CODE" = "0"
           test "$P15_MEDIA_INTEGRITY_CODE" = "0"
+          test "$P15_MEDIA_REVIEW_PREREQUISITE_CODE" = "0"
 
           jq -e '.classification == "QUALIFIED_FOR_BOUND_TARGET_PROOF"' \
             "$P15_PROOF_OUT_DIR/environment-intake.json"
@@ -388,3 +402,10 @@ jobs:
             "$P15_PROOF_OUT_DIR/asset-content-integrity-intake.json"
           jq -e '.mimeType == "image/png" and (.width > 0) and (.height > 0) and .referenceClosureClaim == false and .assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false' \
             "$P15_PROOF_OUT_DIR/asset-content-integrity-intake.json"
+
+          jq -e '.status == "READY_FOR_INTERNAL_REVIEW" and .observedAssetEvidenceBound == true and .contentIntegrityPass == true and .crossBindingMatches == true' \
+            "$P15_PROOF_OUT_DIR/asset-media-review-prerequisite.json"
+          jq -e '.evidenceAuthenticationStatus == "OBSERVED_PROOF_VALIDATED" and .contentIntegrityStatus == "TARGET_MANAGED_CONTENT_INTEGRITY_PASS" and .internalDecisionStatus == "NOT_RUN"' \
+            "$P15_PROOF_OUT_DIR/asset-media-review-prerequisite.json"
+          jq -e '.authenticationAuthority == false and .acceptanceAuthority == false and .referenceClosureClaim == false and .assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false and .generationEnabled == false and .downloadEnabled == false and .internalReviewRequired == true' \
+            "$P15_PROOF_OUT_DIR/asset-media-review-prerequisite.json"
