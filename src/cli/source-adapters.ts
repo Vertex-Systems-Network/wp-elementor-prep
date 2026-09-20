@@ -1,4 +1,5 @@
-import { createReadStream } from 'node:fs';
+import type { Stats } from 'node:fs';
+import { lstat, open, realpath } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import type { AuditNode, LayoutMode } from '../core/types';
 import { isGenericLayerName, normalizeLayoutMode } from '../core/scanner';
@@ -235,6 +236,24 @@ export function parseCanonicalSnapshot(value: unknown): CanonicalSnapshot {
   };
 }
 
+function canonicalPathKey(path: string): string {
+  const resolved = resolve(path);
+  return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
+}
+
+function hasStableFileIdentity(info: Stats): boolean {
+  return info.ino !== 0;
+}
+
+function sameObservedSnapshotFile(first: Stats, second: Stats): boolean {
+  if (hasStableFileIdentity(first) && hasStableFileIdentity(second)) {
+    if (first.dev !== second.dev || first.ino !== second.ino) return false;
+  }
+  return first.size === second.size
+    && first.mtimeMs === second.mtimeMs
+    && first.ctimeMs === second.ctimeMs;
+}
+
 export async function loadCanonicalSnapshot(inputPath: string): Promise<CanonicalSnapshot> {
   const absolute = resolve(inputPath);
   if (extname(absolute).toLowerCase() === '.fig') {
@@ -245,33 +264,122 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
     );
   }
 
-  const chunks: Buffer[] = [];
-  let totalBytes = 0;
+  let canonicalBeforeOpen: string;
+  let initialPathInfo: Stats;
   try {
-    const stream = createReadStream(absolute, { flags: 'r' });
-    for await (const chunk of stream) {
-      const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-      totalBytes += bytes.byteLength;
-      if (totalBytes > CANONICAL_SNAPSHOT_MAX_BYTES) {
-        stream.destroy();
-        throw new SourceAdapterError(
-          'SNAPSHOT_RESOURCE_LIMIT',
-          `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
-          2,
-        );
-      }
-      chunks.push(bytes);
-    }
-  } catch (error) {
-    if (error instanceof SourceAdapterError) throw error;
-    const detail = error instanceof Error ? error.message : String(error);
-    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', `Unable to read canonical snapshot: ${detail}`, 2);
+    [canonicalBeforeOpen, initialPathInfo] = await Promise.all([
+      realpath(absolute),
+      lstat(absolute),
+    ]);
+  } catch {
+    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Unable to inspect canonical snapshot input.', 2);
   }
 
-  if (totalBytes === 0) {
-    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot file is empty.', 2);
+  if (!initialPathInfo.isFile()) {
+    throw new SourceAdapterError(
+      'SNAPSHOT_READ_FAILED',
+      'Canonical snapshot input must be a regular non-symlink file.',
+      2,
+    );
   }
-  const bytes = Buffer.concat(chunks, totalBytes);
+  if (initialPathInfo.size > CANONICAL_SNAPSHOT_MAX_BYTES) {
+    throw new SourceAdapterError(
+      'SNAPSHOT_RESOURCE_LIMIT',
+      `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
+      2,
+    );
+  }
+
+  let handle;
+  try {
+    handle = await open(absolute, 'r');
+  } catch {
+    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Unable to read canonical snapshot.', 2);
+  }
+
+  let bytes: Buffer;
+  try {
+    let before: Stats;
+    let pathInfoBeforeRead: Stats;
+    let canonicalBeforeRead: string;
+    try {
+      [before, pathInfoBeforeRead, canonicalBeforeRead] = await Promise.all([
+        handle.stat(),
+        lstat(absolute),
+        realpath(absolute),
+      ]);
+    } catch {
+      throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot changed before it was read.', 2);
+    }
+
+    if (!before.isFile() || !pathInfoBeforeRead.isFile()) {
+      throw new SourceAdapterError(
+        'SNAPSHOT_READ_FAILED',
+        'Canonical snapshot input must be a regular non-symlink file.',
+        2,
+      );
+    }
+    if (
+      !sameObservedSnapshotFile(initialPathInfo, before)
+      || !sameObservedSnapshotFile(before, pathInfoBeforeRead)
+      || canonicalPathKey(canonicalBeforeOpen) !== canonicalPathKey(canonicalBeforeRead)
+    ) {
+      throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot changed before it was read.', 2);
+    }
+
+    const chunks: Buffer[] = [];
+    let totalBytes = 0;
+    try {
+      const stream = handle.createReadStream({ autoClose: false });
+      for await (const chunk of stream) {
+        const current = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+        totalBytes += current.byteLength;
+        if (totalBytes > CANONICAL_SNAPSHOT_MAX_BYTES) {
+          stream.destroy();
+          throw new SourceAdapterError(
+            'SNAPSHOT_RESOURCE_LIMIT',
+            `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
+            2,
+          );
+        }
+        chunks.push(current);
+      }
+    } catch (error) {
+      if (error instanceof SourceAdapterError) throw error;
+      const detail = error instanceof Error ? error.message : String(error);
+      throw new SourceAdapterError('SNAPSHOT_READ_FAILED', `Unable to read canonical snapshot: ${detail}`, 2);
+    }
+
+    if (totalBytes === 0) {
+      throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot file is empty.', 2);
+    }
+    bytes = Buffer.concat(chunks, totalBytes);
+
+    let after: Stats;
+    let pathInfoAfterRead: Stats;
+    let canonicalAfterRead: string;
+    try {
+      [after, pathInfoAfterRead, canonicalAfterRead] = await Promise.all([
+        handle.stat(),
+        lstat(absolute),
+        realpath(absolute),
+      ]);
+    } catch {
+      throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot changed while it was being read.', 2);
+    }
+
+    if (
+      !after.isFile()
+      || !pathInfoAfterRead.isFile()
+      || !sameObservedSnapshotFile(before, after)
+      || !sameObservedSnapshotFile(after, pathInfoAfterRead)
+      || canonicalPathKey(canonicalBeforeRead) !== canonicalPathKey(canonicalAfterRead)
+    ) {
+      throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot changed while it was being read.', 2);
+    }
+  } finally {
+    await handle.close().catch(() => undefined);
+  }
 
   let raw: string;
   try {
