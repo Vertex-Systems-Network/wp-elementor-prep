@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-21 — Runtime closure evidence/verifier read hardening (#609)
+
+- Continued the bounded-read security train after #608 by auditing the adjacent runtime-closure intake boundary.
+- Operator evidence and same-artifact verifier rereads previously performed whole-descriptor reads after only pre-open checks, leaving growth-after-open resource races and no post-read pathname/descriptor revalidation.
+- Both reads now use bounded `maxBytes + 1` descriptor probes. Evidence retains its existing 5 MiB ceiling; verifier rereads are bounded by the existing runtime-artifact file ceiling used by preflight.
+- Descriptor and pathname metadata are revalidated after each bounded read; growth, symlink substitution, identity drift or metadata drift fail closed before verifier execution.
+- Deterministic regressions grow evidence/verifier files during descriptor reads and prove verifier execution remains blocked.
+- Verified-bytes memory bootstrap, preflight immutable SHA-256 binding, shell-free execution, timeout/output limits and authority boundaries remain unchanged.
+
+
 ## 2026-09-20 — Runtime artifact descriptor-read hardening (#607)
 
 - Security audit found that runtime artifact preflight checked required-file/archive size before open but then used whole-descriptor reads, so growth after validation could exceed configured byte ceilings before the limit was enforced.
