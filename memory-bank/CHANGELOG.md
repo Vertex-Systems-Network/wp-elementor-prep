@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-20 — P15 Button target-alignment vocabulary correction
+
+- Follow-up audit while preparing responsive Button work found that exact Elementor `4.2.4` Button Trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5` accepts Button `align` values `left|center|right|justify`, while the current generator emitted neutral `start|end` directly.
+- Issue #587 / PR #588 corrects the deterministic desktop candidate mapping to neutral `start → left`, `center → center`, `end → right`.
+- Generator contract version advances from `p15-elementor-v3-template-generator-v2` to `...-v3` because target bytes/semantics change for aligned Button nodes.
+- Heading/Text mapping remains unchanged because their exact Elementor `4.2.4` controls natively accept logical `start|center|end` values.
+- Regression coverage locks the exact Button Trait evidence and prevents generated Button settings from retaining unsupported `start` / `end` values.
+- Responsive Button overrides remain a separate future bounded slice; this correction adds no responsive closure, compatibility, production, generation/download or transfer authority.
+
+
 ## 2026-09-20 — P15 exact responsive Heading/Text alignment
 
 - Continued issue #585 through PR #586 as the next independently evidenced bounded responsive slice after container border radius.
