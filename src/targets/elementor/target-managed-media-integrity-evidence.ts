@@ -53,7 +53,6 @@ export interface ElementorTargetManagedMediaIntegrityEvidenceV1 {
     height: number;
   };
   referenceClosureClaim: false;
-  referenceClosureClaim: false;
   assetReferenceClosureClaim: false;
   acceptanceAuthority: false;
   targetCompatibilityClaim: false;
@@ -106,6 +105,7 @@ export interface ElementorTargetManagedMediaIntegrityValidationResultV1 {
   width: number | null;
   height: number | null;
   issues: ElementorTargetManagedMediaIntegrityIssueV1[];
+  referenceClosureClaim: false;
   assetReferenceClosureClaim: false;
   acceptanceAuthority: false;
   targetCompatibilityClaim: false;
