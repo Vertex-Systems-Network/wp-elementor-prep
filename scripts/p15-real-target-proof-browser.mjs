@@ -61,6 +61,23 @@ async function handleElementorOnboarding(page) {
   return { result: 'SKIPPED', interceptedUrl: page.url(), finalUrl: page.url() };
 }
 
+function collectImageUrls(elements, urls = []) {
+  if (!Array.isArray(elements)) return urls;
+  for (const element of elements) {
+    if (!element || typeof element !== 'object' || Array.isArray(element)) continue;
+    const image = element.widgetType === 'image' ? element.settings?.image : null;
+    if (image && typeof image.url === 'string' && image.url.length > 0) {
+      urls.push(image.url);
+    }
+    collectImageUrls(element.elements, urls);
+  }
+  return urls;
+}
+
+function sha256(value) {
+  return 'sha256:' + createHash('sha256').update(value).digest('hex');
+}
+
 async function headingPresentInEditor(page, expectedText, timeoutMs) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
@@ -83,6 +100,8 @@ async function headingPresentInEditor(page, expectedText, timeoutMs) {
 }
 
 const baseUrl = required('P15_BASE_URL').replace(/\/$/, '');
+const secondBaseUrl = required('P15_SECOND_BASE_URL').replace(/\/$/, '');
+const crossTargetExportPath = required('P15_CROSS_TARGET_EXPORT_PATH');
 const token = required('P15_PROOF_TOKEN');
 const vectorDir = required('P15_VECTOR_DIR');
 const assetVectorDir = required('P15_ASSET_VECTOR_DIR');
@@ -142,6 +161,25 @@ const assetRaw = {
     naturalHeight: 0,
     error: '',
   },
+};
+
+const crossTargetRaw = {
+  schema: 'p15-cross-target-media-runtime-bundle-v1',
+  evidenceReference,
+  exportedTemplateSha256: null,
+  sourceTarget: null,
+  destinationTarget: null,
+  render: {
+    result: 'NOT_RUN',
+    imagePresent: false,
+    renderedImageUrlFingerprint: null,
+    imageReferenceResult: 'NOT_RUN',
+    browserImageLoadResult: 'NOT_RUN',
+    naturalWidth: 0,
+    naturalHeight: 0,
+    error: '',
+  },
+  fatalError: '',
 };
 
 let browser;
@@ -411,6 +449,7 @@ try {
       observedAt: assetServer.observedAt,
       evidenceReference: assetServer.evidenceReference,
       environment: assetServer.environment,
+      siteIdentity: assetServer.siteIdentity,
       importResult: assetServer.importResult,
       importObservedAt: assetServer.importObservedAt,
       templateId: assetServer.templateId,
@@ -423,6 +462,7 @@ try {
         mediaUrlFingerprint: assetServer.importedMedia?.mediaUrlFingerprint || null,
         sourceUrlFingerprint: assetServer.importedMedia?.sourceUrlFingerprint || null,
         sourceProvenanceMatches: assetServer.importedMedia?.sourceProvenanceMatches === true,
+        targetManagedMediaTargetLocal: assetServer.importedMedia?.targetManagedMediaTargetLocal === true,
         contentIntegrity: {
           attachmentPostType: assetServer.importedMedia?.contentIntegrity?.attachmentPostType || '',
           fileExists: assetServer.importedMedia?.contentIntegrity?.fileExists === true,
@@ -629,7 +669,233 @@ try {
     await writeJson(join(outDir, 'asset-raw-runtime-observation.json'), assetRaw);
   }
 
-  const fullPass = firstProofFullPass && assetProofFullPass;
+  let crossTargetFullPass = false;
+  let portabilityEvidence = null;
+  if (assetProofFullPass && assetProofEvidence) {
+    try {
+      const exportResponse = await context.request.get(
+        baseUrl + '/?p15_asset_proof_export=' + encodeURIComponent(token),
+        { timeout: 60000 },
+      );
+      if (!exportResponse.ok()) {
+        throw new Error('Target-A Elementor export failed with HTTP ' + exportResponse.status());
+      }
+      const exportedBytes = await exportResponse.body();
+      const exportedRaw = exportedBytes.toString('utf8');
+      let exportedTemplate;
+      try {
+        exportedTemplate = JSON.parse(exportedRaw);
+      } catch {
+        throw new Error('Target-A Elementor export was not valid JSON.');
+      }
+      const exportedUrls = collectImageUrls(exportedTemplate?.content);
+      if (exportedUrls.length !== 1) {
+        throw new Error('Target-A export must contain exactly one Image MEDIA URL.');
+      }
+      const exportedSourceUrl = exportedUrls[0];
+      const exportedSourceUrlFingerprint = sha256(exportedSourceUrl);
+      const exportedTemplateSha256 = sha256(exportedBytes);
+      if (exportedSourceUrlFingerprint !== assetProofEvidence.steps.targetManagedMediaUrlFingerprint) {
+        throw new Error('Target-A export MEDIA URL is not the observed target-managed media reference.');
+      }
+      await writeFile(crossTargetExportPath, exportedBytes);
+
+      crossTargetRaw.exportedTemplateSha256 = exportedTemplateSha256;
+      crossTargetRaw.sourceTarget = {
+        environment: assetRaw.server?.environment ?? null,
+        siteIdentity: assetRaw.server?.siteIdentity ?? null,
+        targetManagedMediaUrlFingerprint: assetProofEvidence.steps.targetManagedMediaUrlFingerprint,
+      };
+
+      await page.goto(secondBaseUrl + '/?p15_cross_target_observe=' + encodeURIComponent(token), {
+        waitUntil: 'domcontentloaded',
+        timeout: 90000,
+      });
+      const destinationServer = await bodyJson(page);
+      crossTargetRaw.destinationTarget = {
+        schema: destinationServer.schema,
+        observedAt: destinationServer.observedAt,
+        evidenceReference: destinationServer.evidenceReference,
+        environment: destinationServer.environment,
+        siteIdentity: destinationServer.siteIdentity,
+        importResult: destinationServer.importResult,
+        importObservedAt: destinationServer.importObservedAt,
+        templateTitle: destinationServer.templateTitle,
+        templateType: destinationServer.templateType,
+        exportedTemplateSha256: destinationServer.exportedTemplateSha256,
+        importedMedia: destinationServer.importedMedia,
+      };
+
+      if (destinationServer.importResult !== 'PASS') {
+        throw new Error('Target-B local Template JSON import did not PASS: ' + destinationServer.importResult);
+      }
+      if (destinationServer.templateType !== 'page') {
+        throw new Error('Target-B imported template type is not page: ' + destinationServer.templateType);
+      }
+      if (destinationServer.exportedTemplateSha256 !== exportedTemplateSha256) {
+        throw new Error('Target-B did not consume the exact Target-A exported JSON bytes.');
+      }
+      if (destinationServer.environment.wordpressVersion !== assetProfile.environment.wordpressVersion
+        || destinationServer.environment.elementorVersion !== assetProfile.environment.elementorVersion) {
+        throw new Error('Target-B versions do not match the exact declared asset TargetProfile.');
+      }
+
+      const sourceSite = assetRaw.server?.siteIdentity;
+      const destinationSite = destinationServer.siteIdentity;
+      if (!sourceSite?.homeUrlFingerprint || !sourceSite?.databaseNameFingerprint
+        || !destinationSite?.homeUrlFingerprint || !destinationSite?.databaseNameFingerprint
+        || sourceSite.homeUrlFingerprint === destinationSite.homeUrlFingerprint
+        || sourceSite.databaseNameFingerprint === destinationSite.databaseNameFingerprint) {
+        throw new Error('Cross-target proof requires distinct disposable site and database identities.');
+      }
+
+      const destinationMedia = destinationServer.importedMedia;
+      const destinationTargetManagedMediaResult = destinationMedia?.mediaReferenceFound === true
+        && destinationMedia?.mediaIdPresent === true
+        && /^sha256:[0-9a-f]{64}$/.test(destinationMedia?.mediaUrlFingerprint || '')
+        && destinationMedia?.targetManagedMediaTargetLocal === true
+        && destinationMedia?.mediaUrlFingerprint !== assetProofEvidence.steps.targetManagedMediaUrlFingerprint
+        ? 'PASS'
+        : 'FAIL';
+      const destinationSourceProvenanceResult = destinationTargetManagedMediaResult === 'PASS'
+        && destinationMedia?.sourceProvenanceMatches === true
+        && destinationMedia?.sourceUrlFingerprint === exportedSourceUrlFingerprint
+        ? 'PASS'
+        : 'FAIL';
+
+      if (destinationTargetManagedMediaResult !== 'PASS' || destinationSourceProvenanceResult !== 'PASS') {
+        throw new Error('Target-B did not rewrite the exact Target-A managed-media source into its own managed media.');
+      }
+
+      const destinationIntegrity = destinationMedia?.contentIntegrity;
+      if (destinationIntegrity?.sourceFixtureSha256 !== process.env.P15_ASSET_FIXTURE_SHA256
+        || destinationIntegrity?.targetFileSha256 !== process.env.P15_ASSET_FIXTURE_SHA256
+        || destinationIntegrity?.contentSha256Matches !== true
+        || destinationIntegrity?.mimeType !== 'image/png'
+        || Number(destinationIntegrity?.width || 0) <= 0
+        || Number(destinationIntegrity?.height || 0) <= 0) {
+        throw new Error('Target-B attachment content integrity does not match the canonical controlled PNG.');
+      }
+
+      await page.goto(destinationServer.renderUrl, {
+        waitUntil: 'networkidle',
+        timeout: 90000,
+      });
+      const destinationImage = await page.evaluate(() => {
+        const root = document.querySelector('#p15-cross-target-root');
+        const image = root ? root.querySelector('img') : null;
+        if (!image) {
+          return { imagePresent: false, renderedUrl: '', complete: false, naturalWidth: 0, naturalHeight: 0 };
+        }
+        return {
+          imagePresent: true,
+          renderedUrl: image.currentSrc || image.src || image.getAttribute('src') || '',
+          complete: image.complete,
+          naturalWidth: image.naturalWidth,
+          naturalHeight: image.naturalHeight,
+        };
+      });
+      const destinationRenderedFingerprint = destinationImage.renderedUrl
+        ? sha256(destinationImage.renderedUrl)
+        : null;
+      const destinationImageReferenceResult = destinationImage.imagePresent
+        && destinationRenderedFingerprint === destinationMedia.mediaUrlFingerprint
+        ? 'PASS'
+        : 'FAIL';
+      const destinationBrowserImageLoadResult = destinationImageReferenceResult === 'PASS'
+        ? (destinationImage.complete && destinationImage.naturalWidth > 0 && destinationImage.naturalHeight > 0
+          ? 'PASS'
+          : 'FAIL')
+        : 'NOT_RUN';
+
+      crossTargetRaw.render = {
+        result: destinationImage.imagePresent ? 'PASS' : 'FAIL',
+        imagePresent: destinationImage.imagePresent,
+        renderedImageUrlFingerprint: destinationRenderedFingerprint,
+        imageReferenceResult: destinationImageReferenceResult,
+        browserImageLoadResult: destinationBrowserImageLoadResult,
+        naturalWidth: destinationImage.naturalWidth,
+        naturalHeight: destinationImage.naturalHeight,
+        error: '',
+      };
+      await page.screenshot({
+        path: join(outDir, 'cross-target-media-render.png'),
+        fullPage: true,
+      });
+
+      portabilityEvidence = {
+        schemaVersion: 1,
+        evidenceVersion: 'elementor-target-managed-media-portability-evidence-v1',
+        exportedTemplateSha256,
+        sourceTarget: {
+          source: 'OBSERVED',
+          wordpressVersion: assetServer.environment.wordpressVersion,
+          elementorVersion: assetServer.environment.elementorVersion,
+          importSurface: 'TEMPLATE_LIBRARY_JSON',
+        },
+        destinationTarget: {
+          source: 'OBSERVED',
+          wordpressVersion: destinationServer.environment.wordpressVersion,
+          elementorVersion: destinationServer.environment.elementorVersion,
+          importSurface: 'TEMPLATE_LIBRARY_JSON',
+        },
+        observedAt: new Date().toISOString(),
+        evidenceReference,
+        steps: {
+          importResult: 'PASS',
+          sourceProvenanceResult: destinationSourceProvenanceResult,
+          sourceManagedMediaUrlFingerprint: assetProofEvidence.steps.targetManagedMediaUrlFingerprint,
+          destinationSourceUrlFingerprint: destinationMedia.sourceUrlFingerprint,
+          destinationManagedMediaUrlFingerprint: destinationMedia.mediaUrlFingerprint,
+          destinationManagedMediaTargetLocal: destinationMedia.targetManagedMediaTargetLocal === true,
+          renderResult: crossTargetRaw.render.result,
+          renderedImageReferenceResult: crossTargetRaw.render.result === 'PASS'
+            ? destinationImageReferenceResult
+            : 'NOT_RUN',
+          browserImageLoadResult: crossTargetRaw.render.result === 'PASS'
+            ? destinationBrowserImageLoadResult
+            : 'NOT_RUN',
+          renderedImageUrlFingerprint: crossTargetRaw.render.result === 'PASS'
+            ? destinationRenderedFingerprint
+            : null,
+        },
+        attachment: {
+          sourceFixtureSha256: destinationIntegrity.sourceFixtureSha256,
+          targetFileSha256: destinationIntegrity.targetFileSha256,
+          mimeType: destinationIntegrity.mimeType,
+          width: Number(destinationIntegrity.width),
+          height: Number(destinationIntegrity.height),
+        },
+        internalDecisionStatus: 'NOT_RUN',
+        authenticationAuthority: false,
+        acceptanceAuthority: false,
+        referenceClosureClaim: false,
+        assetReferenceClosureClaim: false,
+        targetCompatibilityClaim: false,
+        productionAcceptance: false,
+        generationEnabled: false,
+        downloadEnabled: false,
+        internalReviewRequired: true,
+      };
+      await writeJson(join(outDir, 'cross-target-media-portability-evidence.json'), portabilityEvidence);
+      await writeJson(join(outDir, 'cross-target-raw-runtime-observation.json'), crossTargetRaw);
+
+      crossTargetFullPass = (
+        destinationSourceProvenanceResult === 'PASS'
+        && destinationTargetManagedMediaResult === 'PASS'
+        && crossTargetRaw.render.result === 'PASS'
+        && destinationImageReferenceResult === 'PASS'
+        && destinationBrowserImageLoadResult === 'PASS'
+        && destinationIntegrity.targetFileSha256 === process.env.P15_ASSET_FIXTURE_SHA256
+      );
+    } catch (error) {
+      crossTargetRaw.fatalError = error instanceof Error ? error.message : String(error);
+      crossTargetRaw.render.error = crossTargetRaw.fatalError;
+      await writeJson(join(outDir, 'cross-target-raw-runtime-observation.json'), crossTargetRaw);
+    }
+  }
+
+  const fullPass = firstProofFullPass && assetProofFullPass && crossTargetFullPass;
 
   process.stdout.write(JSON.stringify({
     browser: raw.browser,
@@ -652,6 +918,15 @@ try {
       contentIntegrity: assetRaw.server?.importedMedia?.contentIntegrity ?? null,
       fullPass: assetProofFullPass,
     },
+    crossTargetPortability: {
+      classificationReady: portabilityEvidence !== null,
+      exportedTemplateSha256: portabilityEvidence?.exportedTemplateSha256 ?? null,
+      sourceProvenanceResult: portabilityEvidence?.steps.sourceProvenanceResult ?? 'NOT_RUN',
+      destinationManagedMediaTargetLocal: portabilityEvidence?.steps.destinationManagedMediaTargetLocal ?? false,
+      renderResult: portabilityEvidence?.steps.renderResult ?? 'NOT_RUN',
+      browserImageLoadResult: portabilityEvidence?.steps.browserImageLoadResult ?? 'NOT_RUN',
+      fullPass: crossTargetFullPass,
+    },
     fullPass,
   }, null, 2) + '\n');
 
@@ -661,6 +936,8 @@ try {
   await writeJson(join(outDir, 'raw-runtime-observation.json'), raw);
   assetRaw.fatalError = raw.fatalError;
   await writeJson(join(outDir, 'asset-raw-runtime-observation.json'), assetRaw);
+  crossTargetRaw.fatalError = raw.fatalError;
+  await writeJson(join(outDir, 'cross-target-raw-runtime-observation.json'), crossTargetRaw);
   process.stderr.write('P15_REAL_TARGET_PROOF_BROWSER_FAILED: ' + raw.fatalError + '\n');
   process.exitCode = 2;
 } finally {
