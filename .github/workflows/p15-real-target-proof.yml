@@ -210,7 +210,8 @@ jobs:
           '
 
           curl --fail --silent --show-error \
-            "$P15_BASE_URL/?p15_proof_observe=$P15_PROOF_TOKEN" \
+            -H "X-P15-Proof-Token: $P15_PROOF_TOKEN" \
+            "$P15_BASE_URL/?p15_proof_observe=1" \
             -o "$P15_PROOF_OUT_DIR/pre-browser-server-observation.json"
 
           jq -e '.importResult == "PASS"' \
@@ -223,7 +224,8 @@ jobs:
             "$P15_PROOF_OUT_DIR/pre-browser-server-observation.json"
 
           curl --fail --silent --show-error \
-            "$P15_BASE_URL/?p15_asset_proof_observe=$P15_PROOF_TOKEN" \
+            -H "X-P15-Proof-Token: $P15_PROOF_TOKEN" \
+            "$P15_BASE_URL/?p15_asset_proof_observe=1" \
             -o "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
 
           jq -e '.importResult == "PASS"' \
