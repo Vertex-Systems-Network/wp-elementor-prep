@@ -30,6 +30,8 @@ export const P15_ELEMENTOR_ASSET_PROOF_WORDPRESS_VERSION = '6.8' as const;
 export const P15_ELEMENTOR_ASSET_PROOF_ELEMENTOR_VERSION = '4.2.4' as const;
 export const P15_ELEMENTOR_ASSET_PROOF_FIXTURE_URL =
   'http://127.0.0.1:8081/p15-asset-fixture.png' as const;
+export const P15_ELEMENTOR_ASSET_PROOF_FIXTURE_SHA256 =
+  'sha256:65cbaae5caf987301a644dbad6b783476a2e39b2980425a0c57a6505a1c7e5a8' as const;
 
 export const P15_ELEMENTOR_ASSET_PROOF_VECTOR_FILENAMES = [
   'neutral-ir.json',

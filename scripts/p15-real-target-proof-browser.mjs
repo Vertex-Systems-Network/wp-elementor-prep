@@ -423,6 +423,17 @@ try {
         mediaUrlFingerprint: assetServer.importedMedia?.mediaUrlFingerprint || null,
         sourceUrlFingerprint: assetServer.importedMedia?.sourceUrlFingerprint || null,
         sourceProvenanceMatches: assetServer.importedMedia?.sourceProvenanceMatches === true,
+        contentIntegrity: {
+          attachmentPostType: assetServer.importedMedia?.contentIntegrity?.attachmentPostType || '',
+          fileExists: assetServer.importedMedia?.contentIntegrity?.fileExists === true,
+          sourceFixtureSha256: assetServer.importedMedia?.contentIntegrity?.sourceFixtureSha256 || '',
+          targetFileSha256: assetServer.importedMedia?.contentIntegrity?.targetFileSha256 || '',
+          contentSha256Matches: assetServer.importedMedia?.contentIntegrity?.contentSha256Matches === true,
+          mimeType: assetServer.importedMedia?.contentIntegrity?.mimeType || '',
+          width: Number(assetServer.importedMedia?.contentIntegrity?.width || 0),
+          height: Number(assetServer.importedMedia?.contentIntegrity?.height || 0),
+          imageDimensionsObserved: assetServer.importedMedia?.contentIntegrity?.imageDimensionsObserved === true,
+        },
       },
     };
 
@@ -558,6 +569,49 @@ try {
       internalReviewRequired: true,
     };
     await writeJson(join(outDir, 'asset-proof-evidence.json'), assetProofEvidence);
+
+    const contentIntegrity = importedMedia.contentIntegrity;
+    const assetContentIntegrityEvidence = {
+      schemaVersion: 1,
+      evidenceVersion: 'elementor-target-managed-media-integrity-evidence-v1',
+      candidateIdentity: assetManifest.candidateIdentity,
+      targetProfileIdentity: {
+        profileVersion: assetProfile.profileVersion,
+        fingerprint: assetManifest.targetProfileFingerprint,
+      },
+      referenceReviewIdentity: {
+        identityVersion: assetReferenceIdentity.identityVersion,
+        digest: assetManifest.referenceReviewIdentityDigest,
+      },
+      observedTarget: {
+        source: 'OBSERVED',
+        wordpressVersion: assetServer.environment.wordpressVersion,
+        elementorVersion: assetServer.environment.elementorVersion,
+        importSurface: 'TEMPLATE_LIBRARY_JSON',
+      },
+      observedAt: new Date().toISOString(),
+      evidenceReference,
+      attachment: {
+        postType: contentIntegrity.attachmentPostType,
+        sourceFixtureSha256: contentIntegrity.sourceFixtureSha256,
+        targetFileSha256: contentIntegrity.targetFileSha256,
+        mimeType: contentIntegrity.mimeType,
+        width: contentIntegrity.width,
+        height: contentIntegrity.height,
+      },
+      referenceClosureClaim: false,
+      assetReferenceClosureClaim: false,
+      acceptanceAuthority: false,
+      targetCompatibilityClaim: false,
+      productionAcceptance: false,
+      generationEnabled: false,
+      downloadEnabled: false,
+      internalReviewRequired: true,
+    };
+    await writeJson(
+      join(outDir, 'asset-content-integrity-evidence.json'),
+      assetContentIntegrityEvidence,
+    );
     await writeJson(join(outDir, 'asset-raw-runtime-observation.json'), assetRaw);
 
     assetProofFullPass = (
@@ -595,6 +649,7 @@ try {
       renderedImageReferenceResult: assetProofEvidence?.steps.renderedImageReferenceResult ?? 'NOT_RUN',
       browserImageLoadResult: assetProofEvidence?.steps.browserImageLoadResult ?? 'NOT_RUN',
       assetUrlFingerprint: assetProofEvidence?.steps.renderedImageUrlFingerprint ?? null,
+      contentIntegrity: assetRaw.server?.importedMedia?.contentIntegrity ?? null,
       fullPass: assetProofFullPass,
     },
     fullPass,

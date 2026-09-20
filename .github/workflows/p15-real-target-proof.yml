@@ -122,6 +122,10 @@ jobs:
           mkdir -p "$ASSET_FIXTURE_DIR"
           printf '%s' 'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFElEQVR42mNkYPj/n4GBgYGJAQoAHgQCAH6Jx6QAAAAASUVORK5CYII=' \
             | base64 --decode > "$ASSET_FIXTURE_DIR/p15-asset-fixture.png"
+          P15_ASSET_FIXTURE_SHA256_VALUE="sha256:$(sha256sum "$ASSET_FIXTURE_DIR/p15-asset-fixture.png" | awk '{print $1}')"
+          test "$P15_ASSET_FIXTURE_SHA256_VALUE" = "sha256:65cbaae5caf987301a644dbad6b783476a2e39b2980425a0c57a6505a1c7e5a8"
+          export P15_ASSET_FIXTURE_SHA256="$P15_ASSET_FIXTURE_SHA256_VALUE"
+          echo "P15_ASSET_FIXTURE_SHA256=$P15_ASSET_FIXTURE_SHA256_VALUE" >> "$GITHUB_ENV"
           nohup python3 -m http.server 8081 --bind 127.0.0.1 --directory "$ASSET_FIXTURE_DIR" \
             > "$P15_PROOF_OUT_DIR/asset-fixture-server.log" 2>&1 &
           echo $! > "$RUNNER_TEMP/p15-asset-fixture-server.pid"
@@ -264,6 +268,7 @@ jobs:
           CHAIN_CODE=99
           ASSET_PROOF_CODE=99
           OBSERVED_ASSET_REFERENCE_CODE=99
+          MEDIA_INTEGRITY_CODE=99
 
           if [ -f "$P15_PROOF_OUT_DIR/environment-evidence.json" ]; then
             npm run p15:elementor-target-environment-intake -- \
@@ -307,11 +312,23 @@ jobs:
             OBSERVED_ASSET_REFERENCE_CODE=$?
           fi
 
+          if [ -f "$P15_PROOF_OUT_DIR/asset-proof-evidence.json" ] \
+            && [ -f "$P15_PROOF_OUT_DIR/asset-content-integrity-evidence.json" ]; then
+            npm run p15:target-managed-media-integrity -- \
+              --candidate "$P15_ASSET_VECTOR_DIR/candidate.json" \
+              --profile "$P15_ASSET_VECTOR_DIR/target-profile.json" \
+              --asset-proof "$P15_PROOF_OUT_DIR/asset-proof-evidence.json" \
+              --integrity-evidence "$P15_PROOF_OUT_DIR/asset-content-integrity-evidence.json" \
+              --out "$P15_PROOF_OUT_DIR/asset-content-integrity-intake.json"
+            MEDIA_INTEGRITY_CODE=$?
+          fi
+
           echo "P15_ENV_INTAKE_CODE=$ENV_CODE" >> "$GITHUB_ENV"
           echo "P15_PROOF_INTAKE_CODE=$PROOF_CODE" >> "$GITHUB_ENV"
           echo "P15_CHAIN_INTAKE_CODE=$CHAIN_CODE" >> "$GITHUB_ENV"
           echo "P15_ASSET_PROOF_INTAKE_CODE=$ASSET_PROOF_CODE" >> "$GITHUB_ENV"
           echo "P15_OBSERVED_ASSET_REFERENCE_CODE=$OBSERVED_ASSET_REFERENCE_CODE" >> "$GITHUB_ENV"
+          echo "P15_MEDIA_INTEGRITY_CODE=$MEDIA_INTEGRITY_CODE" >> "$GITHUB_ENV"
           exit 0
 
       - name: Retain server diagnostics
@@ -340,6 +357,7 @@ jobs:
           test "$P15_CHAIN_INTAKE_CODE" = "0"
           test "$P15_ASSET_PROOF_INTAKE_CODE" = "0"
           test "$P15_OBSERVED_ASSET_REFERENCE_CODE" = "0"
+          test "$P15_MEDIA_INTEGRITY_CODE" = "0"
 
           jq -e '.classification == "QUALIFIED_FOR_BOUND_TARGET_PROOF"' \
             "$P15_PROOF_OUT_DIR/environment-intake.json"
@@ -365,3 +383,8 @@ jobs:
             "$P15_PROOF_OUT_DIR/observed-asset-reference-evidence.json"
           jq -e '.evidence.evidenceAuthenticationStatus == "OBSERVED_PROOF_VALIDATED" and .evidence.internalDecisionStatus == "NOT_RUN" and .authenticationAuthority == false and .referenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false' \
             "$P15_PROOF_OUT_DIR/observed-asset-reference-evidence.json"
+
+          jq -e '.classification == "TARGET_MANAGED_CONTENT_INTEGRITY_PASS" and .evidenceValid == true and .assetProofValid == true and .assetProofClassification == "ASSET_BOUND_FULL_PASS" and .candidateBindingMatches == true and .profileBindingMatches == true and .referenceReviewBindingMatches == true and .observedTargetMatches == true and .evidenceReferenceMatches == true and .sourceFixtureMatchesCanonical == true and .contentDigestMatches == true and .attachmentMetadataValid == true' \
+            "$P15_PROOF_OUT_DIR/asset-content-integrity-intake.json"
+          jq -e '.mimeType == "image/png" and (.width > 0) and (.height > 0) and .referenceClosureClaim == false and .assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false' \
+            "$P15_PROOF_OUT_DIR/asset-content-integrity-intake.json"
