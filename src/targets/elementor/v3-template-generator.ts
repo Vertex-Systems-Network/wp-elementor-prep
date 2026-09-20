@@ -25,7 +25,15 @@ import {
   type ElementorWidgetV04,
 } from './template-v04';
 
-export const P15_ELEMENTOR_V3_GENERATOR_VERSION = 'p15-elementor-v3-template-generator-v2' as const;
+export const P15_ELEMENTOR_V3_GENERATOR_VERSION = 'p15-elementor-v3-template-generator-v3' as const;
+
+export const P15_ELEMENTOR_BUTTON_ALIGNMENT_EVIDENCE = Object.freeze({
+  elementorVersion: '4.2.4',
+  sourcePath: 'includes/widgets/traits/button-trait.php',
+  sourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5',
+  controlName: 'align',
+  targetValues: ['left', 'center', 'right', 'justify'] as const,
+});
 
 export type P15ElementorV3GenerationStatus =
   | 'REJECTED_INVALID_IR'
@@ -103,6 +111,12 @@ function mapJustification(value: P15NeutralContainerNode['justifyContent']): str
 }
 
 function mapTextAlignment(value: P15NeutralAlignment | P15NeutralTextAlignment | undefined): string | undefined {
+  return value;
+}
+
+function mapButtonAlignment(value: P15NeutralAlignment | undefined): 'left' | 'center' | 'right' | undefined {
+  if (value === 'start') return 'left';
+  if (value === 'end') return 'right';
   return value;
 }
 
@@ -187,7 +201,7 @@ function textEditorWidget(node: P15NeutralTextNode, state: GenerationState): Ele
 
 function buttonWidget(node: P15NeutralButtonNode, state: GenerationState): ElementorWidgetV04 {
   const settings: Record<string, unknown> = { text: node.text };
-  const align = mapTextAlignment(node.align);
+  const align = mapButtonAlignment(node.align);
   if (align !== undefined) settings.align = align;
   if (node.url !== undefined) {
     settings.link = {
