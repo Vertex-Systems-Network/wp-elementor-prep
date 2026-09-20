@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-20 — P15 condition-bound responsive Container boxed width
+
+- Continued issue #597 as the next independently evidenced responsive slice after merged PR #596 / issue #595.
+- Exact Elementor `4.2.4` Container blob `3486766b9565af99536ae205ed1936bb155daed0` defines `content_width` default `boxed`, conditions responsive `boxed_width` on that value and defines the shared px Slider range `500..1600`. Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d`, Slider blob `f56798bd5e0a2bee5a7c3a7771ecbaf2af87fb7f` and exact converter fixture blob `27c8d0eadae77a9c4e33258111829f47ed9e217b` anchor suffixes/value shape/persisted tablet-mobile keys.
+- The resolver accepts only explicit integer px `500..1600` for `boxed_width_tablet` / `boxed_width_mobile`; desktop `content_width` / `boxed_width` remain untouched and omitted breakpoints stay absent.
+- The exact condition is fail-closed: a generated target with omitted `content_width` uses Elementor's documented `boxed` default, explicit `boxed` is accepted, and any future explicit non-boxed value blocks the override.
+- Percent/vw/em/rem/custom/CSS strings, expressions, fractional/non-finite/out-of-range values and authority inflation fail closed. Sanitized summaries omit source content/template/candidate bytes.
+
+
 ## 2026-09-20 — P15 security-bounded responsive Container min-height
 
 - Continued issue #595 as the next independently evidenced responsive slice after Container margin and the P15 operator-input symlink hardening.
