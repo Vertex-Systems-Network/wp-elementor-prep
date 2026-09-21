@@ -218,3 +218,13 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - No local test/CI PASS is claimed before focused PR exact-head verification.
 - Implementation milestone ends before PR creation and CI polling.
 
+
+## 2026-09-22 — #653 focused PR opened
+
+- Opened PR #654 from `p14/vertical-stack-runtime-adapter` against exact main `d4cbf53d4e07c05df91f01bdec967262100452df`.
+- PR creation head was `00259f5bc868c3e76167ffb77f60f11df468caef`.
+- Bound compact state, coordination queue and Runner Benchmark to PR #654.
+- Final exact PR head is intentionally uncertified until the next user `continue` performs the single allowed consolidated exact-head status refresh.
+- No CI/status polling is performed after PR creation in this milestone.
+- Production P14 registry remains empty and runtimeMutationEnabled remains false.
+
