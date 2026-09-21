@@ -4,7 +4,8 @@ Status: approved foundation plan
 Date: 2026-09-07  
 Operational workflow updated: 2026-09-08  
 Commercial multi-target expansion aligned: 2026-09-11  
-Reliability/compatibility audit added: 2026-09-11
+Reliability/compatibility audit added: 2026-09-11  
+Runner benchmark / final-batch policy added: 2026-09-21
 
 ## 1. Product intent
 
@@ -58,7 +59,8 @@ The repository maintains:
 - `CHANGELOG.md`: material work history;
 - `docs/MARKET_RESEARCH_PLAN.md`: recurring R0 research method and public-market snapshot;
 - `docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md`: recurring R1 reliability/compatibility contract;
-- `docs/COMMERCIAL_EXPANSION_PLAN.md`: commercial/target-adapter roadmap.
+- `docs/COMMERCIAL_EXPANSION_PLAN.md`: commercial/target-adapter roadmap;
+- `docs/RUNNER_BENCHMARK.md`: canonical Runner-dependent task queue and consolidated final-batch execution ledger.
 
 `AGENTS.md` enforces reading/updating these files.
 
@@ -241,11 +243,29 @@ Only after issues, PR/MRs and required R0/R1 gates are processed.
 
 Use focused issue/branch/PR work, preserve green CI and keep exact-build/provenance-sensitive paths intact unless the task requires changes.
 
-### F. Mandatory end-of-work sync
+### F. Runner benchmark and consolidated final-batch execution
+
+Runner-dependent work is a first-class planning artifact.
+
+1. Read `docs/RUNNER_BENCHMARK.md` at session start.
+2. Whenever a GitHub Actions/CI/hosted-runner/target-harness task is discovered, add it to the benchmark immediately with phase/issue, trigger, workflow/runner, dependencies, expected evidence, execution class and status.
+3. Default non-blocking Runner work to `FINAL_BATCH`. Continue development with focused local/static/unit checks while those entries accumulate.
+4. Classify a Runner task as `BLOCKING_NOW` and execute it immediately when its result is security-critical, required to continue safely, migration/destructive/authority-sensitive, release-blocking for the active acceptance objective, or required by repository merge rules.
+5. Keep post-merge-only controls as `POST_MERGE`; do not misclassify live/manual Figma or marketplace evidence as synthetic Runner evidence.
+6. At the final integration checkpoint, execute all required `FINAL_BATCH` entries together against the exact candidate head.
+7. Bind results to exact commit SHA, workflow/run identity, conclusion and required artifact/receipt identity.
+8. If a batched task fails, fix the cause, rerun the affected task(s), then rerun every exact-head gate required for merge/release.
+9. Batching is an efficiency mechanism only. It never authorizes skipping, weakening, reinterpreting or fabricating CI/security/runtime acceptance.
+
+Canonical ledger: `docs/RUNNER_BENCHMARK.md`.
+
+### G. Mandatory end-of-work sync
 
 After meaningful work:
 
-- run relevant tests/verifiers;
+- run focused local/static/unit verification during development;
+- execute required blocking Runner work immediately and the consolidated final Runner batch at the integration checkpoint;
+- update `docs/RUNNER_BENCHMARK.md` whenever its queue/evidence changes;
 - update PROJECT_STATE/NEXT_ACTIONS/ROADMAP/CHANGELOG;
 - update DECISIONS for durable policy changes;
 - update README module/overall status;
