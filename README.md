@@ -28,6 +28,12 @@ Canonical planning/status docs:
 
 Machine-readable operational registry: `config/runtime-artifacts.json`, schema v3.
 
+## Development toolchain
+
+The accepted repository toolchain requires **Node.js 22.12.0 or newer**. CI and Node-backed release/security proof workflows exercise the exact floor `22.12.0`; `.nvmrc` pins the same developer baseline.
+
+The coordinated test/build matrix is explicit rather than accidental peer resolution: `vitest 5.0.1`, `vite 8.3.0`, `esbuild 0.28.2`, `playwright-core 1.63.0` and `@types/node 26.6.1`. Locked installs use `npm ci`; `--force` and `--legacy-peer-deps` are not part of the accepted workflow.
+
 ## Live development status
 
 > **Progress policy:** implementation, runtime acceptance and external review are separate evidence states. New future scope does not reduce already-completed historical core progress.
@@ -44,7 +50,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`553bfba0ae3cad4c94d7dd6b5c78c96ec3fde698`
+`ce8d314e9fceae5e5db84ae91a206d9248186da3`
 
 ### Recent verified P16 sequence
 
