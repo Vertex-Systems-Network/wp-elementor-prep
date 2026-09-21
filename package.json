@@ -44,7 +44,8 @@
     "p15:target-managed-media-integrity": "node scripts/p15-target-managed-media-integrity-intake.mjs",
     "p15:target-managed-media-review-prerequisite": "node scripts/p15-target-managed-media-review-prerequisite.mjs",
     "p15:target-managed-media-portability": "node scripts/p15-target-managed-media-portability-intake.mjs",
-    "p15:target-managed-media-internal-decision": "node scripts/p15-target-managed-media-internal-decision.mjs"
+    "p15:target-managed-media-internal-decision": "node scripts/p15-target-managed-media-internal-decision.mjs",
+    "p17:local-browser-proof": "node scripts/p17-local-browser-proof.mjs"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.117.0",
