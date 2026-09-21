@@ -64,3 +64,5 @@ claims:
   - {id: CL-061, statement: p15_659_requires_explicit_contentWidthMode_full_and_integer_tablet_mobile_width_px_500_through_1600, value: true}
   - {id: CL-062, statement: p15_659_write_surface_is_only_content_width_full_width_tablet_and_width_mobile_and_desktop_width_is_untouched, value: true}
   - {id: CL-063, statement: p15_659_keeps_responsive_inference_figma_mutation_network_compatibility_production_and_download_authority_false, value: true}
+  - {id: CL-064, statement: pr_660_is_active_exact_head_verification_path_for_p15_659, value: true}
+  - {id: CL-065, statement: p15_659_has_no_ci_or_runtime_pass_claim_before_exact_head_verification, value: true}
