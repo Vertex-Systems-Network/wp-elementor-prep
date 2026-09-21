@@ -299,3 +299,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Qualification advanced to v5 with bounded implementation blockers empty, internal runtime/confirmation enabled, and acceptance/target-compatibility authority still false.
 - README and verifier now show P14 100% implementation (6/6 bounded slices), explicitly separate from runtime/production acceptance.
 - Opened PR #658 against exact main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`. No local/CI PASS is claimed before exact-head verification.
+
+## 2026-09-22 — PR #658 first exact-head typecheck failure repaired
+
+- Exact head `7c59735eb483bda22bde339613f9a73946dcaceb` passed README/status verification.
+- CI `35657998573` / job `106526346083` and P12 Final `35657998570` / job `106526268511` failed at the same TypeScript error.
+- Root cause: the intentional malicious-preview regression attempted to assign `true` through the literal `mutationEnabled: false` type in `P14PlanPreviewV1`.
+- Repair `2f2fa40c46c950d3b5953b876a2315128096734d` constructs the forged value and casts through `unknown`, preserving the negative security test without production-code changes.
+- No runtime/security/authority gate was weakened. New head remains uncertified and is not polled in this repair milestone.
+
