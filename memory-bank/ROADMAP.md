@@ -25,7 +25,7 @@ Last updated: 2026-09-21
 | P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review active; production registry empty; #159 before real mutation exposure |
 | P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded responsive mapping includes direction, linked-px gap, flex alignment, px padding, #576 explicit wrap and #578 wrap-conditioned align-content; #564–#574 managed-media evidence/decision contract remains bounded; no retained operator approval is supplied, and arbitrary-host/general media portability plus broader responsive/matrix coverage remain pending |
 | P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
-| P17 | HTML/CSS/JS export + code-to-design import | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, static-first; JS sandbox spec required |
+| P17 | HTML/CSS/JS export + code-to-design import | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static neutral IR/export/package gate + exact local Chrome render proof; visual fidelity, JS, reconstruction and production authority remain separate |
 | P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
 | P19 | Asset pack + font manifest + design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Stored-original vs rendered policy; font/API constraints |
 | P20 | Round-trip visual QA + exact section portability | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Target render harness + optional offline-first WP Builders Bridge |
@@ -45,7 +45,7 @@ Last updated: 2026-09-21
 
 Overall project progress is intentionally not collapsed into one synthetic percentage. Implementation, runtime acceptance and external approval are separate evidence states.
 
-R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open. P14 is active with no stable numeric denominator and no production mutation authority. P15 has one retained controlled target proof but no broad compatibility/production authority; P16 remains target-validation unwired. Both remain `N/A` progress. P17-P26 remain preflight frozen/not started. P27 execution remains deferred.
+R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open. P14 is active with no stable numeric denominator and no production mutation authority. P15 has one retained controlled target proof but no broad compatibility/production authority; P16 remains target-validation unwired. Both remain `N/A` progress. P17 foundation implementation is active with a bounded controlled local browser proof and no visual-fidelity/reconstruction/production authority. P18-P26 remain preflight frozen/not started. P27 execution remains deferred.
 
 ## Current P15 implementation truth
 
