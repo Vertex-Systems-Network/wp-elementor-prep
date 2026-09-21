@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: f77ac93460bcb4625b76b914d81bd63fd9706982
+observed_main_sha: c8950242a2848b4f58828d7e3220f59062305442
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -7,16 +7,17 @@ claims:
   - {id: CL-004, statement: pr_642_merged_and_issue_641_closed, value: true}
   - {id: CL-005, statement: pr_644_merged_and_issue_643_closed, value: true}
   - {id: CL-006, statement: pr_646_merged_and_issue_645_closed, value: true}
-  - {id: CL-007, statement: p13_emits_BR_SAFE_VERTICAL_STACK_CANDIDATE_v1_only_from_accepted_p5_vertical_stack_eligibility, value: true}
-  - {id: CL-008, statement: production_p14_safe_recipe_registry_remains_empty_after_issue_641, value: true}
-  - {id: CL-009, statement: p14_mutation_vocabulary_models_complete_p5_vertical_stack_write_surface_after_issue_641, value: true}
-  - {id: CL-010, statement: issue_641_qualification_has_no_accepted_validation_profile_and_grants_no_production_authority, value: true}
-  - {id: CL-011, statement: pr_646_exact_head_required_observed_gate_set_passed_before_merge, value: true}
-  - {id: CL-012, statement: first_post_merge_pr_triggered_workflow_refresh_for_f77ac934_returned_no_runs_and_grants_no_pass_claim, value: true}
-  - {id: CL-013, statement: issue_647_is_active_post_merge_reconciliation, value: true}
-  - {id: CL-014, statement: issue_287_requires_repository_admin_authority, value: true}
-  - {id: CL-015, statement: issue_159_requires_genuine_external_runtime_evidence, value: true}
-  - {id: CL-016, statement: issue_84_requires_genuine_manual_release_evidence, value: true}
-  - {id: CL-017, statement: issue_182_is_deferred_final_release_gate, value: true}
-  - {id: CL-018, statement: issue_119_is_current_roadmap_owner_for_next_bounded_p14_implementation, value: true}
-  - {id: CL-019, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}
+  - {id: CL-007, statement: pr_648_merged_and_issue_647_closed, value: true}
+  - {id: CL-008, statement: p13_emits_BR_SAFE_VERTICAL_STACK_CANDIDATE_v1_only_from_accepted_p5_vertical_stack_eligibility, value: true}
+  - {id: CL-009, statement: production_p14_safe_recipe_registry_remains_empty, value: true}
+  - {id: CL-010, statement: p14_mutation_vocabulary_models_complete_p5_vertical_stack_write_surface, value: true}
+  - {id: CL-011, statement: pr_648_exact_head_required_observed_gate_set_passed_before_merge, value: true}
+  - {id: CL-012, statement: first_post_merge_pr_triggered_workflow_refresh_for_c8950242_returned_no_runs_and_grants_no_pass_claim, value: true}
+  - {id: CL-013, statement: issue_649_is_active_p14_r2_validation_profile_contract, value: true}
+  - {id: CL-014, statement: issue_649_does_not_authorize_runtime_mutation_or_production_registry_binding, value: true}
+  - {id: CL-015, statement: issue_287_requires_repository_admin_authority, value: true}
+  - {id: CL-016, statement: issue_159_requires_genuine_external_runtime_evidence, value: true}
+  - {id: CL-017, statement: issue_84_requires_genuine_manual_release_evidence, value: true}
+  - {id: CL-018, statement: issue_182_is_deferred_final_release_gate, value: true}
+  - {id: CL-019, statement: issue_119_is_current_roadmap_owner_for_p14_implementation, value: true}
+  - {id: CL-020, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}
