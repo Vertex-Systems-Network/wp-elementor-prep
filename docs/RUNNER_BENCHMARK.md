@@ -57,13 +57,13 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | Queue ID | Phase / issue | Task / trigger | Runner / workflow | Dependencies | Class | Expected evidence | Status |
 |---|---|---|---|---|---|---|---|
-| — | — | No additional deferred Runner tasks recorded yet. | — | — | — | — | EMPTY |
+| RQ-634-FINAL | #634 | Full exact-head acceptance after coordinated Node/toolchain migration | CI; CodeQL; P12 Final Release Artifact; P12 Offline Acceptance; Integration Readiness; P15 Real Elementor Target Proof; P17 Local Browser Proof | regenerated deterministic lockfile and Node 22 workflow/runtime contract | `FINAL_BATCH` | all required exact-head gates PASS with run identities retained | QUEUED |
 
 ## Blocking-now queue
 
 | Queue ID | Phase / issue | Why blocking now | Runner / workflow | Expected evidence | Status |
 |---|---|---|---|---|---|
-| — | — | No blocking Runner task recorded at policy creation. | — | — | EMPTY |
+| RQ-634-LOCK | #634 | Generate a deterministic Node 22 / Vitest 5 / Vite 8 / esbuild 0.28 lockfile before normal CI can run | Toolchain Lockfile Refresh | exact generated `package-lock.json` artifact bound to branch commit/run identity; no lifecycle scripts during generation | BLOCKING_NOW |
 
 ## Required workflow for AI agents
 
