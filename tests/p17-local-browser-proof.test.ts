@@ -212,5 +212,9 @@ describe('P17 local browser harness security contract', () => {
     expect(script).toContain("allowedUrls.has(request.url())");
     expect(script).not.toContain('page.goto("http');
     expect(script).not.toContain("page.goto('http");
+
+    const workflow = readFileSync('.github/workflows/p17-local-browser-proof.yml', 'utf8');
+    expect(workflow).toContain('ref: ${{ github.event.pull_request.head.sha || github.sha }}');
+    expect(workflow).toContain('P17_PROOF_GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}');
   });
 });
