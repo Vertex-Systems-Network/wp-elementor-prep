@@ -180,3 +180,13 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Sandbox archive verification could not execute because the environment blocked the unviewed archive URL; no local test/CI PASS is claimed.
 - Implementation milestone ends before PR creation and CI polling.
 
+
+## 2026-09-21 — #651 focused PR opened
+
+- Opened PR #652 from `p14/vertical-stack-target-addressing` against exact main `ef4895ae480744e70f5477fe4443411201dbf33f`.
+- PR creation head was `1c92125c4933a8bb1e208863de79e7e5ae419323`.
+- Bound compact state, coordination queue and Runner Benchmark to PR #652 in follow-up state commits.
+- Final exact PR head is intentionally uncertified until the next user `continue` performs the one allowed consolidated exact-head status refresh.
+- No CI/status polling is performed after PR creation in this milestone.
+- Production P14 registry remains empty; runtime mutation/confirmation authority remains disabled.
+
