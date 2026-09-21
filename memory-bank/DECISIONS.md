@@ -297,3 +297,15 @@ Status: ACCEPTED
 Competitor prices are point-in-time market signals, not a price list to copy. Free / Pro / Agency remains the packaging hypothesis, but exact price points should not be frozen until accepted P15-P20 workflows provide evidence about user value, support burden, conversion friction and operating cost.
 
 Current research snapshot: `docs/R0_MARKET_SNAPSHOT_2026-09-11.md`.
+
+## D-043 — Runner-dependent work is benchmarked and batched by default
+Date: 2026-09-21  
+Status: ACCEPTED
+
+Every GitHub Actions, CI matrix, hosted/self-hosted Runner, target-harness or equivalent Runner-dependent task discovered during development is recorded immediately in `docs/RUNNER_BENCHMARK.md`.
+
+The default class is `FINAL_BATCH`: development continues with focused local/static/unit verification and non-blocking Runner tasks accumulate for one consolidated exact-head execution at the final integration checkpoint.
+
+A Runner task is instead `BLOCKING_NOW` and must execute immediately when the result is security-critical, required to continue safely, destructive/migration/authority-sensitive, release-blocking for the active acceptance objective, or required by repository merge rules. Post-merge-only controls remain `POST_MERGE`.
+
+Batching is only an efficiency policy. It never permits skipping or weakening CI/security/release/runtime acceptance, and it never converts live/manual external evidence into synthetic Runner evidence. Failed final-batch tasks are fixed and rerun, followed by every required exact-head merge/release gate.

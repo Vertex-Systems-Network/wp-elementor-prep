@@ -1,0 +1,90 @@
+# Runner Benchmark
+
+Status: CANONICAL / ACTIVE  
+Owner issue: #631  
+Established: 2026-09-21
+
+## Purpose
+
+This file is the canonical queue for development work that requires GitHub Actions, hosted/self-hosted runners, CI matrices, target harness runners, or other repository Runner execution.
+
+The objective is to avoid repeatedly spending Runner time after every small implementation step while preserving exact-head security, release, and acceptance requirements.
+
+## Mandatory policy
+
+1. Every newly discovered Runner-dependent task MUST be added here when it is discovered.
+2. Every entry MUST record its phase/issue, trigger, required workflow/runner, dependencies, expected evidence, execution class, and current status.
+3. The default execution class is `FINAL_BATCH`: keep developing with focused local/static/unit verification and execute queued Runner work together at the final integration checkpoint.
+4. Use `BLOCKING_NOW` instead of `FINAL_BATCH` when the Runner result is:
+   - security-critical;
+   - required to continue safely;
+   - required to validate a migration or destructive/authority-changing change;
+   - release-blocking for the current acceptance objective;
+   - required by a repository rule before merge.
+5. `POST_MERGE` is reserved for controls that can only observe the merged `main` state.
+6. External/manual runtime evidence such as live Figma account or marketplace actions is not converted into synthetic Runner work. Track it in its owning phase/issue instead.
+7. Batching never authorizes skipping, weakening, reinterpreting, or fabricating a required check.
+8. After a final batch failure, fix the cause, rerun the directly affected Runner task(s), then rerun every exact-head gate required for merge/release.
+9. A Runner task is complete only when retained evidence exists: workflow/run identity, exact commit SHA, conclusion, and any required artifact/receipt identity.
+
+## Execution classes
+
+| Class | Meaning |
+|---|---|
+| `FINAL_BATCH` | Defer until the final consolidated Runner pass for the active development/release train. |
+| `BLOCKING_NOW` | Run immediately because later work would otherwise be unsafe, invalid, or blocked. |
+| `POST_MERGE` | Run/observe only after the accepted PR is merged to `main`. |
+| `CONDITIONAL` | Required only when the documented path/phase/target surface is touched. |
+
+## Standing final-batch baseline
+
+These are the standing repository Runner gates. A focused release train may require a subset during iteration, but the final exact-head checkpoint must satisfy every gate required by the repository/phase.
+
+| Benchmark ID | Gate | Runner / workflow | Class | Trigger | Expected evidence | Status |
+|---|---|---|---|---|---|---|
+| RB-001 | Core CI | GitHub Actions / CI | `FINAL_BATCH` | Every merge candidate | exact-head typecheck, tests, build and repository contracts PASS | BASELINE |
+| RB-002 | Security analysis | CodeQL + locked dependency audit | `FINAL_BATCH` | Every security/release candidate and whenever required by branch policy | CodeQL PASS and dependency audit meets configured threshold | BASELINE |
+| RB-003 | Final release artifact | P12 Final Release Artifact | `FINAL_BATCH` | Release/provenance-sensitive merge candidate | exact-head artifact/provenance verification PASS | BASELINE |
+| RB-004 | Cross-platform offline acceptance | P12 Offline Acceptance | `FINAL_BATCH` | Release/integration checkpoint | required Linux/Windows/macOS matrix PASS | BASELINE |
+| RB-005 | Integration readiness | Integration Readiness | `FINAL_BATCH` | Every PR because the workflow is always-reporting | exact-head readiness PASS | BASELINE |
+| RB-006 | Elementor real-target proof | P15 Real Elementor Target Proof | `CONDITIONAL` | P15 bridge/import/render/proof-chain or target-binding surface changes | exact-bound target proof PASS with retained run identity | CONDITIONAL |
+| RB-007 | Main PR-origin audit | Main PR Origin Audit | `POST_MERGE` | Every push/merge to `main` | merged-PR association PASS and forced-update detection remains clean | POST_MERGE |
+
+## Deferred Runner queue
+
+Add one row immediately when a new Runner-dependent task is discovered. Do not wait until the end of the phase to remember it.
+
+| Queue ID | Phase / issue | Task / trigger | Runner / workflow | Dependencies | Class | Expected evidence | Status |
+|---|---|---|---|---|---|---|---|
+| — | — | No additional deferred Runner tasks recorded yet. | — | — | — | — | EMPTY |
+
+## Blocking-now queue
+
+| Queue ID | Phase / issue | Why blocking now | Runner / workflow | Expected evidence | Status |
+|---|---|---|---|---|---|
+| — | — | No blocking Runner task recorded at policy creation. | — | — | EMPTY |
+
+## Required workflow for AI agents
+
+When developing:
+
+1. inspect this file at session start;
+2. whenever work implies a Runner action, create/update its benchmark row immediately;
+3. run focused local/static/unit checks during implementation;
+4. continue implementation while `FINAL_BATCH` items accumulate;
+5. stop and execute any `BLOCKING_NOW` item before proceeding;
+6. at the final integration checkpoint, execute the consolidated Runner batch;
+7. bind each result to the exact PR-head SHA/run ID and update the row;
+8. fix failures and rerun affected checks;
+9. rerun required exact-head gates before merge;
+10. after merge, verify `POST_MERGE` controls and retain their result.
+
+## Completion rule
+
+A development/release train may not be called complete while:
+
+- a required `BLOCKING_NOW` entry is unresolved;
+- a required `FINAL_BATCH` entry for that train is unexecuted or failed;
+- exact-head evidence is stale relative to the merge candidate;
+- a required `POST_MERGE` control has not been observed;
+- the Runner benchmark disagrees with the owning issue/roadmap state.

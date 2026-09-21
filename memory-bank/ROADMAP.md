@@ -1,10 +1,11 @@
 # Roadmap
 
-Last updated: 2026-09-20
+Last updated: 2026-09-21
 
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
 | AI-native governance/tooling | Memory-bank, issue/PR-first lifecycle, R0 research, R1 reliability, CI/provenance | REPO-SIDE DETECTION COMPLETE / ADMIN ENFORCEMENT IN PROGRESS | N/A | `──────────` | Release-train cadence active; #287 admin branch/ruleset enforcement still required |
+| Runner benchmark / final-batch execution | Canonical Runner queue, blocking-vs-deferred classification, consolidated exact-head Runner batch | DEFINED / ACTIVE | N/A | `──────────` | Add every discovered Runner task to `docs/RUNNER_BENCHMARK.md`; execute non-blocking items together at final integration |
 | P0 | Specification, architecture, repository foundation | COMPLETE | 100% | `██████████` | None |
 | P1 | Audit-only scanner/discovery/scoring | COMPLETE | 100% | `██████████` | None |
 | P2 | Deterministic classifier semantics + evidence | COMPLETE | 100% | `██████████` | None |
@@ -116,7 +117,9 @@ The artifact is registered in `config/runtime-artifacts.json` schema v3 as the m
 4. R1 compatibility/reliability contract freeze.
 5. Highest-priority unblocked roadmap obligation.
 6. One focused release train per acceptance objective.
-7. Focused checks during iteration; full exact-head CI/release/offline gates at merge.
-8. Canonical memory/README truth synchronized only when behavior/status/authority actually changes.
-9. No synthetic runtime/external evidence or synthetic overall project percentage.
-10. Implementation-complete and production-accepted remain separate.
+7. Record every discovered Runner-dependent task in `docs/RUNNER_BENCHMARK.md`; default non-blocking items to the consolidated `FINAL_BATCH`.
+8. Execute `BLOCKING_NOW` Runner entries immediately when security/safety/release prerequisites require them.
+9. Focused local/static/unit checks during iteration; consolidated exact-head Runner/CI/release/offline gates at final integration/merge.
+10. Canonical memory/README truth synchronized only when behavior/status/authority actually changes.
+11. No synthetic runtime/external evidence or synthetic overall project percentage.
+12. Implementation-complete and production-accepted remain separate.
