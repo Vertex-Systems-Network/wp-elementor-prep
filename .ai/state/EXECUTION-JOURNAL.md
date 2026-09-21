@@ -155,3 +155,14 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - No production/runtime/security/authorization behavior changed and no gate was weakened.
 - New exact head remains uncertified; no workflow polling occurs in this repair milestone.
 
+## 2026-09-21 — #650 merged; P14 R3 candidate target-addressing slice activated
+
+- PR #650 repaired exact head `5142487d8b1d55db8f0a156d4b5d3b675f4ff637` was observed green across CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- PR #650 merged as main `ef4895ae480744e70f5477fe4443411201dbf33f`; Issue #649 closed completed.
+- The first post-merge PR-triggered workflow refresh for the merge SHA returned no runs; no post-merge PASS was inferred.
+- Issue #651 opened under roadmap #119 for deterministic source→candidate target addressing.
+- Activated branch `p14/vertical-stack-target-addressing` from exact main.
+- Current P13→P14 plans carry source target node IDs while retained duplicates receive new descendant identities; direct source-ID mutation authority is therefore forbidden.
+- Production P14 registry remains empty; live runtime mutation/confirmation remain disabled.
+- No R3 implementation code was added in this activation milestone.
+
