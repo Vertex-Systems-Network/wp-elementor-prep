@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `64c8077eb37a728efa86a749a95e10f7bdce03c2`  
 Active Issue: `#659`  
-Active PR: none yet  
+Active PR: `#660`  
 Active branch: `p15/responsive-full-width`
 
 ## Completed P14 R6 transition
@@ -38,8 +38,9 @@ Active branch: `p15/responsive-full-width`
 - Stale source/candidate replay, duplicate/non-Container IDs, malformed values/units, wrong mode, unknown fields, existing conflicts and authority inflation fail closed.
 - Responsive inference, custom breakpoints, CSS parsing, network access, Figma mutation, compatibility/production/closure and download authority remain false.
 - README and memory-bank truth now reconcile P14 merge and #659 active development.
-- No local/CI PASS is claimed yet for #659.
+- PR #660 is open against exact main `64c8077eb37a728efa86a749a95e10f7bdce03c2`.
+- No local/CI PASS is claimed yet for #659 / PR #660.
 
 ## Exact next safe action
 
-Open the focused PR for #659 against exact main `64c8077eb37a728efa86a749a95e10f7bdce03c2`, then bind its final post-state-sync head into compact state and Runner Benchmark. Do not poll the newly opened exact-head workflows in this same milestone; the next user `continue` performs one consolidated exact-head status refresh.
+On the next user `continue`, resolve the final post-PR-state-binding head of PR #660 and perform exactly one consolidated exact-head status refresh. If required checks are pending, checkpoint and end without polling again. If a gate fails, diagnose/fix that exact failure on the following milestone. Merge under the user's standing consent only after the full required exact-head gate set is green.
