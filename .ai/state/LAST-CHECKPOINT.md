@@ -1,25 +1,24 @@
 # Last Durable Checkpoint
 
-Canonical `main` carries a neutral checkpoint. Active release trains update the checkpoint on their working branch only when a durable code/process milestone changes.
+Status: VERIFYING  
+Repository: `Vertex-Systems-Network/wp-elementor-prep`  
+Observed main: `ce8d314e9fceae5e5db84ae91a206d9248186da3`  
+Active Issue: `#637`  
+Active PR: `#638`  
+Active branch: `docs/delivery-resilient-ai-flow`
 
-## Resume contract
+## Milestone
 
-A working-branch checkpoint must retain:
+Mandatory AI Engineering Supervisor contract is integrated with the existing delivery-resilient AI-native flow.
 
-- repository;
-- owning issue;
-- branch;
-- PR number if one exists;
-- exact candidate head SHA if one exists;
-- the single logical milestone completed in the turn;
-- external dependency/run identity if known;
-- exact next action;
-- unresolved blockers and authority boundaries.
+## Current coordination truth
 
-Runner polling ticks are not durable milestones and must not create checkpoint commits after exact-head checks start. For queued/in-progress Runner state, GitHub PR/check/run metadata is authoritative.
+- PR #638 is the active accepted governance path for Issue #637.
+- PR #636 is open/actionable and is the next accepted path after #638; unrelated development must not bypass it.
+- #287 remains admin-blocked.
+- #159 and #84 remain external/manual evidence dependencies.
+- #182 remains deferred.
 
-## Neutral main checkpoint
+## Exact next safe action
 
-- repository: `Vertex-Systems-Network/wp-elementor-prep`
-- active release train: none recorded in canonical main
-- next action: inspect Issues first, then open PRs, then resume the highest-priority safe train
+Perform ONE consolidated status refresh for the exact current PR #638 head. If required checks are still running, report WAITING_EXTERNAL and end the milestone without another source commit or refresh. If all are green, the next user turn may perform the merge milestone.
