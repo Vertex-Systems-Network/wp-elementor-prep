@@ -1,0 +1,57 @@
+name: Toolchain Lockfile Refresh
+
+on:
+  push:
+    branches:
+      - toolchain/node22-vitest5
+    paths:
+      - package.json
+      - .github/workflows/toolchain-lockfile-refresh.yml
+
+permissions:
+  contents: read
+
+jobs:
+  generate-lockfile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node 22.12.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22.12.0
+
+      - name: Generate deterministic lockfile without lifecycle scripts
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Verify requested toolchain versions in lockfile
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+          const lock = JSON.parse(readFileSync('package-lock.json', 'utf8'));
+          const root = lock.packages?.[''];
+          const required = {
+            node: '>=22.12.0',
+            vitest: '5.0.1',
+            vite: '8.3.0',
+            esbuild: '0.28.2',
+          };
+          if (pkg.engines?.node !== required.node || root?.engines?.node !== required.node) process.exit(2);
+          for (const [name, version] of Object.entries(required).filter(([name]) => name !== 'node')) {
+            if (pkg.devDependencies?.[name] !== version || root?.devDependencies?.[name] !== version) process.exit(3);
+            if (lock.packages?.[`node_modules/${name}`]?.version !== version) process.exit(4);
+          }
+          NODE
+
+      - name: Upload generated lockfile
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: node22-vitest5-lockfile-${{ github.run_number }}
+          path: package-lock.json
+          if-no-files-found: error
+          retention-days: 7
