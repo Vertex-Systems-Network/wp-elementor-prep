@@ -309,3 +309,13 @@ The default class is `FINAL_BATCH`: development continues with focused local/sta
 A Runner task is instead `BLOCKING_NOW` and must execute immediately when the result is security-critical, required to continue safely, destructive/migration/authority-sensitive, release-blocking for the active acceptance objective, or required by repository merge rules. Post-merge-only controls remain `POST_MERGE`.
 
 Batching is only an efficiency policy. It never permits skipping or weakening CI/security/release/runtime acceptance, and it never converts live/manual external evidence into synthetic Runner evidence. Failed final-batch tasks are fixed and rerun, followed by every required exact-head merge/release gate.
+
+## D-045 — AI execution uses one-milestone short turns with deterministic resume
+Date: 2026-09-21  
+Status: ACCEPTED
+
+AI-native repository work uses one logical milestone per user-triggered development turn. Once a Runner batch starts, only one status inspection is permitted in that turn; queued/in-progress work causes checkpoint + response completion rather than waiting or repeated polling.
+
+GitHub PR/issue/check/run metadata is authoritative for volatile Runner state. Stable `.ai/state` files define the execution protocol and durable resume contract. Status-only commits must not mutate an exact candidate head after Runner checks start.
+
+Security-critical and `BLOCKING_NOW` work still blocks later implementation, but the block may span user turns. This policy optimizes repository workflow against long-turn delivery failures without claiming control over browser/network/ChatGPT transport or UI availability.
