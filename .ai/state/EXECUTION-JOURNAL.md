@@ -166,3 +166,17 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Production P14 registry remains empty; live runtime mutation/confirmation remain disabled.
 - No R3 implementation code was added in this activation milestone.
 
+
+## 2026-09-21 — #651 P14 R3 candidate target-addressing contract implemented
+
+- Added bounded versioned source→candidate target-address evidence for the exact vertical-stack candidate path.
+- Derivation is bound to the reviewed P13 source root ID and exact Build-Ready structural fingerprint.
+- Child-index paths plus clone-stable root/target structural witnesses resolve retained-duplicate descendants without treating source IDs as mutation authority.
+- P13→P14 exact vertical-stack handoff now remains REVIEW when the current source tree is unavailable or stale.
+- Address evidence is included in action identity, plan integrity/digest, confirmation binding, semantic input snapshots and detached adapter callback snapshots.
+- Missing, malformed, duplicate, ambiguous, wrong-root, stale/reordered, unresolved and source-identity evidence fails closed.
+- Added focused regressions for clone-ID divergence, stale paths, root/identity protection, duplicate evidence, handoff gating and confirmation invalidation.
+- No live Figma adapter, production applyRecipe implementation or production safe-recipe registry binding was added.
+- Sandbox archive verification could not execute because the environment blocked the unviewed archive URL; no local test/CI PASS is claimed.
+- Implementation milestone ends before PR creation and CI polling.
+
