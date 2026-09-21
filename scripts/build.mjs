@@ -32,6 +32,7 @@ await build({
     ...provenanceDefines,
     ...p7BuildDefines,
     __PLUGIN_VERSION__: JSON.stringify(packageJson.version),
+    __P14_INTERNAL_ACTIVATION__: 'true',
   },
 });
 

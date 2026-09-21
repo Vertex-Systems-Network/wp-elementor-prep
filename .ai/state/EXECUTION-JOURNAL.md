@@ -286,3 +286,35 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Repairs: `2e8f8435f17d613b46d452c9afc33dbf871e551a`, `1e7ef35cd12d70b6b793ca07ebf17e07975b0e12`; README sync `07a0934ecf0ffa3dce982bc052e0bffbc85457b7`.
 - No runtime/security/authority gate was weakened. New head remains uncertified and is not polled in this repair milestone.
 
+
+## 2026-09-22 — P14 R6 explicit confirmation and internal activation implemented
+
+- Reconciled PR #656 exact head `545c23b4e796540da07a789288857dedc19a50e9` as 7/7 PASS and merged main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`; Issue #655 closed.
+- Opened Issue #657 and branch `p14/explicit-confirmation-internal-activation`.
+- Added plugin-side reviewed activation session bound to exact file/page/frame, P13 run, source fingerprint, plan digest and eligible action IDs.
+- Guided Prepare review now derives exact clone-stable target addressing from the selected source tree while the review artifact itself remains non-authorizing.
+- UI sends explicit confirm intent only; the plugin reloads P13 evidence, rechecks context/freshness, rescans the source, rebuilds the plan and requires exact reviewed-session identity before confirmation/transaction.
+- Exact fresh confirmation enters the existing retained-duplicate transaction through the accepted vertical-stack adapter; source replacement/deletion is still forbidden.
+- Development build enables internal activation; publishable release build hard-disables it and release UI strips/forbids all P14 activation surfaces.
+- Qualification advanced to v5 with bounded implementation blockers empty, internal runtime/confirmation enabled, and acceptance/target-compatibility authority still false.
+- README and verifier now show P14 100% implementation (6/6 bounded slices), explicitly separate from runtime/production acceptance.
+- Opened PR #658 against exact main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`. No local/CI PASS is claimed before exact-head verification.
+
+## 2026-09-22 — PR #658 first exact-head typecheck failure repaired
+
+- Exact head `7c59735eb483bda22bde339613f9a73946dcaceb` passed README/status verification.
+- CI `35657998573` / job `106526346083` and P12 Final `35657998570` / job `106526268511` failed at the same TypeScript error.
+- Root cause: the intentional malicious-preview regression attempted to assign `true` through the literal `mutationEnabled: false` type in `P14PlanPreviewV1`.
+- Repair `2f2fa40c46c950d3b5953b876a2315128096734d` constructs the forged value and casts through `unknown`, preserving the negative security test without production-code changes.
+- No runtime/security/authority gate was weakened. New head remains uncertified and is not polled in this repair milestone.
+
+
+## 2026-09-22 — PR #658 second exact-head stale-contract failures repaired
+
+- Head `1127a4273a74e00e9f56e2bf13f8e1f2bda47e90` passed status verification and TypeScript typecheck.
+- CI `35658550631` / job `106528156488` reached 1603 PASS / 2 FAIL; P12 Final `35658550769` / job `106528042131` failed on the same test stage.
+- Review-packet main-panel test still expected pre-R6 inline `reviewPacket` / `evidence` variables; runtime correctly uses the fresh-state wrapper `current.reviewPacket` / `current.evidence`.
+- R4 adapter regression still expected R5 runtime/confirmation flags false; R6 v5 intentionally enables them only for internal/dev confirmed activation while acceptance and target-compatibility authority remain false.
+- Repairs: `f5c45ccc3115e0d6b4ce982ce02a7d4166a67c98` and `d85e38ae7f92f795f7d62c817fa05ba96d2e4563`.
+- No production behavior or security authority was weakened. New head remains uncertified and is not polled in this repair milestone.
+

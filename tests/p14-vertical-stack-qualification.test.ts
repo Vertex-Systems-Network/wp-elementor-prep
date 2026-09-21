@@ -16,7 +16,7 @@ describe('P14 vertical-stack recipe qualification', () => {
   it('freezes the exact P13/P5 identity and complete bounded P5 write surface', () => {
     expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION).toEqual({
       schemaVersion: 1,
-      qualificationVersion: 4,
+      qualificationVersion: 5,
       sourceRuleId: 'BR_SAFE_VERTICAL_STACK_CANDIDATE',
       sourceRuleVersion: 1,
       p5Recipe: 'vertical-stack',
@@ -33,21 +33,19 @@ describe('P14 vertical-stack recipe qualification', () => {
         'padding',
       ],
       validationProfileId: 'P14_VALIDATE_VERTICAL_STACK_V1',
-      blockers: [
-        'P14_CONFIRMATION_UI_NOT_ACCEPTED',
-      ],
+      blockers: [],
       candidateOnlyRequired: true,
       runtimeAdapterImplemented: true,
       productionRegistryEligible: true,
       productionRegistryBound: true,
-      runtimeMutationEnabled: false,
-      confirmationEnabled: false,
+      runtimeMutationEnabled: true,
+      confirmationEnabled: true,
       acceptanceAuthority: false,
       targetCompatibilityClaim: false,
     });
   });
 
-  it('serializes deterministically with the accepted profile but without runtime or production authority', () => {
+  it('serializes deterministically with the accepted profile but with internal confirmed runtime activation but without acceptance authority', () => {
     const first = serializeP14VerticalStackRecipeQualification();
     const second = serializeP14VerticalStackRecipeQualification();
 
@@ -56,7 +54,8 @@ describe('P14 vertical-stack recipe qualification', () => {
     expect(first).toContain('"runtimeAdapterImplemented": true');
     expect(first).toContain('"productionRegistryEligible": true');
     expect(first).toContain('"productionRegistryBound": true');
-    expect(first).toContain('"runtimeMutationEnabled": false');
+    expect(first).toContain('"runtimeMutationEnabled": true');
+    expect(first).toContain('"confirmationEnabled": true');
     expect(first).toContain('"acceptanceAuthority": false');
   });
 
@@ -88,7 +87,7 @@ describe('P14 vertical-stack recipe qualification', () => {
     expect(validateP14SafeRecipeRegistry(registry)).toEqual({ valid: true, failures: [] });
   });
 
-  it('binds exactly one production planning recipe while keeping mutation fail-closed', () => {
+  it('binds exactly one production planning recipe with internal confirmed mutation activation', () => {
     expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toHaveLength(1);
     expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings[0]).toMatchObject({
       sourceRuleId: 'BR_SAFE_VERTICAL_STACK_CANDIDATE',
@@ -103,13 +102,12 @@ describe('P14 vertical-stack recipe qualification', () => {
     expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.productionRegistryBound).toBe(true);
     expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.validationProfileId).toBe('P14_VALIDATE_VERTICAL_STACK_V1');
     expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.runtimeAdapterImplemented).toBe(true);
-    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.runtimeMutationEnabled).toBe(false);
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.runtimeMutationEnabled).toBe(true);
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.confirmationEnabled).toBe(true);
     expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.blockers).not.toContain(
       'P14_RUNTIME_ADAPTER_NOT_WIRED',
     );
-    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.blockers).toEqual([
-      'P14_CONFIRMATION_UI_NOT_ACCEPTED',
-    ]);
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.blockers).toEqual([]);
     expect(createP14VerticalStackProductionRecipe()).toMatchObject({
       id: P14_VERTICAL_STACK_PRODUCTION_RECIPE_ID,
       version: P14_VERTICAL_STACK_PRODUCTION_RECIPE_VERSION,

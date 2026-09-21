@@ -15,6 +15,8 @@ import { planSafeRecipes } from '../core/safe-recipe-planner';
 import type { SafeRecipeKind } from '../core/safe-recipe-types';
 import { scanSceneNode } from '../core/scanner';
 import { buildBuildReadyReport, serializeBuildReadyReportJson } from '../core/build-ready';
+import { buildP14PreparationConfirmation } from '../core/p14-preparation-confirmation';
+import { runP14RetainedDuplicateTransaction } from '../core/p14-retained-duplicate-transaction';
 import { buildAuditReport } from '../core/scoring';
 import {
   generateBacklog,
@@ -53,6 +55,12 @@ import { buildP14PlanPreview, serializeP14PlanPreviewJson } from './p14-plan-pre
 import { buildP14ReviewPacket, serializeP14ReviewPacketJson } from './p14-review-packet';
 import { assessP14PreviewContextBinding } from './p14-preview-context';
 import { assessP14PreviewFreshness } from './p14-preview-freshness';
+import {
+  assessP14InternalActivationSession,
+  buildP14InternalActivationSession,
+  type P14InternalActivationSessionV1,
+} from './p14-internal-activation';
+import { FigmaP14VerticalStackRetainedDuplicateAdapter } from './p14-vertical-stack-retained-duplicate-adapter';
 import { buildP15ElementorV1PreviewFromFigmaFrame } from './p15-neutral-export-extractor';
 import { buildP15PluginPreviewReport } from './p15-plugin-preview-report';
 import { buildP15TargetProfilePreviewReport } from './p15-target-profile-preview-report';
@@ -79,16 +87,18 @@ import {
 
 declare const __html__: string;
 declare const __PLUGIN_VERSION__: string;
+declare const __P14_INTERNAL_ACTIVATION__: boolean;
 
 const PLUGIN_VERSION = __PLUGIN_VERSION__;
 const RUNTIME_BUILD = currentP5RuntimeBuildIdentity();
 const BACKLOG_STORAGE_PREFIX = 'p9-backlog-v1';
 let auditSequence = 0;
 
-type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize' | 'p6-page-flow-calibration' | 'batch-run' | 'batch-checkpoint';
+type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize' | 'p6-page-flow-calibration' | 'batch-run' | 'batch-checkpoint' | 'p14-guided-prepare';
 let p5OperationInFlight: P5ExclusiveOperation | null = null;
 let p7BatchState: BatchQueueState | null = null;
 let p7CancelRequested = false;
+let p14ReviewedActivation: P14InternalActivationSessionV1 | null = null;
 const p7Metadata = createDefaultFigmaP7MetadataStore();
 
 figma.showUI(__html__, {
@@ -103,7 +113,7 @@ const fullFrameValidator = new FullFrameValidator((message) => {
 
 function postError(
   message: string,
-  type: 'audit-error' | 'validation-error' | 'safe-fix-error' | 'batch-error' = 'audit-error',
+  type: 'audit-error' | 'validation-error' | 'safe-fix-error' | 'batch-error' | 'p14-prepare-error' = 'audit-error',
 ): void {
   figma.ui.postMessage({ type, message });
 }
@@ -121,7 +131,7 @@ function backlogStorageKey(fileKey: string, pageId: string, frameId: string): st
   return `${BACKLOG_STORAGE_PREFIX}:${fileKey}:${pageId}:${frameId}`;
 }
 
-function beginExclusiveP5Operation(operation: P5ExclusiveOperation, errorType: 'validation-error' | 'safe-fix-error' | 'batch-error'): boolean {
+function beginExclusiveP5Operation(operation: P5ExclusiveOperation, errorType: 'validation-error' | 'safe-fix-error' | 'batch-error' | 'p14-prepare-error'): boolean {
   if (p5OperationInFlight) {
     postError(`Another P5 operation (${p5OperationInFlight}) is still running. Wait for it to finish before starting ${operation}.`, errorType);
     return false;
@@ -414,7 +424,64 @@ async function runP13RuntimeEvidenceViewer(): Promise<void> {
   figma.notify(`P13 runtime evidence loaded: ${evidence.buildReady.score.score ?? '—'} / ${evidence.buildReady.score.status} · ${eligibility}.`);
 }
 
+async function loadCurrentP14ReviewState(requestedFrame: FrameNode) {
+  const requestedFileKey = typeof figma.fileKey === 'string' && figma.fileKey ? figma.fileKey : 'local-file';
+  const requestedPageId = figma.currentPage.id;
+
+  const inspection = await inspectLatestP13RuntimeEvidence(figma.clientStorage);
+  const evidence = inspection.evidence;
+  if (!evidence) {
+    const reason = inspection.status === 'EMPTY'
+      ? 'No persisted P13 Build-Ready evidence is available yet.'
+      : `Persisted P13 Build-Ready evidence was rejected (${inspection.status}): ${inspection.reason ?? 'unknown reason.'}`;
+    throw new Error(`${reason} Run Audit on exactly one current Frame first.`);
+  }
+
+  const currentFrame = selectedFrame();
+  const currentFileKey = typeof figma.fileKey === 'string' && figma.fileKey ? figma.fileKey : 'local-file';
+  const currentPageId = figma.currentPage.id;
+  if (!currentFrame
+    || currentFrame.id !== requestedFrame.id
+    || currentFileKey !== requestedFileKey
+    || currentPageId !== requestedPageId) {
+    throw new Error('The Figma selection changed while Guided Prepare evidence was loading. Run Audit on the currently selected Frame and retry.');
+  }
+
+  const context = {
+    fileKey: currentFileKey,
+    pageId: currentPageId,
+    frameId: currentFrame.id,
+  };
+  const contextBinding = assessP14PreviewContextBinding(evidence.context, context);
+  if (!contextBinding.valid) {
+    throw new Error(`${contextBinding.failures.join(' ')} Run Audit on this selected Frame first.`);
+  }
+
+  const sourceTree = scanSceneNode(currentFrame);
+  const currentBuildReady = buildBuildReadyReport(sourceTree);
+  const freshness = assessP14PreviewFreshness(
+    evidence,
+    currentBuildReady,
+    PLUGIN_VERSION,
+    P7_BUILD_IDENTITY,
+  );
+  if (!freshness.valid) {
+    throw new Error(`${freshness.failures.join(' ')} Run Audit on this selected Frame first.`);
+  }
+
+  const preview = buildP14PlanPreview(evidence.buildReady, sourceTree);
+  const reviewPacket = buildP14ReviewPacket({
+    preview,
+    evidence,
+    pluginVersion: PLUGIN_VERSION,
+    runtimeBuild: P7_BUILD_IDENTITY,
+  });
+
+  return { evidence, currentFrame, context, preview, reviewPacket };
+}
+
 async function runP14GuidedPreparePreview(): Promise<void> {
+  p14ReviewedActivation = null;
   const requestedFrame = selectedFrame();
   if (!requestedFrame) {
     figma.ui.postMessage({
@@ -423,88 +490,97 @@ async function runP14GuidedPreparePreview(): Promise<void> {
     });
     return;
   }
-  const requestedFileKey = typeof figma.fileKey === 'string' && figma.fileKey ? figma.fileKey : 'local-file';
-  const requestedPageId = figma.currentPage.id;
 
   try {
-    const inspection = await inspectLatestP13RuntimeEvidence(figma.clientStorage);
-    const evidence = inspection.evidence;
-    if (!evidence) {
-      const reason = inspection.status === 'EMPTY'
-        ? 'No persisted P13 Build-Ready evidence is available yet.'
-        : `Persisted P13 Build-Ready evidence was rejected (${inspection.status}): ${inspection.reason ?? 'unknown reason.'}`;
-      figma.ui.postMessage({
-        type: 'p14-plan-preview-unavailable',
-        message: `${reason} Run Audit on exactly one current Frame first.`,
-      });
-      return;
+    const current = await loadCurrentP14ReviewState(requestedFrame);
+    let activation: P14InternalActivationSessionV1 | null = null;
+    if (__P14_INTERNAL_ACTIVATION__) {
+      try {
+        activation = buildP14InternalActivationSession(current.preview, current.context);
+        p14ReviewedActivation = activation;
+      } catch {
+        activation = null;
+      }
     }
 
-    const currentFrame = selectedFrame();
-    const currentFileKey = typeof figma.fileKey === 'string' && figma.fileKey ? figma.fileKey : 'local-file';
-    const currentPageId = figma.currentPage.id;
-    if (!currentFrame
-      || currentFrame.id !== requestedFrame.id
-      || currentFileKey !== requestedFileKey
-      || currentPageId !== requestedPageId) {
-      figma.ui.postMessage({
-        type: 'p14-plan-preview-unavailable',
-        message: 'The Figma selection changed while Guided Prepare evidence was loading. Run Audit on the currently selected Frame and retry.',
-      });
-      return;
-    }
-
-    const contextBinding = assessP14PreviewContextBinding(evidence.context, {
-      fileKey: currentFileKey,
-      pageId: currentPageId,
-      frameId: currentFrame.id,
-    });
-    if (!contextBinding.valid) {
-      figma.ui.postMessage({
-        type: 'p14-plan-preview-unavailable',
-        message: `${contextBinding.failures.join(' ')} Run Audit on this selected Frame first.`,
-      });
-      return;
-    }
-
-    const currentBuildReady = buildBuildReadyReport(scanSceneNode(currentFrame));
-    const freshness = assessP14PreviewFreshness(
-      evidence,
-      currentBuildReady,
-      PLUGIN_VERSION,
-      P7_BUILD_IDENTITY,
-    );
-    if (!freshness.valid) {
-      figma.ui.postMessage({
-        type: 'p14-plan-preview-unavailable',
-        message: `${freshness.failures.join(' ')} Run Audit on this selected Frame first.`,
-      });
-      return;
-    }
-
-    const preview = buildP14PlanPreview(evidence.buildReady);
-    const reviewPacket = buildP14ReviewPacket({
-      preview,
-      evidence,
-      pluginVersion: PLUGIN_VERSION,
-      runtimeBuild: P7_BUILD_IDENTITY,
-    });
     figma.ui.postMessage({
       type: 'p14-plan-preview-result',
-      preview,
-      previewJson: serializeP14PlanPreviewJson(preview),
-      reviewPacket,
-      reviewPacketJson: serializeP14ReviewPacketJson(reviewPacket),
-      context: { ...evidence.context },
-      capturedAt: evidence.capturedAt,
+      preview: current.preview,
+      previewJson: serializeP14PlanPreviewJson(current.preview),
+      reviewPacket: current.reviewPacket,
+      reviewPacketJson: serializeP14ReviewPacketJson(current.reviewPacket),
+      activation,
+      context: { ...current.evidence.context },
+      capturedAt: current.evidence.capturedAt,
     });
-    figma.notify(`P14 Guided Prepare preview loaded: ${preview.summary.status} · read-only.`);
+    figma.notify(
+      activation
+        ? 'P14 Guided Prepare review loaded. Explicit confirmation is required to create a separate prepared duplicate.'
+        : `P14 Guided Prepare preview loaded: ${current.preview.summary.status} · no executable reviewed action.`,
+    );
   } catch (error) {
+    p14ReviewedActivation = null;
     const message = error instanceof Error ? error.message : String(error);
     figma.ui.postMessage({
       type: 'p14-plan-preview-unavailable',
       message: `P14 Guided Prepare preview could not be loaded safely: ${message}`,
     });
+  }
+}
+
+async function runP14GuidedPrepareConfirmed(): Promise<void> {
+  if (!__P14_INTERNAL_ACTIVATION__) {
+    postError('P14 internal activation is disabled in this build.', 'p14-prepare-error');
+    return;
+  }
+  const reviewed = p14ReviewedActivation;
+  if (!reviewed) {
+    postError('P14 confirmation requires a fresh reviewed Guided Prepare preview. Preview again and retry.', 'p14-prepare-error');
+    return;
+  }
+
+  const operation: P5ExclusiveOperation = 'p14-guided-prepare';
+  if (!beginExclusiveP5Operation(operation, 'p14-prepare-error')) return;
+
+  p14ReviewedActivation = null;
+  try {
+    const requestedFrame = selectedFrame();
+    if (!requestedFrame) {
+      throw new Error('P14 confirmation requires the same single reviewed Frame to remain selected.');
+    }
+
+    const current = await loadCurrentP14ReviewState(requestedFrame);
+    const activation = assessP14InternalActivationSession(reviewed, current.preview, current.context);
+    if (!activation.valid) {
+      throw new Error(`P14 reviewed activation is stale: ${activation.failures.join(' | ')} Preview again before confirming.`);
+    }
+    const plan = current.preview.plan;
+    if (!plan) throw new Error('P14 reviewed activation no longer has a valid preparation plan.');
+
+    const confirmedAt = new Date().toISOString();
+    const confirmation = buildP14PreparationConfirmation(plan, confirmedAt);
+    const receipt = await runP14RetainedDuplicateTransaction({
+      plan,
+      confirmation,
+      transactionId: `p14-ui-${Date.now().toString(36)}`,
+      preparedName: 'P14 Prepared Duplicate',
+      now: () => new Date().toISOString(),
+    }, new FigmaP14VerticalStackRetainedDuplicateAdapter());
+
+    figma.ui.postMessage({
+      type: 'p14-guided-prepare-result',
+      receipt,
+    });
+    figma.notify(
+      receipt.status === 'PREPARED' || receipt.status === 'PREPARED_WITH_REVIEW'
+        ? 'P14 prepared duplicate created and retained separately from the approved source.'
+        : `P14 preparation ended safely with status ${receipt.status}.`,
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    postError(`P14 Guided Prepare confirmation failed safely: ${message}`, 'p14-prepare-error');
+  } finally {
+    endExclusiveP5Operation(operation);
   }
 }
 
@@ -986,6 +1062,11 @@ figma.ui.onmessage = async (message: unknown) => {
     return;
   }
 
+  if (type === 'p14-guided-prepare-confirm-request') {
+    await runP14GuidedPrepareConfirmed();
+    return;
+  }
+
   if (type === 'p15-elementor-preview-request') {
     runP15ElementorPreview();
     return;
@@ -1101,6 +1182,7 @@ figma.ui.onmessage = async (message: unknown) => {
 };
 
 figma.on('selectionchange', () => {
+  p14ReviewedActivation = null;
   const sequence = ++auditSequence;
   if (p5OperationInFlight === 'batch-run' || p7BatchState?.status === 'PAUSED') return;
   if (figma.currentPage.selection.length === 1) void runAudit(sequence);

@@ -83,6 +83,11 @@ const FORBIDDEN_DEVELOPER_TOKENS = [
   'p6-runtime-evidence',
   'p7-runtime-evidence',
   'p14-plan-preview-request',
+  'p14-guided-prepare-confirm-request',
+  'p14-guided-prepare-result',
+  'Confirm & create prepared duplicate',
+  'INTERNAL P14 ACTIVATION',
+  'P14 INTERNAL GUIDED PREPARE RESULT',
   'Preview Guided Prepare',
   'P14 GUIDED PREPARE PREVIEW',
   'P14 Runtime Review Packet',
@@ -112,7 +117,7 @@ export function buildReleaseUi(developmentUi) {
 
   releaseUi = requireReplacement(
     releaseUi,
-    '<div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>',
+    '<div class="sub">Audit + P13 Build-Ready + internal confirmed P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>',
     '<div class="sub">Audit + actionable backlog + Elementor preview + locally validated Elementor JSON download + visual validation + safety-gated Safe Fix + sequential batch preparation</div>',
     'development UI subtitle',
   );

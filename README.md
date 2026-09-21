@@ -11,7 +11,7 @@ Current product surfaces:
 - deterministic audit/backlog/Build-Ready outputs;
 - safety-gated P5/P6/P7 preparation foundations;
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
-- P14 Guided Prepare foundation through candidate-only retained-duplicate runtime adapter plus exact production planning-registry binding; mutation execution, confirmation/UI activation and production authority remain locked;
+- P14 Guided Prepare bounded implementation through exact-registry-backed retained-duplicate runtime plus explicit internal/dev confirmation activation; publishable release activation is hard-disabled and stripped, while production acceptance and target compatibility remain unclaimed;
 - P15 Elementor R1 evidence chain plus bounded target-neutral IR, deterministic local Elementor v0.4 Template JSON candidate generation, read-only selected-Figma-Frame Auto Layout/plain-text extraction, exact source-bound Heading/Button semantic resolution, exact URL-bound image-review resolution, exact source/candidate-bound tablet/mobile container direction + linked-px gap + flex alignment + px-padding overrides, sanitized plugin preview, retained WP 6.8 + Elementor 4.2.4 controlled proof plus one exact controlled URL-only Image asset observation, exact declared-profile reference alignment and exact retained-candidate identity binding;
 - P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding, iterative structural bounds, depth/value/text-bounded + accessor/own-shape-safe direct canonicalization with object-cardinality preflight, prototype-safe canonicalization and alias-safe atomic output writes;
 - exact-build release/provenance tooling.
@@ -52,7 +52,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5`
+`ee406e2cafdc714e074cfb5d1e5a594db93ff727`
 
 ### Current P14 AI-native implementation track
 
@@ -61,13 +61,13 @@ P14 implementation progress is measured against six explicit bounded slices, not
 1. R1 — vertical-stack qualification/write-surface freeze — implemented and merged.
 2. R2 — exact `P14_VALIDATE_VERTICAL_STACK_V1` evidence contract — implemented and merged.
 3. R3 — deterministic source→candidate target addressing — implemented and merged.
-4. R4 — candidate-only retained-duplicate Figma runtime adapter — implemented and merged via PR #654 on main `fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5`.
-5. R5 — exact production safe-recipe registry binding — implemented in PR #656; first exact-head batch exposed two stale pre-R5 test expectations, both repaired, and fresh exact-head verification is pending.
-6. R6 — production confirmation/UI/internal activation boundary — not started; remains non-authorizing and separate from registry planning authority.
+4. R4 — candidate-only retained-duplicate Figma runtime adapter — implemented and merged via PR #654.
+5. R5 — exact production safe-recipe registry binding — implemented and merged via PR #656 on main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`.
+6. R6 — explicit confirmation + internal retained-duplicate activation — implemented in PR #658; the repaired batch cleared typecheck and exposed two stale R5/R6 contract assertions, both repaired, and fresh exact-head verification is pending.
 
-Therefore current **P14 implementation progress is 83% (5/6 bounded slices implemented)**. This percentage is implementation-only; it does not claim live Figma runtime acceptance, target compatibility, production acceptance, marketplace acceptance, or release authority.
+Therefore current **P14 implementation progress is 100% (6/6 bounded slices implemented)**. This is implementation-only/internal readiness; it does not claim live Figma runtime acceptance, target compatibility, production acceptance, marketplace acceptance, or release authority.
 
-Current R5 authority remains fail-closed: `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` contains exactly the accepted `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` → `P14_VERTICAL_STACK_V1@1` planning binding, while `runtimeMutationEnabled=false`, `confirmationEnabled=false`, no P14 mutation UI/message route exists, and R6 remains required before any execution exposure.
+Current R6 authority remains bounded: the development/internal build can expose explicit confirmation only after exact file/page/frame, P13 freshness, source fingerprint, plan digest, eligible-action and production-registry checks. The publishable release build hard-disables this internal activation and strips its UI. `acceptanceAuthority=false` and `targetCompatibilityClaim=false` remain fixed.
 
 ### Recent verified P16 sequence
 
@@ -179,7 +179,7 @@ Current R5 authority remains fail-closed: `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` 
 | R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Refresh per major adapter |
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
-| P14 Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / PRODUCTION REGISTRY BOUND / UI LOCKED | 83% impl | `████████░░` | R1-R5 implemented; PR #656 repaired after stale pre-R5 test expectations and awaits fresh exact-head verification/merge; exact vertical-stack planning binding only; `runtimeMutationEnabled=false`; next R6 confirmation/UI/internal activation |
+| P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 implemented; PR #658 repaired after one TS fixture defect plus two stale contract assertions and awaits fresh exact-head verification/merge; internal/dev activation only; publishable release activation disabled; acceptance/target compatibility remain false |
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded responsive slices now include direction, linked-px gap, flex alignment, px padding, #576 explicit wrap, #578 wrap-conditioned align-content, #582 uniform integer-px border radius and #586 Heading/Text responsive alignment, #590 Button responsive alignment, #592 bounded Container margin, #596 bounded Container min-height, #598 condition-bound Container boxed width and #599 bounded Container z-index; #564/#566/#568/#570/#572/#574 managed-media evidence/decision-contract line remains bounded; no retained operator approval has been supplied, and arbitrary-host/general media portability, broader responsive coverage and additional matrix evidence remain pending |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |

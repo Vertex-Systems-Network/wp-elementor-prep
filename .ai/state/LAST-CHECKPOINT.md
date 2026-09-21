@@ -2,50 +2,68 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5`  
-Active Issue: `#655`  
-Active PR: `#656`  
-Active branch: `p14/vertical-stack-production-registry`
+Observed main: `ee406e2cafdc714e074cfb5d1e5a594db93ff727`  
+Active Issue: `#657`  
+Active PR: `#658`  
+Active branch: `p14/explicit-confirmation-internal-activation`
 
-## Completed R4 transition
+## Completed R5 transition
 
-- PR #654 exact head `3810e8cd668ecd77d2371bc7c2f466037a81b05d` passed CI `35653229263`, CodeQL `35653229247`, Integration `35653229254`, P12 Offline `35653228906`, P12 Final `35653229384`, P15 `35653229039` and P17 `35653228948`.
-- PR #654 merged as main `fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5`; Issue #653 closed completed.
-- R4 retained-duplicate adapter and mandatory README progress-sync enforcement are now on main.
+- PR #656 exact head `545c23b4e796540da07a789288857dedc19a50e9` passed the full observed gate set:
+  - CI `35655638587`
+  - CodeQL `35655638646`
+  - Integration Readiness `35655637799`
+  - P12 Offline Acceptance `35655637947`
+  - P12 Final Release Artifact `35655637838`
+  - P15 Real Elementor Target Proof `35655637699`
+  - P17 Local Browser Proof `35655638156`
+- PR #656 merged by expected-head guard as main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`; Issue #655 closed completed.
+- Exact production planning binding `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` → `P14_VERTICAL_STACK_V1@1` is now on main.
 
-## P14 R5 implementation
+## P14 R6 implementation
 
-- Issue #655 owns the exact production safe-recipe registry binding.
-- `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` now contains exactly one planning binding: `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` → `P14_VERTICAL_STACK_V1@1`.
-- The binding reuses confidence 90, exact R1 mutation allowlist, exact R2 `P14_VALIDATE_VERTICAL_STACK_V1`, no prerequisites/conflicts and order class `10-structure`.
-- Qualification is version 4 with `productionRegistryEligible=true` and `productionRegistryBound=true`.
-- The R4 adapter now rejects any non-exact recipe ID/version before candidate mutation.
-- Focused qualification, registry/handoff and adapter regressions were updated, including explicit lookalike-recipe refusal.
-- README and `status:verify` now report/enforce P14 at 83% implementation (R1-R5 of six bounded slices).
-- PR #656 opened from this branch against exact main `fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5`. Creation head before PR/state binding was `8bc335ccae6371d1c1d44adb5b87ef8211079207`.
-
-## Authority boundary
-
-- Registry binding is planning authority only.
-- `runtimeMutationEnabled=false`.
-- `confirmationEnabled=false`.
-- No P14 mutation UI/message route is exposed.
-- `acceptanceAuthority=false` and `targetCompatibilityClaim=false`.
-- R6 confirmation/UI/internal activation remains separately blocked.
-- No local/CI PASS is claimed for R5 before exact-head PR verification.
+- Issue #657 owns explicit confirmation + internal retained-duplicate activation.
+- PR #658 is open against exact main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`.
+- Guided Prepare preview now receives the exact current source tree so the accepted vertical-stack path can derive clone-stable source→candidate target addresses.
+- New plugin-side reviewed activation session pins exact file/page/frame, P13 run, source fingerprint, plan digest and eligible action IDs.
+- The UI sends only an explicit confirm intent; it never supplies a plan or confirmation object as authority.
+- Confirmation reloads persisted P13 evidence, rechecks context/freshness, rescans the selected Frame, rebuilds the plan and requires an exact reviewed-session match.
+- Only an exact fresh match builds the existing P14 confirmation and invokes the existing retained-duplicate transaction through `FigmaP14VerticalStackRetainedDuplicateAdapter`.
+- The reviewed activation session is one-shot and is invalidated by selection changes.
+- Qualification v5 records the six bounded implementation slices complete with `runtimeMutationEnabled=true` and `confirmationEnabled=true` for the internal/dev boundary only.
+- Development build sets `__P14_INTERNAL_ACTIVATION__=true`; publishable release build hard-disables it with `false`.
+- The release UI contract strips and forbids all P14 review/confirmation/result surfaces.
+- `acceptanceAuthority=false` and `targetCompatibilityClaim=false` remain fixed.
+- README and `status:verify` now record P14 as 100% implementation (6/6 slices) while explicitly separating live runtime/production acceptance.
+- Focused activation-session, qualification, main-panel and release-boundary tests were updated.
+- No local/CI PASS is claimed for R6 before exact-head PR verification.
 
 ## First exact-head failure diagnosis and repair
 
-- PR #656 exact head `03a610eb9395f1d4c098686b8d741c5ce5a3c0e2` passed `status:verify` and TypeScript typecheck.
-- CI run `35655116685` / job `106516902797` and P12 Final Release Artifact run `35655116581` / job `106516633104` both reached the repository test suite and failed on the same two stale pre-R5 expectations.
-- Repository result was 1598 PASS / 2 FAIL.
-- `tests/p13-safe-preparation-candidates.test.ts` still assumed an empty production registry and expected `P14_SAFE_BINDING_REQUIRED`. Under R5 the exact production binding resolves, but without the source tree the candidate correctly remains non-executable with `P14_TARGET_ADDRESS_REQUIRED`.
-- `tests/p14-registry-bounds.test.ts` still asserted an empty production registry instead of the accepted exact singleton bounded binding.
-- Repair commit `2e8f8435f17d613b46d452c9afc33dbf871e551a` updates the default handoff/addressing expectation.
-- Repair commit `1e7ef35cd12d70b6b793ca07ebf17e07975b0e12` updates the production registry bounds contract to the exact singleton binding.
-- README repair state was synchronized in `07a0934ecf0ffa3dce982bc052e0bffbc85457b7`.
-- No runtime mutation, confirmation/UI, validation, target-addressing or security authority was weakened.
+- PR #658 exact head `7c59735eb483bda22bde339613f9a73946dcaceb` passed README/status verification.
+- CI run `35657998573` / job `106526346083` failed at TypeScript typecheck.
+- P12 Final Release Artifact run `35657998570` / job `106526268511` failed at the same repository typecheck step.
+- Exact compiler failure: `tests/p14-internal-activation.test.ts(120,5) TS2322: Type 'true' is not assignable to type 'false'.`
+- Root cause was test-only: the forged-preview regression intentionally sets `mutationEnabled=true`, but intersecting `P14PlanPreviewV1` with a mutable boolean did not widen the literal `false` property.
+- Repair commit `2f2fa40c46c950d3b5953b876a2315128096734d` now constructs the malicious fixture as an object and casts through `unknown` back to `P14PlanPreviewV1`, preserving the security regression without changing production behavior.
+- No runtime, confirmation, registry, source-protection, release-boundary or security authority was weakened.
+- README repair state is synchronized on this branch.
+- The new repaired PR head is not certified in this milestone; no fresh workflow polling occurs after the repair.
+
+## Second exact-head failure diagnosis and repair
+
+- Repaired head `1127a4273a74e00e9f56e2bf13f8e1f2bda47e90` passed README/status verification and TypeScript typecheck.
+- CI run `35658550631` / job `106528156488` reached the full test suite and reported 1603 PASS / 2 FAIL.
+- P12 Final Release Artifact run `35658550769` / job `106528042131` failed on the same repository test stage.
+- Failure 1: `tests/p14-review-packet-main-panel.test.mjs` still expected pre-R6 inline identifiers `reviewPacket` / `evidence`; the runtime now correctly serializes from the fresh-state wrapper `current.reviewPacket` / `current.evidence`.
+- Failure 2: `tests/p14-vertical-stack-retained-duplicate-adapter.test.ts` still asserted R5 `runtimeMutationEnabled=false` / `confirmationEnabled=false`; R6 qualification v5 intentionally enables those only for the internal/dev explicit-confirmation boundary while keeping `acceptanceAuthority=false` and `targetCompatibilityClaim=false`.
+- Repair commits:
+  - `f5c45ccc3115e0d6b4ce982ce02a7d4166a67c98` — align review-packet contract with the fresh-state wrapper;
+  - `d85e38ae7f92f795f7d62c817fa05ba96d2e4563` — align adapter regression with R6 internal activation while explicitly retaining false acceptance/target authority.
+- No production/runtime/security boundary was weakened; these changes update stale assertions to the already-implemented R6 contract.
+- README repair state is synchronized on this branch.
+- The new exact head remains uncertified and is not polled in this repair milestone.
 
 ## Exact next safe action
 
-On the next user `continue`, resolve the final repaired PR #656 head and perform exactly one consolidated exact-head status refresh. If required checks are pending, end without polling again. Merge only after the full exact-head required gate set is green.
+On the next user `continue`, resolve the final second-repaired PR #658 head and perform exactly one consolidated exact-head status refresh. Merge with the existing user consent only after the full exact-head required gate set is green.

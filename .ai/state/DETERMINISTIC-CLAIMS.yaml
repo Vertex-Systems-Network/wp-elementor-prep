@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5
+observed_main_sha: ee406e2cafdc714e074cfb5d1e5a594db93ff727
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -23,10 +23,10 @@ claims:
   - {id: CL-020, statement: r4_validation_emits_exact_P14_VALIDATE_VERTICAL_STACK_V1_required_checks, value: true}
   - {id: CL-021, statement: r4_rescore_uses_deterministic_p13_build_ready_analysis_and_tracks_introduced_high_or_blocker_evidence, value: true}
   - {id: CL-022, statement: r4_retain_and_discard_require_owned_distinct_candidate_and_do_not_reuse_p4_source_swap_semantics, value: true}
-  - {id: CL-023, statement: p14_vertical_stack_qualification_v4_runtime_adapter_and_production_registry_bound_true, value: true}
-  - {id: CL-024, statement: p14_vertical_stack_qualification_v4_has_only_confirmation_ui_blocker, value: true}
+  - {id: CL-023, statement: p14_vertical_stack_qualification_v5_runtime_adapter_registry_and_internal_confirmation_activation_true, value: true}
+  - {id: CL-024, statement: p14_vertical_stack_qualification_v5_has_empty_bounded_implementation_blocker_set, value: true}
   - {id: CL-025, statement: production_p14_safe_recipe_registry_contains_exact_single_vertical_stack_planning_binding, value: true}
-  - {id: CL-026, statement: p14_runtime_mutation_enabled_remains_false, value: true}
+  - {id: CL-026, statement: p14_runtime_mutation_enabled_is_true_only_for_internal_dev_activation_and_publishable_release_activation_is_hard_disabled, value: true}
   - {id: CL-027, statement: r4_focused_fake_figma_regressions_exist_but_no_test_or_ci_pass_is_claimed_before_pr_verification, value: true}
   - {id: CL-028, statement: issue_653_is_closed_after_pr_654_merge, value: true}
   - {id: CL-029, statement: issue_287_requires_repository_admin_authority, value: true}
@@ -36,14 +36,24 @@ claims:
   - {id: CL-033, statement: issue_119_is_current_roadmap_owner_for_p14_implementation, value: true}
   - {id: CL-034, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}
   - {id: CL-035, statement: pr_654_exact_head_3810e8cd_passed_required_gate_set_and_merged_as_fa1f2ea8, value: true}
-  - {id: CL-036, statement: pr_656_is_active_p14_r5_exact_head_verification_path, value: true}
+  - {id: CL-036, statement: pr_656_exact_head_545c23b4_passed_required_gate_set_and_merged_as_ee406e2c, value: true}
   - {id: CL-037, statement: readme_progress_sync_is_mandatory_on_every_material_repository_mutation, value: true}
-  - {id: CL-038, statement: status_verify_machine_checks_current_p14_readme_runtime_adapter_and_empty_registry_truth, value: true}
-  - {id: CL-039, statement: p14_readme_implementation_progress_is_83_percent_for_five_of_six_bounded_slices_and_does_not_claim_acceptance, value: true}
+  - {id: CL-038, statement: status_verify_machine_checks_current_p14_readme_r6_activation_and_dev_release_build_split_truth, value: true}
+  - {id: CL-039, statement: p14_readme_implementation_progress_is_100_percent_for_six_of_six_bounded_slices_and_does_not_claim_acceptance, value: true}
   - {id: CL-040, statement: issue_655_owns_p14_r5_exact_production_registry_binding, value: true}
   - {id: CL-041, statement: p14_production_registry_binding_is_planning_only_and_does_not_enable_runtime_mutation, value: true}
   - {id: CL-042, statement: r4_adapter_requires_exact_P14_VERTICAL_STACK_V1_at_version_1, value: true}
-  - {id: CL-043, statement: p14_r6_confirmation_ui_internal_activation_remains_not_accepted, value: true}
+  - {id: CL-043, statement: p14_r6_internal_confirmation_activation_is_implemented_on_active_pr_658_while_external_acceptance_remains_separate, value: true}
   - {id: CL-044, statement: pr_656_first_exact_head_failed_only_on_two_stale_pre_r5_test_expectations_after_status_verify_and_typecheck_passed, value: true}
   - {id: CL-045, statement: r5_default_handoff_without_source_tree_remains_non_executable_with_P14_TARGET_ADDRESS_REQUIRED, value: true}
   - {id: CL-046, statement: r5_production_registry_is_exact_singleton_and_within_registry_bounds, value: true}
+  - {id: CL-047, statement: issue_657_owns_p14_r6_explicit_confirmation_internal_activation, value: true}
+  - {id: CL-048, statement: p14_r6_ui_supplies_only_explicit_confirm_intent_and_never_plan_or_confirmation_authority, value: true}
+  - {id: CL-049, statement: p14_r6_requires_fresh_context_freshness_source_plan_and_action_identity_match_before_transaction, value: true}
+  - {id: CL-050, statement: p14_r6_internal_activation_is_enabled_in_development_build_and_hard_disabled_plus_ui_stripped_in_publishable_release, value: true}
+  - {id: CL-051, statement: p14_r6_keeps_acceptance_authority_and_target_compatibility_claim_false, value: true}
+  - {id: CL-052, statement: pr_658_first_exact_head_failed_only_on_test_fixture_literal_type_TS2322_after_status_verify_passed, value: true}
+  - {id: CL-053, statement: pr_658_TS2322_repair_changes_only_the_malicious_test_fixture_and_does_not_weaken_runtime_or_security_authority, value: true}
+  - {id: CL-054, statement: pr_658_second_repaired_head_passed_typecheck_then_failed_only_on_two_stale_contract_assertions, value: true}
+  - {id: CL-055, statement: p14_r6_review_packet_runtime_uses_current_fresh_state_wrapper_for_serialization_and_context, value: true}
+  - {id: CL-056, statement: p14_r6_adapter_regression_requires_internal_runtime_and_confirmation_true_while_acceptance_and_target_authority_remain_false, value: true}

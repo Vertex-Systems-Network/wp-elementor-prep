@@ -2,23 +2,24 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5
+observed_main_sha: ee406e2cafdc714e074cfb5d1e5a594db93ff727
 observed_main_branch: main
-active_issue: 655
-active_pr: 656
-active_branch: p14/vertical-stack-production-registry
+active_issue: 657
+active_pr: 658
+active_branch: p14/explicit-confirmation-internal-activation
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p14_r5_vertical_stack_production_registry_binding
+current_milestone: p14_r6_explicit_confirmation_internal_activation
 milestone_status: VERIFYING
-last_completed_milestone: p14_r5_pr_656_stale_pre_r5_test_contract_failures_diagnosed_and_repaired
-exact_next_safe_action: next_user_continue_resolves_repaired_pr_656_head_and_performs_one_consolidated_exact_head_status_refresh
-pending_runner_ids: [RQ-655-FINAL]
+last_completed_milestone: p14_r6_pr_658_stale_contract_assertions_diagnosed_and_repaired
+exact_next_safe_action: next_user_continue_resolves_second_repaired_pr_658_head_and_performs_one_consolidated_exact_head_status_refresh
+pending_runner_ids: [RQ-657-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - repaired_pr_656_required_exact_head_checks_not_yet_observed
-  - p14_r6_confirmation_ui_not_accepted
-  - post_merge_main_pr_origin_state_for_fa1f2ea8_not_yet_reconciled
+  - repaired_pr_658_required_exact_head_checks_not_yet_observed
+  - p14_live_runtime_acceptance_not_claimed
+  - p14_production_release_acceptance_not_claimed
+  - post_merge_main_pr_origin_state_for_ee406e2_not_yet_reconciled
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1

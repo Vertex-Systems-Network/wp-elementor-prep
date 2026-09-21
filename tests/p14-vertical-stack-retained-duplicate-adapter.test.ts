@@ -398,7 +398,7 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     await expect(adapter.discardCandidate(handle)).rejects.toThrow('unowned');
   });
 
-  it('refuses retention for the wrong transaction while production registry remains planning-only', async () => {
+  it('refuses retention for the wrong transaction while R6 activation remains explicit and bounded', async () => {
     const { runtime, source } = fixture();
     const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
     const handle = await adapter.cloneSource(source.id, 'p14-r4-retain');
@@ -406,8 +406,10 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     await expect(adapter.retainCandidate(handle, 'wrong-transaction', 'Prepared'))
       .rejects.toThrow('different transaction');
     expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toHaveLength(1);
-    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.runtimeMutationEnabled).toBe(false);
-    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.confirmationEnabled).toBe(false);
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.runtimeMutationEnabled).toBe(true);
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.confirmationEnabled).toBe(true);
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.acceptanceAuthority).toBe(false);
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.targetCompatibilityClaim).toBe(false);
     expect(runtime.nodes.has(source.id)).toBe(true);
     expect(runtime.nodes.has(handle.candidateNodeId)).toBe(true);
   });
