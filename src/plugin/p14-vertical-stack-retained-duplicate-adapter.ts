@@ -543,6 +543,9 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
   ): Promise<P14RescoreSummary> {
     const metadata = this.owned(candidate);
     const candidateRoot = await frameById(this.runtime, candidate.candidateNodeId, 'Candidate');
+    if (!candidateRoot.visible) {
+      throw new Error('P14 candidate Build-Ready re-score returned insufficient evidence because the candidate root is hidden.');
+    }
     const report = buildBuildReadyReport(scanSceneNode(candidateRoot), {}, this.now());
     if (report.score.score === null || report.score.status === 'INSUFFICIENT_EVIDENCE') {
       throw new Error('P14 candidate Build-Ready re-score returned insufficient evidence.');
