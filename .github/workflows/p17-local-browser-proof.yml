@@ -1,0 +1,76 @@
+name: P17 Local Browser Proof
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/targets/web/**'
+      - 'scripts/p17-local-browser-proof.mjs'
+      - 'fixtures/p17/**'
+      - 'tests/p17-*'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/p17-local-browser-proof.yml'
+      - 'docs/RUNNER_BENCHMARK.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/targets/web/**'
+      - 'scripts/p17-local-browser-proof.mjs'
+      - 'fixtures/p17/**'
+      - 'tests/p17-*'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/p17-local-browser-proof.yml'
+      - 'docs/RUNNER_BENCHMARK.md'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p17-local-browser-proof-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  controlled-browser-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      P17_BROWSER_PROOF_OUT_DIR: dist-p17/p17-local-browser-proof
+      P17_PROOF_GIT_SHA: ${{ github.sha }}
+      P17_PROOF_RUN_ID: ${{ github.run_id }}
+      P17_PROOF_RUN_ATTEMPT: ${{ github.run_attempt }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 20
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Resolve policy-supported Google Chrome
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome || command -v google-chrome-stable || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "Google Chrome is unavailable on the runner." >&2
+            exit 2
+          fi
+          echo "P17_CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          "$CHROME_PATH" --version
+
+      - name: Run controlled local-only browser proof
+        run: npm run p17:local-browser-proof
+
+      - name: Upload bounded browser proof receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: p17-local-browser-proof-${{ github.run_number }}
+          path: dist-p17/p17-local-browser-proof/receipt.json
+          if-no-files-found: error
+          retention-days: 14
