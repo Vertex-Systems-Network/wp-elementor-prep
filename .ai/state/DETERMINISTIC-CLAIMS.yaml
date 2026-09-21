@@ -54,3 +54,6 @@ claims:
   - {id: CL-051, statement: p14_r6_keeps_acceptance_authority_and_target_compatibility_claim_false, value: true}
   - {id: CL-052, statement: pr_658_first_exact_head_failed_only_on_test_fixture_literal_type_TS2322_after_status_verify_passed, value: true}
   - {id: CL-053, statement: pr_658_TS2322_repair_changes_only_the_malicious_test_fixture_and_does_not_weaken_runtime_or_security_authority, value: true}
+  - {id: CL-054, statement: pr_658_second_repaired_head_passed_typecheck_then_failed_only_on_two_stale_contract_assertions, value: true}
+  - {id: CL-055, statement: p14_r6_review_packet_runtime_uses_current_fresh_state_wrapper_for_serialization_and_context, value: true}
+  - {id: CL-056, statement: p14_r6_adapter_regression_requires_internal_runtime_and_confirmation_true_while_acceptance_and_target_authority_remain_false, value: true}
