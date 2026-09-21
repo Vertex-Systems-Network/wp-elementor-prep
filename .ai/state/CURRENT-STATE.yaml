@@ -1,28 +1,38 @@
-schema_version: 1
-mode: delivery-resilient-short-turn
-policy:
+schema_version: 2
+mode: delivery-resilient-ai-engineering-supervisor
+repository: Vertex-Systems-Network/wp-elementor-prep
+compact_state_path: .ai/state
+observed_main_sha: ce8d314e9fceae5e5db84ae91a206d9248186da3
+observed_main_branch: main
+active_issue: 637
+active_pr: 638
+active_branch: docs/delivery-resilient-ai-flow
+candidate_head_source: github_pull_request_head
+current_milestone: integrate_mandatory_supervisor_contract_with_existing_ai_native_flow
+milestone_status: VERIFYING
+last_completed_milestone: strict_delivery_resilience_and_project_final_runner_batching
+exact_next_safe_action: one_consolidated_status_refresh_for_pr_638_then_stop_or_merge_next_turn
+pending_runner_ids: [RB-001, RB-002, RB-003, RB-004, RB-005, RB-006, RB-008]
+blocked_runner_ids: []
+current_blockers:
+  - pr_638_exact_head_checks_must_pass
+  - pr_636_open_actionable_must_be_reconciled_next
+timeout_control:
   max_logical_milestones_per_turn: 1
-  max_runner_status_fetches_per_turn: 1
+  max_consolidated_status_refreshes_per_milestone: 1
   busy_waiting_allowed: false
-  sleep_poll_loops_allowed: false
+  tight_polling_allowed: false
+  repeated_unchanged_status_fetch_allowed: false
+  rerun_on_message_timeout_allowed: false
   checkpoint_before_external_wait: true
-  runner_pending_action: checkpoint_and_end_turn
-  default_deferable_runner_class: project_final
-  merge_required_runner_class: final_batch
-  remote_retry_loops_allowed: false
-  next_milestone_after_external_wait_allowed: false
+  pending_remote_action: END_MILESTONE
+  second_refresh_requires_material_state_transition: true
 sources_of_truth:
-  stable_protocol: .ai/state/PROTOCOL.md
-  durable_checkpoint: .ai/state/LAST-CHECKPOINT.md
+  protocol: .ai/state/PROTOCOL.md
+  last_checkpoint: .ai/state/LAST-CHECKPOINT.md
   execution_journal: .ai/state/EXECUTION-JOURNAL.md
+  deterministic_claims: .ai/state/DETERMINISTIC-CLAIMS.yaml
+  coordination_queue: .ai/state/COORDINATION-QUEUE.yaml
+  runner_benchmark_machine: .ai/state/RUNNER-BENCHMARK.yaml
+  runner_benchmark_human: docs/RUNNER_BENCHMARK.md
   volatile_runner_state: github_pr_issue_check_metadata
-active_execution:
-  repository: Vertex-Systems-Network/wp-elementor-prep
-  issue: 637
-  branch: docs/delivery-resilient-ai-flow
-  pull_request: 638
-  candidate_head_sha: authoritative_from_github_pr_head
-  candidate_head_source: github_pull_request_head
-  completed_milestone: strict delivery-resilient flow plus project-final Runner batching implemented
-  external_dependency: exact-head GitHub Runner batch after PR creation
-  next_action: finish governance branch; inspect PR 638 Runner status once; if any required check is pending, end turn and resume on next user continue
