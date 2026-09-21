@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "irVersion": "p17-neutral-web-ir-v1",
+  "title": "Controlled local browser proof",
+  "language": "en",
+  "direction": "DESIGN_TO_WEB",
+  "nodes": [
+    {
+      "kind": "container",
+      "nodeId": "root",
+      "provenance": {
+        "source": "FIGMA",
+        "sourceRef": "fixture:root"
+      },
+      "semanticTag": "main",
+      "layout": {
+        "mode": "flex",
+        "direction": "column",
+        "gapPx": 16
+      },
+      "style": {
+        "paddingPx": {
+          "top": 24,
+          "right": 24,
+          "bottom": 24,
+          "left": 24
+        },
+        "backgroundColorHex": "#f4f4f4"
+      },
+      "children": [
+        {
+          "kind": "text",
+          "nodeId": "heading",
+          "provenance": {
+            "source": "FIGMA",
+            "sourceRef": "fixture:heading"
+          },
+          "semantic": "heading",
+          "headingLevel": 1,
+          "text": "Controlled browser proof"
+        },
+        {
+          "kind": "text",
+          "nodeId": "paragraph",
+          "provenance": {
+            "source": "FIGMA",
+            "sourceRef": "fixture:paragraph"
+          },
+          "semantic": "paragraph",
+          "text": "Static HTML and CSS only."
+        }
+      ]
+    }
+  ]
+}
