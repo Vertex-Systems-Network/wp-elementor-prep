@@ -63,7 +63,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | Queue ID | Phase / issue | Why blocking now | Runner / workflow | Expected evidence | Status |
 |---|---|---|---|---|---|
-| RQ-634-LOCK | #634 | Generate a deterministic Node 22 / Vitest 5 / Vite 8 / esbuild 0.28 lockfile before normal CI can run | Toolchain Lockfile Refresh | exact generated `package-lock.json` artifact bound to branch commit/run identity; no lifecycle scripts during generation | BLOCKING_NOW |
+| RQ-634-LOCK | #634 | Generate a deterministic Node 22 / Vitest 5 / Vite 8 / esbuild 0.28 lockfile before normal CI can run | Toolchain Lockfile Refresh | run `35601367894` on input `e21af5445bff02b81afa4bf556822e1a16fdf2ae`; artifact `10639475684`, digest `sha256:ef723a8f4015565c5c22d16abf14829aba6d4234526777c37adc0848e0a83066`; generated lock committed as `5597ef67ea2b6761c5b2db7f82e56aea237dee21` | DONE |
 
 ## Required workflow for AI agents
 
