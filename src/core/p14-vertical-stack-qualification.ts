@@ -1,13 +1,20 @@
-import type { P14MutationField } from './p14-preparation-types';
+import type {
+  P14MutationField,
+  P14PreparationRecipeDefinition,
+} from './p14-preparation-types';
 import { P14_VERTICAL_STACK_VALIDATION_PROFILE_ID } from './p14-vertical-stack-validation-profile';
 
 export const P14_RECIPE_QUALIFICATION_SCHEMA_VERSION = 1 as const;
-export const P14_VERTICAL_STACK_QUALIFICATION_VERSION = 3 as const;
+export const P14_VERTICAL_STACK_QUALIFICATION_VERSION = 4 as const;
+
+export const P14_VERTICAL_STACK_PRODUCTION_RECIPE_ID = 'P14_VERTICAL_STACK_V1' as const;
+export const P14_VERTICAL_STACK_PRODUCTION_RECIPE_VERSION = 1 as const;
+export const P14_VERTICAL_STACK_PRODUCTION_ORDER_CLASS = '10-structure' as const;
 
 export type P14RecipeQualificationBlocker =
-  | 'P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED';
+  | 'P14_CONFIRMATION_UI_NOT_ACCEPTED';
 
-export interface P14VerticalStackRecipeQualificationV3 {
+export interface P14VerticalStackRecipeQualificationV4 {
   schemaVersion: typeof P14_RECIPE_QUALIFICATION_SCHEMA_VERSION;
   qualificationVersion: typeof P14_VERTICAL_STACK_QUALIFICATION_VERSION;
   sourceRuleId: 'BR_SAFE_VERTICAL_STACK_CANDIDATE';
@@ -21,7 +28,8 @@ export interface P14VerticalStackRecipeQualificationV3 {
   blockers: readonly P14RecipeQualificationBlocker[];
   candidateOnlyRequired: true;
   runtimeAdapterImplemented: true;
-  productionRegistryEligible: false;
+  productionRegistryEligible: true;
+  productionRegistryBound: true;
   runtimeMutationEnabled: false;
   confirmationEnabled: false;
   acceptanceAuthority: false;
@@ -39,17 +47,32 @@ const VERTICAL_STACK_MUTATION_ALLOWLIST = Object.freeze([
 ] satisfies P14MutationField[]);
 
 const VERTICAL_STACK_BLOCKERS = Object.freeze([
-  'P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED',
+  'P14_CONFIRMATION_UI_NOT_ACCEPTED',
 ] satisfies P14RecipeQualificationBlocker[]);
 
 /**
- * Machine-readable qualification only. The accepted validation profile now freezes the exact
- * candidate-side checks required for this already-proven P5 vertical-stack write surface.
- *
- * The candidate-only runtime adapter is implemented, but this remains deliberately non-authorizing:
- * production registry activation and user confirmation/UI wiring are separate fail-closed gates.
+ * Detached exact recipe contract accepted for the production P14 planning registry.
+ * Registry binding does not enable mutation execution, confirmation/UI or acceptance authority.
  */
-export const P14_VERTICAL_STACK_RECIPE_QUALIFICATION: P14VerticalStackRecipeQualificationV3 =
+export function createP14VerticalStackProductionRecipe(): P14PreparationRecipeDefinition {
+  return {
+    id: P14_VERTICAL_STACK_PRODUCTION_RECIPE_ID,
+    version: P14_VERTICAL_STACK_PRODUCTION_RECIPE_VERSION,
+    sourceRuleIds: ['BR_SAFE_VERTICAL_STACK_CANDIDATE'],
+    minConfidence: 90,
+    prerequisites: [],
+    mutationAllowlist: [...VERTICAL_STACK_MUTATION_ALLOWLIST],
+    validationProfileId: P14_VERTICAL_STACK_VALIDATION_PROFILE_ID,
+    conflictsWith: [],
+    orderClass: P14_VERTICAL_STACK_PRODUCTION_ORDER_CLASS,
+  };
+}
+
+/**
+ * R1-R5 are implemented for one exact vertical-stack candidate path. R6 remains fail-closed:
+ * runtime mutation execution and user confirmation/UI activation are still disabled.
+ */
+export const P14_VERTICAL_STACK_RECIPE_QUALIFICATION: P14VerticalStackRecipeQualificationV4 =
   Object.freeze({
     schemaVersion: P14_RECIPE_QUALIFICATION_SCHEMA_VERSION,
     qualificationVersion: P14_VERTICAL_STACK_QUALIFICATION_VERSION,
@@ -64,7 +87,8 @@ export const P14_VERTICAL_STACK_RECIPE_QUALIFICATION: P14VerticalStackRecipeQual
     blockers: VERTICAL_STACK_BLOCKERS,
     candidateOnlyRequired: true,
     runtimeAdapterImplemented: true,
-    productionRegistryEligible: false,
+    productionRegistryEligible: true,
+    productionRegistryBound: true,
     runtimeMutationEnabled: false,
     confirmationEnabled: false,
     acceptanceAuthority: false,
@@ -72,5 +96,5 @@ export const P14_VERTICAL_STACK_RECIPE_QUALIFICATION: P14VerticalStackRecipeQual
   });
 
 export function serializeP14VerticalStackRecipeQualification(): string {
-  return `${JSON.stringify(P14_VERTICAL_STACK_RECIPE_QUALIFICATION, null, 2)}\n`;
+  return JSON.stringify(P14_VERTICAL_STACK_RECIPE_QUALIFICATION, null, 2) + '\n';
 }

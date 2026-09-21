@@ -5,6 +5,10 @@ import type {
   P14MutationField,
   P14PreparationRecipeDefinition,
 } from './p14-preparation-types';
+import {
+  P14_VERTICAL_STACK_RECIPE_QUALIFICATION,
+  createP14VerticalStackProductionRecipe,
+} from './p14-vertical-stack-qualification';
 
 export const P14_SAFE_RECIPE_REGISTRY_SCHEMA_VERSION = 1 as const;
 
@@ -292,10 +296,12 @@ export function resolveP14SafeRecipe(
 }
 
 /**
- * Production is intentionally non-authorizing at this slice. P13 may emit an explicitly bounded
- * P14_SAFE_CANDIDATE, but candidate classification alone never grants mutation authority. A
- * production binding still requires a separately accepted recipe, validator and runtime-evidence
- * issue before being registered here.
+ * Production planning registry. This one exact binding authorizes deterministic recipe resolution
+ * only. Mutation execution, confirmation/UI, target compatibility and acceptance remain disabled.
  */
 export const PRODUCTION_P14_SAFE_RECIPE_REGISTRY: P14SafeRecipeRegistryV1 =
-  createP14SafeRecipeRegistry([]);
+  createP14SafeRecipeRegistry([{
+    sourceRuleId: P14_VERTICAL_STACK_RECIPE_QUALIFICATION.sourceRuleId,
+    sourceRuleVersion: P14_VERTICAL_STACK_RECIPE_QUALIFICATION.sourceRuleVersion,
+    recipe: createP14VerticalStackProductionRecipe(),
+  }]);

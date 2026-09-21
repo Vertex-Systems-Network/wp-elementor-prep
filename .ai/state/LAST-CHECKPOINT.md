@@ -2,75 +2,50 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `d4cbf53d4e07c05df91f01bdec967262100452df`  
-Active Issue: `#653`  
-Active PR: `#654`  
-Active branch: `p14/vertical-stack-runtime-adapter`
+Observed main: `fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5`  
+Active Issue: `#655`  
+Active PR: `#656`  
+Active branch: `p14/vertical-stack-production-registry`
 
-## P14 R4 implementation
+## Completed R4 transition
 
-- Added `FigmaP14VerticalStackRetainedDuplicateAdapter`, the first concrete P14 retained-duplicate Figma adapter for the exact `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` path.
-- Source fingerprinting uses the exact P13 Build-Ready structural hash over the current Figma source tree.
-- Cloning creates and owns a separate candidate; source fingerprint is rechecked after staging and clone-stable structure must match.
-- Every runtime action is bound to the exact R1 rule/version, confidence gate, R2 validation profile, frozen mutation allowlist and one canonical R3 target address.
-- Candidate target resolution uses #651 source-root/fingerprint-bound child-index addresses and refuses source IDs or unowned candidate handles.
-- Mutation reuses the accepted P5 strict vertical-stack transformer; no second layout algorithm was introduced.
-- Design-property writes remain exactly `layoutMode`, primary/counter sizing, primary/counter alignment, `itemSpacing` and padding.
-- Prepared labeling is metadata-only (`p14:preparedName`); node names are not mutated outside the frozen write allowlist.
-- Validation emits the exact 11 required `P14_VALIDATE_VERTICAL_STACK_V1` checks for layout writes plus structure/content/visibility/geometry preservation.
-- Candidate re-score uses deterministic P13 Build-Ready analysis and reports introduced HIGH/BLOCKER evidence relative to the source report.
-- Retain/discard enforce adapter ownership, transaction identity and source/candidate separation. P4 source-swap/replace semantics are not reused.
-- Added deterministic fake-Figma regressions for full transaction success/source immutability, unowned/source-ID refusal, path drift, geometry drift, insufficient re-score, candidate cleanup and wrong-transaction retention.
-- Qualification is now version 3 with `runtimeAdapterImplemented: true`. The runtime-adapter blocker is removed; only `P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED` remains.
-- No local/CI PASS is claimed in this implementation milestone. Exact-head repository verification is still required.
+- PR #654 exact head `3810e8cd668ecd77d2371bc7c2f466037a81b05d` passed CI `35653229263`, CodeQL `35653229247`, Integration `35653229254`, P12 Offline `35653228906`, P12 Final `35653229384`, P15 `35653229039` and P17 `35653228948`.
+- PR #654 merged as main `fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5`; Issue #653 closed completed.
+- R4 retained-duplicate adapter and mandatory README progress-sync enforcement are now on main.
+
+## P14 R5 implementation
+
+- Issue #655 owns the exact production safe-recipe registry binding.
+- `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` now contains exactly one planning binding: `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` → `P14_VERTICAL_STACK_V1@1`.
+- The binding reuses confidence 90, exact R1 mutation allowlist, exact R2 `P14_VALIDATE_VERTICAL_STACK_V1`, no prerequisites/conflicts and order class `10-structure`.
+- Qualification is version 4 with `productionRegistryEligible=true` and `productionRegistryBound=true`.
+- The R4 adapter now rejects any non-exact recipe ID/version before candidate mutation.
+- Focused qualification, registry/handoff and adapter regressions were updated, including explicit lookalike-recipe refusal.
+- README and `status:verify` now report/enforce P14 at 83% implementation (R1-R5 of six bounded slices).
+- PR #656 opened from this branch against exact main `fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5`. Creation head before PR/state binding was `8bc335ccae6371d1c1d44adb5b87ef8211079207`.
 
 ## Authority boundary
 
-- `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
-- `runtimeMutationEnabled` remains false.
-- Production confirmation/UI/menu activation remains disabled.
-- No target compatibility, real-Figma acceptance or production acceptance is inferred.
-- #287 remains admin-blocked; #159 remains external-runtime-evidence blocked; #84 remains manual-release-evidence blocked; #182 remains the deferred P27 gate.
+- Registry binding is planning authority only.
+- `runtimeMutationEnabled=false`.
+- `confirmationEnabled=false`.
+- No P14 mutation UI/message route is exposed.
+- `acceptanceAuthority=false` and `targetCompatibilityClaim=false`.
+- R6 confirmation/UI/internal activation remains separately blocked.
+- No local/CI PASS is claimed for R5 before exact-head PR verification.
 
-## Focused PR
+## First exact-head failure diagnosis and repair
 
-- PR #654 opened from `p14/vertical-stack-runtime-adapter` against exact main `d4cbf53d4e07c05df91f01bdec967262100452df`.
-- PR creation head was `00259f5bc868c3e76167ffb77f60f11df468caef`.
-- This checkpoint and Runner metadata are committed on the same PR branch, so the final exact PR head is the post-binding head rather than the creation head.
-- No workflow/status polling is performed in this PR-opening milestone.
-
-## Failed exact-head diagnosis and repair
-
-- PR #654 exact head `0647342257919a99c3d7a0276ef29366b4a805ac` produced CI run `35651454191` / job `106504648874` failure and P12 Final Release Artifact run `35651454099` / job `106504605073` failure.
-- Both workflows failed on the same TypeScript compiler error: `src/plugin/p14-vertical-stack-retained-duplicate-adapter.ts(191,11) TS7022`.
-- Root cause was recursive/inferred Figma `SceneNode` child lookup typing in `resolveFrameByPath`, not runtime authorization, validation, source-immutability or security behavior.
-- Repair commit `e20e9f98787c128527df6488bee7918f1f9cb667` adds the explicit `SceneNode | undefined` annotation to the candidate-only child lookup.
-- No mutation allowlist, validation profile, source protection, registry authority, confirmation gate or security check was weakened.
-- The repaired PR head is not certified in this milestone and no workflow polling is performed after the repair.
-
-## Repaired-head test diagnosis and second repair
-
-- Repaired exact head `96f51eb41b1bae0d5a3b8985366e4ffd9e11eb1c` passed TypeScript typecheck, proving the TS7022 repair.
-- CI run `35652020867` / job `106506553178` and P12 Final Release Artifact run `35652020856` / job `106506431436` then failed at the same Vitest suite: `tests/p14-vertical-stack-retained-duplicate-adapter.test.ts`.
-- Repository-wide result reached 1597 PASS / 2 FAIL; failures were isolated to the new R4 adapter regressions.
-- Failure 1 was an assertion wording mismatch: the adapter correctly refused a source-tree identity as mutation authority, but the regex omitted that exact secure wording.
-- Failure 2 exposed a real fail-closed gap: a hidden candidate root could still receive a deterministic P13 Build-Ready READY score, so the adapter did not classify that candidate as insufficient evidence.
-- Repair commit `d9ce31565d82b5196e4f6ebca0f952d83e1d45fb` makes `rescoreCandidate` reject a hidden candidate root as insufficient evidence before Build-Ready scoring.
-- Repair commit `fca1180cb646c7e8ae56649574ba17be94fccc11` aligns the source-identity refusal regression with the actual fail-closed error text.
-- These changes strengthen candidate acceptance; no source protection, mutation allowlist, validation profile, registry authority, confirmation gate or security check was weakened.
-- The second repaired PR head is not certified in this milestone; no workflow/status polling occurs after the repair.
-
-## README progress synchronization hardening
-
-- User-visible README progress is now a mandatory AI-native repository truth surface.
-- `.ai/state/PROTOCOL.md` now requires README synchronization on every material repository mutation that changes implementation state, lifecycle, blocker, capability, PR/merge lifecycle or exact next development step.
-- Pure Runner-observation turns remain the only exception when mutating README would invalidate an already-running exact-head batch; volatile Runner state stays in GitHub metadata and README is synchronized on the next material mutation/post-merge reconciliation.
-- `scripts/verify-readme-progress.mjs` now machine-checks the current P14 runtime-adapter/empty-registry invariants, so stale P14 README progress fails `status:verify`.
-- README now records the explicit six-slice P14 implementation track. R1-R4 are implemented, so P14 is shown as `67% impl`; this is implementation-only and does not claim runtime/production acceptance.
-- README P14 status now reflects runtime adapter implemented, production registry empty, `runtimeMutationEnabled=false`, R5 registry binding next and R6 confirmation/UI/internal activation after that.
-- README's current verified main anchor is synchronized to `d4cbf53d4e07c05df91f01bdec967262100452df`.
-- These README/protocol/verifier commits changed PR #654's exact head; previous exact-head Runner results are not reusable for merge certification.
+- PR #656 exact head `03a610eb9395f1d4c098686b8d741c5ce5a3c0e2` passed `status:verify` and TypeScript typecheck.
+- CI run `35655116685` / job `106516902797` and P12 Final Release Artifact run `35655116581` / job `106516633104` both reached the repository test suite and failed on the same two stale pre-R5 expectations.
+- Repository result was 1598 PASS / 2 FAIL.
+- `tests/p13-safe-preparation-candidates.test.ts` still assumed an empty production registry and expected `P14_SAFE_BINDING_REQUIRED`. Under R5 the exact production binding resolves, but without the source tree the candidate correctly remains non-executable with `P14_TARGET_ADDRESS_REQUIRED`.
+- `tests/p14-registry-bounds.test.ts` still asserted an empty production registry instead of the accepted exact singleton bounded binding.
+- Repair commit `2e8f8435f17d613b46d452c9afc33dbf871e551a` updates the default handoff/addressing expectation.
+- Repair commit `1e7ef35cd12d70b6b793ca07ebf17e07975b0e12` updates the production registry bounds contract to the exact singleton binding.
+- README repair state was synchronized in `07a0934ecf0ffa3dce982bc052e0bffbc85457b7`.
+- No runtime mutation, confirmation/UI, validation, target-addressing or security authority was weakened.
 
 ## Exact next safe action
 
-On the next user `continue`, resolve the final README-synchronized PR #654 head and perform exactly one consolidated exact-head status refresh. Merge only after the full required gate set is green.
+On the next user `continue`, resolve the final repaired PR #656 head and perform exactly one consolidated exact-head status refresh. If required checks are pending, end without polling again. Merge only after the full exact-head required gate set is green.

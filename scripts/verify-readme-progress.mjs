@@ -122,9 +122,9 @@ requireRow('P13', {
   next: '#159',
 });
 requireRow('P14', {
-  status: 'CORE IMPLEMENTATION IN PROGRESS / RUNTIME ADAPTER IMPLEMENTED / REGISTRY+UI LOCKED',
-  progress: '67% impl',
-  next: 'production registry remains empty',
+  status: 'CORE IMPLEMENTATION IN PROGRESS / PRODUCTION REGISTRY BOUND / UI LOCKED',
+  progress: '83% impl',
+  next: 'runtimeMutationEnabled=false',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -135,13 +135,19 @@ requireRow('P27', {
 if (!p14Qualification.includes('runtimeAdapterImplemented: true')) {
   throw new Error('P14 qualification no longer records runtimeAdapterImplemented=true; README P14 progress contract must be revised in the same material mutation.');
 }
-if (!p14Qualification.includes("'P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED'")) {
-  throw new Error('P14 qualification registry blocker changed; README P14 progress contract must be revised in the same material mutation.');
+if (!p14Qualification.includes("'P14_CONFIRMATION_UI_NOT_ACCEPTED'")) {
+  throw new Error('P14 qualification R6 blocker changed; README P14 progress contract must be revised in the same material mutation.');
 }
-if (!p14RegistrySource.includes('createP14SafeRecipeRegistry([]);')) {
-  throw new Error('P14 production registry is no longer empty; README P14 progress/status must be revised in the same material mutation.');
+if (!p14Qualification.includes('productionRegistryBound: true')) {
+  throw new Error('P14 qualification no longer records productionRegistryBound=true; README P14 progress contract must be revised.');
 }
-if (!readme.includes('P14 implementation progress is 67% (4/6 bounded slices implemented)')) {
+if (!p14Qualification.includes('runtimeMutationEnabled: false') || !p14Qualification.includes('confirmationEnabled: false')) {
+  throw new Error('P14 runtime/UI authority changed; README P14 progress contract must be revised in the same material mutation.');
+}
+if (!p14RegistrySource.includes('createP14VerticalStackProductionRecipe()')) {
+  throw new Error('P14 production registry exact vertical-stack binding is missing; README P14 progress is stale.');
+}
+if (!readme.includes('P14 implementation progress is 83% (5/6 bounded slices implemented)')) {
   throw new Error('README P14 bounded-slice implementation progress explanation is stale or missing.');
 }
 
