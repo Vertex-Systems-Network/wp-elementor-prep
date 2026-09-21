@@ -20,3 +20,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Added one-refresh timeout budget, state-drift recovery, security fail-closed, migration/data-safety and compact-state size limits.
 - Milestone status is VERIFYING before exact-head Runner observation.
 
+## 2026-09-21 — Governance backward-compatibility fix
+
+- Inspected only the two failed exact-head jobs from PR #638.
+- Both failures came from governance regression-contract drift, not product/runtime/security behavior.
+- Restored legacy delivery-resilience state keys inside Supervisor schema v2.
+- Added the exact one-consolidated-refresh invariant phrase without weakening either test.
+- New exact-head state is VERIFYING; no CI polling occurs in this fix milestone.
+

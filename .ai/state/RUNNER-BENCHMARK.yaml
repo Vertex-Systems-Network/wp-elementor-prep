@@ -23,7 +23,7 @@ tasks:
     merge_blocking: true
     expected_runner_time: NOT_YET_BASELINED
     deterministic_dedup_key: RB-001:PR_HEAD
-    status: AWAITING_CONSOLIDATED_REFRESH
+    status: AWAITING_NEW_EXACT_HEAD_BATCH
     immutable_evidence: null
   - stable_task_id: RB-002
     source_work: PR-638
@@ -38,7 +38,7 @@ tasks:
     merge_blocking: true
     expected_runner_time: NOT_YET_BASELINED
     deterministic_dedup_key: RB-002:PR_HEAD
-    status: AWAITING_CONSOLIDATED_REFRESH
+    status: AWAITING_NEW_EXACT_HEAD_BATCH
     immutable_evidence: null
   - stable_task_id: RB-003
     source_work: PR-638
@@ -53,7 +53,7 @@ tasks:
     merge_blocking: true
     expected_runner_time: NOT_YET_BASELINED
     deterministic_dedup_key: RB-003:PR_HEAD
-    status: AWAITING_CONSOLIDATED_REFRESH
+    status: AWAITING_NEW_EXACT_HEAD_BATCH
     immutable_evidence: null
   - stable_task_id: RB-004
     source_work: PR-638
@@ -68,7 +68,7 @@ tasks:
     merge_blocking: true
     expected_runner_time: NOT_YET_BASELINED
     deterministic_dedup_key: RB-004:PR_HEAD:MATRIX
-    status: AWAITING_CONSOLIDATED_REFRESH
+    status: AWAITING_NEW_EXACT_HEAD_BATCH
     immutable_evidence: null
   - stable_task_id: RB-005
     source_work: PR-638
@@ -83,7 +83,7 @@ tasks:
     merge_blocking: true
     expected_runner_time: NOT_YET_BASELINED
     deterministic_dedup_key: RB-005:PR_HEAD
-    status: AWAITING_CONSOLIDATED_REFRESH
+    status: AWAITING_NEW_EXACT_HEAD_BATCH
     immutable_evidence: null
   - stable_task_id: RB-006
     source_work: PR-638
@@ -98,7 +98,7 @@ tasks:
     merge_blocking: true
     expected_runner_time: NOT_YET_BASELINED
     deterministic_dedup_key: RB-006:PR_HEAD:TARGET
-    status: AWAITING_CONSOLIDATED_REFRESH
+    status: AWAITING_NEW_EXACT_HEAD_BATCH
     immutable_evidence: null
   - stable_task_id: RB-007
     source_work: POST_MERGE
@@ -128,5 +128,5 @@ tasks:
     merge_blocking: true
     expected_runner_time: NOT_YET_BASELINED
     deterministic_dedup_key: RB-008:PR_HEAD:P17
-    status: AWAITING_CONSOLIDATED_REFRESH
+    status: AWAITING_NEW_EXACT_HEAD_BATCH
     immutable_evidence: null

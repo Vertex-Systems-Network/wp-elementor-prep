@@ -9,16 +9,14 @@ Active branch: `docs/delivery-resilient-ai-flow`
 
 ## Milestone
 
-Mandatory AI Engineering Supervisor contract is integrated with the existing delivery-resilient AI-native flow.
+Fixed the two exact-head governance-contract failures without weakening any test or policy:
+- restored the legacy `max_runner_status_fetches_per_turn: 1` and related delivery-resilience state keys inside the Supervisor v2 schema;
+- restored the exact one-consolidated-refresh invariant wording required by the durable-state regression contract.
 
-## Current coordination truth
+## Root cause
 
-- PR #638 is the active accepted governance path for Issue #637.
-- PR #636 is open/actionable and is the next accepted path after #638; unrelated development must not bypass it.
-- #287 remains admin-blocked.
-- #159 and #84 remain external/manual evidence dependencies.
-- #182 remains deferred.
+The Supervisor v2 state/schema replacement accidentally dropped backward-compatible delivery-resilience keys, and one regression assertion expected the canonical invariant phrase without the new `Use at most ONE` wording.
 
 ## Exact next safe action
 
-Perform ONE consolidated status refresh for the exact current PR #638 head. If required checks are still running, report WAITING_EXTERNAL and end the milestone without another source commit or refresh. If all are green, the next user turn may perform the merge milestone.
+The new exact-head Runner batch starts automatically from this source change. Do not poll it again in this milestone. On the next user `continue`, perform ONE consolidated exact-head status refresh for PR #638.

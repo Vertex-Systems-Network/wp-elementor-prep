@@ -42,6 +42,7 @@ Compact state is only a resume index and NEVER overrides repository/runtime trut
 - Batch related read-only calls where supported.
 - Read only what the active milestone requires.
 - Use at most ONE consolidated CI/status refresh per milestone by default.
+- The invariant is exactly: one consolidated CI/status refresh per milestone by default.
 - Never tight-poll, repeatedly fetch unchanged status, or rerun a workflow because a message timed out.
 - Persist VERIFYING or WAITING_EXTERNAL before the final exact-head observation.
 - If required CI is still running after the refresh, do not mutate the certified source head merely to record pending state; report pending and END the milestone.
