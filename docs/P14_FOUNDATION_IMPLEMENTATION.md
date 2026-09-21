@@ -200,3 +200,15 @@ For P16, do not promote the requirements manifest/export/validator/validation CL
 - Registry authority is planning-only. `runtimeMutationEnabled=false`, `confirmationEnabled=false`, `acceptanceAuthority=false` and `targetCompatibilityClaim=false` remain fixed.
 - The R4 adapter now rejects any action whose recipe ID/version is not the exact production binding, even when other action fields appear compatible.
 - R6 confirmation/UI/internal activation remains the only P14 implementation slice after R5 and must be separately accepted before any production execution exposure.
+
+
+## R6 explicit confirmation and internal activation
+
+- The development/internal plugin can now derive clone-stable target addresses from the currently selected exact source tree and produce a READY reviewed plan when the one accepted vertical-stack path qualifies.
+- A plugin-side reviewed activation session pins file/page/frame, P13 run, source fingerprint, plan digest and eligible action IDs. The UI never supplies a plan or confirmation object as authority.
+- Explicit confirm intent triggers a full fresh context/freshness/source-tree/plan recomputation. Any drift invalidates the reviewed session and requires preview again.
+- Only an exact fresh match builds the existing P14 confirmation and enters the existing retained-duplicate transaction through `FigmaP14VerticalStackRetainedDuplicateAdapter`.
+- The source is never replaced, moved or deleted; the validated candidate is retained separately and all registry, ownership, validation and rescore gates remain authoritative.
+- Internal activation is compile-time enabled only in `scripts/build.mjs`. `scripts/build-release.mjs` hard-disables it and the release UI contract strips/forbids all P14 activation surfaces.
+- Qualification v5 records `runtimeMutationEnabled=true` and `confirmationEnabled=true` for the internal/dev boundary only, while `acceptanceAuthority=false` and `targetCompatibilityClaim=false` remain fixed.
+- R6 completes P14 bounded implementation; live runtime acceptance and final production/release authority remain separate external gates.
