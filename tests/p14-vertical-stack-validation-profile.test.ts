@@ -93,7 +93,13 @@ describe('P14 vertical-stack validation profile', () => {
     ).toBe(true);
 
     const duplicate = validEvidence();
-    duplicate.checks.push({ ...duplicate.checks[0] });
+    const duplicateSource = duplicate.checks[0];
+    if (!duplicateSource) throw new Error('Expected vertical-stack validation fixture check.');
+    duplicate.checks.push({
+      id: duplicateSource.id,
+      passed: duplicateSource.passed,
+      required: duplicateSource.required,
+    });
     expect(
       assessP14VerticalStackValidationProfileEvidence(duplicate).failures,
     ).toContain('Vertical-stack validation evidence contains duplicate check IDs.');
@@ -107,7 +113,13 @@ describe('P14 vertical-stack validation profile', () => {
     ).toBe(true);
 
     const optional = validEvidence();
-    optional.checks[0] = { ...optional.checks[0], required: false };
+    const optionalSource = optional.checks[0];
+    if (!optionalSource) throw new Error('Expected vertical-stack validation fixture check.');
+    optional.checks[0] = {
+      id: optionalSource.id,
+      passed: optionalSource.passed,
+      required: false,
+    };
     expect(
       assessP14VerticalStackValidationProfileEvidence(optional).failures.some(
         (failure) => failure.includes('was not marked required'),
@@ -115,7 +127,13 @@ describe('P14 vertical-stack validation profile', () => {
     ).toBe(true);
 
     const failed = validEvidence();
-    failed.checks[0] = { ...failed.checks[0], passed: false };
+    const failedSource = failed.checks[0];
+    if (!failedSource) throw new Error('Expected vertical-stack validation fixture check.');
+    failed.checks[0] = {
+      id: failedSource.id,
+      passed: false,
+      required: failedSource.required,
+    };
     expect(
       assessP14VerticalStackValidationProfileEvidence(failed).failures.some(
         (failure) => failure.includes('did not pass'),
