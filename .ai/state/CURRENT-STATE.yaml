@@ -7,6 +7,10 @@ policy:
   sleep_poll_loops_allowed: false
   checkpoint_before_external_wait: true
   runner_pending_action: checkpoint_and_end_turn
+  default_deferable_runner_class: project_final
+  merge_required_runner_class: final_batch
+  remote_retry_loops_allowed: false
+  next_milestone_after_external_wait_allowed: false
 sources_of_truth:
   stable_protocol: .ai/state/PROTOCOL.md
   durable_checkpoint: .ai/state/LAST-CHECKPOINT.md
@@ -16,8 +20,8 @@ active_execution:
   repository: Vertex-Systems-Network/wp-elementor-prep
   issue: 637
   branch: docs/delivery-resilient-ai-flow
-  pull_request: null
-  candidate_head_sha: null
-  completed_milestone: delivery-resilient AI flow implemented with governance contract
+  pull_request: 638
+  candidate_head_sha: pending_final_governance_head
+  completed_milestone: strict delivery-resilient flow plus project-final Runner batching implemented
   external_dependency: exact-head GitHub Runner batch after PR creation
-  next_action: open PR; inspect Runner status once; if any required check is pending, end the turn and resume on next user continue
+  next_action: finish governance branch; inspect PR 638 Runner status once; if any required check is pending, end turn and resume on next user continue
