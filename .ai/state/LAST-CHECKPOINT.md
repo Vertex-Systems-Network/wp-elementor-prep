@@ -48,6 +48,18 @@ Active branch: `p14/vertical-stack-runtime-adapter`
 - No mutation allowlist, validation profile, source protection, registry authority, confirmation gate or security check was weakened.
 - The repaired PR head is not certified in this milestone and no workflow polling is performed after the repair.
 
+## Repaired-head test diagnosis and second repair
+
+- Repaired exact head `96f51eb41b1bae0d5a3b8985366e4ffd9e11eb1c` passed TypeScript typecheck, proving the TS7022 repair.
+- CI run `35652020867` / job `106506553178` and P12 Final Release Artifact run `35652020856` / job `106506431436` then failed at the same Vitest suite: `tests/p14-vertical-stack-retained-duplicate-adapter.test.ts`.
+- Repository-wide result reached 1597 PASS / 2 FAIL; failures were isolated to the new R4 adapter regressions.
+- Failure 1 was an assertion wording mismatch: the adapter correctly refused a source-tree identity as mutation authority, but the regex omitted that exact secure wording.
+- Failure 2 exposed a real fail-closed gap: a hidden candidate root could still receive a deterministic P13 Build-Ready READY score, so the adapter did not classify that candidate as insufficient evidence.
+- Repair commit `d9ce31565d82b5196e4f6ebca0f952d83e1d45fb` makes `rescoreCandidate` reject a hidden candidate root as insufficient evidence before Build-Ready scoring.
+- Repair commit `fca1180cb646c7e8ae56649574ba17be94fccc11` aligns the source-identity refusal regression with the actual fail-closed error text.
+- These changes strengthen candidate acceptance; no source protection, mutation allowlist, validation profile, registry authority, confirmation gate or security check was weakened.
+- The second repaired PR head is not certified in this milestone; no workflow/status polling occurs after the repair.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final repaired PR #654 head and perform exactly one consolidated exact-head status refresh. If any required gate is pending, checkpoint-and-end; if any fails, diagnose only that failure in the following milestone; merge only after the full exact-head gate set is green.
+On the next user `continue`, resolve the final second-repaired PR #654 head and perform exactly one consolidated exact-head status refresh. Merge only after the full required gate set is green.
