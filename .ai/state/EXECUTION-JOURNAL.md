@@ -53,3 +53,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Identified an exact modeling gap: P5 writes primary/counter axis alignment in addition to the mutation fields currently represented by P14.
 - Production P14 registry remains empty; no runtime/UI mutation authority is granted by activation.
 
+## 2026-09-21 — #641 P14 vertical-stack qualification implemented
+
+- Extended the P14 mutation vocabulary with the two axis-alignment fields already written by the accepted P5 linear transformer.
+- Added a machine-readable non-authorizing vertical-stack qualification contract bound to `BR_SAFE_VERTICAL_STACK_CANDIDATE@1`, P5 `vertical-stack`, confidence 90 and the exact bounded write surface.
+- Qualification retains no validation profile and explicitly blocks runtime mutation, confirmation and production registry eligibility.
+- Production P14 safe-recipe registry remains empty.
+- Added focused deterministic regressions and corrected stale P13→P14 handoff documentation.
+- State moved to VERIFYING pending a focused PR; CI is not polled in this implementation milestone.
+

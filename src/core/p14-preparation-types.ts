@@ -37,6 +37,8 @@ export type P14MutationField =
   | 'layoutMode'
   | 'primaryAxisSizingMode'
   | 'counterAxisSizingMode'
+  | 'primaryAxisAlignItems'
+  | 'counterAxisAlignItems'
   | 'itemSpacing'
   | 'padding'
   | 'textAutoResize'

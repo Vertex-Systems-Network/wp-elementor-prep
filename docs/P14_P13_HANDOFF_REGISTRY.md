@@ -13,9 +13,11 @@ A P13 finding does **not** gain mutation authority merely because it sounds fixa
 
 ## Current production truth
 
-Current P13 core and responsive-risk production rule definitions emit only `MANUAL_REVIEW` or `ADVISORY` remediation classes. There are no accepted production `P14_SAFE_CANDIDATE` rules.
+P13 now emits one narrowly bounded target-neutral candidate, `BR_SAFE_VERTICAL_STACK_CANDIDATE@1`, only when the already accepted P5 vertical-stack planner returns `ELIGIBLE / SUPPORTED_HIGH_CONFIDENCE` at its 90% gate. Candidate classification is not mutation authority.
 
-Therefore `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` is intentionally empty.
+Issue #641 freezes the complete P5 vertical-stack write surface for P14 qualification, including primary/counter axis alignment fields that the previous P14 mutation vocabulary did not model. The qualification deliberately has no accepted P14 validation profile and grants no runtime/UI authority.
+
+Therefore `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains intentionally empty.
 
 An empty registry is **valid but non-authorizing**. This differs from an invalid registry:
 

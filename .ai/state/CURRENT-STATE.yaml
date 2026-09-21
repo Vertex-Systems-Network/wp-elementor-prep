@@ -9,9 +9,9 @@ active_pr: null
 active_branch: p14/vertical-stack-qualification
 candidate_head_source: github_branch_head
 current_milestone: qualify_p14_vertical_stack_recipe_without_production_activation
-milestone_status: IMPLEMENTING
+milestone_status: VERIFYING
 last_completed_milestone: pr_640_merged_and_post_merge_main_required_checks_green
-exact_next_safe_action: implement_exact_vertical_stack_qualification_contract_and_tests; keep_production_registry_empty; then_open_one_focused_pr
+exact_next_safe_action: open_one_focused_pr_for_issue_641; bind_pr_identity; do_not_poll_ci_until_next_user_continue
 pending_runner_ids: [RQ-641-FINAL]
 blocked_runner_ids: []
 current_blockers: []

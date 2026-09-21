@@ -8,7 +8,8 @@ claims:
   - {id: CL-005, statement: issue_641_is_active_bounded_p14_slice, value: true}
   - {id: CL-006, statement: p13_emits_BR_SAFE_VERTICAL_STACK_CANDIDATE_v1_only_from_accepted_p5_vertical_stack_eligibility, value: true}
   - {id: CL-007, statement: production_p14_safe_recipe_registry_must_remain_empty_in_issue_641, value: true}
-  - {id: CL-008, statement: current_p14_mutation_vocabulary_does_not_model_all_p5_vertical_stack_writes, value: true}
+  - {id: CL-008, statement: p14_mutation_vocabulary_models_complete_p5_vertical_stack_write_surface_after_issue_641_implementation, value: true}
+  - {id: CL-014, statement: issue_641_qualification_has_no_accepted_validation_profile_and_grants_no_production_authority, value: true}
   - {id: CL-009, statement: issue_287_requires_repository_admin_authority, value: true}
   - {id: CL-010, statement: issue_159_requires_genuine_external_runtime_evidence, value: true}
   - {id: CL-011, statement: issue_84_requires_genuine_manual_release_evidence, value: true}
