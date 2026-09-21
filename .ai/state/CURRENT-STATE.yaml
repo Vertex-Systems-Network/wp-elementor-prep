@@ -5,17 +5,17 @@ compact_state_path: .ai/state
 observed_main_sha: d4cbf53d4e07c05df91f01bdec967262100452df
 observed_main_branch: main
 active_issue: 653
-active_pr: null
+active_pr: 654
 active_branch: p14/vertical-stack-runtime-adapter
-candidate_head_source: branch_head_until_pr_creation
+candidate_head_source: github_pull_request_head
 current_milestone: p14_r4_vertical_stack_retained_duplicate_runtime_adapter
 milestone_status: VERIFYING
-last_completed_milestone: p14_r4_vertical_stack_retained_duplicate_runtime_adapter_implemented_pending_pr
-exact_next_safe_action: open_focused_pr_for_issue_653_then_end_without_ci_polling
+last_completed_milestone: p14_r4_focused_pr_654_opened_and_bound_for_exact_head_verification
+exact_next_safe_action: next_user_continue_performs_one_consolidated_exact_head_status_refresh_for_pr_654
 pending_runner_ids: [RQ-653-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - focused_pr_for_issue_653_not_yet_open
+  - pr_654_required_exact_head_checks_not_yet_observed
   - p14_production_registry_binding_remains_unaccepted
   - post_merge_main_workflow_state_for_d4cbf53d_not_observed_in_first_pr_triggered_run_refresh
 timeout_control:
