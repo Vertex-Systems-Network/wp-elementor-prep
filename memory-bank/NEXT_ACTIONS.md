@@ -8,7 +8,7 @@ Security audit train #579 hardens exact-loopback proof-token use/retention, atom
 
 ## Execution mode — focused Elementor V1 release train
 
-Prioritize one coherent Elementor commercial V1. Keep P16 stable unless a concrete shared blocker appears, and keep P17-P26 frozen during this window.
+Prioritize one coherent Elementor commercial V1 while allowing the explicitly opened P17 static-only implementation line to proceed in bounded slices. Keep P16 stable unless a concrete shared blocker appears, and keep P18-P26 frozen during this window.
 
 Use focused typecheck/tests/builds while iterating. The exact integration head must pass the repository's full CI / P12 Final Release Artifact / P12 Offline Acceptance gates before merge. Canonical docs synchronize once per behavior-changing release train rather than in separate ceremonial docs PRs.
 
@@ -19,11 +19,16 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 - P14 — **CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED**; `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
 - P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**.
 - P16 — **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
-- P17-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
+- P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / BROWSER + RECONSTRUCTION UNWIRED**; #612/#613 static export, #614/#615 import safety preflight, #616/#617 neutral Web IR, and #618/#623 IR→HTML/CSS generation are merged. JavaScript execution, browser fidelity and Web→Figma reconstruction remain unclaimed.
+- P18-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
 - P27 — **GATE DEFINED / EXECUTION DEFERRED** under #182.
 - #287 remains repository-admin branch/ruleset enforcement work.
 
 Never promote local artifact validation, environment qualification, evidence-chain validation, deterministic style serialization, declared profile alignment, mapping readiness, caller-supplied evidence or CI success into real target compatibility/import/render/production authority.
+
+## P17 active implementation line
+
+Continue only static-first, non-authorizing slices from the merged neutral Web IR. The next development step must preserve no-JavaScript/no-network defaults and keep browser validation, visual fidelity, reconstruction and production acceptance as separate evidence gates.
 
 ## P15 evidence-integrity provenance
 
