@@ -82,7 +82,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-655-FINAL | #655 / PR #656 | P14 R5 exact vertical-stack production planning-registry binding | Required PR exact-head gate set | repaired exact head `545c23b4e796540da07a789288857dedc19a50e9`; CI, CodeQL, Integration, P12 Offline, P12 Final, P15 and P17 PASS; merged main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`; no authority/security gate weakened | `FINAL_BATCH` | exact-head registry/handoff/adapter/qualification + repository checks PASS | DONE |
 
-| RQ-657-FINAL | #657 / PR #658 | P14 R6 explicit confirmation + internal retained-duplicate activation | Required PR exact-head gate set | plugin-side one-shot reviewed session; fresh context/fingerprint/plan/action match; existing confirmation + retained-duplicate transaction; dev activation true / release false + UI stripped; acceptance/target authority false | `FINAL_BATCH` | exact-head activation/session/UI/release-boundary/transaction + repository checks PASS before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
+| RQ-657-FINAL | #657 / PR #658 | P14 R6 explicit confirmation + internal retained-duplicate activation | Required PR exact-head gate set | first exact head `7c59735eb483bda22bde339613f9a73946dcaceb` passed status verification then failed CI/P12 Final on one test-only TS2322 literal-type fixture defect; repaired by `2f2fa40...`; production behavior and authority gates unchanged | `FINAL_BATCH` | repaired exact-head activation/session/UI/release-boundary/transaction + repository checks PASS before merge | REPAIRED_AWAITING_NEW_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 
