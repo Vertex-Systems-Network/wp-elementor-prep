@@ -62,7 +62,7 @@
 <body>
   <div class="app">
     <h1>WP Builders Prepare</h1>
-    <div class="sub">Audit + P13 Build-Ready + read-only P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>
+    <div class="sub">Audit + P13 Build-Ready + internal confirmed P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>
     <div id="root" class="empty">Select one Frame to audit/preview, two Frames to compare, or multiple Frames for P7 batch processing.</div>
     <div class="profilePanel">
       <div class="status">Declared TargetProfile compatibility</div>
@@ -405,6 +405,19 @@
       const reviewManifest = preview.reviewManifest || null;
       const reviewPacket = message.reviewPacket || null;
       const reviewPacketJson = typeof message.reviewPacketJson === 'string' ? message.reviewPacketJson : '';
+      const activation = message.activation || null;
+      const activationAvailable = locked
+        && activation
+        && activation.internalOnly === true
+        && activation.requiresExplicitConfirmation === true
+        && activation.runtimeMutationEnabled === true
+        && activation.confirmationEnabled === true
+        && activation.acceptanceAuthority === false
+        && activation.targetCompatibilityClaim === false
+        && plan
+        && plan.status === 'READY'
+        && Array.isArray(plan.eligibleActionIds)
+        && plan.eligibleActionIds.length > 0;
       const reviewActionRows = reviewManifest && Array.isArray(reviewManifest.actions)
         ? reviewManifest.actions.map((action) => `
             <div class="row">
@@ -483,6 +496,17 @@
             : 'Persisted P13 evidence could not produce a P14 preparation plan.'}</div>`
         : '';
 
+      const activationControl = activationAvailable
+        ? `
+          <div class="checkpoint">
+            <div class="status">INTERNAL P14 ACTIVATION · EXPLICIT CONFIRMATION REQUIRED</div>
+            <div class="finding">This creates and validates a separate prepared duplicate. The reviewed source is never replaced, moved or deleted.</div>
+            <div class="finding">The plugin will re-check file/page/frame context, P13 freshness, source fingerprint, plan digest, eligible actions and current registry authorization before mutation.</div>
+            <div class="meta">acceptanceAuthority=false · targetCompatibilityClaim=false · internalOnly=true</div>
+            <div class="inlineActions one"><button class="smallButton" id="confirmP14Prepare">Confirm & create prepared duplicate</button></div>
+          </div>`
+        : '';
+
       root.className = '';
       root.innerHTML = `
         <div class="hero">
@@ -506,6 +530,7 @@
         ${reviewPacketBinding}
         ${rows}
         ${blockers}
+        ${activationControl}
         <details><summary>Read-only P14 preview JSON</summary><pre>${escapeHtml(message.previewJson || JSON.stringify(preview, null, 2))}</pre></details>`;
       const exportReviewPacket = document.getElementById('exportP14ReviewPacket');
       if (exportReviewPacket && reviewPacketJson) {
@@ -513,6 +538,39 @@
           downloadText('p14-guided-prepare-review.json', reviewPacketJson, 'application/json;charset=utf-8');
         });
       }
+
+      const confirmPrepare = document.getElementById('confirmP14Prepare');
+      if (confirmPrepare && activationAvailable) {
+        confirmPrepare.addEventListener('click', () => {
+          confirmPrepare.disabled = true;
+          root.className = 'empty';
+          root.textContent = 'Re-checking the exact reviewed P14 plan, then creating and validating a separate candidate duplicate…';
+          post('p14-guided-prepare-confirm-request');
+        });
+      }
+    }
+
+    function renderP14GuidedPrepareResult(message) {
+      const receipt = message.receipt || {};
+      const errors = Array.isArray(receipt.errors)
+        ? receipt.errors.map((error) => `
+            <div class="row">
+              <div class="rowHead"><div class="name">${escapeHtml(error.code || 'P14_ERROR')}</div><div class="badge">${escapeHtml(error.stage || 'unknown')}</div></div>
+              <div class="finding error">${escapeHtml(error.detail || 'P14 preparation failed safely.')}</div>
+            </div>`).join('')
+        : '';
+      const retained = receipt.candidate && receipt.candidate.retained === true;
+      root.className = '';
+      root.innerHTML = `
+        <div class="hero">
+          <div class="score">${escapeHtml(receipt.status || 'UNKNOWN')}</div>
+          <div class="status">P14 INTERNAL GUIDED PREPARE RESULT</div>
+          <div class="meta">Transaction: ${escapeHtml(receipt.transactionId || '—')}</div>
+          <div class="meta">Plan digest: ${escapeHtml(receipt.planDigest || '—')}</div>
+          <div class="meta">Candidate retained separately: ${retained ? 'yes' : 'no'}</div>
+          <div class="meta">acceptanceAuthority=false · targetCompatibilityClaim=false · source replacement=false</div>
+        </div>
+        ${errors || '<div class="empty">The retained-duplicate transaction completed without reported errors.</div>'}`;
     }
 
     function renderP15ElementorPreview(message) {
@@ -902,6 +960,19 @@
         exportPanel.hidden = true;
         root.className = 'empty';
         root.textContent = message.message || 'P14 Guided Prepare preview is unavailable. Run Audit on exactly one Frame first.';
+        return;
+      }
+
+      if (message.type === 'p14-guided-prepare-result') {
+        exportPanel.hidden = true;
+        renderP14GuidedPrepareResult(message);
+        return;
+      }
+
+      if (message.type === 'p14-prepare-error') {
+        exportPanel.hidden = true;
+        root.className = 'empty';
+        root.textContent = message.message || 'P14 Guided Prepare confirmation failed safely. Preview the current Frame again before retrying.';
         return;
       }
 
