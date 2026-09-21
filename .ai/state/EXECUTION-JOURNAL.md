@@ -95,3 +95,10 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - P14 production mutation authority remains false and the production safe-recipe registry remains empty.
 - No next feature slice started in this milestone.
 
+## 2026-09-21 — #645 reconciliation PR opened
+
+- Opened PR #646 from `state/post-644-reconcile` against exact merged main `c5d23152a704fb75c18970cb147a8f6ee4775ebd`.
+- Bound compact state, coordination queue and Runner Benchmark to PR #646.
+- New exact PR head is intentionally uncertified until the next user `continue` performs the one allowed consolidated exact-head status refresh.
+- No CI/status polling is performed after PR creation in this milestone.
+
