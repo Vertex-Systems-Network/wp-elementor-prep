@@ -398,7 +398,7 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
     const handle = await adapter.cloneSource(source.id, 'p14-r4-retain');
 
-    await expect(adapter.retainCandidate(handle, 'wrong-transaction'))
+    await expect(adapter.retainCandidate(handle, 'wrong-transaction', 'Prepared'))
       .rejects.toThrow('different transaction');
     expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toEqual([]);
     expect(runtime.nodes.has(source.id)).toBe(true);
