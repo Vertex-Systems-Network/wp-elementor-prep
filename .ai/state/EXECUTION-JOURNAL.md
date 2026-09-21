@@ -263,3 +263,15 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - README current verified main anchor synchronized to `d4cbf53d4e07c05df91f01bdec967262100452df`.
 - PR #654 exact head changed due this requested material policy/progress update; old Runner evidence is not reused for merge certification.
 
+
+## 2026-09-22 — P14 R5 exact production planning registry implemented
+
+- Reconciled PR #654 exact head `3810e8cd668ecd77d2371bc7c2f466037a81b05d` as 7/7 PASS and merged main `fa1f2ea8d1f8cfce078d1de299dfd36ad2c074d5`; Issue #653 closed.
+- Opened Issue #655 and branch `p14/vertical-stack-production-registry`.
+- Bound exactly `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` to `P14_VERTICAL_STACK_V1@1` in the production P14 planning registry.
+- Qualification advanced to v4 with production registry eligible/bound true and sole blocker `P14_CONFIRMATION_UI_NOT_ACCEPTED`.
+- R4 adapter now refuses non-exact recipe ID/version before mutation.
+- Updated focused qualification, registry/handoff and adapter regressions, including lookalike-recipe refusal.
+- README and its verifier advance P14 implementation to 83% (R1-R5 of six bounded slices).
+- Opened PR #656 against exact main. Creation head before state binding: `8bc335ccae6371d1c1d44adb5b87ef8211079207`.
+- Runtime mutation, confirmation/UI, target-compatibility and acceptance authority remain false. No local/CI PASS is claimed before exact-head verification.
