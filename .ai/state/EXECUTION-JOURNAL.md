@@ -128,3 +128,13 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Production P14 safe-recipe registry remains empty; runtime mutation/confirmation remain disabled.
 - No R2 implementation code was added in this activation milestone.
 
+## 2026-09-21 — #649 P14 R2 validation-profile contract implemented
+
+- Added target-neutral `P14_VALIDATE_VERTICAL_STACK_V1` with exact required check identities for the already-qualified P5 vertical-stack write surface plus child-structure/content/visibility/geometry preservation.
+- Added bounded fail-closed profile evidence assessment; missing, duplicate, unknown, optionalized and failed required evidence reject.
+- Bumped the vertical-stack qualification to version 2 and bound it to the accepted validation profile.
+- Removed only the validation-profile-not-accepted blocker from qualification; runtime adapter and production-registry binding blockers remain.
+- Kept `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` empty and runtime/confirmation/target-compatibility/acceptance authority false.
+- Added focused deterministic regression tests and synchronized P14 authority documentation.
+- Implementation milestone ends before PR creation and CI polling.
+
