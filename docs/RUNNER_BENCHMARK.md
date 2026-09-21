@@ -65,6 +65,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 |---|---|---|---|---|---|
 | RQ-634-LOCK | #634 | Generate a deterministic Node 22 / Vitest 5 / Vite 8 / esbuild 0.28 lockfile before normal CI can run | Toolchain Lockfile Refresh | run `35601367894` on input `e21af5445bff02b81afa4bf556822e1a16fdf2ae`; artifact `10639475684`, digest `sha256:ef723a8f4015565c5c22d16abf14829aba6d4234526777c37adc0848e0a83066`; generated lock committed as `5597ef67ea2b6761c5b2db7f82e56aea237dee21` | DONE |
 | RQ-634-WINSTAT | #634 | Diagnose Node 22 Windows path-stat vs open-handle stat identity mismatch without weakening race detection | Node 22 Windows Stat Probe | run `35602201294`: unchanged synthetic file had identical inode/size/mode/nlink/birthtime/mtime/ctime and canonical path; only `dev` differed (`lstat=0`, handle-stat non-zero). Fix compares device ids only when both are non-zero/comparable and retains exact inode + metadata checks. Probe workflow removed after diagnosis. | DONE |
+| RQ-634-CODEQL | #634 | Resolve the new high-severity CodeQL alert introduced by the migration before merge | CodeQL SARIF Diagnostic | run same pinned CodeQL security-extended query suite with upload disabled; retain only short-lived SARIF diagnostic artifact, identify exact rule/file/line, remove diagnostic workflow, then fix and rerun normal CodeQL | BLOCKING_NOW |
 
 ## Required workflow for AI agents
 
