@@ -86,6 +86,7 @@ await build({
     __P5_SOURCE_SHA__: JSON.stringify(sourceSha),
     __P5_GITHUB_RUN_ID__: JSON.stringify(githubRunId),
     __P5_GITHUB_RUN_NUMBER__: JSON.stringify(githubRunNumber),
+    __P14_INTERNAL_ACTIVATION__: 'false',
   },
 });
 await writeFile(resolve(pluginDir, 'ui.html'), releaseUi, 'utf8');
