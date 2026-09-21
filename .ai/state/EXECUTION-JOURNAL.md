@@ -286,3 +286,16 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Repairs: `2e8f8435f17d613b46d452c9afc33dbf871e551a`, `1e7ef35cd12d70b6b793ca07ebf17e07975b0e12`; README sync `07a0934ecf0ffa3dce982bc052e0bffbc85457b7`.
 - No runtime/security/authority gate was weakened. New head remains uncertified and is not polled in this repair milestone.
 
+
+## 2026-09-22 — P14 R6 explicit confirmation and internal activation implemented
+
+- Reconciled PR #656 exact head `545c23b4e796540da07a789288857dedc19a50e9` as 7/7 PASS and merged main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`; Issue #655 closed.
+- Opened Issue #657 and branch `p14/explicit-confirmation-internal-activation`.
+- Added plugin-side reviewed activation session bound to exact file/page/frame, P13 run, source fingerprint, plan digest and eligible action IDs.
+- Guided Prepare review now derives exact clone-stable target addressing from the selected source tree while the review artifact itself remains non-authorizing.
+- UI sends explicit confirm intent only; the plugin reloads P13 evidence, rechecks context/freshness, rescans the source, rebuilds the plan and requires exact reviewed-session identity before confirmation/transaction.
+- Exact fresh confirmation enters the existing retained-duplicate transaction through the accepted vertical-stack adapter; source replacement/deletion is still forbidden.
+- Development build enables internal activation; publishable release build hard-disables it and release UI strips/forbids all P14 activation surfaces.
+- Qualification advanced to v5 with bounded implementation blockers empty, internal runtime/confirmation enabled, and acceptance/target-compatibility authority still false.
+- README and verifier now show P14 100% implementation (6/6 bounded slices), explicitly separate from runtime/production acceptance.
+- Opened PR #658 against exact main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`. No local/CI PASS is claimed before exact-head verification.
