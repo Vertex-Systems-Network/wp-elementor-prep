@@ -9,6 +9,7 @@
 - Added a regression contract that rejects Node-version drift, accidental toolchain peer drift and `--force` / `--legacy-peer-deps` acceptance paths.
 - Node 22 Windows acceptance exposed a path-vs-handle device-ID representation mismatch for an unchanged canonical snapshot (`lstat.dev=0` while handle `stat.dev` is non-zero). The hardened reader keeps exact BigInt inode/size/mode/nlink/birthtime/mtime/ctime checks and compares `dev` only when both observations expose a non-zero comparable value; no timestamp tolerance or race-detection weakening is introduced.
 - The same Windows device-ID rule is applied to the shared bounded script I/O identity helper used by release verification and atomic operator I/O: inode remains exact when available, and a device mismatch rejects only when both observations expose non-zero comparable device IDs.
+- CodeQL PR gating then surfaced open high-severity alert #36 (`js/file-system-race`) on canonical snapshot intake. The reader now opens the snapshot handle before any path security observation, validates that opened handle against non-symlink/canonical path identity, reads only from that handle, and revalidates after the read; this structurally removes the check-then-open TOCTOU window instead of suppressing the alert.
 
 
 ## 2026-09-21 — P17 controlled local-only browser render proof
