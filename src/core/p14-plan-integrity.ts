@@ -1,4 +1,8 @@
 import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
+import {
+  canonicalizeP14CandidateTargetAddresses,
+  validateP14CandidateTargetAddress,
+} from './p14-target-address';
 import { snapshotP14SemanticInputEvidence } from './p14-semantic-input-snapshot';
 import {
   P14_PREPARATION_ENGINE_VERSION,
@@ -26,10 +30,14 @@ export interface P14DerivedPlanStructure {
 }
 
 const DECISIONS = new Set(['ELIGIBLE', 'NOOP', 'REVIEW', 'REFUSED']);
+const P14_VERTICAL_STACK_SOURCE_RULE_ID = 'BR_SAFE_VERTICAL_STACK_CANDIDATE';
+const P14_VERTICAL_STACK_SOURCE_RULE_VERSION = 1;
 const MUTATION_FIELDS = new Set<P14MutationField>([
   'layoutMode',
   'primaryAxisSizingMode',
   'counterAxisSizingMode',
+  'primaryAxisAlignItems',
+  'counterAxisAlignItems',
   'itemSpacing',
   'padding',
   'textAutoResize',
@@ -61,6 +69,7 @@ export function compareP14Actions(a: P14PreparationAction, b: P14PreparationActi
     || (a.recipeId ?? '').localeCompare(b.recipeId ?? '')
     || a.sourceRuleId.localeCompare(b.sourceRuleId)
     || a.targetNodeIds.join('|').localeCompare(b.targetNodeIds.join('|'))
+    || JSON.stringify(a.targetAddresses ?? []).localeCompare(JSON.stringify(b.targetAddresses ?? []))
     || a.findingId.localeCompare(b.findingId)
     || a.actionId.localeCompare(b.actionId);
 }
@@ -215,6 +224,9 @@ export function computeP14PlanDigest(input: {
     actions: input.actions.map((action) => ({
       ...action,
       targetNodeIds: stableP14Strings(action.targetNodeIds),
+      ...(action.targetAddresses && action.targetAddresses.length > 0
+        ? { targetAddresses: canonicalizeP14CandidateTargetAddresses(action.targetAddresses) }
+        : {}),
       prerequisiteRecipeIds: stableP14Strings(action.prerequisiteRecipeIds),
       conflictsWithRecipeIds: stableP14Strings(action.conflictsWithRecipeIds),
       mutationAllowlist: [...action.mutationAllowlist].sort(),
@@ -252,6 +264,38 @@ function validateAction(value: unknown, index: number, failures: string[]): valu
   } else if (!sameJson(value.targetNodeIds, stableP14Strings(value.targetNodeIds))) {
     failures.push(`${prefix}.targetNodeIds are not canonically ordered.`);
   }
+  if (value.targetAddresses !== undefined) {
+    if (!Array.isArray(value.targetAddresses)) {
+      failures.push(`${prefix}.targetAddresses must be an array when present.`);
+    } else {
+      if (value.targetAddresses.length > DEFAULT_P14_INPUT_BOUNDS.maxTargetsPerAction) {
+        failures.push(`${prefix}.targetAddresses exceeds the bounded target-address limit.`);
+      }
+      const validAddresses = value.targetAddresses.every((address) => {
+        const validation = validateP14CandidateTargetAddress(address);
+        if (!validation.valid) {
+          failures.push(...validation.failures.map((failure) => `${prefix}.targetAddresses: ${failure}`));
+          return false;
+        }
+        return true;
+      });
+      if (validAddresses) {
+        const typedAddresses = value.targetAddresses as P14PreparationAction['targetAddresses'];
+        if (typedAddresses
+          && !sameJson(typedAddresses, canonicalizeP14CandidateTargetAddresses(typedAddresses))) {
+          failures.push(`${prefix}.targetAddresses are not canonically ordered.`);
+        }
+        const sourceTargets = typedAddresses?.map((address) => address.sourceTargetNodeId) ?? [];
+        if (new Set(sourceTargets).size !== sourceTargets.length) {
+          failures.push(`${prefix}.targetAddresses contain duplicate source target identities.`);
+        }
+        const pathKeys = typedAddresses?.map((address) => address.childIndexPath.join('/')) ?? [];
+        if (new Set(pathKeys).size !== pathKeys.length) {
+          failures.push(`${prefix}.targetAddresses contain duplicate child-index paths.`);
+        }
+      }
+    }
+  }
   if (!Number.isFinite(value.confidence) || Number(value.confidence) < 0 || Number(value.confidence) > 100) {
     failures.push(`${prefix}.confidence must be between 0 and 100.`);
   }
@@ -284,6 +328,18 @@ function validateAction(value: unknown, index: number, failures: string[]): valu
     if (value.refusalCode !== null) failures.push(`${prefix}.refusalCode must be null for ELIGIBLE actions.`);
     if (!Array.isArray(value.targetNodeIds) || value.targetNodeIds.length === 0) {
       failures.push(`${prefix}.targetNodeIds cannot be empty for ELIGIBLE actions.`);
+    }
+    if (value.sourceRuleId === P14_VERTICAL_STACK_SOURCE_RULE_ID
+      && value.sourceRuleVersion === P14_VERTICAL_STACK_SOURCE_RULE_VERSION) {
+      if (!Array.isArray(value.targetAddresses) || value.targetAddresses.length === 0) {
+        failures.push(`${prefix}.targetAddresses are required for the vertical-stack candidate path.`);
+      } else if (isStringArray(value.targetNodeIds)) {
+        const addressedIds = (value.targetAddresses as NonNullable<P14PreparationAction['targetAddresses']>)
+          .map((address) => address.sourceTargetNodeId);
+        if (!sameJson(addressedIds, value.targetNodeIds)) {
+          failures.push(`${prefix}.targetAddresses do not match the canonical vertical-stack targetNodeIds.`);
+        }
+      }
     }
   }
   if (value.decision === 'NOOP' && value.refusalCode !== null) {
@@ -331,6 +387,15 @@ function validateP14PreparationPlanSnapshot(value: unknown): P14PlanIntegrityRes
   });
   const actionIds = actions.map((action) => action.actionId);
   if (new Set(actionIds).size !== actionIds.length) failures.push('P14 plan contains duplicate action IDs.');
+
+  for (const action of actions) {
+    for (const address of action.targetAddresses ?? []) {
+      if (address.sourceRootNodeId !== value.source.nodeId
+        || address.sourceRootFingerprint !== value.source.fingerprint) {
+        failures.push(`Action ${action.actionId} target address is bound to a different plan source identity.`);
+      }
+    }
+  }
 
   const derived = deriveP14PlanStructure(actions);
   if (!sameJson(actions.map((action) => action.actionId), derived.actions.map((action) => action.actionId))) {
