@@ -70,7 +70,8 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | Queue ID | Phase / issue | Task / trigger | Runner / workflow | Dependencies | Class | Expected evidence | Status |
 |---|---|---|---|---|---|---|---|
-| RQ-634-FINAL | #634 | Full exact-head acceptance after coordinated Node/toolchain migration | CI; CodeQL; P12 Final Release Artifact; P12 Offline Acceptance; Integration Readiness; P15 Real Elementor Target Proof; P17 Local Browser Proof | code-bearing validation head `ee8017ee4b53a475e8c1ab6514a6f8f88c6d394d`: CI `35604233720` PASS; CodeQL `35604233659` PASS with 0 annotations/no new alerts; P12 Final `35604233590` PASS; P12 Offline `35604233799` PASS on Windows/Ubuntu/macOS; Integration `35604233631` PASS; P15 `35604233710` PASS; P17 `35604233594` PASS. Final evidence-only head must also be green before merge. | DONE |
+| RQ-634-FINAL | #634 | Full exact-head acceptance after coordinated Node/toolchain migration | CI; CodeQL; P12 Final Release Artifact; P12 Offline Acceptance; Integration Readiness; P15 Real Elementor Target Proof; P17 Local Browser Proof | final exact PR head `a971db96dbfbf228329bdc185875f873724b27e1` observed PASS across all required gates; merged main `92c153a4acba2b53e02c938567241c82db880907`; post-merge PR-origin audit, CodeQL, CI, P12 Final, offline matrix, Integration and P17 observed PASS | DONE |
+| RQ-639-FINAL | #639 | Durable post-toolchain merge state reconciliation | Required PR exact-head gate set | state/claims/queue/Runner ledgers reconciled to merged main; no product/runtime authority changes | `FINAL_BATCH` | exact-head governance tests and required repository checks PASS | QUEUED |
 
 ## Blocking-now queue
 

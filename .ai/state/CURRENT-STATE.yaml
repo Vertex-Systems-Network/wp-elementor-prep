@@ -2,20 +2,20 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 14cdcd57fa21a8bed73de35cdfa336923c0e787f
+observed_main_sha: 92c153a4acba2b53e02c938567241c82db880907
 observed_main_branch: main
-active_issue: 634
-active_pr: 636
-active_branch: toolchain/node22-vitest5
+active_issue: 639
+active_pr: 640
+active_branch: state/post-636-reconcile
 candidate_head_source: github_pull_request_head
-current_milestone: sync_pr_636_with_governance_main_and_reconcile_durable_state
+current_milestone: reconcile_post_toolchain_merge_durable_state
 milestone_status: VERIFYING
-last_completed_milestone: pr_638_merged_and_post_merge_main_checks_green
-exact_next_safe_action: new_exact_head_runner_batch_starts_automatically; next_user_continue_performs_one_consolidated_status_refresh_for_pr_636
-pending_runner_ids: [RB-001, RB-002, RB-003, RB-004, RB-005, RB-006, RB-008]
+last_completed_milestone: pr_636_merged_and_post_merge_required_checks_green
+exact_next_safe_action: next_user_continue_performs_one_consolidated_exact_head_status_refresh_for_pr_640
+pending_runner_ids: [RQ-639-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_636_new_exact_head_checks_must_pass
+  - reconciliation_pr_must_pass_required_exact_head_checks
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1
