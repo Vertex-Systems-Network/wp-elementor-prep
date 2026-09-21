@@ -190,3 +190,13 @@ Keep #159 genuine Figma Desktop evidence as the prerequisite before real P14 mut
 P15 may continue deterministic/read-only commercial-V1 mapping/coverage classification and review evidence on top of the accepted generator/extractor/plugin-preview/declared-profile path while target compatibility, import/editor/render validation, production acceptance and download/transfer authority remain false. Any stronger authority-bearing decision still requires genuinely retained trusted evidence and a separate accepted decision path.
 
 For P16, do not promote the requirements manifest/export/validator/validation CLI, stable immutable read-snapshot/file-bound/output-parent/temp-payload/non-recursive-cleanup guards, depth/value/text-bounded accessor/own-shape-safe prototype-safe direct canonicalization or any caller-supplied result into trusted evidence, authentication authority or an internal decision. The next authority-bearing step requires genuinely retained authenticated evidence first.
+
+
+## R5 production registry binding
+
+- Issue #655 binds exactly `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` to `P14_VERTICAL_STACK_V1@1` in `PRODUCTION_P14_SAFE_RECIPE_REGISTRY`.
+- The binding reuses the R1 mutation allowlist, confidence 90, R2 `P14_VALIDATE_VERTICAL_STACK_V1`, no prerequisites/conflicts and order class `10-structure`.
+- Qualification v4 records `productionRegistryEligible=true` and `productionRegistryBound=true`.
+- Registry authority is planning-only. `runtimeMutationEnabled=false`, `confirmationEnabled=false`, `acceptanceAuthority=false` and `targetCompatibilityClaim=false` remain fixed.
+- The R4 adapter now rejects any action whose recipe ID/version is not the exact production binding, even when other action fields appear compatible.
+- R6 confirmation/UI/internal activation remains the only P14 implementation slice after R5 and must be separately accepted before any production execution exposure.
