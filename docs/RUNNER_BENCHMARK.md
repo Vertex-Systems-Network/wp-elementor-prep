@@ -80,6 +80,17 @@ When developing:
 9. rerun required exact-head gates before merge;
 10. after merge, verify `POST_MERGE` controls and retain their result.
 
+## Delivery-resilient Runner observation
+
+Runner execution and Runner observation are separate concerns.
+
+- Start required Runner work when the milestone requires it.
+- After the batch starts, perform at most one Runner/check-status fetch in the current user turn.
+- If required work is queued/in-progress, retain exact head/run identifiers through GitHub metadata, checkpoint the next action and end the turn.
+- Never use sleep loops or repeated polling to keep a response open.
+- The next user `continue` performs the next single observation/fix/merge milestone.
+- `BLOCKING_NOW` blocks subsequent implementation across turns but does not override the one-fetch/no-busy-wait rule.
+
 ## Completion rule
 
 A development/release train may not be called complete while:
