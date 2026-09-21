@@ -44,3 +44,6 @@ claims:
   - {id: CL-041, statement: p14_production_registry_binding_is_planning_only_and_does_not_enable_runtime_mutation, value: true}
   - {id: CL-042, statement: r4_adapter_requires_exact_P14_VERTICAL_STACK_V1_at_version_1, value: true}
   - {id: CL-043, statement: p14_r6_confirmation_ui_internal_activation_remains_not_accepted, value: true}
+  - {id: CL-044, statement: pr_656_first_exact_head_failed_only_on_two_stale_pre_r5_test_expectations_after_status_verify_and_typecheck_passed, value: true}
+  - {id: CL-045, statement: r5_default_handoff_without_source_tree_remains_non_executable_with_P14_TARGET_ADDRESS_REQUIRED, value: true}
+  - {id: CL-046, statement: r5_production_registry_is_exact_singleton_and_within_registry_bounds, value: true}
