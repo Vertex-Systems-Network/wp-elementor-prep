@@ -13,16 +13,25 @@ claims:
   - {id: CL-010, statement: first_post_merge_pr_triggered_workflow_refresh_for_d4cbf53d_returned_no_runs_and_grants_no_pass_claim, value: true}
   - {id: CL-011, statement: p14_vertical_stack_validation_profile_v1_is_merged_on_main, value: true}
   - {id: CL-012, statement: p14_candidate_target_addressing_is_merged_on_main, value: true}
-  - {id: CL-013, statement: source_descendant_ids_are_not_accepted_as_direct_candidate_mutation_authority, value: true}
-  - {id: CL-014, statement: issue_653_is_active_p14_r4_vertical_stack_runtime_adapter_slice, value: true}
-  - {id: CL-015, statement: r4_must_retain_candidate_as_separate_duplicate_and_must_not_reuse_p4_swap_commit_semantics, value: true}
-  - {id: CL-016, statement: r4_runtime_writes_must_not_exceed_the_p14_vertical_stack_qualification_allowlist, value: true}
-  - {id: CL-017, statement: r4_validation_must_satisfy_P14_VALIDATE_VERTICAL_STACK_V1, value: true}
-  - {id: CL-018, statement: production_p14_safe_recipe_registry_remains_empty, value: true}
-  - {id: CL-019, statement: p14_production_registry_binding_remains_unaccepted, value: true}
-  - {id: CL-020, statement: issue_287_requires_repository_admin_authority, value: true}
-  - {id: CL-021, statement: issue_159_requires_genuine_external_runtime_evidence, value: true}
-  - {id: CL-022, statement: issue_84_requires_genuine_manual_release_evidence, value: true}
-  - {id: CL-023, statement: issue_182_is_deferred_final_release_gate, value: true}
-  - {id: CL-024, statement: issue_119_is_current_roadmap_owner_for_p14_implementation, value: true}
-  - {id: CL-025, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}
+  - {id: CL-013, statement: p14_r4_vertical_stack_retained_duplicate_figma_adapter_is_implemented_on_active_branch, value: true}
+  - {id: CL-014, statement: r4_source_fingerprint_uses_exact_p13_build_ready_structural_hash, value: true}
+  - {id: CL-015, statement: r4_clone_is_separate_owned_candidate_and_source_fingerprint_is_rechecked_after_staging, value: true}
+  - {id: CL-016, statement: r4_runtime_action_requires_exact_single_r3_candidate_target_address_and_refuses_source_identity, value: true}
+  - {id: CL-017, statement: r4_reuses_accepted_p5_vertical_stack_transform_semantics, value: true}
+  - {id: CL-018, statement: r4_design_property_writes_do_not_exceed_r1_frozen_vertical_stack_allowlist, value: true}
+  - {id: CL-019, statement: r4_prepared_label_is_plugin_metadata_and_does_not_mutate_node_name, value: true}
+  - {id: CL-020, statement: r4_validation_emits_exact_P14_VALIDATE_VERTICAL_STACK_V1_required_checks, value: true}
+  - {id: CL-021, statement: r4_rescore_uses_deterministic_p13_build_ready_analysis_and_tracks_introduced_high_or_blocker_evidence, value: true}
+  - {id: CL-022, statement: r4_retain_and_discard_require_owned_distinct_candidate_and_do_not_reuse_p4_source_swap_semantics, value: true}
+  - {id: CL-023, statement: p14_vertical_stack_qualification_v3_runtime_adapter_implemented_true, value: true}
+  - {id: CL-024, statement: p14_vertical_stack_qualification_v3_has_only_production_registry_binding_blocker, value: true}
+  - {id: CL-025, statement: production_p14_safe_recipe_registry_remains_empty, value: true}
+  - {id: CL-026, statement: p14_runtime_mutation_enabled_remains_false, value: true}
+  - {id: CL-027, statement: r4_focused_fake_figma_regressions_exist_but_no_test_or_ci_pass_is_claimed_before_pr_verification, value: true}
+  - {id: CL-028, statement: issue_653_is_active_p14_r4_runtime_adapter_slice, value: true}
+  - {id: CL-029, statement: issue_287_requires_repository_admin_authority, value: true}
+  - {id: CL-030, statement: issue_159_requires_genuine_external_runtime_evidence, value: true}
+  - {id: CL-031, statement: issue_84_requires_genuine_manual_release_evidence, value: true}
+  - {id: CL-032, statement: issue_182_is_deferred_final_release_gate, value: true}
+  - {id: CL-033, statement: issue_119_is_current_roadmap_owner_for_p14_implementation, value: true}
+  - {id: CL-034, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}
