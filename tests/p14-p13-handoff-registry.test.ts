@@ -8,6 +8,7 @@ import {
 import {
   PRODUCTION_P14_SAFE_RECIPE_REGISTRY,
   createP14SafeRecipeRegistry,
+  resolveP14SafeRecipe,
   validateP14SafeRecipeRegistry,
   type P14SafeRecipeBinding,
 } from '../src/core/p14-safe-recipe-registry';
@@ -109,9 +110,24 @@ function syntheticReport(findings: BuildReadyFinding[]): BuildReadyReportV2 {
 }
 
 describe('P14 production safe-recipe registry', () => {
-  it('is valid but intentionally empty/non-authorizing', () => {
+  it('contains exactly the accepted vertical-stack production planning binding', () => {
     expect(validateP14SafeRecipeRegistry(PRODUCTION_P14_SAFE_RECIPE_REGISTRY)).toEqual({ valid: true, failures: [] });
-    expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toEqual([]);
+    expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toHaveLength(1);
+    expect(resolveP14SafeRecipe(PRODUCTION_P14_SAFE_RECIPE_REGISTRY, 'BR_SAFE_VERTICAL_STACK_CANDIDATE', 1)).toMatchObject({
+      status: 'MATCH',
+      binding: {
+        sourceRuleId: 'BR_SAFE_VERTICAL_STACK_CANDIDATE',
+        sourceRuleVersion: 1,
+        recipe: {
+          id: 'P14_VERTICAL_STACK_V1',
+          version: 1,
+          minConfidence: 90,
+          validationProfileId: 'P14_VALIDATE_VERTICAL_STACK_V1',
+          orderClass: '10-structure',
+        },
+      },
+    });
+    expect(resolveP14SafeRecipe(PRODUCTION_P14_SAFE_RECIPE_REGISTRY, 'BR_SAFE_VERTICAL_STACK_CANDIDATE', 2)).toEqual({ status: 'NO_MATCH' });
   });
 
   it('keeps current production P13 findings read-only and produces no mutating plan', () => {
