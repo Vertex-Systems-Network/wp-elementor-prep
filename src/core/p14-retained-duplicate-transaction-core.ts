@@ -668,15 +668,10 @@ export async function runP14RetainedDuplicateTransaction(
     });
   }
 
-  const preparedName = input.preparedName?.trim() || 'Prepared Duplicate';
   let candidate: P14CandidateHandle;
   events.push(event(now, 'CLONING'));
   try {
-    const rawCandidate: unknown = await adapter.cloneSource(
-      plan.source.nodeId,
-      input.transactionId,
-      preparedName,
-    );
+    const rawCandidate: unknown = await adapter.cloneSource(plan.source.nodeId, input.transactionId);
     const candidateEvidence = validateP14CandidateHandleEvidence(rawCandidate, plan.source.nodeId);
     if (!candidateEvidence.valid || !candidateEvidence.value) {
       throw new Error(`Candidate adapter returned invalid evidence: ${candidateEvidence.failures.join(' | ')}`);
@@ -1105,6 +1100,7 @@ export async function runP14RetainedDuplicateTransaction(
   }
 
   events.push(event(now, 'FINALIZING'));
+  const preparedName = input.preparedName?.trim() || 'Prepared Duplicate';
   let retention;
   try {
     const rawRetention: unknown = await adapter.retainCandidate(
