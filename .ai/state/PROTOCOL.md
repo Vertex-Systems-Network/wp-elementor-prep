@@ -69,6 +69,31 @@ A timeout, connector failure, or missing chat context grants ZERO additional aut
 
 Migration/destructive work must review idempotency, transaction boundaries, apply-success/marker-failure recovery, retry behavior, rollback/restore, destructive recovery, concurrency, partial execution and backup/snapshot requirements. Never assume apply() followed by markApplied() is crash-safe.
 
+## README / large status dashboard control
+
+Update a large public/module progress dashboard only when module lifecycle/progress/timeline/public delivery truth materially changes or a terminal product/integration milestone is being reported.
+
+For governance/security/coordination-only cycles, update compact state and relevant governance records only. Do not rewrite a large dashboard merely to create churn.
+
+## CI / supply-chain security
+
+Where applicable:
+- pin third-party CI actions to immutable revisions;
+- disable unnecessary credential persistence;
+- use least-privilege workflow permissions;
+- avoid dangerous pull_request_target execution without a separately reviewed exception;
+- enforce dependency-security gates;
+- do not run untrusted lifecycle scripts during security lockfile generation unless explicitly reviewed;
+- keep production/distributable dependency audits separate from development-tooling audits when appropriate.
+
+## Final response truth contract
+
+Keep completion messages compact and factual. Report repository, active/completed milestone, Issue/PR/commit evidence when available, CI state, blockers, and exact next safe action.
+
+Never hide unfinished CI, review, state reconciliation, or authorization behind a success statement.
+
+After any merge or material state transition, re-read deterministic claims, coordination queue, and Runner Benchmark before starting the next milestone.
+
 ## Compact state limits
 
 - CURRENT-STATE.yaml <= 12 KiB
