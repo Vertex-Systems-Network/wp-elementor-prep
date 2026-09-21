@@ -1,3 +1,5 @@
+import type { P14CandidateTargetAddressV1 } from './p14-target-address';
+
 export const P14_PREPARATION_SCHEMA_VERSION = 1 as const;
 export const P14_PREPARATION_ENGINE_VERSION = 'p14-core-v1' as const;
 
@@ -64,6 +66,8 @@ export interface P14PreparationFindingInput {
   sourceRuleId: string;
   sourceRuleVersion: number;
   targetNodeIds: string[];
+  /** Optional reviewed source→candidate address evidence; mandatory for the bounded vertical-stack production candidate path. */
+  targetAddresses?: P14CandidateTargetAddressV1[];
   confidence: number;
   remediationClass: P14RemediationClass;
   acceptedRecipeId?: string;
@@ -78,6 +82,8 @@ export interface P14PreparationAction {
   sourceRuleId: string;
   sourceRuleVersion: number;
   targetNodeIds: string[];
+  /** Clone-stable candidate addressing evidence. Source node IDs are never direct mutation authority. */
+  targetAddresses?: P14CandidateTargetAddressV1[];
   confidence: number;
   recipeId: string | null;
   recipeVersion: number | null;
