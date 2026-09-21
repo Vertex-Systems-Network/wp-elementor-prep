@@ -1,7 +1,7 @@
 # P14 P13 → P14 Handoff and Safe-Recipe Registry
 
 Status: IMPLEMENTATION FOUNDATION ONLY — PRODUCTION REGISTRY EMPTY / RUNTIME UNWIRED  
-Issues: #167, #169  
+Issues: #167, #169, #641, #649  
 Roadmap: #119  
 Dependencies still open: P13 real-Figma acceptance (#159) and final production release gate (#84)
 
@@ -15,7 +15,9 @@ A P13 finding does **not** gain mutation authority merely because it sounds fixa
 
 P13 now emits one narrowly bounded target-neutral candidate, `BR_SAFE_VERTICAL_STACK_CANDIDATE@1`, only when the already accepted P5 vertical-stack planner returns `ELIGIBLE / SUPPORTED_HIGH_CONFIDENCE` at its 90% gate. Candidate classification is not mutation authority.
 
-Issue #641 freezes the complete P5 vertical-stack write surface for P14 qualification, including primary/counter axis alignment fields that the previous P14 mutation vocabulary did not model. The qualification deliberately has no accepted P14 validation profile and grants no runtime/UI authority.
+Issue #641 freezes the complete P5 vertical-stack write surface for P14 qualification, including primary/counter axis alignment fields that the previous P14 mutation vocabulary did not model.
+
+Issue #649 adds the target-neutral `P14_VALIDATE_VERTICAL_STACK_V1` validation-profile contract. It requires exact evidence for the qualified layout-mode, primary/counter sizing, primary/counter alignment, spacing and padding surface plus candidate child-structure, content, visibility and geometry preservation. Missing, duplicate, unknown, optionalized or failed required evidence fails closed. Qualification version 2 references this profile, but runtime mutation and production-registry activation remain separately blocked.
 
 Therefore `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains intentionally empty.
 
