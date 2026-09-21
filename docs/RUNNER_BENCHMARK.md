@@ -82,7 +82,9 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-655-FINAL | #655 / PR #656 | P14 R5 exact vertical-stack production planning-registry binding | Required PR exact-head gate set | repaired exact head `545c23b4e796540da07a789288857dedc19a50e9`; CI, CodeQL, Integration, P12 Offline, P12 Final, P15 and P17 PASS; merged main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`; no authority/security gate weakened | `FINAL_BATCH` | exact-head registry/handoff/adapter/qualification + repository checks PASS | DONE |
 
-| RQ-657-FINAL | #657 / PR #658 | P14 R6 explicit confirmation + internal retained-duplicate activation | Required PR exact-head gate set | first repair cleared typecheck; head `1127a427...` then reached 1603 PASS / 2 FAIL from stale review-packet wrapper + stale R5 runtime-flag assertions; repaired by `f5c45ccc...` + `d85e38ae...`; acceptance/target authority remain false | `FINAL_BATCH` | repaired exact-head activation/session/UI/release-boundary/transaction + repository checks PASS before merge | REPAIRED_AWAITING_NEW_EXACT_HEAD_BATCH |
+| RQ-657-FINAL | #657 / PR #658 | P14 R6 explicit confirmation + internal retained-duplicate activation | Required PR exact-head gate set | exact head `d1daaccd8ed8ed912a171c307e123ca1d83d6b0a`; CI, CodeQL, Integration, P12 Offline, P12 Final, P15 and P17 PASS; merged main `64c8077eb37a728efa86a749a95e10f7bdce03c2`; acceptance/target authority remain false | `FINAL_BATCH` | exact-head activation/session/UI/release-boundary/transaction + repository checks PASS | DONE |
+
+| RQ-659-FINAL | #659 | P15 explicit full-width responsive Container width | Required PR exact-head gate set | implementation `99366a57...`; focused tests `e12f577a...`; exact Elementor 4.2.4 Container/Controls Stack evidence; explicit `content_width=full`; tablet/mobile integer px 500..1600; desktop width untouched; authority false | `FINAL_BATCH` | exact-head focused responsive-full-width tests + CI/CodeQL/Integration/P12/P15/P17 repository gates PASS before merge | IMPLEMENTED_AWAITING_PR_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 
