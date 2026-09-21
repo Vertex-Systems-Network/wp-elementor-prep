@@ -31,7 +31,7 @@ function source(): P17NeutralWebDocumentV1 {
         layout: { mode: 'flex', direction: 'column', gapPx: 16 },
         style: {
           paddingPx: { top: 24, right: 24, bottom: 24, left: 24 },
-          backgroundColorHex: '#f4f4f4',
+          backgroundColorHex: '#F4F4F4',
         },
         children: [
           {
