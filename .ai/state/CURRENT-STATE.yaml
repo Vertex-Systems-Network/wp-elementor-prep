@@ -2,21 +2,21 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: f428114dd2276ebf2033f88e393872281d03b608
+observed_main_sha: c5d23152a704fb75c18970cb147a8f6ee4775ebd
 observed_main_branch: main
-active_issue: 643
-active_pr: 644
-active_branch: state/post-642-reconcile
+active_issue: 645
+active_pr: 646
+active_branch: state/post-644-reconcile
 candidate_head_source: github_pull_request_head
-current_milestone: reconcile_p14_r1_merge_durable_state
+current_milestone: reconcile_pr_644_merge_durable_state
 milestone_status: VERIFYING
-last_completed_milestone: pr_642_merged_issue_641_closed_after_exact_head_required_checks_green
-exact_next_safe_action: next_user_continue_performs_one_consolidated_exact_head_status_refresh_for_pr_644
-pending_runner_ids: [RQ-643-FINAL]
+last_completed_milestone: pr_644_merged_issue_643_closed_after_exact_head_required_checks_green
+exact_next_safe_action: next_user_continue_performs_one_consolidated_exact_head_status_refresh_for_pr_646
+pending_runner_ids: [RQ-645-FINAL]
 blocked_runner_ids: []
 current_blockers:
   - reconciliation_pr_must_pass_required_exact_head_checks
-  - post_merge_main_workflow_state_for_f428_not_observed_in_first_pr_triggered_run_refresh
+  - post_merge_main_workflow_state_for_c5d23152_not_observed_in_first_pr_triggered_run_refresh
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1
