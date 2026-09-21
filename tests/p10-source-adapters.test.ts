@@ -137,6 +137,12 @@ describe('P10 source adapters', () => {
     const source = readFileSync('src/cli/source-adapters.ts', 'utf8');
     expect(source).toContain("lstat(absolute, { bigint: true })");
     expect(source).toContain("handle.stat({ bigint: true })");
+    const openIndex = source.indexOf("handle = await open(absolute, 'r')");
+    const firstPathStatIndex = source.indexOf("lstat(absolute, { bigint: true })");
+    expect(openIndex).toBeGreaterThanOrEqual(0);
+    expect(firstPathStatIndex).toBeGreaterThan(openIndex);
+    expect(source).not.toContain('canonicalBeforeOpen');
+    expect(source).not.toContain('initialPathInfo');
     expect(source).toContain('first.mtimeNs === second.mtimeNs');
     expect(source).toContain('first.ctimeNs === second.ctimeNs');
     expect(source).toContain('first.birthtimeNs === second.birthtimeNs');
