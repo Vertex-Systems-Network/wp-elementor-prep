@@ -6,12 +6,15 @@ This repository is AI-native. Any AI agent or developer working here MUST treat 
 
 Before making changes, read in this order:
 
-1. `memory-bank/PROJECT_STATE.md`
-2. `memory-bank/NEXT_ACTIONS.md`
-3. `memory-bank/DECISIONS.md`
-4. `memory-bank/ROADMAP.md`
-5. `docs/RUNNER_BENCHMARK.md`
-6. Relevant files under `docs/`
+1. `.ai/state/PROTOCOL.md`
+2. `.ai/state/CURRENT-STATE.yaml`
+3. `.ai/state/LAST-CHECKPOINT.md`
+4. `memory-bank/PROJECT_STATE.md`
+5. `memory-bank/NEXT_ACTIONS.md`
+6. `memory-bank/DECISIONS.md`
+7. `memory-bank/ROADMAP.md`
+8. `docs/RUNNER_BENCHMARK.md`
+9. Relevant files under `docs/`
 
 Do not assume chat history is available or current.
 
