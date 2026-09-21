@@ -1,6 +1,6 @@
 # Next Actions
 
-Last updated: 2026-09-19
+Last updated: 2026-09-21
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 and must fail closed on stale or mismatched registered artifacts.
 
@@ -19,7 +19,7 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 - P14 — **CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED**; `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
 - P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**.
 - P16 — **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
-- P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / BROWSER + RECONSTRUCTION UNWIRED**; #612/#613 static export, #614/#615 import safety preflight, #616/#617 neutral Web IR, and #618/#623 IR→HTML/CSS generation are merged. JavaScript execution, browser fidelity and Web→Figma reconstruction remain unclaimed.
+- P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF**; #612/#613 static export, #614/#615 import safety preflight, #616/#617 neutral Web IR, #618/#623 IR→HTML/CSS generation and #628/#629 package validation are merged; #630 adds one exact local-only Chrome render observation. JavaScript execution, visual-fidelity comparison, Web→Figma reconstruction and production acceptance remain unclaimed.
 - P18-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
 - P27 — **GATE DEFINED / EXECUTION DEFERRED** under #182.
 - #287 remains repository-admin branch/ruleset enforcement work.
@@ -28,7 +28,7 @@ Never promote local artifact validation, environment qualification, evidence-cha
 
 ## P17 active implementation line
 
-Continue only static-first, non-authorizing slices from the merged neutral Web IR. The next development step must preserve no-JavaScript/no-network defaults and keep browser validation, visual fidelity, reconstruction and production acceptance as separate evidence gates.
+Continue only static-first, non-authorizing slices from the merged neutral Web IR. #630 is the first controlled local-only browser observation and must stay bound to the exact R4-validated package, loopback allowlist and non-authorizing receipt. Any next slice must keep visual-fidelity comparison, JavaScript execution, Web→Figma reconstruction and production acceptance as separate evidence gates.
 
 ## P15 evidence-integrity provenance
 
