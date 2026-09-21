@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-21 — Coordinated Node 22 / Vitest 5 toolchain migration
+
+- Replaced the unsafe standalone Vitest 5 Dependabot path with coordinated issue #634.
+- Raised the repository runtime floor from Node `>=20` to `>=22.12.0` and pinned `.nvmrc` plus all Node-backed CI/release/security/browser-proof workflows to the exact `22.12.0` floor.
+- Made the test/build matrix explicit at Vitest `5.0.1`, Vite `8.3.0` and esbuild `0.28.2`, preserving Playwright Core `1.63.0` and `@types/node 26.6.1`.
+- Generated the new npm lock deterministically in one `BLOCKING_NOW` Runner job with lifecycle scripts disabled; retained run/artifact/digest evidence in `docs/RUNNER_BENCHMARK.md` and removed the temporary write-capable workflow before acceptance.
+- Added a regression contract that rejects Node-version drift, accidental toolchain peer drift and `--force` / `--legacy-peer-deps` acceptance paths.
+- Node 22 Windows acceptance exposed a path-vs-handle device-ID representation mismatch for an unchanged canonical snapshot (`lstat.dev=0` while handle `stat.dev` is non-zero). The hardened reader keeps exact BigInt inode/size/mode/nlink/birthtime/mtime/ctime checks and compares `dev` only when both observations expose a non-zero comparable value; no timestamp tolerance or race-detection weakening is introduced.
+- The same Windows device-ID rule is applied to the shared bounded script I/O identity helper used by release verification and atomic operator I/O: inode remains exact when available, and a device mismatch rejects only when both observations expose non-zero comparable device IDs.
+- CodeQL PR gating then surfaced open high-severity alert #36 (`js/file-system-race`) on canonical snapshot intake. The reader now opens the snapshot handle before any path security observation, validates that opened handle against non-symlink/canonical path identity, reads only from that handle, and revalidates after the read; this structurally removes the check-then-open TOCTOU window instead of suppressing the alert.
+
+
 ## 2026-09-21 — P17 controlled local-only browser render proof
 
 - Continued #630 after the R4 package-validation gate from #628/#629.

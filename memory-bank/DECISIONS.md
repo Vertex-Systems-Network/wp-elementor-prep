@@ -310,6 +310,16 @@ A Runner task is instead `BLOCKING_NOW` and must execute immediately when the re
 
 Batching is only an efficiency policy. It never permits skipping or weakening CI/security/release/runtime acceptance, and it never converts live/manual external evidence into synthetic Runner evidence. Failed final-batch tasks are fixed and rerun, followed by every required exact-head merge/release gate.
 
+## D-044 — Node 22.12 is the coordinated repository toolchain floor
+Date: 2026-09-21  
+Status: ACCEPTED
+
+The repository's supported development/CI runtime floor is Node.js `22.12.0`. Node-backed CI, release, security and browser/target proof workflows must exercise that exact minimum so the declared `engines.node >=22.12.0` contract is continuously tested.
+
+The accepted coordinated toolchain is explicit: Vitest `5.0.1`, Vite `8.3.0`, esbuild `0.28.2`, Playwright Core `1.63.0` and the retained `@types/node 26.6.1` lock. Major test/build upgrades that alter the Node/Vite/esbuild compatibility matrix are treated as one migration rather than independent bot merges.
+
+Lockfile regeneration for this migration was a one-shot `BLOCKING_NOW` Runner task performed with lifecycle scripts disabled; the write-capable workflow is not retained in the accepted tree. Normal accepted installs remain `npm ci` without `--force` or `--legacy-peer-deps`.
+
 ## D-045 — AI execution uses one-milestone short turns with deterministic resume
 Date: 2026-09-21  
 Status: ACCEPTED

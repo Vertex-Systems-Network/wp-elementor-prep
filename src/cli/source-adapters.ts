@@ -1,4 +1,4 @@
-import type { Stats } from 'node:fs';
+import type { BigIntStats } from 'node:fs';
 import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import type { AuditNode, LayoutMode } from '../core/types';
@@ -241,17 +241,32 @@ function canonicalPathKey(path: string): string {
   return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
 }
 
-function hasStableFileIdentity(info: Stats): boolean {
-  return info.ino !== 0;
+function hasStableFileIdentity(info: BigIntStats): boolean {
+  return info.ino !== 0n;
 }
 
-function sameObservedSnapshotFile(first: Stats, second: Stats): boolean {
+function hasComparableDeviceIdentity(info: BigIntStats): boolean {
+  return info.dev !== 0n;
+}
+
+function sameObservedSnapshotFile(first: BigIntStats, second: BigIntStats): boolean {
   if (hasStableFileIdentity(first) && hasStableFileIdentity(second)) {
-    if (first.dev !== second.dev || first.ino !== second.ino) return false;
+    if (first.ino !== second.ino) return false;
+    // Node 22 on Windows can report dev=0 for path lstat while the open-handle
+    // stat reports the volume device id for the same file. Compare dev only
+    // when both observations expose a comparable non-zero value.
+    if (
+      hasComparableDeviceIdentity(first)
+      && hasComparableDeviceIdentity(second)
+      && first.dev !== second.dev
+    ) return false;
   }
   return first.size === second.size
-    && first.mtimeMs === second.mtimeMs
-    && first.ctimeMs === second.ctimeMs;
+    && first.mode === second.mode
+    && first.nlink === second.nlink
+    && first.birthtimeNs === second.birthtimeNs
+    && first.mtimeNs === second.mtimeNs
+    && first.ctimeNs === second.ctimeNs;
 }
 
 export async function loadCanonicalSnapshot(inputPath: string): Promise<CanonicalSnapshot> {
@@ -264,32 +279,9 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
     );
   }
 
-  let canonicalBeforeOpen: string;
-  let initialPathInfo: Stats;
-  try {
-    [canonicalBeforeOpen, initialPathInfo] = await Promise.all([
-      realpath(absolute),
-      lstat(absolute),
-    ]);
-  } catch {
-    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Unable to inspect canonical snapshot input.', 2);
-  }
-
-  if (!initialPathInfo.isFile()) {
-    throw new SourceAdapterError(
-      'SNAPSHOT_READ_FAILED',
-      'Canonical snapshot input must be a regular non-symlink file.',
-      2,
-    );
-  }
-  if (initialPathInfo.size > CANONICAL_SNAPSHOT_MAX_BYTES) {
-    throw new SourceAdapterError(
-      'SNAPSHOT_RESOURCE_LIMIT',
-      `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
-      2,
-    );
-  }
-
+  // Open first, then validate the opened handle against the current path.
+  // This removes the check-then-open TOCTOU window while still rejecting
+  // symlinks/path replacement before any bytes are accepted.
   let handle: FileHandle;
   try {
     handle = await open(absolute, 'r');
@@ -299,13 +291,13 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
 
   let bytes: Buffer;
   try {
-    let before: Stats;
-    let pathInfoBeforeRead: Stats;
+    let before: BigIntStats;
+    let pathInfoBeforeRead: BigIntStats;
     let canonicalBeforeRead: string;
     try {
       [before, pathInfoBeforeRead, canonicalBeforeRead] = await Promise.all([
-        handle.stat(),
-        lstat(absolute),
+        handle.stat({ bigint: true }),
+        lstat(absolute, { bigint: true }),
         realpath(absolute),
       ]);
     } catch {
@@ -319,11 +311,14 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
         2,
       );
     }
-    if (
-      !sameObservedSnapshotFile(initialPathInfo, before)
-      || !sameObservedSnapshotFile(before, pathInfoBeforeRead)
-      || canonicalPathKey(canonicalBeforeOpen) !== canonicalPathKey(canonicalBeforeRead)
-    ) {
+    if (before.size > BigInt(CANONICAL_SNAPSHOT_MAX_BYTES)) {
+      throw new SourceAdapterError(
+        'SNAPSHOT_RESOURCE_LIMIT',
+        `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
+        2,
+      );
+    }
+    if (!sameObservedSnapshotFile(before, pathInfoBeforeRead)) {
       throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot changed before it was read.', 2);
     }
 
@@ -355,13 +350,13 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
     }
     bytes = Buffer.concat(chunks, totalBytes);
 
-    let after: Stats;
-    let pathInfoAfterRead: Stats;
+    let after: BigIntStats;
+    let pathInfoAfterRead: BigIntStats;
     let canonicalAfterRead: string;
     try {
       [after, pathInfoAfterRead, canonicalAfterRead] = await Promise.all([
-        handle.stat(),
-        lstat(absolute),
+        handle.stat({ bigint: true }),
+        lstat(absolute, { bigint: true }),
         realpath(absolute),
       ]);
     } catch {

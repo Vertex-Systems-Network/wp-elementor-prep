@@ -70,13 +70,15 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | Queue ID | Phase / issue | Task / trigger | Runner / workflow | Dependencies | Class | Expected evidence | Status |
 |---|---|---|---|---|---|---|---|
-| — | — | No additional deferred Runner tasks recorded yet. | — | — | — | — | EMPTY |
+| RQ-634-FINAL | #634 | Full exact-head acceptance after coordinated Node/toolchain migration | CI; CodeQL; P12 Final Release Artifact; P12 Offline Acceptance; Integration Readiness; P15 Real Elementor Target Proof; P17 Local Browser Proof | code-bearing validation head `ee8017ee4b53a475e8c1ab6514a6f8f88c6d394d`: CI `35604233720` PASS; CodeQL `35604233659` PASS with 0 annotations/no new alerts; P12 Final `35604233590` PASS; P12 Offline `35604233799` PASS on Windows/Ubuntu/macOS; Integration `35604233631` PASS; P15 `35604233710` PASS; P17 `35604233594` PASS. Final evidence-only head must also be green before merge. | DONE |
 
 ## Blocking-now queue
 
 | Queue ID | Phase / issue | Why blocking now | Runner / workflow | Expected evidence | Status |
 |---|---|---|---|---|---|
-| — | — | No blocking Runner task recorded at policy creation. | — | — | EMPTY |
+| RQ-634-LOCK | #634 | Generate a deterministic Node 22 / Vitest 5 / Vite 8 / esbuild 0.28 lockfile before normal CI can run | Toolchain Lockfile Refresh | run `35601367894` on input `e21af5445bff02b81afa4bf556822e1a16fdf2ae`; artifact `10639475684`, digest `sha256:ef723a8f4015565c5c22d16abf14829aba6d4234526777c37adc0848e0a83066`; generated lock committed as `5597ef67ea2b6761c5b2db7f82e56aea237dee21` | DONE |
+| RQ-634-WINSTAT | #634 | Diagnose Node 22 Windows path-stat vs open-handle stat identity mismatch without weakening race detection | Node 22 Windows Stat Probe | run `35602201294`: unchanged synthetic file had identical inode/size/mode/nlink/birthtime/mtime/ctime and canonical path; only `dev` differed (`lstat=0`, handle-stat non-zero). Fix compares device ids only when both are non-zero/comparable and retains exact inode + metadata checks. Probe workflow removed after diagnosis. | DONE |
+| RQ-634-CODEQL | #634 | Resolve the high-severity CodeQL blocker before merge | CodeQL SARIF + PR Alert Diagnostic | SARIF run `35603467103`, artifact `10641031030` (`sha256:8f401b6f8583d8761e5ddedad4339dd95d78b07a9712b221120dfdfc552184b3`), plus PR-scoped alert run `35603958490`, identified alert #36: `js/file-system-race` high at `src/cli/source-adapters.ts`. Fix removes check-then-open by opening the handle first, then validating path/symlink/canonical identity around handle-only reads. Diagnostic workflows removed before acceptance. | DONE |
 
 ## Required workflow for AI agents
 

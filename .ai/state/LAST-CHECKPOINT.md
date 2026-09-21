@@ -2,21 +2,21 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `ce8d314e9fceae5e5db84ae91a206d9248186da3`  
-Active Issue: `#637`  
-Active PR: `#638`  
-Active branch: `docs/delivery-resilient-ai-flow`
+Observed main: `14cdcd57fa21a8bed73de35cdfa336923c0e787f`  
+Active Issue: `#634`  
+Active PR: `#636`  
+Active branch: `toolchain/node22-vitest5`
 
 ## Milestone
 
-Fixed the two exact-head governance-contract failures without weakening any test or policy:
-- restored the legacy `max_runner_status_fetches_per_turn: 1` and related delivery-resilience state keys inside the Supervisor v2 schema;
-- restored the exact one-consolidated-refresh invariant wording required by the durable-state regression contract.
+PR #638 / Issue #637 are merged/closed. Post-merge main checks observed green, including PR-origin audit and CodeQL. Durable state is reconciled to the next accepted work path #634 / PR #636, and PR #636 is merge-synced with the governance main without force-push.
 
-## Root cause
+## Retained #634 evidence
 
-The Supervisor v2 state/schema replacement accidentally dropped backward-compatible delivery-resilience keys, and one regression assertion expected the canonical invariant phrase without the new `Use at most ONE` wording.
+- coordinated Node 22.12 / Vitest 5 / Vite 8 / esbuild 0.28 migration remains the active acceptance objective;
+- retained blocking evidence includes deterministic lock generation, Windows stat diagnosis and the CodeQL file-system-race fix;
+- prior exact-head acceptance evidence remains historical evidence only; the merge-sync creates a new exact candidate head that must pass required gates again.
 
 ## Exact next safe action
 
-The new exact-head Runner batch starts automatically from this source change. Do not poll it again in this milestone. On the next user `continue`, perform ONE consolidated exact-head status refresh for PR #638.
+Allow the new PR #636 exact-head Runner batch to start automatically. Do not poll it again in this milestone. On the next user `continue`, perform ONE consolidated exact-head status refresh.

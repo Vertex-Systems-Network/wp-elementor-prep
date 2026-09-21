@@ -22,13 +22,18 @@ function positiveLimit(value, fallback, label) {
 }
 
 function sameFileIdentity(before, after) {
-  const comparableIdentity = Number.isFinite(before.dev)
-    && Number.isFinite(before.ino)
-    && Number.isFinite(after.dev)
+  const comparableInode = Number.isFinite(before.ino)
     && Number.isFinite(after.ino)
     && before.ino !== 0
     && after.ino !== 0;
-  if (comparableIdentity && (before.dev !== after.dev || before.ino !== after.ino)) return false;
+  if (comparableInode && before.ino !== after.ino) return false;
+
+  const comparableDevice = Number.isFinite(before.dev)
+    && Number.isFinite(after.dev)
+    && before.dev !== 0
+    && after.dev !== 0;
+  if (comparableDevice && before.dev !== after.dev) return false;
+
   return true;
 }
 

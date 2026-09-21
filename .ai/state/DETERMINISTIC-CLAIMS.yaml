@@ -1,9 +1,10 @@
 schema_version: 1
-observed_main_sha: ce8d314e9fceae5e5db84ae91a206d9248186da3
+observed_main_sha: 14cdcd57fa21a8bed73de35cdfa336923c0e787f
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
-  - {id: CL-003, statement: pr_638_is_active_path_for_issue_637, value: true}
-  - {id: CL-004, statement: pr_636_is_open_actionable_and_must_not_be_bypassed_after_pr_638, value: true}
+  - {id: CL-003, statement: pr_638_merged_and_issue_637_closed, value: true}
+  - {id: CL-004, statement: pr_636_is_active_accepted_path_for_issue_634, value: true}
   - {id: CL-005, statement: issue_287_admin_enforcement_is_not_code_complete, value: true}
   - {id: CL-006, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}
+  - {id: CL-007, statement: prior_pr_636_exact_head_evidence_is_stale_after_main_sync, value: true}
