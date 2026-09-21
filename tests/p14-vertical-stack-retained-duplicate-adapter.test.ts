@@ -298,7 +298,8 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
 
     const candidate = runtime.nodes.get(result.candidate?.nodeId ?? '');
     expect(candidate).toBeInstanceOf(FakeFrame);
-    expect((candidate as FakeFrame).name).toBe('Approved Desktop — Prepared');
+    expect((candidate as FakeFrame).name).toBe('Approved Desktop');
+    expect((candidate as FakeFrame).getPluginData('p14:preparedName')).toBe('Approved Desktop — Prepared');
     const candidateTarget = (candidate as FakeFrame).children[0];
     expect(candidateTarget).toBeInstanceOf(FakeFrame);
     expect((candidateTarget as FakeFrame).layoutMode).toBe('VERTICAL');
@@ -313,7 +314,7 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     const action = plan.actions[0];
     if (!action) throw new Error('Expected one R4 action.');
     const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
-    const handle = await adapter.cloneSource(source.id, 'p14-r4-owner', 'Approved Desktop — Prepared');
+    const handle = await adapter.cloneSource(source.id, 'p14-r4-owner');
 
     await expect(adapter.applyRecipe(
       { sourceNodeId: source.id, candidateNodeId: 'unknown:candidate' },
@@ -338,7 +339,7 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     const action = plan.actions[0];
     if (!action) throw new Error('Expected one R4 action.');
     const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
-    const handle = await adapter.cloneSource(source.id, 'p14-r4-path-drift', 'Approved Desktop — Prepared');
+    const handle = await adapter.cloneSource(source.id, 'p14-r4-path-drift');
     const candidate = runtime.nodes.get(handle.candidateNodeId);
     if (!(candidate instanceof FakeFrame)) throw new Error('Expected candidate Frame.');
 
@@ -355,7 +356,7 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     const action = plan.actions[0];
     if (!action) throw new Error('Expected one R4 action.');
     const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
-    const handle = await adapter.cloneSource(source.id, 'p14-r4-validation', 'Approved Desktop — Prepared');
+    const handle = await adapter.cloneSource(source.id, 'p14-r4-validation');
     await adapter.applyRecipe(handle, action);
 
     const candidate = runtime.nodes.get(handle.candidateNodeId);
@@ -377,7 +378,7 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     const action = plan.actions[0];
     if (!action) throw new Error('Expected one R4 action.');
     const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
-    const handle = await adapter.cloneSource(source.id, 'p14-r4-rescore', 'Approved Desktop — Prepared');
+    const handle = await adapter.cloneSource(source.id, 'p14-r4-rescore');
     await adapter.applyRecipe(handle, action);
 
     const candidate = runtime.nodes.get(handle.candidateNodeId);
@@ -395,9 +396,9 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
   it('refuses retention for the wrong transaction and leaves production registry empty', async () => {
     const { runtime, source } = fixture();
     const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
-    const handle = await adapter.cloneSource(source.id, 'p14-r4-retain', 'Prepared');
+    const handle = await adapter.cloneSource(source.id, 'p14-r4-retain');
 
-    await expect(adapter.retainCandidate(handle, 'wrong-transaction', 'Prepared'))
+    await expect(adapter.retainCandidate(handle, 'wrong-transaction'))
       .rejects.toThrow('different transaction');
     expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toEqual([]);
     expect(runtime.nodes.has(source.id)).toBe(true);
