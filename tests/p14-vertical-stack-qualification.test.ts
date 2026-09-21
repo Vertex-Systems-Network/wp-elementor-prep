@@ -13,7 +13,7 @@ describe('P14 vertical-stack recipe qualification', () => {
   it('freezes the exact P13/P5 identity and complete bounded P5 write surface', () => {
     expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION).toEqual({
       schemaVersion: 1,
-      qualificationVersion: 1,
+      qualificationVersion: 2,
       sourceRuleId: 'BR_SAFE_VERTICAL_STACK_CANDIDATE',
       sourceRuleVersion: 1,
       p5Recipe: 'vertical-stack',
@@ -29,9 +29,8 @@ describe('P14 vertical-stack recipe qualification', () => {
         'itemSpacing',
         'padding',
       ],
-      validationProfileId: null,
+      validationProfileId: 'P14_VALIDATE_VERTICAL_STACK_V1',
       blockers: [
-        'P14_VALIDATION_PROFILE_NOT_ACCEPTED',
         'P14_RUNTIME_ADAPTER_NOT_WIRED',
         'P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED',
       ],
@@ -44,12 +43,12 @@ describe('P14 vertical-stack recipe qualification', () => {
     });
   });
 
-  it('serializes deterministically without manufacturing a validation profile or authority', () => {
+  it('serializes deterministically with the accepted profile but without runtime or production authority', () => {
     const first = serializeP14VerticalStackRecipeQualification();
     const second = serializeP14VerticalStackRecipeQualification();
 
     expect(first).toBe(second);
-    expect(first).toContain('"validationProfileId": null');
+    expect(first).toContain('"validationProfileId": "P14_VALIDATE_VERTICAL_STACK_V1"');
     expect(first).toContain('"productionRegistryEligible": false');
     expect(first).toContain('"runtimeMutationEnabled": false');
     expect(first).toContain('"acceptanceAuthority": false');
@@ -86,7 +85,10 @@ describe('P14 vertical-stack recipe qualification', () => {
   it('keeps production mutation fail-closed after qualification', () => {
     expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toEqual([]);
     expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.productionRegistryEligible).toBe(false);
-    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.validationProfileId).toBeNull();
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.validationProfileId).toBe('P14_VALIDATE_VERTICAL_STACK_V1');
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.blockers).not.toContain(
+      'P14_VALIDATION_PROFILE_NOT_ACCEPTED',
+    );
     expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.blockers).toContain(
       'P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED',
     );

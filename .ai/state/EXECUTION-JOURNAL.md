@@ -118,3 +118,40 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - New exact PR head is intentionally uncertified until the next user `continue` performs the one allowed consolidated exact-head status refresh.
 - No CI/status polling is performed after PR creation in this milestone.
 
+## 2026-09-21 — #648 merged; P14 R2 validation-profile slice activated
+
+- PR #648 exact head `52c47832b8108e543582fd7f26a9d7da2eec97ec` was observed green across CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- PR #648 merged as main `c8950242a2848b4f58828d7e3220f59062305442`; Issue #647 closed completed.
+- The first post-merge workflow refresh for the merge SHA returned no pull-request-triggered workflow runs; no post-merge PASS was inferred.
+- Issue #649 opened under roadmap #119 for the bounded P14 R2 vertical-stack validation-profile contract.
+- Activated branch `p14/vertical-stack-validation-profile` from exact main.
+- Production P14 safe-recipe registry remains empty; runtime mutation/confirmation remain disabled.
+- No R2 implementation code was added in this activation milestone.
+
+## 2026-09-21 — #649 P14 R2 validation-profile contract implemented
+
+- Added target-neutral `P14_VALIDATE_VERTICAL_STACK_V1` with exact required check identities for the already-qualified P5 vertical-stack write surface plus child-structure/content/visibility/geometry preservation.
+- Added bounded fail-closed profile evidence assessment; missing, duplicate, unknown, optionalized and failed required evidence reject.
+- Bumped the vertical-stack qualification to version 2 and bound it to the accepted validation profile.
+- Removed only the validation-profile-not-accepted blocker from qualification; runtime adapter and production-registry binding blockers remain.
+- Kept `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` empty and runtime/confirmation/target-compatibility/acceptance authority false.
+- Added focused deterministic regression tests and synchronized P14 authority documentation.
+- Implementation milestone ends before PR creation and CI polling.
+
+## 2026-09-21 — #649 focused PR opened
+
+- Opened PR #650 from `p14/vertical-stack-validation-profile` against exact main `c8950242a2848b4f58828d7e3220f59062305442`.
+- PR creation head was `cd6db74d85d738865e44628cb0547cae0040d1ed`.
+- Bound compact state, coordination queue and Runner Benchmark to PR #650 in follow-up state commits.
+- The final post-binding PR head is intentionally uncertified until the next user `continue` performs the one allowed consolidated exact-head status refresh.
+- No CI/status polling is performed after PR creation in this milestone.
+- Production P14 registry remains empty and runtime mutation/confirmation authority remains disabled.
+
+## 2026-09-21 — PR #650 exact-head typecheck failure repaired
+
+- Diagnosed only the two failed workflows from exact head `cf5a98b75c86e8b8be3f011574b1dd505c7b9e1a`: CI run `35630487605` / job `106435233094` and P12 Final Release Artifact run `35630487583` / job `106435209255`.
+- Both failures were the same strict TypeScript test-fixture typing regression in `tests/p14-vertical-stack-validation-profile.test.ts`.
+- Replaced array-index object spreads with explicit required fixture fields in commit `2941d1851df05f799ec146961a7582350eb9d587`.
+- No production/runtime/security/authorization behavior changed and no gate was weakened.
+- New exact head remains uncertified; no workflow polling occurs in this repair milestone.
+

@@ -2,21 +2,23 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: f77ac93460bcb4625b76b914d81bd63fd9706982
+observed_main_sha: c8950242a2848b4f58828d7e3220f59062305442
 observed_main_branch: main
-active_issue: 647
-active_pr: 648
-active_branch: state/post-646-reconcile
+active_issue: 649
+active_pr: 650
+active_branch: p14/vertical-stack-validation-profile
 candidate_head_source: github_pull_request_head
-current_milestone: reconcile_pr_646_merge_durable_state
+current_milestone: p14_r2_vertical_stack_validation_profile_contract
 milestone_status: VERIFYING
-last_completed_milestone: pr_646_merged_issue_645_closed_after_exact_head_required_checks_green
-exact_next_safe_action: next_user_continue_performs_one_consolidated_exact_head_status_refresh_for_pr_648
-pending_runner_ids: [RQ-647-FINAL]
+last_completed_milestone: p14_r2_vertical_stack_validation_profile_contract_implemented_pending_pr
+exact_next_safe_action: next_user_continue_resolves_repaired_pr_650_head_and_performs_one_consolidated_exact_head_status_refresh
+pending_runner_ids: [RQ-649-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - reconciliation_pr_must_pass_required_exact_head_checks
-  - post_merge_main_workflow_state_for_f77ac934_not_observed_in_first_pr_triggered_run_refresh
+  - repaired_pr_650_exact_head_checks_not_yet_observed
+  - p14_runtime_adapter_remains_unwired
+  - p14_production_registry_binding_remains_unaccepted
+  - post_merge_main_workflow_state_for_c8950242_not_observed_in_first_pr_triggered_run_refresh
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1

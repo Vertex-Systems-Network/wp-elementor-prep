@@ -16,6 +16,8 @@ P14 remains exactly **CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED**.
 
 `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty. Current production handoff therefore remains REVIEW/BLOCKED and no production-eligible mutation action IDs exist.
 
+Issue #649 implements the target-neutral `P14_VALIDATE_VERTICAL_STACK_V1` profile for the already-qualified P5 vertical-stack write surface. The profile requires exact bounded evidence for all qualified layout writes plus child-structure/content/visibility/geometry preservation, and fails closed on missing, duplicate, unknown, optionalized or failed required checks. This closes only the validation-profile modeling gap: the runtime adapter and production-registry binding remain unwired/unaccepted.
+
 Read-only preview/review/evidence surfaces do not confirm or execute a mutation, grant target compatibility or production acceptance, or bypass #159 genuine Figma Desktop evidence.
 
 P13 analyzer identity remains `p13-core-v2`; stale or unsupported persisted evidence must fail closed.

@@ -2,27 +2,45 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `f77ac93460bcb4625b76b914d81bd63fd9706982`  
-Active Issue: `#647`  
-Active PR: `#648`  
-Active branch: `state/post-646-reconcile`
+Observed main: `c8950242a2848b4f58828d7e3220f59062305442`  
+Active Issue: `#649`  
+Active PR: `#650`  
+Active branch: `p14/vertical-stack-validation-profile`
 
-## Completed transition
+## P14 R2 implementation
 
-- PR #646 exact head `1e3d6b8b3753e0835803ea98a8b4ace585753f20` passed the observed exact-head gate set: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
-- PR #646 merged as main `f77ac93460bcb4625b76b914d81bd63fd9706982`; Issue #645 closed completed.
-- Open PR queue became empty after the merge.
-- The first post-merge workflow refresh for `f77ac934...` returned no pull-request-triggered workflow runs. No post-merge PASS is inferred from an empty result.
+- Added versioned target-neutral validation profile `P14_VALIDATE_VERTICAL_STACK_V1`.
+- The profile requires exact checks for layout mode, primary/counter sizing, primary/counter alignment, item spacing and padding plus child-structure, content, visibility and geometry preservation.
+- Added bounded profile-evidence assessment on top of the existing validation-evidence boundary.
+- Missing, duplicate, unknown, optionalized or failed required evidence fails closed.
+- Vertical-stack qualification is now version 2 and references the accepted profile.
+- Only the validation-profile modeling blocker was removed; runtime adapter and production-registry binding blockers remain.
+- `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
+- Added focused deterministic profile/qualification regressions and synchronized P14 authority docs.
+- No Figma runtime adapter, production recipe binding, confirmation enablement or target-compatibility claim was added.
+
+## Previous merge reconciliation
+
+- PR #648 exact head `52c47832b8108e543582fd7f26a9d7da2eec97ec` passed the seven observed exact-head workflows before merge.
+- PR #648 merged as main `c8950242a2848b4f58828d7e3220f59062305442`; Issue #647 closed completed.
+- First post-merge PR-triggered workflow refresh for `c8950242...` returned no runs; no PASS was inferred.
 
 ## Authority boundary
 
-- P14 R1 remains implementation-merged, not production-authorized.
-- `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
-- Default P13 -> P14 handoff remains REVIEW/BLOCKED for the vertical-stack candidate.
-- No Figma mutation runtime/UI, accepted validation profile, real-Figma evidence or production authority is inferred.
-- #287 remains admin-blocked; #159 remains external-runtime-evidence blocked; #84 remains manual release-evidence blocked; #182 remains the deferred P27 release gate.
-- #119 remains the roadmap owner for the next bounded P14 implementation slice.
+- Runtime mutation and confirmation remain disabled.
+- Production P14 registry remains empty.
+- No Elementor/Gutenberg/framework compatibility, real-Figma acceptance or production acceptance is inferred.
+- #287 remains admin-blocked; #159 external-runtime-evidence blocked; #84 manual-release-evidence blocked; #182 deferred P27 gate.
+
+## Failed exact-head diagnosis and repair
+
+- PR #650 exact head `cf5a98b75c86e8b8be3f011574b1dd505c7b9e1a` produced CI run `35630487605` and P12 Final Release Artifact run `35630487583` failures.
+- Both failures share the same root cause: TypeScript strict fixture typing in `tests/p14-vertical-stack-validation-profile.test.ts`, not a product/runtime/security failure.
+- CI job `106435233094` failed at `npm run typecheck` with TS2345/TS2322 on array-index spread fixtures.
+- P12 Final job `106435209255` failed in its repository-contract step on the same typecheck errors.
+- Commit `2941d1851df05f799ec146961a7582350eb9d587` replaces optional spread inference with explicit required `id/passed/required` fixture fields.
+- No validation, security, authorization or fail-closed check was weakened.
 
 ## Exact next safe action
 
-PR #648 is open from `state/post-646-reconcile`. End this milestone without CI polling. The next user `continue` performs ONE consolidated exact-head status refresh for PR #648.
+End this repair milestone without CI/status polling. The next user `continue` resolves the final repaired PR #650 head and performs ONE consolidated exact-head status refresh.
