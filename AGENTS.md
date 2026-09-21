@@ -6,12 +6,15 @@ This repository is AI-native. Any AI agent or developer working here MUST treat 
 
 Before making changes, read in this order:
 
-1. `memory-bank/PROJECT_STATE.md`
-2. `memory-bank/NEXT_ACTIONS.md`
-3. `memory-bank/DECISIONS.md`
-4. `memory-bank/ROADMAP.md`
-5. `docs/RUNNER_BENCHMARK.md`
-6. Relevant files under `docs/`
+1. `.ai/state/PROTOCOL.md`
+2. `.ai/state/CURRENT-STATE.yaml`
+3. `.ai/state/LAST-CHECKPOINT.md`
+4. `memory-bank/PROJECT_STATE.md`
+5. `memory-bank/NEXT_ACTIONS.md`
+6. `memory-bank/DECISIONS.md`
+7. `memory-bank/ROADMAP.md`
+8. `docs/RUNNER_BENCHMARK.md`
+9. Relevant files under `docs/`
 
 Do not assume chat history is available or current.
 
@@ -72,12 +75,54 @@ Use release trains to reduce coordination overhead without weakening correctness
 - `docs/RUNNER_BENCHMARK.md` is the canonical ledger for every GitHub Actions, CI matrix, hosted/self-hosted Runner, target-harness or equivalent Runner-dependent task.
 - Add a benchmark row immediately when a Runner task is discovered; do not rely on chat memory or remember it only at phase end.
 - Record phase/issue, trigger, workflow/runner, dependencies, expected evidence, execution class and status.
-- Default non-blocking tasks to `FINAL_BATCH` and continue implementation with focused local/static/unit verification.
+- Default safely deferable tasks that are not required for current merge/release correctness to `PROJECT_FINAL` and accumulate them for one consolidated project-final Runner pass. Use `FINAL_BATCH` only for exact-head gates required before the active PR/release train may merge.
 - Use `BLOCKING_NOW` and execute immediately when the Runner result is security-critical, required to continue safely, destructive/migration/authority-sensitive, release-blocking for the active objective, or required by repository merge rules.
 - Keep post-merge-only checks as `POST_MERGE`. Live/manual external evidence remains owned by its phase/issue and must never be manufactured as Runner evidence.
-- At the final integration checkpoint, execute all required `FINAL_BATCH` items together against the exact candidate head.
+- At each merge/release checkpoint, execute the required current-train `FINAL_BATCH`/`CONDITIONAL` items against the exact candidate head. At final project acceptance, execute the accumulated `PROJECT_FINAL` queue together.
 - On failure, fix the cause, rerun affected Runner tasks, then rerun every exact-head gate required for merge/release.
 - Batching reduces repeated Runner usage; it never permits skipping, weakening or fabricating required acceptance evidence.
+
+## AI Engineering Supervisor hard gate
+
+Repository/runtime evidence always outranks chat memory.
+
+On every start, continue, resume, interruption, tool/connector failure, or prior message-delivery timeout, reconcile in this exact order:
+
+1. `.ai/state/CURRENT-STATE.yaml`
+2. `.ai/state/LAST-CHECKPOINT.md`
+3. exact current main/default SHA
+4. OPEN Issues
+5. OPEN PRs/MRs
+6. `.ai/state/DETERMINISTIC-CLAIMS.yaml`
+7. `.ai/state/COORDINATION-QUEUE.yaml`
+8. `.ai/state/RUNNER-BENCHMARK.yaml`
+9. only then the active milestone
+
+Do not repeat work because a response was not delivered. Do not use chat memory to override repository evidence. Do not start new development while an accepted actionable open Issue/PR path is being bypassed.
+
+Before reporting COMPLETE/BLOCKED/VERIFYING/WAITING_EXTERNAL, durable state must already contain observed main SHA, active Issue/PR/branch, milestone/status, last completed milestone, exact next safe action, pending/blocked Runner IDs, blockers, and timeout-control settings.
+
+Compact limits are mandatory: CURRENT-STATE <=12 KiB; LAST-CHECKPOINT <=16 KiB; EXECUTION-JOURNAL <=32 KiB.
+
+## Delivery-resilient turn budget
+
+Follow `.ai/state/PROTOCOL.md` on every development turn.
+
+- `MAX_LOGICAL_MILESTONES_PER_TURN = 1`.
+- `MAX_RUNNER_STATUS_FETCHES_PER_TURN = 1` after a Runner batch has started.
+- Busy-waiting, repeated status polling and sleep/poll loops are forbidden.
+- When required checks are queued/in-progress on the one allowed status inspection, preserve exact issue/branch/PR/head/run identifiers and end the response. Resume only on the next user `continue`.
+- Never keep a user turn open merely to wait for CI, CodeQL, browser/target proof or another remote dependency.
+- Do not create status-only checkpoint commits after exact-head checks start. GitHub PR/check/run metadata is the volatile source of truth.
+- Before an external wait boundary, ensure the durable branch milestone and exact next action are recoverable from `.ai/state/*` plus the owning issue/PR.
+- A blocking/security-critical Runner result blocks later implementation across turns; it does not permit polling until completion in one turn.
+- Do not combine implementation, Runner waiting, merge, post-merge verification and next-task activation in one turn.
+- Never claim this protocol can eliminate transport/UI/service failures outside repository control.
+- These are strict MUST/MUST-NOT orders. Do not reinterpret them as suggestions to improve throughput.
+- Never use retry-until-green behavior or a second remote wait cycle in the same user turn.
+- Never start another development task after a Runner/external dependency boundary in the same turn.
+- Every discovered Runner activity must be classified immediately; safely deferable work goes to `PROJECT_FINAL`, while merge/security/acceptance-critical work must remain in its stricter class.
+- If classification is uncertain, fail closed: do not defer it to `PROJECT_FINAL`.
 
 ## Mandatory session end
 

@@ -1,0 +1,10 @@
+schema_version: 1
+observed_main_sha: ce8d314e9fceae5e5db84ae91a206d9248186da3
+items:
+  - {id: CQ-637, issue: 637, pr: 638, status: ACTIVE_VERIFYING, priority: 1, accepted: true}
+  - {id: CQ-634, issue: 634, pr: 636, status: ACCEPTED_ACTIONABLE_WAITING_BEHIND_CQ_637, priority: 2, accepted: true}
+  - {id: CQ-287, issue: 287, status: BLOCKED_ADMIN, priority: 3, accepted: true}
+  - {id: CQ-159, issue: 159, status: WAITING_EXTERNAL_RUNTIME_EVIDENCE, priority: 4, accepted: true}
+  - {id: CQ-84, issue: 84, status: WAITING_EXTERNAL_MANUAL_RELEASE_EVIDENCE, priority: 5, accepted: true}
+  - {id: CQ-119, issue: 119, status: ACTIVE_ROADMAP_OWNER, priority: 6, accepted: true}
+  - {id: CQ-182, issue: 182, status: DEFERRED_FINAL_GATE, priority: 7, accepted: true}
