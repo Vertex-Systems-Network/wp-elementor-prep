@@ -1,6 +1,5 @@
-import { P14_CANDIDATE_TARGET_ADDRESS_MAX_DEPTH } from './p14-target-address';
-
 export const P14_INPUT_BOUNDS_VERSION = 1 as const;
+const P14_INPUT_TARGET_ADDRESS_MAX_DEPTH = 128 as const;
 
 export interface P14InputBoundsLimits {
   maxActions: number;
@@ -241,7 +240,7 @@ export function assessP14PreparationInputBounds(
           checkArrayLength(
             address.childIndexPath,
             `actions[${actionIndex}].targetAddresses[${addressIndex}].childIndexPath`,
-            P14_CANDIDATE_TARGET_ADDRESS_MAX_DEPTH,
+            P14_INPUT_TARGET_ADDRESS_MAX_DEPTH,
             'P14_BOUND_MAX_TARGET_ADDRESS_DEPTH',
             failures,
           );
