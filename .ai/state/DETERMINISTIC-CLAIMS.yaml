@@ -1,13 +1,16 @@
 schema_version: 1
-observed_main_sha: 92c153a4acba2b53e02c938567241c82db880907
+observed_main_sha: 84c5809327afec2ddef0a6fb78bffc0cd9fcc2c6
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
-  - {id: CL-003, statement: pr_638_merged_and_issue_637_closed, value: true}
-  - {id: CL-004, statement: pr_636_merged_and_issue_634_closed, value: true}
-  - {id: CL-005, statement: issue_287_requires_repository_admin_authority, value: true}
-  - {id: CL-006, statement: issue_159_requires_genuine_external_runtime_evidence, value: true}
-  - {id: CL-007, statement: issue_84_requires_genuine_manual_release_evidence, value: true}
-  - {id: CL-008, statement: issue_182_is_deferred_final_release_gate, value: true}
-  - {id: CL-009, statement: issue_119_is_current_roadmap_owner_for_next_bounded_implementation, value: true}
-  - {id: CL-010, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}
+  - {id: CL-003, statement: pr_640_merged_and_issue_639_closed, value: true}
+  - {id: CL-004, statement: post_pr_640_main_required_checks_are_green, value: true}
+  - {id: CL-005, statement: issue_641_is_active_bounded_p14_slice, value: true}
+  - {id: CL-006, statement: p13_emits_BR_SAFE_VERTICAL_STACK_CANDIDATE_v1_only_from_accepted_p5_vertical_stack_eligibility, value: true}
+  - {id: CL-007, statement: production_p14_safe_recipe_registry_must_remain_empty_in_issue_641, value: true}
+  - {id: CL-008, statement: current_p14_mutation_vocabulary_does_not_model_all_p5_vertical_stack_writes, value: true}
+  - {id: CL-009, statement: issue_287_requires_repository_admin_authority, value: true}
+  - {id: CL-010, statement: issue_159_requires_genuine_external_runtime_evidence, value: true}
+  - {id: CL-011, statement: issue_84_requires_genuine_manual_release_evidence, value: true}
+  - {id: CL-012, statement: issue_182_is_deferred_final_release_gate, value: true}
+  - {id: CL-013, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}

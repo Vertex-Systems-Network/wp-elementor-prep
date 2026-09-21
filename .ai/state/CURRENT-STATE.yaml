@@ -2,20 +2,19 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 92c153a4acba2b53e02c938567241c82db880907
+observed_main_sha: 84c5809327afec2ddef0a6fb78bffc0cd9fcc2c6
 observed_main_branch: main
-active_issue: 639
-active_pr: 640
-active_branch: state/post-636-reconcile
-candidate_head_source: github_pull_request_head
-current_milestone: reconcile_post_toolchain_merge_durable_state
-milestone_status: VERIFYING
-last_completed_milestone: pr_636_merged_and_post_merge_required_checks_green
-exact_next_safe_action: next_user_continue_performs_one_consolidated_exact_head_status_refresh_for_pr_640
-pending_runner_ids: [RQ-639-FINAL]
+active_issue: 641
+active_pr: null
+active_branch: p14/vertical-stack-qualification
+candidate_head_source: github_branch_head
+current_milestone: qualify_p14_vertical_stack_recipe_without_production_activation
+milestone_status: IMPLEMENTING
+last_completed_milestone: pr_640_merged_and_post_merge_main_required_checks_green
+exact_next_safe_action: implement_exact_vertical_stack_qualification_contract_and_tests; keep_production_registry_empty; then_open_one_focused_pr
+pending_runner_ids: [RQ-641-FINAL]
 blocked_runner_ids: []
-current_blockers:
-  - reconciliation_pr_must_pass_required_exact_head_checks
+current_blockers: []
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1

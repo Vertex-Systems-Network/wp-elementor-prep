@@ -44,3 +44,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Open PR queue is empty.
 - Issue #639 created for focused durable-state reconciliation; no unrelated feature work started.
 
+## 2026-09-21 — P14 vertical-stack qualification slice activated
+
+- Reconciled post-#640 main `84c5809327afec2ddef0a6fb78bffc0cd9fcc2c6` as fully green, including CodeQL and PR-origin audit.
+- Issue #641 opened under roadmap owner #119.
+- Activated branch `p14/vertical-stack-qualification`.
+- Selected bounded scope: qualify exact `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` against proven P5 `vertical-stack` semantics without production registry activation.
+- Identified an exact modeling gap: P5 writes primary/counter axis alignment in addition to the mutation fields currently represented by P14.
+- Production P14 registry remains empty; no runtime/UI mutation authority is granted by activation.
+
