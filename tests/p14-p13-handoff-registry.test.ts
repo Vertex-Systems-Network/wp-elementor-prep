@@ -128,6 +128,19 @@ describe('P14 production safe-recipe registry', () => {
       },
     });
     expect(resolveP14SafeRecipe(PRODUCTION_P14_SAFE_RECIPE_REGISTRY, 'BR_SAFE_VERTICAL_STACK_CANDIDATE', 2)).toEqual({ status: 'NO_MATCH' });
+    expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings[0]?.recipe).toMatchObject({
+      prerequisites: [],
+      conflictsWith: [],
+      mutationAllowlist: [
+        'counterAxisAlignItems',
+        'counterAxisSizingMode',
+        'itemSpacing',
+        'layoutMode',
+        'padding',
+        'primaryAxisAlignItems',
+        'primaryAxisSizingMode',
+      ],
+    });
   });
 
   it('keeps current production P13 findings read-only and produces no mutating plan', () => {
