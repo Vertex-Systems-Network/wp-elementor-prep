@@ -228,3 +228,13 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - No CI/status polling is performed after PR creation in this milestone.
 - Production P14 registry remains empty and runtimeMutationEnabled remains false.
 
+
+## 2026-09-22 — PR #654 exact-head typecheck failure repaired
+
+- Diagnosed only the failed workflows from exact head `0647342257919a99c3d7a0276ef29366b4a805ac`.
+- CI run `35651454191` / job `106504648874` and P12 Final Release Artifact run `35651454099` / job `106504605073` failed at TypeScript typecheck.
+- Shared root cause: `src/plugin/p14-vertical-stack-retained-duplicate-adapter.ts(191,11) TS7022`, caused by inferred recursive Figma SceneNode child lookup typing in `resolveFrameByPath`.
+- Repair commit `e20e9f98787c128527df6488bee7918f1f9cb667` explicitly types the child as `SceneNode | undefined`.
+- No production/runtime/security/authorization behavior changed and no gate was weakened.
+- New exact head remains uncertified; no workflow polling occurs in this repair milestone.
+
