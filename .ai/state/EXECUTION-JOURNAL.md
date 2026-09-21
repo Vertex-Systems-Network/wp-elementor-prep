@@ -36,3 +36,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Merge-synced current governance main into PR #636 without force-push while preserving Node 22/toolchain/security evidence.
 - New PR #636 exact head is VERIFYING; no new-head CI polling occurs in this milestone.
 
+## 2026-09-21 — #636 merged and post-merge truth reconciled
+
+- PR #636 exact head `a971db96dbfbf228329bdc185875f873724b27e1` was verified green and merged.
+- New main is `92c153a4acba2b53e02c938567241c82db880907`; Issue #634 closed.
+- One consolidated post-merge refresh observed PR-origin audit, CodeQL, CI, P12 Final, offline matrix, Integration and P17 PASS.
+- Open PR queue is empty.
+- Issue #639 created for focused durable-state reconciliation; no unrelated feature work started.
+

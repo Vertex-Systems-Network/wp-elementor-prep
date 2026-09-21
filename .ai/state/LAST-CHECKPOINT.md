@@ -2,21 +2,26 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `14cdcd57fa21a8bed73de35cdfa336923c0e787f`  
-Active Issue: `#634`  
-Active PR: `#636`  
-Active branch: `toolchain/node22-vitest5`
+Observed main: `92c153a4acba2b53e02c938567241c82db880907`  
+Active Issue: `#639`  
+Active PR: pending creation  
+Active branch: `state/post-636-reconcile`
 
-## Milestone
+## Completed transition
 
-PR #638 / Issue #637 are merged/closed. Post-merge main checks observed green, including PR-origin audit and CodeQL. Durable state is reconciled to the next accepted work path #634 / PR #636, and PR #636 is merge-synced with the governance main without force-push.
+- PR #636 exact head `a971db96dbfbf228329bdc185875f873724b27e1` passed all required observed merge gates.
+- PR #636 merged as main `92c153a4acba2b53e02c938567241c82db880907`; Issue #634 closed.
+- One post-merge consolidated refresh observed PR-origin audit, CodeQL, CI, P12 Final, offline Ubuntu/Windows/macOS, Integration and P17 green.
+- No open PR remains after #636 merge.
 
-## Retained #634 evidence
+## Remaining open issue truth
 
-- coordinated Node 22.12 / Vitest 5 / Vite 8 / esbuild 0.28 migration remains the active acceptance objective;
-- retained blocking evidence includes deterministic lock generation, Windows stat diagnosis and the CodeQL file-system-race fix;
-- prior exact-head acceptance evidence remains historical evidence only; the merge-sync creates a new exact candidate head that must pass required gates again.
+- #287 requires repository-admin branch/ruleset authority.
+- #159 requires genuine external Figma runtime evidence.
+- #84 requires genuine manual publishing/account/2FA release evidence.
+- #182 is deferred P27 final release gate.
+- #119 remains the roadmap owner for the next bounded implementation work.
 
 ## Exact next safe action
 
-Allow the new PR #636 exact-head Runner batch to start automatically. Do not poll it again in this milestone. On the next user `continue`, perform ONE consolidated exact-head status refresh.
+Open the focused #639 reconciliation PR, persist its PR number in compact state, and end the milestone without CI polling. The next user `continue` performs one consolidated exact-head status refresh for that PR.
