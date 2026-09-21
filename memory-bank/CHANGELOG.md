@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-21 — Coordinated Node 22 / Vitest 5 toolchain migration
+
+- Replaced the unsafe standalone Vitest 5 Dependabot path with coordinated issue #634.
+- Raised the repository runtime floor from Node `>=20` to `>=22.12.0` and pinned `.nvmrc` plus all Node-backed CI/release/security/browser-proof workflows to the exact `22.12.0` floor.
+- Made the test/build matrix explicit at Vitest `5.0.1`, Vite `8.3.0` and esbuild `0.28.2`, preserving Playwright Core `1.63.0` and `@types/node 26.6.1`.
+- Generated the new npm lock deterministically in one `BLOCKING_NOW` Runner job with lifecycle scripts disabled; retained run/artifact/digest evidence in `docs/RUNNER_BENCHMARK.md` and removed the temporary write-capable workflow before acceptance.
+- Added a regression contract that rejects Node-version drift, accidental toolchain peer drift and `--force` / `--legacy-peer-deps` acceptance paths.
+
+
 ## 2026-09-21 — P17 controlled local-only browser render proof
 
 - Continued #630 after the R4 package-validation gate from #628/#629.
