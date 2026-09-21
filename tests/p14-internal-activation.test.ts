@@ -116,8 +116,10 @@ describe('P14 reviewed internal activation session', () => {
     blocked.plan.status = 'BLOCKED';
     expect(() => buildP14InternalActivationSession(blocked, context)).toThrow(/READY reviewed plan/);
 
-    const forged = readyPreview() as P14PlanPreviewV1 & { mutationEnabled: boolean };
-    forged.mutationEnabled = true;
+    const forged = {
+      ...readyPreview(),
+      mutationEnabled: true,
+    } as unknown as P14PlanPreviewV1;
     expect(() => buildP14InternalActivationSession(forged, context)).toThrow(/non-authorizing read-only review preview/);
   });
 });
