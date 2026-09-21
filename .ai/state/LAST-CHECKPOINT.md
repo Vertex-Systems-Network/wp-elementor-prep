@@ -1,46 +1,38 @@
 # Last Durable Checkpoint
 
-Status: VERIFYING  
+Status: IMPLEMENTING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `c8950242a2848b4f58828d7e3220f59062305442`  
-Active Issue: `#649`  
-Active PR: `#650`  
-Active branch: `p14/vertical-stack-validation-profile`
+Observed main: `ef4895ae480744e70f5477fe4443411201dbf33f`  
+Active Issue: `#651`  
+Active PR: none  
+Active branch: `p14/vertical-stack-target-addressing`
 
-## P14 R2 implementation
+## Completed P14 R2 transition
 
-- Added versioned target-neutral validation profile `P14_VALIDATE_VERTICAL_STACK_V1`.
-- The profile requires exact checks for layout mode, primary/counter sizing, primary/counter alignment, item spacing and padding plus child-structure, content, visibility and geometry preservation.
-- Added bounded profile-evidence assessment on top of the existing validation-evidence boundary.
-- Missing, duplicate, unknown, optionalized or failed required evidence fails closed.
-- Vertical-stack qualification is now version 2 and references the accepted profile.
-- Only the validation-profile modeling blocker was removed; runtime adapter and production-registry binding blockers remain.
-- `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
-- Added focused deterministic profile/qualification regressions and synchronized P14 authority docs.
-- No Figma runtime adapter, production recipe binding, confirmation enablement or target-compatibility claim was added.
+- PR #650 repaired exact head `5142487d8b1d55db8f0a156d4b5d3b675f4ff637` passed CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- PR #650 merged as main `ef4895ae480744e70f5477fe4443411201dbf33f`; Issue #649 closed completed.
+- Open PR queue is empty after merge.
+- The first post-merge PR-triggered workflow refresh for `ef4895ae...` returned no runs. No post-merge PASS is inferred from an empty result.
+- R2 validation profile `P14_VALIDATE_VERTICAL_STACK_V1` is merged on main; production registry and runtime mutation remain closed.
 
-## Previous merge reconciliation
+## P14 R3 activation
 
-- PR #648 exact head `52c47832b8108e543582fd7f26a9d7da2eec97ec` passed the seven observed exact-head workflows before merge.
-- PR #648 merged as main `c8950242a2848b4f58828d7e3220f59062305442`; Issue #647 closed completed.
-- First post-merge PR-triggered workflow refresh for `c8950242...` returned no runs; no PASS was inferred.
+- Issue #651 owns the next bounded P14 slice under roadmap #119.
+- Branch `p14/vertical-stack-target-addressing` is based on exact main `ef4895ae...`.
+- Current P13→P14 handoff carries source `targetNodeIds`; retained-duplicate cloning creates new descendant identities.
+- R3 therefore adds deterministic source-root-bound child-index/path addressing and candidate-only resolution before any concrete runtime adapter may mutate a candidate.
+- Source descendant IDs must never become direct candidate mutation authority.
+- Target addresses must participate in action/plan integrity so stale confirmations fail closed.
 
 ## Authority boundary
 
+- No live Figma runtime adapter is enabled.
+- No production safe-recipe binding is added.
+- `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
 - Runtime mutation and confirmation remain disabled.
-- Production P14 registry remains empty.
 - No Elementor/Gutenberg/framework compatibility, real-Figma acceptance or production acceptance is inferred.
-- #287 remains admin-blocked; #159 external-runtime-evidence blocked; #84 manual-release-evidence blocked; #182 deferred P27 gate.
-
-## Failed exact-head diagnosis and repair
-
-- PR #650 exact head `cf5a98b75c86e8b8be3f011574b1dd505c7b9e1a` produced CI run `35630487605` and P12 Final Release Artifact run `35630487583` failures.
-- Both failures share the same root cause: TypeScript strict fixture typing in `tests/p14-vertical-stack-validation-profile.test.ts`, not a product/runtime/security failure.
-- CI job `106435233094` failed at `npm run typecheck` with TS2345/TS2322 on array-index spread fixtures.
-- P12 Final job `106435209255` failed in its repository-contract step on the same typecheck errors.
-- Commit `2941d1851df05f799ec146961a7582350eb9d587` replaces optional spread inference with explicit required `id/passed/required` fixture fields.
-- No validation, security, authorization or fail-closed check was weakened.
+- #287 remains admin-blocked; #159 remains external-runtime-evidence blocked; #84 remains manual-release-evidence blocked; #182 remains the deferred P27 gate.
 
 ## Exact next safe action
 
-End this repair milestone without CI/status polling. The next user `continue` resolves the final repaired PR #650 head and performs ONE consolidated exact-head status refresh.
+Implement Issue #651: add a bounded versioned target-address/path contract, deterministic source-tree derivation and candidate-tree resolution, bind it into action/plan integrity, add clone-ID divergence/stale-path/wrong-root/source-protection regressions, and keep runtime mutation plus production registry activation closed.
