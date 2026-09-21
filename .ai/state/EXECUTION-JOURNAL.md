@@ -147,3 +147,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - No CI/status polling is performed after PR creation in this milestone.
 - Production P14 registry remains empty and runtime mutation/confirmation authority remains disabled.
 
+## 2026-09-21 — PR #650 exact-head typecheck failure repaired
+
+- Diagnosed only the two failed workflows from exact head `cf5a98b75c86e8b8be3f011574b1dd505c7b9e1a`: CI run `35630487605` / job `106435233094` and P12 Final Release Artifact run `35630487583` / job `106435209255`.
+- Both failures were the same strict TypeScript test-fixture typing regression in `tests/p14-vertical-stack-validation-profile.test.ts`.
+- Replaced array-index object spreads with explicit required fixture fields in commit `2941d1851df05f799ec146961a7582350eb9d587`.
+- No production/runtime/security/authorization behavior changed and no gate was weakened.
+- New exact head remains uncertified; no workflow polling occurs in this repair milestone.
+
