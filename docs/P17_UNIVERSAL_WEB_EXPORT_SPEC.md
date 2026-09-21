@@ -1,6 +1,6 @@
 # P17 Universal Web Export + Code-to-Design Import — Preflight Specification
 
-Status: FOUNDATION IMPLEMENTATION IN PROGRESS / BROWSER + RECONSTRUCTION UNWIRED  
+Status: FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF ADDED / RECONSTRUCTION UNWIRED  
 Owner roadmap issue: #119  
 Sequencing: R1/R2 static-only foundations are explicitly opened under #119; production acceptance still depends on #84/#182 plus the later browser/reconstruction/live evidence gates  
 R0 source snapshot: `docs/R0_WEB_CODE_ADAPTER_SNAPSHOT_2026-09-11.md`  
@@ -12,8 +12,10 @@ Implemented foundation slices:
 - #614/#615 — fail-closed static HTML/CSS import safety preflight;
 - #616/#617 — versioned neutral Web IR + deterministic identity;
 - #618/#623 — deterministic neutral Web IR → semantic HTML/CSS generation with IR-bound SHA-256 receipts.
+- #628/#629 — exact R4 neutral-Web package validation gate before browser execution;
+- #630 — controlled local-only Chrome render proof over an exact checked-in fixture, with restrictive CSP/request allowlist and bounded non-authorizing receipt.
 
-These slices do not enable arbitrary JavaScript, network access, browser-fidelity claims, Web→Figma reconstruction authority or production acceptance.
+These slices do not enable arbitrary JavaScript or external browser network access. R5 observes only one exact controlled local render and does not grant visual-fidelity, Web→Figma reconstruction, target compatibility or production acceptance.
 
 ## 1. Purpose
 

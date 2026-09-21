@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-21 — P17 controlled local-only browser render proof
+
+- Continued #630 after the R4 package-validation gate from #628/#629.
+- Added one checked-in neutral-Web fixture that is rebuilt through the production neutral-IR → HTML/CSS generator before browser launch.
+- Added a fail-closed browser-proof receipt contract that requires exact R4 `PACKAGE_VALIDATED` state before execution and retains only sanitized browser/version/viewport, exact request-policy, DOM/static-safety, computed-style and screenshot SHA-256 evidence.
+- Added a conditional GitHub Actions proof using repository-pinned `playwright-core` with policy-supported Google Chrome, an ephemeral `127.0.0.1` server, restrictive CSP and exact document/stylesheet request allowlist; external/unexpected requests, console/page errors, active DOM surfaces, missing stylesheet or structure/style drift fail the proof.
+- The retained receipt binds to exact Git commit/run identity. `visualFidelityStatus=NOT_RUN`, reconstruction remains `NOT_RUN`, JavaScript/external browser networking stay disabled and production acceptance remains false.
+- Registered the workflow as conditional Runner Benchmark gate `RB-008`.
+
+
 ## 2026-09-21 — Runtime closure evidence/verifier read hardening (#609)
 
 - Continued the bounded-read security train after #608 by auditing the adjacent runtime-closure intake boundary.

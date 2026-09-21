@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-20
+Last updated: 2026-09-21
 
 ## Product direction
 
@@ -65,6 +65,14 @@ Repository development remains issue-first, PR-second, R0/R1-aware and exact-hea
 - P12 — **IN PROGRESS / 80%**. Historical publishing authority remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`, plugin ID `1680034649341961379`.
 - P13 — **IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING**, `100% impl`; #159 still requires genuine Figma Desktop evidence and separate internal review.
 - P14 — **CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED**, `N/A`; `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty and no production P14 mutation authority exists.
+
+## P17 state
+
+P17 is **FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF**.
+
+Accepted/active static-first foundation now includes deterministic static export, fail-closed import preflight, versioned neutral Web IR, neutral-IR → semantic HTML/CSS generation, exact R4 package validation and the R5 controlled local-only browser proof. R5 launches only after an exact `PACKAGE_VALIDATED` result, serves only generated HTML/CSS from an ephemeral `127.0.0.1` origin with restrictive CSP, denies requests outside the exact document/stylesheet allowlist, and retains only sanitized browser/version/viewport/request/DOM/computed-style metadata plus screenshot SHA-256 and exact GitHub run binding.
+
+R5 remains non-authorizing: `visualFidelityStatus=NOT_RUN`, reconstruction remains `NOT_RUN`, JavaScript execution and external browser networking remain disabled, and production acceptance stays false.
 
 ## P15 state
 

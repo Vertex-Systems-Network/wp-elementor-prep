@@ -49,6 +49,7 @@ These are the standing repository Runner gates. A focused release train may requ
 | RB-005 | Integration readiness | Integration Readiness | `FINAL_BATCH` | Every PR because the workflow is always-reporting | exact-head readiness PASS | BASELINE |
 | RB-006 | Elementor real-target proof | P15 Real Elementor Target Proof | `CONDITIONAL` | P15 bridge/import/render/proof-chain or target-binding surface changes | exact-bound target proof PASS with retained run identity | CONDITIONAL |
 | RB-007 | Main PR-origin audit | Main PR Origin Audit | `POST_MERGE` | Every push/merge to `main` | merged-PR association PASS and forced-update detection remains clean | POST_MERGE |
+| RB-008 | P17 controlled local browser proof | P17 Local Browser Proof | `CONDITIONAL` | P17 neutral Web export/package-validation/browser-proof surfaces change | exact-head local-only Chrome render receipt PASS, bound to commit/run identity, with zero external/blocked requests and visual fidelity/reconstruction/production authority still false | CONDITIONAL |
 
 ## Deferred Runner queue
 
