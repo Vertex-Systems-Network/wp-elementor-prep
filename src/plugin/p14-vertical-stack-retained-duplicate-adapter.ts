@@ -1,6 +1,8 @@
 import { buildBuildReadyReport, computeBuildReadyStructuralHash } from '../core/build-ready';
 import { analyzeLinearLayoutGeometry } from '../core/linear-layout-analysis';
 import {
+  P14_VERTICAL_STACK_PRODUCTION_RECIPE_ID,
+  P14_VERTICAL_STACK_PRODUCTION_RECIPE_VERSION,
   P14_VERTICAL_STACK_RECIPE_QUALIFICATION,
 } from '../core/p14-vertical-stack-qualification';
 import {
@@ -209,8 +211,9 @@ function actionContractFailures(action: P14PreparationAction): string[] {
     || action.sourceRuleVersion !== P14_VERTICAL_STACK_RULE_VERSION) {
     failures.push('P14 vertical-stack runtime source rule/version does not match the accepted P13 contract.');
   }
-  if (!action.recipeId || !Number.isInteger(action.recipeVersion) || (action.recipeVersion ?? 0) <= 0) {
-    failures.push('P14 vertical-stack runtime requires an explicit versioned recipe identity.');
+  if (action.recipeId !== P14_VERTICAL_STACK_PRODUCTION_RECIPE_ID
+    || action.recipeVersion !== P14_VERTICAL_STACK_PRODUCTION_RECIPE_VERSION) {
+    failures.push('P14 vertical-stack runtime recipe identity does not match the accepted production binding.');
   }
   if (action.confidence < P14_VERTICAL_STACK_MIN_CONFIDENCE) {
     failures.push('P14 vertical-stack runtime confidence is below the accepted P5 mutation gate.');
