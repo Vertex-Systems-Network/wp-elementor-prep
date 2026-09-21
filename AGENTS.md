@@ -79,6 +79,21 @@ Use release trains to reduce coordination overhead without weakening correctness
 - On failure, fix the cause, rerun affected Runner tasks, then rerun every exact-head gate required for merge/release.
 - Batching reduces repeated Runner usage; it never permits skipping, weakening or fabricating required acceptance evidence.
 
+## Delivery-resilient turn budget
+
+Follow `.ai/state/PROTOCOL.md` on every development turn.
+
+- `MAX_LOGICAL_MILESTONES_PER_TURN = 1`.
+- `MAX_RUNNER_STATUS_FETCHES_PER_TURN = 1` after a Runner batch has started.
+- Busy-waiting, repeated status polling and sleep/poll loops are forbidden.
+- When required checks are queued/in-progress on the one allowed status inspection, preserve exact issue/branch/PR/head/run identifiers and end the response. Resume only on the next user `continue`.
+- Never keep a user turn open merely to wait for CI, CodeQL, browser/target proof or another remote dependency.
+- Do not create status-only checkpoint commits after exact-head checks start. GitHub PR/check/run metadata is the volatile source of truth.
+- Before an external wait boundary, ensure the durable branch milestone and exact next action are recoverable from `.ai/state/*` plus the owning issue/PR.
+- A blocking/security-critical Runner result blocks later implementation across turns; it does not permit polling until completion in one turn.
+- Do not combine implementation, Runner waiting, merge, post-merge verification and next-task activation in one turn.
+- Never claim this protocol can eliminate transport/UI/service failures outside repository control.
+
 ## Mandatory session end
 
 After meaningful work, update only the canonical files whose truth materially changed:
