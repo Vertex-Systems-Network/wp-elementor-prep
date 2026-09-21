@@ -23,6 +23,16 @@ async function root() {
 }
 
 describe('scripts security I/O', () => {
+  it('compares device ids only when both filesystem observations expose them', async () => {
+    const source = await readFile('scripts/security-io.mjs', 'utf8');
+    expect(source).toContain('const comparableInode = Number.isFinite(before.ino)');
+    expect(source).toContain('if (comparableInode && before.ino !== after.ino) return false;');
+    expect(source).toContain('before.dev !== 0');
+    expect(source).toContain('after.dev !== 0');
+    expect(source).toContain('if (comparableDevice && before.dev !== after.dev) return false;');
+    expect(source).not.toContain('before.dev !== after.dev || before.ino !== after.ino');
+  });
+
   it('reads strict JSON within caller-supplied resource ceilings', async () => {
     const dir = await root();
     const path = join(dir, 'input.json');
