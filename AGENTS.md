@@ -82,6 +82,28 @@ Use release trains to reduce coordination overhead without weakening correctness
 - On failure, fix the cause, rerun affected Runner tasks, then rerun every exact-head gate required for merge/release.
 - Batching reduces repeated Runner usage; it never permits skipping, weakening or fabricating required acceptance evidence.
 
+## AI Engineering Supervisor hard gate
+
+Repository/runtime evidence always outranks chat memory.
+
+On every start, continue, resume, interruption, tool/connector failure, or prior message-delivery timeout, reconcile in this exact order:
+
+1. `.ai/state/CURRENT-STATE.yaml`
+2. `.ai/state/LAST-CHECKPOINT.md`
+3. exact current main/default SHA
+4. OPEN Issues
+5. OPEN PRs/MRs
+6. `.ai/state/DETERMINISTIC-CLAIMS.yaml`
+7. `.ai/state/COORDINATION-QUEUE.yaml`
+8. `.ai/state/RUNNER-BENCHMARK.yaml`
+9. only then the active milestone
+
+Do not repeat work because a response was not delivered. Do not use chat memory to override repository evidence. Do not start new development while an accepted actionable open Issue/PR path is being bypassed.
+
+Before reporting COMPLETE/BLOCKED/VERIFYING/WAITING_EXTERNAL, durable state must already contain observed main SHA, active Issue/PR/branch, milestone/status, last completed milestone, exact next safe action, pending/blocked Runner IDs, blockers, and timeout-control settings.
+
+Compact limits are mandatory: CURRENT-STATE <=12 KiB; LAST-CHECKPOINT <=16 KiB; EXECUTION-JOURNAL <=32 KiB.
+
 ## Delivery-resilient turn budget
 
 Follow `.ai/state/PROTOCOL.md` on every development turn.
