@@ -4,6 +4,7 @@ import { assertRegistrySchemaReferences } from './status-schema-contract.mjs';
 const readme = await readFile('README.md', 'utf8');
 const p14Qualification = await readFile('src/core/p14-vertical-stack-qualification.ts', 'utf8');
 const p14RegistrySource = await readFile('src/core/p14-safe-recipe-registry.ts', 'utf8');
+const p15ResponsiveFullWidthSource = await readFile('src/targets/elementor/responsive-full-width-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -126,6 +127,11 @@ requireRow('P14', {
   progress: '100% impl',
   next: 'publishable release activation disabled',
 });
+requireRow('P15', {
+  status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
+  progress: 'N/A',
+  next: '#659',
+});
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
   progress: '0% exec',
@@ -154,6 +160,26 @@ const devBuild = await readFile('scripts/build.mjs', 'utf8');
 const releaseBuild = await readFile('scripts/build-release.mjs', 'utf8');
 if (!devBuild.includes("__P14_INTERNAL_ACTIVATION__: 'true'") || !releaseBuild.includes("__P14_INTERNAL_ACTIVATION__: 'false'")) {
   throw new Error('P14 internal activation build split is missing; development must enable it and publishable release must hard-disable it.');
+}
+
+const p15FullWidthRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "containerSourceBlobSha: '3486766b9565af99536ae205ed1936bb155daed0'",
+  "controlsStackSourceBlobSha: '00b280e518b89925c8f85a059b34136177ff3d4d'",
+  "conditionRequiredValue: 'full'",
+  "desktopSettingKey: 'width'",
+  "tabletSettingKey: 'width_tablet'",
+  "mobileSettingKey: 'width_mobile'",
+  "raw.contentWidthMode !== 'full'",
+  "target.settings[P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_EVIDENCE.conditionControlName] = 'full'",
+];
+for (const fragment of p15FullWidthRequiredFragments) {
+  if (!p15ResponsiveFullWidthSource.includes(fragment)) {
+    throw new Error(`P15 #659 responsive full-width contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('#659 adds explicit `content_width=full`')) {
+  throw new Error('README P15 #659 active responsive full-width truth is stale or missing.');
 }
 
 console.log(
