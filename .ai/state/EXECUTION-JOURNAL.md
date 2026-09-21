@@ -70,3 +70,19 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - New exact head must be treated as uncertified until the next user `continue` performs the one allowed consolidated status refresh.
 - No CI/status polling was performed in this milestone.
 
+## 2026-09-21 — #642 merged; post-P14 R1 reconciliation activated
+
+- PR #642 exact head `b5a5b4382494c8922b1b625bb37ea39568871cd7` was observed green across CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact and P15 Real Elementor Target Proof.
+- PR #642 merged as main `f428114dd2276ebf2033f88e393872281d03b608`; Issue #641 closed completed.
+- The first post-merge workflow refresh for the merge SHA returned no pull-request-triggered workflow runs; no post-merge PASS was inferred.
+- Issue #643 opened for focused durable-state reconciliation.
+- P14 production mutation authority remains false and the production safe-recipe registry remains empty.
+- No next feature slice started in this milestone.
+
+## 2026-09-21 — #643 reconciliation PR opened
+
+- Opened PR #644 from `state/post-642-reconcile` against exact merged main `f428114dd2276ebf2033f88e393872281d03b608`.
+- Bound compact state, coordination queue and Runner Benchmark to PR #644.
+- New exact PR head is intentionally uncertified until the next user `continue` performs the one allowed consolidated exact-head status refresh.
+- No CI/status polling is performed after PR creation in this milestone.
+
