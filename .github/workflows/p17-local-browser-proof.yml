@@ -37,13 +37,14 @@ jobs:
     timeout-minutes: 15
     env:
       P17_BROWSER_PROOF_OUT_DIR: dist-p17/p17-local-browser-proof
-      P17_PROOF_GIT_SHA: ${{ github.sha }}
+      P17_PROOF_GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       P17_PROOF_RUN_ID: ${{ github.run_id }}
       P17_PROOF_RUN_ATTEMPT: ${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
