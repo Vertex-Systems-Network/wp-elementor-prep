@@ -14,10 +14,10 @@ sources_of_truth:
   volatile_runner_state: github_pr_issue_check_metadata
 active_execution:
   repository: Vertex-Systems-Network/wp-elementor-prep
-  issue: null
-  branch: null
+  issue: 637
+  branch: docs/delivery-resilient-ai-flow
   pull_request: null
   candidate_head_sha: null
-  completed_milestone: null
-  external_dependency: null
-  next_action: inspect canonical issue/PR queue before starting a new release train
+  completed_milestone: delivery-resilient AI flow implemented with governance contract
+  external_dependency: exact-head GitHub Runner batch after PR creation
+  next_action: open PR; inspect Runner status once; if any required check is pending, end the turn and resume on next user continue
