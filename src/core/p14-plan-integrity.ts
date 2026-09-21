@@ -64,6 +64,15 @@ export function stableP14Strings(values: string[]): string[] {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b));
 }
 
+function safeCanonicalP14TargetAddressesForDigest(
+  value: P14PreparationAction['targetAddresses'],
+) {
+  if (!Array.isArray(value) || value.length === 0) return [];
+  const valid = value.filter((address) => validateP14CandidateTargetAddress(address).valid);
+  if (valid.length !== value.length) return [];
+  return canonicalizeP14CandidateTargetAddresses(valid);
+}
+
 export function compareP14Actions(a: P14PreparationAction, b: P14PreparationAction): number {
   return a.orderClass.localeCompare(b.orderClass)
     || (a.recipeId ?? '').localeCompare(b.recipeId ?? '')
@@ -224,8 +233,8 @@ export function computeP14PlanDigest(input: {
     actions: input.actions.map((action) => ({
       ...action,
       targetNodeIds: stableP14Strings(action.targetNodeIds),
-      ...(action.targetAddresses && action.targetAddresses.length > 0
-        ? { targetAddresses: canonicalizeP14CandidateTargetAddresses(action.targetAddresses) }
+      ...(safeCanonicalP14TargetAddressesForDigest(action.targetAddresses).length > 0
+        ? { targetAddresses: safeCanonicalP14TargetAddressesForDigest(action.targetAddresses) }
         : {}),
       prerequisiteRecipeIds: stableP14Strings(action.prerequisiteRecipeIds),
       conflictsWithRecipeIds: stableP14Strings(action.conflictsWithRecipeIds),
@@ -389,7 +398,9 @@ function validateP14PreparationPlanSnapshot(value: unknown): P14PlanIntegrityRes
   if (new Set(actionIds).size !== actionIds.length) failures.push('P14 plan contains duplicate action IDs.');
 
   for (const action of actions) {
-    for (const address of action.targetAddresses ?? []) {
+    if (!Array.isArray(action.targetAddresses)) continue;
+    for (const address of action.targetAddresses) {
+      if (!validateP14CandidateTargetAddress(address).valid) continue;
       if (address.sourceRootNodeId !== value.source.nodeId
         || address.sourceRootFingerprint !== value.source.fingerprint) {
         failures.push(`Action ${action.actionId} target address is bound to a different plan source identity.`);
