@@ -1,10 +1,19 @@
 # P17 Universal Web Export + Code-to-Design Import — Preflight Specification
 
-Status: PLANNING-ONLY / IMPLEMENTATION BLOCKED  
+Status: FOUNDATION IMPLEMENTATION IN PROGRESS / BROWSER + RECONSTRUCTION UNWIRED  
 Owner roadmap issue: #119  
-Dependencies: #84 internal P12 exit; P13/P14 accepted foundations; sequencing after P15/P16 per roadmap  
+Sequencing: R1/R2 static-only foundations are explicitly opened under #119; production acceptance still depends on #84/#182 plus the later browser/reconstruction/live evidence gates  
 R0 source snapshot: `docs/R0_WEB_CODE_ADAPTER_SNAPSHOT_2026-09-11.md`  
-Date: 2026-09-11
+Date: 2026-09-21
+
+Implemented foundation slices:
+
+- #612/#613 — deterministic static HTML/CSS export foundation;
+- #614/#615 — fail-closed static HTML/CSS import safety preflight;
+- #616/#617 — versioned neutral Web IR + deterministic identity;
+- #618/#623 — deterministic neutral Web IR → semantic HTML/CSS generation with IR-bound SHA-256 receipts.
+
+These slices do not enable arbitrary JavaScript, network access, browser-fidelity claims, Web→Figma reconstruction authority or production acceptance.
 
 ## 1. Purpose
 
