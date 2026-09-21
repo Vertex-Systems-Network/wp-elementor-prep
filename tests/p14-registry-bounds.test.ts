@@ -233,8 +233,25 @@ describe('P14 safe-recipe registry bounds', () => {
     expect(validation.failures).toContain('bindings[0].recipe must be an object.');
   });
 
-  it('keeps the production registry empty and valid', () => {
-    expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toEqual([]);
+  it('keeps the exact singleton production registry bounded and valid', () => {
+    expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toHaveLength(1);
+    expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings[0]).toMatchObject({
+      sourceRuleId: 'BR_SAFE_VERTICAL_STACK_CANDIDATE',
+      sourceRuleVersion: 1,
+      recipe: {
+        id: 'P14_VERTICAL_STACK_V1',
+        version: 1,
+        minConfidence: 90,
+        validationProfileId: 'P14_VALIDATE_VERTICAL_STACK_V1',
+        orderClass: '10-structure',
+        prerequisites: [],
+        conflictsWith: [],
+      },
+    });
+    expect(assessP14SafeRecipeRegistryBounds(PRODUCTION_P14_SAFE_RECIPE_REGISTRY)).toMatchObject({
+      allowed: true,
+      failures: [],
+    });
     expect(validateP14SafeRecipeRegistry(PRODUCTION_P14_SAFE_RECIPE_REGISTRY)).toEqual({ valid: true, failures: [] });
   });
 });
