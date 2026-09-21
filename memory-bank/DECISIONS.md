@@ -319,3 +319,16 @@ AI-native repository work uses one logical milestone per user-triggered developm
 GitHub PR/issue/check/run metadata is authoritative for volatile Runner state. Stable `.ai/state` files define the execution protocol and durable resume contract. Status-only commits must not mutate an exact candidate head after Runner checks start.
 
 Security-critical and `BLOCKING_NOW` work still blocks later implementation, but the block may span user turns. This policy optimizes repository workflow against long-turn delivery failures without claiming control over browser/network/ChatGPT transport or UI availability.
+
+## D-046 — Repository evidence and compact durable state govern AI resume
+Date: 2026-09-21  
+Status: ACCEPTED
+
+The AI Engineering Supervisor resumes from compact durable state only as an index, then reconciles exact repository/runtime truth before any work. Mandatory order: compact state -> exact main -> open Issues -> open PRs -> deterministic claims -> coordination queue -> machine-readable Runner Benchmark -> active milestone.
+
+One user turn remains one logical milestone. CI/status refresh is consolidated to one per milestone by default; tight polling and rerun-on-message-timeout are forbidden. A prior delivery timeout grants no authority and never justifies repeating a merge, deployment, migration, destructive/provider action, or formal runtime execution.
+
+Runner registration never grants execution authority. Safe non-blocking work may batch at project-final acceptance; security-critical, merge-required, migration/auth/secrets/data-safety, current-change integration-safety, and incident/recovery checks remain immediate.
+
+Compact state is size-bounded and must be reconciled before reporting COMPLETE/BLOCKED/VERIFYING/WAITING_EXTERNAL. Governance-only cycles do not rewrite large public dashboards unless public lifecycle truth materially changes.
+
