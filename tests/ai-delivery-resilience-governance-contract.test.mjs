@@ -14,11 +14,17 @@ describe('delivery-resilient AI execution governance', () => {
     expect(protocol).toContain('BUSY_WAITING = FORBIDDEN');
     expect(protocol).toContain('SLEEP_POLL_LOOPS = FORBIDDEN');
     expect(protocol).toContain('RUNNER_PENDING_ACTION = CHECKPOINT_AND_END_TURN');
+    expect(protocol).toContain('DEFAULT_DEFERABLE_RUNNER_CLASS = PROJECT_FINAL');
+    expect(protocol).toContain('REMOTE_RETRY_LOOPS = FORBIDDEN');
+    expect(protocol).toContain('NEXT_MILESTONE_AFTER_EXTERNAL_WAIT = FORBIDDEN');
 
     expect(currentState).toContain('max_logical_milestones_per_turn: 1');
     expect(currentState).toContain('max_runner_status_fetches_per_turn: 1');
     expect(currentState).toContain('busy_waiting_allowed: false');
     expect(currentState).toContain('sleep_poll_loops_allowed: false');
+    expect(currentState).toContain('default_deferable_runner_class: project_final');
+    expect(currentState).toContain('remote_retry_loops_allowed: false');
+    expect(currentState).toContain('next_milestone_after_external_wait_allowed: false');
   });
 
   it('wires the protocol into both the canonical AI plan and agent instructions', () => {
@@ -35,6 +41,10 @@ describe('delivery-resilient AI execution governance', () => {
     expect(runnerBenchmark).toContain('at most one Runner/check-status fetch');
     expect(runnerBenchmark).toContain('Never use sleep loops or repeated polling');
     expect(runnerBenchmark).toContain('BLOCKING_NOW');
+    expect(runnerBenchmark).toContain('PROJECT_FINAL');
+    expect(runnerBenchmark).toContain('## Project-final Runner queue');
+    expect(aiPlan).toContain('final project acceptance checkpoint');
+    expect(agents).toContain('consolidated project-final Runner pass');
   });
 
   it('keeps volatile Runner state out of status-only exact-head commits', () => {
@@ -47,5 +57,6 @@ describe('delivery-resilient AI execution governance', () => {
     expect(protocol).toContain('cannot guarantee transport');
     expect(aiPlan).toContain('must not claim absolute protection');
     expect(agents).toContain('Never claim this protocol can eliminate');
+    expect(agents).toContain('strict MUST/MUST-NOT orders');
   });
 });
