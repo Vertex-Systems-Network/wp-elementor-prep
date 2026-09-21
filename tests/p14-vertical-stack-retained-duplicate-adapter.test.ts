@@ -2,12 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { computeBuildReadyStructuralHash } from '../src/core/build-ready';
 import { buildP14PreparationConfirmation } from '../src/core/p14-preparation-confirmation';
 import { buildP14PreparationPlan } from '../src/core/p14-preparation-plan';
-import { createP14SafeRecipeRegistry, PRODUCTION_P14_SAFE_RECIPE_REGISTRY } from '../src/core/p14-safe-recipe-registry';
+import { PRODUCTION_P14_SAFE_RECIPE_REGISTRY } from '../src/core/p14-safe-recipe-registry';
 import { runP14RetainedDuplicateTransaction } from '../src/core/p14-retained-duplicate-transaction';
 import {
   deriveP14CandidateTargetAddresses,
 } from '../src/core/p14-target-address';
-import { P14_VERTICAL_STACK_RECIPE_QUALIFICATION } from '../src/core/p14-vertical-stack-qualification';
+import {
+  P14_VERTICAL_STACK_RECIPE_QUALIFICATION,
+  createP14VerticalStackProductionRecipe,
+} from '../src/core/p14-vertical-stack-qualification';
 import { P14_VERTICAL_STACK_VALIDATION_PROFILE_ID } from '../src/core/p14-vertical-stack-validation-profile';
 import { scanSceneNode } from '../src/core/scanner';
 import type {
@@ -218,23 +221,9 @@ function fixture() {
   return { runtime, source, target };
 }
 
-const recipe: P14PreparationRecipeDefinition = {
-  id: 'P14_VERTICAL_STACK_RUNTIME_V1',
-  version: 1,
-  sourceRuleIds: ['BR_SAFE_VERTICAL_STACK_CANDIDATE'],
-  minConfidence: 90,
-  prerequisites: [],
-  mutationAllowlist: [...P14_VERTICAL_STACK_RECIPE_QUALIFICATION.mutationAllowlist],
-  validationProfileId: P14_VERTICAL_STACK_VALIDATION_PROFILE_ID,
-  conflictsWith: [],
-  orderClass: '10-structure',
-};
+const recipe: P14PreparationRecipeDefinition = createP14VerticalStackProductionRecipe();
 
-const registry = createP14SafeRecipeRegistry([{
-  sourceRuleId: 'BR_SAFE_VERTICAL_STACK_CANDIDATE',
-  sourceRuleVersion: 1,
-  recipe,
-}]);
+const registry = PRODUCTION_P14_SAFE_RECIPE_REGISTRY;
 
 function planFor(source: FakeFrame): P14PreparationPlanV1 {
   const audit = scanSceneNode(source as unknown as SceneNode);
@@ -393,14 +382,16 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     await expect(adapter.discardCandidate(handle)).rejects.toThrow('unowned');
   });
 
-  it('refuses retention for the wrong transaction and leaves production registry empty', async () => {
+  it('refuses retention for the wrong transaction while production registry remains planning-only', async () => {
     const { runtime, source } = fixture();
     const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
     const handle = await adapter.cloneSource(source.id, 'p14-r4-retain');
 
     await expect(adapter.retainCandidate(handle, 'wrong-transaction', 'Prepared'))
       .rejects.toThrow('different transaction');
-    expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toEqual([]);
+    expect(PRODUCTION_P14_SAFE_RECIPE_REGISTRY.bindings).toHaveLength(1);
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.runtimeMutationEnabled).toBe(false);
+    expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.confirmationEnabled).toBe(false);
     expect(runtime.nodes.has(source.id)).toBe(true);
     expect(runtime.nodes.has(handle.candidateNodeId)).toBe(true);
   });
