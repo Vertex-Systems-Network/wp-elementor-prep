@@ -139,6 +139,12 @@ describe('P10 source adapters', () => {
     expect(source).toContain("handle.stat({ bigint: true })");
     expect(source).toContain('first.mtimeNs === second.mtimeNs');
     expect(source).toContain('first.ctimeNs === second.ctimeNs');
+    expect(source).toContain('first.birthtimeNs === second.birthtimeNs');
+    expect(source).toContain('first.nlink === second.nlink');
+    expect(source).toContain('first.mode === second.mode');
+    expect(source).toContain('hasComparableDeviceIdentity(first)');
+    expect(source).toContain('hasComparableDeviceIdentity(second)');
+    expect(source).not.toContain('first.dev !== second.dev || first.ino !== second.ino');
     expect(source).not.toContain('first.mtimeMs === second.mtimeMs');
     expect(source).not.toContain('first.ctimeMs === second.ctimeMs');
   });
