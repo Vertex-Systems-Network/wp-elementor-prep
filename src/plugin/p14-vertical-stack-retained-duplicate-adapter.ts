@@ -85,7 +85,6 @@ interface CandidateMetadata {
   candidateNodeId: string;
   sourceFingerprint: string;
   sourceReport: BuildReadyReportV2;
-  preparedName: string;
   appliedTargets: AppliedTargetEvidence[];
   retained: boolean;
 }
@@ -361,11 +360,10 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     return computeBuildReadyStructuralHash(scanSceneNode(source));
   }
 
-  async cloneSource(sourceNodeId: string, transactionId: string, preparedName?: string): Promise<P14CandidateHandle> {
+  async cloneSource(sourceNodeId: string, transactionId: string): Promise<P14CandidateHandle> {
     if (this.candidates.size > 0) {
       throw new Error('P14 vertical-stack adapter allows only one owned candidate per adapter instance.');
     }
-    const finalPreparedName = preparedName?.trim() || 'Prepared Duplicate';
     const source = await frameById(this.runtime, sourceNodeId, 'Source');
     const sourceAudit = scanSceneNode(source);
     const sourceFingerprint = computeBuildReadyStructuralHash(sourceAudit);
@@ -401,7 +399,6 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
         candidateNodeId: candidate.id,
         sourceFingerprint,
         sourceReport,
-        preparedName: finalPreparedName,
         appliedTargets: [],
         retained: false,
       });
@@ -466,10 +463,6 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     if (!result.applied) {
       throw new Error(`P14 vertical-stack P5 transform refused candidate: ${result.reason}`);
     }
-
-    assessed.candidateRoot.name = assessed.metadata.preparedName;
-    assessed.candidateRoot.setPluginData('p14:preparedName', assessed.metadata.preparedName);
-    assessed.candidateRoot.setPluginData('p14:state', 'prepared-candidate');
 
     assessed.metadata.appliedTargets.push({
       actionId: action.actionId,
@@ -577,20 +570,14 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     if (metadata.retained) {
       throw new Error('P14 candidate is already retained.');
     }
-    if (preparedName !== metadata.preparedName) {
-      throw new Error('P14 retained candidate prepared name differs from the pre-validated candidate identity.');
-    }
     const node = await frameById(this.runtime, candidate.candidateNodeId, 'Candidate');
     if (node.id === metadata.sourceNodeId) {
       throw new Error('P14 adapter refused to retain the approved source as candidate output.');
     }
 
-    if (node.name !== metadata.preparedName) {
-      throw new Error('P14 candidate name drifted after validation/re-score; refusing retention.');
-    }
     node.setPluginData('p14:transactionId', transactionId);
     node.setPluginData('p14:sourceNodeId', metadata.sourceNodeId);
-    node.setPluginData('p14:preparedName', metadata.preparedName);
+    node.setPluginData('p14:preparedName', preparedName);
     node.setPluginData('p14:state', 'retained');
     metadata.retained = true;
 
