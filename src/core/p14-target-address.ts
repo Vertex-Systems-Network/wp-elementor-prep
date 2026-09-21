@@ -264,9 +264,14 @@ export function resolveP14CandidateTargetAddresses(input: {
     failures.push('P14 candidate target resolution requires a bounded non-empty address set.');
   }
 
-  const canonical = canonicalizeP14CandidateTargetAddresses(input.addresses);
-  if (JSON.stringify(canonical) !== JSON.stringify(input.addresses)) {
-    failures.push('P14 candidate target addresses are not canonically ordered.');
+  const allAddressShapesValid = input.addresses.every(
+    (address) => validateP14CandidateTargetAddress(address).valid,
+  );
+  if (allAddressShapesValid) {
+    const canonical = canonicalizeP14CandidateTargetAddresses(input.addresses);
+    if (JSON.stringify(canonical) !== JSON.stringify(input.addresses)) {
+      failures.push('P14 candidate target addresses are not canonically ordered.');
+    }
   }
 
   const sourceTargetIds = new Set<string>();
