@@ -1,3 +1,4 @@
+import { DEFAULT_P14_INPUT_BOUNDS } from './p14-input-bounds';
 import { validateP14ValidationEvidence } from './p14-validation-evidence';
 
 export const P14_VERTICAL_STACK_VALIDATION_PROFILE_SCHEMA_VERSION = 1 as const;
@@ -75,8 +76,12 @@ export function assessP14VerticalStackValidationProfileEvidence(
   const failures: string[] = [];
   const profileIds: string[] = [];
   for (const profileId of bounded.value.profileIdsRun) {
-    if (typeof profileId !== 'string' || profileId.length === 0) {
-      failures.push('Vertical-stack validation profile evidence contains an invalid profile ID.');
+    if (
+      typeof profileId !== 'string'
+      || profileId.length === 0
+      || profileId.length > DEFAULT_P14_INPUT_BOUNDS.maxIdentityLength
+    ) {
+      failures.push('Vertical-stack validation profile evidence contains an invalid or oversized profile ID.');
       continue;
     }
     profileIds.push(profileId);
