@@ -4,7 +4,7 @@ Status: VERIFYING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `c8950242a2848b4f58828d7e3220f59062305442`  
 Active Issue: `#649`  
-Active PR: none  
+Active PR: `#650`  
 Active branch: `p14/vertical-stack-validation-profile`
 
 ## P14 R2 implementation
@@ -34,4 +34,4 @@ Active branch: `p14/vertical-stack-validation-profile`
 
 ## Exact next safe action
 
-Open one focused PR for Issue #649 from `p14/vertical-stack-validation-profile`. Bind compact state/Runner metadata to the PR head, then end without CI/status polling. The following user `continue` performs the first single consolidated exact-head status refresh.
+PR #650 is open from `p14/vertical-stack-validation-profile`. Its creation head was `cd6db74d85d738865e44628cb0547cae0040d1ed`; subsequent state-binding commits intentionally make that creation head non-authoritative for CI. End without status polling. The next user `continue` resolves the final PR head and performs ONE consolidated exact-head status refresh.
