@@ -238,3 +238,16 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - No production/runtime/security/authorization behavior changed and no gate was weakened.
 - New exact head remains uncertified; no workflow polling occurs in this repair milestone.
 
+
+## 2026-09-22 — PR #654 second exact-head failures diagnosed and repaired
+
+- Repaired exact head `96f51eb41b1bae0d5a3b8985366e4ffd9e11eb1c` passed TypeScript typecheck.
+- CI run `35652020867` / job `106506553178` and P12 Final run `35652020856` / job `106506431436` then failed only in the new R4 adapter test suite.
+- Repository test result: 1597 passed, 2 failed.
+- One failure was test-regex wording against a correctly fail-closed source-identity refusal.
+- The second failure exposed that a hidden candidate root could still receive READY from Build-Ready scoring.
+- Commit `d9ce31565d82b5196e4f6ebca0f952d83e1d45fb` adds explicit hidden-root insufficient-evidence refusal in candidate rescore.
+- Commit `fca1180cb646c7e8ae56649574ba17be94fccc11` aligns the refusal regression with the adapter's actual secure error wording.
+- No authority/security gate was weakened; the behavior change makes candidate acceptance stricter.
+- New exact head remains uncertified and is not polled in this milestone.
+
