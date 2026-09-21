@@ -44,3 +44,29 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Open PR queue is empty.
 - Issue #639 created for focused durable-state reconciliation; no unrelated feature work started.
 
+## 2026-09-21 — P14 vertical-stack qualification slice activated
+
+- Reconciled post-#640 main `84c5809327afec2ddef0a6fb78bffc0cd9fcc2c6` as fully green, including CodeQL and PR-origin audit.
+- Issue #641 opened under roadmap owner #119.
+- Activated branch `p14/vertical-stack-qualification`.
+- Selected bounded scope: qualify exact `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` against proven P5 `vertical-stack` semantics without production registry activation.
+- Identified an exact modeling gap: P5 writes primary/counter axis alignment in addition to the mutation fields currently represented by P14.
+- Production P14 registry remains empty; no runtime/UI mutation authority is granted by activation.
+
+## 2026-09-21 — #641 P14 vertical-stack qualification implemented
+
+- Extended the P14 mutation vocabulary with the two axis-alignment fields already written by the accepted P5 linear transformer.
+- Added a machine-readable non-authorizing vertical-stack qualification contract bound to `BR_SAFE_VERTICAL_STACK_CANDIDATE@1`, P5 `vertical-stack`, confidence 90 and the exact bounded write surface.
+- Qualification retains no validation profile and explicitly blocks runtime mutation, confirmation and production registry eligibility.
+- Production P14 safe-recipe registry remains empty.
+- Added focused deterministic regressions and corrected stale P13→P14 handoff documentation.
+- State moved to VERIFYING pending a focused PR; CI is not polled in this implementation milestone.
+
+## 2026-09-21 — #641 focused PR opened
+
+- Opened PR #642 from `p14/vertical-stack-qualification` against main.
+- PR creation head was `e35ebc643d0f52d837abe246566f5b6e3a1c136c`.
+- Bound compact state, coordination queue and Runner Benchmark to PR #642 in a follow-up state commit.
+- New exact head must be treated as uncertified until the next user `continue` performs the one allowed consolidated status refresh.
+- No CI/status polling was performed in this milestone.
+

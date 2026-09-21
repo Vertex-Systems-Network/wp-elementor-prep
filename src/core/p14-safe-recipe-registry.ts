@@ -37,6 +37,8 @@ const MUTATION_FIELDS = new Set<P14MutationField>([
   'layoutMode',
   'primaryAxisSizingMode',
   'counterAxisSizingMode',
+  'primaryAxisAlignItems',
+  'counterAxisAlignItems',
   'itemSpacing',
   'padding',
   'textAutoResize',
@@ -290,9 +292,10 @@ export function resolveP14SafeRecipe(
 }
 
 /**
- * Production is intentionally non-authorizing at this slice. Current P13 production rules emit
- * only MANUAL_REVIEW/ADVISORY findings; a mutating binding requires a separately accepted issue,
- * recipe, validator and runtime evidence before being registered here.
+ * Production is intentionally non-authorizing at this slice. P13 may emit an explicitly bounded
+ * P14_SAFE_CANDIDATE, but candidate classification alone never grants mutation authority. A
+ * production binding still requires a separately accepted recipe, validator and runtime-evidence
+ * issue before being registered here.
  */
 export const PRODUCTION_P14_SAFE_RECIPE_REGISTRY: P14SafeRecipeRegistryV1 =
   createP14SafeRecipeRegistry([]);
