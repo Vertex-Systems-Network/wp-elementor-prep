@@ -50,6 +50,20 @@ Active branch: `p14/explicit-confirmation-internal-activation`
 - README repair state is synchronized on this branch.
 - The new repaired PR head is not certified in this milestone; no fresh workflow polling occurs after the repair.
 
+## Second exact-head failure diagnosis and repair
+
+- Repaired head `1127a4273a74e00e9f56e2bf13f8e1f2bda47e90` passed README/status verification and TypeScript typecheck.
+- CI run `35658550631` / job `106528156488` reached the full test suite and reported 1603 PASS / 2 FAIL.
+- P12 Final Release Artifact run `35658550769` / job `106528042131` failed on the same repository test stage.
+- Failure 1: `tests/p14-review-packet-main-panel.test.mjs` still expected pre-R6 inline identifiers `reviewPacket` / `evidence`; the runtime now correctly serializes from the fresh-state wrapper `current.reviewPacket` / `current.evidence`.
+- Failure 2: `tests/p14-vertical-stack-retained-duplicate-adapter.test.ts` still asserted R5 `runtimeMutationEnabled=false` / `confirmationEnabled=false`; R6 qualification v5 intentionally enables those only for the internal/dev explicit-confirmation boundary while keeping `acceptanceAuthority=false` and `targetCompatibilityClaim=false`.
+- Repair commits:
+  - `f5c45ccc3115e0d6b4ce982ce02a7d4166a67c98` — align review-packet contract with the fresh-state wrapper;
+  - `d85e38ae7f92f795f7d62c817fa05ba96d2e4563` — align adapter regression with R6 internal activation while explicitly retaining false acceptance/target authority.
+- No production/runtime/security boundary was weakened; these changes update stale assertions to the already-implemented R6 contract.
+- README repair state is synchronized on this branch.
+- The new exact head remains uncertified and is not polled in this repair milestone.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final repaired PR #658 head and perform exactly one consolidated exact-head status refresh. If required checks are pending, end without polling again. Merge only after the full exact-head required gate set is green.
+On the next user `continue`, resolve the final second-repaired PR #658 head and perform exactly one consolidated exact-head status refresh. Merge with the existing user consent only after the full exact-head required gate set is green.
