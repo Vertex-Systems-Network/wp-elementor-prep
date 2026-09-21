@@ -312,6 +312,8 @@ Static import either rejects, strips, quarantines or records each according to a
 
 ## 16. Package safety
 
+Generated-output validation contract: `src/targets/web/neutral-web-package-validation.ts` freezes `p17-neutral-web-package-validation-v1`. Before any future browser harness, it rebinds HTML/CSS to the exact neutral-IR identity, recomputes the receipt hashes, enforces output ceilings, rejects active HTML/CSS surfaces, and keeps browser/reconstruction/production authority false. This does not replace the separate ZIP/folder input controls below.
+
 ZIP/folder input validation must include:
 
 - bounded compressed/uncompressed size;
