@@ -62,3 +62,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Added focused deterministic regressions and corrected stale P13→P14 handoff documentation.
 - State moved to VERIFYING pending a focused PR; CI is not polled in this implementation milestone.
 
+## 2026-09-21 — #641 focused PR opened
+
+- Opened PR #642 from `p14/vertical-stack-qualification` against main.
+- PR creation head was `e35ebc643d0f52d837abe246566f5b6e3a1c136c`.
+- Bound compact state, coordination queue and Runner Benchmark to PR #642 in a follow-up state commit.
+- New exact head must be treated as uncertified until the next user `continue` performs the one allowed consolidated status refresh.
+- No CI/status polling was performed in this milestone.
+

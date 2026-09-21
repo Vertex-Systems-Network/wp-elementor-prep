@@ -5,13 +5,13 @@ compact_state_path: .ai/state
 observed_main_sha: 84c5809327afec2ddef0a6fb78bffc0cd9fcc2c6
 observed_main_branch: main
 active_issue: 641
-active_pr: null
+active_pr: 642
 active_branch: p14/vertical-stack-qualification
-candidate_head_source: github_branch_head
+candidate_head_source: github_pull_request_head
 current_milestone: qualify_p14_vertical_stack_recipe_without_production_activation
 milestone_status: VERIFYING
 last_completed_milestone: pr_640_merged_and_post_merge_main_required_checks_green
-exact_next_safe_action: open_one_focused_pr_for_issue_641; bind_pr_identity; do_not_poll_ci_until_next_user_continue
+exact_next_safe_action: next_user_continue_performs_one_consolidated_exact_head_status_refresh_for_pr_642
 pending_runner_ids: [RQ-641-FINAL]
 blocked_runner_ids: []
 current_blockers: []
