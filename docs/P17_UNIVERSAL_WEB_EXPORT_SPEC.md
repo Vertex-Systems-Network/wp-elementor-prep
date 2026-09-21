@@ -343,6 +343,9 @@ A page whose intended render materially depends on unresolved external CSS/fonts
 
 ## 18. CSS support matrix
 
+Implementation contract: `src/targets/web/css-support-matrix.ts` freezes `p17-css-support-matrix-v1`. It reports design→web, static-import and Web→Figma status separately, binds every claim to either merged implementation or specification policy, and carries explicit false JavaScript/network/browser-fidelity/reconstruction/production authority flags.
+
+
 P17 implementation must maintain a machine-readable support matrix, not a vague “CSS supported” claim.
 
 Initial categories:
