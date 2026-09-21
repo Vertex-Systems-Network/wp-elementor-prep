@@ -8,6 +8,7 @@
 - Generated the new npm lock deterministically in one `BLOCKING_NOW` Runner job with lifecycle scripts disabled; retained run/artifact/digest evidence in `docs/RUNNER_BENCHMARK.md` and removed the temporary write-capable workflow before acceptance.
 - Added a regression contract that rejects Node-version drift, accidental toolchain peer drift and `--force` / `--legacy-peer-deps` acceptance paths.
 - Node 22 Windows acceptance exposed a path-vs-handle device-ID representation mismatch for an unchanged canonical snapshot (`lstat.dev=0` while handle `stat.dev` is non-zero). The hardened reader keeps exact BigInt inode/size/mode/nlink/birthtime/mtime/ctime checks and compares `dev` only when both observations expose a non-zero comparable value; no timestamp tolerance or race-detection weakening is introduced.
+- The same Windows device-ID rule is applied to the shared bounded script I/O identity helper used by release verification and atomic operator I/O: inode remains exact when available, and a device mismatch rejects only when both observations expose non-zero comparable device IDs.
 
 
 ## 2026-09-21 — P17 controlled local-only browser render proof
