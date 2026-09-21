@@ -18,8 +18,8 @@ describe('P14 runtime review packet main-panel contract', () => {
     expect(main).toContain('const reviewPacket = buildP14ReviewPacket({');
     expect(main).toContain('pluginVersion: PLUGIN_VERSION');
     expect(main).toContain('runtimeBuild: P7_BUILD_IDENTITY');
-    expect(main).toContain('reviewPacketJson: serializeP14ReviewPacketJson(reviewPacket)');
-    expect(main).toContain('context: { ...evidence.context }');
+    expect(main).toContain('reviewPacketJson: serializeP14ReviewPacketJson(current.reviewPacket)');
+    expect(main).toContain('context: { ...current.evidence.context }');
   });
 
   it('shows exact non-authorizing review provenance next to the separate R6 confirmation boundary', () => {
