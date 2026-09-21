@@ -2,6 +2,8 @@ import { readFile } from 'node:fs/promises';
 import { assertRegistrySchemaReferences } from './status-schema-contract.mjs';
 
 const readme = await readFile('README.md', 'utf8');
+const p14Qualification = await readFile('src/core/p14-vertical-stack-qualification.ts', 'utf8');
+const p14RegistrySource = await readFile('src/core/p14-safe-recipe-registry.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -18,6 +20,7 @@ const requiredFragments = [
   '| Module | Status | Progress | Progress Bar | Blocker / Next |',
   overallTruth,
   '**Open PR/MR:**',
+  '**Progress sync policy:**',
   'P27 Final production release + publisher/runtime evidence',
 ];
 
@@ -119,8 +122,8 @@ requireRow('P13', {
   next: '#159',
 });
 requireRow('P14', {
-  status: 'CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED',
-  progress: 'N/A',
+  status: 'CORE IMPLEMENTATION IN PROGRESS / RUNTIME ADAPTER IMPLEMENTED / REGISTRY+UI LOCKED',
+  progress: '67% impl',
   next: 'production registry remains empty',
 });
 requireRow('P27', {
@@ -128,6 +131,19 @@ requireRow('P27', {
   progress: '0% exec',
   next: '#84',
 });
+
+if (!p14Qualification.includes('runtimeAdapterImplemented: true')) {
+  throw new Error('P14 qualification no longer records runtimeAdapterImplemented=true; README P14 progress contract must be revised in the same material mutation.');
+}
+if (!p14Qualification.includes("'P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED'")) {
+  throw new Error('P14 qualification registry blocker changed; README P14 progress contract must be revised in the same material mutation.');
+}
+if (!p14RegistrySource.includes('createP14SafeRecipeRegistry([]);')) {
+  throw new Error('P14 production registry is no longer empty; README P14 progress/status must be revised in the same material mutation.');
+}
+if (!readme.includes('P14 implementation progress is 67% (4/6 bounded slices implemented)')) {
+  throw new Error('README P14 bounded-slice implementation progress explanation is stale or missing.');
+}
 
 console.log(
   `README progress contract PASS: ${rows.length} stage-separated modules, no synthetic overall percentage, runtime registry ${schemaTag}.`,

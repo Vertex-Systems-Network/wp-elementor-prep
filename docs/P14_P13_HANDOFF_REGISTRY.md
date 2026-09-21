@@ -1,7 +1,7 @@
 # P14 P13 → P14 Handoff and Safe-Recipe Registry
 
-Status: IMPLEMENTATION FOUNDATION ONLY — PRODUCTION REGISTRY EMPTY / RUNTIME UNWIRED  
-Issues: #167, #169, #641, #649, #651  
+Status: IMPLEMENTATION FOUNDATION + VERTICAL-STACK RUNTIME ADAPTER — PRODUCTION REGISTRY EMPTY / UI UNWIRED  
+Issues: #167, #169, #641, #649, #651, #653  
 Roadmap: #119  
 Dependencies still open: P13 real-Figma acceptance (#159) and final production release gate (#84)
 
@@ -20,6 +20,8 @@ Issue #641 freezes the complete P5 vertical-stack write surface for P14 qualific
 Issue #649 adds the target-neutral `P14_VALIDATE_VERTICAL_STACK_V1` validation-profile contract. It requires exact evidence for the qualified layout-mode, primary/counter sizing, primary/counter alignment, spacing and padding surface plus candidate child-structure, content, visibility and geometry preservation. Missing, duplicate, unknown, optionalized or failed required evidence fails closed. Qualification version 2 references this profile, but runtime mutation and production-registry activation remain separately blocked.
 
 Issue #651 adds the missing source→candidate addressing prerequisite. The exact vertical-stack candidate path now requires source-root-bound child-index addresses derived from the exact reviewed P13 structural fingerprint. Each address carries clone-stable root/target structural witnesses so a retained duplicate with new node IDs can be resolved without treating source IDs as candidate mutation authority. Missing, duplicate, ambiguous, oversized, stale, wrong-root, reordered or source-identity evidence fails closed. Address evidence is included in action identity, plan integrity/digest, confirmation binding and detached adapter snapshots.
+
+Issue #653 wires the concrete candidate-only Figma retained-duplicate adapter for this exact path. It reuses the accepted P5 strict vertical-stack transform after #651 candidate address resolution, generates #649 validation-profile evidence, performs deterministic P13 Build-Ready re-score and finalizes only the separately owned candidate. The adapter never reuses P4 source-swap semantics, refuses source/candidate identity aliasing, and records the requested prepared label only as plugin metadata so no design-property write is added beyond the frozen #641 allowlist. Qualification version 3 therefore removes `P14_RUNTIME_ADAPTER_NOT_WIRED`, records `runtimeAdapterImplemented: true`, keeps `runtimeMutationEnabled: false`, and retains only `P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED` as the qualification blocker.
 
 Therefore `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains intentionally empty.
 
@@ -106,6 +108,6 @@ A future production recipe requires its own accepted rule/recipe/validator/runti
 
 ## Still deliberately unwired
 
-This foundation adds no Figma plugin menu item, no UI action, no real Figma mutation adapter, no target profile and no Elementor/Gutenberg/framework readiness claim.
+This foundation adds no production Figma plugin menu item or UI mutation action and no target profile or Elementor/Gutenberg/framework readiness claim. A concrete candidate-only vertical-stack retained-duplicate adapter now exists, but the empty production registry prevents it from receiving default production mutation authority.
 
-P14 remains implementation-foundation only. P13 #159 real runtime acceptance and P12 #84 final release-exit gates remain separate and open.
+P14 remains non-production-authorizing. P13 #159 real runtime acceptance and P12 #84 final release-exit gates remain separate and open.
