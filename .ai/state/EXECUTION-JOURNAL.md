@@ -118,3 +118,13 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - New exact PR head is intentionally uncertified until the next user `continue` performs the one allowed consolidated exact-head status refresh.
 - No CI/status polling is performed after PR creation in this milestone.
 
+## 2026-09-21 — #648 merged; P14 R2 validation-profile slice activated
+
+- PR #648 exact head `52c47832b8108e543582fd7f26a9d7da2eec97ec` was observed green across CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- PR #648 merged as main `c8950242a2848b4f58828d7e3220f59062305442`; Issue #647 closed completed.
+- The first post-merge workflow refresh for the merge SHA returned no pull-request-triggered workflow runs; no post-merge PASS was inferred.
+- Issue #649 opened under roadmap #119 for the bounded P14 R2 vertical-stack validation-profile contract.
+- Activated branch `p14/vertical-stack-validation-profile` from exact main.
+- Production P14 safe-recipe registry remains empty; runtime mutation/confirmation remain disabled.
+- No R2 implementation code was added in this activation milestone.
+
