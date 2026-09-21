@@ -322,6 +322,22 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     expect((source.children[0] as FakeFrame).layoutMode).toBe('NONE');
   });
 
+  it('refuses a non-exact recipe identity before candidate mutation', async () => {
+    const { runtime, source } = fixture();
+    const plan = planFor(source);
+    const action = plan.actions[0];
+    if (!action) throw new Error('Expected one R5 action.');
+    const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
+    const handle = await adapter.cloneSource(source.id, 'p14-r5-wrong-recipe');
+
+    await expect(adapter.applyRecipe(handle, {
+      ...action,
+      recipeId: 'P14_VERTICAL_STACK_LOOKALIKE',
+    })).rejects.toThrow('recipe identity does not match the accepted production binding');
+
+    expect((source.children[0] as FakeFrame).layoutMode).toBe('NONE');
+  });
+
   it('fails closed when the addressed candidate path drifts before mutation', async () => {
     const { runtime, source } = fixture();
     const plan = planFor(source);
