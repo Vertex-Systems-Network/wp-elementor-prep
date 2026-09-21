@@ -1,7 +1,7 @@
 # P14 P13 → P14 Handoff and Safe-Recipe Registry
 
 Status: IMPLEMENTATION FOUNDATION ONLY — PRODUCTION REGISTRY EMPTY / RUNTIME UNWIRED  
-Issues: #167, #169, #641, #649  
+Issues: #167, #169, #641, #649, #651  
 Roadmap: #119  
 Dependencies still open: P13 real-Figma acceptance (#159) and final production release gate (#84)
 
@@ -18,6 +18,8 @@ P13 now emits one narrowly bounded target-neutral candidate, `BR_SAFE_VERTICAL_S
 Issue #641 freezes the complete P5 vertical-stack write surface for P14 qualification, including primary/counter axis alignment fields that the previous P14 mutation vocabulary did not model.
 
 Issue #649 adds the target-neutral `P14_VALIDATE_VERTICAL_STACK_V1` validation-profile contract. It requires exact evidence for the qualified layout-mode, primary/counter sizing, primary/counter alignment, spacing and padding surface plus candidate child-structure, content, visibility and geometry preservation. Missing, duplicate, unknown, optionalized or failed required evidence fails closed. Qualification version 2 references this profile, but runtime mutation and production-registry activation remain separately blocked.
+
+Issue #651 adds the missing source→candidate addressing prerequisite. The exact vertical-stack candidate path now requires source-root-bound child-index addresses derived from the exact reviewed P13 structural fingerprint. Each address carries clone-stable root/target structural witnesses so a retained duplicate with new node IDs can be resolved without treating source IDs as candidate mutation authority. Missing, duplicate, ambiguous, oversized, stale, wrong-root, reordered or source-identity evidence fails closed. Address evidence is included in action identity, plan integrity/digest, confirmation binding and detached adapter snapshots.
 
 Therefore `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains intentionally empty.
 
@@ -51,7 +53,9 @@ For an exact accepted candidate:
 - P13 root ID becomes the P14 source node ID;
 - P13 structural hash becomes the P14 source fingerprint;
 - P13 run ID is re-checked against the exact `structuralHash + configHash` binding;
-- exact finding node IDs become the P14 target context;
+- exact finding node IDs remain source-tree target context only and never become direct candidate mutation authority;
+- for `BR_SAFE_VERTICAL_STACK_CANDIDATE@1`, the exact reviewed source tree must derive canonical child-index target addresses bound to the P13 root ID + structural hash;
+- clone-stable root/target witnesses must resolve against the retained candidate even though cloned descendant IDs differ;
 - exact accepted recipe ID/version is attached.
 
 Fail-closed behavior:
@@ -59,6 +63,7 @@ Fail-closed behavior:
 - `MANUAL_REVIEW` and `ADVISORY` never escalate merely because a recipe exists;
 - `P14_SAFE_CANDIDATE` without an exact rule/version binding becomes review-only;
 - below-confidence candidates remain review-only;
+- the bounded vertical-stack candidate remains review-only when exact source-tree address evidence is missing or stale;
 - invalid registry, insufficient evidence, forged run/source/config binding, invalid score status or invalid target context blocks handoff.
 
 The handoff always carries `acceptanceAuthority: false` and `targetCompatibilityClaim: false`.
