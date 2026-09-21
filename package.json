@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.117.0",
-    "@types/node": "^20.17.0",
+    "@types/node": "^26.6.1",
     "esbuild": "^0.25.0",
     "typescript": "^5.9.0",
     "vitest": "^4.1.11",
