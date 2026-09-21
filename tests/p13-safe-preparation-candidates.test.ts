@@ -120,7 +120,7 @@ describe('P13/P14 vertical-stack safe-preparation candidate', () => {
     expect(serializeBuildReadyReportJson(first)).toContain('BR_SAFE_VERTICAL_STACK_CANDIDATE');
   });
 
-  it('keeps the candidate non-executable under the empty production P14 recipe registry', () => {
+  it('keeps the production-bound candidate non-executable without exact source-tree addressing evidence', () => {
     const report = buildBuildReadyReport(verticalStackRoot(), {}, '2026-09-13T00:00:00.000Z');
     const result = buildP14PreparationPlanFromBuildReady(report);
     const action = result.plan?.actions.find((item) => item.sourceRuleId === 'BR_SAFE_VERTICAL_STACK_CANDIDATE');
@@ -128,7 +128,7 @@ describe('P13/P14 vertical-stack safe-preparation candidate', () => {
     expect(result.handoff.valid).toBe(true);
     expect(result.handoff.acceptedCandidateCount).toBe(0);
     expect(action?.decision).toBe('REVIEW');
-    expect(action?.refusalCode).toBe('P14_SAFE_BINDING_REQUIRED');
+    expect(action?.refusalCode).toBe('P14_TARGET_ADDRESS_REQUIRED');
     expect(result.plan?.eligibleActionIds).toEqual([]);
     expect(result.plan?.status).toBe('BLOCKED');
   });
