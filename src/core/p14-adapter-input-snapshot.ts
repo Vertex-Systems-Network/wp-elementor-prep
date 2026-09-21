@@ -31,6 +31,19 @@ export function snapshotP14AdapterAction(
     sourceRuleId: action.sourceRuleId,
     sourceRuleVersion: action.sourceRuleVersion,
     targetNodeIds: [...action.targetNodeIds],
+    ...(action.targetAddresses
+      ? {
+        targetAddresses: action.targetAddresses.map((address) => ({
+          schemaVersion: address.schemaVersion,
+          sourceRootNodeId: address.sourceRootNodeId,
+          sourceRootFingerprint: address.sourceRootFingerprint,
+          sourceRootCloneStableFingerprint: address.sourceRootCloneStableFingerprint,
+          sourceTargetNodeId: address.sourceTargetNodeId,
+          sourceTargetCloneStableFingerprint: address.sourceTargetCloneStableFingerprint,
+          childIndexPath: [...address.childIndexPath],
+        })),
+      }
+      : {}),
     confidence: action.confidence,
     recipeId: action.recipeId,
     recipeVersion: action.recipeVersion,

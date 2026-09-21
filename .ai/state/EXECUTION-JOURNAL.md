@@ -155,3 +155,38 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - No production/runtime/security/authorization behavior changed and no gate was weakened.
 - New exact head remains uncertified; no workflow polling occurs in this repair milestone.
 
+## 2026-09-21 — #650 merged; P14 R3 candidate target-addressing slice activated
+
+- PR #650 repaired exact head `5142487d8b1d55db8f0a156d4b5d3b675f4ff637` was observed green across CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- PR #650 merged as main `ef4895ae480744e70f5477fe4443411201dbf33f`; Issue #649 closed completed.
+- The first post-merge PR-triggered workflow refresh for the merge SHA returned no runs; no post-merge PASS was inferred.
+- Issue #651 opened under roadmap #119 for deterministic source→candidate target addressing.
+- Activated branch `p14/vertical-stack-target-addressing` from exact main.
+- Current P13→P14 plans carry source target node IDs while retained duplicates receive new descendant identities; direct source-ID mutation authority is therefore forbidden.
+- Production P14 registry remains empty; live runtime mutation/confirmation remain disabled.
+- No R3 implementation code was added in this activation milestone.
+
+
+## 2026-09-21 — #651 P14 R3 candidate target-addressing contract implemented
+
+- Added bounded versioned source→candidate target-address evidence for the exact vertical-stack candidate path.
+- Derivation is bound to the reviewed P13 source root ID and exact Build-Ready structural fingerprint.
+- Child-index paths plus clone-stable root/target structural witnesses resolve retained-duplicate descendants without treating source IDs as mutation authority.
+- P13→P14 exact vertical-stack handoff now remains REVIEW when the current source tree is unavailable or stale.
+- Address evidence is included in action identity, plan integrity/digest, confirmation binding, semantic input snapshots and detached adapter callback snapshots.
+- Missing, malformed, duplicate, ambiguous, wrong-root, stale/reordered, unresolved and source-identity evidence fails closed.
+- Added focused regressions for clone-ID divergence, stale paths, root/identity protection, duplicate evidence, handoff gating and confirmation invalidation.
+- No live Figma adapter, production applyRecipe implementation or production safe-recipe registry binding was added.
+- Sandbox archive verification could not execute because the environment blocked the unviewed archive URL; no local test/CI PASS is claimed.
+- Implementation milestone ends before PR creation and CI polling.
+
+
+## 2026-09-21 — #651 focused PR opened
+
+- Opened PR #652 from `p14/vertical-stack-target-addressing` against exact main `ef4895ae480744e70f5477fe4443411201dbf33f`.
+- PR creation head was `1c92125c4933a8bb1e208863de79e7e5ae419323`.
+- Bound compact state, coordination queue and Runner Benchmark to PR #652 in follow-up state commits.
+- Final exact PR head is intentionally uncertified until the next user `continue` performs the one allowed consolidated exact-head status refresh.
+- No CI/status polling is performed after PR creation in this milestone.
+- Production P14 registry remains empty; runtime mutation/confirmation authority remains disabled.
+

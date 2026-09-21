@@ -1,4 +1,5 @@
 import type { P14InputBoundsLimits } from './p14-input-bounds';
+import { P14_CANDIDATE_TARGET_ADDRESS_MAX_DEPTH } from './p14-target-address';
 import { safeP14RuntimeErrorMessage } from './p14-receipt-evidence';
 
 export interface P14SemanticInputSnapshotAssessment {
@@ -120,6 +121,39 @@ function snapshotSource(value: unknown, path: string, failures: string[]): unkno
   };
 }
 
+function snapshotTargetAddress(
+  value: unknown,
+  index: number,
+  failures: string[],
+): unknown {
+  const path = `plan.actions[*].targetAddresses[${index}]`;
+  const kind = classify(value, path, failures);
+  if (kind === 'unreadable') return undefined;
+  if (kind === 'array') return [];
+  if (kind !== 'record') return value;
+
+  const record = value as Record<string, unknown>;
+  const leaf = (key: string): unknown => snapshotLeaf(
+    readProperty(record, key, `${path}.${key}`, failures),
+    `${path}.${key}`,
+    failures,
+  );
+  return {
+    schemaVersion: leaf('schemaVersion'),
+    sourceRootNodeId: leaf('sourceRootNodeId'),
+    sourceRootFingerprint: leaf('sourceRootFingerprint'),
+    sourceRootCloneStableFingerprint: leaf('sourceRootCloneStableFingerprint'),
+    sourceTargetNodeId: leaf('sourceTargetNodeId'),
+    sourceTargetCloneStableFingerprint: leaf('sourceTargetCloneStableFingerprint'),
+    childIndexPath: snapshotArray(
+      readProperty(record, 'childIndexPath', `${path}.childIndexPath`, failures),
+      P14_CANDIDATE_TARGET_ADDRESS_MAX_DEPTH,
+      `${path}.childIndexPath`,
+      failures,
+    ),
+  };
+}
+
 function snapshotAction(
   value: unknown,
   index: number,
@@ -173,6 +207,17 @@ function snapshotAction(
     failures,
   );
 
+  const rawTargetAddresses = readProperty(record, 'targetAddresses', `${path}.targetAddresses`, failures);
+  const targetAddresses = rawTargetAddresses === undefined
+    ? undefined
+    : snapshotArray(
+      rawTargetAddresses,
+      limits.maxTargetsPerAction,
+      `${path}.targetAddresses`,
+      failures,
+      (item, addressIndex) => snapshotTargetAddress(item, addressIndex, failures),
+    );
+
   return {
     actionId: leaf('actionId'),
     findingId: leaf('findingId'),
@@ -180,6 +225,7 @@ function snapshotAction(
     sourceRuleId: leaf('sourceRuleId'),
     sourceRuleVersion: leaf('sourceRuleVersion'),
     targetNodeIds: targetSnapshot,
+    ...(targetAddresses !== undefined ? { targetAddresses } : {}),
     confidence: leaf('confidence'),
     recipeId: leaf('recipeId'),
     recipeVersion: leaf('recipeVersion'),

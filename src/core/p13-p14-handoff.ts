@@ -23,9 +23,14 @@ import {
   validateP14SafeRecipeRegistry,
   type P14SafeRecipeRegistryV1,
 } from './p14-safe-recipe-registry';
+import { deriveP14CandidateTargetAddresses } from './p14-target-address';
+import type { AuditNode } from './types';
 
 export const P13_P14_HANDOFF_SCHEMA_VERSION = 1 as const;
 export const P13_P14_HANDOFF_VERSION = 1 as const;
+
+const P14_VERTICAL_STACK_SOURCE_RULE_ID = 'BR_SAFE_VERTICAL_STACK_CANDIDATE';
+const P14_VERTICAL_STACK_SOURCE_RULE_VERSION = 1;
 
 export interface P13P14HandoffResult {
   schemaVersion: typeof P13_P14_HANDOFF_SCHEMA_VERSION;
@@ -88,6 +93,11 @@ function findingSort(a: BuildReadyFinding, b: BuildReadyFinding): number {
 
 function recipeSort(a: P14PreparationRecipeDefinition, b: P14PreparationRecipeDefinition): number {
   return a.id.localeCompare(b.id) || a.version - b.version;
+}
+
+function requiresCandidateTargetAddressing(finding: BuildReadyFinding): boolean {
+  return finding.ruleId === P14_VERTICAL_STACK_SOURCE_RULE_ID
+    && finding.ruleVersion === P14_VERTICAL_STACK_SOURCE_RULE_VERSION;
 }
 
 function validateBuildReadyReportForHandoff(value: unknown): { valid: boolean; failures: string[] } {
@@ -179,6 +189,7 @@ function reviewFinding(
 export function buildP13P14Handoff(
   reportValue: unknown,
   registry: P14SafeRecipeRegistryV1 = PRODUCTION_P14_SAFE_RECIPE_REGISTRY,
+  sourceRoot?: AuditNode,
 ): P13P14HandoffResult {
   const reportValidation = validateBuildReadyReportForHandoff(reportValue);
   const registryValidation = validateP14SafeRecipeRegistry(registry);
@@ -225,12 +236,32 @@ export function buildP13P14Handoff(
       continue;
     }
 
+    let targetAddresses: P14PreparationFindingInput['targetAddresses'];
+    if (requiresCandidateTargetAddressing(finding)) {
+      if (!sourceRoot) {
+        findings.push(reviewFinding(finding, 'P14_TARGET_ADDRESS_REQUIRED'));
+        continue;
+      }
+      const addressing = deriveP14CandidateTargetAddresses({
+        sourceRoot,
+        expectedSourceRootNodeId: report.source.rootId,
+        expectedSourceRootFingerprint: report.source.structuralHash,
+        sourceTargetNodeIds: stableStrings(finding.nodeIds),
+      });
+      if (!addressing.valid) {
+        findings.push(reviewFinding(finding, 'P14_TARGET_ADDRESS_INVALID'));
+        continue;
+      }
+      targetAddresses = addressing.addresses;
+    }
+
     const recipe = resolution.binding.recipe;
     findings.push({
       findingId: finding.id,
       sourceRuleId: finding.ruleId,
       sourceRuleVersion: finding.ruleVersion,
       targetNodeIds: stableStrings(finding.nodeIds),
+      ...(targetAddresses ? { targetAddresses } : {}),
       confidence: finding.confidence,
       remediationClass: 'P14_SAFE_CANDIDATE',
       acceptedRecipeId: recipe.id,
@@ -265,8 +296,9 @@ export function buildP13P14Handoff(
 export function buildP14PreparationPlanFromBuildReady(
   reportValue: unknown,
   registry: P14SafeRecipeRegistryV1 = PRODUCTION_P14_SAFE_RECIPE_REGISTRY,
+  sourceRoot?: AuditNode,
 ): P13P14PlanResult {
-  const handoff = buildP13P14Handoff(reportValue, registry);
+  const handoff = buildP13P14Handoff(reportValue, registry, sourceRoot);
   if (!handoff.valid || !handoff.source || !handoff.p13RunId) return { handoff, plan: null };
   return {
     handoff,

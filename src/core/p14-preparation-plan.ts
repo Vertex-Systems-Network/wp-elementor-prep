@@ -4,6 +4,10 @@ import {
   stableP14Strings,
 } from './p14-plan-integrity';
 import {
+  canonicalizeP14CandidateTargetAddresses,
+  validateP14CandidateTargetAddress,
+} from './p14-target-address';
+import {
   P14_PREPARATION_ENGINE_VERSION,
   P14_PREPARATION_SCHEMA_VERSION,
   type P14PreparationAction,
@@ -11,6 +15,9 @@ import {
   type P14PreparationPlanV1,
   type P14PreparationRecipeDefinition,
 } from './p14-preparation-types';
+
+const P14_VERTICAL_STACK_SOURCE_RULE_ID = 'BR_SAFE_VERTICAL_STACK_CANDIDATE';
+const P14_VERTICAL_STACK_SOURCE_RULE_VERSION = 1;
 
 function clampConfidence(value: number): number {
   if (!Number.isFinite(value)) return 0;
@@ -26,12 +33,20 @@ function fnv1a(value: string): string {
   return (hash >>> 0).toString(16).padStart(8, '0');
 }
 
+function normalizedAddresses(input: P14PreparationFindingInput) {
+  return input.targetAddresses
+    ? canonicalizeP14CandidateTargetAddresses(input.targetAddresses)
+    : [];
+}
+
 function actionId(input: P14PreparationFindingInput): string {
+  const addresses = normalizedAddresses(input);
   const canonical = JSON.stringify({
     findingId: input.findingId,
     sourceRuleId: input.sourceRuleId,
     sourceRuleVersion: input.sourceRuleVersion,
     targetNodeIds: stableP14Strings(input.targetNodeIds),
+    ...(addresses.length > 0 ? { targetAddresses: addresses } : {}),
     remediationClass: input.remediationClass,
     recipeId: input.acceptedRecipeId ?? null,
     recipeVersion: input.acceptedRecipeVersion ?? null,
@@ -83,9 +98,43 @@ function refusedAction(
   };
 }
 
+function isVerticalStackProductionCandidate(input: P14PreparationFindingInput): boolean {
+  return input.sourceRuleId === P14_VERTICAL_STACK_SOURCE_RULE_ID
+    && input.sourceRuleVersion === P14_VERTICAL_STACK_SOURCE_RULE_VERSION;
+}
+
+function validateVerticalStackAddressing(
+  input: P14PreparationFindingInput,
+  sourceNodeId: string,
+  sourceFingerprint: string,
+): { valid: boolean; reason: string; addresses: NonNullable<P14PreparationFindingInput['targetAddresses']> } {
+  const addresses = normalizedAddresses(input);
+  if (addresses.length === 0) {
+    return { valid: false, reason: 'P14_TARGET_ADDRESS_REQUIRED', addresses };
+  }
+  if (addresses.length !== input.targetNodeIds.length) {
+    return { valid: false, reason: 'P14_TARGET_ADDRESS_INVALID', addresses };
+  }
+  if (addresses.some((address) => !validateP14CandidateTargetAddress(address).valid)) {
+    return { valid: false, reason: 'P14_TARGET_ADDRESS_INVALID', addresses };
+  }
+  const targetNodeIds = stableP14Strings(input.targetNodeIds);
+  if (JSON.stringify(addresses.map((address) => address.sourceTargetNodeId)) !== JSON.stringify(targetNodeIds)) {
+    return { valid: false, reason: 'P14_TARGET_ADDRESS_INVALID', addresses };
+  }
+  if (addresses.some((address) =>
+    address.sourceRootNodeId !== sourceNodeId
+    || address.sourceRootFingerprint !== sourceFingerprint)) {
+    return { valid: false, reason: 'P14_TARGET_ADDRESS_STALE', addresses };
+  }
+  return { valid: true, reason: '', addresses };
+}
+
 function findingToAction(
   input: P14PreparationFindingInput,
   registry: Map<string, P14PreparationRecipeDefinition>,
+  sourceNodeId: string,
+  sourceFingerprint: string,
 ): P14PreparationAction {
   if (input.remediationClass === 'P14_SAFE_NOOP') {
     return {
@@ -131,6 +180,12 @@ function findingToAction(
     return refusedAction(input, 'P14_INSUFFICIENT_TARGET_CONTEXT', recipe);
   }
 
+  const addresses = normalizedAddresses(input);
+  if (isVerticalStackProductionCandidate(input)) {
+    const addressing = validateVerticalStackAddressing(input, sourceNodeId, sourceFingerprint);
+    if (!addressing.valid) return refusedAction(input, addressing.reason, recipe);
+  }
+
   return {
     actionId: actionId(input),
     findingId: input.findingId,
@@ -138,6 +193,7 @@ function findingToAction(
     sourceRuleId: input.sourceRuleId,
     sourceRuleVersion: input.sourceRuleVersion,
     targetNodeIds: stableP14Strings(input.targetNodeIds),
+    ...(addresses.length > 0 ? { targetAddresses: addresses } : {}),
     confidence: clampConfidence(input.confidence),
     recipeId: recipe.id,
     recipeVersion: recipe.version,
@@ -158,7 +214,8 @@ export function buildP14PreparationPlan(input: {
   recipes: P14PreparationRecipeDefinition[];
 }): P14PreparationPlanV1 {
   const registry = new Map(input.recipes.map((recipe) => [recipe.id, recipe]));
-  const rawActions = input.findings.map((finding) => findingToAction(finding, registry));
+  const rawActions = input.findings.map((finding) =>
+    findingToAction(finding, registry, input.sourceNodeId, input.sourceFingerprint));
   const derived = deriveP14PlanStructure(rawActions);
   const planDigest = computeP14PlanDigest({
     p13RunId: input.p13RunId,

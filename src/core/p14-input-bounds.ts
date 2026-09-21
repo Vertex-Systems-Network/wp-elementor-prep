@@ -1,4 +1,5 @@
 export const P14_INPUT_BOUNDS_VERSION = 1 as const;
+const P14_INPUT_TARGET_ADDRESS_MAX_DEPTH = 128 as const;
 
 export interface P14InputBoundsLimits {
   maxActions: number;
@@ -24,6 +25,7 @@ export type P14InputBoundFailureCode =
   | 'P14_BOUND_MAX_ACTIONS'
   | 'P14_BOUND_MAX_BLOCKERS'
   | 'P14_BOUND_MAX_TARGETS_PER_ACTION'
+  | 'P14_BOUND_MAX_TARGET_ADDRESS_DEPTH'
   | 'P14_BOUND_MAX_TOTAL_TARGET_REFERENCES'
   | 'P14_BOUND_MAX_PREREQUISITES_PER_ACTION'
   | 'P14_BOUND_MAX_CONFLICTS_PER_ACTION'
@@ -207,6 +209,42 @@ export function assessP14PreparationInputBounds(
       }
       if (checkArrayLength(targets, `actions[${actionIndex}].targetNodeIds`, limits.maxTargetsPerAction, 'P14_BOUND_MAX_TARGETS_PER_ACTION', failures)) {
         checkIdentityArrayItems(targets, `actions[${actionIndex}].targetNodeIds`, limits.maxIdentityLength, failures);
+      }
+
+      const targetAddresses = action.targetAddresses;
+      if (checkArrayLength(
+        targetAddresses,
+        `actions[${actionIndex}].targetAddresses`,
+        limits.maxTargetsPerAction,
+        'P14_BOUND_MAX_TARGETS_PER_ACTION',
+        failures,
+      )) {
+        for (let addressIndex = 0; addressIndex < targetAddresses.length; addressIndex += 1) {
+          const address = targetAddresses[addressIndex];
+          if (!isRecord(address)) continue;
+          for (const key of [
+            'sourceRootNodeId',
+            'sourceRootFingerprint',
+            'sourceRootCloneStableFingerprint',
+            'sourceTargetNodeId',
+            'sourceTargetCloneStableFingerprint',
+          ]) {
+            checkString(
+              address[key],
+              `actions[${actionIndex}].targetAddresses[${addressIndex}].${key}`,
+              limits.maxIdentityLength,
+              'P14_BOUND_MAX_IDENTITY_LENGTH',
+              failures,
+            );
+          }
+          checkArrayLength(
+            address.childIndexPath,
+            `actions[${actionIndex}].targetAddresses[${addressIndex}].childIndexPath`,
+            P14_INPUT_TARGET_ADDRESS_MAX_DEPTH,
+            'P14_BOUND_MAX_TARGET_ADDRESS_DEPTH',
+            failures,
+          );
+        }
       }
 
       const prerequisites = action.prerequisiteRecipeIds;
