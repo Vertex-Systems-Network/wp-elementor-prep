@@ -190,3 +190,16 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - No CI/status polling is performed after PR creation in this milestone.
 - Production P14 registry remains empty; runtime mutation/confirmation authority remains disabled.
 
+
+## 2026-09-22 — #652 merged; P14 R4 retained-duplicate runtime-adapter slice activated
+
+- PR #652 exact head `d4a858374eee45ffc54126f4b85db51804bfbbb1` was observed green across CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- PR #652 merged as main `d4cbf53d4e07c05df91f01bdec967262100452df`; Issue #651 closed completed.
+- The first post-merge PR-triggered workflow refresh for the merge SHA returned no runs; no post-merge PASS was inferred.
+- Issue #653 opened under roadmap #119 for the first concrete candidate-only vertical-stack `P14RetainedDuplicateAdapter`.
+- Activated branch `p14/vertical-stack-runtime-adapter` from exact main.
+- R4 will reuse accepted P5 vertical-layout semantics, #651 candidate address resolution and #649 validation evidence while preserving the approved source and retaining a separate prepared duplicate.
+- P4 swap/replace commit semantics are explicitly excluded.
+- Production P14 registry remains empty; confirmation/UI/target-compatibility/acceptance authority remain disabled.
+- No R4 implementation code was added in this activation milestone.
+
