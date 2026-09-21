@@ -300,7 +300,7 @@ export function validateP17CssSupportMatrix(value: unknown): P17CssSupportMatrix
         issue(issues, 'P17_CSS_MATRIX_DUPLICATE_FEATURE_ID', `${path}.featureId`, `Duplicate featureId: ${featureId}.`);
       }
       ids.add(featureId);
-      if (previousId !== null && previousId.localeCompare(featureId) >= 0) {
+      if (previousId !== null && previousId >= featureId) {
         issue(issues, 'P17_CSS_MATRIX_ORDER_INVALID', `${path}.featureId`, 'Entries must be strictly sorted by featureId.');
       }
       previousId = featureId;
