@@ -22,7 +22,7 @@ describe('P17 machine-readable CSS support matrix', () => {
     expect(P17_CSS_SUPPORT_MATRIX_VERSION).toBe('p17-css-support-matrix-v1');
     expect(validation.valid).toBe(true);
     expect(validation.entryCount).toBe(P17_CSS_SUPPORT_MATRIX_V1.entries.length);
-    expect(ids).toEqual([...ids].sort((a, b) => a.localeCompare(b)));
+    expect(ids).toEqual([...ids].sort());
     expect(new Set(ids).size).toBe(ids.length);
     expect(Object.isFrozen(P17_CSS_SUPPORT_MATRIX_V1)).toBe(true);
     expect(Object.isFrozen(P17_CSS_SUPPORT_MATRIX_V1.authority)).toBe(true);
