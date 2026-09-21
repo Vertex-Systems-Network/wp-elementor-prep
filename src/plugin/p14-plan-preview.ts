@@ -1,5 +1,6 @@
 import { buildP14PreparationPlanFromBuildReady } from '../core/p13-p14-handoff';
 import type { P14PlanDecision, P14PreparationPlanV1 } from '../core/p14-preparation-types';
+import type { AuditNode } from '../core/types';
 import {
   buildP14ProposedChangeReviewManifest,
   type P14ProposedChangeReviewManifestV1,
@@ -47,8 +48,8 @@ function decisionCount(plan: P14PreparationPlanV1, decision: P14PlanDecision): n
  * Builds a target-neutral, read-only P14 preview from current P13 Build-Ready evidence.
  * This surface deliberately cannot create confirmation evidence or authorize mutation.
  */
-export function buildP14PlanPreview(reportValue: unknown): P14PlanPreviewV1 {
-  const result = buildP14PreparationPlanFromBuildReady(reportValue);
+export function buildP14PlanPreview(reportValue: unknown, sourceRoot?: AuditNode): P14PlanPreviewV1 {
+  const result = buildP14PreparationPlanFromBuildReady(reportValue, undefined, sourceRoot);
   const plan = result.plan;
   const summary: P14PlanPreviewSummaryV1 = plan
     ? {
