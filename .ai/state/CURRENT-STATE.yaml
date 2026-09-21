@@ -2,23 +2,23 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: c8950242a2848b4f58828d7e3220f59062305442
+observed_main_sha: ef4895ae480744e70f5477fe4443411201dbf33f
 observed_main_branch: main
-active_issue: 649
-active_pr: 650
-active_branch: p14/vertical-stack-validation-profile
-candidate_head_source: github_pull_request_head
-current_milestone: p14_r2_vertical_stack_validation_profile_contract
-milestone_status: VERIFYING
-last_completed_milestone: p14_r2_vertical_stack_validation_profile_contract_implemented_pending_pr
-exact_next_safe_action: next_user_continue_resolves_repaired_pr_650_head_and_performs_one_consolidated_exact_head_status_refresh
-pending_runner_ids: [RQ-649-FINAL]
+active_issue: 651
+active_pr: null
+active_branch: p14/vertical-stack-target-addressing
+candidate_head_source: branch_head_until_pr_creation
+current_milestone: p14_r3_vertical_stack_candidate_target_addressing_contract
+milestone_status: IMPLEMENTING
+last_completed_milestone: p14_r2_pr_650_merged_issue_649_closed_after_repaired_exact_head_gate_set_green
+exact_next_safe_action: implement_issue_651_candidate_target_addressing_contract_and_focused_tests_without_runtime_mutation_or_registry_activation
+pending_runner_ids: [RQ-651-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - repaired_pr_650_exact_head_checks_not_yet_observed
+  - candidate_target_addressing_contract_not_yet_implemented
   - p14_runtime_adapter_remains_unwired
   - p14_production_registry_binding_remains_unaccepted
-  - post_merge_main_workflow_state_for_c8950242_not_observed_in_first_pr_triggered_run_refresh
+  - post_merge_main_workflow_state_for_ef4895ae_not_observed_in_first_pr_triggered_run_refresh
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1
