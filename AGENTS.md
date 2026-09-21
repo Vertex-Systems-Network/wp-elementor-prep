@@ -10,7 +10,8 @@ Before making changes, read in this order:
 2. `memory-bank/NEXT_ACTIONS.md`
 3. `memory-bank/DECISIONS.md`
 4. `memory-bank/ROADMAP.md`
-5. Relevant files under `docs/`
+5. `docs/RUNNER_BENCHMARK.md`
+6. Relevant files under `docs/`
 
 Do not assume chat history is available or current.
 
@@ -66,6 +67,18 @@ Use release trains to reduce coordination overhead without weakening correctness
 - Keep target-specific work inside its adapter/module as long as possible; touch shared plugin/UI integration surfaces only at the bounded integration step.
 - Prefer one coherent commercial slice that can be verified end-to-end over several partially wired roadmap phases.
 
+### Runner Benchmark / deferred Runner batching
+
+- `docs/RUNNER_BENCHMARK.md` is the canonical ledger for every GitHub Actions, CI matrix, hosted/self-hosted Runner, target-harness or equivalent Runner-dependent task.
+- Add a benchmark row immediately when a Runner task is discovered; do not rely on chat memory or remember it only at phase end.
+- Record phase/issue, trigger, workflow/runner, dependencies, expected evidence, execution class and status.
+- Default non-blocking tasks to `FINAL_BATCH` and continue implementation with focused local/static/unit verification.
+- Use `BLOCKING_NOW` and execute immediately when the Runner result is security-critical, required to continue safely, destructive/migration/authority-sensitive, release-blocking for the active objective, or required by repository merge rules.
+- Keep post-merge-only checks as `POST_MERGE`. Live/manual external evidence remains owned by its phase/issue and must never be manufactured as Runner evidence.
+- At the final integration checkpoint, execute all required `FINAL_BATCH` items together against the exact candidate head.
+- On failure, fix the cause, rerun affected Runner tasks, then rerun every exact-head gate required for merge/release.
+- Batching reduces repeated Runner usage; it never permits skipping, weakening or fabricating required acceptance evidence.
+
 ## Mandatory session end
 
 After meaningful work, update only the canonical files whose truth materially changed:
@@ -75,6 +88,7 @@ After meaningful work, update only the canonical files whose truth materially ch
 - `memory-bank/ROADMAP.md` — when module/phase state, progress interpretation or sequencing changes.
 - `memory-bank/CHANGELOG.md` — concise dated record for an accepted meaningful release train, not every intermediate commit.
 - `memory-bank/DECISIONS.md` — only when a durable architectural/product/process decision changes or is added.
+- `docs/RUNNER_BENCHMARK.md` — whenever a Runner task is discovered, reclassified, executed, failed, rerun or completed.
 - root `README.md` — when user-facing module status/progress/blockers or product-surface truth changes.
 
 Documentation sync is part of completion, but it must not create reflexive PR churn. Intermediate commits inside one release train do not each require a full canonical-doc rewrite when the externally visible truth has not changed yet.
@@ -134,6 +148,9 @@ A task/release train is not complete because code exists. It is complete when:
 - the Issues-first and PR/MR-second queues were checked,
 - required R0/R1 gates were completed for external target work,
 - focused development verification passed during implementation,
+- every discovered Runner-dependent task is recorded in `docs/RUNNER_BENCHMARK.md`,
+- no required `BLOCKING_NOW` Runner item remains unresolved,
+- the required consolidated `FINAL_BATCH` Runner entries passed on the exact integration/PR head,
 - the exact integration/PR head passed the full required merge/release gates,
 - relevant canonical memory/status files are synchronized once the truth changes,
 - README module progress is updated when its user-facing status/progress/blocker truth changed,
