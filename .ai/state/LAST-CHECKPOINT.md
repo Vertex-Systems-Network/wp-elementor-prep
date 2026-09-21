@@ -1,37 +1,37 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `d4cbf53d4e07c05df91f01bdec967262100452df`  
 Active Issue: `#653`  
 Active PR: none  
 Active branch: `p14/vertical-stack-runtime-adapter`
 
-## Completed P14 R3 transition
+## P14 R4 implementation
 
-- PR #652 exact head `d4a858374eee45ffc54126f4b85db51804bfbbb1` passed CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
-- PR #652 merged as main `d4cbf53d4e07c05df91f01bdec967262100452df`; Issue #651 closed completed.
-- Open PR queue is empty after merge.
-- The first post-merge PR-triggered workflow refresh for `d4cbf53d4e07c05df91f01bdec967262100452df` returned no runs. No post-merge PASS is inferred from an empty result.
-- R3 candidate target addressing is merged on main; source descendant IDs remain non-authorizing and production registry remains empty.
-
-## P14 R4 activation
-
-- Issue #653 owns the next bounded P14 slice under roadmap #119.
-- Branch `p14/vertical-stack-runtime-adapter` is based on exact main `d4cbf53d4e07c05df91f01bdec967262100452df`.
-- Qualification now has only two blockers: `P14_RUNTIME_ADAPTER_NOT_WIRED` and `P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED`.
-- R4 addresses only the runtime-adapter blocker.
-- The adapter must implement the exact `P14RetainedDuplicateAdapter` lifecycle for the existing vertical-stack candidate: fingerprint source → clone separate candidate → resolve #651 addresses → apply only the #641 write allowlist using accepted P5 semantics → validate with #649 → deterministic re-score → retain or discard.
-- P4 swap/replace commit semantics are explicitly not reused. P14 retains a separate validated duplicate and never replaces/deletes/moves the approved source.
-- Every adapter call must enforce transaction/candidate ownership and source/candidate identity separation.
+- Added `FigmaP14VerticalStackRetainedDuplicateAdapter`, the first concrete P14 retained-duplicate Figma adapter for the exact `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` path.
+- Source fingerprinting uses the exact P13 Build-Ready structural hash over the current Figma source tree.
+- Cloning creates and owns a separate candidate; source fingerprint is rechecked after staging and clone-stable structure must match.
+- Every runtime action is bound to the exact R1 rule/version, confidence gate, R2 validation profile, frozen mutation allowlist and one canonical R3 target address.
+- Candidate target resolution uses #651 source-root/fingerprint-bound child-index addresses and refuses source IDs or unowned candidate handles.
+- Mutation reuses the accepted P5 strict vertical-stack transformer; no second layout algorithm was introduced.
+- Design-property writes remain exactly `layoutMode`, primary/counter sizing, primary/counter alignment, `itemSpacing` and padding.
+- Prepared labeling is metadata-only (`p14:preparedName`); node names are not mutated outside the frozen write allowlist.
+- Validation emits the exact 11 required `P14_VALIDATE_VERTICAL_STACK_V1` checks for layout writes plus structure/content/visibility/geometry preservation.
+- Candidate re-score uses deterministic P13 Build-Ready analysis and reports introduced HIGH/BLOCKER evidence relative to the source report.
+- Retain/discard enforce adapter ownership, transaction identity and source/candidate separation. P4 source-swap/replace semantics are not reused.
+- Added deterministic fake-Figma regressions for full transaction success/source immutability, unowned/source-ID refusal, path drift, geometry drift, insufficient re-score, candidate cleanup and wrong-transaction retention.
+- Qualification is now version 3 with `runtimeAdapterImplemented: true`. The runtime-adapter blocker is removed; only `P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED` remains.
+- No local/CI PASS is claimed in this implementation milestone. Exact-head repository verification is still required.
 
 ## Authority boundary
 
 - `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
-- No production confirmation/UI/menu activation is permitted in R4.
-- No target compatibility or production acceptance is inferred.
+- `runtimeMutationEnabled` remains false.
+- Production confirmation/UI/menu activation remains disabled.
+- No target compatibility, real-Figma acceptance or production acceptance is inferred.
 - #287 remains admin-blocked; #159 remains external-runtime-evidence blocked; #84 remains manual-release-evidence blocked; #182 remains the deferred P27 gate.
 
 ## Exact next safe action
 
-Implement Issue #653 on `p14/vertical-stack-runtime-adapter` with deterministic fake-Figma/unit coverage. After focused implementation and static verification, remove only the runtime-adapter blocker from qualification if the implementation contract is proven; keep production registry binding as the remaining blocker.
+Open one focused PR for Issue #653 from `p14/vertical-stack-runtime-adapter`. Bind compact state/Runner metadata to that PR head, then end without CI/status polling. The following user `continue` performs the first single consolidated exact-head status refresh.
