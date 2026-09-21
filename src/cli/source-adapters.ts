@@ -1,4 +1,4 @@
-import type { Stats } from 'node:fs';
+import type { BigIntStats } from 'node:fs';
 import { lstat, open, realpath, type FileHandle } from 'node:fs/promises';
 import { extname, resolve } from 'node:path';
 import type { AuditNode, LayoutMode } from '../core/types';
@@ -241,17 +241,17 @@ function canonicalPathKey(path: string): string {
   return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
 }
 
-function hasStableFileIdentity(info: Stats): boolean {
-  return info.ino !== 0;
+function hasStableFileIdentity(info: BigIntStats): boolean {
+  return info.ino !== 0n;
 }
 
-function sameObservedSnapshotFile(first: Stats, second: Stats): boolean {
+function sameObservedSnapshotFile(first: BigIntStats, second: BigIntStats): boolean {
   if (hasStableFileIdentity(first) && hasStableFileIdentity(second)) {
     if (first.dev !== second.dev || first.ino !== second.ino) return false;
   }
   return first.size === second.size
-    && first.mtimeMs === second.mtimeMs
-    && first.ctimeMs === second.ctimeMs;
+    && first.mtimeNs === second.mtimeNs
+    && first.ctimeNs === second.ctimeNs;
 }
 
 export async function loadCanonicalSnapshot(inputPath: string): Promise<CanonicalSnapshot> {
@@ -265,11 +265,11 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
   }
 
   let canonicalBeforeOpen: string;
-  let initialPathInfo: Stats;
+  let initialPathInfo: BigIntStats;
   try {
     [canonicalBeforeOpen, initialPathInfo] = await Promise.all([
       realpath(absolute),
-      lstat(absolute),
+      lstat(absolute, { bigint: true }),
     ]);
   } catch {
     throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Unable to inspect canonical snapshot input.', 2);
@@ -282,7 +282,7 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
       2,
     );
   }
-  if (initialPathInfo.size > CANONICAL_SNAPSHOT_MAX_BYTES) {
+  if (initialPathInfo.size > BigInt(CANONICAL_SNAPSHOT_MAX_BYTES)) {
     throw new SourceAdapterError(
       'SNAPSHOT_RESOURCE_LIMIT',
       `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
@@ -299,13 +299,13 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
 
   let bytes: Buffer;
   try {
-    let before: Stats;
-    let pathInfoBeforeRead: Stats;
+    let before: BigIntStats;
+    let pathInfoBeforeRead: BigIntStats;
     let canonicalBeforeRead: string;
     try {
       [before, pathInfoBeforeRead, canonicalBeforeRead] = await Promise.all([
-        handle.stat(),
-        lstat(absolute),
+        handle.stat({ bigint: true }),
+        lstat(absolute, { bigint: true }),
         realpath(absolute),
       ]);
     } catch {
@@ -355,13 +355,13 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
     }
     bytes = Buffer.concat(chunks, totalBytes);
 
-    let after: Stats;
-    let pathInfoAfterRead: Stats;
+    let after: BigIntStats;
+    let pathInfoAfterRead: BigIntStats;
     let canonicalAfterRead: string;
     try {
       [after, pathInfoAfterRead, canonicalAfterRead] = await Promise.all([
-        handle.stat(),
-        lstat(absolute),
+        handle.stat({ bigint: true }),
+        lstat(absolute, { bigint: true }),
         realpath(absolute),
       ]);
     } catch {
