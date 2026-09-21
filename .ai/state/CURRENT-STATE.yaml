@@ -2,23 +2,22 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: ef4895ae480744e70f5477fe4443411201dbf33f
+observed_main_sha: d4cbf53d4e07c05df91f01bdec967262100452df
 observed_main_branch: main
-active_issue: 651
-active_pr: 652
-active_branch: p14/vertical-stack-target-addressing
-candidate_head_source: github_pull_request_head
-current_milestone: p14_r3_vertical_stack_candidate_target_addressing_contract
-milestone_status: VERIFYING
-last_completed_milestone: p14_r3_focused_pr_652_opened_and_bound_for_exact_head_verification
-exact_next_safe_action: next_user_continue_performs_one_consolidated_exact_head_status_refresh_for_pr_652
-pending_runner_ids: [RQ-651-FINAL]
+active_issue: 653
+active_pr: null
+active_branch: p14/vertical-stack-runtime-adapter
+candidate_head_source: branch_head_until_pr_creation
+current_milestone: p14_r4_vertical_stack_retained_duplicate_runtime_adapter
+milestone_status: IMPLEMENTING
+last_completed_milestone: p14_r3_pr_652_merged_issue_651_closed_after_exact_head_gate_set_green
+exact_next_safe_action: implement_issue_653_candidate_only_vertical_stack_retained_duplicate_figma_adapter_without_registry_or_ui_activation
+pending_runner_ids: [RQ-653-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_652_required_exact_head_checks_not_yet_observed
-  - p14_runtime_adapter_remains_unwired
+  - p14_vertical_stack_runtime_adapter_not_yet_implemented
   - p14_production_registry_binding_remains_unaccepted
-  - post_merge_main_workflow_state_for_ef4895ae_not_observed_in_first_pr_triggered_run_refresh
+  - post_merge_main_workflow_state_for_d4cbf53d_not_observed_in_first_pr_triggered_run_refresh
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1
