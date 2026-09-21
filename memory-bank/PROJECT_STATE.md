@@ -162,10 +162,11 @@ During the focused Elementor V1 window, keep P16 stable unless a concrete shared
 
 ## P17-P27 state
 
-- P17-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**;
+- P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / BROWSER + RECONSTRUCTION UNWIRED**. Merged foundations cover deterministic static HTML/CSS export, fail-closed static import safety preflight, versioned neutral Web IR identity, and deterministic neutral-IR → HTML/CSS generation. JavaScript execution, browser fidelity, Web→Figma reconstruction and production acceptance remain unclaimed;
+- P18-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**;
 - P27 — **GATE DEFINED / EXECUTION DEFERRED** under #182.
 
-Do not open future phases merely to increase parallelism while the bounded Elementor-first V1 is unfinished.
+Do not open P18-P26 merely to increase parallelism while the bounded Elementor-first V1 and active P17 static-only line remain unfinished.
 
 ## Immediate execution target
 
@@ -173,4 +174,4 @@ Continue the coherent Elementor-first internal V1 from the retained controlled p
 
 `selected Figma Frame -> deterministic extraction -> exact source-bound semantic/image-reference resolution where supplied -> exact bounded responsive direction/gap/alignment/padding/margin/min-height/boxed-width/z-index overrides where supplied -> mapping readiness -> fresh candidate -> local artifact validation/download -> exact declared TargetProfile -> exact retained profile/candidate reference binding -> exact controlled asset/reference observations where applicable -> sanitized observed evidence binding -> exact imported-file content integrity -> separate internal closure decision / durable target-managed portability proof + remaining responsive work -> bounded handoff`
 
-The retained WordPress `6.8` + Elementor `4.2.4` proof is a reference point, not broad version support. Keep P16 stable unless a concrete shared blocker appears, keep P17-P26 frozen during this Elementor V1 window, and preserve false compatibility/production/download authority until the applicable evidence and release gates explicitly change it.
+The retained WordPress `6.8` + Elementor `4.2.4` proof is a reference point, not broad version support. Keep P16 stable unless a concrete shared blocker appears. The explicitly opened P17 static-only line may continue in bounded dependency order; keep P18-P26 frozen, and preserve false compatibility/production/download authority until the applicable evidence and release gates explicitly change it.
