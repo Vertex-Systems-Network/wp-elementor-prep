@@ -37,3 +37,6 @@ claims:
   - {id: CL-034, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}
   - {id: CL-035, statement: pr_654_is_active_p14_r4_exact_head_verification_path, value: true}
   - {id: CL-036, statement: pr_654_creation_head_was_00259f5bc868c3e76167ffb77f60f11df468caef_and_post_binding_head_requires_fresh_capture, value: true}
+  - {id: CL-037, statement: readme_progress_sync_is_mandatory_on_every_material_repository_mutation, value: true}
+  - {id: CL-038, statement: status_verify_machine_checks_current_p14_readme_runtime_adapter_and_empty_registry_truth, value: true}
+  - {id: CL-039, statement: p14_readme_implementation_progress_is_67_percent_for_four_of_six_bounded_slices_and_does_not_claim_acceptance, value: true}
