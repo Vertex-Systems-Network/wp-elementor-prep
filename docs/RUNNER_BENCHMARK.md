@@ -4,6 +4,8 @@ Status: CANONICAL / ACTIVE
 Owner issue: #631  
 Established: 2026-09-21
 
+Machine-readable canonical ledger: `.ai/state/RUNNER-BENCHMARK.yaml`. This Markdown file is the human-readable policy/view and must not contradict the machine-readable ledger.
+
 ## Purpose
 
 This file is the canonical queue for development work that requires GitHub Actions, hosted/self-hosted runners, CI matrices, target harness runners, or other repository Runner execution.
@@ -11,6 +13,8 @@ This file is the canonical queue for development work that requires GitHub Actio
 The objective is to avoid repeatedly spending Runner time after every small implementation step while preserving exact-head security, release, and acceptance requirements.
 
 ## Mandatory policy
+
+Runner registration NEVER grants execution authority. Consumed, expired, historical, destructive, provider, production, deployment, release, or formal-runtime authorization must never be inferred or silently reused.
 
 1. Every newly discovered Runner-dependent task MUST be added here when it is discovered.
 2. Every entry MUST record its phase/issue, trigger, required workflow/runner, dependencies, expected evidence, execution class, and current status.
