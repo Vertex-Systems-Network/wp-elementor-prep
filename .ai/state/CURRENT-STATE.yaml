@@ -21,7 +21,8 @@ active_execution:
   issue: 637
   branch: docs/delivery-resilient-ai-flow
   pull_request: 638
-  candidate_head_sha: pending_final_governance_head
+  candidate_head_sha: authoritative_from_github_pr_head
+  candidate_head_source: github_pull_request_head
   completed_milestone: strict delivery-resilient flow plus project-final Runner batching implemented
   external_dependency: exact-head GitHub Runner batch after PR creation
   next_action: finish governance branch; inspect PR 638 Runner status once; if any required check is pending, end turn and resume on next user continue
