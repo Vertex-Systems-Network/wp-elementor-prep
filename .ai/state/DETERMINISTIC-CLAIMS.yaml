@@ -21,6 +21,8 @@ claims:
   - {id: CL-018, statement: p14_runtime_adapter_and_confirmation_remain_unwired, value: true}
   - {id: CL-019, statement: issue_651_is_active_p14_r3_candidate_target_addressing_contract, value: true}
   - {id: CL-020, statement: r3_focused_regressions_exist_but_no_test_or_ci_pass_is_claimed_before_pr_verification, value: true}
+  - {id: CL-027, statement: pr_652_is_active_p14_r3_exact_head_verification_path, value: true}
+  - {id: CL-028, statement: pr_652_creation_head_was_1c92125c4933a8bb1e208863de79e7e5ae419323_and_post_binding_head_requires_fresh_capture, value: true}
   - {id: CL-021, statement: issue_287_requires_repository_admin_authority, value: true}
   - {id: CL-022, statement: issue_159_requires_genuine_external_runtime_evidence, value: true}
   - {id: CL-023, statement: issue_84_requires_genuine_manual_release_evidence, value: true}
