@@ -7,7 +7,11 @@ import {
   serializeP14VerticalStackValidationProfile,
 } from '../src/core/p14-vertical-stack-validation-profile';
 
-function validEvidence() {
+function validEvidence(): {
+  passed: boolean;
+  profileIdsRun: string[];
+  checks: Array<{ id: string; passed: boolean; required: boolean }>;
+} {
   return {
     passed: true,
     profileIdsRun: [P14_VERTICAL_STACK_VALIDATION_PROFILE_ID],
