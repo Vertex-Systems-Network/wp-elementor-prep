@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, symlinkSync, truncateSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, symlinkSync, truncateSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -131,6 +131,16 @@ describe('P10 source adapters', () => {
       code: 'UNSUPPORTED_FIG_LOCAL_FILE',
       exitCode: 2,
     });
+  });
+
+  it('uses exact bigint nanosecond metadata for canonical snapshot identity checks', () => {
+    const source = readFileSync('src/cli/source-adapters.ts', 'utf8');
+    expect(source).toContain("lstat(absolute, { bigint: true })");
+    expect(source).toContain("handle.stat({ bigint: true })");
+    expect(source).toContain('first.mtimeNs === second.mtimeNs');
+    expect(source).toContain('first.ctimeNs === second.ctimeNs');
+    expect(source).not.toContain('first.mtimeMs === second.mtimeMs');
+    expect(source).not.toContain('first.ctimeMs === second.ctimeMs');
   });
 
   it('loads a stable regular canonical snapshot file through the hardened local-file boundary', async () => {
