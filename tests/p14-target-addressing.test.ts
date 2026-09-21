@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildBuildReadyReport, computeBuildReadyStructuralHash } from '../src/core/build-ready';
+import { snapshotP14AdapterAction } from '../src/core/p14-adapter-input-snapshot';
 import {
   buildP14PreparationPlanFromBuildReady,
 } from '../src/core/p13-p14-handoff';
@@ -185,6 +186,31 @@ describe('P14 candidate target addressing', () => {
     expect(wrong.failures.some((failure) => failure.includes('different reviewed source root'))).toBe(true);
   });
 
+  it('rejects duplicate addresses, duplicate paths and out-of-bounds paths', () => {
+    const derived = addressing();
+    const address = derived.addresses[0];
+    if (!address) throw new Error('Expected target address fixture.');
+
+    const duplicate = resolveP14CandidateTargetAddresses({
+      candidateRoot: candidateTree(),
+      expectedSourceRootNodeId: 'source:root',
+      expectedSourceRootFingerprint: computeBuildReadyStructuralHash(sourceTree()),
+      addresses: [address, { ...address, childIndexPath: [...address.childIndexPath] }],
+    });
+    expect(duplicate.valid).toBe(false);
+    expect(duplicate.failures.some((failure) =>
+      failure.includes('duplicates source target') || failure.includes('duplicate child-index path'))).toBe(true);
+
+    const outOfBounds = resolveP14CandidateTargetAddresses({
+      candidateRoot: candidateTree(),
+      expectedSourceRootNodeId: 'source:root',
+      expectedSourceRootFingerprint: computeBuildReadyStructuralHash(sourceTree()),
+      addresses: [{ ...address, childIndexPath: [99] }],
+    });
+    expect(outOfBounds.valid).toBe(false);
+    expect(outOfBounds.failures.some((failure) => failure.includes('no longer resolves'))).toBe(true);
+  });
+
   it('rejects ambiguous source IDs and refuses source identities as candidate mutation authority', () => {
     const source = sourceTree();
     source.children.push(node({ id: 'source:target', name: 'Duplicate Target' }));
@@ -256,6 +282,10 @@ describe('P14 candidate target addressing', () => {
     });
     expect(plan.status).toBe('READY');
     expect(validateP14PreparationPlan(plan)).toEqual({ valid: true, failures: [] });
+
+    const adapterCopy = snapshotP14AdapterAction(plan.actions[0]!);
+    adapterCopy.targetAddresses![0]!.childIndexPath[0] = 77;
+    expect(plan.actions[0]?.targetAddresses?.[0]?.childIndexPath).toEqual([1]);
 
     const confirmation = buildP14PreparationConfirmation(plan, '2026-09-21T18:30:00.000Z');
     const tampered = structuredClone(plan);
