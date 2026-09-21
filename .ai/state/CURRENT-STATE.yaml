@@ -5,13 +5,13 @@ compact_state_path: .ai/state
 observed_main_sha: 92c153a4acba2b53e02c938567241c82db880907
 observed_main_branch: main
 active_issue: 639
-active_pr: pending_creation
+active_pr: 640
 active_branch: state/post-636-reconcile
-candidate_head_source: github_pull_request_head_after_creation
+candidate_head_source: github_pull_request_head
 current_milestone: reconcile_post_toolchain_merge_durable_state
 milestone_status: VERIFYING
 last_completed_milestone: pr_636_merged_and_post_merge_required_checks_green
-exact_next_safe_action: open_focused_reconciliation_pr_then_persist_pr_number; do_not_poll_ci_until_next_user_continue
+exact_next_safe_action: next_user_continue_performs_one_consolidated_exact_head_status_refresh_for_pr_640
 pending_runner_ids: [RQ-639-FINAL]
 blocked_runner_ids: []
 current_blockers:

@@ -4,7 +4,7 @@ Status: VERIFYING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `92c153a4acba2b53e02c938567241c82db880907`  
 Active Issue: `#639`  
-Active PR: pending creation  
+Active PR: `#640`  
 Active branch: `state/post-636-reconcile`
 
 ## Completed transition
@@ -24,4 +24,4 @@ Active branch: `state/post-636-reconcile`
 
 ## Exact next safe action
 
-Open the focused #639 reconciliation PR, persist its PR number in compact state, and end the milestone without CI polling. The next user `continue` performs one consolidated exact-head status refresh for that PR.
+PR #640 is open from `state/post-636-reconcile`. End this milestone without CI polling. The next user `continue` performs ONE consolidated exact-head status refresh for PR #640.
