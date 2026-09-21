@@ -319,3 +319,26 @@ The repository's supported development/CI runtime floor is Node.js `22.12.0`. No
 The accepted coordinated toolchain is explicit: Vitest `5.0.1`, Vite `8.3.0`, esbuild `0.28.2`, Playwright Core `1.63.0` and the retained `@types/node 26.6.1` lock. Major test/build upgrades that alter the Node/Vite/esbuild compatibility matrix are treated as one migration rather than independent bot merges.
 
 Lockfile regeneration for this migration was a one-shot `BLOCKING_NOW` Runner task performed with lifecycle scripts disabled; the write-capable workflow is not retained in the accepted tree. Normal accepted installs remain `npm ci` without `--force` or `--legacy-peer-deps`.
+
+## D-045 — AI execution uses one-milestone short turns with deterministic resume
+Date: 2026-09-21  
+Status: ACCEPTED
+
+AI-native repository work uses one logical milestone per user-triggered development turn. Once a Runner batch starts, only one status inspection is permitted in that turn; queued/in-progress work causes checkpoint + response completion rather than waiting or repeated polling.
+
+GitHub PR/issue/check/run metadata is authoritative for volatile Runner state. Stable `.ai/state` files define the execution protocol and durable resume contract. Status-only commits must not mutate an exact candidate head after Runner checks start.
+
+Security-critical and `BLOCKING_NOW` work still blocks later implementation, but the block may span user turns. This policy optimizes repository workflow against long-turn delivery failures without claiming control over browser/network/ChatGPT transport or UI availability.
+
+## D-046 — Repository evidence and compact durable state govern AI resume
+Date: 2026-09-21  
+Status: ACCEPTED
+
+The AI Engineering Supervisor resumes from compact durable state only as an index, then reconciles exact repository/runtime truth before any work. Mandatory order: compact state -> exact main -> open Issues -> open PRs -> deterministic claims -> coordination queue -> machine-readable Runner Benchmark -> active milestone.
+
+One user turn remains one logical milestone. CI/status refresh is consolidated to one per milestone by default; tight polling and rerun-on-message-timeout are forbidden. A prior delivery timeout grants no authority and never justifies repeating a merge, deployment, migration, destructive/provider action, or formal runtime execution.
+
+Runner registration never grants execution authority. Safe non-blocking work may batch at project-final acceptance; security-critical, merge-required, migration/auth/secrets/data-safety, current-change integration-safety, and incident/recovery checks remain immediate.
+
+Compact state is size-bounded and must be reconciled before reporting COMPLETE/BLOCKED/VERIFYING/WAITING_EXTERNAL. Governance-only cycles do not rewrite large public dashboards unless public lifecycle truth materially changes.
+

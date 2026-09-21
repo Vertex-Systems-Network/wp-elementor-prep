@@ -4,6 +4,8 @@ Status: CANONICAL / ACTIVE
 Owner issue: #631  
 Established: 2026-09-21
 
+Machine-readable canonical ledger: `.ai/state/RUNNER-BENCHMARK.yaml`. This Markdown file is the human-readable policy/view and must not contradict the machine-readable ledger.
+
 ## Purpose
 
 This file is the canonical queue for development work that requires GitHub Actions, hosted/self-hosted runners, CI matrices, target harness runners, or other repository Runner execution.
@@ -12,9 +14,11 @@ The objective is to avoid repeatedly spending Runner time after every small impl
 
 ## Mandatory policy
 
+Runner registration NEVER grants execution authority. Consumed, expired, historical, destructive, provider, production, deployment, release, or formal-runtime authorization must never be inferred or silently reused.
+
 1. Every newly discovered Runner-dependent task MUST be added here when it is discovered.
 2. Every entry MUST record its phase/issue, trigger, required workflow/runner, dependencies, expected evidence, execution class, and current status.
-3. The default execution class is `FINAL_BATCH`: keep developing with focused local/static/unit verification and execute queued Runner work together at the final integration checkpoint.
+3. The default class for a safely deferable Runner activity that is not required for current merge/release correctness is `PROJECT_FINAL`: record it now and execute it with the consolidated project-final Runner pass. Use `FINAL_BATCH` for Runner gates required on the exact head before the current release-train/PR may merge.
 4. Use `BLOCKING_NOW` instead of `FINAL_BATCH` when the Runner result is:
    - security-critical;
    - required to continue safely;
@@ -31,7 +35,8 @@ The objective is to avoid repeatedly spending Runner time after every small impl
 
 | Class | Meaning |
 |---|---|
-| `FINAL_BATCH` | Defer until the final consolidated Runner pass for the active development/release train. |
+| `PROJECT_FINAL` | Safely defer across ordinary development/release trains and execute together at the final project acceptance checkpoint; never use for a required merge/security/exact-head gate. |
+| `FINAL_BATCH` | Defer until the consolidated exact-head Runner pass for the active development/release train because it is required before merge/release acceptance. |
 | `BLOCKING_NOW` | Run immediately because later work would otherwise be unsafe, invalid, or blocked. |
 | `POST_MERGE` | Run/observe only after the accepted PR is merged to `main`. |
 | `CONDITIONAL` | Required only when the documented path/phase/target surface is touched. |
@@ -50,6 +55,14 @@ These are the standing repository Runner gates. A focused release train may requ
 | RB-006 | Elementor real-target proof | P15 Real Elementor Target Proof | `CONDITIONAL` | P15 bridge/import/render/proof-chain or target-binding surface changes | exact-bound target proof PASS with retained run identity | CONDITIONAL |
 | RB-007 | Main PR-origin audit | Main PR Origin Audit | `POST_MERGE` | Every push/merge to `main` | merged-PR association PASS and forced-update detection remains clean | POST_MERGE |
 | RB-008 | P17 controlled local browser proof | P17 Local Browser Proof | `CONDITIONAL` | P17 neutral Web export/package-validation/browser-proof surfaces change | exact-head local-only Chrome render receipt PASS, bound to commit/run identity, with zero external/blocked requests and visual fidelity/reconstruction/production authority still false | CONDITIONAL |
+
+## Project-final Runner queue
+
+Every Runner-dependent activity that can safely wait until project completion is accumulated here instead of being executed repeatedly during normal development.
+
+| Queue ID | Phase / issue | Task / trigger | Runner / workflow | Dependencies | Class | Expected evidence | Status |
+|---|---|---|---|---|---|---|---|
+| — | — | No safely deferable project-final Runner task recorded yet. | — | — | `PROJECT_FINAL` | — | EMPTY |
 
 ## Deferred Runner queue
 
@@ -74,13 +87,24 @@ When developing:
 1. inspect this file at session start;
 2. whenever work implies a Runner action, create/update its benchmark row immediately;
 3. run focused local/static/unit checks during implementation;
-4. continue implementation while `FINAL_BATCH` items accumulate;
+4. continue implementation while `PROJECT_FINAL` items accumulate for project-end acceptance and while current-train `FINAL_BATCH` items wait for the final exact-head merge checkpoint;
 5. stop and execute any `BLOCKING_NOW` item before proceeding;
-6. at the final integration checkpoint, execute the consolidated Runner batch;
+6. at each required merge/release integration checkpoint, execute only the required current-train `FINAL_BATCH`/`CONDITIONAL` gates; at final project acceptance, execute the accumulated `PROJECT_FINAL` queue together;
 7. bind each result to the exact PR-head SHA/run ID and update the row;
 8. fix failures and rerun affected checks;
 9. rerun required exact-head gates before merge;
 10. after merge, verify `POST_MERGE` controls and retain their result.
+
+## Delivery-resilient Runner observation
+
+Runner execution and Runner observation are separate concerns.
+
+- Start required Runner work when the milestone requires it.
+- After the batch starts, perform at most one Runner/check-status fetch in the current user turn.
+- If required work is queued/in-progress, retain exact head/run identifiers through GitHub metadata, checkpoint the next action and end the turn.
+- Never use sleep loops or repeated polling to keep a response open.
+- The next user `continue` performs the next single observation/fix/merge milestone.
+- `BLOCKING_NOW` blocks subsequent implementation across turns but does not override the one-fetch/no-busy-wait rule.
 
 ## Completion rule
 
@@ -88,6 +112,7 @@ A development/release train may not be called complete while:
 
 - a required `BLOCKING_NOW` entry is unresolved;
 - a required `FINAL_BATCH` entry for that train is unexecuted or failed;
+- final project acceptance is being claimed while any required `PROJECT_FINAL` entry is unexecuted or failed;
 - exact-head evidence is stale relative to the merge candidate;
 - a required `POST_MERGE` control has not been observed;
 - the Runner benchmark disagrees with the owning issue/roadmap state.
