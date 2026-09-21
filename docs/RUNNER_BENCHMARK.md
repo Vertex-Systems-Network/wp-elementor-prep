@@ -57,7 +57,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | Queue ID | Phase / issue | Task / trigger | Runner / workflow | Dependencies | Class | Expected evidence | Status |
 |---|---|---|---|---|---|---|---|
-| RQ-634-FINAL | #634 | Full exact-head acceptance after coordinated Node/toolchain migration | CI; CodeQL; P12 Final Release Artifact; P12 Offline Acceptance; Integration Readiness; P15 Real Elementor Target Proof; P17 Local Browser Proof | regenerated deterministic lockfile and Node 22 workflow/runtime contract | `FINAL_BATCH` | all required exact-head gates PASS with run identities retained | QUEUED |
+| RQ-634-FINAL | #634 | Full exact-head acceptance after coordinated Node/toolchain migration | CI; CodeQL; P12 Final Release Artifact; P12 Offline Acceptance; Integration Readiness; P15 Real Elementor Target Proof; P17 Local Browser Proof | code-bearing validation head `ee8017ee4b53a475e8c1ab6514a6f8f88c6d394d`: CI `35604233720` PASS; CodeQL `35604233659` PASS with 0 annotations/no new alerts; P12 Final `35604233590` PASS; P12 Offline `35604233799` PASS on Windows/Ubuntu/macOS; Integration `35604233631` PASS; P15 `35604233710` PASS; P17 `35604233594` PASS. Final evidence-only head must also be green before merge. | DONE |
 
 ## Blocking-now queue
 
