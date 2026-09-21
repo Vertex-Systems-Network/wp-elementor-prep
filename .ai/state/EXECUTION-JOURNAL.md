@@ -203,3 +203,18 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Production P14 registry remains empty; confirmation/UI/target-compatibility/acceptance authority remain disabled.
 - No R4 implementation code was added in this activation milestone.
 
+
+## 2026-09-22 — #653 P14 R4 retained-duplicate Figma adapter implemented
+
+- Added the first concrete P14 Figma retained-duplicate adapter for the exact vertical-stack candidate path.
+- Source fingerprinting uses the current P13 structural hash; cloning stages a separate owned candidate and rechecks source immutability plus clone-stable structure.
+- Runtime action eligibility is bound to the exact rule/version, confidence gate, R2 validation profile, frozen R1 mutation allowlist and one R3 target address.
+- Mutation reuses the accepted P5 strict vertical-stack transformer; no new layout algorithm or source-swap path was introduced.
+- Exact R2 validation checks are generated from the candidate after transformation; candidate re-score uses deterministic P13 Build-Ready analysis.
+- Retain/discard are ownership- and transaction-bound. Requested prepared labeling is plugin metadata only and does not add node-name mutation beyond the accepted design-property allowlist.
+- Qualification version 3 removes only the runtime-adapter-not-wired blocker and records runtimeAdapterImplemented=true; production registry binding remains the sole qualification blocker.
+- Added deterministic fake-Figma regressions for full transaction/source immutability, identity/address refusal, path/geometry drift, insufficient re-score, cleanup and retention ownership.
+- Production safe-recipe registry remains empty; runtimeMutationEnabled, confirmation/UI, target compatibility and acceptance authority remain false.
+- No local test/CI PASS is claimed before focused PR exact-head verification.
+- Implementation milestone ends before PR creation and CI polling.
+
