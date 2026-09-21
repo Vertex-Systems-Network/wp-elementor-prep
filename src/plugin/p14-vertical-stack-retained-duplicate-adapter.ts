@@ -24,8 +24,6 @@ import type {
   P14ValidationSummary,
 } from '../core/p14-preparation-types';
 import type { BuildReadyFinding, BuildReadyReportV2 } from '../core/build-ready-types';
-import type { AuditNode } from '../core/types';
-import { captureIntegritySnapshot } from './integrity-snapshot';
 import { applySafeRecipeToCandidate } from './safe-recipe-transform';
 
 const P14_VERTICAL_STACK_RULE_ID = 'BR_SAFE_VERTICAL_STACK_CANDIDATE';
