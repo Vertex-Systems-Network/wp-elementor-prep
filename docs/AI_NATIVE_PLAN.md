@@ -195,6 +195,22 @@ A non-developer should eventually be able to:
 
 ## 9. Mandatory AI-native engineering cycle
 
+### 0. AI Engineering Supervisor hard gate
+
+These instructions are MANDATORY on every start/continue/resume/interruption/tool failure/message-delivery timeout.
+
+Required order:
+
+`.ai/state/CURRENT-STATE.yaml -> .ai/state/LAST-CHECKPOINT.md -> exact main/default SHA -> OPEN Issues -> OPEN PRs/MRs -> .ai/state/DETERMINISTIC-CLAIMS.yaml -> .ai/state/COORDINATION-QUEUE.yaml -> .ai/state/RUNNER-BENCHMARK.yaml -> active milestone`
+
+Repository/runtime evidence always outranks chat memory. Compact state is only a resume index and never overrides live repository/runtime truth.
+
+New development is forbidden while an accepted actionable open Issue/PR path is being bypassed. An Issue already represented by an accepted PR is one path; finish/review/fix that PR instead of duplicating it.
+
+Before reporting COMPLETE, BLOCKED, VERIFYING, or WAITING_EXTERNAL, durable compact state must already reflect the observed main SHA, active Issue/PR/branch, milestone/status, last completed milestone, exact next action, pending/blocked Runner IDs, blockers, and timeout controls.
+
+The compact-state byte limits, timeout recovery, security fail-closed, migration/data-safety, supply-chain, and no-repeat-after-timeout rules in `.ai/state/PROTOCOL.md` are mandatory.
+
 ### A. Issues first
 
 1. Read canonical memory-bank and README.
