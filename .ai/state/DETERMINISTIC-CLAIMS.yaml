@@ -23,10 +23,10 @@ claims:
   - {id: CL-020, statement: r4_validation_emits_exact_P14_VALIDATE_VERTICAL_STACK_V1_required_checks, value: true}
   - {id: CL-021, statement: r4_rescore_uses_deterministic_p13_build_ready_analysis_and_tracks_introduced_high_or_blocker_evidence, value: true}
   - {id: CL-022, statement: r4_retain_and_discard_require_owned_distinct_candidate_and_do_not_reuse_p4_source_swap_semantics, value: true}
-  - {id: CL-023, statement: p14_vertical_stack_qualification_v4_runtime_adapter_and_production_registry_bound_true, value: true}
-  - {id: CL-024, statement: p14_vertical_stack_qualification_v4_has_only_confirmation_ui_blocker, value: true}
+  - {id: CL-023, statement: p14_vertical_stack_qualification_v5_runtime_adapter_registry_and_internal_confirmation_activation_true, value: true}
+  - {id: CL-024, statement: p14_vertical_stack_qualification_v5_has_empty_bounded_implementation_blocker_set, value: true}
   - {id: CL-025, statement: production_p14_safe_recipe_registry_contains_exact_single_vertical_stack_planning_binding, value: true}
-  - {id: CL-026, statement: p14_runtime_mutation_enabled_remains_false, value: true}
+  - {id: CL-026, statement: p14_runtime_mutation_enabled_is_true_only_for_internal_dev_activation_and_publishable_release_activation_is_hard_disabled, value: true}
   - {id: CL-027, statement: r4_focused_fake_figma_regressions_exist_but_no_test_or_ci_pass_is_claimed_before_pr_verification, value: true}
   - {id: CL-028, statement: issue_653_is_closed_after_pr_654_merge, value: true}
   - {id: CL-029, statement: issue_287_requires_repository_admin_authority, value: true}
@@ -52,3 +52,5 @@ claims:
   - {id: CL-049, statement: p14_r6_requires_fresh_context_freshness_source_plan_and_action_identity_match_before_transaction, value: true}
   - {id: CL-050, statement: p14_r6_internal_activation_is_enabled_in_development_build_and_hard_disabled_plus_ui_stripped_in_publishable_release, value: true}
   - {id: CL-051, statement: p14_r6_keeps_acceptance_authority_and_target_compatibility_claim_false, value: true}
+  - {id: CL-052, statement: pr_658_first_exact_head_failed_only_on_test_fixture_literal_type_TS2322_after_status_verify_passed, value: true}
+  - {id: CL-053, statement: pr_658_TS2322_repair_changes_only_the_malicious_test_fixture_and_does_not_weaken_runtime_or_security_authority, value: true}
