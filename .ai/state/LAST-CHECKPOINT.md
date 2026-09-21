@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `f77ac93460bcb4625b76b914d81bd63fd9706982`  
 Active Issue: `#647`  
-Active PR: pending creation  
+Active PR: `#648`  
 Active branch: `state/post-646-reconcile`
 
 ## Completed transition
@@ -25,4 +25,4 @@ Active branch: `state/post-646-reconcile`
 
 ## Exact next safe action
 
-Open one focused reconciliation PR for Issue #647 from `state/post-646-reconcile`. Do not poll the new exact-head batch in this milestone. The next user `continue` performs ONE consolidated exact-head status refresh for that PR.
+PR #648 is open from `state/post-646-reconcile`. End this milestone without CI polling. The next user `continue` performs ONE consolidated exact-head status refresh for PR #648.
