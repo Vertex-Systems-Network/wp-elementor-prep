@@ -251,3 +251,15 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - No authority/security gate was weakened; the behavior change makes candidate acceptance stricter.
 - New exact head remains uncertified and is not polled in this milestone.
 
+
+## 2026-09-22 — README progress synchronization made mandatory
+
+- User identified that README progress was not advancing with material AI-native development.
+- Updated `.ai/state/PROTOCOL.md` so every material repository mutation must synchronize affected README status/progress/blocker truth before milestone handoff.
+- Preserved exact-head Runner safety: pure observation turns do not mutate an already-running candidate merely to log volatile status.
+- Updated README P14 truth to an explicit six-slice implementation track; R1-R4 implemented = 67% implementation, not acceptance.
+- Updated P14 status to runtime adapter implemented / production registry + UI locked.
+- Updated `scripts/verify-readme-progress.mjs` so current qualification/registry invariants require the matching README P14 state and stale progress fails `status:verify`.
+- README current verified main anchor synchronized to `d4cbf53d4e07c05df91f01bdec967262100452df`.
+- PR #654 exact head changed due this requested material policy/progress update; old Runner evidence is not reused for merge certification.
+
