@@ -122,9 +122,9 @@ requireRow('P13', {
   next: '#159',
 });
 requireRow('P14', {
-  status: 'CORE IMPLEMENTATION IN PROGRESS / PRODUCTION REGISTRY BOUND / UI LOCKED',
-  progress: '83% impl',
-  next: 'runtimeMutationEnabled=false',
+  status: 'IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING',
+  progress: '100% impl',
+  next: 'publishable release activation disabled',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -135,20 +135,25 @@ requireRow('P27', {
 if (!p14Qualification.includes('runtimeAdapterImplemented: true')) {
   throw new Error('P14 qualification no longer records runtimeAdapterImplemented=true; README P14 progress contract must be revised in the same material mutation.');
 }
-if (!p14Qualification.includes("'P14_CONFIRMATION_UI_NOT_ACCEPTED'")) {
-  throw new Error('P14 qualification R6 blocker changed; README P14 progress contract must be revised in the same material mutation.');
+if (!p14Qualification.includes('blockers: VERTICAL_STACK_BLOCKERS') || !p14Qualification.includes('Object.freeze([] satisfies P14RecipeQualificationBlocker[])')) {
+  throw new Error('P14 qualification no longer records an empty bounded-implementation blocker set; README P14 progress contract must be revised.');
 }
 if (!p14Qualification.includes('productionRegistryBound: true')) {
   throw new Error('P14 qualification no longer records productionRegistryBound=true; README P14 progress contract must be revised.');
 }
-if (!p14Qualification.includes('runtimeMutationEnabled: false') || !p14Qualification.includes('confirmationEnabled: false')) {
-  throw new Error('P14 runtime/UI authority changed; README P14 progress contract must be revised in the same material mutation.');
+if (!p14Qualification.includes('runtimeMutationEnabled: true') || !p14Qualification.includes('confirmationEnabled: true')) {
+  throw new Error('P14 internal runtime/confirmation activation is not reflected in qualification; README P14 progress is stale.');
 }
 if (!p14RegistrySource.includes('createP14VerticalStackProductionRecipe()')) {
   throw new Error('P14 production registry exact vertical-stack binding is missing; README P14 progress is stale.');
 }
-if (!readme.includes('P14 implementation progress is 83% (5/6 bounded slices implemented)')) {
+if (!readme.includes('P14 implementation progress is 100% (6/6 bounded slices implemented)')) {
   throw new Error('README P14 bounded-slice implementation progress explanation is stale or missing.');
+}
+const devBuild = await readFile('scripts/build.mjs', 'utf8');
+const releaseBuild = await readFile('scripts/build-release.mjs', 'utf8');
+if (!devBuild.includes("__P14_INTERNAL_ACTIVATION__: 'true'") || !releaseBuild.includes("__P14_INTERNAL_ACTIVATION__: 'false'")) {
+  throw new Error('P14 internal activation build split is missing; development must enable it and publishable release must hard-disable it.');
 }
 
 console.log(
