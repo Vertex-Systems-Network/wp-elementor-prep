@@ -20,6 +20,63 @@ This protocol keeps AI-native repository work resumable while minimizing long-tu
 - `REMOTE_RETRY_LOOPS = FORBIDDEN`
 - `NEXT_MILESTONE_AFTER_EXTERNAL_WAIT = FORBIDDEN`
 
+## AI Engineering Supervisor mandatory resume order
+
+Repository/runtime evidence always outranks chat memory.
+
+On every start, continue, resume, interrupted session, tool/connector failure, or previous message-delivery timeout:
+
+1. read `.ai/state/CURRENT-STATE.yaml`;
+2. read `.ai/state/LAST-CHECKPOINT.md`;
+3. resolve exact current main/default SHA;
+4. reconcile OPEN Issues first;
+5. reconcile OPEN PRs/MRs second;
+6. re-read `.ai/state/DETERMINISTIC-CLAIMS.yaml`, `.ai/state/COORDINATION-QUEUE.yaml`, and `.ai/state/RUNNER-BENCHMARK.yaml`;
+7. inspect only relevant commits since the recorded anchor when drift is possible;
+8. read large historical checkpoints only for a specific fact/conflict/evidence need.
+
+Compact state is only a resume index and NEVER overrides repository/runtime truth. Never repeat work merely because the prior response was not delivered.
+
+## Timeout / remote-call hard budget
+
+- Batch related read-only calls where supported.
+- Read only what the active milestone requires.
+- Use at most ONE consolidated CI/status refresh per milestone by default.
+- Never tight-poll, repeatedly fetch unchanged status, or rerun a workflow because a message timed out.
+- Persist VERIFYING or WAITING_EXTERNAL before the final exact-head observation.
+- If required CI is still running after the refresh, do not mutate the certified source head merely to record pending state; report pending and END the milestone.
+- A second refresh in one milestone requires a material security, merge, incident/recovery, or provider state transition and a durable exception record.
+
+## Issues / PRs first hard gate
+
+New development is forbidden while an accepted actionable OPEN Issue or PR/MR is being bypassed. An Issue already represented by an accepted PR is one work path.
+
+Mandatory order: Compact State -> Exact Main -> OPEN Issues -> OPEN PRs/MRs -> Deterministic Claims -> Coordination Queue -> Runner Benchmark -> New Work.
+
+## State drift / timeout recovery
+
+On resume reconcile main SHA, merged/closed Issues and PRs, coordination queue, Runner Benchmark, and relevant commits since the recorded anchor. A merged item must not remain PENDING_MERGE.
+
+After `Message delivery timed out. Please try again.`, verify what persisted before doing anything again. Never redo a merge, deployment, destructive action, migration, provider call, or formal runtime execution solely because the response was not delivered.
+
+## Security fail-closed
+
+Never weaken auth/authz, nonce/CSRF protections, validation/escaping, security checks, correct tests, branch protection or required checks merely to obtain green CI. Never force-push shared history, hard-code/expose secrets, invent results, mark running/skipped/deferred work PASS, reuse expired/consumed grants, or treat `continue` as new authority.
+
+A timeout, connector failure, or missing chat context grants ZERO additional authority.
+
+## Migration / data-safety hard gate
+
+Migration/destructive work must review idempotency, transaction boundaries, apply-success/marker-failure recovery, retry behavior, rollback/restore, destructive recovery, concurrency, partial execution and backup/snapshot requirements. Never assume apply() followed by markApplied() is crash-safe.
+
+## Compact state limits
+
+- CURRENT-STATE.yaml <= 12 KiB
+- LAST-CHECKPOINT.md <= 16 KiB
+- EXECUTION-JOURNAL.md <= 32 KiB
+
+The journal is rolling. Large historical checkpoints are not part of every resume.
+
 ## Logical milestone
 
 A logical milestone is one coherent state transition, for example:
