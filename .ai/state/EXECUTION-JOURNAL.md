@@ -138,3 +138,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Added focused deterministic regression tests and synchronized P14 authority documentation.
 - Implementation milestone ends before PR creation and CI polling.
 
+## 2026-09-21 — #649 focused PR opened
+
+- Opened PR #650 from `p14/vertical-stack-validation-profile` against exact main `c8950242a2848b4f58828d7e3220f59062305442`.
+- PR creation head was `cd6db74d85d738865e44628cb0547cae0040d1ed`.
+- Bound compact state, coordination queue and Runner Benchmark to PR #650 in follow-up state commits.
+- The final post-binding PR head is intentionally uncertified until the next user `continue` performs the one allowed consolidated exact-head status refresh.
+- No CI/status polling is performed after PR creation in this milestone.
+- Production P14 registry remains empty and runtime mutation/confirmation authority remains disabled.
+
