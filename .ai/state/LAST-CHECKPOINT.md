@@ -34,6 +34,18 @@ Active branch: `p14/vertical-stack-production-registry`
 - R6 confirmation/UI/internal activation remains separately blocked.
 - No local/CI PASS is claimed for R5 before exact-head PR verification.
 
+## First exact-head failure diagnosis and repair
+
+- PR #656 exact head `03a610eb9395f1d4c098686b8d741c5ce5a3c0e2` passed `status:verify` and TypeScript typecheck.
+- CI run `35655116685` / job `106516902797` and P12 Final Release Artifact run `35655116581` / job `106516633104` both reached the repository test suite and failed on the same two stale pre-R5 expectations.
+- Repository result was 1598 PASS / 2 FAIL.
+- `tests/p13-safe-preparation-candidates.test.ts` still assumed an empty production registry and expected `P14_SAFE_BINDING_REQUIRED`. Under R5 the exact production binding resolves, but without the source tree the candidate correctly remains non-executable with `P14_TARGET_ADDRESS_REQUIRED`.
+- `tests/p14-registry-bounds.test.ts` still asserted an empty production registry instead of the accepted exact singleton bounded binding.
+- Repair commit `2e8f8435f17d613b46d452c9afc33dbf871e551a` updates the default handoff/addressing expectation.
+- Repair commit `1e7ef35cd12d70b6b793ca07ebf17e07975b0e12` updates the production registry bounds contract to the exact singleton binding.
+- README repair state was synchronized in `07a0934ecf0ffa3dce982bc052e0bffbc85457b7`.
+- No runtime mutation, confirmation/UI, validation, target-addressing or security authority was weakened.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final post-binding head of PR #656 and perform exactly one consolidated exact-head status refresh. If required checks are pending, end without polling again. Merge only after the full exact-head required gate set is green.
+On the next user `continue`, resolve the final repaired PR #656 head and perform exactly one consolidated exact-head status refresh. If required checks are pending, end without polling again. Merge only after the full exact-head required gate set is green.
