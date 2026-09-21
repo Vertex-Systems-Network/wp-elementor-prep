@@ -48,7 +48,7 @@ describe('P14 vertical-stack recipe qualification', () => {
     const second = serializeP14VerticalStackRecipeQualification();
 
     expect(first).toBe(second);
-    expect(first).toContain('"validationProfileId": null');
+    expect(first).toContain('"validationProfileId": "P14_VALIDATE_VERTICAL_STACK_V1"');
     expect(first).toContain('"productionRegistryEligible": false');
     expect(first).toContain('"runtimeMutationEnabled": false');
     expect(first).toContain('"acceptanceAuthority": false');
