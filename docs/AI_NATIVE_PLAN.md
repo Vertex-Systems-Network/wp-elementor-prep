@@ -249,10 +249,10 @@ Runner-dependent work is a first-class planning artifact.
 
 1. Read `docs/RUNNER_BENCHMARK.md` at session start.
 2. Whenever a GitHub Actions/CI/hosted-runner/target-harness task is discovered, add it to the benchmark immediately with phase/issue, trigger, workflow/runner, dependencies, expected evidence, execution class and status.
-3. Default non-blocking Runner work to `FINAL_BATCH`. Continue development with focused local/static/unit checks while those entries accumulate.
+3. Default safely deferable Runner work that is not required for the current merge/release correctness to `PROJECT_FINAL`. Accumulate those entries throughout development and execute them together at the final project acceptance checkpoint. Use `FINAL_BATCH` only for exact-head gates required before the current PR/release train may merge.
 4. Classify a Runner task as `BLOCKING_NOW` and execute it immediately when its result is security-critical, required to continue safely, migration/destructive/authority-sensitive, release-blocking for the active acceptance objective, or required by repository merge rules.
 5. Keep post-merge-only controls as `POST_MERGE`; do not misclassify live/manual Figma or marketplace evidence as synthetic Runner evidence.
-6. At the final integration checkpoint, execute all required `FINAL_BATCH` entries together against the exact candidate head.
+6. At each merge/release integration checkpoint, execute the required current-train `FINAL_BATCH`/`CONDITIONAL` gates against the exact candidate head. At final project acceptance, execute all accumulated `PROJECT_FINAL` entries together.
 7. Bind results to exact commit SHA, workflow/run identity, conclusion and required artifact/receipt identity.
 8. If a batched task fails, fix the cause, rerun the affected task(s), then rerun every exact-head gate required for merge/release.
 9. Batching is an efficiency mechanism only. It never authorizes skipping, weakening, reinterpreting or fabricating CI/security/runtime acceptance.
@@ -273,6 +273,8 @@ Long-turn remote waiting is prohibited as an AI-native execution pattern. Canoni
 8. A failed check becomes a future single milestone: inspect -> fix -> push -> start new exact-head batch -> checkpoint/end.
 9. Never combine implementation, CI waiting, merge, post-merge verification and activation of the next task in one turn.
 10. This policy reduces workflow-caused message-delivery risk but must not claim absolute protection from transport/UI/service failures outside repository control.
+11. These rules are mandatory AI orders: no busy waiting, no retry-until-green loops, no second logical milestone, no next-task activation after an external wait boundary, and no unrecorded Runner task.
+12. If a Runner's safe deferral classification is ambiguous, fail closed and keep it out of `PROJECT_FINAL` until its merge/security/acceptance dependency is proven non-blocking.
 
 ### H. Mandatory end-of-work sync
 
