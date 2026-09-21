@@ -1,0 +1,59 @@
+name: Node 22 Windows Stat Probe
+
+on:
+  push:
+    branches:
+      - toolchain/node22-vitest5
+    paths:
+      - .github/workflows/node22-windows-stat-probe.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - name: Set up Node 22.12.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22.12.0
+
+      - name: Compare path and open-handle metadata
+        shell: pwsh
+        run: |
+          @'
+          import { mkdtemp, mkdir, writeFile, lstat, open, realpath, rm } from 'node:fs/promises';
+          import { join } from 'node:path';
+          import { tmpdir } from 'node:os';
+
+          const root = await mkdtemp(join(tmpdir(), 'wp elementor prep stat probe '));
+          const nested = join(root, 'input with spaces');
+          const file = join(nested, 'canonical snapshot.json');
+          await mkdir(nested);
+          await writeFile(file, '{"ok":true}');
+
+          const initial = await lstat(file, { bigint: true });
+          const canonicalA = await realpath(file);
+          const handle = await open(file, 'r');
+          const handleStat = await handle.stat({ bigint: true });
+          const pathStat = await lstat(file, { bigint: true });
+          const canonicalB = await realpath(file);
+
+          const fields = ['dev','ino','size','mode','nlink','mtimeNs','ctimeNs','birthtimeNs'];
+          const pick = (s) => Object.fromEntries(fields.map((k) => [k, String(s[k])]));
+          console.log(JSON.stringify({
+            node: process.version,
+            platform: process.platform,
+            canonicalEqual: canonicalA.toLowerCase() === canonicalB.toLowerCase(),
+            initial: pick(initial),
+            handle: pick(handleStat),
+            path: pick(pathStat),
+            equalInitialHandle: fields.filter((k) => initial[k] !== handleStat[k]),
+            equalHandlePath: fields.filter((k) => handleStat[k] !== pathStat[k]),
+          }, null, 2));
+
+          await handle.close();
+          await rm(root, { recursive: true, force: true });
+          '@ | node --input-type=module
