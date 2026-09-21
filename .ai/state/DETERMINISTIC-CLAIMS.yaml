@@ -35,3 +35,5 @@ claims:
   - {id: CL-032, statement: issue_182_is_deferred_final_release_gate, value: true}
   - {id: CL-033, statement: issue_119_is_current_roadmap_owner_for_p14_implementation, value: true}
   - {id: CL-034, statement: ci_success_does_not_grant_live_target_or_production_authority, value: true}
+  - {id: CL-035, statement: pr_654_is_active_p14_r4_exact_head_verification_path, value: true}
+  - {id: CL-036, statement: pr_654_creation_head_was_00259f5bc868c3e76167ffb77f60f11df468caef_and_post_binding_head_requires_fresh_capture, value: true}
