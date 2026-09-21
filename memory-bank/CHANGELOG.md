@@ -7,7 +7,7 @@
 - Made the test/build matrix explicit at Vitest `5.0.1`, Vite `8.3.0` and esbuild `0.28.2`, preserving Playwright Core `1.63.0` and `@types/node 26.6.1`.
 - Generated the new npm lock deterministically in one `BLOCKING_NOW` Runner job with lifecycle scripts disabled; retained run/artifact/digest evidence in `docs/RUNNER_BENCHMARK.md` and removed the temporary write-capable workflow before acceptance.
 - Added a regression contract that rejects Node-version drift, accidental toolchain peer drift and `--force` / `--legacy-peer-deps` acceptance paths.
-- Node 22 Windows acceptance exposed millisecond-stat representation drift between path and open-handle metadata for an unchanged canonical snapshot. The hardened reader now compares exact BigInt nanosecond `mtimeNs`/`ctimeNs` while retaining dev/inode/size checks, avoiding tolerance-based weakening of same-size mutation detection.
+- Node 22 Windows acceptance exposed a path-vs-handle device-ID representation mismatch for an unchanged canonical snapshot (`lstat.dev=0` while handle `stat.dev` is non-zero). The hardened reader keeps exact BigInt inode/size/mode/nlink/birthtime/mtime/ctime checks and compares `dev` only when both observations expose a non-zero comparable value; no timestamp tolerance or race-detection weakening is introduced.
 
 
 ## 2026-09-21 — P17 controlled local-only browser render proof
