@@ -57,7 +57,7 @@ interface PreservationNode {
 }
 
 interface PreservationSnapshot {
-  structure: Array<Pick<PreservationNode, 'path' | 'type' | 'name' | 'childCount'>>;
+  structure: Array<Pick<PreservationNode, 'path' | 'type' | 'childCount'>>;
   visibility: Array<Pick<PreservationNode, 'path' | 'visible'>>;
   geometry: Array<Pick<PreservationNode, 'path' | 'x' | 'y' | 'width' | 'height'>>;
   contentSignature: string;
@@ -84,8 +84,8 @@ interface CandidateMetadata {
   sourceNodeId: string;
   candidateNodeId: string;
   sourceFingerprint: string;
-  sourceCloneStableFingerprint: string;
   sourceReport: BuildReadyReportV2;
+  preparedName: string;
   appliedTargets: AppliedTargetEvidence[];
   retained: boolean;
 }
@@ -152,7 +152,7 @@ function preservationSnapshot(root: SceneNode): PreservationSnapshot {
   nodes.sort((a, b) => a.path.localeCompare(b.path));
   content.sort((a, b) => a.path.localeCompare(b.path));
   return {
-    structure: nodes.map(({ path, type, name, childCount }) => ({ path, type, name, childCount })),
+    structure: nodes.map(({ path, type, childCount }) => ({ path, type, childCount })),
     visibility: nodes.map(({ path, visible }) => ({ path, visible })),
     geometry: nodes.map(({ path, x, y, width, height }) => ({ path, x, y, width, height })),
     contentSignature: JSON.stringify(content),
@@ -361,7 +361,7 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     return computeBuildReadyStructuralHash(scanSceneNode(source));
   }
 
-  async cloneSource(sourceNodeId: string, transactionId: string): Promise<P14CandidateHandle> {
+  async cloneSource(sourceNodeId: string, transactionId: string, preparedName: string): Promise<P14CandidateHandle> {
     if (this.candidates.size > 0) {
       throw new Error('P14 vertical-stack adapter allows only one owned candidate per adapter instance.');
     }
@@ -399,8 +399,8 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
         sourceNodeId,
         candidateNodeId: candidate.id,
         sourceFingerprint,
-        sourceCloneStableFingerprint,
         sourceReport,
+        preparedName,
         appliedTargets: [],
         retained: false,
       });
@@ -465,6 +465,10 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     if (!result.applied) {
       throw new Error(`P14 vertical-stack P5 transform refused candidate: ${result.reason}`);
     }
+
+    assessed.candidateRoot.name = assessed.metadata.preparedName;
+    assessed.candidateRoot.setPluginData('p14:preparedName', assessed.metadata.preparedName);
+    assessed.candidateRoot.setPluginData('p14:state', 'prepared-candidate');
 
     assessed.metadata.appliedTargets.push({
       actionId: action.actionId,
@@ -572,17 +576,21 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     if (metadata.retained) {
       throw new Error('P14 candidate is already retained.');
     }
+    if (preparedName !== metadata.preparedName) {
+      throw new Error('P14 retained candidate prepared name differs from the pre-validated candidate identity.');
+    }
     const node = await frameById(this.runtime, candidate.candidateNodeId, 'Candidate');
     if (node.id === metadata.sourceNodeId) {
       throw new Error('P14 adapter refused to retain the approved source as candidate output.');
     }
 
-    node.name = preparedName;
-    if ('setPluginData' in node) {
-      node.setPluginData('p14:transactionId', transactionId);
-      node.setPluginData('p14:sourceNodeId', metadata.sourceNodeId);
-      node.setPluginData('p14:state', 'retained');
+    if (node.name !== metadata.preparedName) {
+      throw new Error('P14 candidate name drifted after validation/re-score; refusing retention.');
     }
+    node.setPluginData('p14:transactionId', transactionId);
+    node.setPluginData('p14:sourceNodeId', metadata.sourceNodeId);
+    node.setPluginData('p14:preparedName', metadata.preparedName);
+    node.setPluginData('p14:state', 'retained');
     metadata.retained = true;
 
     return {
