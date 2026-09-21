@@ -60,6 +60,17 @@ Active branch: `p14/vertical-stack-runtime-adapter`
 - These changes strengthen candidate acceptance; no source protection, mutation allowlist, validation profile, registry authority, confirmation gate or security check was weakened.
 - The second repaired PR head is not certified in this milestone; no workflow/status polling occurs after the repair.
 
+## README progress synchronization hardening
+
+- User-visible README progress is now a mandatory AI-native repository truth surface.
+- `.ai/state/PROTOCOL.md` now requires README synchronization on every material repository mutation that changes implementation state, lifecycle, blocker, capability, PR/merge lifecycle or exact next development step.
+- Pure Runner-observation turns remain the only exception when mutating README would invalidate an already-running exact-head batch; volatile Runner state stays in GitHub metadata and README is synchronized on the next material mutation/post-merge reconciliation.
+- `scripts/verify-readme-progress.mjs` now machine-checks the current P14 runtime-adapter/empty-registry invariants, so stale P14 README progress fails `status:verify`.
+- README now records the explicit six-slice P14 implementation track. R1-R4 are implemented, so P14 is shown as `67% impl`; this is implementation-only and does not claim runtime/production acceptance.
+- README P14 status now reflects runtime adapter implemented, production registry empty, `runtimeMutationEnabled=false`, R5 registry binding next and R6 confirmation/UI/internal activation after that.
+- README's current verified main anchor is synchronized to `d4cbf53d4e07c05df91f01bdec967262100452df`.
+- These README/protocol/verifier commits changed PR #654's exact head; previous exact-head Runner results are not reusable for merge certification.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final second-repaired PR #654 head and perform exactly one consolidated exact-head status refresh. Merge only after the full required gate set is green.
+On the next user `continue`, resolve the final README-synchronized PR #654 head and perform exactly one consolidated exact-head status refresh. Merge only after the full required gate set is green.
