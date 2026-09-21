@@ -14,7 +14,7 @@ describe('P14 runtime review packet main-panel contract', () => {
     expect(main).toContain("from './p14-review-packet'");
     expect(main).toContain('const freshness = assessP14PreviewFreshness(');
     expect(main).toContain('if (!freshness.valid)');
-    expect(main).toContain('const preview = buildP14PlanPreview(evidence.buildReady)');
+    expect(main).toContain('const preview = buildP14PlanPreview(evidence.buildReady, sourceTree)');
     expect(main).toContain('const reviewPacket = buildP14ReviewPacket({');
     expect(main).toContain('pluginVersion: PLUGIN_VERSION');
     expect(main).toContain('runtimeBuild: P7_BUILD_IDENTITY');
@@ -22,7 +22,7 @@ describe('P14 runtime review packet main-panel contract', () => {
     expect(main).toContain('context: { ...evidence.context }');
   });
 
-  it('shows exact review provenance and export without adding approval/confirmation controls', () => {
+  it('shows exact non-authorizing review provenance next to the separate R6 confirmation boundary', () => {
     expect(ui).toContain('P14 Runtime Review Packet');
     expect(ui).toContain('DETERMINISTIC READ-ONLY REVIEW PACKET');
     expect(ui).toContain('reviewPacket.context.pageId');
@@ -32,9 +32,9 @@ describe('P14 runtime review packet main-panel contract', () => {
     expect(ui).toContain('id="exportP14ReviewPacket"');
     expect(ui).toContain('p14-guided-prepare-review.json');
     expect(ui).toContain('acceptanceAuthority=false · targetCompatibilityClaim=false · mutationEnabled=false · confirmationEnabled=false');
+    expect(ui).toContain("post('p14-guided-prepare-confirm-request')");
+    expect(ui).toContain('Confirm & create prepared duplicate');
     expect(ui).not.toContain("post('p14-confirmation-request')");
-    expect(ui).not.toContain('Approve Guided Prepare');
-    expect(ui).not.toContain('Confirm Guided Prepare');
   });
 
   it('forbids all review-packet surfaces from the publishable release UI', () => {
@@ -45,5 +45,7 @@ describe('P14 runtime review packet main-panel contract', () => {
     expect(generatedReleaseUi).not.toContain('reviewPacketJson');
     expect(generatedReleaseUi).not.toContain('p14-guided-prepare-review.json');
     expect(generatedReleaseUi).not.toContain('exportP14ReviewPacket');
+    expect(generatedReleaseUi).not.toContain('p14-guided-prepare-confirm-request');
+    expect(generatedReleaseUi).not.toContain('Confirm & create prepared duplicate');
   });
 });
