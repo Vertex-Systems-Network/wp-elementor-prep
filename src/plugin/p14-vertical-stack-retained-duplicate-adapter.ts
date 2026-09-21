@@ -361,10 +361,11 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     return computeBuildReadyStructuralHash(scanSceneNode(source));
   }
 
-  async cloneSource(sourceNodeId: string, transactionId: string, preparedName: string): Promise<P14CandidateHandle> {
+  async cloneSource(sourceNodeId: string, transactionId: string, preparedName?: string): Promise<P14CandidateHandle> {
     if (this.candidates.size > 0) {
       throw new Error('P14 vertical-stack adapter allows only one owned candidate per adapter instance.');
     }
+    const finalPreparedName = preparedName?.trim() || 'Prepared Duplicate';
     const source = await frameById(this.runtime, sourceNodeId, 'Source');
     const sourceAudit = scanSceneNode(source);
     const sourceFingerprint = computeBuildReadyStructuralHash(sourceAudit);
@@ -400,7 +401,7 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
         candidateNodeId: candidate.id,
         sourceFingerprint,
         sourceReport,
-        preparedName,
+        preparedName: finalPreparedName,
         appliedTargets: [],
         retained: false,
       });
