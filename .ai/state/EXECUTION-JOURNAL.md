@@ -329,3 +329,5 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Commit `e12f577a2473f22f26aa0398f289acac02b6e7d7` adds focused regressions for exact mapping, bounds, stale replay, malformed input and authority inflation.
 - Write surface is limited to `content_width`, `width_tablet`, `width_mobile`; desktop `width` is untouched.
 - README/memory/state reconcile P14 merge and #659 active work. No local/CI PASS is claimed before exact-head PR verification.
+
+- Opened PR #660 for #659 against main `64c8077eb37a728efa86a749a95e10f7bdce03c2`; exact-head workflow evidence is intentionally deferred to the next user `continue` under the one-refresh protocol.
