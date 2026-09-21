@@ -1,0 +1,23 @@
+schema_version: 1
+mode: delivery-resilient-short-turn
+policy:
+  max_logical_milestones_per_turn: 1
+  max_runner_status_fetches_per_turn: 1
+  busy_waiting_allowed: false
+  sleep_poll_loops_allowed: false
+  checkpoint_before_external_wait: true
+  runner_pending_action: checkpoint_and_end_turn
+sources_of_truth:
+  stable_protocol: .ai/state/PROTOCOL.md
+  durable_checkpoint: .ai/state/LAST-CHECKPOINT.md
+  execution_journal: .ai/state/EXECUTION-JOURNAL.md
+  volatile_runner_state: github_pr_issue_check_metadata
+active_execution:
+  repository: Vertex-Systems-Network/wp-elementor-prep
+  issue: null
+  branch: null
+  pull_request: null
+  candidate_head_sha: null
+  completed_milestone: null
+  external_dependency: null
+  next_action: inspect canonical issue/PR queue before starting a new release train
