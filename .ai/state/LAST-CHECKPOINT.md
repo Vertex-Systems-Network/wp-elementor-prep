@@ -39,6 +39,15 @@ Active branch: `p14/vertical-stack-runtime-adapter`
 - This checkpoint and Runner metadata are committed on the same PR branch, so the final exact PR head is the post-binding head rather than the creation head.
 - No workflow/status polling is performed in this PR-opening milestone.
 
+## Failed exact-head diagnosis and repair
+
+- PR #654 exact head `0647342257919a99c3d7a0276ef29366b4a805ac` produced CI run `35651454191` / job `106504648874` failure and P12 Final Release Artifact run `35651454099` / job `106504605073` failure.
+- Both workflows failed on the same TypeScript compiler error: `src/plugin/p14-vertical-stack-retained-duplicate-adapter.ts(191,11) TS7022`.
+- Root cause was recursive/inferred Figma `SceneNode` child lookup typing in `resolveFrameByPath`, not runtime authorization, validation, source-immutability or security behavior.
+- Repair commit `e20e9f98787c128527df6488bee7918f1f9cb667` adds the explicit `SceneNode | undefined` annotation to the candidate-only child lookup.
+- No mutation allowlist, validation profile, source protection, registry authority, confirmation gate or security check was weakened.
+- The repaired PR head is not certified in this milestone and no workflow polling is performed after the repair.
+
 ## Exact next safe action
 
-On the next user `continue`, re-enter through compact state and perform exactly one consolidated exact-head status refresh for PR #654. Do not mutate the PR head merely to record pending Runner state.
+On the next user `continue`, resolve the final repaired PR #654 head and perform exactly one consolidated exact-head status refresh. If any required gate is pending, checkpoint-and-end; if any fails, diagnose only that failure in the following milestone; merge only after the full exact-head gate set is green.
