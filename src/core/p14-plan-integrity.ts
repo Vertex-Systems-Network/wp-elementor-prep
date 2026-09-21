@@ -342,7 +342,8 @@ function validateAction(value: unknown, index: number, failures: string[]): valu
       && value.sourceRuleVersion === P14_VERTICAL_STACK_SOURCE_RULE_VERSION) {
       if (!Array.isArray(value.targetAddresses) || value.targetAddresses.length === 0) {
         failures.push(`${prefix}.targetAddresses are required for the vertical-stack candidate path.`);
-      } else if (isStringArray(value.targetNodeIds)) {
+      } else if (isStringArray(value.targetNodeIds)
+        && value.targetAddresses.every((address) => validateP14CandidateTargetAddress(address).valid)) {
         const addressedIds = (value.targetAddresses as NonNullable<P14PreparationAction['targetAddresses']>)
           .map((address) => address.sourceTargetNodeId);
         if (!sameJson(addressedIds, value.targetNodeIds)) {
