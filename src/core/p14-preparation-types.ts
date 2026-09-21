@@ -236,7 +236,7 @@ export interface P14PreparationReceiptV1 {
 
 export interface P14RetainedDuplicateAdapter {
   fingerprintSource(sourceNodeId: string): Promise<string>;
-  cloneSource(sourceNodeId: string, transactionId: string, preparedName?: string): Promise<P14CandidateHandle>;
+  cloneSource(sourceNodeId: string, transactionId: string): Promise<P14CandidateHandle>;
   /**
    * Required by the transaction core before every action after the first planned recipe has run.
    * The return value is untrusted runtime evidence and is validated before the next mutation.
