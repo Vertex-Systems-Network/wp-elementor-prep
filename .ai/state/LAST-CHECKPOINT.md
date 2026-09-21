@@ -4,7 +4,7 @@ Status: VERIFYING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `d4cbf53d4e07c05df91f01bdec967262100452df`  
 Active Issue: `#653`  
-Active PR: none  
+Active PR: `#654`  
 Active branch: `p14/vertical-stack-runtime-adapter`
 
 ## P14 R4 implementation
@@ -32,6 +32,13 @@ Active branch: `p14/vertical-stack-runtime-adapter`
 - No target compatibility, real-Figma acceptance or production acceptance is inferred.
 - #287 remains admin-blocked; #159 remains external-runtime-evidence blocked; #84 remains manual-release-evidence blocked; #182 remains the deferred P27 gate.
 
+## Focused PR
+
+- PR #654 opened from `p14/vertical-stack-runtime-adapter` against exact main `d4cbf53d4e07c05df91f01bdec967262100452df`.
+- PR creation head was `00259f5bc868c3e76167ffb77f60f11df468caef`.
+- This checkpoint and Runner metadata are committed on the same PR branch, so the final exact PR head is the post-binding head rather than the creation head.
+- No workflow/status polling is performed in this PR-opening milestone.
+
 ## Exact next safe action
 
-Open one focused PR for Issue #653 from `p14/vertical-stack-runtime-adapter`. Bind compact state/Runner metadata to that PR head, then end without CI/status polling. The following user `continue` performs the first single consolidated exact-head status refresh.
+On the next user `continue`, re-enter through compact state and perform exactly one consolidated exact-head status refresh for PR #654. Do not mutate the PR head merely to record pending Runner state.
