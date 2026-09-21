@@ -1,33 +1,37 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `c8950242a2848b4f58828d7e3220f59062305442`  
 Active Issue: `#649`  
 Active PR: none  
 Active branch: `p14/vertical-stack-validation-profile`
 
-## Completed transition
+## P14 R2 implementation
 
-- PR #648 exact head `52c47832b8108e543582fd7f26a9d7da2eec97ec` passed the observed exact-head gate set: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- Added versioned target-neutral validation profile `P14_VALIDATE_VERTICAL_STACK_V1`.
+- The profile requires exact checks for layout mode, primary/counter sizing, primary/counter alignment, item spacing and padding plus child-structure, content, visibility and geometry preservation.
+- Added bounded profile-evidence assessment on top of the existing validation-evidence boundary.
+- Missing, duplicate, unknown, optionalized or failed required evidence fails closed.
+- Vertical-stack qualification is now version 2 and references the accepted profile.
+- Only the validation-profile modeling blocker was removed; runtime adapter and production-registry binding blockers remain.
+- `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
+- Added focused deterministic profile/qualification regressions and synchronized P14 authority docs.
+- No Figma runtime adapter, production recipe binding, confirmation enablement or target-compatibility claim was added.
+
+## Previous merge reconciliation
+
+- PR #648 exact head `52c47832b8108e543582fd7f26a9d7da2eec97ec` passed the seven observed exact-head workflows before merge.
 - PR #648 merged as main `c8950242a2848b4f58828d7e3220f59062305442`; Issue #647 closed completed.
-- Open PR queue is empty after the merge.
-- The first post-merge workflow refresh for `c8950242...` returned no pull-request-triggered workflow runs. No post-merge PASS is inferred from an empty result.
-
-## P14 R2 activation
-
-- Issue #649 owns the next bounded P14 slice under roadmap #119.
-- Branch `p14/vertical-stack-validation-profile` is based on exact main `c8950242...`.
-- Scope is an accepted, target-neutral vertical-stack validation-profile contract and fail-closed evidence/check coverage.
-- This slice does not wire a Figma runtime adapter or add a production safe-recipe binding.
+- First post-merge PR-triggered workflow refresh for `c8950242...` returned no runs; no PASS was inferred.
 
 ## Authority boundary
 
-- `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
-- P14 runtime mutation and confirmation remain disabled.
-- No Elementor/Gutenberg/framework compatibility, real-Figma acceptance or production authority is inferred.
-- #287 remains admin-blocked; #159 remains external-runtime-evidence blocked; #84 remains manual release-evidence blocked; #182 remains the deferred P27 release gate.
+- Runtime mutation and confirmation remain disabled.
+- Production P14 registry remains empty.
+- No Elementor/Gutenberg/framework compatibility, real-Figma acceptance or production acceptance is inferred.
+- #287 remains admin-blocked; #159 external-runtime-evidence blocked; #84 manual-release-evidence blocked; #182 deferred P27 gate.
 
 ## Exact next safe action
 
-Implement Issue #649 on the active branch: define the versioned validation profile/check contract, add bounded fail-closed validation, bind the qualification only after focused tests, and keep runtime/production-registry gates closed. Do not start CI polling in the implementation milestone.
+Open one focused PR for Issue #649 from `p14/vertical-stack-validation-profile`. Bind compact state/Runner metadata to the PR head, then end without CI/status polling. The following user `continue` performs the first single consolidated exact-head status refresh.
