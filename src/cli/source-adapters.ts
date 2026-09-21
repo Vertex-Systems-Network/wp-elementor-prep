@@ -279,32 +279,9 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
     );
   }
 
-  let canonicalBeforeOpen: string;
-  let initialPathInfo: BigIntStats;
-  try {
-    [canonicalBeforeOpen, initialPathInfo] = await Promise.all([
-      realpath(absolute),
-      lstat(absolute, { bigint: true }),
-    ]);
-  } catch {
-    throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Unable to inspect canonical snapshot input.', 2);
-  }
-
-  if (!initialPathInfo.isFile()) {
-    throw new SourceAdapterError(
-      'SNAPSHOT_READ_FAILED',
-      'Canonical snapshot input must be a regular non-symlink file.',
-      2,
-    );
-  }
-  if (initialPathInfo.size > BigInt(CANONICAL_SNAPSHOT_MAX_BYTES)) {
-    throw new SourceAdapterError(
-      'SNAPSHOT_RESOURCE_LIMIT',
-      `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
-      2,
-    );
-  }
-
+  // Open first, then validate the opened handle against the current path.
+  // This removes the check-then-open TOCTOU window while still rejecting
+  // symlinks/path replacement before any bytes are accepted.
   let handle: FileHandle;
   try {
     handle = await open(absolute, 'r');
@@ -334,11 +311,14 @@ export async function loadCanonicalSnapshot(inputPath: string): Promise<Canonica
         2,
       );
     }
-    if (
-      !sameObservedSnapshotFile(initialPathInfo, before)
-      || !sameObservedSnapshotFile(before, pathInfoBeforeRead)
-      || canonicalPathKey(canonicalBeforeOpen) !== canonicalPathKey(canonicalBeforeRead)
-    ) {
+    if (before.size > BigInt(CANONICAL_SNAPSHOT_MAX_BYTES)) {
+      throw new SourceAdapterError(
+        'SNAPSHOT_RESOURCE_LIMIT',
+        `Canonical snapshot exceeds the ${CANONICAL_SNAPSHOT_MAX_BYTES}-byte input limit.`,
+        2,
+      );
+    }
+    if (!sameObservedSnapshotFile(before, pathInfoBeforeRead)) {
       throw new SourceAdapterError('SNAPSHOT_READ_FAILED', 'Canonical snapshot changed before it was read.', 2);
     }
 
