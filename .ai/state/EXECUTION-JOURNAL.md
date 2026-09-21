@@ -308,3 +308,13 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Repair `2f2fa40c46c950d3b5953b876a2315128096734d` constructs the forged value and casts through `unknown`, preserving the negative security test without production-code changes.
 - No runtime/security/authority gate was weakened. New head remains uncertified and is not polled in this repair milestone.
 
+
+## 2026-09-22 — PR #658 second exact-head stale-contract failures repaired
+
+- Head `1127a4273a74e00e9f56e2bf13f8e1f2bda47e90` passed status verification and TypeScript typecheck.
+- CI `35658550631` / job `106528156488` reached 1603 PASS / 2 FAIL; P12 Final `35658550769` / job `106528042131` failed on the same test stage.
+- Review-packet main-panel test still expected pre-R6 inline `reviewPacket` / `evidence` variables; runtime correctly uses the fresh-state wrapper `current.reviewPacket` / `current.evidence`.
+- R4 adapter regression still expected R5 runtime/confirmation flags false; R6 v5 intentionally enables them only for internal/dev confirmed activation while acceptance and target-compatibility authority remain false.
+- Repairs: `f5c45ccc3115e0d6b4ce982ce02a7d4166a67c98` and `d85e38ae7f92f795f7d62c817fa05ba96d2e4563`.
+- No production behavior or security authority was weakened. New head remains uncertified and is not polled in this repair milestone.
+
