@@ -1,23 +1,23 @@
 schema_version: 1
-observed_main_sha: c8950242a2848b4f58828d7e3220f59062305442
+observed_main_sha: ef4895ae480744e70f5477fe4443411201dbf33f
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
-  - {id: CL-003, statement: pr_640_merged_and_issue_639_closed, value: true}
-  - {id: CL-004, statement: pr_642_merged_and_issue_641_closed, value: true}
-  - {id: CL-005, statement: pr_644_merged_and_issue_643_closed, value: true}
-  - {id: CL-006, statement: pr_646_merged_and_issue_645_closed, value: true}
-  - {id: CL-007, statement: pr_648_merged_and_issue_647_closed, value: true}
-  - {id: CL-008, statement: p13_emits_BR_SAFE_VERTICAL_STACK_CANDIDATE_v1_only_from_accepted_p5_vertical_stack_eligibility, value: true}
-  - {id: CL-009, statement: p14_mutation_vocabulary_models_complete_p5_vertical_stack_write_surface, value: true}
-  - {id: CL-010, statement: p14_vertical_stack_validation_profile_v1_is_implemented_on_active_branch, value: true}
-  - {id: CL-011, statement: p14_vertical_stack_validation_profile_fails_closed_on_missing_duplicate_unknown_optionalized_or_failed_required_evidence, value: true}
+  - {id: CL-003, statement: pr_642_merged_and_issue_641_closed, value: true}
+  - {id: CL-004, statement: pr_644_merged_and_issue_643_closed, value: true}
+  - {id: CL-005, statement: pr_646_merged_and_issue_645_closed, value: true}
+  - {id: CL-006, statement: pr_648_merged_and_issue_647_closed, value: true}
+  - {id: CL-007, statement: pr_650_merged_and_issue_649_closed, value: true}
+  - {id: CL-008, statement: pr_650_repaired_exact_head_required_observed_gate_set_passed_before_merge, value: true}
+  - {id: CL-009, statement: first_post_merge_pr_triggered_workflow_refresh_for_ef4895ae_returned_no_runs_and_grants_no_pass_claim, value: true}
+  - {id: CL-010, statement: p13_emits_BR_SAFE_VERTICAL_STACK_CANDIDATE_v1_only_from_accepted_p5_vertical_stack_eligibility, value: true}
+  - {id: CL-011, statement: p14_vertical_stack_validation_profile_v1_is_merged_on_main, value: true}
   - {id: CL-012, statement: p14_vertical_stack_qualification_v2_references_validation_profile_v1, value: true}
-  - {id: CL-013, statement: production_p14_safe_recipe_registry_remains_empty, value: true}
-  - {id: CL-014, statement: p14_runtime_adapter_and_confirmation_remain_unwired, value: true}
-  - {id: CL-015, statement: pr_648_exact_head_required_observed_gate_set_passed_before_merge, value: true}
-  - {id: CL-016, statement: first_post_merge_pr_triggered_workflow_refresh_for_c8950242_returned_no_runs_and_grants_no_pass_claim, value: true}
-  - {id: CL-017, statement: issue_649_is_active_p14_r2_validation_profile_contract, value: true}
+  - {id: CL-013, statement: p13_p14_handoff_currently_carries_source_target_node_ids_not_candidate_clone_descendant_ids, value: true}
+  - {id: CL-014, statement: issue_651_is_active_p14_r3_candidate_target_addressing_contract, value: true}
+  - {id: CL-015, statement: source_descendant_ids_are_not_accepted_as_direct_candidate_mutation_authority, value: true}
+  - {id: CL-016, statement: production_p14_safe_recipe_registry_remains_empty, value: true}
+  - {id: CL-017, statement: p14_runtime_adapter_and_confirmation_remain_unwired, value: true}
   - {id: CL-018, statement: issue_287_requires_repository_admin_authority, value: true}
   - {id: CL-019, statement: issue_159_requires_genuine_external_runtime_evidence, value: true}
   - {id: CL-020, statement: issue_84_requires_genuine_manual_release_evidence, value: true}
