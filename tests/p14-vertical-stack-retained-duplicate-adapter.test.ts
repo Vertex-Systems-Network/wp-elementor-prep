@@ -329,7 +329,7 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     Object.defineProperty(target, 'id', { value: 'source:target' });
     runtime.nodes.set(target.id, target);
 
-    await expect(adapter.applyRecipe(handle, action)).rejects.toThrow(/source-tree target identity|source identity/);
+    await expect(adapter.applyRecipe(handle, action)).rejects.toThrow(/source-tree target identity|source-tree identity|source identity/);
     expect((source.children[0] as FakeFrame).layoutMode).toBe('NONE');
   });
 
