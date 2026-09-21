@@ -38,6 +38,18 @@ Active branch: `p14/explicit-confirmation-internal-activation`
 - Focused activation-session, qualification, main-panel and release-boundary tests were updated.
 - No local/CI PASS is claimed for R6 before exact-head PR verification.
 
+## First exact-head failure diagnosis and repair
+
+- PR #658 exact head `7c59735eb483bda22bde339613f9a73946dcaceb` passed README/status verification.
+- CI run `35657998573` / job `106526346083` failed at TypeScript typecheck.
+- P12 Final Release Artifact run `35657998570` / job `106526268511` failed at the same repository typecheck step.
+- Exact compiler failure: `tests/p14-internal-activation.test.ts(120,5) TS2322: Type 'true' is not assignable to type 'false'.`
+- Root cause was test-only: the forged-preview regression intentionally sets `mutationEnabled=true`, but intersecting `P14PlanPreviewV1` with a mutable boolean did not widen the literal `false` property.
+- Repair commit `2f2fa40c46c950d3b5953b876a2315128096734d` now constructs the malicious fixture as an object and casts through `unknown` back to `P14PlanPreviewV1`, preserving the security regression without changing production behavior.
+- No runtime, confirmation, registry, source-protection, release-boundary or security authority was weakened.
+- README repair state is synchronized on this branch.
+- The new repaired PR head is not certified in this milestone; no fresh workflow polling occurs after the repair.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final post-state-binding head of PR #658 and perform exactly one consolidated exact-head status refresh. If required checks are pending, end without polling again. If a gate fails, diagnose that exact failure on the following milestone. Merge only after the full exact-head required gate set is green.
+On the next user `continue`, resolve the final repaired PR #658 head and perform exactly one consolidated exact-head status refresh. If required checks are pending, end without polling again. Merge only after the full exact-head required gate set is green.
