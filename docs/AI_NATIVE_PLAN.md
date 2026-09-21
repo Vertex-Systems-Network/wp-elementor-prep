@@ -259,7 +259,22 @@ Runner-dependent work is a first-class planning artifact.
 
 Canonical ledger: `docs/RUNNER_BENCHMARK.md`.
 
-### G. Mandatory end-of-work sync
+### G. Delivery-resilient short-turn execution
+
+Long-turn remote waiting is prohibited as an AI-native execution pattern. Canonical protocol: `.ai/state/PROTOCOL.md`.
+
+1. One user-triggered development turn may complete at most one logical milestone (`MAX_LOGICAL_MILESTONES_PER_TURN = 1`).
+2. After a Runner batch starts, inspect Runner/check status at most once in that turn (`MAX_RUNNER_STATUS_FETCHES_PER_TURN = 1`).
+3. Busy-waiting, repeated status polling and sleep/poll loops are forbidden.
+4. If any required Runner remains queued/in-progress on that single inspection, checkpoint the exact issue/branch/PR/head/run context and end the user-facing turn. The next user `continue` resumes from that checkpoint.
+5. Persist the branch/code milestone before an external dependency boundary. Do not make extra checkpoint commits after an exact-head Runner batch starts merely to record changing CI status.
+6. GitHub PR/issue/check/run metadata is the authoritative volatile Runner state; `.ai/state/*` retains the stable protocol and durable resume contract.
+7. Security-critical or `BLOCKING_NOW` Runner work still blocks later implementation, but it does not permit waiting/polling until completion inside the same turn.
+8. A failed check becomes a future single milestone: inspect -> fix -> push -> start new exact-head batch -> checkpoint/end.
+9. Never combine implementation, CI waiting, merge, post-merge verification and activation of the next task in one turn.
+10. This policy reduces workflow-caused message-delivery risk but must not claim absolute protection from transport/UI/service failures outside repository control.
+
+### H. Mandatory end-of-work sync
 
 After meaningful work:
 
