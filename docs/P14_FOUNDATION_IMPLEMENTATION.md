@@ -1,6 +1,6 @@
 # P14 Retained-Duplicate Foundation
 
-Status: CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED  
+Status: CORE IMPLEMENTATION IN PROGRESS / VERTICAL-STACK RUNTIME ADAPTER IMPLEMENTED / PRODUCTION REGISTRY UNWIRED  
 Roadmap: #119  
 Canonical status synchronized through P14 review-packet work, the bounded P15 Elementor R1 evidence/review chain plus target-neutral IR, deterministic local v0.4 Template JSON generation, read-only selected-Figma-Frame extraction, sanitized normal/publishable plugin preview and declared TargetProfile alignment preview, and P16 Gutenberg R1 through genuine-evidence retention requirements metadata + offline export + exact-current manifest validation + offline validation CLI + bounded local JSON I/O + stable immutable operator input snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + iterative structural bounds + depth/value/text-bounded accessor/own-shape-safe direct canonicalization + object-cardinality preflight + prototype-safe canonicalization + alias-safe atomic output writes.
 
@@ -12,13 +12,15 @@ P14 owns target-neutral **Target-Ready Duplicate + Guided Prepare** foundations.
 
 ## Current P14 authority boundary
 
-P14 remains exactly **CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED**.
+P14 remains exactly **CORE IMPLEMENTATION IN PROGRESS / VERTICAL-STACK RUNTIME ADAPTER IMPLEMENTED / PRODUCTION REGISTRY UNWIRED**.
 
-`PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty. Current production handoff therefore remains REVIEW/BLOCKED and no production-eligible mutation action IDs exist.
+`PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty. The concrete vertical-stack adapter therefore has implementation evidence but no default production execution authority; current production handoff remains REVIEW/BLOCKED and no production-eligible mutation action IDs exist.
 
 Issue #649 implements the target-neutral `P14_VALIDATE_VERTICAL_STACK_V1` profile for the already-qualified P5 vertical-stack write surface. The profile requires exact bounded evidence for all qualified layout writes plus child-structure/content/visibility/geometry preservation, and fails closed on missing, duplicate, unknown, optionalized or failed required checks. This closes only the validation-profile modeling gap: the runtime adapter and production-registry binding remain unwired/unaccepted.
 
 Issue #651 implements deterministic candidate target addressing before any vertical-stack runtime adapter may be accepted. P13 source target IDs are converted into source-root-bound child-index paths only from the exact reviewed source tree; clone-stable structural witnesses then resolve those paths against a retained duplicate whose node IDs differ. Address evidence participates in P14 action/plan digest and confirmation integrity, while malformed/stale/wrong-root/reordered/source-identity evidence fails closed. This still does not implement `applyRecipe`, a live Figma adapter or a production safe-recipe binding.
+
+Issue #653 implements the first concrete candidate-only retained-duplicate Figma adapter for the exact vertical-stack path. The adapter fingerprints the approved source with the exact P13 structural hash, creates and owns a separate clone, resolves #651 source-bound target addresses against that clone, reuses the accepted P5 strict vertical-stack transformer, emits the exact #649 validation profile checks, performs deterministic Build-Ready re-score, and retains/discards only the owned candidate. The approved source is never passed to the mutation transformer and P4 swap/replace commit semantics are not reused. Prepared labeling is stored as candidate plugin metadata rather than changing the node name, so the design-property write surface remains exactly the #641 allowlist. Qualification v3 records `runtimeAdapterImplemented: true` while `runtimeMutationEnabled: false`; the sole remaining qualification blocker is production safe-recipe registry binding.
 
 Read-only preview/review/evidence surfaces do not confirm or execute a mutation, grant target compatibility or production acceptance, or bypass #159 genuine Figma Desktop evidence.
 
