@@ -19,6 +19,7 @@ This protocol keeps AI-native repository work resumable while minimizing long-tu
 - `MERGE_REQUIRED_RUNNERS_MUST_NOT_DEFER = TRUE`
 - `REMOTE_RETRY_LOOPS = FORBIDDEN`
 - `NEXT_MILESTONE_AFTER_EXTERNAL_WAIT = FORBIDDEN`
+- `README_PROGRESS_SYNC = REQUIRED_ON_EVERY_MATERIAL_REPOSITORY_MUTATION`
 
 ## AI Engineering Supervisor mandatory resume order
 
@@ -70,11 +71,16 @@ A timeout, connector failure, or missing chat context grants ZERO additional aut
 
 Migration/destructive work must review idempotency, transaction boundaries, apply-success/marker-failure recovery, retry behavior, rollback/restore, destructive recovery, concurrency, partial execution and backup/snapshot requirements. Never assume apply() followed by markApplied() is crash-safe.
 
-## README / large status dashboard control
+## README / progress synchronization control
 
-Update a large public/module progress dashboard only when module lifecycle/progress/timeline/public delivery truth materially changes or a terminal product/integration milestone is being reported.
+README module progress is a mandatory repository truth surface, not an optional documentation afterthought.
 
-For governance/security/coordination-only cycles, update compact state and relevant governance records only. Do not rewrite a large dashboard merely to create churn.
+- Every material repository mutation that changes implementation state, module lifecycle, active blocker, accepted capability, PR/merge lifecycle, or exact next development step MUST update the relevant README progress row/summary in the same logical milestone before external wait or handoff.
+- The README update MUST preserve the distinction between implementation progress, exact-head verification, runtime acceptance, external evidence and production authority.
+- A stale README progress row is a blocking repository-truth defect and MUST be fixed before exact-head merge certification.
+- `scripts/verify-readme-progress.mjs` MUST encode current machine-checkable progress invariants for active modules so implementation can fail CI when README truth drifts.
+- Pure Runner-observation turns MUST NOT mutate an already-running exact candidate head merely to record volatile queued/running/check state. In that case, keep volatile Runner state in GitHub metadata and synchronize README on the next material repository mutation or post-merge reconciliation.
+- Governance/security-only mutations that materially change an active blocker, enforcement state, or roadmap execution state MUST also update README. Truly internal bookkeeping with no public/module truth change may remain compact-state-only.
 
 ## CI / supply-chain security
 
@@ -130,6 +136,8 @@ These are MUST/MUST-NOT rules, not recommendations.
 9. MUST fail closed on ambiguous classification: if unsure whether a Runner can safely wait until project end, do not classify it `PROJECT_FINAL`.
 10. MUST prefer batched/grouped repository reads/writes over many repetitive remote calls where semantics are identical.
 11. MUST end the user turn after a tool/service timeout or unrecoverable remote error once the durable checkpoint is sufficient for deterministic resume; do not enter an unbounded retry loop.
+12. MUST synchronize README progress on every material repository mutation before the milestone ends; stale README progress is a blocking defect.
+13. MUST NOT create a README-only commit during a pure Runner observation if doing so would invalidate an exact-head batch; synchronize it on the next material mutation or post-merge reconciliation instead.
 
 ## Runner rule
 
