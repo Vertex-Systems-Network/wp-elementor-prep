@@ -245,11 +245,26 @@ function hasStableFileIdentity(info: BigIntStats): boolean {
   return info.ino !== 0n;
 }
 
+function hasComparableDeviceIdentity(info: BigIntStats): boolean {
+  return info.dev !== 0n;
+}
+
 function sameObservedSnapshotFile(first: BigIntStats, second: BigIntStats): boolean {
   if (hasStableFileIdentity(first) && hasStableFileIdentity(second)) {
-    if (first.dev !== second.dev || first.ino !== second.ino) return false;
+    if (first.ino !== second.ino) return false;
+    // Node 22 on Windows can report dev=0 for path lstat while the open-handle
+    // stat reports the volume device id for the same file. Compare dev only
+    // when both observations expose a comparable non-zero value.
+    if (
+      hasComparableDeviceIdentity(first)
+      && hasComparableDeviceIdentity(second)
+      && first.dev !== second.dev
+    ) return false;
   }
   return first.size === second.size
+    && first.mode === second.mode
+    && first.nlink === second.nlink
+    && first.birthtimeNs === second.birthtimeNs
     && first.mtimeNs === second.mtimeNs
     && first.ctimeNs === second.ctimeNs;
 }
