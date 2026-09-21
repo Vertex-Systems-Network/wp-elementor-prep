@@ -1,35 +1,37 @@
 # Last Durable Checkpoint
 
-Status: VERIFYING  
+Status: IMPLEMENTING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `ef4895ae480744e70f5477fe4443411201dbf33f`  
-Active Issue: `#651`  
-Active PR: `#652`  
-Active branch: `p14/vertical-stack-target-addressing`
+Observed main: `d4cbf53d4e07c05df91f01bdec967262100452df`  
+Active Issue: `#653`  
+Active PR: none  
+Active branch: `p14/vertical-stack-runtime-adapter`
 
-## P14 R3 implementation
+## Completed P14 R3 transition
 
-- Bounded deterministic source→candidate target addressing is implemented for the exact vertical-stack candidate path.
-- Source root ID + P13 structural fingerprint, source target ID, child-index path and clone-stable root/target witnesses are bound into the plan.
-- Source IDs remain source evidence only and never become candidate mutation authority.
-- Address evidence participates in action identity, plan digest/integrity, confirmation binding, semantic snapshots and detached adapter inputs.
-- Missing/malformed/ambiguous/duplicate/stale/reordered/wrong-root/unresolved/source-identity evidence fails closed.
-- Focused regression coverage exists, but no local/CI PASS was claimed before PR verification.
+- PR #652 exact head `d4a858374eee45ffc54126f4b85db51804bfbbb1` passed CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- PR #652 merged as main `d4cbf53d4e07c05df91f01bdec967262100452df`; Issue #651 closed completed.
+- Open PR queue is empty after merge.
+- The first post-merge PR-triggered workflow refresh for `d4cbf53d4e07c05df91f01bdec967262100452df` returned no runs. No post-merge PASS is inferred from an empty result.
+- R3 candidate target addressing is merged on main; source descendant IDs remain non-authorizing and production registry remains empty.
 
-## Focused PR
+## P14 R4 activation
 
-- PR #652 opened from `p14/vertical-stack-target-addressing` against exact main `ef4895ae480744e70f5477fe4443411201dbf33f`.
-- Creation head was `1c92125c4933a8bb1e208863de79e7e5ae419323`.
-- This checkpoint and Runner metadata are being committed on the same PR branch; therefore the final exact PR head is the post-binding branch head, not the creation head.
-- No CI/status polling is performed in this PR-opening milestone.
+- Issue #653 owns the next bounded P14 slice under roadmap #119.
+- Branch `p14/vertical-stack-runtime-adapter` is based on exact main `d4cbf53d4e07c05df91f01bdec967262100452df`.
+- Qualification now has only two blockers: `P14_RUNTIME_ADAPTER_NOT_WIRED` and `P14_PRODUCTION_REGISTRY_BINDING_NOT_ACCEPTED`.
+- R4 addresses only the runtime-adapter blocker.
+- The adapter must implement the exact `P14RetainedDuplicateAdapter` lifecycle for the existing vertical-stack candidate: fingerprint source → clone separate candidate → resolve #651 addresses → apply only the #641 write allowlist using accepted P5 semantics → validate with #649 → deterministic re-score → retain or discard.
+- P4 swap/replace commit semantics are explicitly not reused. P14 retains a separate validated duplicate and never replaces/deletes/moves the approved source.
+- Every adapter call must enforce transaction/candidate ownership and source/candidate identity separation.
 
 ## Authority boundary
 
-- No live Figma runtime adapter or production `applyRecipe` implementation is enabled.
 - `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty.
-- Runtime mutation/confirmation remain disabled.
+- No production confirmation/UI/menu activation is permitted in R4.
+- No target compatibility or production acceptance is inferred.
 - #287 remains admin-blocked; #159 remains external-runtime-evidence blocked; #84 remains manual-release-evidence blocked; #182 remains the deferred P27 gate.
 
 ## Exact next safe action
 
-On the next user `continue`, re-enter through compact state and perform exactly one consolidated exact-head status refresh for PR #652. Do not mutate the PR head merely to record pending Runner state.
+Implement Issue #653 on `p14/vertical-stack-runtime-adapter` with deterministic fake-Figma/unit coverage. After focused implementation and static verification, remove only the runtime-adapter blocker from qualification if the implementation contract is proven; keep production registry binding as the remaining blocker.
