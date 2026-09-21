@@ -6,6 +6,7 @@ import {
   type P17NeutralWebExportPackage,
 } from './neutral-web-export';
 import {
+  P17_NEUTRAL_WEB_IR_VERSION,
   identifyP17NeutralWebDocument,
   validateP17NeutralWebDocument,
   type P17NeutralWebDocumentV1,
@@ -117,7 +118,7 @@ function expectedPackageSha256(
 ): string {
   return sha256Hex([
     P17_NEUTRAL_WEB_EXPORT_VERSION,
-    'p17-neutral-web-ir-v1',
+    P17_NEUTRAL_WEB_IR_VERSION,
     irSha256,
     htmlSha256,
     cssSha256,
