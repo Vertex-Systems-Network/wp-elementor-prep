@@ -165,7 +165,7 @@ function configHash(config: BuildReadyRunConfig): string {
   return fnv1a(JSON.stringify(config));
 }
 
-function structuralHash(root: AuditNode): string {
+export function computeBuildReadyStructuralHash(root: AuditNode): string {
   return fnv1a(JSON.stringify(canonicalNode(root)));
 }
 
@@ -525,7 +525,7 @@ function insufficientReport(
   coverage: EvidenceCoverage,
   limitations: BuildReadyLimitation[],
 ): BuildReadyReportV2 {
-  const sourceHash = structuralHash(root);
+  const sourceHash = computeBuildReadyStructuralHash(root);
   const cfgHash = configHash(config);
   const categories = (Object.keys(CATEGORY_WEIGHTS) as BuildReadyCategory[]).map((category) => ({
     category,
@@ -608,7 +608,7 @@ export function buildBuildReadyReport(
 
   const categories = categoryResults(boundedFindings, coverage, config);
   const score = overallScore(categories, boundedFindings, coverage, config);
-  const sourceHash = structuralHash(root);
+  const sourceHash = computeBuildReadyStructuralHash(root);
   const cfgHash = configHash(config);
 
   return {
