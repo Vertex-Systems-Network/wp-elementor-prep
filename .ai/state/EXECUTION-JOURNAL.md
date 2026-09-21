@@ -318,3 +318,14 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Repairs: `f5c45ccc3115e0d6b4ce982ce02a7d4166a67c98` and `d85e38ae7f92f795f7d62c817fa05ba96d2e4563`.
 - No production behavior or security authority was weakened. New head remains uncertified and is not polled in this repair milestone.
 
+
+## 2026-09-22 — P14 R6 merged; P15 #659 explicit responsive full-width implementation
+
+- PR #658 exact head `d1daaccd8ed8ed912a171c307e123ca1d83d6b0a` passed CI `35659376091`, CodeQL `35659376103`, Integration `35659376221`, P12 Offline `35659376187`, P12 Final `35659376126`, P15 target proof `35659376096` and P17 browser proof `35659376164`.
+- PR #658 merged with expected-head guard as main `64c8077eb37a728efa86a749a95e10f7bdce03c2`; Issue #657 closed completed.
+- Issue #659 opened under #119 on branch `p15/responsive-full-width`.
+- Exact Elementor 4.2.4 evidence is bound to Container blob `3486766b9565af99536ae205ed1936bb155daed0` and Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d`.
+- Commit `99366a570ec360583c0105b84357b4af818c234a` adds a fail-closed resolver for explicit `content_width=full` plus `width_tablet` / `width_mobile`.
+- Commit `e12f577a2473f22f26aa0398f289acac02b6e7d7` adds focused regressions for exact mapping, bounds, stale replay, malformed input and authority inflation.
+- Write surface is limited to `content_width`, `width_tablet`, `width_mobile`; desktop `width` is untouched.
+- README/memory/state reconcile P14 merge and #659 active work. No local/CI PASS is claimed before exact-head PR verification.
