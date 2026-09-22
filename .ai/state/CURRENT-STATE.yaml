@@ -5,18 +5,18 @@ compact_state_path: .ai/state
 observed_main_sha: e2839d8e32dab4a29db908f1ba1a1710579219af
 observed_main_branch: main
 active_issue: 667
-active_pr: null
+active_pr: 668
 active_branch: p15/responsive-flex-item-factors
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
 current_milestone: p15_responsive_flex_item_factors
-milestone_status: IMPLEMENTING
+milestone_status: VERIFYING
 last_completed_milestone: p15_pr_666_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: finish_issue_667_branch_sync_then_open_pr_and_bind_exact_head_without_polling
+exact_next_safe_action: next_user_continue_resolves_final_pr_668_head_and_performs_one_consolidated_exact_head_status_refresh
 pending_runner_ids: [RQ-667-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - issue_667_pr_not_yet_open
+  - pr_668_required_exact_head_gate_set_not_yet_observed
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
   - p13_live_figma_runtime_acceptance_issue_159_pending
