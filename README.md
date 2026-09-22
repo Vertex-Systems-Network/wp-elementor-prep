@@ -120,7 +120,7 @@ Current verified main before this documentation sync:
 - Existing neutral Heading IDs only; exact source fingerprint + exact base-candidate identity required.
 - Stale replay, duplicate/non-Heading IDs, invalid colors, unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Color/theme/global-token inference, CSS parsing, link mutation, hover inference, responsive inference, network access, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/heading-text-color`; exact-head CI PASS is not claimed before PR verification.
+- Focused implementation/tests are on branch `p15/heading-text-color` in PR #676 against exact base main `424964452fa1b0d7055103116fd19260ef856393`; exact-head CI PASS is not claimed before final post-binding verification.
 
 ### Current P14 AI-native implementation track
 
