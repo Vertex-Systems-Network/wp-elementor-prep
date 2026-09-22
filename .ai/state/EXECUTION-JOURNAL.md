@@ -371,3 +371,4 @@ This journal records durable AI-native execution-policy milestones only. It is n
 ## 2026-09-22 — PR #668 merged; #669 started
 - #668 head `c50627b6...` passed 7/7 and merged as main `0ce4d23a...`; #667 closed.
 - #669 starts explicit responsive Container order presets: `start -> -99999`, `end -> 99999`; only tablet/mobile order keys writable; arbitrary custom order/position/authority remain untouched.
+- PR #670 opened for #669; creation head `1424a49b...`; final post-binding head awaits exact-head gates.
