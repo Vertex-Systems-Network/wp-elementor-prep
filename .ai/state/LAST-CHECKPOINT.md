@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `687bb2105ce1c407ee4977582cefc354556e0325`  
 Active Issue: `#671`  
-Active PR: none yet  
+Active PR: `#672`  
 Active branch: `p15/container-overflow`
 
 ## Completed P15 #669 / PR #670
@@ -34,6 +34,13 @@ Active branch: `p15/container-overflow`
 - Responsive/layout inference, CSS parsing, custom breakpoints, positioning/grid semantics, network, Figma mutation, compatibility, responsive closure, production/download authority remain false.
 - No CI PASS is claimed before exact-head PR verification.
 
+## PR #672 binding
+
+- PR #672 is open against exact base main `687bb2105ce1c407ee4977582cefc354556e0325`.
+- Creation head was `819201104f5bdfe8801ec2fc3bce824d599a5b07`.
+- README/state/claims/queue/Runner binding commits intentionally advance the branch after PR creation.
+- No CI PASS is claimed for the post-binding head.
+
 ## Exact next safe action
 
-Finish README/memory/AI-native synchronization, open the focused #671 PR, bind its final head, and end without workflow polling. The next user `continue` performs one consolidated exact-head required-gate refresh.
+On the next user `continue`, resolve the final current PR #672 head from GitHub and perform exactly one consolidated exact-head required-gate refresh. Merge with expected-head protection only if the full required gate set is green and review threads are resolved.
