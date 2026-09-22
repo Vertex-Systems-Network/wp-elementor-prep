@@ -360,3 +360,4 @@ This journal records durable AI-native execution-policy milestones only. It is n
 ## 2026-09-23 — PR #676 merged; #677 started
 - #676 repaired head `5d40e176...` passed 7/7 and merged as main `1ab21408...`; #675 closed.
 - #677 starts strict Text Editor normal color: lowercase six-digit hex only; only `text_color` writable; exact generated editor binding rechecked; link/global tokens/CSS variables/alpha/custom/responsive color and broader authority remain untouched.
+- PR #678 is open for #677; lifecycle state bound; final post-binding exact head awaits one consolidated required-gate refresh.
