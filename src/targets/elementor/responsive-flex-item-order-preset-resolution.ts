@@ -386,7 +386,7 @@ export function resolveP15ElementorResponsiveContainerOrderPreset(
           issues.push({
             code: 'P15_RESPONSIVE_FLEX_ITEM_ORDER_PRESET_ENTRY_INVALID',
             path,
-            message: 'Each responsive flex-item order preset entry may contain only sourceNodeId plus tablet/mobile align-self values.',
+            message: 'Each responsive flex-item order preset entry may contain only sourceNodeId plus tablet/mobile order presets.',
           });
           continue;
         }
