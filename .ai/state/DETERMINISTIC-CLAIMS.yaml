@@ -100,3 +100,4 @@ claims:
   - {id: CL-097, statement: issue_669_owns_exact_bound_responsive_container_flex_item_order_start_end_presets_for_elementor_4_2_4, value: true}
   - {id: CL-098, statement: p15_669_write_surface_is_only__flex_order_tablet_and_mobile_with_start_end_mapping_to_minus99999_plus99999_and_desktop_custom_numeric_order_untouched, value: true}
   - {id: CL-099, statement: p15_669_keeps_responsive_parent_layout_custom_order_numeric_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-100, statement: pr_670_is_active_exact_head_verification_path_for_p15_669_flex_item_start_end_order_presets, value: true}
