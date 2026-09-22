@@ -92,7 +92,8 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 | RQ-665-FINAL | #665 / PR #666 | P15 responsive Container flex-item align-self | Required PR exact-head gate set | repaired exact head `5e975dcb...`; all seven gates PASS; merged main `e2839d8e...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
 | RQ-667-FINAL | #667 / PR #668 | P15 responsive Container flex-item binary grow/shrink factors | Required PR exact-head gate set | exact head `c50627b6...`; all seven gates PASS; merged main `0ce4d23a...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
 | RQ-669-FINAL | #669 / PR #670 | P15 responsive Container flex-item start/end order presets | Required PR exact-head gate set | exact head `e244b3a2...`; all seven gates PASS; merged main `687bb210...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
-| RQ-671-FINAL | #671 / PR #672 | P15 bounded Container overflow hidden/auto | Required PR exact-head gate set | first head `0ea6ee2a...` 5/7 PASS; CI + Final failed only on README table delimiter; README-only repair applied | `FINAL_BATCH` | repaired exact PR head must pass all seven required gates before merge | REPAIRED_AWAITING_NEW_EXACT_HEAD_BATCH |
+| RQ-671-FINAL | #671 / PR #672 | P15 bounded Container overflow hidden/auto | Required PR exact-head gate set | repaired exact head `6454ac8e...`; all seven gates PASS; merged main `1f8b8ed3...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
+| RQ-673-FINAL | #673 | P15 bounded Container semantic HTML tags | Required PR exact-head gate set | branch implementation + focused tests; PR not opened yet | `FINAL_BATCH` | exact PR head must pass CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser before merge | IMPLEMENTING_PR_NOT_OPEN |
 
 ## Blocking-now queue
 
