@@ -2,15 +2,6 @@
 
 This journal records durable AI-native execution-policy milestones only. It is not a CI polling log.
 
-## 2026-09-21 — #641 P14 vertical-stack qualification implemented
-
-- Extended the P14 mutation vocabulary with the two axis-alignment fields already written by the accepted P5 linear transformer.
-- Added a machine-readable non-authorizing vertical-stack qualification contract bound to `BR_SAFE_VERTICAL_STACK_CANDIDATE@1`, P5 `vertical-stack`, confidence 90 and the exact bounded write surface.
-- Qualification retains no validation profile and explicitly blocks runtime mutation, confirmation and production registry eligibility.
-- Production P14 safe-recipe registry remains empty.
-- Added focused deterministic regressions and corrected stale P13→P14 handoff documentation.
-- State moved to VERIFYING pending a focused PR; CI is not polled in this implementation milestone.
-
 ## 2026-09-21 — #641 focused PR opened
 
 - Opened PR #642 from `p14/vertical-stack-qualification` against main.
@@ -361,3 +352,7 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #676 repaired head `5d40e176...` passed 7/7 and merged as main `1ab21408...`; #675 closed.
 - #677 starts strict Text Editor normal color: lowercase six-digit hex only; only `text_color` writable; exact generated editor binding rechecked; link/global tokens/CSS variables/alpha/custom/responsive color and broader authority remain untouched.
 - PR #678 is open for #677; lifecycle state bound; final post-binding exact head awaits one consolidated required-gate refresh.
+
+## 2026-09-23 — PR #678 merged; #679 started
+- #678 exact head `94ee08c1...` passed 7/7 and merged as main `9ef893af...`; #677 closed.
+- #679 starts strict Button normal text color: lowercase six-digit hex only; only `button_text_color` writable; exact text/alignment/link binding rechecked; hover/background/global-token/CSS-variable/alpha/custom/responsive color and broader authority remain untouched.
