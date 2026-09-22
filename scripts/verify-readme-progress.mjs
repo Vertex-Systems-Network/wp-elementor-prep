@@ -179,7 +179,10 @@ for (const fragment of p15FullWidthRequiredFragments) {
     throw new Error(`P15 #659 merged responsive full-width contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('#659 / PR #660') || !readme.includes('`content_width=full`')) {
+if (!readme.includes('### Completed P15 #659 verification')
+  || !readme.includes('PR #660 exact head')
+  || !readme.includes('Issue #659 is closed completed')
+  || !readme.includes('`content_width=full`')) {
   throw new Error('README P15 #659 / PR #660 merged responsive full-width truth is stale or missing.');
 }
 
