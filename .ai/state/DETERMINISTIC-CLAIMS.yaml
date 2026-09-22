@@ -106,3 +106,4 @@ claims:
   - {id: CL-103, statement: issue_671_owns_exact_bound_container_overflow_hidden_auto_for_elementor_4_2_4, value: true}
   - {id: CL-104, statement: p15_671_write_surface_is_only_overflow_with_hidden_auto_values_and_default_visible_scroll_clip_custom_responsive_overflow_out_of_scope, value: true}
   - {id: CL-105, statement: p15_671_keeps_responsive_layout_css_parsing_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-106, statement: pr_672_is_active_exact_head_verification_path_for_p15_671_container_overflow_hidden_auto, value: true}
