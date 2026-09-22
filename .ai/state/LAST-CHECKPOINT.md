@@ -2,68 +2,77 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `ee406e2cafdc714e074cfb5d1e5a594db93ff727`  
-Active Issue: `#657`  
-Active PR: `#658`  
-Active branch: `p14/explicit-confirmation-internal-activation`
+Observed main: `64c8077eb37a728efa86a749a95e10f7bdce03c2`  
+Active Issue: `#659`  
+Active PR: `#660`  
+Active branch: `p15/responsive-full-width`
 
-## Completed R5 transition
+## Completed P14 R6 transition
 
-- PR #656 exact head `545c23b4e796540da07a789288857dedc19a50e9` passed the full observed gate set:
-  - CI `35655638587`
-  - CodeQL `35655638646`
-  - Integration Readiness `35655637799`
-  - P12 Offline Acceptance `35655637947`
-  - P12 Final Release Artifact `35655637838`
-  - P15 Real Elementor Target Proof `35655637699`
-  - P17 Local Browser Proof `35655638156`
-- PR #656 merged by expected-head guard as main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`; Issue #655 closed completed.
-- Exact production planning binding `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` → `P14_VERTICAL_STACK_V1@1` is now on main.
+- PR #658 exact head `d1daaccd8ed8ed912a171c307e123ca1d83d6b0a` passed the full required gate set:
+  - CI `35659376091`
+  - CodeQL `35659376103`
+  - Integration Readiness `35659376221`
+  - P12 Offline Acceptance `35659376187`
+  - P12 Final Release Artifact `35659376126`
+  - P15 Real Elementor Target Proof `35659376096`
+  - P17 Local Browser Proof `35659376164`
+- No review-thread blocker was present.
+- PR #658 merged with expected-head guard as main `64c8077eb37a728efa86a749a95e10f7bdce03c2`; Issue #657 closed completed.
+- P14 R1-R6 bounded implementation is therefore merged. Internal/dev confirmed activation is implemented, while publishable release activation remains hard-disabled/stripped and acceptance/target-compatibility authority remain false.
 
-## P14 R6 implementation
+## P15 #659 implementation
 
-- Issue #657 owns explicit confirmation + internal retained-duplicate activation.
-- PR #658 is open against exact main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`.
-- Guided Prepare preview now receives the exact current source tree so the accepted vertical-stack path can derive clone-stable source→candidate target addresses.
-- New plugin-side reviewed activation session pins exact file/page/frame, P13 run, source fingerprint, plan digest and eligible action IDs.
-- The UI sends only an explicit confirm intent; it never supplies a plan or confirmation object as authority.
-- Confirmation reloads persisted P13 evidence, rechecks context/freshness, rescans the selected Frame, rebuilds the plan and requires an exact reviewed-session match.
-- Only an exact fresh match builds the existing P14 confirmation and invokes the existing retained-duplicate transaction through `FigmaP14VerticalStackRetainedDuplicateAdapter`.
-- The reviewed activation session is one-shot and is invalidated by selection changes.
-- Qualification v5 records the six bounded implementation slices complete with `runtimeMutationEnabled=true` and `confirmationEnabled=true` for the internal/dev boundary only.
-- Development build sets `__P14_INTERNAL_ACTIVATION__=true`; publishable release build hard-disables it with `false`.
-- The release UI contract strips and forbids all P14 review/confirmation/result surfaces.
-- `acceptanceAuthority=false` and `targetCompatibilityClaim=false` remain fixed.
-- README and `status:verify` now record P14 as 100% implementation (6/6 slices) while explicitly separating live runtime/production acceptance.
-- Focused activation-session, qualification, main-panel and release-boundary tests were updated.
-- No local/CI PASS is claimed for R6 before exact-head PR verification.
+- #119 remains the roadmap owner and the repository execution plan keeps the focused Elementor V1 train ahead of frozen P18-P26 scope.
+- #599 z-index is already closed/merged; #659 is the next independently evidenced responsive slice.
+- Exact Elementor `4.2.4` evidence is bound to:
+  - `includes/elements/container.php` blob `3486766b9565af99536ae205ed1936bb155daed0`;
+  - `includes/base/controls-stack.php` blob `00b280e518b89925c8f85a059b34136177ff3d4d`;
+  - accepted slider/converter evidence already retained by the boxed-width slice.
+- The source contract establishes `content_width` default `boxed`, explicit `full` mode, responsive `width` only under `content_width=full`, px range `500..1600`, and tablet/mobile `width_tablet` / `width_mobile` descendants.
+- Implementation commit `99366a570ec360583c0105b84357b4af818c234a` adds `src/targets/elementor/responsive-full-width-resolution.ts`.
+- Focused test commit `e12f577a2473f22f26aa0398f289acac02b6e7d7` adds five fail-closed regression groups.
+- Manifest requires exact neutral-IR fingerprint + exact base-candidate identity + explicit `contentWidthMode='full'`.
+- Accepted values are finite integer px `500..1600` for tablet/mobile only.
+- Write surface is limited to `content_width='full'`, `width_tablet`, and `width_mobile`; desktop `width` is never written.
+- Stale source/candidate replay, duplicate/non-Container IDs, malformed values/units, wrong mode, unknown fields, existing conflicts and authority inflation fail closed.
+- Responsive inference, custom breakpoints, CSS parsing, network access, Figma mutation, compatibility/production/closure and download authority remain false.
+- README and memory-bank truth now reconcile P14 merge and #659 active development.
+- PR #660 is open against exact main `64c8077eb37a728efa86a749a95e10f7bdce03c2`.
+- No local/CI PASS is claimed yet for #659 / PR #660.
 
 ## First exact-head failure diagnosis and repair
 
-- PR #658 exact head `7c59735eb483bda22bde339613f9a73946dcaceb` passed README/status verification.
-- CI run `35657998573` / job `106526346083` failed at TypeScript typecheck.
-- P12 Final Release Artifact run `35657998570` / job `106526268511` failed at the same repository typecheck step.
-- Exact compiler failure: `tests/p14-internal-activation.test.ts(120,5) TS2322: Type 'true' is not assignable to type 'false'.`
-- Root cause was test-only: the forged-preview regression intentionally sets `mutationEnabled=true`, but intersecting `P14PlanPreviewV1` with a mutable boolean did not widen the literal `false` property.
-- Repair commit `2f2fa40c46c950d3b5953b876a2315128096734d` now constructs the malicious fixture as an object and casts through `unknown` back to `P14PlanPreviewV1`, preserving the security regression without changing production behavior.
-- No runtime, confirmation, registry, source-protection, release-boundary or security authority was weakened.
-- README repair state is synchronized on this branch.
-- The new repaired PR head is not certified in this milestone; no fresh workflow polling occurs after the repair.
+- PR #660 exact head `198547884907916d92d85734838685eb75d96333` produced 5/7 green required gates:
+  - CodeQL `35661211482` PASS;
+  - Integration Readiness `35661211561` PASS;
+  - P12 Offline Acceptance `35661211545` PASS;
+  - P15 Real Elementor Target Proof `35661211560` PASS;
+  - P17 Local Browser Proof `35661211584` PASS.
+- CI `35661211507` / job `106536681943` failed at `npm run status:verify` before typecheck/tests.
+- P12 Final Release Artifact `35661211628` / job `106536628789` failed at the same repository status-contract verification stage.
+- Exact root cause: the README correctly says `#659 / PR #660 adds explicit content_width=full`, while `scripts/verify-readme-progress.mjs` still required the older exact literal `#659 adds explicit content_width=full`.
+- Repair commit `2344232e118297c49a05c641764e99a518af05ec` replaces the brittle sentence match with semantic README requirements: exact `#659 / PR #660` identity plus the `content_width=full` token.
+- README repair commit `20100f23d1d65819bc3c5f9e0b5eb7c91f2edc8b` records the failed-batch/repair state.
+- Product resolver, source evidence, input bounds, write allowlist and all authority flags are unchanged.
+- The repaired head is not certified in this milestone; no fresh workflow polling occurs after the repair.
 
 ## Second exact-head failure diagnosis and repair
 
-- Repaired head `1127a4273a74e00e9f56e2bf13f8e1f2bda47e90` passed README/status verification and TypeScript typecheck.
-- CI run `35658550631` / job `106528156488` reached the full test suite and reported 1603 PASS / 2 FAIL.
-- P12 Final Release Artifact run `35658550769` / job `106528042131` failed on the same repository test stage.
-- Failure 1: `tests/p14-review-packet-main-panel.test.mjs` still expected pre-R6 inline identifiers `reviewPacket` / `evidence`; the runtime now correctly serializes from the fresh-state wrapper `current.reviewPacket` / `current.evidence`.
-- Failure 2: `tests/p14-vertical-stack-retained-duplicate-adapter.test.ts` still asserted R5 `runtimeMutationEnabled=false` / `confirmationEnabled=false`; R6 qualification v5 intentionally enables those only for the internal/dev explicit-confirmation boundary while keeping `acceptanceAuthority=false` and `targetCompatibilityClaim=false`.
-- Repair commits:
-  - `f5c45ccc3115e0d6b4ce982ce02a7d4166a67c98` — align review-packet contract with the fresh-state wrapper;
-  - `d85e38ae7f92f795f7d62c817fa05ba96d2e4563` — align adapter regression with R6 internal activation while explicitly retaining false acceptance/target authority.
-- No production/runtime/security boundary was weakened; these changes update stale assertions to the already-implemented R6 contract.
-- README repair state is synchronized on this branch.
-- The new exact head remains uncertified and is not polled in this repair milestone.
+- PR #660 observed head `46c2f0625a9e8a084090d5871aa8a105b08bb388` retained 5/7 green required gates:
+  - CodeQL `35670558546` PASS;
+  - Integration Readiness `35670558578` PASS;
+  - P12 Offline Acceptance `35670558521` PASS;
+  - P15 Real Elementor Target Proof `35670558640` PASS;
+  - P17 Local Browser Proof `35670558508` PASS.
+- CI `35670558507` / job `106565855465` passed `status:verify`, then failed at TypeScript typecheck.
+- P12 Final Release Artifact `35670558503` / job `106565828493` reached the same repository typecheck and failed on the same defect.
+- Exact root cause: `src/targets/elementor/responsive-full-width-resolution.ts` exported the new full-width resolver under the stale copy/paste name `resolveP15ElementorResponsiveContainerBoxedWidth`, while the focused contract imports `resolveP15ElementorResponsiveContainerFullWidth`.
+- The downstream implicit-`any` diagnostics are cascading consequences of the missing typed import, not separate production defects.
+- Repair commits `084d329f39dcc2484ecf074b56e1a15e1bc019dd` and `0244e523683fed57d96a1e95ad99f925b51744bb` rename only the exported resolver symbol and synchronize README truth.
+- No algorithm, write allowlist, evidence binding, bounds, security check or authority flag changes.
+- The new repaired PR head is deliberately uncertified in this milestone; no second workflow/status refresh occurs after repair.
 
 ## Exact next safe action
 
-On the next user `continue`, resolve the final second-repaired PR #658 head and perform exactly one consolidated exact-head status refresh. Merge with the existing user consent only after the full exact-head required gate set is green.
+On the next user `continue`, resolve the export-name-repaired PR #660 head and perform exactly one consolidated exact-head status refresh. If a gate fails, diagnose/fix that exact failure without weakening the contract. If all required exact-head gates are green, merge under the user's standing consent with expected-head protection.

@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: ee406e2cafdc714e074cfb5d1e5a594db93ff727
+observed_main_sha: 64c8077eb37a728efa86a749a95e10f7bdce03c2
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -43,7 +43,7 @@ claims:
   - {id: CL-040, statement: issue_655_owns_p14_r5_exact_production_registry_binding, value: true}
   - {id: CL-041, statement: p14_production_registry_binding_is_planning_only_and_does_not_enable_runtime_mutation, value: true}
   - {id: CL-042, statement: r4_adapter_requires_exact_P14_VERTICAL_STACK_V1_at_version_1, value: true}
-  - {id: CL-043, statement: p14_r6_internal_confirmation_activation_is_implemented_on_active_pr_658_while_external_acceptance_remains_separate, value: true}
+  - {id: CL-043, statement: p14_r6_internal_confirmation_activation_is_merged_on_main_64c8077_while_external_acceptance_remains_separate, value: true}
   - {id: CL-044, statement: pr_656_first_exact_head_failed_only_on_two_stale_pre_r5_test_expectations_after_status_verify_and_typecheck_passed, value: true}
   - {id: CL-045, statement: r5_default_handoff_without_source_tree_remains_non_executable_with_P14_TARGET_ADDRESS_REQUIRED, value: true}
   - {id: CL-046, statement: r5_production_registry_is_exact_singleton_and_within_registry_bounds, value: true}
@@ -57,3 +57,16 @@ claims:
   - {id: CL-054, statement: pr_658_second_repaired_head_passed_typecheck_then_failed_only_on_two_stale_contract_assertions, value: true}
   - {id: CL-055, statement: p14_r6_review_packet_runtime_uses_current_fresh_state_wrapper_for_serialization_and_context, value: true}
   - {id: CL-056, statement: p14_r6_adapter_regression_requires_internal_runtime_and_confirmation_true_while_acceptance_and_target_authority_remain_false, value: true}
+  - {id: CL-057, statement: pr_658_exact_head_d1daaccd_passed_required_gate_set_and_merged_as_64c8077e, value: true}
+  - {id: CL-058, statement: issue_657_is_closed_completed_after_pr_658_merge, value: true}
+  - {id: CL-059, statement: issue_659_owns_p15_explicit_responsive_full_width_slice, value: true}
+  - {id: CL-060, statement: p15_659_is_bound_to_exact_elementor_4_2_4_container_blob_3486766_and_controls_stack_blob_00b280e, value: true}
+  - {id: CL-061, statement: p15_659_requires_explicit_contentWidthMode_full_and_integer_tablet_mobile_width_px_500_through_1600, value: true}
+  - {id: CL-062, statement: p15_659_write_surface_is_only_content_width_full_width_tablet_and_width_mobile_and_desktop_width_is_untouched, value: true}
+  - {id: CL-063, statement: p15_659_keeps_responsive_inference_figma_mutation_network_compatibility_production_and_download_authority_false, value: true}
+  - {id: CL-064, statement: pr_660_is_active_exact_head_verification_path_for_p15_659, value: true}
+  - {id: CL-065, statement: p15_659_has_no_ci_or_runtime_pass_claim_before_exact_head_verification, value: true}
+  - {id: CL-066, statement: pr_660_first_exact_head_failed_only_on_readme_verifier_literal_mismatch_before_typecheck_or_tests, value: true}
+  - {id: CL-067, statement: pr_660_verifier_repair_is_semantic_readme_contract_only_and_does_not_change_product_runtime_or_authority, value: true}
+  - {id: CL-068, statement: pr_660_second_observed_head_46c2f062_passed_status_verify_but_failed_typecheck_on_full_width_resolver_export_name_mismatch, value: true}
+  - {id: CL-069, statement: pr_660_export_name_repair_changes_only_the_full_width_resolver_symbol_and_does_not_weaken_write_bounds_security_or_authority, value: true}

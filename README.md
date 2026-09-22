@@ -12,7 +12,7 @@ Current product surfaces:
 - safety-gated P5/P6/P7 preparation foundations;
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - P14 Guided Prepare bounded implementation through exact-registry-backed retained-duplicate runtime plus explicit internal/dev confirmation activation; publishable release activation is hard-disabled and stripped, while production acceptance and target compatibility remain unclaimed;
-- P15 Elementor R1 evidence chain plus bounded target-neutral IR, deterministic local Elementor v0.4 Template JSON candidate generation, read-only selected-Figma-Frame Auto Layout/plain-text extraction, exact source-bound Heading/Button semantic resolution, exact URL-bound image-review resolution, exact source/candidate-bound tablet/mobile container direction + linked-px gap + flex alignment + px-padding overrides, sanitized plugin preview, retained WP 6.8 + Elementor 4.2.4 controlled proof plus one exact controlled URL-only Image asset observation, exact declared-profile reference alignment and exact retained-candidate identity binding;
+- P15 Elementor R1 evidence chain plus bounded target-neutral IR, deterministic local Elementor v0.4 Template JSON candidate generation, read-only selected-Figma-Frame Auto Layout/plain-text extraction, exact source-bound Heading/Button semantic resolution, exact URL-bound image-review resolution, exact source/candidate-bound tablet/mobile container direction + linked-px gap + flex alignment + px padding + wrap + align-content + border-radius + margin + min-height + boxed-width + z-index overrides, plus explicit full-width responsive width under #659, sanitized plugin preview, retained WP 6.8 + Elementor 4.2.4 controlled proof plus one exact controlled URL-only Image asset observation, exact declared-profile reference alignment and exact retained-candidate identity binding;
 - P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding, iterative structural bounds, depth/value/text-bounded + accessor/own-shape-safe direct canonicalization with object-cardinality preflight, prototype-safe canonicalization and alias-safe atomic output writes;
 - exact-build release/provenance tooling.
 
@@ -52,7 +52,14 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before this documentation sync:
 
-`ee406e2cafdc714e074cfb5d1e5a594db93ff727`
+`64c8077eb37a728efa86a749a95e10f7bdce03c2`
+
+### Current P15 #659 verification
+
+- PR #660 observed head `46c2f0625a9e8a084090d5871aa8a105b08bb388` retained 5/7 required gates green: CodeQL, Integration Readiness, P12 Offline Acceptance, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- CI `35670558507` and P12 Final Release Artifact `35670558503` both passed the repaired README/status contract, then failed at TypeScript because the new full-width module accidentally exported its resolver under the stale `resolveP15ElementorResponsiveContainerBoxedWidth` name while the focused contract imports `resolveP15ElementorResponsiveContainerFullWidth`.
+- This repair changes only that exported symbol name. The bounded write surface (`content_width`, `width_tablet`, `width_mobile`), px range `500..1600`, exact source/candidate binding, fail-closed checks and false authority flags remain unchanged.
+- The repaired PR head is intentionally not claimed green in this milestone; fresh exact-head verification is still required before merge.
 
 ### Current P14 AI-native implementation track
 
@@ -63,7 +70,7 @@ P14 implementation progress is measured against six explicit bounded slices, not
 3. R3 — deterministic source→candidate target addressing — implemented and merged.
 4. R4 — candidate-only retained-duplicate Figma runtime adapter — implemented and merged via PR #654.
 5. R5 — exact production safe-recipe registry binding — implemented and merged via PR #656 on main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`.
-6. R6 — explicit confirmation + internal retained-duplicate activation — implemented in PR #658; the repaired batch cleared typecheck and exposed two stale R5/R6 contract assertions, both repaired, and fresh exact-head verification is pending.
+6. R6 — explicit confirmation + internal retained-duplicate activation — implemented and merged via PR #658 on main `64c8077eb37a728efa86a749a95e10f7bdce03c2`.
 
 Therefore current **P14 implementation progress is 100% (6/6 bounded slices implemented)**. This is implementation-only/internal readiness; it does not claim live Figma runtime acceptance, target compatibility, production acceptance, marketplace acceptance, or release authority.
 
@@ -179,8 +186,8 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R0 Market/platform research gate contract | DEFINED / RECURRING | 100% | `██████████` | Refresh per major adapter |
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
-| P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 implemented; PR #658 repaired after one TS fixture defect plus two stale contract assertions and awaits fresh exact-head verification/merge; internal/dev activation only; publishable release activation disabled; acceptance/target compatibility remain false |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded responsive slices now include direction, linked-px gap, flex alignment, px padding, #576 explicit wrap, #578 wrap-conditioned align-content, #582 uniform integer-px border radius and #586 Heading/Text responsive alignment, #590 Button responsive alignment, #592 bounded Container margin, #596 bounded Container min-height, #598 condition-bound Container boxed width and #599 bounded Container z-index; #564/#566/#568/#570/#572/#574 managed-media evidence/decision-contract line remains bounded; no retained operator approval has been supplied, and arbitrary-host/general media portability, broader responsive coverage and additional matrix evidence remain pending |
+| P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded responsive slices include direction, gap, flex alignment, padding, wrap, wrap-conditioned align-content, border radius, Heading/Text + Button alignment, margin, min-height, boxed width and z-index; #659 / PR #660 adds explicit `content_width=full` + bounded `width_tablet`/`width_mobile`; the first exact-head batch failed only on a brittle README-verifier literal mismatch, repaired without changing product/runtime authority, and fresh exact-head verification is pending; no retained operator approval, broad compatibility or production authority is claimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -198,7 +205,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 
 ## Current P14 boundary
 
-P14 remains **CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED**. `PRODUCTION_P14_SAFE_RECIPE_REGISTRY` remains empty. Read-only preview/review evidence does not create confirmation or production mutation authority. #159 genuine Figma Desktop evidence remains required before real P14 mutation exposure.
+P14 bounded implementation is **IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING**. R1-R6 are merged through PR #658 on main `64c8077eb37a728efa86a749a95e10f7bdce03c2`; the exact production planning registry binding is present, and the development/internal build may execute only after explicit confirmation plus fresh context/source/plan authorization checks. The publishable release build hard-disables and strips P14 activation. `acceptanceAuthority=false` and `targetCompatibilityClaim=false` remain fixed; #159 genuine Figma Desktop evidence is still a separate runtime-acceptance dependency.
 
 ## Current P15 boundary
 
@@ -274,8 +281,8 @@ P12 remains at the retained **80%** release-exit state. The publishing-authorita
 
 ## Immediate execution order
 
-1. keep P14 non-authorizing while #159 genuine Figma evidence remains pending;
-2. continue P15 commercial-V1 after #591/#592 without fabricating a retained approval: exact default-breakpoint align-content is now supported only where the same breakpoint has an explicit #576 `wrap` prerequisite; continue only independently evidenced responsive/matrix slices and keep custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority unclaimed unless separate evidence explicitly changes them;
+1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
+2. continue P15 commercial-V1 through #659 explicit full-width responsive width without fabricating a retained approval: exact default-breakpoint align-content is now supported only where the same breakpoint has an explicit #576 `wrap` prerequisite; continue only independently evidenced responsive/matrix slices and keep custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority unclaimed unless separate evidence explicitly changes them;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;

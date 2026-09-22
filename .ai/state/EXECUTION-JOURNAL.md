@@ -318,3 +318,35 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Repairs: `f5c45ccc3115e0d6b4ce982ce02a7d4166a67c98` and `d85e38ae7f92f795f7d62c817fa05ba96d2e4563`.
 - No production behavior or security authority was weakened. New head remains uncertified and is not polled in this repair milestone.
 
+
+## 2026-09-22 — P14 R6 merged; P15 #659 explicit responsive full-width implementation
+
+- PR #658 exact head `d1daaccd8ed8ed912a171c307e123ca1d83d6b0a` passed CI `35659376091`, CodeQL `35659376103`, Integration `35659376221`, P12 Offline `35659376187`, P12 Final `35659376126`, P15 target proof `35659376096` and P17 browser proof `35659376164`.
+- PR #658 merged with expected-head guard as main `64c8077eb37a728efa86a749a95e10f7bdce03c2`; Issue #657 closed completed.
+- Issue #659 opened under #119 on branch `p15/responsive-full-width`.
+- Exact Elementor 4.2.4 evidence is bound to Container blob `3486766b9565af99536ae205ed1936bb155daed0` and Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d`.
+- Commit `99366a570ec360583c0105b84357b4af818c234a` adds a fail-closed resolver for explicit `content_width=full` plus `width_tablet` / `width_mobile`.
+- Commit `e12f577a2473f22f26aa0398f289acac02b6e7d7` adds focused regressions for exact mapping, bounds, stale replay, malformed input and authority inflation.
+- Write surface is limited to `content_width`, `width_tablet`, `width_mobile`; desktop `width` is untouched.
+- README/memory/state reconcile P14 merge and #659 active work. No local/CI PASS is claimed before exact-head PR verification.
+
+- Opened PR #660 for #659 against main `64c8077eb37a728efa86a749a95e10f7bdce03c2`; exact-head workflow evidence is intentionally deferred to the next user `continue` under the one-refresh protocol.
+
+## 2026-09-22 — PR #660 first exact-head README verifier mismatch repaired
+
+- Exact head `198547884907916d92d85734838685eb75d96333` had 5/7 green gates: CodeQL `35661211482`, Integration `35661211561`, P12 Offline `35661211545`, P15 target proof `35661211560`, P17 browser proof `35661211584`.
+- CI `35661211507` / job `106536681943` and P12 Final `35661211628` / job `106536628789` both failed only at `status:verify`.
+- Root cause: README correctly used `#659 / PR #660`, while the verifier still required the stale exact sentence prefix `#659 adds...`.
+- Repair `2344232e118297c49a05c641764e99a518af05ec` now validates the semantic PR identity + `content_width=full` token instead of a brittle full phrase.
+- README repair sync: `20100f23d1d65819bc3c5f9e0b5eb7c91f2edc8b`.
+- Product resolver and all authority/security boundaries are unchanged. New head is intentionally not polled in this repair milestone.
+
+
+## 2026-09-22 — PR #660 full-width resolver export-name defect repaired
+
+- Observed head `46c2f0625a9e8a084090d5871aa8a105b08bb388` retained CodeQL, Integration, P12 Offline, P15 target proof and P17 browser proof PASS.
+- CI `35670558507` and P12 Final `35670558503` both passed the repaired README/status contract, then failed at TypeScript typecheck.
+- Root cause was a copy/paste export-name defect: the full-width module exported `resolveP15ElementorResponsiveContainerBoxedWidth` while its full-width contract imports `resolveP15ElementorResponsiveContainerFullWidth`.
+- Source repair `084d329f39dcc2484ecf074b56e1a15e1bc019dd` renames only the exported symbol; README sync `0244e523683fed57d96a1e95ad99f925b51744bb` records the observed failure/repair state.
+- No resolver algorithm, evidence source binding, write allowlist, px bounds, source/candidate replay protection, sanitizer or authority/security boundary changes.
+- New exact head remains uncertified and is not polled again in this milestone.
