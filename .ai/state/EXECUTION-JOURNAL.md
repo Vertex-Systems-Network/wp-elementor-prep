@@ -341,3 +341,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - README repair sync: `20100f23d1d65819bc3c5f9e0b5eb7c91f2edc8b`.
 - Product resolver and all authority/security boundaries are unchanged. New head is intentionally not polled in this repair milestone.
 
+
+## 2026-09-22 — PR #660 full-width resolver export-name defect repaired
+
+- Observed head `46c2f0625a9e8a084090d5871aa8a105b08bb388` retained CodeQL, Integration, P12 Offline, P15 target proof and P17 browser proof PASS.
+- CI `35670558507` and P12 Final `35670558503` both passed the repaired README/status contract, then failed at TypeScript typecheck.
+- Root cause was a copy/paste export-name defect: the full-width module exported `resolveP15ElementorResponsiveContainerBoxedWidth` while its full-width contract imports `resolveP15ElementorResponsiveContainerFullWidth`.
+- Source repair `084d329f39dcc2484ecf074b56e1a15e1bc019dd` renames only the exported symbol; README sync `0244e523683fed57d96a1e95ad99f925b51744bb` records the observed failure/repair state.
+- No resolver algorithm, evidence source binding, write allowlist, px bounds, source/candidate replay protection, sanitizer or authority/security boundary changes.
+- New exact head remains uncertified and is not polled again in this milestone.
