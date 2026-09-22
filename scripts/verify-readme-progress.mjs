@@ -11,6 +11,7 @@ const p15ResponsiveFlexItemFactorsSource = await readFile('src/targets/elementor
 const p15ResponsiveFlexItemOrderPresetSource = await readFile('src/targets/elementor/responsive-flex-item-order-preset-resolution.ts', 'utf8');
 const p15ContainerOverflowSource = await readFile('src/targets/elementor/container-overflow-resolution.ts', 'utf8');
 const p15ContainerSemanticHtmlTagSource = await readFile('src/targets/elementor/container-semantic-html-tag-resolution.ts', 'utf8');
+const p15HeadingTextColorSource = await readFile('src/targets/elementor/heading-text-color-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -136,7 +137,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#673',
+  next: '#675',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -348,11 +349,41 @@ for (const fragment of p15ContainerSemanticHtmlTagRequiredFragments) {
     throw new Error(`P15 #673 Container semantic HTML tag contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #673 implementation')
+if (!readme.includes('### Completed P15 #673 / PR #674 verification')
+  || !readme.includes('8c54239d33f687dd9730fc54174da115149f8d49')
+  || !readme.includes('424964452fa1b0d7055103116fd19260ef856393')
+  || !readme.includes('Issue #673 is closed completed')
   || !readme.includes('`html_tag`')
-  || !readme.includes('`header | footer | main | article | section | aside | nav`')
-  || !readme.includes('linked `a` remains out of scope')) {
-  throw new Error('README P15 #673 active Container semantic HTML tag truth is stale or missing.');
+  || !readme.includes('`header | footer | main | article | section | aside | nav`')) {
+  throw new Error('README P15 #673 / PR #674 merged semantic HTML tag truth is stale or missing.');
+}
+
+const p15HeadingTextColorRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "headingSourceBlobSha: '5b193f958ba34d8d4a24d165a9114f9bc3ef2561'",
+  "controlName: 'title_color'",
+  "settingKey: 'title_color'",
+  "hoverControlName: 'title_hover_color'",
+  "acceptedColorPattern: '^#[0-9a-f]{6}
+console.log(
+  `README progress contract PASS: ${rows.length} stage-separated modules, no synthetic overall percentage, runtime registry ${schemaTag}.`,
+);
+",
+  "validColor",
+  "target.settings[P15_ELEMENTOR_HEADING_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
+  "colorInferencePerformed: false",
+];
+for (const fragment of p15HeadingTextColorRequiredFragments) {
+  if (!p15HeadingTextColorSource.includes(fragment)) {
+    throw new Error(`P15 #675 Heading text color contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #675 implementation')
+  || !readme.includes('`title_color`')
+  || !readme.includes('lowercase six-digit hex')
+  || !readme.includes('global/theme color tokens remain out of scope')) {
+  throw new Error('README P15 #675 active Heading text color truth is stale or missing.');
 }
 
 console.log(
