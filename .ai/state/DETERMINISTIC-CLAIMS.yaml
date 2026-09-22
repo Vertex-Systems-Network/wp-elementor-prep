@@ -78,3 +78,4 @@ claims:
   - {id: CL-075, statement: issue_663_owns_exact_bound_responsive_container_hover_border_radius_for_elementor_4_2_4, value: true}
   - {id: CL-076, statement: p15_663_write_surface_is_only_border_radius_hover_tablet_and_border_radius_hover_mobile_with_desktop_hover_and_normal_radius_untouched, value: true}
   - {id: CL-077, statement: p15_663_keeps_responsive_hover_inference_custom_breakpoints_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-078, statement: pr_664_is_active_exact_head_verification_path_for_p15_663_hover_border_radius, value: true}
