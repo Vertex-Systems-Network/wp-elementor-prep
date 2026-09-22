@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `9ef893af8417706ef8904d1b879b91d498012e16`  
 Active Issue: `#679`  
-Active PR: none yet  
+Active PR: `#680`  
 Active branch: `p15/button-text-color`
 
 ## Completed P15 #677 / PR #678
@@ -34,6 +34,13 @@ Active branch: `p15/button-text-color`
 - Color/theme/global-token inference, link mutation, hover/background/responsive inference, network, Figma mutation, compatibility, responsive closure, production/download authority remain false.
 - No CI PASS is claimed before exact-head PR verification.
 
+## PR #680 binding
+
+- PR #680 is open against exact base main `9ef893af8417706ef8904d1b879b91d498012e16`.
+- Creation head: `d85eabe043944feacd2838ba7d761fddc1c2cbc9`.
+- Binding commits intentionally advance the branch after PR creation.
+- No CI PASS is claimed until the final bound head is checked.
+
 ## Exact next safe action
 
-Finish synchronization, open the focused #679 PR against exact main, bind its final head, and end without workflow polling. The next user `continue` performs one consolidated exact-head required-gate refresh.
+On the next user `continue`, resolve the final PR #680 head, perform exactly one consolidated required-gate refresh, and merge only if all seven workflows are green and review threads are resolved.
