@@ -357,3 +357,20 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Expected-head guarded merge produced main `5125e041d3e9f942bd4c02bb93bedecf8e4c1bd1`; Issue #659 closed completed.
 - Issue #661 and branch `ai-native/post-660-reconciliation` were opened from that exact main to reconcile stale README/memory/AI-native status before starting another P15 slice.
 - #661 is governance/status reconciliation only and grants no new target, production, responsive-closure, custom-breakpoint or operator-approval authority.
+
+## 2026-09-22 — PR #662 merged; P15 #663 hover border-radius started
+
+- PR #662 exact head `f4d188ef9b056afeb50a82322ca62114be869f74` passed CI `35673781046`, CodeQL `35673781022`, Integration `35673781010`, P12 Offline `35673780986`, P12 Final `35673781000`, P15 target proof `35673780982` and P17 browser proof `35673780981`.
+- Expected-head merge produced main `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`; Issue #661 closed completed.
+- Issue #663 and branch `p15/responsive-hover-border-radius` were opened from that exact main.
+- New resolver/test bind only Elementor 4.2.4 `border_radius_hover_tablet` / `border_radius_hover_mobile` to explicit uniform integer-px values under exact source/candidate identity.
+- No responsive inference, custom breakpoint, compatibility, production, download, network or Figma-mutation authority is introduced.
+
+## 2026-09-22 — PR #664 first exact-head batch failed at status verifier; repaired
+
+- Exact head `e51d10426c2141b909ff1f603c366c5ddd777400` returned 5/7 required gates PASS.
+- CI `35699420361` and P12 Final `35699420268` failed at the same `status:verify` assertion before typecheck/tests.
+- Root cause was a stale adjacent-literal README assertion for merged #659/#660 truth, not P15 #663 product code.
+- The verifier now requires independent semantic merged-evidence markers instead of one phrase.
+- No P15 #663 algorithm, bounds, write allowlist, source/candidate binding, security rule or authority flag changed.
+- No fresh workflow polling is performed after this repair; next `continue` owns the repaired exact-head batch.

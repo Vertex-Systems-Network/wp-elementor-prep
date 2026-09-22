@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 5125e041d3e9f942bd4c02bb93bedecf8e4c1bd1
+observed_main_sha: 143808f4e60b1d0a10ed8b148b4cc24bd6633a6e
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -73,3 +73,11 @@ claims:
   - {id: CL-070, statement: pr_660_exact_head_4e58c5ad_passed_all_seven_required_gates_and_merged_as_main_5125e041, value: true}
   - {id: CL-071, statement: issue_659_is_closed_completed_after_pr_660_merge, value: true}
   - {id: CL-072, statement: issue_661_owns_post_pr_660_ai_native_reconciliation_only_and_does_not_change_product_authority, value: true}
+  - {id: CL-073, statement: pr_662_exact_head_f4d188ef_passed_all_seven_required_gates_and_merged_as_main_143808f4, value: true}
+  - {id: CL-074, statement: issue_661_is_closed_completed_after_pr_662_merge, value: true}
+  - {id: CL-075, statement: issue_663_owns_exact_bound_responsive_container_hover_border_radius_for_elementor_4_2_4, value: true}
+  - {id: CL-076, statement: p15_663_write_surface_is_only_border_radius_hover_tablet_and_border_radius_hover_mobile_with_desktop_hover_and_normal_radius_untouched, value: true}
+  - {id: CL-077, statement: p15_663_keeps_responsive_hover_inference_custom_breakpoints_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-078, statement: pr_664_is_active_exact_head_verification_path_for_p15_663_hover_border_radius, value: true}
+  - {id: CL-079, statement: pr_664_first_exact_head_e51d1042_passed_five_of_seven_required_gates_and_failed_only_at_readme_status_verifier_before_typecheck, value: true}
+  - {id: CL-080, statement: pr_664_readme_verifier_repair_changes_only_brittle_merged_659_phrase_matching_and_does_not_weaken_p15_663_product_security_or_authority_contracts, value: true}
