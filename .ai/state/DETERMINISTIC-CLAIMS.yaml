@@ -107,3 +107,5 @@ claims:
   - {id: CL-104, statement: p15_671_write_surface_is_only_overflow_with_hidden_auto_values_and_default_visible_scroll_clip_custom_responsive_overflow_out_of_scope, value: true}
   - {id: CL-105, statement: p15_671_keeps_responsive_layout_css_parsing_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
   - {id: CL-106, statement: pr_672_is_active_exact_head_verification_path_for_p15_671_container_overflow_hidden_auto, value: true}
+  - {id: CL-107, statement: pr_672_first_exact_head_0ea6ee2a_passed_five_of_seven_required_gates_and_failed_only_at_readme_status_verification_before_typecheck, value: true}
+  - {id: CL-108, statement: pr_672_readme_table_repair_changes_only_markdown_safe_hidden_auto_wording_and_does_not_change_p15_671_product_security_or_authority_contracts, value: true}
