@@ -2,16 +2,6 @@
 
 This journal records durable AI-native execution-policy milestones only. It is not a CI polling log.
 
-## 2026-09-21 — Delivery-resilient short-turn protocol
-
-- Established issue #637.
-- Defined one logical milestone per user-triggered development turn.
-- Forbids busy-waiting and sleep/poll loops.
-- Limits Runner/check-state inspection to one fetch per turn after a Runner batch starts.
-- Requires checkpoint-and-end-turn when required gates are still queued/in-progress.
-- Keeps volatile Runner state in GitHub PR/issue/check metadata so checkpoint commits do not invalidate exact-head CI.
-- Requires deterministic resume from exact issue/branch/PR/head/run identifiers on the next user `continue`.
-
 ## 2026-09-21 — Mandatory AI Engineering Supervisor contract integrated
 
 - Reconciled compact state with exact main, open Issues and open PRs.
@@ -380,3 +370,7 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #665 starts exact-bound responsive Container flex-item align-self; writes only `_flex_align_self_tablet/mobile`; authority remains false.
 - PR #666 opened for #665; creation head `7c341ca8...`; final post-binding head requires next-turn exact-head gates.
 - #666 head `5409136a...`: 5/7 PASS; CI/Final status verifier failed on missing canonical `content_width=full`; README-only repair applied, no repoll.
+
+## 2026-09-22 — PR #666 merged; #667 started
+- #666 repaired head `5e975dcb...` passed 7/7 and merged as main `e2839d8e...`; #665 closed.
+- #667 starts binary `0|1` responsive Container flex grow/shrink factors; only four tablet/mobile keys are writable; order/position/authority remain untouched.
