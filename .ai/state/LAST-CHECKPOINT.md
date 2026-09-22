@@ -41,6 +41,22 @@ Active branch: `p15/responsive-full-width`
 - PR #660 is open against exact main `64c8077eb37a728efa86a749a95e10f7bdce03c2`.
 - No local/CI PASS is claimed yet for #659 / PR #660.
 
+## First exact-head failure diagnosis and repair
+
+- PR #660 exact head `198547884907916d92d85734838685eb75d96333` produced 5/7 green required gates:
+  - CodeQL `35661211482` PASS;
+  - Integration Readiness `35661211561` PASS;
+  - P12 Offline Acceptance `35661211545` PASS;
+  - P15 Real Elementor Target Proof `35661211560` PASS;
+  - P17 Local Browser Proof `35661211584` PASS.
+- CI `35661211507` / job `106536681943` failed at `npm run status:verify` before typecheck/tests.
+- P12 Final Release Artifact `35661211628` / job `106536628789` failed at the same repository status-contract verification stage.
+- Exact root cause: the README correctly says `#659 / PR #660 adds explicit content_width=full`, while `scripts/verify-readme-progress.mjs` still required the older exact literal `#659 adds explicit content_width=full`.
+- Repair commit `2344232e118297c49a05c641764e99a518af05ec` replaces the brittle sentence match with semantic README requirements: exact `#659 / PR #660` identity plus the `content_width=full` token.
+- README repair commit `20100f23d1d65819bc3c5f9e0b5eb7c91f2edc8b` records the failed-batch/repair state.
+- Product resolver, source evidence, input bounds, write allowlist and all authority flags are unchanged.
+- The repaired head is not certified in this milestone; no fresh workflow polling occurs after the repair.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final post-PR-state-binding head of PR #660 and perform exactly one consolidated exact-head status refresh. If required checks are pending, checkpoint and end without polling again. If a gate fails, diagnose/fix that exact failure on the following milestone. Merge under the user's standing consent only after the full required exact-head gate set is green.
+On the next user `continue`, resolve the final repaired PR #660 head and perform exactly one consolidated exact-head status refresh. If a gate fails, diagnose/fix that exact failure on the following milestone. If all required exact-head gates are green, merge under the user's standing consent with expected-head protection.
