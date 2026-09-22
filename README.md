@@ -96,7 +96,7 @@ Current verified main before this documentation sync:
 - Desktop `_flex_order`, arbitrary/custom numeric order, grow/shrink, align-self, parent/container alignment, position and unrelated settings remain untouched.
 - Stale source/candidate replay, duplicate/non-Container IDs, invalid/unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Responsive/parent-layout inference, custom-order inference, arbitrary numeric order, custom breakpoints, positioning, grid semantics, network access, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/responsive-flex-item-order-presets`; exact-head CI PASS is not claimed before PR verification.
+- Focused implementation/tests are on branch `p15/responsive-flex-item-order-presets` in PR #670 against exact base main `0ce4d23aa7cd9b7ecb5c7ed0003952e465da041f`; exact-head CI PASS is not claimed before final post-binding verification.
 
 ### Current P14 AI-native implementation track
 
