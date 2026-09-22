@@ -86,7 +86,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-659-FINAL | #659 / PR #660 | P15 explicit full-width responsive Container width | Required PR exact-head gate set | exact head `4e58c5ad...`; CI `35672164045`, CodeQL `35672164148`, Integration `35672164115`, P12 Offline `35672164084`, P12 Final `35672164127`, P15 `35672164051`, P17 `35672164085` PASS; merged main `5125e041...`; authority unchanged | `FINAL_BATCH` | exact-head focused responsive-full-width tests + required repository gates PASS | DONE |
 
-| RQ-661-FINAL | #661 | Post-PR #660 AI-native reconciliation | Required PR exact-head gate set | main `5125e041...`; status/readme/memory reconciliation only; no product or authority change | `FINAL_BATCH` | exact-head governance/README/repository gates PASS before merge | PR_NOT_YET_OPENED |
+| RQ-661-FINAL | #661 / PR #662 | Post-PR #660 AI-native reconciliation | Required PR exact-head gate set | base main `5125e041...`; creation head `32c62d6b...`; status/readme/memory reconciliation only; no product or authority change | `FINAL_BATCH` | exact-head governance/README/repository gates PASS before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 
