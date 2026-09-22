@@ -2,15 +2,6 @@
 
 This journal records durable AI-native execution-policy milestones only. It is not a CI polling log.
 
-## 2026-09-21 — P14 vertical-stack qualification slice activated
-
-- Reconciled post-#640 main `84c5809327afec2ddef0a6fb78bffc0cd9fcc2c6` as fully green, including CodeQL and PR-origin audit.
-- Issue #641 opened under roadmap owner #119.
-- Activated branch `p14/vertical-stack-qualification`.
-- Selected bounded scope: qualify exact `BR_SAFE_VERTICAL_STACK_CANDIDATE@1` against proven P5 `vertical-stack` semantics without production registry activation.
-- Identified an exact modeling gap: P5 writes primary/counter axis alignment in addition to the mutation fields currently represented by P14.
-- Production P14 registry remains empty; no runtime/UI mutation authority is granted by activation.
-
 ## 2026-09-21 — #641 P14 vertical-stack qualification implemented
 
 - Extended the P14 mutation vocabulary with the two axis-alignment fields already written by the accepted P5 linear transformer.
@@ -365,3 +356,8 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #675 starts strict Heading normal text color: lowercase six-digit hex only; only `title_color` writable; global/theme tokens, CSS variables, alpha, hover/link color and broader authority remain untouched.
 - PR #676 opened for #675; creation head `c2ab7472...`; final post-binding head awaits exact-head gates; strict color-token security boundary retained.
 - #676 first head `b7235734...`: 5/7 PASS; CI + Final failed because #675 verifier fragment insertion corrupted JS syntax via replacement-string `$'` semantics; verifier-only line-boundary repair applied, no same-turn re-poll.
+
+## 2026-09-23 — PR #676 merged; #677 started
+- #676 repaired head `5d40e176...` passed 7/7 and merged as main `1ab21408...`; #675 closed.
+- #677 starts strict Text Editor normal color: lowercase six-digit hex only; only `text_color` writable; exact generated editor binding rechecked; link/global tokens/CSS variables/alpha/custom/responsive color and broader authority remain untouched.
+- PR #678 is open for #677; lifecycle state bound; final post-binding exact head awaits one consolidated required-gate refresh.
