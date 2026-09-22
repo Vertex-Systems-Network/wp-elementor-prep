@@ -331,3 +331,13 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - README/memory/state reconcile P14 merge and #659 active work. No local/CI PASS is claimed before exact-head PR verification.
 
 - Opened PR #660 for #659 against main `64c8077eb37a728efa86a749a95e10f7bdce03c2`; exact-head workflow evidence is intentionally deferred to the next user `continue` under the one-refresh protocol.
+
+## 2026-09-22 — PR #660 first exact-head README verifier mismatch repaired
+
+- Exact head `198547884907916d92d85734838685eb75d96333` had 5/7 green gates: CodeQL `35661211482`, Integration `35661211561`, P12 Offline `35661211545`, P15 target proof `35661211560`, P17 browser proof `35661211584`.
+- CI `35661211507` / job `106536681943` and P12 Final `35661211628` / job `106536628789` both failed only at `status:verify`.
+- Root cause: README correctly used `#659 / PR #660`, while the verifier still required the stale exact sentence prefix `#659 adds...`.
+- Repair `2344232e118297c49a05c641764e99a518af05ec` now validates the semantic PR identity + `content_width=full` token instead of a brittle full phrase.
+- README repair sync: `20100f23d1d65819bc3c5f9e0b5eb7c91f2edc8b`.
+- Product resolver and all authority/security boundaries are unchanged. New head is intentionally not polled in this repair milestone.
+
