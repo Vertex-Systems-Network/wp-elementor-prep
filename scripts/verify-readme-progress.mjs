@@ -9,6 +9,7 @@ const p15ResponsiveHoverBorderRadiusSource = await readFile('src/targets/element
 const p15ResponsiveFlexItemAlignSelfSource = await readFile('src/targets/elementor/responsive-flex-item-align-self-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemFactorsSource = await readFile('src/targets/elementor/responsive-flex-item-factors-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemOrderPresetSource = await readFile('src/targets/elementor/responsive-flex-item-order-preset-resolution.ts', 'utf8');
+const p15ContainerOverflowSource = await readFile('src/targets/elementor/container-overflow-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -134,7 +135,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#669',
+  next: '#671',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -294,12 +295,37 @@ for (const fragment of p15FlexItemOrderPresetRequiredFragments) {
     throw new Error(`P15 #669 responsive flex-item order preset contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #669 implementation')
+if (!readme.includes('### Completed P15 #669 / PR #670 verification')
+  || !readme.includes('e244b3a2b8209d48429f454d7eaf0e4c0dd31e64')
+  || !readme.includes('687bb2105ce1c407ee4977582cefc354556e0325')
+  || !readme.includes('Issue #669 is closed completed')
   || !readme.includes('`_flex_order_tablet`')
-  || !readme.includes('`_flex_order_mobile`')
-  || !readme.includes('`start -> -99999`')
-  || !readme.includes('`end -> 99999`')) {
-  throw new Error('README P15 #669 active responsive flex-item order preset truth is stale or missing.');
+  || !readme.includes('`_flex_order_mobile`')) {
+  throw new Error('README P15 #669 / PR #670 merged flex-item order preset truth is stale or missing.');
+}
+
+const p15ContainerOverflowRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "containerSourceBlobSha: '3486766b9565af99536ae205ed1936bb155daed0'",
+  "frontendContainerStylesSourceBlobSha: 'd6c65cb86810634c55c8b9e65aef8e9b9ef439e8'",
+  "controlName: 'overflow'",
+  "settingKey: 'overflow'",
+  "defaultCssVariableValue: 'visible'",
+  "acceptedValues: ['hidden', 'auto'] as const",
+  "validOverflow",
+  "target.settings[P15_ELEMENTOR_CONTAINER_OVERFLOW_EVIDENCE.settingKey] = resolution.overflow",
+];
+for (const fragment of p15ContainerOverflowRequiredFragments) {
+  if (!p15ContainerOverflowSource.includes(fragment)) {
+    throw new Error(`P15 #671 Container overflow contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #671 implementation')
+  || !readme.includes('`overflow`')
+  || !readme.includes('`hidden | auto`')
+  || !readme.includes('d6c65cb86810634c55c8b9e65aef8e9b9ef439e8')) {
+  throw new Error('README P15 #671 active Container overflow truth is stale or missing.');
 }
 
 console.log(
