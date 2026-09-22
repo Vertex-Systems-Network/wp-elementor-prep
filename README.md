@@ -58,7 +58,7 @@ Current verified main before this documentation sync:
 
 - PR #660 observed head `46c2f0625a9e8a084090d5871aa8a105b08bb388` retained 5/7 required gates green: CodeQL, Integration Readiness, P12 Offline Acceptance, P15 Real Elementor Target Proof and P17 Local Browser Proof.
 - CI `35670558507` and P12 Final Release Artifact `35670558503` both passed the repaired README/status contract, then failed at TypeScript because the new full-width module accidentally exported its resolver under the stale `resolveP15ElementorResponsiveContainerBoxedWidth` name while the focused contract imports `resolveP15ElementorResponsiveContainerFullWidth`.
-- This repair changes only that exported symbol name. The bounded write surface (`content_width`, `width_tablet`, `width_mobile`), px range `500..1600`, exact source/candidate binding, fail-closed checks and false authority flags remain unchanged.
+- This repair changes only that exported symbol name. The bounded write surface remains `content_width=full`, `width_tablet`, `width_mobile`; px range `500..1600`, exact source/candidate binding, fail-closed checks and false authority flags remain unchanged.
 - PR #660 exact head `4e58c5ad8c2f462f52f6bbeb9e3e80c1f5d59f83` passed all seven required gates and merged as main `5125e041d3e9f942bd4c02bb93bedecf8e4c1bd1`; Issue #659 is closed completed.
 
 ### Completed AI-native reconciliation #661
