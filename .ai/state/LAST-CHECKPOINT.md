@@ -4,7 +4,7 @@ Status: IMPLEMENTING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`  
 Active Issue: `#663`  
-Active PR: not opened yet  
+Active PR: `#664`  
 Active branch: `p15/responsive-hover-border-radius`
 
 ## Completed reconciliation transition
@@ -34,6 +34,7 @@ Active branch: `p15/responsive-hover-border-radius`
 - Stale bindings, duplicates, non-Container IDs, malformed/fractional/non-finite/out-of-range values, existing conflicts, unknown fields, generator drift and authority inflation fail closed.
 - Focused regression file: `tests/p15-responsive-hover-border-radius-resolution.test.ts`.
 - README/status verifier and memory-bank truth are synchronized.
+- PR #664 is open against exact base main `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`.
 - No local/CI PASS is claimed before exact-head PR verification.
 
 ## Authority boundary
@@ -42,4 +43,4 @@ Responsive/hover inference, inheritance synthesis, custom breakpoints, CSS parsi
 
 ## Exact next safe action
 
-Open one focused PR for #663 against exact main, bind its final head into durable state, then end the milestone without polling CI. The next user `continue` performs the single consolidated exact-head required-gate refresh.
+Resolve the final post-binding PR #664 head from GitHub and perform exactly one consolidated exact-head required-gate refresh. Merge with expected-head protection only if all required gates are green; otherwise diagnose the exact failing gate without weakening the contract.
