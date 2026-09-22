@@ -7,6 +7,7 @@ const p14RegistrySource = await readFile('src/core/p14-safe-recipe-registry.ts',
 const p15ResponsiveFullWidthSource = await readFile('src/targets/elementor/responsive-full-width-resolution.ts', 'utf8');
 const p15ResponsiveHoverBorderRadiusSource = await readFile('src/targets/elementor/responsive-hover-border-radius-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemAlignSelfSource = await readFile('src/targets/elementor/responsive-flex-item-align-self-resolution.ts', 'utf8');
+const p15ResponsiveFlexItemFactorsSource = await readFile('src/targets/elementor/responsive-flex-item-factors-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -132,7 +133,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#665',
+  next: '#667',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -233,10 +234,41 @@ for (const fragment of p15FlexItemAlignSelfRequiredFragments) {
     throw new Error(`P15 #665 responsive flex-item align-self contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #665 implementation')
+if (!readme.includes('### Completed P15 #665 / PR #666 verification')
+  || !readme.includes('5e975dcbb2142c29c58cc6c3851cb80b8a97e58f')
+  || !readme.includes('e2839d8e32dab4a29db908f1ba1a1710579219af')
+  || !readme.includes('Issue #665 is closed completed')
   || !readme.includes('`_flex_align_self_tablet`')
   || !readme.includes('`_flex_align_self_mobile`')) {
-  throw new Error('README P15 #665 active responsive flex-item align-self truth is stale or missing.');
+  throw new Error('README P15 #665 / PR #666 merged flex-item align-self truth is stale or missing.');
+}
+
+const p15FlexItemFactorsRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "containerSourceBlobSha: '3486766b9565af99536ae205ed1936bb155daed0'",
+  "flexItemSourceBlobSha: 'dc95ad439d8f9acfd5eefb1d129da67d9ff9c13a'",
+  "qunitFixtureBlobSha: 'f06c5f60afa8fbef34ed922af419284cece09692'",
+  "growControlName: 'grow'",
+  "shrinkControlName: 'shrink'",
+  "tabletGrowSettingKey: '_flex_grow_tablet'",
+  "mobileGrowSettingKey: '_flex_grow_mobile'",
+  "tabletShrinkSettingKey: '_flex_shrink_tablet'",
+  "mobileShrinkSettingKey: '_flex_shrink_mobile'",
+  "acceptedFactors: [0, 1] as const",
+  "validBinaryFactor",
+];
+for (const fragment of p15FlexItemFactorsRequiredFragments) {
+  if (!p15ResponsiveFlexItemFactorsSource.includes(fragment)) {
+    throw new Error(`P15 #667 responsive flex-item factor contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #667 implementation')
+  || !readme.includes('`_flex_grow_tablet`')
+  || !readme.includes('`_flex_grow_mobile`')
+  || !readme.includes('`_flex_shrink_tablet`')
+  || !readme.includes('`_flex_shrink_mobile`')) {
+  throw new Error('README P15 #667 active responsive flex-item factor truth is stale or missing.');
 }
 
 console.log(
