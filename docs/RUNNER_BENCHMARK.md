@@ -88,7 +88,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-661-FINAL | #661 / PR #662 | Post-PR #660 AI-native reconciliation | Required PR exact-head gate set | exact head `f4d188ef...`; all seven gates PASS; merged main `143808f4...`; no product/authority change | `FINAL_BATCH` | exact-head governance/README/repository gates PASS | DONE |
 
-| RQ-663-FINAL | #663 / PR #664 | P15 responsive Container hover border-radius | Required PR exact-head gate set | base main `143808f4...`; creation head `e0f7b577...`; write surface only tablet/mobile hover radius; authority unchanged | `FINAL_BATCH` | focused tests + CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser PASS before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
+| RQ-663-FINAL | #663 / PR #664 | P15 responsive Container hover border-radius | Required PR exact-head gate set | first head `e51d1042...`: 5/7 PASS; CI `35699420361` + P12 Final `35699420268` failed only at brittle README status verifier before typecheck; semantic verifier repaired with product/authority contract unchanged | `FINAL_BATCH` | repaired exact head must pass focused tests + CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser before merge | REPAIRED_AWAITING_NEW_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 
