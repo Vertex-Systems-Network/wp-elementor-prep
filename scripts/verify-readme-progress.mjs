@@ -365,11 +365,7 @@ const p15HeadingTextColorRequiredFragments = [
   "controlName: 'title_color'",
   "settingKey: 'title_color'",
   "hoverControlName: 'title_hover_color'",
-  "acceptedColorPattern: '^#[0-9a-f]{6}
-console.log(
-  `README progress contract PASS: ${rows.length} stage-separated modules, no synthetic overall percentage, runtime registry ${schemaTag}.`,
-);
-",
+  "acceptedColorPattern: '^#[0-9a-f]{6}$'",
   "validColor",
   "target.settings[P15_ELEMENTOR_HEADING_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
   "colorInferencePerformed: false",
