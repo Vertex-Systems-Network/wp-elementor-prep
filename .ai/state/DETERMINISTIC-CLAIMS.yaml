@@ -114,3 +114,4 @@ claims:
   - {id: CL-111, statement: issue_673_owns_exact_bound_container_semantic_html_tags_for_elementor_4_2_4, value: true}
   - {id: CL-112, statement: p15_673_write_surface_is_only_html_tag_with_header_footer_main_article_section_aside_nav_and_div_a_custom_responsive_tags_out_of_scope, value: true}
   - {id: CL-113, statement: p15_673_keeps_semantic_link_layout_responsive_custom_tag_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-114, statement: pr_674_is_active_exact_head_verification_path_for_p15_673_container_semantic_html_tags, value: true}
