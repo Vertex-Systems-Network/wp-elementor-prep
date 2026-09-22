@@ -54,6 +54,13 @@ Current verified main before this documentation sync:
 
 `64c8077eb37a728efa86a749a95e10f7bdce03c2`
 
+### Current P15 #659 verification
+
+- PR #660 observed head `46c2f0625a9e8a084090d5871aa8a105b08bb388` retained 5/7 required gates green: CodeQL, Integration Readiness, P12 Offline Acceptance, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- CI `35670558507` and P12 Final Release Artifact `35670558503` both passed the repaired README/status contract, then failed at TypeScript because the new full-width module accidentally exported its resolver under the stale `resolveP15ElementorResponsiveContainerBoxedWidth` name while the focused contract imports `resolveP15ElementorResponsiveContainerFullWidth`.
+- This repair changes only that exported symbol name. The bounded write surface (`content_width`, `width_tablet`, `width_mobile`), px range `500..1600`, exact source/candidate binding, fail-closed checks and false authority flags remain unchanged.
+- The repaired PR head is intentionally not claimed green in this milestone; fresh exact-head verification is still required before merge.
+
 ### Current P14 AI-native implementation track
 
 P14 implementation progress is measured against six explicit bounded slices, not against production acceptance:
@@ -63,7 +70,7 @@ P14 implementation progress is measured against six explicit bounded slices, not
 3. R3 — deterministic source→candidate target addressing — implemented and merged.
 4. R4 — candidate-only retained-duplicate Figma runtime adapter — implemented and merged via PR #654.
 5. R5 — exact production safe-recipe registry binding — implemented and merged via PR #656 on main `ee406e2cafdc714e074cfb5d1e5a594db93ff727`.
-6. R6 — explicit confirmation + internal retained-duplicate activation — implemented in PR #658; the repaired batch cleared typecheck and exposed two stale R5/R6 contract assertions, both repaired, and fresh exact-head verification is pending.
+6. R6 — explicit confirmation + internal retained-duplicate activation — implemented and merged via PR #658 on main `64c8077eb37a728efa86a749a95e10f7bdce03c2`.
 
 Therefore current **P14 implementation progress is 100% (6/6 bounded slices implemented)**. This is implementation-only/internal readiness; it does not claim live Figma runtime acceptance, target compatibility, production acceptance, marketplace acceptance, or release authority.
 
