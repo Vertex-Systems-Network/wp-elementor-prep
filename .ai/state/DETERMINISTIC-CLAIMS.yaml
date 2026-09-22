@@ -134,3 +134,4 @@ claims:
   - {id: CL-131, statement: issue_679_owns_exact_bound_button_normal_text_color_for_elementor_4_2_4, value: true}
   - {id: CL-132, statement: p15_679_write_surface_is_only_button_text_color_with_lowercase_six_digit_hex_and_hover_background_global_tokens_css_variables_alpha_custom_responsive_values_out_of_scope, value: true}
   - {id: CL-133, statement: p15_679_revalidates_exact_button_text_alignment_and_link_object_and_keeps_color_theme_link_hover_background_responsive_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-134, statement: pr_680_is_active_exact_head_verification_path_for_p15_679_button_normal_text_color, value: true}
