@@ -137,7 +137,7 @@ Current verified main before this documentation sync:
 - Existing neutral Button IDs only; exact source fingerprint + exact base-candidate identity required.
 - Stale replay, duplicate/non-Button IDs, invalid colors, unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Color/theme/global-token inference, link mutation, hover/background/responsive inference, network, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/button-text-color`; exact-head CI PASS is not claimed before PR verification.
+- Focused implementation/tests are on branch `p15/button-text-color` in PR #680 against exact base main `9ef893af8417706ef8904d1b879b91d498012e16`; exact-head CI PASS is not claimed before final verification.
 
 ### Current P14 AI-native implementation track
 
