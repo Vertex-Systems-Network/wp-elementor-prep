@@ -12,6 +12,7 @@ const p15ResponsiveFlexItemOrderPresetSource = await readFile('src/targets/eleme
 const p15ContainerOverflowSource = await readFile('src/targets/elementor/container-overflow-resolution.ts', 'utf8');
 const p15ContainerSemanticHtmlTagSource = await readFile('src/targets/elementor/container-semantic-html-tag-resolution.ts', 'utf8');
 const p15HeadingTextColorSource = await readFile('src/targets/elementor/heading-text-color-resolution.ts', 'utf8');
+const p15TextEditorTextColorSource = await readFile('src/targets/elementor/text-editor-text-color-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -137,7 +138,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#675',
+  next: '#677',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -375,11 +376,42 @@ for (const fragment of p15HeadingTextColorRequiredFragments) {
     throw new Error(`P15 #675 Heading text color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #675 implementation')
+if (!readme.includes('### Completed P15 #675 / PR #676 verification')
+  || !readme.includes('5d40e176aabf09d320c840ef0fd966997c07af83')
+  || !readme.includes('1ab21408bcf32c21bdcae7ca4c6b407a0670241f')
+  || !readme.includes('Issue #675 is closed completed')
   || !readme.includes('`title_color`')
+  || !readme.includes('lowercase six-digit hex')) {
+  throw new Error('README P15 #675 / PR #676 merged Heading text color truth is stale or missing.');
+}
+
+const p15TextEditorTextColorRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "textEditorSourceBlobSha: '72ff868493a3c0f27c6305794ffcff9cf217c9ea'",
+  "controlName: 'text_color'",
+  "settingKey: 'text_color'",
+  "linkControlName: 'link_color'",
+  "acceptedColorPattern: '^#[0-9a-f]{6}
+console.log(
+  `README progress contract PASS: ${rows.length} stage-separated modules, no synthetic overall percentage, runtime registry ${schemaTag}.`,
+);
+",
+  "validColor",
+  "settings.editor !== expectedTextEditorHtml(node.text)",
+  "target.settings[P15_ELEMENTOR_TEXT_EDITOR_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
+  "colorInferencePerformed: false",
+];
+for (const fragment of p15TextEditorTextColorRequiredFragments) {
+  if (!p15TextEditorTextColorSource.includes(fragment)) {
+    throw new Error(`P15 #677 Text Editor text color contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #677 implementation')
+  || !readme.includes('`text_color`')
   || !readme.includes('lowercase six-digit hex')
-  || !readme.includes('global/theme color tokens remain out of scope')) {
-  throw new Error('README P15 #675 active Heading text color truth is stale or missing.');
+  || !readme.includes('link/global-theme color authority remains out of scope')) {
+  throw new Error('README P15 #677 active Text Editor text color truth is stale or missing.');
 }
 
 console.log(

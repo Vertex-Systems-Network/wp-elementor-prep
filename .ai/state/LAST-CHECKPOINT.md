@@ -1,46 +1,39 @@
 # Last Durable Checkpoint
 
-Status: REPAIRED_AWAITING_REVERIFY  
+Status: IMPLEMENTING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `424964452fa1b0d7055103116fd19260ef856393`  
-Active Issue: `#675`  
-Active PR: `#676`  
-Active branch: `p15/heading-text-color`
+Observed main: `1ab21408bcf32c21bdcae7ca4c6b407a0670241f`  
+Active Issue: `#677`  
+Active PR: none yet  
+Active branch: `p15/text-editor-text-color`
 
-## P15 #675 product/security contract
+## Completed P15 #675 / PR #676
 
-- Exact Elementor 4.2.4 Heading blob: `5b193f958ba34d8d4a24d165a9114f9bc3ef2561`.
-- Normal control: `title_color`; separate hover/link `title_hover_color` remains untouched.
+- Repaired exact head `5d40e176aabf09d320c840ef0fd966997c07af83` passed all seven required gates:
+  - CI `35788488782`
+  - CodeQL `35788488857`
+  - Integration Readiness `35788488653`
+  - P12 Offline Acceptance `35788488696`
+  - P12 Final Release Artifact `35788488646`
+  - P15 Real Elementor Target Proof `35788488761`
+  - P17 Local Browser Proof `35788488663`
+- Expected-head merge produced main `1ab21408bcf32c21bdcae7ca4c6b407a0670241f`; Issue #675 closed completed.
+- Heading color scope remains strict lowercase six-digit hex, `title_color` only, non-authorizing.
+
+## P15 #677 implementation
+
+- Exact Elementor 4.2.4 Text Editor blob: `72ff868493a3c0f27c6305794ffcff9cf217c9ea`.
+- Exact normal control: `text_color`; separate `link_color` remains untouched.
+- Resolver: `src/targets/elementor/text-editor-text-color-resolution.ts`.
+- Focused tests: `tests/p15-text-editor-text-color-resolution.test.ts`.
 - Accepted values only: lowercase six-digit hex matching `#[0-9a-f]{6}`.
-- Write surface only: `title_color`.
-- Global/theme tokens, CSS variables, shorthand hex, alpha/rgba/hsla, named/custom CSS colors, hover/link color and transitions remain out of scope.
-- Color/theme/global-token inference, CSS parsing, link mutation, hover inference, responsive inference, network, Figma mutation, compatibility, responsive closure, production/download authority remain false.
-
-## PR #676 first exact-head verification
-
-First observed exact head: `b72357345e8873e5c4f7c1c3b35f74e892f1b860`
-
-Required gate result: 5/7 PASS
-
-- Integration Readiness `35786599806` — PASS
-- P12 Offline Acceptance `35786599587` — PASS
-- P17 Local Browser Proof `35786599695` — PASS
-- P15 Real Elementor Target Proof `35786599597` — PASS
-- CodeQL `35786599918` — PASS
-- CI `35786599650` — FAIL at `npm run status:verify`
-- P12 Final Release Artifact `35786599603` — FAIL at repository status verification
-
-Both failures have the same root cause: `scripts/verify-readme-progress.mjs` was syntactically corrupted in the #675 required-fragment block. The intended marker `acceptedColorPattern: '^#[0-9a-f]{6}$'` was inserted through a JavaScript replacement string where the `$'` sequence was interpreted as replacement syntax, splicing the file suffix into the string literal. Node therefore raised `SyntaxError: Invalid or unexpected token` before typecheck/tests/build or Final packaging.
-
-## Repair
-
-- Rebuilt the entire #675 verifier-fragment array by line boundaries instead of replacement-string interpolation.
-- Restored the exact required marker `acceptedColorPattern: '^#[0-9a-f]{6}$'`.
-- Confirmed the final README progress PASS `console.log` occurs exactly once.
-- Resolver, tests, accepted color domain, single-key write surface, security checks and authority flags are unchanged.
-- Verifier was repaired, not weakened.
-- No same-turn workflow re-poll is performed.
+- Write surface only: `text_color`.
+- Exact generated `editor` HTML + optional desktop align are rebound and checked against the neutral Text node.
+- Global/theme tokens, CSS variables, shorthand/alpha/named/custom colors, link color and responsive variants remain out of scope.
+- Stale source/candidate, duplicate/non-Text IDs, unknown/invalid/conflicting input, generator drift and authority inflation fail closed.
+- Color/theme/global-token inference, CSS parsing, link mutation, responsive inference, network, Figma mutation, compatibility, responsive closure, production/download authority remain false.
+- No CI PASS is claimed before exact-head PR verification.
 
 ## Exact next safe action
 
-On the next user `continue`, resolve the repaired live PR #676 head and perform exactly one consolidated required-gate refresh. Merge with expected-head protection only if all seven required workflows are green, base/main is unchanged, and review threads remain resolved.
+Open the focused #677 PR against exact main, bind its final post-sync head, and end without workflow polling. The next user `continue` performs one consolidated exact-head required-gate refresh.

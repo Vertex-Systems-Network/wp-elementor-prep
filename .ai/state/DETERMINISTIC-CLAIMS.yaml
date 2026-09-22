@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 424964452fa1b0d7055103116fd19260ef856393
+observed_main_sha: 1ab21408bcf32c21bdcae7ca4c6b407a0670241f
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -123,3 +123,8 @@ claims:
   - {id: CL-120, statement: pr_676_is_active_exact_head_verification_path_for_p15_675_heading_normal_text_color, value: true}
   - {id: CL-121, statement: pr_676_first_exact_head_b7235734_passed_five_of_seven_required_gates_and_failed_only_because_status_verifier_had_a_javascript_string_replacement_syntax_corruption, value: true}
   - {id: CL-122, statement: pr_676_verifier_repair_restores_exact_heading_color_marker_without_changing_product_security_or_authority_contracts, value: true}
+  - {id: CL-123, statement: pr_676_repaired_exact_head_5d40e176_passed_all_seven_required_gates_and_merged_as_main_1ab21408, value: true}
+  - {id: CL-124, statement: issue_675_is_closed_completed_after_pr_676_merge, value: true}
+  - {id: CL-125, statement: issue_677_owns_exact_bound_text_editor_normal_text_color_for_elementor_4_2_4, value: true}
+  - {id: CL-126, statement: p15_677_write_surface_is_only_text_color_with_lowercase_six_digit_hex_and_link_global_tokens_css_variables_alpha_custom_responsive_values_out_of_scope, value: true}
+  - {id: CL-127, statement: p15_677_revalidates_exact_generated_editor_html_and_keeps_color_theme_global_token_css_link_responsive_compatibility_production_download_network_and_figma_authority_false, value: true}
