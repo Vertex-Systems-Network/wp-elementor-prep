@@ -116,7 +116,7 @@ Current verified main before this documentation sync:
 - Elementor source registers normal control `title_color` for `.elementor-heading-title`; hover/link color is separate `title_hover_color` and remains untouched.
 - Accepted values are lowercase six-digit hex only, matching `#[0-9a-f]{6}`.
 - Write surface is only target setting `title_color`.
-- Global/theme color tokens remain out of scope, together with CSS variables, shorthand hex, alpha/rgba/hsla, named colors, arbitrary CSS strings, hover/link color and transition controls.
+- global/theme color tokens remain out of scope, together with CSS variables, shorthand hex, alpha/rgba/hsla, named colors, arbitrary CSS strings, hover/link color and transition controls.
 - Existing neutral Heading IDs only; exact source fingerprint + exact base-candidate identity required.
 - Stale replay, duplicate/non-Heading IDs, invalid colors, unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Color/theme/global-token inference, CSS parsing, link mutation, hover inference, responsive inference, network access, Figma mutation, compatibility, responsive closure, production and download authority remain false.
