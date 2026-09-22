@@ -87,3 +87,5 @@ claims:
   - {id: CL-084, statement: p15_665_write_surface_is_only__flex_align_self_tablet_and_mobile_with_desktop_and_parent_alignment_untouched, value: true}
   - {id: CL-085, statement: p15_665_keeps_responsive_parent_layout_inference_reordering_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
   - {id: CL-086, statement: pr_666_is_active_exact_head_verification_path_for_p15_665_flex_item_align_self, value: true}
+  - {id: CL-087, statement: pr_666_first_exact_head_5409136a_passed_five_of_seven_required_gates_and_failed_only_at_readme_status_verifier_before_typecheck, value: true}
+  - {id: CL-088, statement: pr_666_readme_repair_restores_canonical_content_width_full_token_only_and_does_not_change_p15_665_product_security_or_authority_contracts, value: true}
