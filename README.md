@@ -73,7 +73,7 @@ Current verified main before this documentation sync:
 - Accepted values are uniform integer px `0..4096`; write surface is only `border_radius_hover_tablet` / `border_radius_hover_mobile`.
 - Desktop hover radius and all normal-state radius settings remain untouched; omitted breakpoints remain omitted.
 - Responsive/hover inference, custom breakpoints, compatibility, production, generation/download, network and Figma-mutation authority remain false.
-- Focused implementation/tests are on branch `p15/responsive-hover-border-radius`; exact-head CI PASS is not claimed yet.
+- Focused implementation/tests are on branch `p15/responsive-hover-border-radius` in PR #664 against exact main `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`; exact-head CI PASS is not claimed yet.
 
 ### Current P14 AI-native implementation track
 
