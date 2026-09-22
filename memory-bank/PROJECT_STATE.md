@@ -158,7 +158,7 @@ PR #546 / #545 binds declared TargetProfiles to that retained reference by exact
 
 PR #666 repaired exact head `5e975dcbb2142c29c58cc6c3851cb80b8a97e58f` passed the complete required seven-gate set and merged as main `e2839d8e32dab4a29db908f1ba1a1710579219af`; Issue #665 is closed completed.
 
-Issue #667 now owns the next bounded P15 responsive slice. Exact Elementor `4.2.4` Container + Flex Item group + QUnit evidence proves responsive `_flex_grow_tablet/mobile` and `_flex_shrink_tablet/mobile`. The resolver deliberately accepts only binary integer factors `0|1`, preserves desktop factors, align-self, parent alignment, order and position, and keeps all compatibility/production/closure/download/network/Figma authority false.
+Issue #667 / PR #668 now owns the next bounded P15 responsive slice. Exact Elementor `4.2.4` Container + Flex Item group + QUnit evidence proves responsive `_flex_grow_tablet/mobile` and `_flex_shrink_tablet/mobile`. The resolver deliberately accepts only binary integer factors `0|1`, preserves desktop factors, align-self, parent alignment, order and position, and keeps all compatibility/production/closure/download/network/Figma authority false.
 
 ## P16 state
 
