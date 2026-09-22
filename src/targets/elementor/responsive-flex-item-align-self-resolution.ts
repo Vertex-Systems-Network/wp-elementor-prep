@@ -248,10 +248,10 @@ function baseResult(
 }
 
 /**
- * Apply only explicit default tablet/mobile explicit flex-item align-self overrides to exact generated container bindings.
+ * Apply only explicit default tablet/mobile flex-item align-self overrides to exact generated container bindings.
  *
- * Omitted breakpoints remain omitted. This contract does not infer responsive flex-item align-self, synthesize inheritance,
- * convert units, parse CSS/custom values, change desktop flex-item align-self, permit negative/fractional values,
+ * Omitted breakpoints remain omitted. This contract does not infer responsive flex-item align-self or parent flex context,
+ * synthesize inheritance, parse CSS/custom values, change desktop flex-item align-self, reorder items,
  * or claim responsive closure.
  */
 export function resolveP15ElementorResponsiveContainerAlignSelf(
