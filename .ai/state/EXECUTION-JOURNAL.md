@@ -356,3 +356,4 @@ This journal records durable AI-native execution-policy milestones only. It is n
 ## 2026-09-23 — PR #678 merged; #679 started
 - #678 exact head `94ee08c1...` passed 7/7 and merged as main `9ef893af...`; #677 closed.
 - #679 starts strict Button normal text color: lowercase six-digit hex only; only `button_text_color` writable; exact text/alignment/link binding rechecked; hover/background/global-token/CSS-variable/alpha/custom/responsive color and broader authority remain untouched.
+- PR #680 opened for #679; lifecycle state bound; final post-binding exact head awaits one consolidated required-gate refresh.
