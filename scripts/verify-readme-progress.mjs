@@ -6,6 +6,7 @@ const p14Qualification = await readFile('src/core/p14-vertical-stack-qualificati
 const p14RegistrySource = await readFile('src/core/p14-safe-recipe-registry.ts', 'utf8');
 const p15ResponsiveFullWidthSource = await readFile('src/targets/elementor/responsive-full-width-resolution.ts', 'utf8');
 const p15ResponsiveHoverBorderRadiusSource = await readFile('src/targets/elementor/responsive-hover-border-radius-resolution.ts', 'utf8');
+const p15ResponsiveFlexItemAlignSelfSource = await readFile('src/targets/elementor/responsive-flex-item-align-self-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -131,7 +132,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#663',
+  next: '#665',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -204,8 +205,38 @@ for (const fragment of p15HoverBorderRadiusRequiredFragments) {
     throw new Error(`P15 #663 responsive hover border-radius contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('#663') || !readme.includes('`border_radius_hover_tablet`') || !readme.includes('`border_radius_hover_mobile`')) {
-  throw new Error('README P15 #663 active responsive hover border-radius truth is stale or missing.');
+if (!readme.includes('### Completed P15 #663 / PR #664 verification')
+  || !readme.includes('5100c664cddf8fa28c7ed259d20ea7600f2a48b8')
+  || !readme.includes('15b2825e45cad543fc1950ecdcc361131043113d')
+  || !readme.includes('Issue #663 is closed completed')
+  || !readme.includes('`border_radius_hover_tablet`')
+  || !readme.includes('`border_radius_hover_mobile`')) {
+  throw new Error('README P15 #663 / PR #664 merged hover border-radius truth is stale or missing.');
+}
+
+const p15FlexItemAlignSelfRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "containerSourceBlobSha: '3486766b9565af99536ae205ed1936bb155daed0'",
+  "flexItemSourceBlobSha: 'dc95ad439d8f9acfd5eefb1d129da67d9ff9c13a'",
+  "qunitFixtureBlobSha: 'f06c5f60afa8fbef34ed922af419284cece09692'",
+  "groupName: '_flex'",
+  "controlName: 'align_self'",
+  "desktopSettingKey: '_flex_align_self'",
+  "tabletSettingKey: '_flex_align_self_tablet'",
+  "mobileSettingKey: '_flex_align_self_mobile'",
+  "mapAlignSelf(resolution.tabletAlignSelf)",
+  "mapAlignSelf(resolution.mobileAlignSelf)",
+];
+for (const fragment of p15FlexItemAlignSelfRequiredFragments) {
+  if (!p15ResponsiveFlexItemAlignSelfSource.includes(fragment)) {
+    throw new Error(`P15 #665 responsive flex-item align-self contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #665 implementation')
+  || !readme.includes('`_flex_align_self_tablet`')
+  || !readme.includes('`_flex_align_self_mobile`')) {
+  throw new Error('README P15 #665 active responsive flex-item align-self truth is stale or missing.');
 }
 
 console.log(

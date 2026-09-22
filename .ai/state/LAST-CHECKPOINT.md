@@ -2,64 +2,49 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`  
-Active Issue: `#663`  
-Active PR: `#664`  
-Active branch: `p15/responsive-hover-border-radius`
+Observed main: `15b2825e45cad543fc1950ecdcc361131043113d`  
+Active Issue: `#665`  
+Active PR: `#666`  
+Active branch: `p15/responsive-flex-item-align-self`
 
-## Completed reconciliation transition
+## Completed P15 #663 / PR #664
 
-- PR #662 exact head `f4d188ef9b056afeb50a82322ca62114be869f74` passed the full required gate set:
-  - CI `35673781046`
-  - CodeQL `35673781022`
-  - Integration Readiness `35673781010`
-  - P12 Offline Acceptance `35673780986`
-  - P12 Final Release Artifact `35673781000`
-  - P15 Real Elementor Target Proof `35673780982`
-  - P17 Local Browser Proof `35673780981`
-- PR #662 merged with expected-head protection as main `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`; Issue #661 closed completed.
-- The reconciliation changed no product/runtime behavior or authority.
+- Repaired exact head `5100c664cddf8fa28c7ed259d20ea7600f2a48b8` passed CI `35700602375`, CodeQL `35700602552`, Integration `35700602474`, P12 Offline `35700602489`, P12 Final `35700602312`, P15 target proof `35700602404`, and P17 browser proof `35700602455`.
+- Expected-head merge produced main `15b2825e45cad543fc1950ecdcc361131043113d`; Issue #663 closed completed.
 
-## P15 #663 implementation
+## P15 #665 implementation
 
-- Issue #663 owns bounded responsive Container hover border-radius for Elementor 4.2.4.
-- Exact evidence:
-  - Container blob `3486766b9565af99536ae205ed1936bb155daed0` registers responsive `border_radius_hover`;
-  - Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` establishes default device suffixes;
-  - Dimensions blob `7de34809d407e5fa208935b77a6b6648c72d3c5d` establishes four-side DIMENSIONS shape.
-- New resolver `src/targets/elementor/responsive-hover-border-radius-resolution.ts` is exact neutral-source fingerprint + exact base-candidate identity bound.
-- Only explicit uniform integer px `0..4096` values are accepted.
-- Write surface is limited to `border_radius_hover_tablet` and `border_radius_hover_mobile`.
-- Desktop `border_radius_hover`, normal-state `border_radius`, omitted breakpoints and unrelated settings remain untouched.
-- Stale bindings, duplicates, non-Container IDs, malformed/fractional/non-finite/out-of-range values, existing conflicts, unknown fields, generator drift and authority inflation fail closed.
-- Focused regression file: `tests/p15-responsive-hover-border-radius-resolution.test.ts`.
-- README/status verifier and memory-bank truth are synchronized.
-- PR #664 is open against exact base main `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`.
-- No local/CI PASS is claimed before exact-head PR verification.
+- Exact Elementor 4.2.4 tag commit: `0e292207b5b45f0e22603967ae41c0374211160d`.
+- Evidence blobs: Container `3486766b9565af99536ae205ed1936bb155daed0`; Flex Item `dc95ad439d8f9acfd5eefb1d129da67d9ff9c13a`; Container QUnit fixture `f06c5f60afa8fbef34ed922af419284cece09692`.
+- Resolver: `src/targets/elementor/responsive-flex-item-align-self-resolution.ts`.
+- Tests: `tests/p15-responsive-flex-item-align-self-resolution.test.ts`.
+- Explicit neutral values only: `start | center | end | stretch`.
+- Write surface only: `_flex_align_self_tablet` / `_flex_align_self_mobile`.
+- Desktop `_flex_align_self`, parent/container `flex_align_items*`, direction/order/grow/shrink/position remain untouched.
+- Exact source fingerprint + exact base-candidate identity required; stale/duplicate/non-Container/unknown/conflicting inputs fail closed.
+- Responsive/parent-layout inference, custom breakpoints, reordering, grid/position semantics, network, Figma mutation, compatibility, responsive closure, production/download authority remain false.
+- No CI PASS is claimed before exact-head PR verification.
 
-## Authority boundary
+## PR #666 binding
 
-Responsive/hover inference, inheritance synthesis, custom breakpoints, CSS parsing, network access, Figma mutation, responsive closure, target compatibility, production acceptance, generation/download and transfer authority remain false.
+- PR #666 is open against exact base main `15b2825e45cad543fc1950ecdcc361131043113d`.
+- Creation head was `7c341ca8e955318d0f6411ae0ffac61b72a43f07`.
+- README/state/claims/queue/Runner binding commits intentionally advance the branch after PR creation.
+- No CI PASS is claimed for the post-binding head.
 
-## Exact next safe action
+## PR #666 first exact-head batch and repair
 
-Resolve the final post-binding PR #664 head from GitHub and perform exactly one consolidated exact-head required-gate refresh. Merge with expected-head protection only if all required gates are green; otherwise diagnose the exact failing gate without weakening the contract.
-
-## First PR #664 exact-head failure diagnosis and repair
-
-- PR #664 exact head `e51d10426c2141b909ff1f603c366c5ddd777400` produced 5/7 green required gates:
-  - CodeQL `35699420251` PASS;
-  - Integration Readiness `35699420185` PASS;
-  - P12 Offline Acceptance `35699420359` PASS;
-  - P15 Real Elementor Target Proof `35699420310` PASS;
-  - P17 Local Browser Proof `35699420417` PASS.
-- CI `35699420361` / job `106653639347` failed at `npm run status:verify` before typecheck/tests.
-- P12 Final Release Artifact `35699420268` / job `106653633879` failed at the same status verifier step.
-- Exact root cause: the verifier still required the literal adjacent phrase `#659 / PR #660`, while README already retained the completed #659 heading, PR #660 exact-head merge evidence, closed Issue #659 statement and `content_width=full` truth separately.
-- Repair changes only the verifier from brittle phrase matching to those independent semantic merged-truth requirements.
-- P15 #663 resolver algorithm, exact source/candidate binding, `0..4096` uniform integer-px bound, write allowlist and all false authority flags are unchanged.
-- The repaired PR head is deliberately uncertified in this milestone; no second workflow/status refresh occurs after repair.
+- Exact head `5409136a572c38ada004c2ba7389c964c15ca5e1` returned 5/7 required gates PASS:
+  - Integration Readiness `35704296012` PASS;
+  - P12 Offline Acceptance `35704296038` PASS;
+  - P17 Local Browser Proof `35704296096` PASS;
+  - CodeQL `35704296097` PASS;
+  - P15 Real Elementor Target Proof `35704296135` PASS.
+- CI `35704296151` / job `106670851597` and P12 Final `35704296112` / job `106669399979` failed at the repository status verifier before typecheck/tests.
+- Exact root cause: README #659 retained the full-width write surface semantically as `content_width`, `width_tablet`, `width_mobile`, but the verifier intentionally requires the canonical merged literal `content_width=full`.
+- Repair restores only that exact README token. P15 #665 resolver/test logic, exact source/candidate binding, write allowlist and all security/authority boundaries are unchanged.
+- Per protocol, the repaired head is not polled again in this milestone.
 
 ## Exact next safe action
 
-On the next user `continue`, resolve the repaired PR #664 head and perform exactly one consolidated exact-head status refresh. If a gate fails, diagnose/fix that exact failure without weakening the contract. If all required gates are green, merge with expected-head protection under the user's standing consent.
+On the next user `continue`, resolve the repaired PR #666 head and perform exactly one consolidated exact-head required-gate refresh. If all seven are green and review threads remain resolved, merge with expected-head protection.
