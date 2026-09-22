@@ -130,7 +130,7 @@ Current verified main before this documentation sync:
 - Existing neutral Text IDs only; exact source fingerprint + exact base-candidate identity required.
 - Stale replay, duplicate/non-Text IDs, invalid colors, unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Color/theme/global-token inference, CSS parsing, link mutation, hover/responsive inference, network, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/text-editor-text-color`; exact-head CI PASS is not claimed before PR verification.
+- Focused implementation/tests are on branch `p15/text-editor-text-color` in PR #678 against exact base main `1ab21408bcf32c21bdcae7ca4c6b407a0670241f`; exact-head CI PASS is not claimed before final verification.
 
 ### Current P14 AI-native implementation track
 
