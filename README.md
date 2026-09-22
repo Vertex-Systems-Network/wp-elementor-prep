@@ -81,6 +81,7 @@ Current verified main before this documentation sync:
 - Stale source/candidate replay, duplicate/non-Container IDs, invalid/unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Responsive/parent-layout inference, reordering, positioning, custom breakpoints, grid semantics, network access, Figma mutation, compatibility, responsive closure, production and download authority remain false.
 - Focused implementation/tests are on branch `p15/responsive-flex-item-align-self` in PR #666 against exact base main `15b2825e45cad543fc1950ecdcc361131043113d`; exact-head CI PASS is not claimed before final post-binding verification.
+- First exact head `5409136a572c38ada004c2ba7389c964c15ca5e1` passed 5/7 required gates; CI and P12 Final failed only at `status:verify` because the canonical merged #659 token `content_width=full` had drifted from README wording. That README-only token is restored; P15 #665 resolver/tests/security boundaries are unchanged, and the repaired head is intentionally not re-polled in this milestone.
 
 ### Current P14 AI-native implementation track
 
