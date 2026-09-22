@@ -73,7 +73,10 @@ Current verified main before this documentation sync:
 - Accepted values are uniform integer px `0..4096`; write surface is only `border_radius_hover_tablet` / `border_radius_hover_mobile`.
 - Desktop hover radius and all normal-state radius settings remain untouched; omitted breakpoints remain omitted.
 - Responsive/hover inference, custom breakpoints, compatibility, production, generation/download, network and Figma-mutation authority remain false.
-- Focused implementation/tests are on branch `p15/responsive-hover-border-radius` in PR #664 against exact main `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`; exact-head CI PASS is not claimed yet.
+- First PR #664 exact head `e51d10426c2141b909ff1f603c366c5ddd777400` produced 5/7 green required gates: CodeQL, Integration Readiness, P12 Offline Acceptance, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- CI `35699420361` and P12 Final Release Artifact `35699420268` both failed at `status:verify` before typecheck/tests because the README verifier still required one brittle adjacent `#659 / PR #660` literal even though merged #659 truth was present semantically.
+- The repair changes only that verifier assertion to require the completed #659 heading, PR #660 exact-head merge statement, closed Issue #659 statement and `content_width=full` token independently. P15 #663 resolver logic, write surface, bounds and authority flags are unchanged.
+- The repaired PR #664 head is intentionally not claimed green in this milestone; fresh exact-head verification is required on the next `continue`.
 
 ### Current P14 AI-native implementation track
 
