@@ -365,3 +365,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Issue #663 and branch `p15/responsive-hover-border-radius` were opened from that exact main.
 - New resolver/test bind only Elementor 4.2.4 `border_radius_hover_tablet` / `border_radius_hover_mobile` to explicit uniform integer-px values under exact source/candidate identity.
 - No responsive inference, custom breakpoint, compatibility, production, download, network or Figma-mutation authority is introduced.
+
+## 2026-09-22 — PR #664 first exact-head batch failed at status verifier; repaired
+
+- Exact head `e51d10426c2141b909ff1f603c366c5ddd777400` returned 5/7 required gates PASS.
+- CI `35699420361` and P12 Final `35699420268` failed at the same `status:verify` assertion before typecheck/tests.
+- Root cause was a stale adjacent-literal README assertion for merged #659/#660 truth, not P15 #663 product code.
+- The verifier now requires independent semantic merged-evidence markers instead of one phrase.
+- No P15 #663 algorithm, bounds, write allowlist, source/candidate binding, security rule or authority flag changed.
+- No fresh workflow polling is performed after this repair; next `continue` owns the repaired exact-head batch.
