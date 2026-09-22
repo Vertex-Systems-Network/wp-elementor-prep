@@ -158,7 +158,7 @@ PR #546 / #545 binds declared TargetProfiles to that retained reference by exact
 
 PR #668 exact head `c50627b66674d3b2d07dff23996e641742351646` passed the complete required seven-gate set and merged as main `0ce4d23aa7cd9b7ecb5c7ed0003952e465da041f`; Issue #667 is closed completed.
 
-Issue #669 now owns the next bounded P15 responsive slice. Exact Elementor `4.2.4` Flex Item source proves explicit order presets `start|end` with selector dictionary target values `-99999|99999`, while the QUnit fixture confirms numeric `_flex_order_tablet/mobile` keys. The resolver accepts only the two named presets, preserves desktop/custom order, grow/shrink, align-self, parent alignment and position, and keeps compatibility/production/closure/download/network/Figma authority false.
+Issue #669 / PR #670 now owns the next bounded P15 responsive slice. Exact Elementor `4.2.4` Flex Item source proves explicit order presets `start|end` with selector dictionary target values `-99999|99999`, while the QUnit fixture confirms numeric `_flex_order_tablet/mobile` keys. The resolver accepts only the two named presets, preserves desktop/custom order, grow/shrink, align-self, parent alignment and position, and keeps compatibility/production/closure/download/network/Figma authority false.
 
 ## P16 state
 
