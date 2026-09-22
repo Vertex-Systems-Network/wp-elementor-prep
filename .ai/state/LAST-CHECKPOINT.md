@@ -57,6 +57,22 @@ Active branch: `p15/responsive-full-width`
 - Product resolver, source evidence, input bounds, write allowlist and all authority flags are unchanged.
 - The repaired head is not certified in this milestone; no fresh workflow polling occurs after the repair.
 
+## Second exact-head failure diagnosis and repair
+
+- PR #660 observed head `46c2f0625a9e8a084090d5871aa8a105b08bb388` retained 5/7 green required gates:
+  - CodeQL `35670558546` PASS;
+  - Integration Readiness `35670558578` PASS;
+  - P12 Offline Acceptance `35670558521` PASS;
+  - P15 Real Elementor Target Proof `35670558640` PASS;
+  - P17 Local Browser Proof `35670558508` PASS.
+- CI `35670558507` / job `106565855465` passed `status:verify`, then failed at TypeScript typecheck.
+- P12 Final Release Artifact `35670558503` / job `106565828493` reached the same repository typecheck and failed on the same defect.
+- Exact root cause: `src/targets/elementor/responsive-full-width-resolution.ts` exported the new full-width resolver under the stale copy/paste name `resolveP15ElementorResponsiveContainerBoxedWidth`, while the focused contract imports `resolveP15ElementorResponsiveContainerFullWidth`.
+- The downstream implicit-`any` diagnostics are cascading consequences of the missing typed import, not separate production defects.
+- Repair commits `084d329f39dcc2484ecf074b56e1a15e1bc019dd` and `0244e523683fed57d96a1e95ad99f925b51744bb` rename only the exported resolver symbol and synchronize README truth.
+- No algorithm, write allowlist, evidence binding, bounds, security check or authority flag changes.
+- The new repaired PR head is deliberately uncertified in this milestone; no second workflow/status refresh occurs after repair.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final repaired PR #660 head and perform exactly one consolidated exact-head status refresh. If a gate fails, diagnose/fix that exact failure on the following milestone. If all required exact-head gates are green, merge under the user's standing consent with expected-head protection.
+On the next user `continue`, resolve the export-name-repaired PR #660 head and perform exactly one consolidated exact-head status refresh. If a gate fails, diagnose/fix that exact failure without weakening the contract. If all required exact-head gates are green, merge under the user's standing consent with expected-head protection.
