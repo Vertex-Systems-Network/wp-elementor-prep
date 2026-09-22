@@ -378,3 +378,4 @@ This journal records durable AI-native execution-policy milestones only. It is n
 ## 2026-09-22 — PR #664 merged; #665 started
 - #664 head `5100c664...` passed 7/7 and merged as main `15b2825e...`; #663 closed.
 - #665 starts exact-bound responsive Container flex-item align-self; writes only `_flex_align_self_tablet/mobile`; authority remains false.
+- PR #666 opened for #665; creation head `7c341ca8...`; final post-binding head requires next-turn exact-head gates.
