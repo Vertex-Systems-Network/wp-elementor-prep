@@ -350,3 +350,10 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Source repair `084d329f39dcc2484ecf074b56e1a15e1bc019dd` renames only the exported symbol; README sync `0244e523683fed57d96a1e95ad99f925b51744bb` records the observed failure/repair state.
 - No resolver algorithm, evidence source binding, write allowlist, px bounds, source/candidate replay protection, sanitizer or authority/security boundary changes.
 - New exact head remains uncertified and is not polled again in this milestone.
+
+## 2026-09-22 — PR #660 merged; post-merge reconciliation #661 opened
+
+- PR #660 exact head `4e58c5ad8c2f462f52f6bbeb9e3e80c1f5d59f83` passed CI `35672164045`, CodeQL `35672164148`, Integration `35672164115`, P12 Offline `35672164084`, P12 Final `35672164127`, P15 target proof `35672164051` and P17 browser proof `35672164085`.
+- Expected-head guarded merge produced main `5125e041d3e9f942bd4c02bb93bedecf8e4c1bd1`; Issue #659 closed completed.
+- Issue #661 and branch `ai-native/post-660-reconciliation` were opened from that exact main to reconcile stale README/memory/AI-native status before starting another P15 slice.
+- #661 is governance/status reconciliation only and grants no new target, production, responsive-closure, custom-breakpoint or operator-approval authority.

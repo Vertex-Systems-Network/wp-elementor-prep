@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 64c8077eb37a728efa86a749a95e10f7bdce03c2
+observed_main_sha: 5125e041d3e9f942bd4c02bb93bedecf8e4c1bd1
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -64,9 +64,12 @@ claims:
   - {id: CL-061, statement: p15_659_requires_explicit_contentWidthMode_full_and_integer_tablet_mobile_width_px_500_through_1600, value: true}
   - {id: CL-062, statement: p15_659_write_surface_is_only_content_width_full_width_tablet_and_width_mobile_and_desktop_width_is_untouched, value: true}
   - {id: CL-063, statement: p15_659_keeps_responsive_inference_figma_mutation_network_compatibility_production_and_download_authority_false, value: true}
-  - {id: CL-064, statement: pr_660_is_active_exact_head_verification_path_for_p15_659, value: true}
-  - {id: CL-065, statement: p15_659_has_no_ci_or_runtime_pass_claim_before_exact_head_verification, value: true}
+  - {id: CL-064, statement: pr_660_exact_head_verification_path_for_p15_659_completed_and_merged, value: true}
+  - {id: CL-065, statement: p15_659_exact_head_verification_completed_before_merge_without_granting_broad_runtime_or_production_authority, value: true}
   - {id: CL-066, statement: pr_660_first_exact_head_failed_only_on_readme_verifier_literal_mismatch_before_typecheck_or_tests, value: true}
   - {id: CL-067, statement: pr_660_verifier_repair_is_semantic_readme_contract_only_and_does_not_change_product_runtime_or_authority, value: true}
   - {id: CL-068, statement: pr_660_second_observed_head_46c2f062_passed_status_verify_but_failed_typecheck_on_full_width_resolver_export_name_mismatch, value: true}
   - {id: CL-069, statement: pr_660_export_name_repair_changes_only_the_full_width_resolver_symbol_and_does_not_weaken_write_bounds_security_or_authority, value: true}
+  - {id: CL-070, statement: pr_660_exact_head_4e58c5ad_passed_all_seven_required_gates_and_merged_as_main_5125e041, value: true}
+  - {id: CL-071, statement: issue_659_is_closed_completed_after_pr_660_merge, value: true}
+  - {id: CL-072, statement: issue_661_owns_post_pr_660_ai_native_reconciliation_only_and_does_not_change_product_authority, value: true}

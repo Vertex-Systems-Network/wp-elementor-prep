@@ -84,7 +84,9 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-657-FINAL | #657 / PR #658 | P14 R6 explicit confirmation + internal retained-duplicate activation | Required PR exact-head gate set | exact head `d1daaccd8ed8ed912a171c307e123ca1d83d6b0a`; CI, CodeQL, Integration, P12 Offline, P12 Final, P15 and P17 PASS; merged main `64c8077eb37a728efa86a749a95e10f7bdce03c2`; acceptance/target authority remain false | `FINAL_BATCH` | exact-head activation/session/UI/release-boundary/transaction + repository checks PASS | DONE |
 
-| RQ-659-FINAL | #659 / PR #660 | P15 explicit full-width responsive Container width | Required PR exact-head gate set | observed head `46c2f062...`: CodeQL/Integration/P12 Offline/P15/P17 PASS; README verifier PASS; CI + P12 Final fail at typecheck because resolver was exported under stale `...BoxedWidth` name; source repair `084d329f...` renames only symbol to `...FullWidth`, README sync `0244e523...`; product/authority unchanged | `FINAL_BATCH` | repaired exact-head focused responsive-full-width tests + CI/CodeQL/Integration/P12/P15/P17 repository gates PASS before merge | REPAIRED_AWAITING_NEW_EXACT_HEAD_BATCH |
+| RQ-659-FINAL | #659 / PR #660 | P15 explicit full-width responsive Container width | Required PR exact-head gate set | exact head `4e58c5ad...`; CI `35672164045`, CodeQL `35672164148`, Integration `35672164115`, P12 Offline `35672164084`, P12 Final `35672164127`, P15 `35672164051`, P17 `35672164085` PASS; merged main `5125e041...`; authority unchanged | `FINAL_BATCH` | exact-head focused responsive-full-width tests + required repository gates PASS | DONE |
+
+| RQ-661-FINAL | #661 / PR #662 | Post-PR #660 AI-native reconciliation | Required PR exact-head gate set | base main `5125e041...`; creation head `32c62d6b...`; status/readme/memory reconciliation only; no product or authority change | `FINAL_BATCH` | exact-head governance/README/repository gates PASS before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 
