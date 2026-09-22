@@ -32,6 +32,19 @@ Active branch: `p15/responsive-flex-item-align-self`
 - README/state/claims/queue/Runner binding commits intentionally advance the branch after PR creation.
 - No CI PASS is claimed for the post-binding head.
 
+## PR #666 first exact-head batch and repair
+
+- Exact head `5409136a572c38ada004c2ba7389c964c15ca5e1` returned 5/7 required gates PASS:
+  - Integration Readiness `35704296012` PASS;
+  - P12 Offline Acceptance `35704296038` PASS;
+  - P17 Local Browser Proof `35704296096` PASS;
+  - CodeQL `35704296097` PASS;
+  - P15 Real Elementor Target Proof `35704296135` PASS.
+- CI `35704296151` / job `106670851597` and P12 Final `35704296112` / job `106669399979` failed at the repository status verifier before typecheck/tests.
+- Exact root cause: README #659 retained the full-width write surface semantically as `content_width`, `width_tablet`, `width_mobile`, but the verifier intentionally requires the canonical merged literal `content_width=full`.
+- Repair restores only that exact README token. P15 #665 resolver/test logic, exact source/candidate binding, write allowlist and all security/authority boundaries are unchanged.
+- Per protocol, the repaired head is not polled again in this milestone.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final current PR #666 head from GitHub and perform exactly one consolidated exact-head required-gate refresh. Merge with expected-head protection only if the full required gate set is green and review threads are resolved.
+On the next user `continue`, resolve the repaired PR #666 head and perform exactly one consolidated exact-head required-gate refresh. If all seven are green and review threads remain resolved, merge with expected-head protection.
