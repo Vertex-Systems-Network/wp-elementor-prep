@@ -158,7 +158,7 @@ PR #546 / #545 binds declared TargetProfiles to that retained reference by exact
 
 PR #672 repaired exact head `6454ac8ea0ef6070345a6b104513353274f3e661` passed the complete required seven-gate set and merged as main `1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb`; Issue #671 is closed completed.
 
-Issue #673 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Container source proves `html_tag`, empty/default-to-`div` behavior, validated tag rendering, and the separate `a`/link dependency. The resolver accepts only explicit semantic non-link tags `header, footer, main, article, section, aside, nav`, writes only `html_tag`, excludes div/a/link/custom/responsive semantics, and keeps compatibility/production/closure/download/network/Figma authority false.
+Issue #673 / PR #674 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Container source proves `html_tag`, empty/default-to-`div` behavior, validated tag rendering, and the separate `a`/link dependency. The resolver accepts only explicit semantic non-link tags `header, footer, main, article, section, aside, nav`, writes only `html_tag`, excludes div/a/link/custom/responsive semantics, and keeps compatibility/production/closure/download/network/Figma authority false.
 
 ## P16 state
 
