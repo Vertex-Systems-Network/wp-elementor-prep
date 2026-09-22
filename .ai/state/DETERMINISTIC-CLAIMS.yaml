@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 687bb2105ce1c407ee4977582cefc354556e0325
+observed_main_sha: 1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -109,3 +109,8 @@ claims:
   - {id: CL-106, statement: pr_672_is_active_exact_head_verification_path_for_p15_671_container_overflow_hidden_auto, value: true}
   - {id: CL-107, statement: pr_672_first_exact_head_0ea6ee2a_passed_five_of_seven_required_gates_and_failed_only_at_readme_status_verification_before_typecheck, value: true}
   - {id: CL-108, statement: pr_672_readme_table_repair_changes_only_markdown_safe_hidden_auto_wording_and_does_not_change_p15_671_product_security_or_authority_contracts, value: true}
+  - {id: CL-109, statement: pr_672_repaired_exact_head_6454ac8e_passed_all_seven_required_gates_and_merged_as_main_1f8b8ed3, value: true}
+  - {id: CL-110, statement: issue_671_is_closed_completed_after_pr_672_merge, value: true}
+  - {id: CL-111, statement: issue_673_owns_exact_bound_container_semantic_html_tags_for_elementor_4_2_4, value: true}
+  - {id: CL-112, statement: p15_673_write_surface_is_only_html_tag_with_header_footer_main_article_section_aside_nav_and_div_a_custom_responsive_tags_out_of_scope, value: true}
+  - {id: CL-113, statement: p15_673_keeps_semantic_link_layout_responsive_custom_tag_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
