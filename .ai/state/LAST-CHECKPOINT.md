@@ -44,3 +44,22 @@ Responsive/hover inference, inheritance synthesis, custom breakpoints, CSS parsi
 ## Exact next safe action
 
 Resolve the final post-binding PR #664 head from GitHub and perform exactly one consolidated exact-head required-gate refresh. Merge with expected-head protection only if all required gates are green; otherwise diagnose the exact failing gate without weakening the contract.
+
+## First PR #664 exact-head failure diagnosis and repair
+
+- PR #664 exact head `e51d10426c2141b909ff1f603c366c5ddd777400` produced 5/7 green required gates:
+  - CodeQL `35699420251` PASS;
+  - Integration Readiness `35699420185` PASS;
+  - P12 Offline Acceptance `35699420359` PASS;
+  - P15 Real Elementor Target Proof `35699420310` PASS;
+  - P17 Local Browser Proof `35699420417` PASS.
+- CI `35699420361` / job `106653639347` failed at `npm run status:verify` before typecheck/tests.
+- P12 Final Release Artifact `35699420268` / job `106653633879` failed at the same status verifier step.
+- Exact root cause: the verifier still required the literal adjacent phrase `#659 / PR #660`, while README already retained the completed #659 heading, PR #660 exact-head merge evidence, closed Issue #659 statement and `content_width=full` truth separately.
+- Repair changes only the verifier from brittle phrase matching to those independent semantic merged-truth requirements.
+- P15 #663 resolver algorithm, exact source/candidate binding, `0..4096` uniform integer-px bound, write allowlist and all false authority flags are unchanged.
+- The repaired PR head is deliberately uncertified in this milestone; no second workflow/status refresh occurs after repair.
+
+## Exact next safe action
+
+On the next user `continue`, resolve the repaired PR #664 head and perform exactly one consolidated exact-head status refresh. If a gate fails, diagnose/fix that exact failure without weakening the contract. If all required gates are green, merge with expected-head protection under the user's standing consent.
