@@ -94,3 +94,4 @@ claims:
   - {id: CL-091, statement: issue_667_owns_exact_bound_responsive_container_flex_item_grow_shrink_binary_factors_for_elementor_4_2_4, value: true}
   - {id: CL-092, statement: p15_667_write_surface_is_only__flex_grow_and_shrink_tablet_mobile_with_binary_0_1_values_and_desktop_order_position_alignment_untouched, value: true}
   - {id: CL-093, statement: p15_667_keeps_responsive_parent_layout_arbitrary_numeric_factor_reordering_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-094, statement: pr_668_is_active_exact_head_verification_path_for_p15_667_binary_flex_item_grow_shrink_factors, value: true}
