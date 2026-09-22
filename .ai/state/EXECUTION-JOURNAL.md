@@ -2,14 +2,6 @@
 
 This journal records durable AI-native execution-policy milestones only. It is not a CI polling log.
 
-## 2026-09-21 — #636 merged and post-merge truth reconciled
-
-- PR #636 exact head `a971db96dbfbf228329bdc185875f873724b27e1` was verified green and merged.
-- New main is `92c153a4acba2b53e02c938567241c82db880907`; Issue #634 closed.
-- One consolidated post-merge refresh observed PR-origin audit, CodeQL, CI, P12 Final, offline matrix, Integration and P17 PASS.
-- Open PR queue is empty.
-- Issue #639 created for focused durable-state reconciliation; no unrelated feature work started.
-
 ## 2026-09-21 — P14 vertical-stack qualification slice activated
 
 - Reconciled post-#640 main `84c5809327afec2ddef0a6fb78bffc0cd9fcc2c6` as fully green, including CodeQL and PR-origin audit.
@@ -367,3 +359,9 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #672 repaired head `6454ac8e...` passed 7/7 and merged as main `1f8b8ed3...`; #671 closed.
 - #673 starts explicit Container semantic HTML tags: header/footer/main/article/section/aside/nav only; only `html_tag` writable; div/a/custom tags, link mutation/inference and broader authority remain untouched.
 - PR #674 opened for #673; creation head `93e612ed...`; final post-binding head awaits exact-head gates.
+
+## 2026-09-23 — PR #674 merged; #675 started
+- #674 head `8c54239d...` passed 7/7 and merged as main `42496445...`; #673 closed.
+- #675 starts strict Heading normal text color: lowercase six-digit hex only; only `title_color` writable; global/theme tokens, CSS variables, alpha, hover/link color and broader authority remain untouched.
+- PR #676 opened for #675; creation head `c2ab7472...`; final post-binding head awaits exact-head gates; strict color-token security boundary retained.
+- #676 first head `b7235734...`: 5/7 PASS; CI + Final failed because #675 verifier fragment insertion corrupted JS syntax via replacement-string `$'` semantics; verifier-only line-boundary repair applied, no same-turn re-poll.
