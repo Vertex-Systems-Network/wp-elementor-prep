@@ -2,14 +2,6 @@
 
 This journal records durable AI-native execution-policy milestones only. It is not a CI polling log.
 
-## 2026-09-21 — Governance backward-compatibility fix
-
-- Inspected only the two failed exact-head jobs from PR #638.
-- Both failures came from governance regression-contract drift, not product/runtime/security behavior.
-- Restored legacy delivery-resilience state keys inside Supervisor schema v2.
-- Added the exact one-consolidated-refresh invariant phrase without weakening either test.
-- New exact-head state is VERIFYING; no CI polling occurs in this fix milestone.
-
 ## 2026-09-21 — #638 post-merge reconciliation and #636 main sync
 
 - Reconciled exact main `14cdcd57fa21a8bed73de35cdfa336923c0e787f`; #637/#638 are terminal merged/closed.
@@ -372,3 +364,9 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #668 head `c50627b6...` passed 7/7 and merged as main `0ce4d23a...`; #667 closed.
 - #669 starts explicit responsive Container order presets: `start -> -99999`, `end -> 99999`; only tablet/mobile order keys writable; arbitrary custom order/position/authority remain untouched.
 - PR #670 opened for #669; creation head `1424a49b...`; final post-binding head awaits exact-head gates.
+
+## 2026-09-22 — PR #670 merged; #671 started
+- #670 head `e244b3a2...` passed 7/7 and merged as main `687bb210...`; #669 closed.
+- #671 starts standalone Container overflow with explicit `hidden|auto`; only `overflow` is writable; default reset/custom/responsive overflow and authority remain untouched.
+- PR #672 opened for #671; creation head `81920110...`; final post-binding head awaits exact-head gates.
+- #672 first head `0ea6ee2a...`: 5/7 PASS; CI + Final failed on README table `hidden|auto` delimiter; README-only `hidden/auto` repair applied, no same-turn re-poll.
