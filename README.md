@@ -89,7 +89,7 @@ Current verified main before this documentation sync:
 - Desktop `_flex_grow` / `_flex_shrink`, align-self, parent/container alignment, order, position and unrelated settings remain untouched.
 - Stale source/candidate replay, duplicate/non-Container IDs, invalid/unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Responsive/parent-layout inference, arbitrary numeric-factor inference, custom breakpoints, reordering, positioning, grid semantics, network access, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/responsive-flex-item-factors`; exact-head CI PASS is not claimed before PR verification.
+- Focused implementation/tests are on branch `p15/responsive-flex-item-factors` in PR #668 against exact base main `e2839d8e32dab4a29db908f1ba1a1710579219af`; exact-head CI PASS is not claimed before final post-binding verification.
 
 ### Current P14 AI-native implementation track
 
