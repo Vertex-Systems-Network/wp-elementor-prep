@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb
+observed_main_sha: 424964452fa1b0d7055103116fd19260ef856393
 items:
   - {id: CQ-637, issue: 637, pr: 638, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-634, issue: 634, pr: 636, status: MERGED_CLOSED, priority: 0, accepted: true}
@@ -20,7 +20,8 @@ items:
   - {id: CQ-667, issue: 667, pr: 668, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-669, issue: 669, pr: 670, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-671, issue: 671, pr: 672, status: MERGED_CLOSED, priority: 0, accepted: true}
-  - {id: CQ-673, issue: 673, pr: 674, status: ACTIVE_VERIFYING, priority: 1, accepted: true}
+  - {id: CQ-673, issue: 673, pr: 674, status: MERGED_CLOSED, priority: 0, accepted: true}
+  - {id: CQ-675, issue: 675, status: ACTIVE_IMPLEMENTING, priority: 1, accepted: true}
   - {id: CQ-287, issue: 287, status: BLOCKED_ADMIN, priority: 2, accepted: true}
   - {id: CQ-119, issue: 119, status: ACTIVE_ROADMAP_OWNER, priority: 3, accepted: true}
   - {id: CQ-159, issue: 159, status: WAITING_EXTERNAL_RUNTIME_EVIDENCE, priority: 4, accepted: true}
