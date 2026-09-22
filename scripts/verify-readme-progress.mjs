@@ -13,6 +13,7 @@ const p15ContainerOverflowSource = await readFile('src/targets/elementor/contain
 const p15ContainerSemanticHtmlTagSource = await readFile('src/targets/elementor/container-semantic-html-tag-resolution.ts', 'utf8');
 const p15HeadingTextColorSource = await readFile('src/targets/elementor/heading-text-color-resolution.ts', 'utf8');
 const p15TextEditorTextColorSource = await readFile('src/targets/elementor/text-editor-text-color-resolution.ts', 'utf8');
+const p15ButtonTextColorSource = await readFile('src/targets/elementor/button-text-color-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -138,7 +139,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#677',
+  next: '#679',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -404,11 +405,39 @@ for (const fragment of p15TextEditorTextColorRequiredFragments) {
     throw new Error(`P15 #677 Text Editor text color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #677 implementation')
-  || !readme.includes('`text_color`')
+if (!readme.includes('### Completed P15 #677 / PR #678 verification')
+  || !readme.includes('94ee08c1a8039ea8496483419a747b2ddd637c8a')
+  || !readme.includes('9ef893af8417706ef8904d1b879b91d498012e16')
+  || !readme.includes('Issue #677 is closed completed')
+  || !readme.includes('`text_color`')) {
+  throw new Error('README P15 #677 / PR #678 merged Text Editor text color truth is stale or missing.');
+}
+
+const p15ButtonTextColorRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "controlName: 'button_text_color'",
+  "settingKey: 'button_text_color'",
+  "hoverControlName: 'hover_color'",
+  "backgroundGroupName: 'background'",
+  "acceptedColorPattern:",
+  "^#[0-9a-f]{6}$",
+  "settings.text !== node.text",
+  "function expectedButtonLink",
+  "target.settings[P15_ELEMENTOR_BUTTON_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
+  "colorInferencePerformed: false",
+];
+for (const fragment of p15ButtonTextColorRequiredFragments) {
+  if (!p15ButtonTextColorSource.includes(fragment)) {
+    throw new Error(`P15 #679 Button text color contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #679 implementation')
+  || !readme.includes('`button_text_color`')
   || !readme.includes('lowercase six-digit hex')
-  || !readme.includes('link/global-theme color authority remains out of scope')) {
-  throw new Error('README P15 #677 active Text Editor text color truth is stale or missing.');
+  || !readme.includes('hover/background/global-token color authority remains out of scope')) {
+  throw new Error('README P15 #679 active Button text color truth is stale or missing.');
 }
 
 console.log(
