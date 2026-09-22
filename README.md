@@ -12,7 +12,7 @@ Current product surfaces:
 - safety-gated P5/P6/P7 preparation foundations;
 - P13 Build-Ready Score 2.0 + Responsive Risk with analyzer-bound provenance;
 - P14 Guided Prepare bounded implementation through exact-registry-backed retained-duplicate runtime plus explicit internal/dev confirmation activation; publishable release activation is hard-disabled and stripped, while production acceptance and target compatibility remain unclaimed;
-- P15 Elementor R1 evidence chain plus bounded target-neutral IR, deterministic local Elementor v0.4 Template JSON candidate generation, read-only selected-Figma-Frame Auto Layout/plain-text extraction, exact source-bound Heading/Button semantic resolution, exact URL-bound image-review resolution, exact source/candidate-bound tablet/mobile container direction + linked-px gap + flex alignment + px padding + wrap + align-content + border-radius + margin + min-height + boxed-width + z-index overrides, explicit full-width responsive width under #659, plus bounded responsive hover border-radius under #663, exact-bound responsive flex-item align-self under #665, bounded responsive flex-item grow/shrink factors under #667, bounded responsive flex-item order presets under #669, bounded standalone Container overflow under #671, bounded Container semantic HTML tags under #673, bounded Heading normal text color under #675, and bounded Text Editor normal text color under #677, sanitized plugin preview, retained WP 6.8 + Elementor 4.2.4 controlled proof plus one exact controlled URL-only Image asset observation, exact declared-profile reference alignment and exact retained-candidate identity binding;
+- P15 Elementor R1 evidence chain plus bounded target-neutral IR, deterministic local Elementor v0.4 Template JSON candidate generation, read-only selected-Figma-Frame Auto Layout/plain-text extraction, exact source-bound Heading/Button semantic resolution, exact URL-bound image-review resolution, exact source/candidate-bound tablet/mobile container direction + linked-px gap + flex alignment + px padding + wrap + align-content + border-radius + margin + min-height + boxed-width + z-index overrides, explicit full-width responsive width under #659, plus bounded responsive hover border-radius under #663, exact-bound responsive flex-item align-self under #665, bounded responsive flex-item grow/shrink factors under #667, bounded responsive flex-item order presets under #669, bounded standalone Container overflow under #671, bounded Container semantic HTML tags under #673, bounded Heading normal text color under #675, bounded Text Editor normal text color under #677, and bounded Button normal text color under #679, sanitized plugin preview, retained WP 6.8 + Elementor 4.2.4 controlled proof plus one exact controlled URL-only Image asset observation, exact declared-profile reference alignment and exact retained-candidate identity binding;
 - P16 Gutenberg R1 normalized candidate/native-validation evidence chain through an exact decision prerequisite, non-authorizing genuine-evidence retention requirements manifest, offline operator export, exact-current manifest validator, offline validation CLI, bounded local JSON I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding, iterative structural bounds, depth/value/text-bounded + accessor/own-shape-safe direct canonicalization with object-cardinality preflight, prototype-safe canonicalization and alias-safe atomic output writes;
 - exact-build release/provenance tooling.
 
@@ -118,19 +118,26 @@ Current verified main before this documentation sync:
 - Expected-head merge produced main `1ab21408bcf32c21bdcae7ca4c6b407a0670241f`; Issue #675 is closed completed.
 - Merged write surface remains only `title_color`, strict lowercase six-digit hex; global/theme tokens, CSS variables, alpha, hover/link mutation and broader authority remain out of scope.
 
-### Current P15 #677 implementation
+### Completed P15 #677 / PR #678 verification
 
-- Issue #677 adds exact-bound normal Text Editor text color for Elementor 4.2.4.
-- Exact source evidence binds tag commit `0e292207...` and Text Editor blob `72ff8684...`.
-- Elementor source registers normal `text_color` on `{{WRAPPER}}`; separate `link_color` remains untouched.
+- Issue #677 added exact-bound normal Text Editor text color only.
+- Final exact head `94ee08c1a8039ea8496483419a747b2ddd637c8a` passed all seven required gates: CI `35791305993`, CodeQL `35791305966`, Integration `35791305937`, P12 Offline `35791306017`, P12 Final `35791305949`, P15 target proof `35791305926`, and P17 browser proof `35791305962`.
+- Expected-head merge produced main `9ef893af8417706ef8904d1b879b91d498012e16`; Issue #677 is closed completed.
+- Merged write surface remains only `text_color`, strict lowercase six-digit hex; link/global tokens, CSS variables, alpha/custom/responsive colors and broader authority remain out of scope.
+
+### Current P15 #679 implementation
+
+- Issue #679 adds exact-bound normal Button text color for Elementor 4.2.4.
+- Exact source evidence binds tag commit `0e292207...` and Button trait blob `31192aae...`.
+- Elementor source registers normal `button_text_color` on `.elementor-button`; hover `hover_color` and background controls remain separate and untouched.
 - Accepted values are lowercase six-digit hex only, matching `#[0-9a-f]{6}`.
-- Write surface is only target setting `text_color`.
-- Exact generated Text Editor content binding is revalidated using the generator-equivalent escaped `editor` HTML plus optional desktop alignment.
-- link/global-theme color authority remains out of scope, together with CSS variables, shorthand hex, alpha/rgba/hsla, named colors, arbitrary CSS strings and responsive variants.
-- Existing neutral Text IDs only; exact source fingerprint + exact base-candidate identity required.
-- Stale replay, duplicate/non-Text IDs, invalid colors, unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
-- Color/theme/global-token inference, CSS parsing, link mutation, hover/responsive inference, network, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/text-editor-text-color` in PR #678 against exact base main `1ab21408bcf32c21bdcae7ca4c6b407a0670241f`; exact-head CI PASS is not claimed before final verification.
+- Write surface is only target setting `button_text_color`.
+- Exact generated Button text, normalized desktop alignment, and exact generated link object are rebound before any color mutation.
+- hover/background/global-token color authority remains out of scope, together with CSS variables, shorthand hex, alpha/rgba/hsla, named/custom colors and responsive variants.
+- Existing neutral Button IDs only; exact source fingerprint + exact base-candidate identity required.
+- Stale replay, duplicate/non-Button IDs, invalid colors, unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
+- Color/theme/global-token inference, link mutation, hover/background/responsive inference, network, Figma mutation, compatibility, responsive closure, production and download authority remain false.
+- Focused implementation/tests are on branch `p15/button-text-color`; exact-head CI PASS is not claimed before PR verification.
 
 ### Current P14 AI-native implementation track
 
@@ -258,7 +265,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded slices include responsive layout/style controls, flex-item controls, overflow, semantic Container tags and strict Heading color; #677 adds strict lowercase six-digit hex Text Editor normal color only; no link/global-token inference, retained operator approval, broad compatibility, responsive closure or production authority is claimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded slices include responsive layout/style controls, flex-item controls, overflow, semantic Container tags plus strict Heading/Text Editor colors; #679 adds strict lowercase six-digit hex Button normal text color only; no hover/background/global-token inference, retained operator approval, broad compatibility, responsive closure or production authority is claimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -353,7 +360,7 @@ P12 remains at the retained **80%** release-exit state. The publishing-authorita
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. continue P15 commercial-V1 through #677 bounded Text Editor normal text color without fabricating a retained approval: exact default-breakpoint align-content is now supported only where the same breakpoint has an explicit #576 `wrap` prerequisite; continue only independently evidenced responsive/matrix slices and keep custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority unclaimed unless separate evidence explicitly changes them;
+2. continue P15 commercial-V1 through #679 bounded Button normal text color without fabricating a retained approval: exact default-breakpoint align-content is now supported only where the same breakpoint has an explicit #576 `wrap` prerequisite; continue only independently evidenced responsive/matrix slices and keep custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority unclaimed unless separate evidence explicitly changes them;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;
