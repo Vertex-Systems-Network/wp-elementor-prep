@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb`  
 Active Issue: `#673`  
-Active PR: none yet  
+Active PR: `#674`  
 Active branch: `p15/container-semantic-html-tag`
 
 ## Completed P15 #671 / PR #672
@@ -36,6 +36,13 @@ Active branch: `p15/container-semantic-html-tag`
 - Semantic/link/layout/responsive inference, custom tags, positioning/grid semantics, network, Figma mutation, compatibility, responsive closure, production/download authority remain false.
 - No CI PASS is claimed before exact-head PR verification.
 
+## PR #674 binding
+
+- PR #674 is open against exact base main `1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb`.
+- Creation head was `93e612edb0eb1f4bfb57b4cc78cccca40b5c4dcb`.
+- README/state/claims/queue/Runner binding commits intentionally advance the branch after PR creation.
+- No CI PASS is claimed for the post-binding head.
+
 ## Exact next safe action
 
-Finish synchronization, open the focused #673 PR, bind its final head, and end without workflow polling. The next user `continue` performs one consolidated exact-head required-gate refresh.
+On the next user `continue`, resolve the final current PR #674 head from GitHub and perform exactly one consolidated exact-head required-gate refresh. Merge with expected-head protection only if the full required gate set is green and review threads are resolved.
