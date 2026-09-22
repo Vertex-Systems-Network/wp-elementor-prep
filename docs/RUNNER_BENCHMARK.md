@@ -93,7 +93,8 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 | RQ-667-FINAL | #667 / PR #668 | P15 responsive Container flex-item binary grow/shrink factors | Required PR exact-head gate set | exact head `c50627b6...`; all seven gates PASS; merged main `0ce4d23a...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
 | RQ-669-FINAL | #669 / PR #670 | P15 responsive Container flex-item start/end order presets | Required PR exact-head gate set | exact head `e244b3a2...`; all seven gates PASS; merged main `687bb210...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
 | RQ-671-FINAL | #671 / PR #672 | P15 bounded Container overflow hidden/auto | Required PR exact-head gate set | repaired exact head `6454ac8e...`; all seven gates PASS; merged main `1f8b8ed3...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
-| RQ-673-FINAL | #673 / PR #674 | P15 bounded Container semantic HTML tags | Required PR exact-head gate set | creation head `93e612ed...`; branch binding commits follow; no CI PASS claimed | `FINAL_BATCH` | final exact PR head must pass CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
+| RQ-673-FINAL | #673 / PR #674 | P15 bounded Container semantic HTML tags | Required PR exact-head gate set | exact head `8c54239d...`; all seven gates PASS; merged main `42496445...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
+| RQ-675-FINAL | #675 | P15 bounded Heading normal text color | Required PR exact-head gate set | branch implementation + focused security tests; PR not opened yet | `FINAL_BATCH` | exact PR head must pass CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser before merge | IMPLEMENTING_PR_NOT_OPEN |
 
 ## Blocking-now queue
 
