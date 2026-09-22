@@ -120,3 +120,4 @@ claims:
   - {id: CL-117, statement: issue_675_owns_exact_bound_heading_normal_text_color_for_elementor_4_2_4, value: true}
   - {id: CL-118, statement: p15_675_write_surface_is_only_title_color_with_lowercase_six_digit_hex_and_global_tokens_css_variables_alpha_hover_link_and_arbitrary_css_out_of_scope, value: true}
   - {id: CL-119, statement: p15_675_keeps_color_theme_global_token_css_link_hover_responsive_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-120, statement: pr_676_is_active_exact_head_verification_path_for_p15_675_heading_normal_text_color, value: true}
