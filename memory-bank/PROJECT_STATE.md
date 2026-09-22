@@ -158,7 +158,7 @@ PR #546 / #545 binds declared TargetProfiles to that retained reference by exact
 
 PR #678 exact head `94ee08c1a8039ea8496483419a747b2ddd637c8a` passed the complete required seven-gate set and merged as main `9ef893af8417706ef8904d1b879b91d498012e16`; Issue #677 is closed completed.
 
-Issue #679 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Button trait source proves normal `button_text_color`, with separate hover/background controls. The resolver accepts only lowercase six-digit hex, writes only `button_text_color`, revalidates exact generated Button text, normalized desktop alignment and exact link object, rejects global/theme tokens, CSS variables, shorthand/alpha/named/custom/responsive color strings, and leaves hover/background settings untouched. Exact source/candidate binding, fail-closed validation and false compatibility/production/closure/download/network/Figma authority remain mandatory.
+Issue #679 / PR #680 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Button trait source proves normal `button_text_color`, with separate hover/background controls. The resolver accepts only lowercase six-digit hex, writes only `button_text_color`, revalidates exact generated Button text, normalized desktop alignment and exact link object, rejects global/theme tokens, CSS variables, shorthand/alpha/named/custom/responsive color strings, and leaves hover/background settings untouched. Exact source/candidate binding, fail-closed validation and false compatibility/production/closure/download/network/Figma authority remain mandatory.
 
 ## P16 state
 
