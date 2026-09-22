@@ -121,3 +121,5 @@ claims:
   - {id: CL-118, statement: p15_675_write_surface_is_only_title_color_with_lowercase_six_digit_hex_and_global_tokens_css_variables_alpha_hover_link_and_arbitrary_css_out_of_scope, value: true}
   - {id: CL-119, statement: p15_675_keeps_color_theme_global_token_css_link_hover_responsive_compatibility_production_download_network_and_figma_authority_false, value: true}
   - {id: CL-120, statement: pr_676_is_active_exact_head_verification_path_for_p15_675_heading_normal_text_color, value: true}
+  - {id: CL-121, statement: pr_676_first_exact_head_b7235734_passed_five_of_seven_required_gates_and_failed_only_because_status_verifier_had_a_javascript_string_replacement_syntax_corruption, value: true}
+  - {id: CL-122, statement: pr_676_verifier_repair_restores_exact_heading_color_marker_without_changing_product_security_or_authority_contracts, value: true}
