@@ -366,3 +366,4 @@ This journal records durable AI-native execution-policy milestones only. It is n
 ## 2026-09-23 — PR #672 merged; #673 started
 - #672 repaired head `6454ac8e...` passed 7/7 and merged as main `1f8b8ed3...`; #671 closed.
 - #673 starts explicit Container semantic HTML tags: header/footer/main/article/section/aside/nav only; only `html_tag` writable; div/a/custom tags, link mutation/inference and broader authority remain untouched.
+- PR #674 opened for #673; creation head `93e612ed...`; final post-binding head awaits exact-head gates.
