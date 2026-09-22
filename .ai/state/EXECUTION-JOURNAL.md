@@ -2,14 +2,6 @@
 
 This journal records durable AI-native execution-policy milestones only. It is not a CI polling log.
 
-## 2026-09-21 — #638 post-merge reconciliation and #636 main sync
-
-- Reconciled exact main `14cdcd57fa21a8bed73de35cdfa336923c0e787f`; #637/#638 are terminal merged/closed.
-- Observed post-merge PR-origin audit PASS and CodeQL PASS in the single consolidated refresh.
-- Promoted #634 / PR #636 to the active accepted path.
-- Merge-synced current governance main into PR #636 without force-push while preserving Node 22/toolchain/security evidence.
-- New PR #636 exact head is VERIFYING; no new-head CI polling occurs in this milestone.
-
 ## 2026-09-21 — #636 merged and post-merge truth reconciled
 
 - PR #636 exact head `a971db96dbfbf228329bdc185875f873724b27e1` was verified green and merged.
@@ -370,3 +362,8 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #671 starts standalone Container overflow with explicit `hidden|auto`; only `overflow` is writable; default reset/custom/responsive overflow and authority remain untouched.
 - PR #672 opened for #671; creation head `81920110...`; final post-binding head awaits exact-head gates.
 - #672 first head `0ea6ee2a...`: 5/7 PASS; CI + Final failed on README table `hidden|auto` delimiter; README-only `hidden/auto` repair applied, no same-turn re-poll.
+
+## 2026-09-23 — PR #672 merged; #673 started
+- #672 repaired head `6454ac8e...` passed 7/7 and merged as main `1f8b8ed3...`; #671 closed.
+- #673 starts explicit Container semantic HTML tags: header/footer/main/article/section/aside/nav only; only `html_tag` writable; div/a/custom tags, link mutation/inference and broader authority remain untouched.
+- PR #674 opened for #673; creation head `93e612ed...`; final post-binding head awaits exact-head gates.

@@ -2,21 +2,21 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 687bb2105ce1c407ee4977582cefc354556e0325
+observed_main_sha: 1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb
 observed_main_branch: main
-active_issue: 671
-active_pr: 672
-active_branch: p15/container-overflow
+active_issue: 673
+active_pr: 674
+active_branch: p15/container-semantic-html-tag
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_container_overflow
-milestone_status: REPAIRED_AWAITING_REVERIFY
-last_completed_milestone: p15_pr_670_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: next_user_continue_resolves_repaired_pr_672_head_and_performs_one_consolidated_exact_head_status_refresh
-pending_runner_ids: [RQ-671-FINAL]
+current_milestone: p15_container_semantic_html_tag
+milestone_status: VERIFYING
+last_completed_milestone: p15_pr_672_repaired_exact_head_passed_7_of_7_and_merged
+exact_next_safe_action: next_user_continue_resolves_final_pr_674_head_and_performs_one_consolidated_exact_head_status_refresh
+pending_runner_ids: [RQ-673-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_672_first_exact_head_failed_status_verify_readme_table_pipe
+  - pr_674_required_exact_head_gate_set_not_yet_observed
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
   - p13_live_figma_runtime_acceptance_issue_159_pending

@@ -10,6 +10,7 @@ const p15ResponsiveFlexItemAlignSelfSource = await readFile('src/targets/element
 const p15ResponsiveFlexItemFactorsSource = await readFile('src/targets/elementor/responsive-flex-item-factors-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemOrderPresetSource = await readFile('src/targets/elementor/responsive-flex-item-order-preset-resolution.ts', 'utf8');
 const p15ContainerOverflowSource = await readFile('src/targets/elementor/container-overflow-resolution.ts', 'utf8');
+const p15ContainerSemanticHtmlTagSource = await readFile('src/targets/elementor/container-semantic-html-tag-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -135,7 +136,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#671',
+  next: '#673',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -321,11 +322,37 @@ for (const fragment of p15ContainerOverflowRequiredFragments) {
     throw new Error(`P15 #671 Container overflow contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #671 implementation')
+if (!readme.includes('### Completed P15 #671 / PR #672 verification')
+  || !readme.includes('6454ac8ea0ef6070345a6b104513353274f3e661')
+  || !readme.includes('1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb')
+  || !readme.includes('Issue #671 is closed completed')
   || !readme.includes('`overflow`')
-  || !readme.includes('`hidden | auto`')
-  || !readme.includes('d6c65cb86810634c55c8b9e65aef8e9b9ef439e8')) {
-  throw new Error('README P15 #671 active Container overflow truth is stale or missing.');
+  || !readme.includes('`hidden | auto`')) {
+  throw new Error('README P15 #671 / PR #672 merged Container overflow truth is stale or missing.');
+}
+
+const p15ContainerSemanticHtmlTagRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "containerSourceBlobSha: '3486766b9565af99536ae205ed1936bb155daed0'",
+  "controlName: 'html_tag'",
+  "settingKey: 'html_tag'",
+  "defaultTag: 'div'",
+  "linkedTag: 'a'",
+  "acceptedTags: ['header', 'footer', 'main', 'article', 'section', 'aside', 'nav'] as const",
+  "validSemanticHtmlTag",
+  "target.settings[P15_ELEMENTOR_CONTAINER_SEMANTIC_HTML_TAG_EVIDENCE.settingKey] = resolution.htmlTag",
+];
+for (const fragment of p15ContainerSemanticHtmlTagRequiredFragments) {
+  if (!p15ContainerSemanticHtmlTagSource.includes(fragment)) {
+    throw new Error(`P15 #673 Container semantic HTML tag contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #673 implementation')
+  || !readme.includes('`html_tag`')
+  || !readme.includes('`header | footer | main | article | section | aside | nav`')
+  || !readme.includes('linked `a` remains out of scope')) {
+  throw new Error('README P15 #673 active Container semantic HTML tag truth is stale or missing.');
 }
 
 console.log(
