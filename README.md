@@ -112,7 +112,7 @@ Current verified main before this documentation sync:
 - Default/empty reset, explicit `div`, linked `a` remains out of scope, along with link settings, arbitrary/custom tags and responsive variants.
 - Stale source/candidate replay, duplicate/non-Container IDs, invalid/unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Semantic/link/layout/responsive inference, custom tags, positioning, grid semantics, network access, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/container-semantic-html-tag`; exact-head CI PASS is not claimed before PR verification.
+- Focused implementation/tests are on branch `p15/container-semantic-html-tag` in PR #674 against exact base main `1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb`; exact-head CI PASS is not claimed before final post-binding verification.
 
 ### Current P14 AI-native implementation track
 
