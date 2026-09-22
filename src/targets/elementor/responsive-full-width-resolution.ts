@@ -271,7 +271,7 @@ function baseResult(
  * convert units, parse CSS/custom values, change desktop full width, permit negative/fractional values,
  * or claim responsive closure.
  */
-export function resolveP15ElementorResponsiveContainerBoxedWidth(
+export function resolveP15ElementorResponsiveContainerFullWidth(
   sourceValue: unknown,
   manifestValue: unknown,
 ): P15ElementorResponsiveFullWidthResultV1 {
