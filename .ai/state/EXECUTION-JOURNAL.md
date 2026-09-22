@@ -363,3 +363,4 @@ This journal records durable AI-native execution-policy milestones only. It is n
 ## 2026-09-23 — PR #674 merged; #675 started
 - #674 head `8c54239d...` passed 7/7 and merged as main `42496445...`; #673 closed.
 - #675 starts strict Heading normal text color: lowercase six-digit hex only; only `title_color` writable; global/theme tokens, CSS variables, alpha, hover/link color and broader authority remain untouched.
+- PR #676 opened for #675; creation head `c2ab7472...`; final post-binding head awaits exact-head gates; strict color-token security boundary retained.
