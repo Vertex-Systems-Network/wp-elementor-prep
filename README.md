@@ -103,7 +103,7 @@ Current verified main before this documentation sync:
 - Default/empty reset, `visible`, `scroll`, `clip`, arbitrary CSS/custom values and responsive variants remain out of scope.
 - Stale source/candidate replay, duplicate/non-Container IDs, invalid/unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Responsive/layout inference, custom breakpoints, positioning, grid semantics, network access, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/container-overflow`; exact-head CI PASS is not claimed before PR verification.
+- Focused implementation/tests are on branch `p15/container-overflow` in PR #672 against exact base main `687bb2105ce1c407ee4977582cefc354556e0325`; exact-head CI PASS is not claimed before final post-binding verification.
 
 ### Current P14 AI-native implementation track
 
