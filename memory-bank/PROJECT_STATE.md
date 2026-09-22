@@ -158,7 +158,7 @@ PR #546 / #545 binds declared TargetProfiles to that retained reference by exact
 
 PR #670 exact head `e244b3a2b8209d48429f454d7eaf0e4c0dd31e64` passed the complete required seven-gate set and merged as main `687bb2105ce1c407ee4977582cefc354556e0325`; Issue #669 is closed completed.
 
-Issue #671 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Container source proves standalone `overflow` with Default/Hidden/Auto and selector `--overflow: {{VALUE}}`; exact frontend stylesheet evidence proves default visible plus runtime `var(--overflow)` consumption. The resolver accepts only `hidden|auto`, writes only `overflow`, excludes reset/visible/scroll/clip/custom/responsive variants, and keeps compatibility/production/closure/download/network/Figma authority false.
+Issue #671 / PR #672 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Container source proves standalone `overflow` with Default/Hidden/Auto and selector `--overflow: {{VALUE}}`; exact frontend stylesheet evidence proves default visible plus runtime `var(--overflow)` consumption. The resolver accepts only `hidden|auto`, writes only `overflow`, excludes reset/visible/scroll/clip/custom/responsive variants, and keeps compatibility/production/closure/download/network/Figma authority false.
 
 ## P16 state
 
