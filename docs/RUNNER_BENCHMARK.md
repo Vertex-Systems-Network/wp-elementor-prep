@@ -89,7 +89,8 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 | RQ-661-FINAL | #661 / PR #662 | Post-PR #660 AI-native reconciliation | Required PR exact-head gate set | exact head `f4d188ef...`; all seven gates PASS; merged main `143808f4...`; no product/authority change | `FINAL_BATCH` | exact-head governance/README/repository gates PASS | DONE |
 
 | RQ-663-FINAL | #663 / PR #664 | P15 responsive Container hover border-radius | Required PR exact-head gate set | repaired exact head `5100c664...`; all seven required gates PASS; merged main `15b2825e...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
-| RQ-665-FINAL | #665 / PR #666 | P15 responsive Container flex-item align-self | Required PR exact-head gate set | head `5409136a...`: 5/7 PASS; CI `35704296151` + P12 Final `35704296112` failed only at README status verifier before typecheck; canonical `content_width=full` token restored with product/authority contract unchanged | `FINAL_BATCH` | repaired exact head must pass all seven required gates before merge | REPAIRED_AWAITING_NEW_EXACT_HEAD_BATCH |
+| RQ-665-FINAL | #665 / PR #666 | P15 responsive Container flex-item align-self | Required PR exact-head gate set | repaired exact head `5e975dcb...`; all seven gates PASS; merged main `e2839d8e...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
+| RQ-667-FINAL | #667 / PR #668 | P15 responsive Container flex-item binary grow/shrink factors | Required PR exact-head gate set | creation head `3bb3e1de...`; branch binding commits follow; no CI PASS claimed | `FINAL_BATCH` | final exact PR head must pass CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 

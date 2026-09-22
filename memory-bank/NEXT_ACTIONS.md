@@ -21,7 +21,7 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 - P12 — **IN PROGRESS / 80%**; historical publishing authority remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`, plugin ID `1680034649341961379`.
 - P13 — **IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING**; #159 requires genuine Figma Desktop evidence.
 - P14 — **IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING**; R1-R6 are merged through PR #658, the exact production planning registry binding is present, internal/dev activation requires explicit confirmation + fresh authorization checks, and publishable release activation remains hard-disabled/stripped.
-- P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. PR #664 / #663 is merged on `15b2825e...`; #665 / PR #666 is the active exact-bound responsive flex-item align-self slice; final exact-head gate observation is pending.
+- P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. PR #666 / #665 is merged on `e2839d8e...`; #667 / PR #668 is the active exact-bound binary responsive flex-item grow/shrink slice; final exact-head gate observation is pending.
 - P16 — **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
 - P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF**; #612/#613 static export, #614/#615 import safety preflight, #616/#617 neutral Web IR, #618/#623 IR→HTML/CSS generation and #628/#629 package validation are merged; #630 adds one exact local-only Chrome render observation. JavaScript execution, visual-fidelity comparison, Web→Figma reconstruction and production acceptance remain unclaimed.
 - P18-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
@@ -103,7 +103,7 @@ Do not broaden semantics, responsive behavior or asset portability through heuri
 
 PR #662 exact head `f4d188ef9b056afeb50a82322ca62114be869f74` passed the complete required gate set and merged as main `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`; Issue #661 is completed.
 
-Issue #663 is now the active bounded P15 slice. It adds only exact source/candidate-bound `border_radius_hover_tablet` / `border_radius_hover_mobile` DIMENSIONS values using explicit uniform integer px `0..4096`. It preserves desktop hover radius, normal-state radius, custom-breakpoint/closure/compatibility/production/download authority and requires exact-head repository gates before merge.
+Issue #667 is now the active bounded P15 slice. It adds only exact source/candidate-bound binary `0|1` values for `_flex_grow_tablet/mobile` and `_flex_shrink_tablet/mobile`, preserves desktop factors/order/position/alignment, and requires exact-head repository gates before merge.
 
 ## P16 bounded retention evidence-integrity boundary
 
