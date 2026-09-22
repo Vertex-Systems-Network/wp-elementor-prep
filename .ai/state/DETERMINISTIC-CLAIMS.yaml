@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 0ce4d23aa7cd9b7ecb5c7ed0003952e465da041f
+observed_main_sha: 687bb2105ce1c407ee4977582cefc354556e0325
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -101,3 +101,8 @@ claims:
   - {id: CL-098, statement: p15_669_write_surface_is_only__flex_order_tablet_and_mobile_with_start_end_mapping_to_minus99999_plus99999_and_desktop_custom_numeric_order_untouched, value: true}
   - {id: CL-099, statement: p15_669_keeps_responsive_parent_layout_custom_order_numeric_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
   - {id: CL-100, statement: pr_670_is_active_exact_head_verification_path_for_p15_669_flex_item_start_end_order_presets, value: true}
+  - {id: CL-101, statement: pr_670_exact_head_e244b3a2_passed_all_seven_required_gates_and_merged_as_main_687bb210, value: true}
+  - {id: CL-102, statement: issue_669_is_closed_completed_after_pr_670_merge, value: true}
+  - {id: CL-103, statement: issue_671_owns_exact_bound_container_overflow_hidden_auto_for_elementor_4_2_4, value: true}
+  - {id: CL-104, statement: p15_671_write_surface_is_only_overflow_with_hidden_auto_values_and_default_visible_scroll_clip_custom_responsive_overflow_out_of_scope, value: true}
+  - {id: CL-105, statement: p15_671_keeps_responsive_layout_css_parsing_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
