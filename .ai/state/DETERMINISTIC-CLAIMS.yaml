@@ -86,3 +86,4 @@ claims:
   - {id: CL-083, statement: issue_665_owns_exact_bound_responsive_container_flex_item_align_self_for_elementor_4_2_4, value: true}
   - {id: CL-084, statement: p15_665_write_surface_is_only__flex_align_self_tablet_and_mobile_with_desktop_and_parent_alignment_untouched, value: true}
   - {id: CL-085, statement: p15_665_keeps_responsive_parent_layout_inference_reordering_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-086, statement: pr_666_is_active_exact_head_verification_path_for_p15_665_flex_item_align_self, value: true}
