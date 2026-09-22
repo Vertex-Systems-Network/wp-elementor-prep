@@ -66,3 +66,5 @@ claims:
   - {id: CL-063, statement: p15_659_keeps_responsive_inference_figma_mutation_network_compatibility_production_and_download_authority_false, value: true}
   - {id: CL-064, statement: pr_660_is_active_exact_head_verification_path_for_p15_659, value: true}
   - {id: CL-065, statement: p15_659_has_no_ci_or_runtime_pass_claim_before_exact_head_verification, value: true}
+  - {id: CL-066, statement: pr_660_first_exact_head_failed_only_on_readme_verifier_literal_mismatch_before_typecheck_or_tests, value: true}
+  - {id: CL-067, statement: pr_660_verifier_repair_is_semantic_readme_contract_only_and_does_not_change_product_runtime_or_authority, value: true}
