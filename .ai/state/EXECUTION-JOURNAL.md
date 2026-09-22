@@ -364,3 +364,4 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #674 head `8c54239d...` passed 7/7 and merged as main `42496445...`; #673 closed.
 - #675 starts strict Heading normal text color: lowercase six-digit hex only; only `title_color` writable; global/theme tokens, CSS variables, alpha, hover/link color and broader authority remain untouched.
 - PR #676 opened for #675; creation head `c2ab7472...`; final post-binding head awaits exact-head gates; strict color-token security boundary retained.
+- #676 first head `b7235734...`: 5/7 PASS; CI + Final failed because #675 verifier fragment insertion corrupted JS syntax via replacement-string `$'` semantics; verifier-only line-boundary repair applied, no same-turn re-poll.
