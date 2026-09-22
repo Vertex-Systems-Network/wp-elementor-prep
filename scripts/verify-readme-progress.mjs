@@ -5,6 +5,7 @@ const readme = await readFile('README.md', 'utf8');
 const p14Qualification = await readFile('src/core/p14-vertical-stack-qualification.ts', 'utf8');
 const p14RegistrySource = await readFile('src/core/p14-safe-recipe-registry.ts', 'utf8');
 const p15ResponsiveFullWidthSource = await readFile('src/targets/elementor/responsive-full-width-resolution.ts', 'utf8');
+const p15ResponsiveHoverBorderRadiusSource = await readFile('src/targets/elementor/responsive-hover-border-radius-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -130,7 +131,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#659',
+  next: '#663',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -175,11 +176,33 @@ const p15FullWidthRequiredFragments = [
 ];
 for (const fragment of p15FullWidthRequiredFragments) {
   if (!p15ResponsiveFullWidthSource.includes(fragment)) {
-    throw new Error(`P15 #659 responsive full-width contract is stale or missing: ${fragment}`);
+    throw new Error(`P15 #659 merged responsive full-width contract is stale or missing: ${fragment}`);
   }
 }
 if (!readme.includes('#659 / PR #660') || !readme.includes('`content_width=full`')) {
-  throw new Error('README P15 #659 / PR #660 active responsive full-width truth is stale or missing.');
+  throw new Error('README P15 #659 / PR #660 merged responsive full-width truth is stale or missing.');
+}
+
+
+const p15HoverBorderRadiusRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "containerSourceBlobSha: '3486766b9565af99536ae205ed1936bb155daed0'",
+  "controlsStackSourceBlobSha: '00b280e518b89925c8f85a059b34136177ff3d4d'",
+  "dimensionsSourceBlobSha: '7de34809d407e5fa208935b77a6b6648c72d3c5d'",
+  "controlName: 'border_radius_hover'",
+  "desktopSettingKey: 'border_radius_hover'",
+  "tabletSettingKey: 'border_radius_hover_tablet'",
+  "mobileSettingKey: 'border_radius_hover_mobile'",
+  "P15_ELEMENTOR_RESPONSIVE_HOVER_BORDER_RADIUS_EVIDENCE.tabletSettingKey",
+  "P15_ELEMENTOR_RESPONSIVE_HOVER_BORDER_RADIUS_EVIDENCE.mobileSettingKey",
+];
+for (const fragment of p15HoverBorderRadiusRequiredFragments) {
+  if (!p15ResponsiveHoverBorderRadiusSource.includes(fragment)) {
+    throw new Error(`P15 #663 responsive hover border-radius contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('#663') || !readme.includes('`border_radius_hover_tablet`') || !readme.includes('`border_radius_hover_mobile`')) {
+  throw new Error('README P15 #663 active responsive hover border-radius truth is stale or missing.');
 }
 
 console.log(
