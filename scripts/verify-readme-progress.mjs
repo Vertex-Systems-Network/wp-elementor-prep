@@ -8,6 +8,7 @@ const p15ResponsiveFullWidthSource = await readFile('src/targets/elementor/respo
 const p15ResponsiveHoverBorderRadiusSource = await readFile('src/targets/elementor/responsive-hover-border-radius-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemAlignSelfSource = await readFile('src/targets/elementor/responsive-flex-item-align-self-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemFactorsSource = await readFile('src/targets/elementor/responsive-flex-item-factors-resolution.ts', 'utf8');
+const p15ResponsiveFlexItemOrderPresetSource = await readFile('src/targets/elementor/responsive-flex-item-order-preset-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -133,7 +134,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#667',
+  next: '#669',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -263,12 +264,42 @@ for (const fragment of p15FlexItemFactorsRequiredFragments) {
     throw new Error(`P15 #667 responsive flex-item factor contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #667 implementation')
+if (!readme.includes('### Completed P15 #667 / PR #668 verification')
+  || !readme.includes('c50627b66674d3b2d07dff23996e641742351646')
+  || !readme.includes('0ce4d23aa7cd9b7ecb5c7ed0003952e465da041f')
+  || !readme.includes('Issue #667 is closed completed')
   || !readme.includes('`_flex_grow_tablet`')
   || !readme.includes('`_flex_grow_mobile`')
   || !readme.includes('`_flex_shrink_tablet`')
   || !readme.includes('`_flex_shrink_mobile`')) {
-  throw new Error('README P15 #667 active responsive flex-item factor truth is stale or missing.');
+  throw new Error('README P15 #667 / PR #668 merged flex-item factor truth is stale or missing.');
+}
+
+const p15FlexItemOrderPresetRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "containerSourceBlobSha: '3486766b9565af99536ae205ed1936bb155daed0'",
+  "flexItemSourceBlobSha: 'dc95ad439d8f9acfd5eefb1d129da67d9ff9c13a'",
+  "qunitFixtureBlobSha: 'f06c5f60afa8fbef34ed922af419284cece09692'",
+  "controlName: 'order'",
+  "tabletSettingKey: '_flex_order_tablet'",
+  "mobileSettingKey: '_flex_order_mobile'",
+  "startTargetValue: -99999",
+  "endTargetValue: 99999",
+  "mapOrderPreset(resolution.tabletOrderPreset)",
+  "mapOrderPreset(resolution.mobileOrderPreset)",
+];
+for (const fragment of p15FlexItemOrderPresetRequiredFragments) {
+  if (!p15ResponsiveFlexItemOrderPresetSource.includes(fragment)) {
+    throw new Error(`P15 #669 responsive flex-item order preset contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #669 implementation')
+  || !readme.includes('`_flex_order_tablet`')
+  || !readme.includes('`_flex_order_mobile`')
+  || !readme.includes('`start -> -99999`')
+  || !readme.includes('`end -> 99999`')) {
+  throw new Error('README P15 #669 active responsive flex-item order preset truth is stale or missing.');
 }
 
 console.log(
