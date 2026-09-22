@@ -158,7 +158,7 @@ PR #546 / #545 binds declared TargetProfiles to that retained reference by exact
 
 PR #676 repaired exact head `5d40e176aabf09d320c840ef0fd966997c07af83` passed the complete required seven-gate set and merged as main `1ab21408bcf32c21bdcae7ca4c6b407a0670241f`; Issue #675 is closed completed.
 
-Issue #677 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Text Editor source proves normal `text_color` and separate `link_color`. The resolver accepts only lowercase six-digit hex, writes only `text_color`, revalidates exact generated `editor` HTML and optional desktop alignment, rejects global/theme tokens, CSS variables, shorthand/alpha/named/custom/responsive color strings, and leaves link color untouched. Exact source/candidate binding, fail-closed validation and false compatibility/production/closure/download/network/Figma authority remain mandatory.
+Issue #677 / PR #678 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Text Editor source proves normal `text_color` and separate `link_color`. The resolver accepts only lowercase six-digit hex, writes only `text_color`, revalidates exact generated `editor` HTML and optional desktop alignment, rejects global/theme tokens, CSS variables, shorthand/alpha/named/custom/responsive color strings, and leaves link color untouched. Exact source/candidate binding, fail-closed validation and false compatibility/production/closure/download/network/Figma authority remain mandatory.
 
 ## P16 state
 
