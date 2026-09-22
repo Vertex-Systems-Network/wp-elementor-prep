@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `e2839d8e32dab4a29db908f1ba1a1710579219af`  
 Active Issue: `#667`  
-Active PR: none yet  
+Active PR: `#668`  
 Active branch: `p15/responsive-flex-item-factors`
 
 ## Completed P15 #665 / PR #666
@@ -40,6 +40,13 @@ Active branch: `p15/responsive-flex-item-factors`
 - Responsive/parent-layout inference, arbitrary numeric-factor inference, custom breakpoints, reordering, positioning/grid semantics, network, Figma mutation, compatibility, responsive closure, production/download authority remain false.
 - No CI PASS is claimed before exact-head PR verification.
 
+## PR #668 binding
+
+- PR #668 is open against exact base main `e2839d8e32dab4a29db908f1ba1a1710579219af`.
+- Creation head was `3bb3e1de00de6b419492962913a5ecf24dc8ae87`.
+- README/state/claims/queue/Runner binding commits intentionally advance the branch after PR creation.
+- No CI PASS is claimed for the post-binding head.
+
 ## Exact next safe action
 
-Finish README/memory/AI-native synchronization, open the focused #667 PR, bind its final head, and end without workflow polling. The next user `continue` performs one consolidated exact-head required-gate refresh.
+On the next user `continue`, resolve the final current PR #668 head from GitHub and perform exactly one consolidated exact-head required-gate refresh. Merge with expected-head protection only if the full required gate set is green and review threads are resolved.
