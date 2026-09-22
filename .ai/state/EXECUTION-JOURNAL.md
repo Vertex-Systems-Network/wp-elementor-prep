@@ -2,14 +2,6 @@
 
 This journal records durable AI-native execution-policy milestones only. It is not a CI polling log.
 
-## 2026-09-21 — Mandatory AI Engineering Supervisor contract integrated
-
-- Reconciled compact state with exact main, open Issues and open PRs.
-- Active path is #637 -> PR #638; PR #636 remains accepted/actionable and must be processed next.
-- Added machine-readable claims, coordination queue and Runner Benchmark.
-- Added one-refresh timeout budget, state-drift recovery, security fail-closed, migration/data-safety and compact-state size limits.
-- Milestone status is VERIFYING before exact-head Runner observation.
-
 ## 2026-09-21 — Governance backward-compatibility fix
 
 - Inspected only the two failed exact-head jobs from PR #638.
@@ -375,3 +367,8 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #666 repaired head `5e975dcb...` passed 7/7 and merged as main `e2839d8e...`; #665 closed.
 - #667 starts binary `0|1` responsive Container flex grow/shrink factors; only four tablet/mobile keys are writable; order/position/authority remain untouched.
 - PR #668 opened for #667; creation head `3bb3e1de...`; final post-binding head awaits exact-head gates.
+
+## 2026-09-22 — PR #668 merged; #669 started
+- #668 head `c50627b6...` passed 7/7 and merged as main `0ce4d23a...`; #667 closed.
+- #669 starts explicit responsive Container order presets: `start -> -99999`, `end -> 99999`; only tablet/mobile order keys writable; arbitrary custom order/position/authority remain untouched.
+- PR #670 opened for #669; creation head `1424a49b...`; final post-binding head awaits exact-head gates.

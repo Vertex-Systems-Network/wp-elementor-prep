@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: e2839d8e32dab4a29db908f1ba1a1710579219af
+observed_main_sha: 0ce4d23aa7cd9b7ecb5c7ed0003952e465da041f
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -95,3 +95,9 @@ claims:
   - {id: CL-092, statement: p15_667_write_surface_is_only__flex_grow_and_shrink_tablet_mobile_with_binary_0_1_values_and_desktop_order_position_alignment_untouched, value: true}
   - {id: CL-093, statement: p15_667_keeps_responsive_parent_layout_arbitrary_numeric_factor_reordering_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
   - {id: CL-094, statement: pr_668_is_active_exact_head_verification_path_for_p15_667_binary_flex_item_grow_shrink_factors, value: true}
+  - {id: CL-095, statement: pr_668_exact_head_c50627b6_passed_all_seven_required_gates_and_merged_as_main_0ce4d23a, value: true}
+  - {id: CL-096, statement: issue_667_is_closed_completed_after_pr_668_merge, value: true}
+  - {id: CL-097, statement: issue_669_owns_exact_bound_responsive_container_flex_item_order_start_end_presets_for_elementor_4_2_4, value: true}
+  - {id: CL-098, statement: p15_669_write_surface_is_only__flex_order_tablet_and_mobile_with_start_end_mapping_to_minus99999_plus99999_and_desktop_custom_numeric_order_untouched, value: true}
+  - {id: CL-099, statement: p15_669_keeps_responsive_parent_layout_custom_order_numeric_position_grid_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-100, statement: pr_670_is_active_exact_head_verification_path_for_p15_669_flex_item_start_end_order_presets, value: true}
