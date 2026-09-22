@@ -369,3 +369,4 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #670 head `e244b3a2...` passed 7/7 and merged as main `687bb210...`; #669 closed.
 - #671 starts standalone Container overflow with explicit `hidden|auto`; only `overflow` is writable; default reset/custom/responsive overflow and authority remain untouched.
 - PR #672 opened for #671; creation head `81920110...`; final post-binding head awaits exact-head gates.
+- #672 first head `0ea6ee2a...`: 5/7 PASS; CI + Final failed on README table `hidden|auto` delimiter; README-only `hidden/auto` repair applied, no same-turn re-poll.
