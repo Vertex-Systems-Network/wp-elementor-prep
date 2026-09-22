@@ -91,7 +91,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 | RQ-663-FINAL | #663 / PR #664 | P15 responsive Container hover border-radius | Required PR exact-head gate set | repaired exact head `5100c664...`; all seven required gates PASS; merged main `15b2825e...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
 | RQ-665-FINAL | #665 / PR #666 | P15 responsive Container flex-item align-self | Required PR exact-head gate set | repaired exact head `5e975dcb...`; all seven gates PASS; merged main `e2839d8e...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
 | RQ-667-FINAL | #667 / PR #668 | P15 responsive Container flex-item binary grow/shrink factors | Required PR exact-head gate set | exact head `c50627b6...`; all seven gates PASS; merged main `0ce4d23a...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
-| RQ-669-FINAL | #669 | P15 responsive Container flex-item start/end order presets | Required PR exact-head gate set | branch implementation + focused tests; PR not opened yet | `FINAL_BATCH` | exact PR head must pass CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser before merge | IMPLEMENTING_PR_NOT_OPEN |
+| RQ-669-FINAL | #669 / PR #670 | P15 responsive Container flex-item start/end order presets | Required PR exact-head gate set | creation head `1424a49b...`; branch binding commits follow; no CI PASS claimed | `FINAL_BATCH` | final exact PR head must pass CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 
