@@ -80,7 +80,7 @@ Current verified main before this documentation sync:
 - Write surface is only `_flex_align_self_tablet` / `_flex_align_self_mobile`; desktop `_flex_align_self`, parent/container `flex_align_items*`, direction, order, grow/shrink and position remain untouched.
 - Stale source/candidate replay, duplicate/non-Container IDs, invalid/unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
 - Responsive/parent-layout inference, reordering, positioning, custom breakpoints, grid semantics, network access, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/responsive-flex-item-align-self`; exact-head CI PASS is not claimed before PR verification.
+- Focused implementation/tests are on branch `p15/responsive-flex-item-align-self` in PR #666 against exact base main `15b2825e45cad543fc1950ecdcc361131043113d`; exact-head CI PASS is not claimed before final post-binding verification.
 
 ### Current P14 AI-native implementation track
 
