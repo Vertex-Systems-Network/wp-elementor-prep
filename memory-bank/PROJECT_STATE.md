@@ -158,7 +158,7 @@ PR #546 / #545 binds declared TargetProfiles to that retained reference by exact
 
 PR #674 exact head `8c54239d33f687dd9730fc54174da115149f8d49` passed the complete required seven-gate set and merged as main `424964452fa1b0d7055103116fd19260ef856393`; Issue #673 is closed completed.
 
-Issue #675 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Heading source proves normal `title_color` and separate hover/link `title_hover_color`. The resolver accepts only lowercase six-digit hex, writes only `title_color`, rejects global/theme tokens, CSS variables, shorthand/alpha/named/custom color strings and leaves hover/link color untouched. Exact source/candidate binding, fail-closed validation and false compatibility/production/closure/download/network/Figma authority remain mandatory.
+Issue #675 / PR #676 now owns the next bounded P15 slice. Exact Elementor `4.2.4` Heading source proves normal `title_color` and separate hover/link `title_hover_color`. The resolver accepts only lowercase six-digit hex, writes only `title_color`, rejects global/theme tokens, CSS variables, shorthand/alpha/named/custom color strings and leaves hover/link color untouched. Exact source/candidate binding, fail-closed validation and false compatibility/production/closure/download/network/Figma authority remain mandatory.
 
 ## P16 state
 
