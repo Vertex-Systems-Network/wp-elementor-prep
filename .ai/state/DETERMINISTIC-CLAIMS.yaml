@@ -128,3 +128,4 @@ claims:
   - {id: CL-125, statement: issue_677_owns_exact_bound_text_editor_normal_text_color_for_elementor_4_2_4, value: true}
   - {id: CL-126, statement: p15_677_write_surface_is_only_text_color_with_lowercase_six_digit_hex_and_link_global_tokens_css_variables_alpha_custom_responsive_values_out_of_scope, value: true}
   - {id: CL-127, statement: p15_677_revalidates_exact_generated_editor_html_and_keeps_color_theme_global_token_css_link_responsive_compatibility_production_download_network_and_figma_authority_false, value: true}
+  - {id: CL-128, statement: pr_678_is_active_exact_head_verification_path_for_p15_677_text_editor_normal_text_color, value: true}
