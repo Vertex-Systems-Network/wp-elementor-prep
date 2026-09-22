@@ -374,3 +374,4 @@ This journal records durable AI-native execution-policy milestones only. It is n
 ## 2026-09-22 — PR #666 merged; #667 started
 - #666 repaired head `5e975dcb...` passed 7/7 and merged as main `e2839d8e...`; #665 closed.
 - #667 starts binary `0|1` responsive Container flex grow/shrink factors; only four tablet/mobile keys are writable; order/position/authority remain untouched.
+- PR #668 opened for #667; creation head `3bb3e1de...`; final post-binding head awaits exact-head gates.
