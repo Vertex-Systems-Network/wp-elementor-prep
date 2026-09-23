@@ -166,6 +166,8 @@ Issue #687 is the active governance/status-only reconciliation owner on branch `
 
 Issue #689 is the active governance/status-only reconciliation owner on branch `ai-native/post-pr-688-reconciliation`; no product/runtime or broader authority is introduced.
 
+PR #690 is open for Issue #689 against exact main `2eb809f45aec1508c6d93a8120950b122718f61c`. Lifecycle-binding commits advance the branch after PR creation, so only the final bound head may be used for merge certification.
+
 
 ## P16 state
 
