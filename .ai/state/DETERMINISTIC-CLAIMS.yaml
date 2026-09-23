@@ -147,3 +147,4 @@ claims:
   - {id: CL-144, statement: pr_683_repaired_exact_head_82806d00_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
   - {id: CL-145, statement: pr_683_merged_with_expected_head_as_main_e8ce67ab_and_issue_682_closed_completed, value: true}
   - {id: CL-146, statement: issue_685_owns_post_pr_683_ai_native_reconciliation_only_and_does_not_change_product_runtime_or_authority, value: true}
+  - {id: CL-147, statement: pr_686_is_active_exact_head_verification_path_for_issue_685_post_pr_683_reconciliation, value: true}
