@@ -96,7 +96,8 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 | RQ-673-FINAL | #673 / PR #674 | P15 bounded Container semantic HTML tags | Required PR exact-head gate set | exact head `8c54239d...`; all seven gates PASS; merged main `42496445...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
 | RQ-675-FINAL | #675 / PR #676 | P15 bounded Heading normal text color | Required PR exact-head gate set | repaired exact head `5d40e176...`; all seven gates PASS; merged main `1ab21408...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
 | RQ-677-FINAL | #677 / PR #678 | P15 bounded Text Editor normal text color | Required PR exact-head gate set | exact head `94ee08c1...`; all seven gates PASS; merged main `9ef893af...`; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
-| RQ-679-FINAL | #679 / PR #680 | P15 bounded Button normal text color | Required PR exact-head gate set | PR open; exact Button text/alignment/link binding + strict lowercase hex retained; no CI PASS claimed | `FINAL_BATCH` | final exact PR head must pass CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
+| RQ-679-FINAL | #679 / PR #680 | P15 bounded Button normal text color | Required PR exact-head gate set | exact head `ccd2c19d...`; all seven gates PASS; merged main `878ffa04...`; review threads clear; authority unchanged | `FINAL_BATCH` | exact-head focused/repository gates PASS | DONE |
+| RQ-682-FINAL | #682 / PR pending | Post-PR #680 AI-native reconciliation | Required PR exact-head gate set | governance/status-only reconciliation from main `878ffa04...`; no product/runtime change | `FINAL_BATCH` | final exact PR head must pass CI/CodeQL/Integration/P12 Offline/P12 Final/P15 target/P17 browser before merge | PR_NOT_OPEN |
 
 ## Blocking-now queue
 
