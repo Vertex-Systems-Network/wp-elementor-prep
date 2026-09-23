@@ -298,6 +298,11 @@ Long-lived busy-waiting inside one agent run remains prohibited. Continuity is p
 
 The intended scheduled supervisor cadence is hourly, which is the highest supported automation frequency. Each run performs one bounded reconciliation/development iteration, then exits cleanly. A later run continues from the durable checkpoint. The schedule itself remains active through temporary Runner waits and ordinary blockers; it stops only after verified project completion or explicit user cancellation.
 
+Execution-bound constants and safety wording are machine-checked:
+- `MAX_LOGICAL_MILESTONES_PER_TURN = 1` remains the interactive-turn bound; scheduled invocations provide continuation rather than silently widening one interactive milestone.
+- `MAX_RUNNER_STATUS_FETCHES_PER_TURN = 1` remains the default unchanged-runner/status fetch bound per interactive turn; a recorded exception must be evidence-backed and still may not become a busy-wait loop.
+- Scheduled supervision adds recovery and reconciliation coverage but must not claim absolute protection against platform outages, missing external evidence, runner unavailability, concurrent external writers or other failures outside repository-controlled guarantees.
+
 ### H. Mandatory end-of-work sync
 
 After meaningful work:
