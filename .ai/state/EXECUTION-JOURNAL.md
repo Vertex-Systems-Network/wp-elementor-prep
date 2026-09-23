@@ -137,3 +137,20 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - The protocol explicitly defines the journal as rolling. Older detailed milestones are preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-001.md`; the active journal retains recent handoff history.
 - No product/runtime behavior, security gate, target compatibility or release authority changed.
 - The repaired exact head remains uncertified until the next user turn performs the single allowed consolidated required-gate refresh.
+
+
+## 2026-09-24 — PR #686 merged; reconciliation #687 started
+
+- PR #686 repaired exact head `5d22c87ce3c5542cecc7c001dabafc8736efbb34` passed all seven required gates; unresolved review threads: 0.
+- Expected-head merge produced main `36e656385840a05bfe1d118a72b7b64abcc3bbed`; Issue #685 closed completed.
+- Issue #687 and branch `ai-native/post-pr-686-reconciliation` started post-merge AI-native reconciliation only.
+- No product/runtime behavior or security/compatibility/production/download/release authority changes.
+
+
+## 2026-09-24 — reconciliation PR #688 opened
+
+- PR #688 opened for Issue #687 from `ai-native/post-pr-686-reconciliation` against exact base main `36e656385840a05bfe1d118a72b7b64abcc3bbed`.
+- PR creation head was `fbe69064e1a19e6fbb749bd07723426546e03d12`.
+- Lifecycle binding updates durable state, coordination queue, Runner benchmark, README and memory-bank truth.
+- The final bound PR head is intentionally uncertified; no CI/status polling occurs in this milestone.
+- No product/runtime behavior or security/compatibility/production/download/release authority changes.

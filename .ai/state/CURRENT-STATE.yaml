@@ -2,29 +2,29 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: e8ce67abe31ac4948cdc981469e38a97752779aa
+observed_main_sha: 36e656385840a05bfe1d118a72b7b64abcc3bbed
 observed_main_branch: main
-active_issue: 685
-active_pr: 686
-active_branch: ai-native/post-pr-683-reconciliation
+active_issue: 687
+active_pr: 688
+active_branch: ai-native/post-pr-686-reconciliation
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_post_pr_683_ai_native_reconciliation
+current_milestone: p15_post_pr_686_ai_native_reconciliation
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
-  prefer_interactive_buttons_when_supported: true
+  prefer_interactive_buttons_when_host_supported: true
   fallback_action_tokens_required: true
   click_semantics: new_user_request_only
   grants_authority: false
-  recommended_action_id: verify-pr-686
+  recommended_action_id: verify-pr-688
 milestone_status: VERIFYING
-last_completed_milestone: p15_pr_683_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: next_user_continue_resolves_repaired_pr_686_head_and_performs_one_consolidated_exact_head_status_refresh
-pending_runner_ids: [RQ-685-FINAL]
+last_completed_milestone: p15_pr_686_exact_head_passed_7_of_7_and_merged
+exact_next_safe_action: next_user_continue_resolves_final_pr_688_head_and_performs_one_consolidated_exact_head_status_refresh
+pending_runner_ids: [RQ-687-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_686_repaired_after_execution_journal_ceiling_failure_exact_head_gate_set_not_yet_observed
+  - reconciliation_pr_688_exact_head_gate_set_not_yet_observed
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
   - p13_live_figma_runtime_acceptance_issue_159_pending
