@@ -162,6 +162,8 @@ The merged #679 slice keeps the exact Elementor `4.2.4` Button normal `button_te
 
 PR #683 repaired exact head `82806d008f7d29e087f10631fc42f2ed5ad4e6de` passed all seven required gates and merged as main `e8ce67abe31ac4948cdc981469e38a97752779aa`; Issue #682 closed completed. Issue #685 now owns post-merge AI-native reconciliation only. No product/runtime behavior is added here; the next bounded P15 product slice must be selected separately after this reconciliation path is exact-head verified and merged.
 
+PR #686 is open for Issue #685 against exact main `e8ce67abe31ac4948cdc981469e38a97752779aa`. Its lifecycle-binding commits advance the branch after PR creation, so only the final bound head may be used for merge certification.
+
 
 ## P16 state
 
