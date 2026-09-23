@@ -135,6 +135,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Global/theme tokens, CSS variables, shorthand/alpha/named/custom/responsive colors, hover/background mutation and broader inference remain out of scope.
 - Compatibility, responsive closure, production acceptance, download/transfer authority, network and Figma mutation remain false.
 - Issue #682 is governance/status reconciliation only. The next P15 product slice is not activated until this reconciliation path is exact-head verified.
+- Main later advanced through governance-only PR #684 to `6ff09a665a329e643d8159132bb6bf4443d23952`; PR #683 is reconciled with that main and preserves the org-wide next-action handoff contract. Exact-head CI/security gates remain required before merge.
 
 
 ### Current P14 AI-native implementation track

@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 878ffa04b352b1e636d30dfb7e2bb96ad7ed21d9
+observed_main_sha: 6ff09a665a329e643d8159132bb6bf4443d23952
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -142,3 +142,5 @@ claims:
   - {id: CL-139, statement: ai_native_protocol_requires_machine_readable_next_action_options_at_each_material_milestone_boundary, value: true}
   - {id: CL-140, statement: interactive_action_buttons_are_preferred_only_when_host_supported_and_plain_text_must_not_be_presented_as_clickable, value: true}
   - {id: CL-141, statement: action_button_selection_starts_a_new_user_request_and_grants_zero_additional_authority, value: true}
+  - {id: CL-142, statement: pr_684_governance_only_next_action_contract_is_merged_on_current_main_6ff09a66, value: true}
+  - {id: CL-143, statement: pr_683_branch_is_reconciled_with_main_6ff09a66_without_product_runtime_or_authority_expansion, value: true}

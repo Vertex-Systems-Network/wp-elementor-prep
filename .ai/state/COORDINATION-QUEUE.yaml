@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 878ffa04b352b1e636d30dfb7e2bb96ad7ed21d9
+observed_main_sha: 6ff09a665a329e643d8159132bb6bf4443d23952
 items:
   - {id: CQ-637, issue: 637, pr: 638, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-634, issue: 634, pr: 636, status: MERGED_CLOSED, priority: 0, accepted: true}

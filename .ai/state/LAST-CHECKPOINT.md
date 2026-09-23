@@ -2,7 +2,7 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `878ffa04b352b1e636d30dfb7e2bb96ad7ed21d9`  
+Observed main: `6ff09a665a329e643d8159132bb6bf4443d23952`  
 Active Issue: `#682`  
 Active PR: `#683`  
 Active branch: `p15/post-pr-680-reconciliation`
@@ -16,6 +16,13 @@ Active branch: `p15/post-pr-680-reconciliation`
 ## Reconciliation #682
 
 Governance/status reconciliation only. #287 stays admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred. No product/runtime behavior or production/compatibility authority changes.
+
+## Latest main reconciliation
+
+- Main advanced through governance-only PR #684 to `6ff09a665a329e643d8159132bb6bf4443d23952`.
+- PR #683 branch includes that exact main and preserves the org-wide `.ai/NEXT-ACTION-OPTIONS.md` and `AGENTS.md` handoff contract.
+- No product/runtime behavior, target compatibility, production, release or download authority changed.
+- The reconciled PR head remains uncertified until the next exact-head required-gate refresh.
 
 ## AI-Native next-action interaction update
 
