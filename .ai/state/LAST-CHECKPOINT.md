@@ -2,7 +2,7 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `9ef893af8417706ef8904d1b879b91d498012e16`  
+Observed main: `50a79a2031e5a34bb8da7b07df1e48bfb9e53ada`  
 Active Issue: `#679`  
 Active PR: `#680`  
 Active branch: `p15/button-text-color`
