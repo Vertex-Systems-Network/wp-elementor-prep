@@ -31,6 +31,15 @@ Governance/status reconciliation only. #287 stays admin-blocked; #159 and #84 re
 - Button selection starts a new user request only and grants no additional authority.
 - Current recommended option is `verify-pr-683`; next P15 development remains blocked until PR #683 passes required gates and is merged.
 
+## PR #683 first exact-head failure and repair
+
+- Observed exact head `ef90e4d8e8e88a624c4f9889bd6c9c03470c1404`.
+- CI `35914601078` and P12 Final `35914601136` failed only at `status:verify`.
+- Shared root cause: stale verifier expectation for the pre-merge README heading `Current P15 #679 implementation`.
+- Repair changes only `scripts/verify-readme-progress.mjs` semantic README markers and matching status documentation.
+- No product/runtime/security/authority behavior changed or was weakened.
+- New repaired head must not reuse the failed head's workflow evidence.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final PR #683 head and perform exactly one consolidated required-gate refresh. Merge only in a later logical milestone after exact-head gates are green and review threads are clear.
+On the next user `continue`, resolve the repaired PR #683 exact head and perform exactly one consolidated required-gate refresh. Merge only in a later logical milestone after that repaired exact head is green and review threads are clear.

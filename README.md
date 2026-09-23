@@ -137,6 +137,14 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Issue #682 is governance/status reconciliation only. The next P15 product slice is not activated until this reconciliation path is exact-head verified.
 - Main later advanced through governance-only PR #684 to `6ff09a665a329e643d8159132bb6bf4443d23952`; PR #683 is reconciled with that main and preserves the org-wide next-action handoff contract. Exact-head CI/security gates remain required before merge.
 
+#### PR #683 first reconciled-head verifier failure
+
+- Exact head `ef90e4d8e8e88a624c4f9889bd6c9c03470c1404` had Integration Readiness, P12 Offline Acceptance and P17 Local Browser Proof green when observed.
+- CI `35914601078` and P12 Final Release Artifact `35914601136` both failed only at `status:verify` before typecheck/tests.
+- Shared root cause: `scripts/verify-readme-progress.mjs` still required the pre-merge heading `Current P15 #679 implementation` after README had correctly advanced to merged #679 / PR #680 plus active #682/#683 reconciliation.
+- Repair updates only the semantic README verifier markers. Product/runtime code, security controls and authority boundaries are unchanged.
+- The repaired exact head is intentionally uncertified until the next user turn performs the single allowed consolidated required-gate refresh.
+
 
 ### Current P14 AI-native implementation track
 
