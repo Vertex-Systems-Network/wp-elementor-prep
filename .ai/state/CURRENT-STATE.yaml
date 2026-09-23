@@ -10,6 +10,14 @@ active_branch: p15/post-pr-680-reconciliation
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
 current_milestone: p15_post_pr_680_ai_native_reconciliation
+next_action_options:
+  source: .ai/state/NEXT-ACTION-OPTIONS.yaml
+  render_required: true
+  prefer_interactive_buttons_when_supported: true
+  fallback_action_tokens_required: true
+  click_semantics: new_user_request_only
+  grants_authority: false
+  recommended_action_id: verify-pr-683
 milestone_status: VERIFYING
 last_completed_milestone: p15_pr_680_exact_head_passed_7_of_7_and_merged
 exact_next_safe_action: next_user_continue_resolves_final_pr_683_head_and_performs_one_consolidated_exact_head_status_refresh
@@ -45,3 +53,4 @@ sources_of_truth:
   runner_benchmark_machine: .ai/state/RUNNER-BENCHMARK.yaml
   runner_benchmark_human: docs/RUNNER_BENCHMARK.md
   volatile_runner_state: github_pr_issue_check_metadata
+  next_action_options: .ai/state/NEXT-ACTION-OPTIONS.yaml

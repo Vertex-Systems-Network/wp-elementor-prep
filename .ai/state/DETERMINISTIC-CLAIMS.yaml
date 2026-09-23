@@ -139,3 +139,6 @@ claims:
   - {id: CL-136, statement: issue_679_is_closed_completed_after_pr_680_merge, value: true}
   - {id: CL-137, statement: issue_682_owns_post_pr_680_ai_native_reconciliation_only_and_does_not_change_product_runtime_authority, value: true}
   - {id: CL-138, statement: pr_683_is_active_exact_head_verification_path_for_issue_682_post_pr_680_reconciliation, value: true}
+  - {id: CL-139, statement: ai_native_protocol_requires_machine_readable_next_action_options_at_each_material_milestone_boundary, value: true}
+  - {id: CL-140, statement: interactive_action_buttons_are_preferred_only_when_host_supported_and_plain_text_must_not_be_presented_as_clickable, value: true}
+  - {id: CL-141, statement: action_button_selection_starts_a_new_user_request_and_grants_zero_additional_authority, value: true}

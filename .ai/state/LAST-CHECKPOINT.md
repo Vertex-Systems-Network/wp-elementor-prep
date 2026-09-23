@@ -17,6 +17,13 @@ Active branch: `p15/post-pr-680-reconciliation`
 
 Governance/status reconciliation only. #287 stays admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred. No product/runtime behavior or production/compatibility authority changes.
 
+## AI-Native next-action interaction update
+
+- Canonical option menu: `.ai/state/NEXT-ACTION-OPTIONS.yaml`.
+- Prefer host-supported interactive buttons; otherwise show truthful copyable action tokens/payloads.
+- Button selection starts a new user request only and grants no additional authority.
+- Current recommended option is `verify-pr-683`; next P15 development remains blocked until PR #683 passes required gates and is merged.
+
 ## Exact next safe action
 
 On the next user `continue`, resolve the final PR #683 head and perform exactly one consolidated required-gate refresh. Merge only in a later logical milestone after exact-head gates are green and review threads are clear.

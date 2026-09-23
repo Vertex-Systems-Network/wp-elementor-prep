@@ -20,6 +20,12 @@ This protocol keeps AI-native repository work resumable while minimizing long-tu
 - `REMOTE_RETRY_LOOPS = FORBIDDEN`
 - `NEXT_MILESTONE_AFTER_EXTERNAL_WAIT = FORBIDDEN`
 - `README_PROGRESS_SYNC = REQUIRED_ON_EVERY_MATERIAL_REPOSITORY_MUTATION`
+- `NEXT_ACTION_OPTIONS_PATH = .ai/state/NEXT-ACTION-OPTIONS.yaml`
+- `FINAL_RESPONSE_NEXT_ACTION_OPTIONS = REQUIRED`
+- `INTERACTIVE_ACTION_BUTTONS = PREFER_WHEN_HOST_SUPPORTED`
+- `BUTTON_CLICK_STARTS_NEW_USER_REQUEST = TRUE`
+- `BUTTON_CLICK_GRANTS_AUTHORITY = FALSE`
+- `FALLBACK_ACTION_TOKEN_REQUIRED = TRUE`
 
 ## AI Engineering Supervisor mandatory resume order
 
@@ -82,6 +88,22 @@ README module progress is a mandatory repository truth surface, not an optional 
 - Pure Runner-observation turns MUST NOT mutate an already-running exact candidate head merely to record volatile queued/running/check state. In that case, keep volatile Runner state in GitHub metadata and synchronize README on the next material repository mutation or post-merge reconciliation.
 - Governance/security-only mutations that materially change an active blocker, enforcement state, or roadmap execution state MUST also update README. Truly internal bookkeeping with no public/module truth change may remain compact-state-only.
 
+## Next-action options / button interaction contract
+
+Every completed or paused logical milestone MUST expose the valid next actions needed to keep development moving.
+
+- The canonical machine-readable surface is `.ai/state/NEXT-ACTION-OPTIONS.yaml`.
+- Options MUST be derived from current repository/runtime truth, not chat memory.
+- Each option MUST have a stable `action_id`, short `label`, exact `request_payload`, `enabled` state, `recommended` flag, and any `blocked_by` / `blocked_reason`.
+- Show 2-4 useful options when possible. The first enabled recommended option should be the exact next safe action.
+- When the host/client supports interactive quick actions or buttons, render enabled options as buttons. Clicking a button initiates the stored request payload as a NEW user request.
+- A button click NEVER grants new merge, deployment, destructive, security, production, release, or external-service authority. Normal authorization and one-milestone rules still apply.
+- Unsafe or sequencing-blocked actions MUST be disabled with a reason or omitted; never make a button a bypass around an active PR, required Runner gate, security blocker, manual evidence gate, or authority boundary.
+- When generic interactive buttons are unavailable, render the same labels plus copyable action tokens/request payloads as the required fallback. Do not pretend plain text is clickable.
+- Refresh `NEXT-ACTION-OPTIONS.yaml` after every material state transition, PR/Issue lifecycle change, blocker change, or plan update that changes what the user can safely do next.
+- `CURRENT-STATE.yaml` MUST identify the current recommended `action_id` and the next-action-options source path.
+- A selected action starts the next user turn; it MUST NOT silently chain a second logical milestone into the current turn.
+
 ## CI / supply-chain security
 
 Where applicable:
@@ -95,7 +117,7 @@ Where applicable:
 
 ## Final response truth contract
 
-Keep completion messages compact and factual. Report repository, active/completed milestone, Issue/PR/commit evidence when available, CI state, blockers, and exact next safe action.
+Keep completion messages compact and factual. Report repository, active/completed milestone, Issue/PR/commit evidence when available, CI state, blockers, exact next safe action, and the current next-action options from `.ai/state/NEXT-ACTION-OPTIONS.yaml`.
 
 Never hide unfinished CI, review, state reconciliation, or authorization behind a success statement.
 
@@ -138,6 +160,9 @@ These are MUST/MUST-NOT rules, not recommendations.
 11. MUST end the user turn after a tool/service timeout or unrecoverable remote error once the durable checkpoint is sufficient for deterministic resume; do not enter an unbounded retry loop.
 12. MUST synchronize README progress on every material repository mutation before the milestone ends; stale README progress is a blocking defect.
 13. MUST NOT create a README-only commit during a pure Runner observation if doing so would invalidate an exact-head batch; synchronize it on the next material mutation or post-merge reconciliation instead.
+14. MUST expose safe next-action options at every milestone boundary and prefer real host-supported buttons/quick actions when available.
+15. MUST treat every button/quick-action selection as a new user request, never as implicit authority or permission to bypass blockers.
+16. MUST provide a truthful non-clickable fallback action token/payload when the host does not support generic interactive buttons.
 
 ## Runner rule
 

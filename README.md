@@ -355,6 +355,17 @@ The normalized JSON model is not Gutenberg post-content serialization and intent
 
 P12 remains at the retained **80%** release-exit state. The publishing-authoritative historical package remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`. Later P13-P16 development commits do not silently replace that publishing candidate.
 
+## AI-Native next-action controls
+
+The AI-Native supervisor now maintains `.ai/state/NEXT-ACTION-OPTIONS.yaml` as the canonical handoff menu after every material milestone.
+
+- Each option contains a stable action ID, button label, exact next-request payload, enabled/blocked state and recommendation flag.
+- If the chat/client supports generic interactive action buttons, enabled options should be rendered as buttons and a click should submit the bound payload as the next user request.
+- If generic buttons are unavailable, the same actions must be shown as explicit action tokens/copyable requests; plain text must not be misrepresented as clickable.
+- Buttons never bypass the one-milestone rule, required CI, review/security gates, operator evidence, or production/release authority.
+- Blocked next-development actions remain visible only with their blocking reason (or are omitted) until prerequisites are satisfied.
+- The menu is refreshed after PR/Issue lifecycle changes, merges, failures, blocker changes and plan updates so the user always has a clear route to continue development.
+
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
