@@ -161,3 +161,4 @@ claims:
   - {id: CL-158, statement: pr_690_exact_head_c7d5169e_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
   - {id: CL-159, statement: pr_690_merged_with_expected_head_as_main_d96b5514_and_issue_689_closed_completed, value: true}
   - {id: CL-160, statement: issue_691_owns_post_pr_690_ai_native_reconciliation_only_and_does_not_change_product_runtime_or_authority, value: true}
+  - {id: CL-161, statement: pr_692_is_active_exact_head_verification_path_for_issue_691_post_pr_690_reconciliation, value: true}
