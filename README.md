@@ -190,6 +190,8 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 
 - Issue #691 owns governance/status reconciliation only on branch `ai-native/post-pr-690-reconciliation`.
 - Durable state, README, verifier, Runner benchmark, execution journal, memory-bank truth and next-action options are being synchronized to main `d96b5514ec02b9d521b8d6d63a873d2f3b002178`.
+- PR #692 is open for #691 against exact base main `d96b5514ec02b9d521b8d6d63a873d2f3b002178`; lifecycle-binding commits intentionally advance the branch after PR creation.
+- No PASS is claimed for PR #692 until the final bound head receives its own required exact-head gate batch.
 - The next bounded P15 product slice remains unactivated until the #691 reconciliation PR passes its own exact-head gates and merges.
 
 
