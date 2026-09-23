@@ -362,4 +362,5 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - #680 exact head `ccd2c19d...` passed 7/7 and merged as main `878ffa04...`; #679 closed.
 - #682 owns post-merge AI-native reconciliation only; product/runtime behavior and authority do not change.
 - Canonical state, README, Runner benchmark and memory-bank truth are synchronized before the next P15 slice is selected.
+- Reconciliation PR #683 opened; final post-binding exact head must be observed on the next `continue` before merge.
 

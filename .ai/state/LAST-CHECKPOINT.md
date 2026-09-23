@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `878ffa04b352b1e636d30dfb7e2bb96ad7ed21d9`  
 Active Issue: `#682`  
-Active PR: not opened yet  
+Active PR: `#683`  
 Active branch: `p15/post-pr-680-reconciliation`
 
 ## Completed P15 #679 / PR #680
@@ -19,4 +19,4 @@ Governance/status reconciliation only. #287 stays admin-blocked; #159 and #84 re
 
 ## Exact next safe action
 
-Open the reconciliation PR, bind its final exact head, perform one consolidated required-gate refresh, and stop if any required workflow is queued/running.
+On the next user `continue`, resolve the final PR #683 head and perform exactly one consolidated required-gate refresh. Merge only in a later logical milestone after exact-head gates are green and review threads are clear.

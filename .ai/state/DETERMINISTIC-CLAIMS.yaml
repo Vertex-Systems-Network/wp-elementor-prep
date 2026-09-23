@@ -138,3 +138,4 @@ claims:
   - {id: CL-135, statement: pr_680_exact_head_ccd2c19d_passed_all_seven_required_gates_and_merged_as_main_878ffa04, value: true}
   - {id: CL-136, statement: issue_679_is_closed_completed_after_pr_680_merge, value: true}
   - {id: CL-137, statement: issue_682_owns_post_pr_680_ai_native_reconciliation_only_and_does_not_change_product_runtime_authority, value: true}
+  - {id: CL-138, statement: pr_683_is_active_exact_head_verification_path_for_issue_682_post_pr_680_reconciliation, value: true}
