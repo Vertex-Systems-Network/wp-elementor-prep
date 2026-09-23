@@ -275,22 +275,33 @@ Runner-dependent work is a first-class planning artifact.
 
 Canonical ledger: `docs/RUNNER_BENCHMARK.md`.
 
-### G. Delivery-resilient short-turn execution
+### G. Delivery-resilient continuous scheduled execution
 
-Long-turn remote waiting is prohibited as an AI-native execution pattern. Canonical protocol: `.ai/state/PROTOCOL.md`.
+Long-lived busy-waiting inside one agent run remains prohibited. Continuity is provided by durable repository checkpoints plus a recurring scheduled supervisor. Canonical protocol: `.ai/state/PROTOCOL.md`.
 
-1. One user-triggered development turn may complete at most one logical milestone (`MAX_LOGICAL_MILESTONES_PER_TURN = 1`).
-2. After a Runner batch starts, inspect Runner/check status at most once in that turn (`MAX_RUNNER_STATUS_FETCHES_PER_TURN = 1`).
-3. Busy-waiting, repeated status polling and sleep/poll loops are forbidden.
-4. If any required Runner remains queued/in-progress on that single inspection, checkpoint the exact issue/branch/PR/head/run context and end the user-facing turn. The next user `continue` resumes from that checkpoint.
-5. Persist the branch/code milestone before an external dependency boundary. Do not make extra checkpoint commits after an exact-head Runner batch starts merely to record changing CI status.
-6. GitHub PR/issue/check/run metadata is the authoritative volatile Runner state; `.ai/state/*` retains the stable protocol and durable resume contract.
-7. Security-critical or `BLOCKING_NOW` Runner work still blocks later implementation, but it does not permit waiting/polling until completion inside the same turn.
-8. A failed check becomes a future single milestone: inspect -> fix -> push -> start new exact-head batch -> checkpoint/end.
-9. Never combine implementation, CI waiting, merge, post-merge verification and activation of the next task in one turn.
-10. This policy reduces workflow-caused message-delivery risk but must not claim absolute protection from transport/UI/service failures outside repository control.
-11. These rules are mandatory AI orders: no busy waiting, no retry-until-green loops, no second logical milestone, no next-task activation after an external wait boundary, and no unrecorded Runner task.
-12. If a Runner's safe deferral classification is ambiguous, fail closed and keep it out of `PROJECT_FINAL` until its merge/security/acceptance dependency is proven non-blocking.
+1. Interactive/user-triggered turns remain bounded to one logical milestone unless the execution surface explicitly supports a later scheduled continuation.
+2. A scheduled supervisor run must reconcile live main SHA, open Issues, open PRs, reviews, mergeability, checks/Actions and compact AI state before selecting work.
+3. Runner/check states `queued`, `waiting`, `pending` or `in_progress` are dependency boundaries, not reasons to stop the overall development schedule. Persist exact PR/head/run context and let the next scheduled run resume automatically.
+4. Never busy-wait, sleep/poll, or repeatedly fetch unchanged Runner state inside one run. The recurring schedule is the polling boundary.
+5. When required exact-head checks become successful, a later scheduled run may review the exact PR head, verify security/acceptance constraints, merge when authorized and safe, reconcile main, and activate the next actionable roadmap item.
+6. When checks fail, the next scheduled run must inspect failed evidence, fix the cause on the appropriate branch, rerun required exact-head gates, checkpoint, and return control to the schedule.
+7. Independent safely actionable work may proceed while another PR waits only when doing so does not bypass the accepted Issue/PR path, create conflicting authority, weaken security, or invalidate exact-head evidence.
+8. GitHub PR/issue/check/run metadata is authoritative volatile state; `.ai/state/*` is the durable resume index. Every scheduled run must be idempotent and revalidate before mutation.
+9. The continuous supervisor must keep running while accepted roadmap work remains. It may mark the project complete only when roadmap completion criteria, required security gates, required Runner batches, release/integration acceptance and durable state all agree.
+10. Completion does not mean an agent process stayed alive continuously; it means scheduled runs repeatedly resume from durable state without requiring a manual `continue`.
+11. Rate limits, service outages, unavailable runners or external/manual evidence must be checkpointed as blockers. They must not be fabricated, bypassed or converted into false PASS states; the next scheduled run retries reconciliation.
+12. Scheduled continuity never weakens fail-closed security, migration/data-safety, supply-chain controls, exact-head binding, review requirements or target/runtime acceptance.
+13. Avoid no-op commits and status-only churn. Update durable state when it materially changes and batch repository reads/writes where safe.
+14. If a Runner's safe deferral classification is ambiguous, fail closed and keep it out of `PROJECT_FINAL` until its merge/security/acceptance dependency is proven non-blocking.
+
+#### Continuous supervisor contract
+
+The intended scheduled supervisor cadence is hourly, which is the highest supported automation frequency. Each run performs one bounded reconciliation/development iteration, then exits cleanly. A later run continues from the durable checkpoint. The schedule itself remains active through temporary Runner waits and ordinary blockers; it stops only after verified project completion or explicit user cancellation.
+
+Execution-bound constants and safety wording are machine-checked:
+- `MAX_LOGICAL_MILESTONES_PER_TURN = 1` remains the interactive-turn bound; scheduled invocations provide continuation rather than silently widening one interactive milestone.
+- `MAX_RUNNER_STATUS_FETCHES_PER_TURN = 1` remains the default unchanged-runner/status fetch bound per interactive turn; a recorded exception must be evidence-backed and still may not become a busy-wait loop.
+- Scheduled supervision adds recovery and reconciliation coverage but must not claim absolute protection against platform outages, missing external evidence, runner unavailability, concurrent external writers or other failures outside repository-controlled guarantees.
 
 ### H. Mandatory end-of-work sync
 
