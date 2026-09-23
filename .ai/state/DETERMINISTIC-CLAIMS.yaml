@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 50a79a2031e5a34bb8da7b07df1e48bfb9e53ada
+observed_main_sha: 6ff09a665a329e643d8159132bb6bf4443d23952
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -135,3 +135,12 @@ claims:
   - {id: CL-132, statement: p15_679_write_surface_is_only_button_text_color_with_lowercase_six_digit_hex_and_hover_background_global_tokens_css_variables_alpha_custom_responsive_values_out_of_scope, value: true}
   - {id: CL-133, statement: p15_679_revalidates_exact_button_text_alignment_and_link_object_and_keeps_color_theme_link_hover_background_responsive_compatibility_production_download_network_and_figma_authority_false, value: true}
   - {id: CL-134, statement: pr_680_is_active_exact_head_verification_path_for_p15_679_button_normal_text_color, value: true}
+  - {id: CL-135, statement: pr_680_exact_head_ccd2c19d_passed_all_seven_required_gates_and_merged_as_main_878ffa04, value: true}
+  - {id: CL-136, statement: issue_679_is_closed_completed_after_pr_680_merge, value: true}
+  - {id: CL-137, statement: issue_682_owns_post_pr_680_ai_native_reconciliation_only_and_does_not_change_product_runtime_authority, value: true}
+  - {id: CL-138, statement: pr_683_is_active_exact_head_verification_path_for_issue_682_post_pr_680_reconciliation, value: true}
+  - {id: CL-139, statement: ai_native_protocol_requires_machine_readable_next_action_options_at_each_material_milestone_boundary, value: true}
+  - {id: CL-140, statement: interactive_action_buttons_are_preferred_only_when_host_supported_and_plain_text_must_not_be_presented_as_clickable, value: true}
+  - {id: CL-141, statement: action_button_selection_starts_a_new_user_request_and_grants_zero_additional_authority, value: true}
+  - {id: CL-142, statement: pr_684_governance_only_next_action_contract_is_merged_on_current_main_6ff09a66, value: true}
+  - {id: CL-143, statement: pr_683_branch_is_reconciled_with_main_6ff09a66_without_product_runtime_or_authority_expansion, value: true}

@@ -433,11 +433,12 @@ for (const fragment of p15ButtonTextColorRequiredFragments) {
     throw new Error(`P15 #679 Button text color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #679 implementation')
+if (!readme.includes('### Current P15 post-PR #680 state')
+  || !readme.includes('Issue #679 / PR #680 is merged and closed.')
   || !readme.includes('`button_text_color`')
   || !readme.includes('lowercase six-digit hex')
-  || !readme.includes('hover/background/global-token color authority remains out of scope')) {
-  throw new Error('README P15 #679 active Button text color truth is stale or missing.');
+  || !readme.includes('hover/background mutation and broader inference remain out of scope')) {
+  throw new Error('README P15 #679 / PR #680 merged Button text color truth is stale or missing.');
 }
 
 console.log(

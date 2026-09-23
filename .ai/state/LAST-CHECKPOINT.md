@@ -2,45 +2,44 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `50a79a2031e5a34bb8da7b07df1e48bfb9e53ada`  
-Active Issue: `#679`  
-Active PR: `#680`  
-Active branch: `p15/button-text-color`
+Observed main: `6ff09a665a329e643d8159132bb6bf4443d23952`  
+Active Issue: `#682`  
+Active PR: `#683`  
+Active branch: `p15/post-pr-680-reconciliation`
 
-## Completed P15 #677 / PR #678
+## Completed P15 #679 / PR #680
 
-- Exact head `94ee08c1a8039ea8496483419a747b2ddd637c8a` passed:
-  - CI `35791305993`
-  - CodeQL `35791305966`
-  - Integration Readiness `35791305937`
-  - P12 Offline Acceptance `35791306017`
-  - P12 Final Release Artifact `35791305949`
-  - P15 Real Elementor Target Proof `35791305926`
-  - P17 Local Browser Proof `35791305962`
-- Expected-head merge produced main `9ef893af8417706ef8904d1b879b91d498012e16`; Issue #677 closed completed.
-- Text Editor color remains strict lowercase six-digit hex and `text_color` only.
+- Exact head `ccd2c19d3a3c933a345aa8825e24a7943b2522bb` passed all seven required gates: CI `35853999477`, CodeQL `35853999398`, Integration Readiness `35853999401`, P12 Offline `35853999464`, P12 Final `35853999428`, P15 target `35853999370`, P17 browser `35853999470`.
+- PR #680 merged as main `878ffa04b352b1e636d30dfb7e2bb96ad7ed21d9`; Issue #679 closed completed; unresolved review threads: 0.
+- Button color remains lowercase six-digit hex and `button_text_color` only; broader authority remains false.
 
-## P15 #679 implementation
+## Reconciliation #682
 
-- Exact Elementor 4.2.4 Button trait blob: `31192aaee6851c445f79d1998499f6ce73ba7da5`.
-- Normal control: `button_text_color`; separate `hover_color` and background controls remain untouched.
-- Resolver: `src/targets/elementor/button-text-color-resolution.ts`.
-- Focused tests: `tests/p15-button-text-color-resolution.test.ts`.
-- Accepted values only: lowercase six-digit hex matching `#[0-9a-f]{6}`.
-- Write surface only: `button_text_color`.
-- Exact Button text, normalized desktop alignment and generated link object are rebound and checked before color mutation.
-- Global/theme tokens, CSS variables, shorthand/alpha/named/custom/responsive colors, hover/background color remain out of scope.
-- Stale source/candidate, duplicate/non-Button IDs, unknown/invalid/conflicting input, generator drift and authority inflation fail closed.
-- Color/theme/global-token inference, link mutation, hover/background/responsive inference, network, Figma mutation, compatibility, responsive closure, production/download authority remain false.
-- No CI PASS is claimed before exact-head PR verification.
+Governance/status reconciliation only. #287 stays admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred. No product/runtime behavior or production/compatibility authority changes.
 
-## PR #680 binding
+## Latest main reconciliation
 
-- PR #680 is open against exact base main `9ef893af8417706ef8904d1b879b91d498012e16`.
-- Creation head: `d85eabe043944feacd2838ba7d761fddc1c2cbc9`.
-- Binding commits intentionally advance the branch after PR creation.
-- No CI PASS is claimed until the final bound head is checked.
+- Main advanced through governance-only PR #684 to `6ff09a665a329e643d8159132bb6bf4443d23952`.
+- PR #683 branch includes that exact main and preserves the org-wide `.ai/NEXT-ACTION-OPTIONS.md` and `AGENTS.md` handoff contract.
+- No product/runtime behavior, target compatibility, production, release or download authority changed.
+- The reconciled PR head remains uncertified until the next exact-head required-gate refresh.
+
+## AI-Native next-action interaction update
+
+- Canonical option menu: `.ai/state/NEXT-ACTION-OPTIONS.yaml`.
+- Prefer host-supported interactive buttons; otherwise show truthful copyable action tokens/payloads.
+- Button selection starts a new user request only and grants no additional authority.
+- Current recommended option is `verify-pr-683`; next P15 development remains blocked until PR #683 passes required gates and is merged.
+
+## PR #683 first exact-head failure and repair
+
+- Observed exact head `ef90e4d8e8e88a624c4f9889bd6c9c03470c1404`.
+- CI `35914601078` and P12 Final `35914601136` failed only at `status:verify`.
+- Shared root cause: stale verifier expectation for the pre-merge README heading `Current P15 #679 implementation`.
+- Repair changes only `scripts/verify-readme-progress.mjs` semantic README markers and matching status documentation.
+- No product/runtime/security/authority behavior changed or was weakened.
+- New repaired head must not reuse the failed head's workflow evidence.
 
 ## Exact next safe action
 
-On the next user `continue`, resolve the final PR #680 head, perform exactly one consolidated required-gate refresh, and merge only if all seven workflows are green and review threads are resolved.
+On the next user `continue`, resolve the repaired PR #683 exact head and perform exactly one consolidated required-gate refresh. Merge only in a later logical milestone after that repaired exact head is green and review threads are clear.

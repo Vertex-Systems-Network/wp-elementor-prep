@@ -125,19 +125,26 @@ Current verified main before this documentation sync:
 - Expected-head merge produced main `9ef893af8417706ef8904d1b879b91d498012e16`; Issue #677 is closed completed.
 - Merged write surface remains only `text_color`, strict lowercase six-digit hex; link/global tokens, CSS variables, alpha/custom/responsive colors and broader authority remain out of scope.
 
-### Current P15 #679 implementation
+### Current P15 post-PR #680 state
 
-- Issue #679 adds exact-bound normal Button text color for Elementor 4.2.4.
-- Exact source evidence binds tag commit `0e292207...` and Button trait blob `31192aae...`.
-- Elementor source registers normal `button_text_color` on `.elementor-button`; hover `hover_color` and background controls remain separate and untouched.
-- Accepted values are lowercase six-digit hex only, matching `#[0-9a-f]{6}`.
-- Write surface is only target setting `button_text_color`.
-- Exact generated Button text, normalized desktop alignment, and exact generated link object are rebound before any color mutation.
-- hover/background/global-token color authority remains out of scope, together with CSS variables, shorthand hex, alpha/rgba/hsla, named/custom colors and responsive variants.
-- Existing neutral Button IDs only; exact source fingerprint + exact base-candidate identity required.
-- Stale replay, duplicate/non-Button IDs, invalid colors, unknown fields, existing override conflicts, generator drift and authority inflation fail closed.
-- Color/theme/global-token inference, link mutation, hover/background/responsive inference, network, Figma mutation, compatibility, responsive closure, production and download authority remain false.
-- Focused implementation/tests are on branch `p15/button-text-color` in PR #680 against exact base main `9ef893af8417706ef8904d1b879b91d498012e16`; exact-head CI PASS is not claimed before final verification.
+Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825e24a7943b2522bb` passed all seven required workflows and merged as main `878ffa04b352b1e636d30dfb7e2bb96ad7ed21d9`.
+
+- Exact Elementor 4.2.4 Button normal control remains `button_text_color`; separate hover/background controls remain untouched.
+- Accepted color remains strict lowercase six-digit hex only.
+- Exact generated Button text, normalized desktop alignment and exact link object remain rebound and checked.
+- Global/theme tokens, CSS variables, shorthand/alpha/named/custom/responsive colors, hover/background mutation and broader inference remain out of scope.
+- Compatibility, responsive closure, production acceptance, download/transfer authority, network and Figma mutation remain false.
+- Issue #682 is governance/status reconciliation only. The next P15 product slice is not activated until this reconciliation path is exact-head verified.
+- Main later advanced through governance-only PR #684 to `6ff09a665a329e643d8159132bb6bf4443d23952`; PR #683 is reconciled with that main and preserves the org-wide next-action handoff contract. Exact-head CI/security gates remain required before merge.
+
+#### PR #683 first reconciled-head verifier failure
+
+- Exact head `ef90e4d8e8e88a624c4f9889bd6c9c03470c1404` had Integration Readiness, P12 Offline Acceptance and P17 Local Browser Proof green when observed.
+- CI `35914601078` and P12 Final Release Artifact `35914601136` both failed only at `status:verify` before typecheck/tests.
+- Shared root cause: `scripts/verify-readme-progress.mjs` still required the pre-merge heading `Current P15 #679 implementation` after README had correctly advanced to merged #679 / PR #680 plus active #682/#683 reconciliation.
+- Repair updates only the semantic README verifier markers. Product/runtime code, security controls and authority boundaries are unchanged.
+- The repaired exact head is intentionally uncertified until the next user turn performs the single allowed consolidated required-gate refresh.
+
 
 ### Current P14 AI-native implementation track
 
@@ -265,7 +272,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded slices include responsive layout/style controls, flex-item controls, overflow, semantic Container tags plus strict Heading/Text Editor colors; #679 adds strict lowercase six-digit hex Button normal text color only; no hover/background/global-token inference, retained operator approval, broad compatibility, responsive closure or production authority is claimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded slices include responsive layout/style controls, flex-item controls, overflow, semantic Container tags plus strict Heading/Text Editor/Button normal colors; #679 / PR #680 is merged after 7/7 exact-head gates; no hover/background/global-token inference, retained operator approval, broad compatibility, responsive closure or production authority is claimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -357,10 +364,21 @@ The normalized JSON model is not Gutenberg post-content serialization and intent
 
 P12 remains at the retained **80%** release-exit state. The publishing-authoritative historical package remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5` with plugin ID `1680034649341961379`. Later P13-P16 development commits do not silently replace that publishing candidate.
 
+## AI-Native next-action controls
+
+The AI-Native supervisor now maintains `.ai/state/NEXT-ACTION-OPTIONS.yaml` as the canonical handoff menu after every material milestone.
+
+- Each option contains a stable action ID, button label, exact next-request payload, enabled/blocked state and recommendation flag.
+- If the chat/client supports generic interactive action buttons, enabled options should be rendered as buttons and a click should submit the bound payload as the next user request.
+- If generic buttons are unavailable, the same actions must be shown as explicit action tokens/copyable requests; plain text must not be misrepresented as clickable.
+- Buttons never bypass the one-milestone rule, required CI, review/security gates, operator evidence, or production/release authority.
+- Blocked next-development actions remain visible only with their blocking reason (or are omitted) until prerequisites are satisfied.
+- The menu is refreshed after PR/Issue lifecycle changes, merges, failures, blocker changes and plan updates so the user always has a clear route to continue development.
+
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. continue P15 commercial-V1 through #679 bounded Button normal text color without fabricating a retained approval: exact default-breakpoint align-content is now supported only where the same breakpoint has an explicit #576 `wrap` prerequisite; continue only independently evidenced responsive/matrix slices and keep custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority unclaimed unless separate evidence explicitly changes them;
+2. reconcile merged #679 / PR #680 through #682, then select/activate only the next independently evidenced bounded P15 commercial-V1 slice; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;
