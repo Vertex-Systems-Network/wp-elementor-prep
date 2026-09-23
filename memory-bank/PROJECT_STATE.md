@@ -164,6 +164,8 @@ PR #686 repaired exact head `5d22c87ce3c5542cecc7c001dabafc8736efbb34` passed al
 
 Issue #687 is the active governance/status-only reconciliation owner on branch `ai-native/post-pr-686-reconciliation`; no product/runtime or broader authority is introduced.
 
+PR #688 is open for Issue #687 against exact main `36e656385840a05bfe1d118a72b7b64abcc3bbed`. Lifecycle-binding commits advance the branch after PR creation, so only the final bound head may be used for merge certification.
+
 
 ## P16 state
 
