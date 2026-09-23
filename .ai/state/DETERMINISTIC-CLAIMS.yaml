@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 36e656385840a05bfe1d118a72b7b64abcc3bbed
+observed_main_sha: 2eb809f45aec1508c6d93a8120950b122718f61c
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -154,3 +154,7 @@ claims:
   - {id: CL-151, statement: pr_686_merged_with_expected_head_as_main_36e65638_and_issue_685_closed_completed, value: true}
   - {id: CL-152, statement: issue_687_owns_post_pr_686_ai_native_reconciliation_only_and_does_not_change_product_runtime_or_authority, value: true}
   - {id: CL-153, statement: pr_688_is_active_exact_head_verification_path_for_issue_687_post_pr_686_reconciliation, value: true}
+  - {id: CL-154, statement: pr_688_exact_head_bd383220_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
+  - {id: CL-155, statement: pr_688_merged_with_expected_head_as_main_2eb809f4_and_issue_687_closed_completed, value: true}
+  - {id: CL-156, statement: issue_689_owns_post_pr_688_ai_native_reconciliation_only_and_does_not_change_product_runtime_or_authority, value: true}
+  - {id: CL-157, statement: pr_690_is_active_exact_head_verification_path_for_issue_689_post_pr_688_reconciliation, value: true}
