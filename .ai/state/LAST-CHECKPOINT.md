@@ -23,6 +23,16 @@ Active branch: `ai-native/post-pr-683-reconciliation`
 - #287 remains admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred.
 - No product/runtime behavior or security/authority boundary is changed.
 
+## PR #686 first exact-head failure and rolling-journal repair
+
+- Observed exact head `101ae58a5c715a40441e3dac89d2248f6435920f`.
+- CI `35917379784` passed status verification and typecheck, then reached 1673 PASS / 1 FAIL.
+- The sole failure was the durable-state contract: `.ai/state/EXECUTION-JOURNAL.md` measured 34,180 bytes against the 32 KiB ceiling.
+- P12 Final Release Artifact `35917379875` failed on the same repository-contract path.
+- The protocol defines the journal as rolling; older detail is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-001.md` and the active journal is compacted.
+- No product/runtime/security/authority behavior changed or was weakened.
+- New repaired head must not reuse the failed head's workflow evidence.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final bound PR #686 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+On the next user `continue`, resolve the repaired PR #686 exact head and perform exactly one consolidated required-gate refresh. Do not merge until that repaired exact head is green and review threads are clear.

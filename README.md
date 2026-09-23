@@ -158,6 +158,15 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Issue #685 owns governance/status reconciliation only on branch `ai-native/post-pr-683-reconciliation`.
 - PR #686 is open for #685 against exact base main `e8ce67abe31ac4948cdc981469e38a97752779aa`; lifecycle-binding commits intentionally advance the branch after PR creation.
 - No PASS is claimed for PR #686 until the final bound head receives its own required exact-head gate batch.
+
+#### PR #686 first exact-head durable-state ceiling failure
+
+- Exact head `101ae58a5c715a40441e3dac89d2248f6435920f` passed README/status verification and TypeScript typecheck.
+- CI `35917379784` reached 1673 PASS / 1 FAIL; the sole failure was the compact-state contract because `.ai/state/EXECUTION-JOURNAL.md` was 34,180 bytes against the 32 KiB hard ceiling.
+- P12 Final Release Artifact `35917379875` failed on the same repository-contract path.
+- The protocol explicitly defines the journal as rolling. Older detailed execution history is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-001.md`, while the active journal retains recent handoff history below the ceiling.
+- This repair changes no product/runtime behavior, security gate, target compatibility or production/download/release authority.
+- The repaired exact head remains uncertified until the next user turn performs the single allowed consolidated required-gate refresh.
 - Durable state, README, Runner benchmark, memory-bank truth and next-action options are being synchronized to main `e8ce67abe31ac4948cdc981469e38a97752779aa`.
 - The next bounded P15 product slice remains unactivated until the #685 reconciliation PR passes its own exact-head gates and merges.
 
