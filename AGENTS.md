@@ -204,3 +204,10 @@ A task/release train is not complete because code exists. It is complete when:
 - no unsupported option combination is exposed as valid,
 - local artifact validation is not misreported as real target verification,
 - next work is unambiguous.
+
+
+## VSN organization next-action handoff
+
+Before every user-facing development handoff, read and follow `.ai/NEXT-ACTION-OPTIONS.md`.
+
+If the user sends only this repository's GitHub URL, perform the policy's read-only bootstrap and return shuffled numbered next-action options. A URL-only message never authorizes a repository mutation. A later numeric selection must revalidate live repository state before acting.
