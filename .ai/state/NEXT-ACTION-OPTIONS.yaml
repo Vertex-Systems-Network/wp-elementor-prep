@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 6ff09a665a329e643d8159132bb6bf4443d23952
-active_issue: 682
-active_pr: 683
-active_branch: p15/post-pr-680-reconciliation
+observed_main_sha: e8ce67abe31ac4948cdc981469e38a97752779aa
+active_issue: 685
+active_pr: null
+active_branch: ai-native/post-pr-683-reconciliation
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -11,22 +11,14 @@ interaction:
   selection_semantics: NEW_USER_REQUEST
   selection_grants_authority: false
   max_visible_options: 4
-recommended_action_id: verify-pr-683
+recommended_action_id: open-reconciliation-pr
 options:
-  - action_id: verify-pr-683
-    label: Verify PR #683
+  - action_id: open-reconciliation-pr
+    label: Open reconciliation PR
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_683
-    request_payload: "Continue AI-Native plan: resolve the exact current head of PR #683, perform one consolidated required-gate refresh, and merge only in a later logical milestone if all required gates are green and review threads are clear."
-    blocked_by: []
-    blocked_reason: null
-  - action_id: update-ai-plan-status
-    label: Update AI plan/status
-    enabled: true
-    recommended: false
-    action_token: UPDATE_AI_PLAN
-    request_payload: "Re-read durable repository state and update the AI-Native plan/status surfaces only where repository/runtime evidence changed. Preserve one logical milestone and all security/authority boundaries."
+    action_token: OPEN_RECONCILIATION_PR
+    request_payload: "Continue AI-Native plan: open and bind the focused post-PR #683 reconciliation PR for Issue #685 against exact main e8ce67abe31ac4948cdc981469e38a97752779aa, then end without CI polling."
     blocked_by: []
     blocked_reason: null
   - action_id: start-next-p15-slice
@@ -34,15 +26,23 @@ options:
     enabled: false
     recommended: false
     action_token: NEXT_P15
-    request_payload: "After PR #683 is merged and reconciled, select and start the next independently evidenced bounded P15 commercial-V1 slice under the AI-Native plan."
+    request_payload: "After Issue #685 reconciliation PR passes exact-head gates and merges, select and start the next independently evidenced bounded P15 commercial-V1 slice."
     blocked_by:
-      - PR_683_NOT_MERGED
-    blocked_reason: "PR #683 reconciliation must pass required exact-head gates and merge before the next P15 product milestone starts."
+      - ISSUE_685_RECONCILIATION_NOT_MERGED
+    blocked_reason: "Post-PR #683 durable-state reconciliation must merge before the next P15 product slice starts."
   - action_id: review-security-blocker-287
     label: Review security blocker #287
     enabled: true
     recommended: false
     action_token: SECURITY_287
     request_payload: "Review current repository security blocker #287 and report the exact admin-level branch/ruleset action still required without weakening repository security controls."
+    blocked_by: []
+    blocked_reason: null
+  - action_id: update-ai-plan-status
+    label: Review AI plan/status
+    enabled: true
+    recommended: false
+    action_token: UPDATE_AI_PLAN
+    request_payload: "Re-read current repository truth and review the AI-Native plan/status without bypassing Issue #685 or any security/release authority boundary."
     blocked_by: []
     blocked_reason: null
