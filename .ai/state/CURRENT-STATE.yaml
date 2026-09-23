@@ -1,5 +1,5 @@
 schema_version: 2
-mode: delivery-resilient-ai-engineering_supervisor
+mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
 observed_main_sha: 36e656385840a05bfe1d118a72b7b64abcc3bbed
