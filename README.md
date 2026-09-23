@@ -46,13 +46,14 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
+- `#685` — active post-PR #683 AI-native reconciliation before the next bounded P15 slice;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
 Current verified main before this documentation sync:
 
-`15b2825e45cad543fc1950ecdcc361131043113d`
+`e8ce67abe31ac4948cdc981469e38a97752779aa`
 
 ### Completed P15 #659 verification
 
@@ -144,6 +145,19 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Shared root cause: `scripts/verify-readme-progress.mjs` still required the pre-merge heading `Current P15 #679 implementation` after README had correctly advanced to merged #679 / PR #680 plus active #682/#683 reconciliation.
 - Repair updates only the semantic README verifier markers. Product/runtime code, security controls and authority boundaries are unchanged.
 - The repaired exact head is intentionally uncertified until the next user turn performs the single allowed consolidated required-gate refresh.
+
+### Completed AI-native reconciliation #682 / PR #683
+
+- Repaired exact head `82806d008f7d29e087f10631fc42f2ed5ad4e6de` passed all seven required workflows: CI `35915727238`, CodeQL `35915727493`, Integration `35915727438`, P12 Offline `35915727351`, P12 Final `35915727410`, P15 target proof `35915727394`, and P17 browser proof `35915727239`.
+- Unresolved review threads were 0.
+- Expected-head merge produced main `e8ce67abe31ac4948cdc981469e38a97752779aa`; Issue #682 closed completed.
+- Product/runtime behavior, compatibility, responsive closure, production/download/release authority and security controls were not broadened.
+
+### Current P15 post-PR #683 reconciliation
+
+- Issue #685 owns governance/status reconciliation only on branch `ai-native/post-pr-683-reconciliation`.
+- Durable state, README, Runner benchmark, memory-bank truth and next-action options are being synchronized to main `e8ce67abe31ac4948cdc981469e38a97752779aa`.
+- The next bounded P15 product slice remains unactivated until the #685 reconciliation PR passes its own exact-head gates and merges.
 
 
 ### Current P14 AI-native implementation track
@@ -272,7 +286,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded slices include responsive layout/style controls, flex-item controls, overflow, semantic Container tags plus strict Heading/Text Editor/Button normal colors; #679 / PR #680 is merged after 7/7 exact-head gates; no hover/background/global-token inference, retained operator approval, broad compatibility, responsive closure or production authority is claimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; #679 / PR #680 and reconciliation #682 / PR #683 are merged after 7/7 exact-head gates; #685 owns the current post-merge state reconciliation before the next bounded P15 slice; no hover/background/global-token inference, retained operator approval, broad compatibility, responsive closure or production authority is claimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -378,7 +392,7 @@ The AI-Native supervisor now maintains `.ai/state/NEXT-ACTION-OPTIONS.yaml` as t
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. reconcile merged #679 / PR #680 through #682, then select/activate only the next independently evidenced bounded P15 commercial-V1 slice; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
+2. complete post-PR #683 reconciliation through #685, then select/activate only the next independently evidenced bounded P15 commercial-V1 slice; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;
