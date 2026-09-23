@@ -2,44 +2,37 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `6ff09a665a329e643d8159132bb6bf4443d23952`  
-Active Issue: `#682`  
-Active PR: `#683`  
-Active branch: `p15/post-pr-680-reconciliation`
+Observed main: `e8ce67abe31ac4948cdc981469e38a97752779aa`  
+Active Issue: `#685`  
+Active PR: `#686`  
+Active branch: `ai-native/post-pr-683-reconciliation`
 
-## Completed P15 #679 / PR #680
+## Completed reconciliation #682 / PR #683
 
-- Exact head `ccd2c19d3a3c933a345aa8825e24a7943b2522bb` passed all seven required gates: CI `35853999477`, CodeQL `35853999398`, Integration Readiness `35853999401`, P12 Offline `35853999464`, P12 Final `35853999428`, P15 target `35853999370`, P17 browser `35853999470`.
-- PR #680 merged as main `878ffa04b352b1e636d30dfb7e2bb96ad7ed21d9`; Issue #679 closed completed; unresolved review threads: 0.
-- Button color remains lowercase six-digit hex and `button_text_color` only; broader authority remains false.
+- PR #683 repaired exact head `82806d008f7d29e087f10631fc42f2ed5ad4e6de` passed all seven required gates: CI `35915727238`, CodeQL `35915727493`, Integration Readiness `35915727438`, P12 Offline `35915727351`, P12 Final `35915727410`, P15 target `35915727394`, P17 browser `35915727239`.
+- Unresolved review threads: 0.
+- Expected-head merge produced main `e8ce67abe31ac4948cdc981469e38a97752779aa`; Issue #682 closed completed.
+- No product/runtime behavior or compatibility/production/download/release authority changed.
 
-## Reconciliation #682
+## Reconciliation #685 / PR #686
 
-Governance/status reconciliation only. #287 stays admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred. No product/runtime behavior or production/compatibility authority changes.
+- Issue #685 owns post-PR #683 AI-native reconciliation only.
+- PR #686 opened against exact main `e8ce67abe31ac4948cdc981469e38a97752779aa` from branch `ai-native/post-pr-683-reconciliation`.
+- PR creation head before lifecycle binding: `68cb73448edfd8201a3df600bcf8130dabcf2bfd`.
+- Durable state, README, verifier, Runner benchmark and memory-bank truth are synchronized to the merged #683 state.
+- #287 remains admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred.
+- No product/runtime behavior or security/authority boundary is changed.
 
-## Latest main reconciliation
+## PR #686 first exact-head failure and rolling-journal repair
 
-- Main advanced through governance-only PR #684 to `6ff09a665a329e643d8159132bb6bf4443d23952`.
-- PR #683 branch includes that exact main and preserves the org-wide `.ai/NEXT-ACTION-OPTIONS.md` and `AGENTS.md` handoff contract.
-- No product/runtime behavior, target compatibility, production, release or download authority changed.
-- The reconciled PR head remains uncertified until the next exact-head required-gate refresh.
-
-## AI-Native next-action interaction update
-
-- Canonical option menu: `.ai/state/NEXT-ACTION-OPTIONS.yaml`.
-- Prefer host-supported interactive buttons; otherwise show truthful copyable action tokens/payloads.
-- Button selection starts a new user request only and grants no additional authority.
-- Current recommended option is `verify-pr-683`; next P15 development remains blocked until PR #683 passes required gates and is merged.
-
-## PR #683 first exact-head failure and repair
-
-- Observed exact head `ef90e4d8e8e88a624c4f9889bd6c9c03470c1404`.
-- CI `35914601078` and P12 Final `35914601136` failed only at `status:verify`.
-- Shared root cause: stale verifier expectation for the pre-merge README heading `Current P15 #679 implementation`.
-- Repair changes only `scripts/verify-readme-progress.mjs` semantic README markers and matching status documentation.
+- Observed exact head `101ae58a5c715a40441e3dac89d2248f6435920f`.
+- CI `35917379784` passed status verification and typecheck, then reached 1673 PASS / 1 FAIL.
+- The sole failure was the durable-state contract: `.ai/state/EXECUTION-JOURNAL.md` measured 34,180 bytes against the 32 KiB ceiling.
+- P12 Final Release Artifact `35917379875` failed on the same repository-contract path.
+- The protocol defines the journal as rolling; older detail is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-001.md` and the active journal is compacted.
 - No product/runtime/security/authority behavior changed or was weakened.
 - New repaired head must not reuse the failed head's workflow evidence.
 
 ## Exact next safe action
 
-On the next user `continue`, resolve the repaired PR #683 exact head and perform exactly one consolidated required-gate refresh. Merge only in a later logical milestone after that repaired exact head is green and review threads are clear.
+On the next user `continue`, resolve the repaired PR #686 exact head and perform exactly one consolidated required-gate refresh. Do not merge until that repaired exact head is green and review threads are clear.
