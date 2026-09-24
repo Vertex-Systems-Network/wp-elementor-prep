@@ -673,7 +673,7 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
   }
 }
 if (!readme.includes('### Current P15 Fast Batch #723 implementation')
-  || !readme.includes('Issue #723 owns five tightly-related Elementor 4.2.4 Button typography metrics')
+  || !readme.includes('Issue #723 / PR #724 owns five tightly-related Elementor 4.2.4 Button typography metrics')
   || !readme.includes('`typography_font_family`')
   || !readme.includes('`typography_font_size`')
   || !readme.includes('`typography_line_height`')
