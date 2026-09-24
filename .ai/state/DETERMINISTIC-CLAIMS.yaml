@@ -244,3 +244,4 @@ claims:
   - {id: CL-241, statement: pr_718_exact_head_747ce431_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
   - {id: CL-242, statement: pr_718_merged_with_expected_head_as_main_1cd8181c_and_issue_717_closed_completed, value: true}
   - {id: CL-243, statement: issue_719_owns_post_pr_718_ai_native_reconciliation_only_and_does_not_change_product_runtime_security_or_authority, value: true}
+  - {id: CL-244, statement: pr_720_is_active_exact_head_verification_path_for_issue_719_post_pr_718_ai_native_reconciliation, value: true}

@@ -195,3 +195,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Randomized next-action presentation remains enabled; recommended action semantics stay bound to stable action IDs rather than fixed numbers.
 - No product/runtime behavior, security control, compatibility, responsive closure, production, download or release authority is changed.
 - The next P15 product batch remains unactivated until the reconciliation PR is exact-head verified and merged.
+
+## 2026-09-25 — reconciliation PR #720 opened
+
+- PR #720 opened for Issue #719 from `ai-native/post-pr-718-reconciliation` against exact base main `1cd8181cf863353c3f5e4bab7b1270156067b288`.
+- PR creation head was `f804b8352c1f163badc5740604536df28923496d`.
+- Lifecycle binding records PR #720 in compact state, coordination queue, Runner benchmark, README and memory-bank truth.
+- The final bound reconciliation head is intentionally uncertified; no workflow/status polling occurs in this lifecycle-binding milestone.
+- Randomized next-action presentation remains enabled and recommended semantics remain decoupled from displayed numbering.
+- No product/runtime behavior, security control or compatibility/production/download/release authority changes.

@@ -5,9 +5,9 @@ compact_state_path: .ai/state
 observed_main_sha: 1cd8181cf863353c3f5e4bab7b1270156067b288
 observed_main_branch: main
 active_issue: 719
-active_pr: null
+active_pr: 720
 active_branch: ai-native/post-pr-718-reconciliation
-candidate_head_source: branch_head_until_pr_open
+candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
 current_milestone: post_pr_718_ai_native_reconciliation
 next_action_options:
@@ -19,14 +19,14 @@ next_action_options:
   grants_authority: false
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  recommended_action_id: open-reconciliation-pr-719
-milestone_status: BUILDING
+  recommended_action_id: verify-pr-720
+milestone_status: VERIFYING
 last_completed_milestone: p15_pr_718_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: open_post_pr_718_reconciliation_pr_then_bind_exact_pr_identity
-pending_runner_ids: []
+exact_next_safe_action: next_user_continue_resolves_final_pr_720_head_and_performs_one_consolidated_exact_head_status_refresh
+pending_runner_ids: [RQ-719-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - reconciliation_pr_719_not_yet_open
+  - pr_720_exact_head_gate_set_not_yet_observed
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed

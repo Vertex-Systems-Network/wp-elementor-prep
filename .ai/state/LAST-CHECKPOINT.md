@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: BUILDING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `1cd8181cf863353c3f5e4bab7b1270156067b288`  
 Active Issue: `#719`  
-Active PR: `not yet opened`  
+Active PR: `#720`  
 Active branch: `ai-native/post-pr-718-reconciliation`
 
 ## Completed P15 Fast Batch #717 / PR #718
@@ -19,10 +19,16 @@ Active branch: `ai-native/post-pr-718-reconciliation`
 
 Synchronize post-merge README/verifier, compact state, deterministic claims, coordination queue, Runner benchmark, execution journal and memory-bank truth. No product/runtime or authority expansion is allowed.
 
+## PR #720 lifecycle
+
+- PR #720 opened against exact base main `1cd8181cf863353c3f5e4bab7b1270156067b288`.
+- PR creation head was `f804b8352c1f163badc5740604536df28923496d`.
+- Lifecycle binding changes governance/status truth only; remote exact-head gates are intentionally not polled in this milestone.
+
 ## Option presentation contract
 
 Visible option order remains shuffled per material milestone; recommended action identity is stable and not bound to a fixed numeric slot.
 
 ## Exact next safe action
 
-Open the reconciliation PR from `ai-native/post-pr-718-reconciliation`, bind its exact PR identity into durable state, then defer exact-head gate verification to the next user turn.
+Resolve the final bound PR #720 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.

@@ -46,7 +46,7 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#719` — active post-PR #718 AI-native reconciliation;
+- `#719 / PR #720` — active post-PR #718 AI-native reconciliation;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -282,7 +282,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Issue #717 / PR #718 owns three tightly-related Elementor 4.2.4 Button typography capabilities under one Fast Batch: exact font weight, text transform and font style.
 - Final exact head `747ce4312c7723e00235143510e1fc3d394aae7c` passed all seven required gates with 0 unresolved review threads.
 - Expected-head merge produced main `1cd8181cf863353c3f5e4bab7b1270156067b288`; Issue #717 closed completed.
-- Issue #719 now owns post-merge AI-native reconciliation only; the next P15 product batch is not yet activated.
+- Issue #719 / PR #720 now owns post-merge AI-native reconciliation only; the next P15 product batch is not yet activated.
 - Product commit `df3b5cf079b8c3901231fa00f378d15462200406` adds `button-typography-basics-resolution.ts` plus focused tests.
 - Exact source evidence binds Button trait `31192aaee6851c445f79d1998499f6ce73ba7da5`, Typography group `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1` and group base `6117c06b286dbec336eefe63475c747e2fda0234`.
 - Any requested typography override writes `typography_typography=custom` plus only explicit `typography_font_weight`, `typography_text_transform` and/or `typography_font_style`.
