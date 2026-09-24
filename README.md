@@ -46,7 +46,7 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#717 / PR #718` — active P15 Fast Batch: Button typography basics v1;
+- `#719` — active post-PR #718 AI-native reconciliation;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -277,10 +277,12 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
-### Current P15 Fast Batch #717 / PR #718 implementation
+### Completed P15 Fast Batch #717 / PR #718 implementation
 
 - Issue #717 / PR #718 owns three tightly-related Elementor 4.2.4 Button typography capabilities under one Fast Batch: exact font weight, text transform and font style.
-- PR creation head `291f5ca0c126d8d7fed8e118958a63ea577c04cc` was opened against exact main `d99695e8e1183f152a01a308251d2f02f086e67f`; lifecycle binding now freezes the final candidate before one consolidated exact-head gate refresh.
+- Final exact head `747ce4312c7723e00235143510e1fc3d394aae7c` passed all seven required gates with 0 unresolved review threads.
+- Expected-head merge produced main `1cd8181cf863353c3f5e4bab7b1270156067b288`; Issue #717 closed completed.
+- Issue #719 now owns post-merge AI-native reconciliation only; the next P15 product batch is not yet activated.
 - Product commit `df3b5cf079b8c3901231fa00f378d15462200406` adds `button-typography-basics-resolution.ts` plus focused tests.
 - Exact source evidence binds Button trait `31192aaee6851c445f79d1998499f6ce73ba7da5`, Typography group `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1` and group base `6117c06b286dbec336eefe63475c747e2fda0234`.
 - Any requested typography override writes `typography_typography=custom` plus only explicit `typography_font_weight`, `typography_text_transform` and/or `typography_font_style`.
@@ -432,7 +434,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #715 / PR #716 merged after 7/7 repaired exact-head gates; #717 batches Button font weight + text transform + font style; font family/size, responsive typography, padding, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #717 / PR #718 merged after 7/7 exact-head gates; #719 reconciles post-merge AI-native truth before the next 3-5-capability batch; font family/size, responsive typography, padding, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -549,7 +551,7 @@ Development now defaults to **3-5 closely related capabilities per product batch
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. exact-head verify and merge Fast Batch #717 containing Button font weight, text transform and font style while preserving exact source/evidence and authority boundaries;
+2. exact-head verify and merge post-PR #718 reconciliation #719; only then start the next 3-5-capability P15 Fast Batch while preserving exact source/evidence and authority boundaries;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;

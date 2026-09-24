@@ -147,7 +147,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#717',
+  next: '#719',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -672,12 +672,14 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #717 / PR #718 implementation')
+if (!readme.includes('### Completed P15 Fast Batch #717 / PR #718 implementation')
   || !readme.includes('Issue #717 / PR #718 owns three tightly-related Elementor 4.2.4 Button typography capabilities')
   || !readme.includes('`typography_font_weight`')
   || !readme.includes('`typography_text_transform`')
   || !readme.includes('`typography_font_style`')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  || !readme.includes('Final exact head `747ce4312c7723e00235143510e1fc3d394aae7c` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `1cd8181cf863353c3f5e4bab7b1270156067b288`; Issue #717 closed completed.')
+  || !readme.includes('Issue #719 now owns post-merge AI-native reconciliation only')) {
   throw new Error('README P15 #717 Button typography basics Fast Batch truth is stale or missing.');
 }
 

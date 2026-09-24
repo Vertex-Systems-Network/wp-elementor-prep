@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: d99695e8e1183f152a01a308251d2f02f086e67f
-active_issue: 717
-active_pr: 718
-active_branch: p15/button-typography-basics-batch
+observed_main_sha: 1cd8181cf863353c3f5e4bab7b1270156067b288
+active_issue: 719
+active_pr: null
+active_branch: ai-native/post-pr-718-reconciliation
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,28 +13,28 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-718-final-handoff
+  presentation_epoch: issue-719-pre-pr
   presentation_order:
-    - inspect-batch-717
     - review-security-blocker-287
-    - verify-pr-718
+    - open-reconciliation-pr-719
+    - inspect-merged-batch-718
     - review-ai-plan
-recommended_action_id: verify-pr-718
+recommended_action_id: open-reconciliation-pr-719
 options:
-  - action_id: verify-pr-718
-    label: Verify Fast Batch PR #718
+  - action_id: open-reconciliation-pr-719
+    label: Open post-#718 reconciliation PR
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_718
-    request_payload: "Resolve the exact current head of PR #718 and perform one consolidated required-gate refresh for the completed Button typography basics Fast Batch."
+    action_token: OPEN_RECONCILIATION_PR_719
+    request_payload: "Open the post-PR #718 AI-native reconciliation PR for Issue #719, bind its exact PR identity into durable state, and stop before exact-head CI verification."
     blocked_by: []
     blocked_reason: null
-  - action_id: inspect-batch-717
-    label: Inspect typography batch #717
+  - action_id: inspect-merged-batch-718
+    label: Inspect merged typography batch
     enabled: true
     recommended: false
-    action_token: INSPECT_717
-    request_payload: "Review the exact source evidence, write surface, exclusions and focused tests for P15 Fast Batch #717 without changing its scope."
+    action_token: INSPECT_718
+    request_payload: "Review merged P15 Button typography batch #717 / PR #718 evidence and boundaries without starting new product scope."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -50,6 +50,6 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review current AI-Native roadmap/status without bypassing PR #718."
+    request_payload: "Review the AI-Native roadmap from current merged truth while Issue #719 owns post-merge reconciliation."
     blocked_by: []
     blocked_reason: null
