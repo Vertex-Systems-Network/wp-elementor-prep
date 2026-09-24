@@ -342,3 +342,10 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - CI `36017992344` and P12 Final `36017992198` failed at `status:verify` on one case-sensitive README/verifier phrase mismatch.
 - README uses `Exact head`; verifier incorrectly required `exact head`.
 - Repair changes the verifier phrase only; the 3-capability Fast Batch resolver/tests, security controls and authority boundaries are unchanged.
+
+## 2026-09-24 — PR #710 exactOptionalPropertyTypes repair
+
+- Head `6ca4d32a86dc653dfd9236cdbe99b6f81ad8bc5c` proved the README verifier repair: `status:verify` passed.
+- CI `36019163256` and P12 Final `36019163185` then exposed focused TypeScript `TS2375` in `cloneEntry()` under `exactOptionalPropertyTypes: true`.
+- `cloneBoxShadow()` is narrowed from optional input/output to definite input/output because the existing caller guard already proves presence.
+- Runtime behavior, three-capability scope, focused tests, source evidence, security controls and authority boundaries remain unchanged.

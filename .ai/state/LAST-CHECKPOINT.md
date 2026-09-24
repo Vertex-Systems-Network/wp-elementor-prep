@@ -34,6 +34,14 @@ Existing requested target keys are rejected instead of overwritten. Style/respon
 - The Fast Batch product resolver/tests were not the reported failure surface.
 - This repair changes only the verifier phrase plus durable failure evidence; all three batch capability contracts and authority boundaries remain unchanged.
 
+## PR #710 exactOptionalPropertyTypes repair
+
+- Verifier-repaired head `6ca4d32a86dc653dfd9236cdbe99b6f81ad8bc5c` confirmed `status:verify` PASS.
+- CI `36019163256` and P12 Final `36019163185` then failed at TypeScript `TS2375` in `cloneEntry()` under `exactOptionalPropertyTypes: true`.
+- Root cause: `cloneBoxShadow()` returned `P15ElementorButtonHoverBoxShadowV1 | undefined` even though the caller's conditional branch had already proved `value.boxShadow` defined.
+- Repair narrows that helper to a definite input/output type only. The conditional presence guard and runtime behavior are unchanged.
+- No capability, accepted value, setting key, test contract, security control or authority boundary is expanded.
+
 ## Exact next safe action
 
-Perform exactly one fresh consolidated required-gate refresh on the repaired PR #710 head. Do not merge until that exact head is green and review threads are clear.
+Perform exactly one fresh consolidated required-gate refresh on the type-repaired PR #710 head. Do not merge until that exact head is green and review threads are clear.

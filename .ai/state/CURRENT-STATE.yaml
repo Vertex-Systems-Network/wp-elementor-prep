@@ -9,7 +9,7 @@ active_pr: 710
 active_branch: p15/button-hover-interaction-batch
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_button_hover_interaction_fast_batch_v1_verifier_phrase_repair
+current_milestone: p15_button_hover_interaction_fast_batch_v1_exact_optional_type_repair
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -20,11 +20,11 @@ next_action_options:
   recommended_action_id: verify-pr-710
 milestone_status: VERIFYING
 last_completed_milestone: p15_pr_708_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: repaired_pr_710_head_requires_one_fresh_consolidated_exact_head_status_refresh
+exact_next_safe_action: type_repaired_pr_710_head_requires_one_fresh_consolidated_exact_head_status_refresh
 pending_runner_ids: [RQ-709-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_710_repaired_exact_head_gate_set_not_yet_observed
+  - pr_710_type_repaired_exact_head_gate_set_not_yet_observed
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed

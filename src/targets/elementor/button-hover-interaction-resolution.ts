@@ -293,9 +293,9 @@ function validAnimation(value: unknown): value is P15ElementorButtonHoverCoreAni
 }
 
 function cloneBoxShadow(
-  value: P15ElementorButtonHoverBoxShadowV1 | undefined,
-): P15ElementorButtonHoverBoxShadowV1 | undefined {
-  return value === undefined ? undefined : { ...value };
+  value: P15ElementorButtonHoverBoxShadowV1,
+): P15ElementorButtonHoverBoxShadowV1 {
+  return { ...value };
 }
 
 function cloneEntry(
