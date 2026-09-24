@@ -9,7 +9,7 @@ active_pr: 704
 active_branch: p15/button-hover-text-color
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_button_hover_text_color_v1_verifier_repair
+current_milestone: p15_button_hover_text_color_v1_verifier_semantic_repair
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
