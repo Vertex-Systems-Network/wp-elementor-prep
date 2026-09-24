@@ -1,9 +1,11 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 1cd8181cf863353c3f5e4bab7b1270156067b288
-active_issue: 719
-active_pr: 720
-active_branch: ai-native/post-pr-718-reconciliation
+observed_main_sha: f3384739609ea68e9141f7488e924e20e5ac9d6b
+active_issue: null
+active_pr: null
+active_branch: main
+terminal_transport_issue: 721
+terminal_transport_pr: 722
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,30 +15,30 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-720-final-handoff
+  presentation_epoch: terminal-pr-722-final-handoff
   presentation_order:
-    - review-ai-plan
-    - inspect-merged-batch-718
     - review-security-blocker-287
-    - verify-pr-720
-recommended_action_id: verify-pr-720
+    - verify-terminal-finalization-pr-722
+    - review-ai-plan
+    - review-next-p15-capability-map
+recommended_action_id: verify-terminal-finalization-pr-722
 options:
-  - action_id: verify-pr-720
-    label: Verify reconciliation PR #720
+  - action_id: verify-terminal-finalization-pr-722
+    label: Verify terminal finalization PR #722
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_720
-    request_payload: "Resolve the exact current head of PR #720 and perform one consolidated required-gate refresh for the post-PR #718 AI-native reconciliation."
+    action_token: VERIFY_TERMINAL_PR_722
+    request_payload: "Resolve the exact current head of transport-only PR #722 and perform one consolidated required-gate refresh. Preserve canonical active_issue/active_pr as null."
     blocked_by: []
     blocked_reason: null
-  - action_id: inspect-merged-batch-718
-    label: Inspect merged typography batch
+  - action_id: review-next-p15-capability-map
+    label: Review next P15 capability map
     enabled: true
     recommended: false
-    action_token: INSPECT_718
-    request_payload: "Review merged P15 Button typography batch #717 / PR #718 evidence and boundaries without changing scope."
-    blocked_by: []
-    blocked_reason: null
+    action_token: REVIEW_P15_MAP
+    request_payload: "Review the remaining P15 capability map without activating a new product batch until PR #722 merges."
+    blocked_by: [terminal_finalization_pr_722_not_yet_merged]
+    blocked_reason: "Transport-only PR #722 must merge before the next product batch starts."
   - action_id: review-security-blocker-287
     label: Review security blocker #287
     enabled: true
@@ -50,6 +52,6 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review current AI-Native roadmap/status without bypassing PR #720."
+    request_payload: "Review the settled AI-Native roadmap while terminal transport PR #722 awaits verification."
     blocked_by: []
     blocked_reason: null

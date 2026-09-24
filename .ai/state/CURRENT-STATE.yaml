@@ -2,14 +2,15 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 1cd8181cf863353c3f5e4bab7b1270156067b288
+observed_main_sha: f3384739609ea68e9141f7488e924e20e5ac9d6b
+observed_main_sha_semantics: terminal_finalization_base_tip
 observed_main_branch: main
-active_issue: 719
-active_pr: 720
-active_branch: ai-native/post-pr-718-reconciliation
-candidate_head_source: github_pull_request_head
+active_issue: null
+active_pr: null
+active_branch: main
+candidate_head_source: main_tip
 readme_progress_sync_required: true
-current_milestone: post_pr_718_ai_native_reconciliation
+current_milestone: p15_ready_for_next_fast_batch
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -19,14 +20,14 @@ next_action_options:
   grants_authority: false
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  recommended_action_id: verify-pr-720
-milestone_status: VERIFYING
-last_completed_milestone: p15_pr_718_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: next_user_continue_resolves_final_pr_720_head_and_performs_one_consolidated_exact_head_status_refresh
-pending_runner_ids: [RQ-719-FINAL]
+  recommended_action_id: verify-terminal-finalization-pr-722
+milestone_status: IDLE_READY_NEXT_P15_BATCH
+last_completed_milestone: post_pr_718_reconciliation_pr_720_exact_head_passed_7_of_7_and_merged
+exact_next_safe_action: verify_repaired_pr_722_exact_head_after_status_verifier_wording_sync
+pending_runner_ids: [RQ-721-TRANSPORT]
 blocked_runner_ids: []
 current_blockers:
-  - pr_720_exact_head_gate_set_not_yet_observed
+  - pr_722_repaired_exact_head_gate_set_not_yet_observed
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
@@ -35,7 +36,7 @@ current_blockers:
 development_batching:
   mode: fast_batch
   enabled: true
-  activation: active
+  activation: ready
   current_batch_capabilities: 0
   default_capabilities_per_batch_min: 3
   default_capabilities_per_batch_max: 5
@@ -48,6 +49,12 @@ development_batching:
     - batch_complete_or_verification_boundary
   micro_pr_default: false
   security_and_authority_controls_unchanged: true
+terminal_finalization:
+  transport_issue: 721
+  transport_pr: 722
+  transport_pr_is_canonical_owner: false
+  recursive_reconciliation_required_after_transport_merge: false
+  base_main_sha: f3384739609ea68e9141f7488e924e20e5ac9d6b
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1
