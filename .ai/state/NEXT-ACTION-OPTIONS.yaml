@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-724-final-handoff
+  presentation_epoch: pr-724-repair-handoff
   presentation_order:
     - review-security-blocker-287
     - inspect-batch-723
     - verify-pr-724
     - review-ai-plan
-recommended_action_id: verify-pr-724
+recommended_action_id: verify-repaired-pr-724
 options:
-  - action_id: verify-pr-724
-    label: Verify typography metrics PR #724
+  - action_id: verify-repaired-pr-724
+    label: Verify repaired typography metrics PR #724
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_724
-    request_payload: "Resolve the exact current head of PR #724 and perform one consolidated required-gate refresh for the Button typography metrics Fast Batch."
+    action_token: VERIFY_REPAIRED_PR_724
+    request_payload: "Resolve the repaired exact head of PR #724 and perform one consolidated required-gate refresh for the Button typography metrics Fast Batch."
     blocked_by: []
     blocked_reason: null
   - action_id: inspect-batch-723

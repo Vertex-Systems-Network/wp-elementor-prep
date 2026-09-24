@@ -246,3 +246,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - The batch remains five capabilities: literal font family plus desktop px font size, line height, letter spacing and word spacing.
 - Final lifecycle binding records PR identity only; remote exact-head gate polling is deferred to the next user turn.
 - No responsive typography, global/token font resolution, variable axes, compatibility, production or download authority is added.
+
+## 2026-09-25 — PR #724 P15 status-verifier phrase repair
+
+- First exact head `3812e014faafb1ee42712e48e9b1e8e1354c4650` observed CI and P12 Final failures at `npm run status:verify` only.
+- Root cause: P15 README row correctly advertised active #723 Button typography metrics work, while `verify-readme-progress.mjs` still required the terminal #721 phrase.
+- Repair changes only the P15 row matcher to `#723 batches Button literal font family + desktop px font size/line height/letter spacing/word spacing`.
+- Product/runtime/security behavior and responsive/compatibility/production/download authority remain unchanged.
+- Repaired exact head requires a fresh seven-gate run before merge.

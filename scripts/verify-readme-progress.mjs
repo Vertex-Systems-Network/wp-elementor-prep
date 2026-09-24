@@ -147,7 +147,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: 'terminal transport #721 closes state recursion',
+  next: '#723 batches Button literal font family + desktop px font size/line height/letter spacing/word spacing',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
