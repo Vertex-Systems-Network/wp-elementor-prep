@@ -20,6 +20,7 @@ const p15ButtonHoverBackgroundColorSource = await readFile('src/targets/elemento
 const p15ButtonHoverBorderColorSource = await readFile('src/targets/elementor/button-hover-border-color-resolution.ts', 'utf8');
 const p15ButtonHoverInteractionSource = await readFile('src/targets/elementor/button-hover-interaction-resolution.ts', 'utf8');
 const p15ButtonBorderStyleSource = await readFile('src/targets/elementor/button-border-style-resolution.ts', 'utf8');
+const p15ButtonVisualDepthRadiusSource = await readFile('src/targets/elementor/button-visual-depth-radius-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -145,7 +146,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#711',
+  next: '#713',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -608,13 +609,44 @@ for (const fragment of p15ButtonBorderStyleRequiredFragments) {
     throw new Error(`P15 #711 Fast Batch Button border contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #711 implementation')
-  || !readme.includes('PR #712')
-  || !readme.includes('`border_border`')
-  || !readme.includes('`border_width`')
-  || !readme.includes('`border_color`')
+if (!readme.includes('### Completed P15 Fast Batch #711 implementation')
+  || !readme.includes('Final exact head `56607e9a5c42071167cd84aa9d82eefef74c4a3e`')
+  || !readme.includes('Issue #711 closed completed')) {
+  throw new Error('README P15 #711 / PR #712 merged Button border Fast Batch truth is stale or missing.');
+}
+
+const p15ButtonVisualDepthRadiusRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "groupBaseSourceBlobSha: '6117c06b286dbec336eefe63475c747e2fda0234'",
+  "textShadowGroupSourceBlobSha: 'd587b60ada0e4303e8168b334354c8c04fcccd84'",
+  "textShadowControlSourceBlobSha: 'c6d9615d280e20de8356a90351f95d8a36c18d2f'",
+  "boxShadowGroupSourceBlobSha: '1c068c900db0ff2593089028d67fb6d897dbaa33'",
+  "boxShadowControlSourceBlobSha: 'e55cf9af34db5cc3e73dc295cd9f35b437da6fa7'",
+  "dimensionsControlSourceBlobSha: '7de34809d407e5fa208935b77a6b6648c72d3c5d'",
+  "controlsStackSourceBlobSha: '00b280e518b89925c8f85a059b34136177ff3d4d'",
+  "textShadowSettingKey: 'text_shadow_text_shadow'",
+  "boxShadowSettingKey: 'button_box_shadow_box_shadow'",
+  "borderRadiusDesktopSettingKey: 'border_radius'",
+  "borderRadiusTabletSettingKey: 'border_radius_tablet'",
+  "borderRadiusMobileSettingKey: 'border_radius_mobile'",
+  "radiusMaxPx: P15_NEUTRAL_EXPORT_MAX_RADIUS_PX",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonVisualDepthRadiusRequiredFragments) {
+  if (!p15ButtonVisualDepthRadiusSource.includes(fragment)) {
+    throw new Error(`P15 #713 Fast Batch Button visual-depth/radius contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #713 implementation')
+  || !readme.includes('PR #714')
+  || !readme.includes('`text_shadow_text_shadow`')
+  || !readme.includes('`button_box_shadow_box_shadow`')
+  || !readme.includes('`border_radius_tablet`')
   || !readme.includes('production acceptance and download authority remain false/out of scope')) {
-  throw new Error('README P15 #711 / PR #712 Button border Fast Batch truth is stale or missing.');
+  throw new Error('README P15 #713 / PR #714 Button visual-depth/radius Fast Batch truth is stale or missing.');
 }
 
 console.log(

@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: c2c001d133f0f2333d4b489897cfac53cc47b830
+observed_main_sha: 012edb7f8403c18eb5bab8f41ac1fd2572e4be0e
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -225,3 +225,8 @@ claims:
   - {id: CL-222, statement: issue_711_pr_712_is_active_button_normal_border_fast_batch_with_three_related_capabilities, value: true}
   - {id: CL-223, statement: p15_711_atomic_border_profile_writes_only_border_border_border_width_and_border_color_with_explicit_visible_type_condition, value: true}
   - {id: CL-224, statement: p15_711_excludes_responsive_border_width_border_radius_padding_hover_border_and_broader_authority, value: true}
+  - {id: CL-225, statement: pr_712_exact_head_56607e9a_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
+  - {id: CL-226, statement: pr_712_merged_with_expected_head_as_main_012edb7f_and_issue_711_closed_completed, value: true}
+  - {id: CL-227, statement: issue_713_pr_714_is_active_button_visual_depth_radius_fast_batch_with_three_related_capabilities, value: true}
+  - {id: CL-228, statement: p15_713_text_shadow_box_shadow_and_explicit_three_device_border_radius_are_exact_source_bound, value: true}
+  - {id: CL-229, statement: p15_713_preserves_false_responsive_inference_compatibility_production_and_download_authority, value: true}

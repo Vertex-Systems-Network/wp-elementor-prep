@@ -2,33 +2,33 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `c2c001d133f0f2333d4b489897cfac53cc47b830`  
-Active Issue: `#711`  
-Active PR: `#712`  
-Active branch: `p15/button-border-style-batch`
+Observed main: `012edb7f8403c18eb5bab8f41ac1fd2572e4be0e`  
+Active Issue: `#713`  
+Active PR: `#714`  
+Active branch: `p15/button-visual-depth-radius-batch`
 
-## Completed Fast Batch #709 / PR #710
+## Completed Fast Batch #711 / PR #712
 
-- Final exact head `e019e903531b1d7db270df7aefe5b79851b801e9` passed all seven required gates: CI `36019858350`, CodeQL `36019858055`, Integration `36019858049`, P12 Offline `36019858124`, P12 Final `36019858109`, P15 target `36019858101`, P17 browser `36019858044`.
+- Final exact head `56607e9a5c42071167cd84aa9d82eefef74c4a3e` passed all seven required gates: CI `36021872054`, CodeQL `36021872333`, Integration `36021872757`, P12 Offline `36021872069`, P12 Final `36021872087`, P15 target `36021872268`, P17 browser `36021871967`.
 - Unresolved review threads: 0.
-- Expected-head merge produced main `c2c001d133f0f2333d4b489897cfac53cc47b830`; Issue #709 closed completed.
-- Merged product scope is the three-capability Button-hover interaction batch: bounded box shadow, explicit transition seconds and Elementor 4.2.4 core hover animation.
+- Expected-head merge produced main `012edb7f8403c18eb5bab8f41ac1fd2572e4be0e`; Issue #711 closed completed.
+- Merged product scope is Button normal border type, desktop integer-px border width and strict lowercase hex border color.
 
-## P15 Fast Batch #711 / PR #712
+## P15 Fast Batch #713 / PR #714
 
-One Fast Batch contains three tightly-related Elementor 4.2.4 Button normal-border capabilities from the same Border group:
-1. exact visible border type via `border_border`;
-2. explicit desktop px border width via `border_width`;
-3. strict lowercase six-digit border color via `border_color`.
+One Fast Batch contains three independently valid Elementor 4.2.4 Button style capabilities:
+1. bounded normal text shadow;
+2. bounded normal Button box shadow;
+3. explicit responsive Button border radius with desktop/tablet/mobile values.
 
-Product commit: `ee58570942841975881502fbc6f1fbc51a5f979d`.
+Product commit: `9dfdc83d5b41513bf04284ce65530d3fb6d0411d`.
 
-Evidence is bound to Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, group base `6117c06b286dbec336eefe63475c747e2fda0234`, Border group `eac53e6b1014a985d1d17f90a4044cfb0c6c33c5`, Dimensions control `7de34809d407e5fa208935b77a6b6648c72d3c5d`, and Controls Stack `00b280e518b89925c8f85a059b34136177ff3d4d`.
+Evidence is bound to Button trait `31192aaee6851c445f79d1998499f6ce73ba7da5`, group base `6117c06b286dbec336eefe63475c747e2fda0234`, text-shadow group `d587b60ada0e4303e8168b334354c8c04fcccd84`, text-shadow control `c6d9615d280e20de8356a90351f95d8a36c18d2f`, box-shadow group `1c068c900db0ff2593089028d67fb6d897dbaa33`, box-shadow control `e55cf9af34db5cc3e73dc295cd9f35b437da6fa7`, Dimensions `7de34809d407e5fa208935b77a6b6648c72d3c5d` and Controls Stack `00b280e518b89925c8f85a059b34136177ff3d4d`.
 
-Repository v1 accepts `solid|double|dotted|dashed|groove`, integer px sides `0..100`, and strict lowercase six-digit hex. The three values are atomic so width/color condition on a visible border type is explicit. Responsive width keys, border radius, padding and hover-border styling remain untouched.
+Radius requires explicit integer px values for desktop/tablet/mobile; no responsive value is inferred. Shadows use target slider bounds and strict lowercase six-digit hex subset.
 
-Existing requested target keys are rejected instead of overwritten. Style/responsive inference, CSS parsing, token resolution, Figma/network access, compatibility, production and download authority remain false.
+Existing requested target keys are rejected instead of overwritten. Button text/alignment/link and unrelated styling are preserved. CSS parsing, unit conversion, token resolution, Figma/network access, inference, compatibility, production and download authority remain false.
 
 ## Exact next safe action
 
-Resolve the final bound PR #712 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+Resolve the final bound PR #714 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.

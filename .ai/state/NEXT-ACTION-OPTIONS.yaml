@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: c2c001d133f0f2333d4b489897cfac53cc47b830
-active_issue: 711
-active_pr: 712
-active_branch: p15/button-border-style-batch
+observed_main_sha: 012edb7f8403c18eb5bab8f41ac1fd2572e4be0e
+active_issue: 713
+active_pr: 714
+active_branch: p15/button-visual-depth-radius-batch
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -11,14 +11,14 @@ interaction:
   selection_semantics: NEW_USER_REQUEST
   selection_grants_authority: false
   max_visible_options: 4
-recommended_action_id: verify-pr-712
+recommended_action_id: verify-pr-714
 options:
-  - action_id: verify-pr-712
-    label: Verify Fast Batch PR #712
+  - action_id: verify-pr-714
+    label: Verify Fast Batch PR #714
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_712
-    request_payload: "Resolve the exact current head of PR #712 and perform one consolidated required-gate refresh for the completed 3-capability Button border Fast Batch."
+    action_token: VERIFY_PR_714
+    request_payload: "Resolve the exact current head of PR #714 and perform one consolidated required-gate refresh for the completed 3-capability Button visual-depth/radius Fast Batch."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Re-read current repository truth and review the AI-Native roadmap/status without bypassing PR #712."
+    request_payload: "Re-read current repository truth and review the AI-Native roadmap/status without bypassing PR #714."
     blocked_by: []
     blocked_reason: null
   - action_id: start-next-p15-batch
@@ -42,7 +42,7 @@ options:
     enabled: false
     recommended: false
     action_token: NEXT_P15_BATCH
-    request_payload: "After PR #712 passes exact-head gates and merges, start the next 3-5-capability Fast Batch under one Issue/branch/PR."
+    request_payload: "After PR #714 passes exact-head gates and merges, start the next 3-5-capability Fast Batch under one Issue/branch/PR."
     blocked_by:
-      - PR_712_NOT_MERGED
-    blocked_reason: "Current Button border Fast Batch must verify and merge first."
+      - PR_714_NOT_MERGED
+    blocked_reason: "Current Button visual-depth/radius Fast Batch must verify and merge first."
