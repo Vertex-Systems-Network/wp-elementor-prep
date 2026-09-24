@@ -139,7 +139,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#693',
+  next: '#695',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
