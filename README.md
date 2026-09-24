@@ -46,7 +46,7 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#723 / PR #724` — completed P15 Fast Batch: Button typography metrics v1; terminal state transport #725 is pending exact-head certification;
+- `#723 / PR #724` — completed P15 Fast Batch: Button typography metrics v1; terminal state transport #725 / PR #726 is pending exact-head certification;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.

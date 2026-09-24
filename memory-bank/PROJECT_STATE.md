@@ -164,7 +164,7 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 ## Terminal post-PR #724 finalization #725
 
-PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
+PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
 ## Completed P15 Fast Batch #723 / PR #724 Button typography metrics
 

@@ -24,8 +24,15 @@ Canonical Active branch: `main`
 
 ## Terminal finalization transport #725
 
-Issue #725 is state-only transport under the protocol terminal-finalization exception. It is not the canonical lifecycle owner and does not populate `active_issue` or `active_pr`.
+Issue #725 / PR #726 is state-only transport under the protocol terminal-finalization exception. It is not the canonical lifecycle owner and does not populate `active_issue` or `active_pr`.
+
+## Transport PR #726 lifecycle
+
+- PR #726 opened against exact base main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`.
+- PR creation head was `650959442d97fa28f961492d20155943cc281e7b`.
+- PR #726 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
+- Remote exact-head gates are intentionally deferred to the next user turn.
 
 ## Exact next safe action
 
-Open the state-only PR for Issue #725, bind its transport identity, and defer remote exact-head verification to the next user turn.
+Resolve the final bound PR #726 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green with zero unresolved review threads.
