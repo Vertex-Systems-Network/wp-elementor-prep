@@ -240,3 +240,4 @@ claims:
   - {id: CL-237, statement: p15_717_typography_writes_custom_starter_plus_only_explicit_bounded_font_weight_text_transform_font_style_keys, value: true}
   - {id: CL-238, statement: p15_717_preserves_false_style_responsive_inference_network_figma_compatibility_production_and_download_authority, value: true}
   - {id: CL-239, statement: next_action_visible_order_is_shuffled_per_material_milestone_and_recommended_action_is_not_bound_to_a_fixed_numeric_slot, value: true}
+  - {id: CL-240, statement: pr_718_is_active_final_exact_head_verification_path_for_issue_717_button_typography_basics_fast_batch, value: true}
