@@ -26,6 +26,12 @@ This protocol keeps AI-native repository work resumable while minimizing long-tu
 - `BUTTON_CLICK_STARTS_NEW_USER_REQUEST = TRUE`
 - `BUTTON_CLICK_GRANTS_AUTHORITY = FALSE`
 - `FALLBACK_ACTION_TOKEN_REQUIRED = TRUE`
+- `FAST_BATCH_MODE = ACTIVE`
+- `DEFAULT_PRODUCT_CAPABILITIES_PER_BATCH = 3_TO_5`
+- `MICRO_PR_DEFAULT = FORBIDDEN`
+- `BATCH_REMOTE_CI = FINAL_BOUND_HEAD_ONLY`
+- `BATCH_README_SYNC = FINAL_PRE_CI_HANDOFF_OR_MATERIAL_BLOCKER`
+- `USER_UPDATE_CADENCE = BATCH_START_BLOCKER_BATCH_COMPLETE`
 
 ## AI Engineering Supervisor mandatory resume order
 
@@ -43,6 +49,21 @@ On every start, continue, resume, interrupted session, tool/connector failure, o
 8. read large historical checkpoints only for a specific fact/conflict/evidence need.
 
 Compact state is only a resume index and NEVER overrides repository/runtime truth. Never repeat work merely because the prior response was not delivered.
+
+## Fast Batch Mode
+
+Fast Batch Mode is the default product-development cadence. It preserves the one-logical-milestone rule while making a normal product milestone materially larger.
+
+- A normal product batch SHOULD contain **3-5 closely related bounded capabilities** that share the same target/source-evidence family and security/authority boundary.
+- One batch uses one owning Issue, one branch and one PR/MR. Grouped implementation/test commits inside that PR are allowed.
+- Do not create a separate micro-Issue/PR for every small setting or adjacent control by default.
+- Remote exact-head CI/status verification SHOULD occur once on the **final bound batch head** after product code, focused tests, README/verifier, durable state and Runner metadata are synchronized.
+- Focused static checks and deterministic repository-side validation MAY run while building the batch; they do not require a remote CI cycle per capability.
+- Closely related intermediate commits inside the same active batch do not each require a README/state rewrite. Synchronize README, verifier and compact state once at the final pre-CI handoff, unless a material blocker, security/authority boundary, Issue/PR lifecycle state or externally relevant scope changes earlier.
+- User-facing progress chatter is minimized: report **batch start**, any **material blocker/failure that changes the plan**, and **batch completion/verification boundary**. Do not emit per-control or per-small-commit status updates unless needed for correctness.
+- A micro-PR remains valid when isolation is materially safer or necessary: security fixes, destructive/migration work, unrelated source/evidence families, authority-boundary changes, external/manual prerequisites, or focused repair of a failed merge-blocking gate.
+- Security fail-closed rules, required checks, expected-head merge protection, exact-head review, external/manual evidence gates and production/release authority are never weakened by batching.
+- PR #708 is the transitional final micro-slice. After it merges, new P15 product work defaults to Fast Batch Mode.
 
 ## Timeout / remote-call hard budget
 
@@ -81,7 +102,7 @@ Migration/destructive work must review idempotency, transaction boundaries, appl
 
 README module progress is a mandatory repository truth surface, not an optional documentation afterthought.
 
-- Every material repository mutation that changes implementation state, module lifecycle, active blocker, accepted capability, PR/merge lifecycle, or exact next development step MUST update the relevant README progress row/summary in the same logical milestone before external wait or handoff.
+- Every material batch milestone that changes implementation state, module lifecycle, active blocker, accepted capability, PR/merge lifecycle, or exact next development step MUST update the relevant README progress row/summary before external wait or handoff. Under Fast Batch Mode, closely related intermediate commits inside the same active batch MAY defer README synchronization until the final pre-CI handoff, unless a material blocker, security/authority boundary, or Issue/PR lifecycle truth changes earlier.
 - The README update MUST preserve the distinction between implementation progress, exact-head verification, runtime acceptance, external evidence and production authority.
 - A stale README progress row is a blocking repository-truth defect and MUST be fixed before exact-head merge certification.
 - `scripts/verify-readme-progress.mjs` MUST encode current machine-checkable progress invariants for active modules so implementation can fail CI when README truth drifts.
@@ -133,9 +154,10 @@ The journal is rolling. Large historical checkpoints are not part of every resum
 
 ## Logical milestone
 
-A logical milestone is one coherent state transition, for example:
+A logical milestone is one coherent state transition. For product development, Fast Batch Mode makes that milestone a bounded batch rather than a single tiny control. Examples:
 
-- implement + focused verification + open/update PR;
+- implement 3-5 closely related capabilities + focused verification + open/update one PR;
+- implement + focused verification + open/update PR when a micro-PR isolation exception applies;
 - inspect one already-running Runner batch and record its state;
 - fix one failed gate and push the correction;
 - merge one fully green PR;
@@ -158,7 +180,7 @@ These are MUST/MUST-NOT rules, not recommendations.
 9. MUST fail closed on ambiguous classification: if unsure whether a Runner can safely wait until project end, do not classify it `PROJECT_FINAL`.
 10. MUST prefer batched/grouped repository reads/writes over many repetitive remote calls where semantics are identical.
 11. MUST end the user turn after a tool/service timeout or unrecoverable remote error once the durable checkpoint is sufficient for deterministic resume; do not enter an unbounded retry loop.
-12. MUST synchronize README progress on every material repository mutation before the milestone ends; stale README progress is a blocking defect.
+12. MUST synchronize README progress before the active batch milestone reaches external wait/final exact-head CI or ends on a material blocker; intermediate commits inside one Fast Batch do not require per-commit README churn.
 13. MUST NOT create a README-only commit during a pure Runner observation if doing so would invalidate an exact-head batch; synchronize it on the next material mutation or post-merge reconciliation instead.
 14. MUST expose safe next-action options at every milestone boundary and prefer real host-supported buttons/quick actions when available.
 15. MUST treat every button/quick-action selection as a new user request, never as implicit authority or permission to bypass blockers.

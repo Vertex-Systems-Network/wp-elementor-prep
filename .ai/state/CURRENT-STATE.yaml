@@ -2,14 +2,14 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: a36219fb01e90780c1c962dc7b534dbbcda40bed
+observed_main_sha: 1258ba0854847c91f5792f170be831bf96e4dbf3
 observed_main_branch: main
-active_issue: 705
-active_pr: 706
-active_branch: p15/button-hover-classic-background-color
+active_issue: 707
+active_pr: 708
+active_branch: p15/button-hover-border-color
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_button_hover_classic_background_color_v1_test_repair
+current_milestone: p15_button_hover_border_color_v1
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -17,19 +17,35 @@ next_action_options:
   fallback_action_tokens_required: true
   click_semantics: new_user_request_only
   grants_authority: false
-  recommended_action_id: verify-pr-706
+  recommended_action_id: verify-pr-708
 milestone_status: VERIFYING
-last_completed_milestone: p15_pr_704_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: next_user_continue_resolves_repaired_final_pr_706_head_and_performs_one_consolidated_exact_head_status_refresh
-pending_runner_ids: [RQ-705-FINAL]
+last_completed_milestone: p15_pr_706_repaired_exact_head_passed_7_of_7_and_merged
+exact_next_safe_action: next_user_continue_resolves_final_pr_708_head_and_performs_one_consolidated_exact_head_status_refresh
+pending_runner_ids: [RQ-707-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_706_repaired_exact_head_gate_set_not_yet_observed
+  - pr_708_exact_head_gate_set_not_yet_observed
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
   - p13_live_figma_runtime_acceptance_issue_159_pending
   - p12_manual_release_exit_issue_84_pending
+development_batching:
+  mode: fast_batch
+  enabled: true
+  activation: next_product_milestone_after_pr_708_merge
+  current_pr_transition: finish_pr_708_without_product_scope_expansion
+  default_capabilities_per_batch_min: 3
+  default_capabilities_per_batch_max: 5
+  one_issue_branch_pr_per_batch: true
+  remote_ci_on_final_bound_head_only: true
+  readme_state_sync: final_pre_ci_handoff_or_material_blocker
+  user_updates:
+    - batch_start
+    - material_blocker_or_failure
+    - batch_complete_or_verification_boundary
+  micro_pr_default: false
+  security_and_authority_controls_unchanged: true
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1

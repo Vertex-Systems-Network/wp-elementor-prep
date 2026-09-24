@@ -46,14 +46,14 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#705` — active P15 exact-bound Button hover classic background-color implementation;
+- `#707` — active P15 exact-bound Button hover border-color implementation;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
 Current verified main before this documentation sync:
 
-`a36219fb01e90780c1c962dc7b534dbbcda40bed`
+`1258ba0854847c91f5792f170be831bf96e4dbf3`
 
 ### Completed P15 #659 verification
 
@@ -237,24 +237,23 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `a36219fb01e90780c1c962dc7b534dbbcda40bed`; Issue #703 closed completed.
 - Merged exact write surface remains only strict lowercase six-digit `hover_color`; normal text/background, hover background and broader compatibility/production/download authority remain excluded.
 
-### Current P15 #705 implementation
+### Completed P15 #705 implementation
 
-- Issue #705 owns one exact-bound Elementor 4.2.4 capability: Button hover/focus classic background color v1.
-- PR #706 is open from `p15/button-hover-classic-background-color` against exact base main `a36219fb01e90780c1c962dc7b534dbbcda40bed`.
-- Exact retained source evidence is Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`, Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, Background group-control blob `ac8e1a510ec663f3f428c9f564dc2c5b727435e1`, and the group-prefix rule `{{ControlName}}_`.
-- Exact write surface is only `button_background_hover_background=classic` plus explicit strict lowercase six-digit `button_background_hover_color`.
-- Hover text `hover_color`, normal `button_text_color`, normal `background_background` / `background_color`, gradients and gradient child fields, image/video, global/theme tokens, responsive inference, Figma mutation, network access, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
-- No PASS is claimed for PR #706 until its final bound head receives the required exact-head gate batch.
+- Issue #705 owned exact-bound Elementor 4.2.4 Button hover/focus classic background color v1.
+- Initial exact head `056cfd720720e3f54f12038892a0803b32ea5aa0` exposed one focused-test generation syntax defect only.
+- Callback-safe focused-test rebuild produced exact head `34f1714da4d09dfe35cc66bddb99e934ea2645f2`, which passed all seven required gates: CI `36011720197`, CodeQL `36011720374`, Integration `36011720187`, P12 Offline `36011720191`, P12 Final `36011720215`, P15 target `36011720272`, P17 browser `36011720267`.
+- Unresolved review threads were 0.
+- Expected-head merge produced main `1258ba0854847c91f5792f170be831bf96e4dbf3`; Issue #705 closed completed.
+- Merged exact write surface remains only `button_background_hover_background=classic` plus strict lowercase six-digit `button_background_hover_color`; hover text, normal styling and broader authority remain excluded.
 
+### Current P15 #707 implementation
 
-#### PR #706 initial exact-head test repair
-
-- Initial exact head `056cfd720720e3f54f12038892a0803b32ea5aa0` had Integration, P12 Offline, P15 Target Proof and P17 Browser PASS, CodeQL still running, and CI `36010951996` plus P12 Final `36010952008` failed only at TypeScript parsing of the focused #705 test.
-- README status verification passed before the failure.
-- Root cause was test-generation replacement-string semantics corrupting the intended literal `acceptedColorPattern: '^#[0-9a-f]{6}$'`; the `$'` sequence was interpreted as a replacement token and injected the unmatched suffix.
-- Repair commit `e2df76deb487c5012ea4fd5075b39cb07f255bf3` rebuilds the focused test from the verified normal-background test using callback-safe replacement.
-- The #705 resolver, exact hover classic background write surface and all authority exclusions are unchanged.
-- The repaired PR #706 head requires a fresh exact-head gate batch before merge.
+- Issue #707 owns one exact-bound Elementor 4.2.4 capability: Button hover/focus border color v1.
+- PR #708 is open from `p15/button-hover-border-color` against exact base main `1258ba0854847c91f5792f170be831bf96e4dbf3`.
+- Exact retained source evidence is Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d` and Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`.
+- Exact control/write surface is only direct `button_hover_border_color` with explicit strict lowercase six-digit hex.
+- Hover text `hover_color`, hover background `button_background_hover_*`, hover box shadow `button_hover_box_shadow_*`, transition duration, hover animation, normal text/background/border, responsive inference, global/theme tokens, Figma mutation, network access, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
+- No PASS is claimed for PR #708 until its final bound head receives the required exact-head gate batch.
 
 ### Current P14 AI-native implementation track
 
@@ -382,7 +381,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #703 / PR #704 merged after final 7/7 exact-head gates; #705 / PR #706 adds only exact Elementor 4.2.4 Button hover classic `button_background_hover_background=classic` + strict lowercase six-digit `button_background_hover_color`; hover text, normal text/background, gradients, global tokens, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #705 / PR #706 merged after repaired 7/7 exact-head gates; #707 / PR #708 adds only exact Elementor 4.2.4 Button `button_hover_border_color` with strict lowercase six-digit hex; hover text/background/shadow/transition/animation, normal border, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -485,10 +484,21 @@ The AI-Native supervisor now maintains `.ai/state/NEXT-ACTION-OPTIONS.yaml` as t
 - Blocked next-development actions remain visible only with their blocking reason (or are omitted) until prerequisites are satisfied.
 - The menu is refreshed after PR/Issue lifecycle changes, merges, failures, blocker changes and plan updates so the user always has a clear route to continue development.
 
+### Fast Batch Mode
+
+Development now defaults to **3-5 closely related capabilities per product batch** instead of one tiny control per Issue/PR.
+
+- One batch = one Issue, one branch, one PR and one final exact-head CI cycle.
+- Related implementation/test commits are grouped; README/verifier/compact-state truth is synchronized once at the final pre-CI handoff unless a material blocker/security/authority/lifecycle change requires an earlier update.
+- User-facing progress updates are limited to batch start, material blocker/failure and batch completion/verification boundaries.
+- Micro-PRs are exceptions for isolation-sensitive security, migration/destructive work, unrelated evidence families, authority-boundary changes or focused failed-gate repairs.
+- Security checks, exact-head review, expected-head merge protection and production/release authority remain unchanged.
+- PR #708 remains the transitional final micro-slice; the next P15 product milestone after it merges will use Fast Batch Mode.
+
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. exact-head verify and merge #705 / PR #706 Button hover classic background-color v1, then select/activate only the next independently evidenced bounded P15 commercial-V1 slice; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
+2. exact-head verify and merge #707 / PR #708 Button hover border-color v1 as the transitional final micro-slice; after merge, activate one Fast Batch Mode P15 milestone with 3-5 closely related independently evidenced capabilities under one Issue/branch/PR and one final exact-head CI cycle; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;
