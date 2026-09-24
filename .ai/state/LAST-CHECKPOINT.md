@@ -2,46 +2,33 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `17832e372d43de32cb886ed6da03982d24e1fdaa`  
-Active Issue: `#709`  
-Active PR: `#710`  
-Active branch: `p15/button-hover-interaction-batch`
+Observed main: `c2c001d133f0f2333d4b489897cfac53cc47b830`  
+Active Issue: `#711`  
+Active PR: `#712`  
+Active branch: `p15/button-border-style-batch`
 
-## Completed P15 #707 / PR #708
+## Completed Fast Batch #709 / PR #710
 
-- PR #708 exact head `0fe42e9393c46815fc8d44ceb9c02d84468ea341` passed all seven required gates: CI `36013705685`, CodeQL `36013705495`, Integration `36013705413`, P12 Offline `36013705541`, P12 Final `36013705488`, P15 target `36013705414`, P17 browser `36013705411`.
+- Final exact head `e019e903531b1d7db270df7aefe5b79851b801e9` passed all seven required gates: CI `36019858350`, CodeQL `36019858055`, Integration `36019858049`, P12 Offline `36019858124`, P12 Final `36019858109`, P15 target `36019858101`, P17 browser `36019858044`.
 - Unresolved review threads: 0.
-- Expected-head merge produced main `17832e372d43de32cb886ed6da03982d24e1fdaa`; Issue #707 closed completed.
+- Expected-head merge produced main `c2c001d133f0f2333d4b489897cfac53cc47b830`; Issue #709 closed completed.
+- Merged product scope is the three-capability Button-hover interaction batch: bounded box shadow, explicit transition seconds and Elementor 4.2.4 core hover animation.
 
-## P15 Fast Batch #709 / PR #710
+## P15 Fast Batch #711 / PR #712
 
-One Fast Batch contains three closely related Elementor 4.2.4 Button-hover capabilities:
-1. bounded hover box shadow with exact group-prefixed keys;
-2. explicit finite 0..10 second transition duration serialized as an Elementor `s` slider;
-3. Elementor 4.2.4 core hover animation names only.
+One Fast Batch contains three tightly-related Elementor 4.2.4 Button normal-border capabilities from the same Border group:
+1. exact visible border type via `border_border`;
+2. explicit desktop px border width via `border_width`;
+3. strict lowercase six-digit border color via `border_color`.
 
-Product commit: `92e1d05b1aa69c2ce43600532bb3b73cca46a388`.
+Product commit: `ee58570942841975881502fbc6f1fbc51a5f979d`.
 
-Evidence is bound to Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, group base `6117c06b286dbec336eefe63475c747e2fda0234`, box-shadow group `1c068c900db0ff2593089028d67fb6d897dbaa33`, box-shadow control `e55cf9af34db5cc3e73dc295cd9f35b437da6fa7`, and hover-animation control `157399fddae46264f07654bc178373a2c1050c4e`.
+Evidence is bound to Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, group base `6117c06b286dbec336eefe63475c747e2fda0234`, Border group `eac53e6b1014a985d1d17f90a4044cfb0c6c33c5`, Dimensions control `7de34809d407e5fa208935b77a6b6648c72d3c5d`, and Controls Stack `00b280e518b89925c8f85a059b34136177ff3d4d`.
+
+Repository v1 accepts `solid|double|dotted|dashed|groove`, integer px sides `0..100`, and strict lowercase six-digit hex. The three values are atomic so width/color condition on a visible border type is explicit. Responsive width keys, border radius, padding and hover-border styling remain untouched.
 
 Existing requested target keys are rejected instead of overwritten. Style/responsive inference, CSS parsing, token resolution, Figma/network access, compatibility, production and download authority remain false.
 
-## PR #710 initial exact-head verifier phrase failure
-
-- Exact head `ecf372e0a026bdd5034becabbbe6eb7b359627a3` had five required gates PASS and 0 unresolved review threads.
-- CI `36017992344` and P12 Final `36017992198` failed at `status:verify` only.
-- Root cause was one stale case-sensitive verifier substring: README uses `Exact head` while verifier required `exact head`.
-- The Fast Batch product resolver/tests were not the reported failure surface.
-- This repair changes only the verifier phrase plus durable failure evidence; all three batch capability contracts and authority boundaries remain unchanged.
-
-## PR #710 exactOptionalPropertyTypes repair
-
-- Verifier-repaired head `6ca4d32a86dc653dfd9236cdbe99b6f81ad8bc5c` confirmed `status:verify` PASS.
-- CI `36019163256` and P12 Final `36019163185` then failed at TypeScript `TS2375` in `cloneEntry()` under `exactOptionalPropertyTypes: true`.
-- Root cause: `cloneBoxShadow()` returned `P15ElementorButtonHoverBoxShadowV1 | undefined` even though the caller's conditional branch had already proved `value.boxShadow` defined.
-- Repair narrows that helper to a definite input/output type only. The conditional presence guard and runtime behavior are unchanged.
-- No capability, accepted value, setting key, test contract, security control or authority boundary is expanded.
-
 ## Exact next safe action
 
-Perform exactly one fresh consolidated required-gate refresh on the type-repaired PR #710 head. Do not merge until that exact head is green and review threads are clear.
+Resolve the final bound PR #712 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
