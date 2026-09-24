@@ -241,3 +241,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Lifecycle binding updates durable state, coordination queue, Runner benchmark, README and memory-bank truth in grouped commits.
 - The final bound PR head is intentionally uncertified; no CI/status polling occurs in this lifecycle-binding milestone.
 - No product/runtime behavior or security/compatibility/production/download/release authority changes.
+
+## 2026-09-24 — P15 #701 Button normal classic background-color implementation started
+
+- PR #700 exact head `7f1a517850ecba1d47f59ca421983b9f43ded934` passed all seven required gates with 0 unresolved review threads and merged as main `456a7a7fd4c9fcc97dacd206561df5f56a8d9e83`; Issue #699 closed completed.
+- Issue #701 and branch `p15/button-normal-classic-background-color` activated the next real P15 product slice rather than another reconciliation-only loop.
+- Product commit `1ce451026ad0b8cf3e9679ca69bcd07bbc992ae6` adds exact source-bound normal Button classic background resolution plus focused tests.
+- PR #702 opened against exact main `456a7a7fd4c9fcc97dacd206561df5f56a8d9e83`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
+- Exact write surface is only `background_background=classic` plus strict lowercase six-digit `background_color`; gradients, hover, global tokens, responsive inference and production/download authority remain out of scope.
+- Final bound PR #702 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.

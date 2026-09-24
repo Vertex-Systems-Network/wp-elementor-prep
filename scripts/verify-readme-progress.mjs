@@ -14,6 +14,7 @@ const p15ContainerSemanticHtmlTagSource = await readFile('src/targets/elementor/
 const p15HeadingTextColorSource = await readFile('src/targets/elementor/heading-text-color-resolution.ts', 'utf8');
 const p15TextEditorTextColorSource = await readFile('src/targets/elementor/text-editor-text-color-resolution.ts', 'utf8');
 const p15ButtonTextColorSource = await readFile('src/targets/elementor/button-text-color-resolution.ts', 'utf8');
+const p15ButtonBackgroundColorSource = await readFile('src/targets/elementor/button-background-color-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -139,7 +140,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#699',
+  next: '#701',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -439,6 +440,34 @@ if (!readme.includes('### Current P15 post-PR #680 state')
   || !readme.includes('lowercase six-digit hex')
   || !readme.includes('hover/background mutation and broader inference remain out of scope')) {
   throw new Error('README P15 #679 / PR #680 merged Button text color truth is stale or missing.');
+}
+
+const p15ButtonBackgroundColorRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "backgroundGroupControlSourceBlobSha: 'ac8e1a510ec663f3f428c9f564dc2c5b727435e1'",
+  "groupName: 'background'",
+  "backgroundTypeSettingKey: 'background_background'",
+  "backgroundColorSettingKey: 'background_color'",
+  "hoverGroupName: 'button_background_hover'",
+  "acceptedBackgroundType: 'classic'",
+  "^#[0-9a-f]{6}$",
+  "P15_ELEMENTOR_BUTTON_BACKGROUND_COLOR_EVIDENCE.backgroundTypeSettingKey",
+  "P15_ELEMENTOR_BUTTON_BACKGROUND_COLOR_EVIDENCE.backgroundColorSettingKey",
+];
+for (const fragment of p15ButtonBackgroundColorRequiredFragments) {
+  if (!p15ButtonBackgroundColorSource.includes(fragment)) {
+    throw new Error(`P15 #701 Button normal classic background-color contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #701 implementation')
+  || !readme.includes('PR #702 is open')
+  || !readme.includes('`background_background=classic`')
+  || !readme.includes('`background_color`')
+  || !readme.includes('Gradient/image/video background')
+  || !readme.includes('production acceptance and download authority remain false/out of scope')) {
+  throw new Error('README P15 #701 / PR #702 Button normal classic background-color truth is stale or missing.');
 }
 
 console.log(
