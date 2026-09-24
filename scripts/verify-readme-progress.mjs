@@ -554,7 +554,7 @@ for (const fragment of p15ButtonHoverBorderColorRequiredFragments) {
   }
 }
 if (!readme.includes('### Completed P15 #707 implementation')
-  || !readme.includes('exact head `0fe42e9393c46815fc8d44ceb9c02d84468ea341`')
+  || !readme.includes('Exact head `0fe42e9393c46815fc8d44ceb9c02d84468ea341`')
   || !readme.includes('Issue #707 closed completed')) {
   throw new Error('README P15 #707 / PR #708 merged Button hover border-color truth is stale or missing.');
 }

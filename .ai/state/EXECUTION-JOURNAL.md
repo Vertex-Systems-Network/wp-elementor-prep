@@ -335,3 +335,10 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Core handoff commit `9e21c87e072e48388b99fbfb870aa396b7512e9d` synchronizes compact state, coordination queue, Runner machine record, README and verifier.
 - Remote exact-head CI is deferred to one final bound-head refresh in the next milestone.
 - Security fail-closed and compatibility/production/download authority boundaries remain unchanged.
+
+## 2026-09-24 — PR #710 verifier phrase repair
+
+- Exact head `ecf372e0a026bdd5034becabbbe6eb7b359627a3` produced 5/7 required gates PASS with 0 unresolved review threads.
+- CI `36017992344` and P12 Final `36017992198` failed at `status:verify` on one case-sensitive README/verifier phrase mismatch.
+- README uses `Exact head`; verifier incorrectly required `exact head`.
+- Repair changes the verifier phrase only; the 3-capability Fast Batch resolver/tests, security controls and authority boundaries are unchanged.

@@ -26,6 +26,14 @@ Evidence is bound to Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5
 
 Existing requested target keys are rejected instead of overwritten. Style/responsive inference, CSS parsing, token resolution, Figma/network access, compatibility, production and download authority remain false.
 
+## PR #710 initial exact-head verifier phrase failure
+
+- Exact head `ecf372e0a026bdd5034becabbbe6eb7b359627a3` had five required gates PASS and 0 unresolved review threads.
+- CI `36017992344` and P12 Final `36017992198` failed at `status:verify` only.
+- Root cause was one stale case-sensitive verifier substring: README uses `Exact head` while verifier required `exact head`.
+- The Fast Batch product resolver/tests were not the reported failure surface.
+- This repair changes only the verifier phrase plus durable failure evidence; all three batch capability contracts and authority boundaries remain unchanged.
+
 ## Exact next safe action
 
-Resolve the final bound PR #710 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+Perform exactly one fresh consolidated required-gate refresh on the repaired PR #710 head. Do not merge until that exact head is green and review threads are clear.
