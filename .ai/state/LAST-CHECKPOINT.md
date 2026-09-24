@@ -2,38 +2,46 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `1258ba0854847c91f5792f170be831bf96e4dbf3`  
-Active Issue: `#707`  
-Active PR: `#708`  
-Active branch: `p15/button-hover-border-color`
+Observed main: `17832e372d43de32cb886ed6da03982d24e1fdaa`  
+Active Issue: `#709`  
+Active PR: `#710`  
+Active branch: `p15/button-hover-interaction-batch`
 
-## Completed P15 #705 / PR #706
+## Completed P15 #707 / PR #708
 
-- PR #706 repaired exact head `34f1714da4d09dfe35cc66bddb99e934ea2645f2` passed all seven required gates: CI `36011720197`, CodeQL `36011720374`, Integration `36011720187`, P12 Offline `36011720191`, P12 Final `36011720215`, P15 target `36011720272`, P17 browser `36011720267`.
+- PR #708 exact head `0fe42e9393c46815fc8d44ceb9c02d84468ea341` passed all seven required gates: CI `36013705685`, CodeQL `36013705495`, Integration `36013705413`, P12 Offline `36013705541`, P12 Final `36013705488`, P15 target `36013705414`, P17 browser `36013705411`.
 - Unresolved review threads: 0.
-- Expected-head merge produced main `1258ba0854847c91f5792f170be831bf96e4dbf3`; Issue #705 closed completed.
-- Merged exact write surface remains only `button_background_hover_background=classic` plus strict lowercase six-digit `button_background_hover_color`; hover text, normal styling and broader authority remain excluded.
+- Expected-head merge produced main `17832e372d43de32cb886ed6da03982d24e1fdaa`; Issue #707 closed completed.
 
-## P15 #707 / PR #708
+## P15 Fast Batch #709 / PR #710
 
-- Issue #707 owns exact-bound Elementor 4.2.4 Button hover/focus border color v1.
-- Product implementation commit before PR lifecycle binding: `77f22d2b2f40c51a15107f829a7c4f66b05bc970`.
-- Exact write surface is only explicit strict lowercase six-digit `button_hover_border_color`.
-- Evidence is bound to Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`, Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, exact hover/focus selector and `border-color` CSS property.
-- Hover text/background, hover box shadow/transition/animation, normal text/background/border, global/theme tokens, responsive inference, compatibility, production and download authority remain out of scope.
-- PR #708 is open against exact base main `1258ba0854847c91f5792f170be831bf96e4dbf3`.
-- #287 remains admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred.
+One Fast Batch contains three closely related Elementor 4.2.4 Button-hover capabilities:
+1. bounded hover box shadow with exact group-prefixed keys;
+2. explicit finite 0..10 second transition duration serialized as an Elementor `s` slider;
+3. Elementor 4.2.4 core hover animation names only.
 
-## Fast Batch Mode applied
+Product commit: `92e1d05b1aa69c2ce43600532bb3b73cca46a388`.
 
-- Fast Batch Mode is now canonical repository policy.
-- Default new product milestone size is 3-5 closely related capabilities under one Issue/branch/PR.
-- Remote exact-head CI is performed once on the final bound batch head instead of once per small capability.
-- README/verifier/compact-state synchronization is consolidated at the final pre-CI handoff, except when a material blocker, security/authority boundary or Issue/PR lifecycle state changes earlier.
-- User-facing development updates are limited to batch start, material blocker/failure and batch completion/verification boundaries.
-- PR #708 remains the transitional final micro-slice and is not expanded mid-flight; the next P15 product milestone after its merge MUST use Fast Batch Mode by default.
-- Security, required checks, exact-head review, expected-head merge and production/release authority controls are unchanged.
+Evidence is bound to Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, group base `6117c06b286dbec336eefe63475c747e2fda0234`, box-shadow group `1c068c900db0ff2593089028d67fb6d897dbaa33`, box-shadow control `e55cf9af34db5cc3e73dc295cd9f35b437da6fa7`, and hover-animation control `157399fddae46264f07654bc178373a2c1050c4e`.
+
+Existing requested target keys are rejected instead of overwritten. Style/responsive inference, CSS parsing, token resolution, Figma/network access, compatibility, production and download authority remain false.
+
+## PR #710 initial exact-head verifier phrase failure
+
+- Exact head `ecf372e0a026bdd5034becabbbe6eb7b359627a3` had five required gates PASS and 0 unresolved review threads.
+- CI `36017992344` and P12 Final `36017992198` failed at `status:verify` only.
+- Root cause was one stale case-sensitive verifier substring: README uses `Exact head` while verifier required `exact head`.
+- The Fast Batch product resolver/tests were not the reported failure surface.
+- This repair changes only the verifier phrase plus durable failure evidence; all three batch capability contracts and authority boundaries remain unchanged.
+
+## PR #710 exactOptionalPropertyTypes repair
+
+- Verifier-repaired head `6ca4d32a86dc653dfd9236cdbe99b6f81ad8bc5c` confirmed `status:verify` PASS.
+- CI `36019163256` and P12 Final `36019163185` then failed at TypeScript `TS2375` in `cloneEntry()` under `exactOptionalPropertyTypes: true`.
+- Root cause: `cloneBoxShadow()` returned `P15ElementorButtonHoverBoxShadowV1 | undefined` even though the caller's conditional branch had already proved `value.boxShadow` defined.
+- Repair narrows that helper to a definite input/output type only. The conditional presence guard and runtime behavior are unchanged.
+- No capability, accepted value, setting key, test contract, security control or authority boundary is expanded.
 
 ## Exact next safe action
 
-On the next user `continue`, resolve the final bound PR #708 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+Perform exactly one fresh consolidated required-gate refresh on the type-repaired PR #710 head. Do not merge until that exact head is green and review threads are clear.
