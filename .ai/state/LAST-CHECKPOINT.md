@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: BUILDING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `d99695e8e1183f152a01a308251d2f02f086e67f`  
 Active Issue: `#717`  
-Active PR: `not yet opened`  
+Active PR: `#718`  
 Active branch: `p15/button-typography-basics-batch`
 
 ## Completed reconciliation #715 / PR #716
@@ -25,10 +25,16 @@ Product commit: `df3b5cf079b8c3901231fa00f378d15462200406`.
 
 The resolver writes `typography_typography=custom` plus only explicitly requested bounded keys, rejects any pre-existing `typography_*` setting, and preserves exact Button text/alignment/link binding. Font family/size, variable-font axes, decoration, line height, letter/word spacing, padding, responsive typography, tokens/global-font resolution, inference, Figma/network mutation, compatibility, responsive closure, production and download authority remain excluded.
 
+## PR #718 lifecycle
+
+- PR #718 opened against exact base main `d99695e8e1183f152a01a308251d2f02f086e67f`.
+- PR creation head was `291f5ca0c126d8d7fed8e118958a63ea577c04cc`.
+- Final lifecycle binding changes governance/status truth only; remote exact-head gates are intentionally not polled in this milestone.
+
 ## Option presentation contract
 
 Recommended action identity is stable, but visible numeric/order presentation is shuffled per material milestone. Numbers are not persistent action identifiers.
 
 ## Exact next safe action
 
-Open one PR for Issue #717 from `p15/button-typography-basics-batch`, bind its exact PR identity into durable state, and stop before polling the final exact-head gate set.
+Resolve the final bound PR #718 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
