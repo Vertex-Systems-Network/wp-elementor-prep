@@ -233,3 +233,4 @@ claims:
   - {id: CL-230, statement: pr_714_repaired_exact_head_4e2cc76a_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
   - {id: CL-231, statement: pr_714_merged_with_expected_head_as_main_f25acc0e_and_issue_713_closed_completed, value: true}
   - {id: CL-232, statement: issue_715_owns_post_pr_714_ai_native_reconciliation_only_and_does_not_change_product_runtime_security_or_authority, value: true}
+  - {id: CL-233, statement: pr_716_is_active_exact_head_verification_path_for_issue_715_post_pr_714_ai_native_reconciliation, value: true}

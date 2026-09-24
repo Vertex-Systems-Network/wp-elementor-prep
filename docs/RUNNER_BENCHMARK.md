@@ -114,7 +114,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 | RQ-711-FINAL | #711 / PR #712 | P15 Button normal border Fast Batch v1 | Required PR exact-head gate set | exact head `56607e9a...` passed all seven required gates; threads 0; merged main `012edb7f...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 | RQ-713-FINAL | #713 / PR #714 | P15 Fast Batch Button visual depth and radius v1 | Required PR exact-head gate set | repaired exact head `4e2cc76a...` passed all seven required gates; review threads 0; merged main `f25acc0e...`; prior 5/7 journal-ceiling failure repaired without product/security/authority change | `FINAL_BATCH` | repaired exact-head repository gates PASS | DONE |
 
-| RQ-715-FINAL | #715 | Post-PR #714 AI-native reconciliation | Required PR exact-head gate set | PR not yet opened; synchronize governance/README/verifier/Runner/memory-bank truth only | `FINAL_BATCH` | final reconciliation PR head must pass all seven required gates before merge | PR_NOT_YET_OPEN |
+| RQ-715-FINAL | #715 / PR #716 | Post-PR #714 AI-native reconciliation | Required PR exact-head gate set | PR creation head `1e6376d5...`; governance/README/verifier/Runner/memory-bank reconciliation only | `FINAL_BATCH` | final bound PR head must pass all seven required gates before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 

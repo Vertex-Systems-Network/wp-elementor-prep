@@ -2,7 +2,7 @@ schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
 observed_main_sha: f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c
 active_issue: 715
-active_pr: null
+active_pr: 716
 active_branch: ai-native/post-pr-714-reconciliation
 interaction:
   render_required: true
@@ -11,14 +11,14 @@ interaction:
   selection_semantics: NEW_USER_REQUEST
   selection_grants_authority: false
   max_visible_options: 4
-recommended_action_id: open-reconciliation-pr
+recommended_action_id: verify-pr-716
 options:
-  - action_id: open-reconciliation-pr
-    label: Open post-#714 reconciliation PR
+  - action_id: verify-pr-716
+    label: Verify reconciliation PR #716
     enabled: true
     recommended: true
-    action_token: OPEN_RECONCILIATION_PR
-    request_payload: "Open the post-PR #714 AI-native reconciliation PR for Issue #715, bind its exact PR identity into durable state, and stop before exact-head CI verification."
+    action_token: VERIFY_PR_716
+    request_payload: "Resolve the exact current head of PR #716 and perform one consolidated required-gate refresh for the post-PR #714 AI-native reconciliation."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review the AI-Native roadmap from current main truth while Issue #715 owns post-merge reconciliation."
+    request_payload: "Review the AI-Native roadmap from current repository truth without bypassing PR #716."
     blocked_by: []
     blocked_reason: null
   - action_id: start-next-p15-batch
@@ -42,7 +42,7 @@ options:
     enabled: false
     recommended: false
     action_token: NEXT_P15_BATCH
-    request_payload: "After Issue #715 reconciliation passes exact-head gates and merges, start the next 3-5-capability P15 Fast Batch."
+    request_payload: "After PR #716 passes exact-head gates and merges, start the next 3-5-capability P15 Fast Batch."
     blocked_by:
-      - RECONCILIATION_715_NOT_MERGED
+      - PR_716_NOT_MERGED
     blocked_reason: "Post-PR #714 reconciliation must verify and merge first."

@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: BUILDING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`  
 Active Issue: `#715`  
-Active PR: `not yet opened`  
+Active PR: `#716`  
 Active branch: `ai-native/post-pr-714-reconciliation`
 
 ## Completed P15 Fast Batch #713 / PR #714
@@ -21,4 +21,4 @@ Synchronize post-merge README/verifier, compact state, deterministic claims, coo
 
 ## Exact next safe action
 
-Open the reconciliation PR from `ai-native/post-pr-714-reconciliation`, bind its exact PR identity into the durable state, then defer exact-head gate verification to the next user turn.
+Resolve the final bound PR #716 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.

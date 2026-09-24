@@ -160,7 +160,7 @@ PR #712 final exact head `56607e9a5c42071167cd84aa9d82eefef74c4a3e` passed 7/7 a
 
 Issue #713 / PR #714 is closed completed. Repaired exact head `4e2cc76a309d99c8c37b73402bcd8f1f5050715d` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`. The exact-bound composite Button resolver provides bounded normal text shadow, bounded normal box shadow and explicit desktop/tablet/mobile integer-px border radius. Padding, inference, compatibility, production and download authority remain false/out of scope.
 
-Issue #715 is the active post-merge AI-native reconciliation only; no next P15 product batch is activated until its reconciliation PR verifies and merges.
+Issue #715 / PR #716 is the active post-merge AI-native reconciliation only; no next P15 product batch is activated until its exact reconciliation head verifies and merges.
 ## P16 state
 
 P16 remains **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED** with `N/A` progress.
