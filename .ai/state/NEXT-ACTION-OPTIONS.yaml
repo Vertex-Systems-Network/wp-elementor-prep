@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: d389c554a6770efd3606abc5216c2082ad2c61fc
-active_issue: 699
-active_pr: 700
-active_branch: ai-native/post-pr-698-reconciliation
+observed_main_sha: 456a7a7fd4c9fcc97dacd206561df5f56a8d9e83
+active_issue: 701
+active_pr: 702
+active_branch: p15/button-normal-classic-background-color
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -11,14 +11,14 @@ interaction:
   selection_semantics: NEW_USER_REQUEST
   selection_grants_authority: false
   max_visible_options: 4
-recommended_action_id: verify-pr-700
+recommended_action_id: verify-pr-702
 options:
-  - action_id: verify-pr-700
-    label: Verify PR #700
+  - action_id: verify-pr-702
+    label: Verify PR #702
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_700
-    request_payload: "Continue AI-Native plan: resolve the exact current head of PR #700, perform one consolidated required-gate refresh, and merge only in a later logical milestone if all required gates are green and review threads are clear."
+    action_token: VERIFY_PR_702
+    request_payload: "Continue AI-Native plan: resolve the exact current head of PR #702 and perform one consolidated required-gate refresh. Do not merge unless a later logical milestone is selected after all required gates are green and review threads are clear."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -29,20 +29,20 @@ options:
     request_payload: "Review current repository security blocker #287 and report the exact admin-level branch/ruleset action still required without weakening repository security controls."
     blocked_by: []
     blocked_reason: null
-  - action_id: update-ai-plan-status
-    label: Review AI plan/status
+  - action_id: review-ai-plan
+    label: Review AI-Native roadmap
     enabled: true
     recommended: false
-    action_token: UPDATE_AI_PLAN
-    request_payload: "Re-read current repository truth and review the AI-Native plan/status without bypassing PR #700 or any security/release authority boundary."
+    action_token: REVIEW_AI_PLAN
+    request_payload: "Re-read current repository truth and review the AI-Native roadmap/status without bypassing PR #702 or authority boundaries."
     blocked_by: []
     blocked_reason: null
   - action_id: start-next-p15-slice
-    label: Continue P15 development
+    label: Continue next P15 slice
     enabled: false
     recommended: false
     action_token: NEXT_P15
-    request_payload: "After PR #700 passes exact-head gates and merges, select and start the next independently evidenced bounded P15 commercial-V1 slice."
+    request_payload: "After PR #702 passes exact-head gates and merges, select and start the next independently evidenced bounded P15 commercial-V1 slice."
     blocked_by:
-      - PR_700_NOT_MERGED
-    blocked_reason: "Post-PR #698 durable-state reconciliation PR #700 must pass required exact-head gates and merge before the next P15 product slice starts."
+      - PR_702_NOT_MERGED
+    blocked_reason: "Current Button classic-background slice must pass exact-head repository gates and merge first."
