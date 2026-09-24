@@ -194,3 +194,5 @@ claims:
   - {id: CL-191, statement: pr_704_is_active_exact_head_verification_path_for_p15_703_button_hover_text_color, value: true}
   - {id: CL-192, statement: pr_704_initial_head_d9eeadda_failed_only_ci_and_p12_final_on_shared_status_verifier_placement_syntax_defect_while_five_other_required_gates_passed_and_review_threads_were_zero, value: true}
   - {id: CL-193, statement: pr_704_verifier_placement_repair_preserves_exact_hover_color_write_surface_product_tests_security_controls_and_all_authority_exclusions, value: true}
+  - {id: CL-194, statement: pr_704_first_repaired_head_7cf9d1df_restored_verifier_syntax_but_exposed_only_stale_701_readme_assertion_in_ci_and_p12_final, value: true}
+  - {id: CL-195, statement: pr_704_second_verifier_repair_aligns_701_assertion_with_canonical_merged_readme_wording_without_product_or_authority_change, value: true}
