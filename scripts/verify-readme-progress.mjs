@@ -466,8 +466,7 @@ if (!readme.includes('### Completed P15 #701 implementation')
   || !readme.includes('PR #702 exact head')
   || !readme.includes('`background_background=classic`')
   || !readme.includes('`background_color`')
-  || !readme.includes('Gradient/image/video background')
-  || !readme.includes('broader authority remain excluded')) {
+  || !readme.includes('gradients, hover background, global tokens and broader authority remain excluded')) {
   throw new Error('README P15 #701 / PR #702 Button normal classic background-color truth is stale or missing.');
 }
 
