@@ -156,3 +156,13 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Lifecycle binding records PR #716 in compact state, coordination queue, Runner benchmark, README and memory-bank truth.
 - The final bound reconciliation head is intentionally uncertified; no workflow/status polling occurs in this lifecycle-binding milestone.
 - No product/runtime behavior, security control or compatibility/production/download/release authority changes.
+
+## 2026-09-25 — PR #716 verifier phrase repair
+
+- Exact head `dfd830af5aa6e94e2b18c91a0fdbdedbecc17a4a` completed with 5/7 required gates PASS and 0 unresolved review threads.
+- PASS: CodeQL `36054283243`, Integration Readiness `36054283267`, P12 Offline Acceptance `36054283413`, P15 Real Elementor Target Proof `36054283194`, P17 Local Browser Proof `36054283178`.
+- CI `36054283277` and P12 Final Release Artifact `36054283261` failed only at `status:verify`.
+- Root cause was README/verifier lifecycle wording drift: README correctly names `#715 / PR #716`, while the verifier still required the pre-PR `#715` phrase.
+- Repair changes the verifier matcher only for executable logic and synchronizes durable failure/repair metadata.
+- No product/runtime behavior, required check, security control, compatibility, production, download or release authority boundary is changed.
+- The repaired PR head is intentionally uncertified until the next consolidated exact-head verification turn.

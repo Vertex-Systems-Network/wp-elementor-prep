@@ -643,7 +643,7 @@ for (const fragment of p15ButtonVisualDepthRadiusRequiredFragments) {
 if (!readme.includes('### Completed P15 Fast Batch #713 implementation')
   || !readme.includes('Repaired final exact head `4e2cc76a309d99c8c37b73402bcd8f1f5050715d`')
   || !readme.includes('Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.')
-  || !readme.includes('Issue #715 now owns post-merge AI-native reconciliation only')
+  || !readme.includes('Issue #715 / PR #716 now owns post-merge AI-native reconciliation only')
   || !readme.includes('`text_shadow_text_shadow`')
   || !readme.includes('`button_box_shadow_box_shadow`')
   || !readme.includes('`border_radius_tablet`')

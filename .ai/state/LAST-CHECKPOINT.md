@@ -19,6 +19,13 @@ Active branch: `ai-native/post-pr-714-reconciliation`
 
 Synchronize post-merge README/verifier, compact state, deterministic claims, coordination queue, Runner benchmark, execution journal and memory-bank truth. No product/runtime or authority expansion is allowed.
 
+## PR #716 first exact-head failure and repair
+
+- Exact head `dfd830af5aa6e94e2b18c91a0fdbdedbecc17a4a` produced 5/7 required gates PASS with 0 unresolved review threads.
+- CI `36054283277` and P12 Final Release Artifact `36054283261` failed only at `status:verify`.
+- Root cause was one stale verifier phrase: README uses `Issue #715 / PR #716 now owns...`; verifier expected `Issue #715 now owns...`.
+- Repair updates that verifier matcher and records the failure/repair truth without changing product/runtime, security or authority boundaries.
+
 ## Exact next safe action
 
-Resolve the final bound PR #716 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+Resolve the repaired final bound PR #716 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.

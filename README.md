@@ -277,6 +277,15 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - Issue #715 / PR #716 now owns post-merge AI-native reconciliation only; the next P15 product batch is not yet activated.
 
+#### PR #716 first exact-head verifier mismatch
+
+- Exact head `dfd830af5aa6e94e2b18c91a0fdbdedbecc17a4a` returned 5/7 required gates PASS with 0 unresolved review threads.
+- CodeQL `36054283243`, Integration Readiness `36054283267`, P12 Offline Acceptance `36054283413`, P15 Real Elementor Target Proof `36054283194`, and P17 Local Browser Proof `36054283178` passed.
+- CI `36054283277` and P12 Final Release Artifact `36054283261` failed only at `status:verify`.
+- Root cause: README correctly records `Issue #715 / PR #716 now owns...`, while the verifier still required the pre-PR wording `Issue #715 now owns...`.
+- Repair updates only that verifier truth matcher plus durable verification metadata; product/runtime behavior, required checks, security controls, and compatibility/production/download/release authority remain unchanged.
+- The repaired head remains uncertified until its own exact-head gate batch completes.
+
 #### PR #714 first exact-head durable-state ceiling failure
 
 - Exact head `ef7485e54f9d022815f8678fc30a7a6dbc59bef1` returned 5/7 required gates PASS with 0 unresolved review threads.

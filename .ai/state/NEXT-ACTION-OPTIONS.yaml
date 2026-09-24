@@ -18,7 +18,7 @@ options:
     enabled: true
     recommended: true
     action_token: VERIFY_PR_716
-    request_payload: "Resolve the exact current head of PR #716 and perform one consolidated required-gate refresh for the post-PR #714 AI-native reconciliation."
+    request_payload: "Resolve the repaired exact current head of PR #716 and perform one consolidated required-gate refresh for the post-PR #714 AI-native reconciliation."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
