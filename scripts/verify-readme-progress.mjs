@@ -471,8 +471,6 @@ if (!readme.includes('### Completed P15 #701 implementation')
   throw new Error('README P15 #701 / PR #702 Button normal classic background-color truth is stale or missing.');
 }
 
-console.log(
-  `README progress
 const p15ButtonHoverTextColorRequiredFragments = [
   "elementorVersion: '4.2.4'",
   "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
@@ -498,5 +496,7 @@ if (!readme.includes('### Current P15 #703 implementation')
   || !readme.includes('production acceptance and download authority remain false/out of scope')) {
   throw new Error('README P15 #703 / PR #704 Button hover text-color truth is stale or missing.');
 }
- contract PASS: ${rows.length} stage-separated modules, no synthetic overall percentage, runtime registry ${schemaTag}.`,
+
+console.log(
+  `README progress contract PASS: ${rows.length} stage-separated modules, no synthetic overall percentage, runtime registry ${schemaTag}.`,
 );
