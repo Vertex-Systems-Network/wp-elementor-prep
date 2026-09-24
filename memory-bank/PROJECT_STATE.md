@@ -162,9 +162,9 @@ Issue #713 / PR #714 is closed completed. Repaired exact head `4e2cc76a309d99c8c
 
 Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `d99695e8e1183f152a01a308251d2f02f086e67f`.
 
-## Active P15 Fast Batch #717 Button typography basics
+## Active P15 Fast Batch #717 / PR #718 Button typography basics
 
-Issue #717 / branch `p15/button-typography-basics-batch` owns three tightly-related exact Elementor 4.2.4 typography capabilities: `typography_font_weight`, `typography_text_transform` and `typography_font_style`. Product commit `df3b5cf079b8c3901231fa00f378d15462200406` writes `typography_typography=custom` plus only explicitly requested bounded keys, rejects pre-existing `typography_*` settings, and preserves exact Button text/alignment/link binding.
+Issue #717 / PR #718 on branch `p15/button-typography-basics-batch` owns three tightly-related exact Elementor 4.2.4 typography capabilities: `typography_font_weight`, `typography_text_transform` and `typography_font_style`. Product commit `df3b5cf079b8c3901231fa00f378d15462200406` writes `typography_typography=custom` plus only explicitly requested bounded keys, rejects pre-existing `typography_*` settings, and preserves exact Button text/alignment/link binding.
 
 Font family/size, variable axes, text decoration, line height, letter/word spacing, padding, responsive typography, global/token resolution, inference, Figma/network mutation, compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
 ## P16 state
