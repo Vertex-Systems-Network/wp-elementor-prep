@@ -166,3 +166,22 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Repair changes the verifier matcher only for executable logic and synchronizes durable failure/repair metadata.
 - No product/runtime behavior, required check, security control, compatibility, production, download or release authority boundary is changed.
 - The repaired PR head is intentionally uncertified until the next consolidated exact-head verification turn.
+
+## 2026-09-25 — PR #716 merged; P15 Fast Batch #717 started
+
+- PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads: CI `36056622412`, CodeQL `36056622443`, Integration `36056622458`, P12 Offline `36056622405`, P12 Final `36056622416`, P15 target `36056622409`, P17 browser `36056622471`.
+- Expected-head merge produced main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
+- Issue #717 and branch `p15/button-typography-basics-batch` activate the next Fast Batch with exactly three Button typography basics: font weight, text transform and font style.
+- Product commit `df3b5cf079b8c3901231fa00f378d15462200406` adds exact source-bound resolver + focused tests. It writes `typography_typography=custom` plus only requested bounded typography keys and rejects pre-existing `typography_*` settings.
+- Exact evidence is Elementor 4.2.4 Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, typography group blob `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1`, and group base blob `6117c06b286dbec336eefe63475c747e2fda0234`.
+- Font family/size, variable axes, decoration, line height, spacing, padding, responsive typography, tokens/global fonts and broader authority remain excluded.
+- Next-action visible order is explicitly shuffled/rotated per material milestone; recommended semantics remain bound to stable action IDs rather than a fixed displayed number.
+- Remote exact-head CI remains deferred until the final PR-bound head.
+
+## 2026-09-25 — P15 Fast Batch PR #718 opened
+
+- PR #718 opened for Issue #717 from `p15/button-typography-basics-batch` against exact base main `d99695e8e1183f152a01a308251d2f02f086e67f`.
+- PR creation head was `291f5ca0c126d8d7fed8e118958a63ea577c04cc`.
+- Lifecycle binding records PR #718 in compact state, coordination queue, Runner benchmark, README and memory-bank truth.
+- The final bound Fast Batch head is intentionally uncertified; no workflow/status polling occurs in this lifecycle-binding milestone.
+- Product scope remains exactly font weight + text transform + font style; security and compatibility/production/download authority boundaries are unchanged.

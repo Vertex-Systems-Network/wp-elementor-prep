@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c
-active_issue: 715
-active_pr: 716
-active_branch: ai-native/post-pr-714-reconciliation
+observed_main_sha: d99695e8e1183f152a01a308251d2f02f086e67f
+active_issue: 717
+active_pr: 718
+active_branch: p15/button-typography-basics-batch
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -11,14 +11,30 @@ interaction:
   selection_semantics: NEW_USER_REQUEST
   selection_grants_authority: false
   max_visible_options: 4
-recommended_action_id: verify-pr-716
+  randomize_presentation_order: true
+  recommended_slot_fixed: false
+  presentation_epoch: pr-718-final-handoff
+  presentation_order:
+    - inspect-batch-717
+    - review-security-blocker-287
+    - verify-pr-718
+    - review-ai-plan
+recommended_action_id: verify-pr-718
 options:
-  - action_id: verify-pr-716
-    label: Verify reconciliation PR #716
+  - action_id: verify-pr-718
+    label: Verify Fast Batch PR #718
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_716
-    request_payload: "Resolve the repaired exact current head of PR #716 and perform one consolidated required-gate refresh for the post-PR #714 AI-native reconciliation."
+    action_token: VERIFY_PR_718
+    request_payload: "Resolve the exact current head of PR #718 and perform one consolidated required-gate refresh for the completed Button typography basics Fast Batch."
+    blocked_by: []
+    blocked_reason: null
+  - action_id: inspect-batch-717
+    label: Inspect typography batch #717
+    enabled: true
+    recommended: false
+    action_token: INSPECT_717
+    request_payload: "Review the exact source evidence, write surface, exclusions and focused tests for P15 Fast Batch #717 without changing its scope."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -34,15 +50,6 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review the AI-Native roadmap from current repository truth without bypassing PR #716."
+    request_payload: "Review current AI-Native roadmap/status without bypassing PR #718."
     blocked_by: []
     blocked_reason: null
-  - action_id: start-next-p15-batch
-    label: Start next P15 Fast Batch
-    enabled: false
-    recommended: false
-    action_token: NEXT_P15_BATCH
-    request_payload: "After PR #716 passes exact-head gates and merges, start the next 3-5-capability P15 Fast Batch."
-    blocked_by:
-      - PR_716_NOT_MERGED
-    blocked_reason: "Post-PR #714 reconciliation must verify and merge first."

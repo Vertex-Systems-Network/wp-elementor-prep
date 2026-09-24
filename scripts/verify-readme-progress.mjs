@@ -21,6 +21,7 @@ const p15ButtonHoverBorderColorSource = await readFile('src/targets/elementor/bu
 const p15ButtonHoverInteractionSource = await readFile('src/targets/elementor/button-hover-interaction-resolution.ts', 'utf8');
 const p15ButtonBorderStyleSource = await readFile('src/targets/elementor/button-border-style-resolution.ts', 'utf8');
 const p15ButtonVisualDepthRadiusSource = await readFile('src/targets/elementor/button-visual-depth-radius-resolution.ts', 'utf8');
+const p15ButtonTypographyBasicsSource = await readFile('src/targets/elementor/button-typography-basics-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -146,7 +147,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#715',
+  next: '#717',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -643,12 +644,41 @@ for (const fragment of p15ButtonVisualDepthRadiusRequiredFragments) {
 if (!readme.includes('### Completed P15 Fast Batch #713 implementation')
   || !readme.includes('Repaired final exact head `4e2cc76a309d99c8c37b73402bcd8f1f5050715d`')
   || !readme.includes('Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.')
-  || !readme.includes('Issue #715 / PR #716 now owns post-merge AI-native reconciliation only')
+  || !readme.includes('PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.')
   || !readme.includes('`text_shadow_text_shadow`')
   || !readme.includes('`button_box_shadow_box_shadow`')
   || !readme.includes('`border_radius_tablet`')
   || !readme.includes('production acceptance and download authority remain false/out of scope')) {
   throw new Error('README P15 #713 / PR #714 merged Button visual-depth/radius Fast Batch truth is stale or missing.');
+}
+
+const p15ButtonTypographyBasicsRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "typographyGroupSourceBlobSha: 'eea951b6331bd84c80e24b7fb6ab249e5c4c41a1'",
+  "groupBaseSourceBlobSha: '6117c06b286dbec336eefe63475c747e2fda0234'",
+  "starterSettingKey: 'typography_typography'",
+  "starterValue: 'custom'",
+  "fontWeightSettingKey: 'typography_font_weight'",
+  "textTransformSettingKey: 'typography_text_transform'",
+  "fontStyleSettingKey: 'typography_font_style'",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
+  if (!p15ButtonTypographyBasicsSource.includes(fragment)) {
+    throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #717 / PR #718 implementation')
+  || !readme.includes('Issue #717 / PR #718 owns three tightly-related Elementor 4.2.4 Button typography capabilities')
+  || !readme.includes('`typography_font_weight`')
+  || !readme.includes('`typography_text_transform`')
+  || !readme.includes('`typography_font_style`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #717 Button typography basics Fast Batch truth is stale or missing.');
 }
 
 console.log(
