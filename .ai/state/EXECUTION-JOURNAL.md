@@ -250,3 +250,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - PR #702 opened against exact main `456a7a7fd4c9fcc97dacd206561df5f56a8d9e83`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
 - Exact write surface is only `background_background=classic` plus strict lowercase six-digit `background_color`; gradients, hover, global tokens, responsive inference and production/download authority remain out of scope.
 - Final bound PR #702 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
+
+## 2026-09-24 — PR #702 syntax-only repair
+
+- Exact head `28de25ae1289d58d820750abcb988c2319ff28b1` completed with 5/7 required gates PASS and 0 unresolved review threads.
+- CI `35998968559` and P12 Final `35998968479` failed on the same TypeScript parse defect in `src/targets/elementor/button-background-color-resolution.ts`.
+- Root cause was branch-construction replacement-string `$'` interpretation, which corrupted `acceptedColorPattern: '^#[0-9a-f]{6}$'` and duplicated the source suffix.
+- Repair rebuilds the resolver from the verified Button text-color source using callback-safe replacement.
+- No product write-surface, test intent, security control or compatibility/production/download authority boundary is broadened.

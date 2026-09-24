@@ -184,3 +184,5 @@ claims:
   - {id: CL-181, statement: p15_701_write_surface_is_only_background_background_classic_plus_background_color_lowercase_six_digit_hex, value: true}
   - {id: CL-182, statement: p15_701_excludes_gradient_image_video_hover_global_tokens_responsive_inference_and_production_download_authority, value: true}
   - {id: CL-183, statement: pr_702_is_active_exact_head_verification_path_for_p15_701_button_background_color, value: true}
+  - {id: CL-184, statement: pr_702_initial_head_28de25ae_failed_only_ci_and_p12_final_on_shared_typescript_parse_defect_while_five_other_required_gates_passed_and_review_threads_were_zero, value: true}
+  - {id: CL-185, statement: pr_702_syntax_repair_preserves_exact_background_background_classic_plus_background_color_write_surface_and_all_authority_exclusions, value: true}

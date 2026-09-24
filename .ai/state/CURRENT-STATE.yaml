@@ -9,7 +9,7 @@ active_pr: 702
 active_branch: p15/button-normal-classic-background-color
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_button_normal_classic_background_color_v1
+current_milestone: p15_button_normal_classic_background_color_v1_syntax_repair
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -20,7 +20,7 @@ next_action_options:
   recommended_action_id: verify-pr-702
 milestone_status: VERIFYING
 last_completed_milestone: p15_pr_700_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: next_user_continue_resolves_final_pr_702_head_and_performs_one_consolidated_exact_head_status_refresh
+exact_next_safe_action: next_user_continue_resolves_repaired_final_pr_702_head_and_performs_one_consolidated_exact_head_status_refresh
 pending_runner_ids: [RQ-701-FINAL]
 blocked_runner_ids: []
 current_blockers:

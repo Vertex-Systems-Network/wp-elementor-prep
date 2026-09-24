@@ -23,6 +23,14 @@ Active branch: `p15/button-normal-classic-background-color`
 - PR #702 is open against exact base main `456a7a7fd4c9fcc97dacd206561df5f56a8d9e83`.
 - #287 remains admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred.
 
+## Failed exact head and repair
+
+- Exact head `28de25ae1289d58d820750abcb988c2319ff28b1` passed 5/7 required gates.
+- CI `35998968559` and P12 Final `35998968479` failed on the same TypeScript parse defect in `button-background-color-resolution.ts`.
+- Root cause: replacement-string `
+` semantics corrupted the retained regex literal and duplicated the source suffix.
+- Repair is syntax-only and preserves #701's exact `background_background=classic` + strict lowercase six-digit `background_color` contract and all authority exclusions.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final bound PR #702 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+Resolve the repaired final PR #702 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact repaired head is green and review threads are clear.
