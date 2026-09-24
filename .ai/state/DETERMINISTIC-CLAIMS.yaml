@@ -250,3 +250,4 @@ claims:
   - {id: CL-247, statement: canonical_state_is_idle_ready_for_next_p15_batch_with_no_active_issue_or_pr_after_pr_720_merge, value: true}
   - {id: CL-248, statement: issue_721_is_transport_only_terminal_finalization_and_does_not_become_canonical_active_issue_or_pr, value: true}
   - {id: CL-249, statement: terminal_finalization_transport_merge_does_not_require_recursive_reconciliation_when_no_product_runtime_security_or_authority_truth_changes, value: true}
+  - {id: CL-250, statement: pr_722_is_transport_only_terminal_finalization_and_is_not_a_canonical_active_pr, value: true}

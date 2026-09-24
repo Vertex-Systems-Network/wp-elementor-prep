@@ -213,3 +213,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Issue #721 is terminal-finalization transport only. Its PR lifecycle remains GitHub metadata and is not written as active canonical work.
 - Protocol now explicitly prevents recursive reconciliation after a transport-only finalization merge when no product/runtime/security/authority truth changed.
 - Randomized next-action presentation remains required.
+
+## 2026-09-25 — terminal finalization PR #722 opened
+
+- Issue #721 / PR #722 transports the settled post-#720 state to protected main.
+- PR creation head was `5b713b7b021209e85e9cff78d4772b7e3531d58d`; exact base main is `f3384739609ea68e9141f7488e924e20e5ac9d6b`.
+- Canonical `active_issue` and `active_pr` remain null by design; PR #722 is transport metadata, not a canonical lifecycle owner.
+- The exact final transport head remains uncertified until its own required gate set completes.
+- No product/runtime/security behavior or authority scope changes.

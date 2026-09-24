@@ -4,6 +4,8 @@ observed_main_sha: f3384739609ea68e9141f7488e924e20e5ac9d6b
 active_issue: null
 active_pr: null
 active_branch: main
+terminal_transport_issue: 721
+terminal_transport_pr: 722
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,20 +15,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: terminal-finalization-721-pre-pr
+  presentation_epoch: terminal-pr-722-final-handoff
   presentation_order:
-    - review-ai-plan
-    - open-terminal-finalization-pr
     - review-security-blocker-287
+    - verify-terminal-finalization-pr-722
+    - review-ai-plan
     - review-next-p15-capability-map
-recommended_action_id: open-terminal-finalization-pr
+recommended_action_id: verify-terminal-finalization-pr-722
 options:
-  - action_id: open-terminal-finalization-pr
-    label: Open terminal finalization PR
+  - action_id: verify-terminal-finalization-pr-722
+    label: Verify terminal finalization PR #722
     enabled: true
     recommended: true
-    action_token: OPEN_TERMINAL_FINALIZATION
-    request_payload: "Open the transport-only terminal finalization PR for Issue #721, preserve canonical IDLE_READY state, and stop before exact-head gate polling."
+    action_token: VERIFY_TERMINAL_PR_722
+    request_payload: "Resolve the exact current head of transport-only PR #722 and perform one consolidated required-gate refresh. Preserve canonical active_issue/active_pr as null."
     blocked_by: []
     blocked_reason: null
   - action_id: review-next-p15-capability-map
@@ -34,9 +36,9 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_P15_MAP
-    request_payload: "Review the remaining P15 capability map without starting a new product batch until terminal finalization transport merges."
-    blocked_by: [terminal_finalization_transport_not_yet_merged]
-    blocked_reason: "Terminal finalization transport must merge before activating the next product batch."
+    request_payload: "Review the remaining P15 capability map without activating a new product batch until PR #722 merges."
+    blocked_by: [terminal_finalization_pr_722_not_yet_merged]
+    blocked_reason: "Transport-only PR #722 must merge before the next product batch starts."
   - action_id: review-security-blocker-287
     label: Review security blocker #287
     enabled: true
@@ -50,6 +52,6 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review the current AI-Native roadmap from settled post-#720 truth without activating new product scope."
+    request_payload: "Review the settled AI-Native roadmap while terminal transport PR #722 awaits verification."
     blocked_by: []
     blocked_reason: null

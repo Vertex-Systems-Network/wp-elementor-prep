@@ -120,7 +120,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-719-FINAL | #719 / PR #720 | Post-PR #718 AI-native reconciliation | Required PR exact-head gate set | exact head `243e0aa9...` passed all seven required gates; review threads 0; merged main `f3384739...`; no product/security/authority change | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-721-TRANSPORT | #721 | Terminal post-reconciliation finalization | Required PR exact-head gate set | transport-only; canonical owner=false; recursive reconciliation after merge=false | `FINAL_BATCH` | future transport PR head must pass all seven required gates before merge | PR_NOT_YET_OPEN |
+| RQ-721-TRANSPORT | #721 / PR #722 | Terminal post-reconciliation finalization | Required PR exact-head gate set | transport-only; canonical owner=false; PR creation head `5b713b7b...`; recursive reconciliation after merge=false | `FINAL_BATCH` | final transport head must pass all seven required gates before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 

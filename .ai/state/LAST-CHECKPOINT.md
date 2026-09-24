@@ -16,10 +16,10 @@ Canonical branch: `main`
 
 ## Terminal finalization transport #721
 
-Issue #721 exists only to transport this settled state to protected main. Its PR is deliberately not a canonical lifecycle owner. Once its exact head passes the normal required gates and merges with expected-head protection, no further reconciliation PR is required solely to record that transport merge SHA.
+Issue #721 / PR #722 exists only to transport this settled state to protected main. PR #722 is deliberately not a canonical lifecycle owner. Once its exact head passes the normal required gates and merges with expected-head protection, no further reconciliation PR is required solely to record that transport merge SHA.
 
 The next material product/security/governance mutation refreshes `observed_main_sha` from live main.
 
 ## Exact next safe action
 
-Open the transport-only finalization PR for Issue #721, exact-head verify it, then expected-head merge it. After merge, start the next P15 Fast Batch as a new user-selected milestone.
+Resolve the exact current head of transport-only PR #722 and perform one consolidated required-gate refresh. Merge only after that exact head is green with zero unresolved review threads.
