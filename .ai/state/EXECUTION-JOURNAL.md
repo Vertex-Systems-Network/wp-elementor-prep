@@ -349,3 +349,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - CI `36019163256` and P12 Final `36019163185` then exposed focused TypeScript `TS2375` in `cloneEntry()` under `exactOptionalPropertyTypes: true`.
 - `cloneBoxShadow()` is narrowed from optional input/output to definite input/output because the existing caller guard already proves presence.
 - Runtime behavior, three-capability scope, focused tests, source evidence, security controls and authority boundaries remain unchanged.
+
+## 2026-09-24 — P15 Fast Batch #711 Button normal border styling
+
+- PR #710 final exact head `e019e903531b1d7db270df7aefe5b79851b801e9` passed 7/7 with 0 unresolved review threads and merged as main `c2c001d133f0f2333d4b489897cfac53cc47b830`; Issue #709 closed completed.
+- Issue #711 / PR #712 is the next Fast Batch and keeps one Issue/branch/PR for three tightly-related normal Button border capabilities.
+- Product commit `ee58570942841975881502fbc6f1fbc51a5f979d` adds one exact-bound atomic border profile resolver plus focused tests for visible border type, desktop px width and border color.
+- Core handoff commit `e420bcc6a1f4f3e65ad2492ff20cc6ca96e4e548` synchronizes compact state, coordination queue, Runner machine record, README and verifier.
+- Responsive border width, border radius, padding, hover border, inference and compatibility/production/download authority remain outside the batch.
+- Remote exact-head CI is deferred to one final bound-head refresh in the next milestone.

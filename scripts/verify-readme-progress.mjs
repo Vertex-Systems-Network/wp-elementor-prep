@@ -19,6 +19,7 @@ const p15ButtonHoverTextColorSource = await readFile('src/targets/elementor/butt
 const p15ButtonHoverBackgroundColorSource = await readFile('src/targets/elementor/button-hover-background-color-resolution.ts', 'utf8');
 const p15ButtonHoverBorderColorSource = await readFile('src/targets/elementor/button-hover-border-color-resolution.ts', 'utf8');
 const p15ButtonHoverInteractionSource = await readFile('src/targets/elementor/button-hover-interaction-resolution.ts', 'utf8');
+const p15ButtonBorderStyleSource = await readFile('src/targets/elementor/button-border-style-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -144,7 +145,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#709',
+  next: '#711',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -579,13 +580,41 @@ for (const fragment of p15ButtonHoverInteractionRequiredFragments) {
     throw new Error(`P15 #709 Fast Batch hover interaction contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #709 implementation')
-  || !readme.includes('PR #710')
-  || !readme.includes('bounded hover box shadow')
-  || !readme.includes('`button_hover_transition_duration`')
-  || !readme.includes('`hover_animation`')
+if (!readme.includes('### Completed P15 Fast Batch #709 implementation')
+  || !readme.includes('Final exact head `e019e903531b1d7db270df7aefe5b79851b801e9`')
+  || !readme.includes('Issue #709 closed completed')) {
+  throw new Error('README P15 #709 / PR #710 merged Fast Batch truth is stale or missing.');
+}
+
+const p15ButtonBorderStyleRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "groupBaseSourceBlobSha: '6117c06b286dbec336eefe63475c747e2fda0234'",
+  "borderGroupSourceBlobSha: 'eac53e6b1014a985d1d17f90a4044cfb0c6c33c5'",
+  "dimensionsControlSourceBlobSha: '7de34809d407e5fa208935b77a6b6648c72d3c5d'",
+  "controlsStackSourceBlobSha: '00b280e518b89925c8f85a059b34136177ff3d4d'",
+  "borderTypeSettingKey: 'border_border'",
+  "borderWidthSettingKey: 'border_width'",
+  "borderColorSettingKey: 'border_color'",
+  "borderWidthTabletSettingKey: 'border_width_tablet'",
+  "borderWidthMobileSettingKey: 'border_width_mobile'",
+  "P15_ELEMENTOR_BUTTON_BORDER_WIDTH_MAX_PX = 100",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonBorderStyleRequiredFragments) {
+  if (!p15ButtonBorderStyleSource.includes(fragment)) {
+    throw new Error(`P15 #711 Fast Batch Button border contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #711 implementation')
+  || !readme.includes('PR #712')
+  || !readme.includes('`border_border`')
+  || !readme.includes('`border_width`')
+  || !readme.includes('`border_color`')
   || !readme.includes('production acceptance and download authority remain false/out of scope')) {
-  throw new Error('README P15 #709 / PR #710 Fast Batch truth is stale or missing.');
+  throw new Error('README P15 #711 / PR #712 Button border Fast Batch truth is stale or missing.');
 }
 
 console.log(

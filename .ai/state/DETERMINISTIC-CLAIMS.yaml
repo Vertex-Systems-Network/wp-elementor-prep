@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 17832e372d43de32cb886ed6da03982d24e1fdaa
+observed_main_sha: c2c001d133f0f2333d4b489897cfac53cc47b830
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -220,3 +220,8 @@ claims:
   - {id: CL-217, statement: issue_709_pr_710_is_first_active_fast_batch_with_three_related_button_hover_interaction_capabilities, value: true}
   - {id: CL-218, statement: p15_709_batch_contains_bounded_box_shadow_transition_seconds_and_core_hover_animation_with_exact_source_boundaries, value: true}
   - {id: CL-219, statement: p15_709_batch_preserves_false_inference_network_compatibility_production_and_download_authority, value: true}
+  - {id: CL-220, statement: pr_710_exact_head_e019e903_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
+  - {id: CL-221, statement: pr_710_merged_with_expected_head_as_main_c2c001d1_and_issue_709_closed_completed, value: true}
+  - {id: CL-222, statement: issue_711_pr_712_is_active_button_normal_border_fast_batch_with_three_related_capabilities, value: true}
+  - {id: CL-223, statement: p15_711_atomic_border_profile_writes_only_border_border_border_width_and_border_color_with_explicit_visible_type_condition, value: true}
+  - {id: CL-224, statement: p15_711_excludes_responsive_border_width_border_radius_padding_hover_border_and_broader_authority, value: true}
