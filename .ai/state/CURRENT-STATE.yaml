@@ -2,14 +2,14 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: c2c001d133f0f2333d4b489897cfac53cc47b830
+observed_main_sha: 012edb7f8403c18eb5bab8f41ac1fd2572e4be0e
 observed_main_branch: main
-active_issue: 711
-active_pr: 712
-active_branch: p15/button-border-style-batch
+active_issue: 713
+active_pr: 714
+active_branch: p15/button-visual-depth-radius-batch
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_button_normal_border_style_fast_batch_v1
+current_milestone: p15_button_visual_depth_radius_fast_batch_v1
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -17,14 +17,14 @@ next_action_options:
   fallback_action_tokens_required: true
   click_semantics: new_user_request_only
   grants_authority: false
-  recommended_action_id: verify-pr-712
+  recommended_action_id: verify-pr-714
 milestone_status: VERIFYING
-last_completed_milestone: p15_pr_710_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: next_user_continue_resolves_final_pr_712_head_and_performs_one_consolidated_exact_head_status_refresh
-pending_runner_ids: [RQ-711-FINAL]
+last_completed_milestone: p15_pr_712_exact_head_passed_7_of_7_and_merged
+exact_next_safe_action: next_user_continue_resolves_repaired_pr_714_head_and_performs_one_consolidated_exact_head_status_refresh
+pending_runner_ids: [RQ-713-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_712_exact_head_gate_set_not_yet_observed
+  - pr_714_repaired_exact_head_gate_set_not_yet_observed
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
