@@ -105,7 +105,8 @@ describe('P15 Button hover classic background color', () => {
       normalBackgroundGroupName: 'background',
       selector: '{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus',
       acceptedBackgroundType: 'classic',
-      acceptedColorPattern: '^#[0-9a-f]{6}
+      acceptedColorPattern: '^#[0-9a-f]{6}$',
+    });
 
     expect(result.status).toBe('BUTTON_HOVER_BACKGROUND_COLORS_RESOLVED');
     const settings = settingsOf(result.template?.content[0]?.elements[0]);
@@ -224,131 +225,6 @@ describe('P15 Button hover classic background color', () => {
     expect(serialized).not.toContain('templateJson');
     expect(serialized).toContain('"backgroundTypeSettingKey": "button_background_hover_background"');
     expect(serialized).toContain('"backgroundColorSettingKey": "button_background_hover_color"');
-    expect(serialized).toContain('"acceptedBackgroundType": "classic"');
-
-    const inflatedResult = { ...result, networkAccess: true } as unknown as P15ElementorButtonHoverBackgroundColorResultV1;
-    expect(() => serializeP15ElementorButtonHoverBackgroundColorSummary(inflatedResult))
-      .toThrow(/authority-inflated/);
-  });
-});
-,
-    });
-
-    expect(result.status).toBe('BUTTON_HOVER_BACKGROUND_COLORS_RESOLVED');
-    const settings = settingsOf(result.template?.content[0]?.elements[0]);
-    expect(settings.text).toBe('PRIVATE BUTTON COPY');
-    expect(settings.align).toBe('left');
-    expect(settings.background_background).toBe('classic');
-    expect(settings.background_color).toBe('#1a2b3c');
-    expect(settings).not.toHaveProperty('button_text_color');
-    expect(settings).not.toHaveProperty('hover_color');
-    expect(settings).not.toHaveProperty('button_background_hover_background');
-    expect(settings).not.toHaveProperty('button_background_hover_color');
-    expect(settings).not.toHaveProperty('background_color_b');
-    expect(result.resolvedHoverBackgrounds).toEqual([{ sourceNodeId: 'button', color: '#1a2b3c' }]);
-    expect(result.targetCompatibilityClaim).toBe(false);
-    expect(result.productionAcceptance).toBe(false);
-    expect(result.downloadEnabled).toBe(false);
-  });
-
-  it('preserves exact linked Button binding and targets only requested source id', () => {
-    const source = sourceDocument();
-    const result = resolveP15ElementorButtonHoverBackgroundColors(source, manifest(source, [
-      { sourceNodeId: 'linked-button', color: '#abcdef' },
-    ]));
-    const root = result.template?.content[0];
-    expect(settingsOf(root?.elements[0])).not.toHaveProperty('background_color');
-    const linked = settingsOf(root?.elements[2]?.elements[0]);
-    expect(linked.link).toEqual({
-      url: 'https://example.com/path',
-      is_external: 'on',
-      nofollow: 'on',
-      custom_attributes: '',
-    });
-    expect(linked.background_background).toBe('classic');
-    expect(linked.background_color).toBe('#abcdef');
-  });
-
-  it('is deterministic and fails closed for stale replay', () => {
-    const source = sourceDocument();
-    const first = resolveP15ElementorButtonHoverBackgroundColors(source, manifest(source, []));
-    const second = resolveP15ElementorButtonHoverBackgroundColors(source, manifest(source, []));
-    expect(first.status).toBe('NO_BUTTON_HOVER_BACKGROUND_COLOR_OVERRIDES');
-    expect(first).toEqual(second);
-
-    const valid = manifest(source, [{ sourceNodeId: 'button', color: '#123456' }]);
-    const staleSource = resolveP15ElementorButtonHoverBackgroundColors(source, {
-      ...valid,
-      sourceIrFingerprint: 'sha256:' + '0'.repeat(64),
-    });
-    expect(staleSource.issues.map((issue) => issue.code))
-      .toContain('P15_BUTTON_HOVER_BACKGROUND_COLOR_SOURCE_FINGERPRINT_MISMATCH');
-
-    const staleCandidate = resolveP15ElementorButtonHoverBackgroundColors(source, {
-      ...valid,
-      baseCandidateIdentityDigest: 'sha256:' + '1'.repeat(64),
-    });
-    expect(staleCandidate.issues.map((issue) => issue.code))
-      .toContain('P15_BUTTON_HOVER_BACKGROUND_COLOR_BASE_CANDIDATE_IDENTITY_MISMATCH');
-  });
-
-  it('rejects invalid ids/colors and gradient/hover/type expansion fields', () => {
-    const source = sourceDocument();
-
-    const duplicate = resolveP15ElementorButtonHoverBackgroundColors(source, manifest(source, [
-      { sourceNodeId: 'button', color: '#112233' },
-      { sourceNodeId: 'button', color: '#445566' },
-    ]));
-    expect(duplicate.issues.map((issue) => issue.code))
-      .toContain('P15_BUTTON_HOVER_BACKGROUND_COLOR_DUPLICATE_SOURCE_ID');
-
-    const nonButton = resolveP15ElementorButtonHoverBackgroundColors(source, manifest(source, [
-      { sourceNodeId: 'heading', color: '#112233' },
-    ]));
-    expect(nonButton.issues.map((issue) => issue.code))
-      .toContain('P15_BUTTON_HOVER_BACKGROUND_COLOR_SOURCE_NOT_BUTTON');
-
-    for (const color of ['', '#fff', '#ABCDEF', '#11223344', 'red', 'transparent', 'var(--e-global-color-accent)']) {
-      const invalid = resolveP15ElementorButtonHoverBackgroundColors(source, {
-        ...manifest(source, []),
-        buttons: [{ sourceNodeId: 'button', color }],
-      });
-      expect(invalid.issues.map((issue) => issue.code))
-        .toContain('P15_BUTTON_HOVER_BACKGROUND_COLOR_VALUE_INVALID');
-    }
-
-    for (const extra of [
-      { backgroundType: 'gradient' },
-      { gradientColor: '#654321' },
-      { hoverColor: '#654321' },
-    ]) {
-      const invalid = resolveP15ElementorButtonHoverBackgroundColors(source, {
-        ...manifest(source, []),
-        buttons: [{ sourceNodeId: 'button', color: '#123456', ...extra }],
-      });
-      expect(invalid.issues.map((issue) => issue.code))
-        .toContain('P15_BUTTON_HOVER_BACKGROUND_COLOR_ENTRY_INVALID');
-    }
-  });
-
-  it('rejects authority inflation and serializes sanitized metadata only', () => {
-    const source = sourceDocument();
-    const raw = manifest(source, [{ sourceNodeId: 'button', color: '#123456' }]);
-
-    const inflatedManifest = resolveP15ElementorButtonHoverBackgroundColors(source, {
-      ...raw,
-      productionAcceptance: true,
-    });
-    expect(inflatedManifest.issues.map((issue) => issue.code))
-      .toContain('P15_BUTTON_HOVER_BACKGROUND_COLOR_AUTHORITY_FLAGS_INVALID');
-
-    const result = resolveP15ElementorButtonHoverBackgroundColors(source, raw);
-    const serialized = serializeP15ElementorButtonHoverBackgroundColorSummary(result);
-    expect(serialized).not.toContain('PRIVATE BUTTON COPY');
-    expect(serialized).not.toContain('https://example.com/path');
-    expect(serialized).not.toContain('templateJson');
-    expect(serialized).toContain('"backgroundTypeSettingKey": "background_background"');
-    expect(serialized).toContain('"backgroundColorSettingKey": "background_color"');
     expect(serialized).toContain('"acceptedBackgroundType": "classic"');
 
     const inflatedResult = { ...result, networkAccess: true } as unknown as P15ElementorButtonHoverBackgroundColorResultV1;
