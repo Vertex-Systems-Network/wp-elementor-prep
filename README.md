@@ -46,7 +46,7 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#717` — active P15 Fast Batch: Button typography basics v1;
+- `#717 / PR #718` — active P15 Fast Batch: Button typography basics v1;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -277,9 +277,10 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
-### Current P15 Fast Batch #717 implementation
+### Current P15 Fast Batch #717 / PR #718 implementation
 
-- Issue #717 owns three tightly-related Elementor 4.2.4 Button typography capabilities under one Fast Batch: exact font weight, text transform and font style.
+- Issue #717 / PR #718 owns three tightly-related Elementor 4.2.4 Button typography capabilities under one Fast Batch: exact font weight, text transform and font style.
+- PR creation head `291f5ca0c126d8d7fed8e118958a63ea577c04cc` was opened against exact main `d99695e8e1183f152a01a308251d2f02f086e67f`; lifecycle binding now freezes the final candidate before one consolidated exact-head gate refresh.
 - Product commit `df3b5cf079b8c3901231fa00f378d15462200406` adds `button-typography-basics-resolution.ts` plus focused tests.
 - Exact source evidence binds Button trait `31192aaee6851c445f79d1998499f6ce73ba7da5`, Typography group `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1` and group base `6117c06b286dbec336eefe63475c747e2fda0234`.
 - Any requested typography override writes `typography_typography=custom` plus only explicit `typography_font_weight`, `typography_text_transform` and/or `typography_font_style`.
