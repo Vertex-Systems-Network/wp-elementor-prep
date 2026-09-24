@@ -238,3 +238,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Product commit `e3d32384b439b0dbffd28c776bb43630d42cca64`; focused tests commit `f03b7d03afa4dcb9407168f1409fd99b1191612a`.
 - Scope: literal font family plus desktop px font size, line height, letter spacing and word spacing; all applied entries use `typography_typography=custom`.
 - No responsive typography writes, global/token resolution, variable axes, CSS/custom-unit parsing, compatibility, production or download authority.
+
+## 2026-09-25 — P15 Fast Batch #723 PR #724 opened
+
+- PR #724 opened from `p15/button-typography-metrics-batch` against exact base main `1a89e7f34110ba11942b657a21be56bb64a45170`.
+- PR creation head was `4864b5f08f857258fce6286469782ccd0c1abe37`.
+- The batch remains five capabilities: literal font family plus desktop px font size, line height, letter spacing and word spacing.
+- Final lifecycle binding records PR identity only; remote exact-head gate polling is deferred to the next user turn.
+- No responsive typography, global/token font resolution, variable axes, compatibility, production or download authority is added.

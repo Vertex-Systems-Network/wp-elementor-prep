@@ -164,7 +164,7 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 ## Active P15 Fast Batch #723 Button typography metrics
 
-Issue #723 on branch `p15/button-typography-metrics-batch` owns five tightly-related exact Elementor 4.2.4 Button typography metrics: literal font family and explicit desktop px font size, line height, letter spacing and word spacing. Applied entries write `typography_typography=custom` plus only requested bounded keys. Source IR and exact generated base-candidate identities remain replay-bound, Button text/alignment/link binding is revalidated, and any pre-existing `typography_*` setting fails closed.
+Issue #723 / PR #724 on branch `p15/button-typography-metrics-batch` owns five tightly-related exact Elementor 4.2.4 Button typography metrics: literal font family and explicit desktop px font size, line height, letter spacing and word spacing. Applied entries write `typography_typography=custom` plus only requested bounded keys. Source IR and exact generated base-candidate identities remain replay-bound, Button text/alignment/link binding is revalidated, and any pre-existing `typography_*` setting fails closed.
 
 Font size is integer px `1..200`; line height is locally bounded integer px `1..400`; letter spacing is `-5..10` px in `0.1` steps; word spacing is integer px `0..50`; font family is a single bounded literal family with no token/fallback-list syntax. Responsive typography, CSS/custom units, global/token font resolution, variable-font axes, inference, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
 

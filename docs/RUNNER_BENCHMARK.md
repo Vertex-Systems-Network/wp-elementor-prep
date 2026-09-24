@@ -122,7 +122,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-721-TRANSPORT | #721 / PR #722 | Terminal post-reconciliation finalization | Required PR exact-head gate set | repaired exact head `e1ccf916...` passed 7/7; review threads 0; merged main `1a89e7f3...`; recursive reconciliation disabled | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-723-FINAL | #723 | P15 Button typography metrics v1 | Required PR exact-head gate set | PR not yet opened; five-capability exact Elementor typography contract | `FINAL_BATCH` | final bound PR head must pass all seven required gates before merge | PR_NOT_YET_OPEN |
+| RQ-723-FINAL | #723 / PR #724 | P15 Button typography metrics v1 | Required PR exact-head gate set | PR creation head `4864b5f0...`; five-capability exact Elementor typography contract | `FINAL_BATCH` | final bound PR head must pass all seven required gates before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 

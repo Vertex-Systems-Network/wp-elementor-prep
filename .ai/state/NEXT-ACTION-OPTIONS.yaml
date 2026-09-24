@@ -2,7 +2,7 @@ schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
 observed_main_sha: 1a89e7f34110ba11942b657a21be56bb64a45170
 active_issue: 723
-active_pr: null
+active_pr: 724
 active_branch: p15/button-typography-metrics-batch
 interaction:
   render_required: true
@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: issue-723-pre-pr
+  presentation_epoch: pr-724-final-handoff
   presentation_order:
-    - inspect-batch-723
-    - review-ai-plan
-    - open-pr-723
     - review-security-blocker-287
-recommended_action_id: open-pr-723
+    - inspect-batch-723
+    - verify-pr-724
+    - review-ai-plan
+recommended_action_id: verify-pr-724
 options:
-  - action_id: open-pr-723
-    label: Open typography metrics PR
+  - action_id: verify-pr-724
+    label: Verify typography metrics PR #724
     enabled: true
     recommended: true
-    action_token: OPEN_PR_723
-    request_payload: "Open the P15 Button typography metrics Fast Batch PR for Issue #723, bind exact PR identity, and stop before remote exact-head gate polling."
+    action_token: VERIFY_PR_724
+    request_payload: "Resolve the exact current head of PR #724 and perform one consolidated required-gate refresh for the Button typography metrics Fast Batch."
     blocked_by: []
     blocked_reason: null
   - action_id: inspect-batch-723
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: INSPECT_723
-    request_payload: "Inspect exact source evidence, bounds, write surface and focused tests for Issue #723 without changing batch scope."
+    request_payload: "Inspect exact source evidence, bounds, write surface and focused tests for Issue #723 / PR #724 without changing batch scope."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -50,6 +50,6 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review current AI-Native roadmap while Issue #723 owns active P15 development."
+    request_payload: "Review current AI-Native roadmap/status without bypassing PR #724."
     blocked_by: []
     blocked_reason: null

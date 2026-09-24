@@ -255,3 +255,4 @@ claims:
   - {id: CL-252, statement: issue_723_owns_button_typography_metrics_fast_batch_with_font_family_font_size_line_height_letter_spacing_and_word_spacing, value: true}
   - {id: CL-253, statement: p15_723_metrics_writes_literal_font_family_and_explicit_desktop_px_slider_values_only_with_no_responsive_typography_writes, value: true}
   - {id: CL-254, statement: p15_723_preserves_false_global_font_token_variable_axis_responsive_inference_network_figma_compatibility_production_and_download_authority, value: true}
+  - {id: CL-255, statement: pr_724_is_active_final_exact_head_verification_path_for_issue_723_button_typography_metrics_fast_batch, value: true}

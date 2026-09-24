@@ -46,7 +46,7 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#723` — active P15 Fast Batch: Button typography metrics v1;
+- `#723 / PR #724` — active P15 Fast Batch: Button typography metrics v1;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -279,7 +279,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 
 ### Current P15 Fast Batch #723 implementation
 
-- Issue #723 owns five tightly-related Elementor 4.2.4 Button typography metrics: literal font family plus explicit desktop-px font size, line height, letter spacing and word spacing.
+- Issue #723 / PR #724 owns five tightly-related Elementor 4.2.4 Button typography metrics: literal font family plus explicit desktop-px font size, line height, letter spacing and word spacing.
 - Product commit: `e3d32384b439b0dbffd28c776bb43630d42cca64`; focused tests: `f03b7d03afa4dcb9407168f1409fd99b1191612a`.
 - Exact source evidence reuses Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, Typography group blob `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1`, and group-base blob `6117c06b286dbec336eefe63475c747e2fda0234` at Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
 - Writes are bounded to `typography_typography=custom`, `typography_font_family`, `typography_font_size`, `typography_line_height`, `typography_letter_spacing`, and `typography_word_spacing`.
