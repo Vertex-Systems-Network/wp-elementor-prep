@@ -275,3 +275,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Root cause was the #703 hover-text verifier block being inserted inside the final README progress `console.log` template literal.
 - Repair relocates that verifier block immediately before the final log statement and restores the canonical PASS log.
 - Product resolver/tests, exact `hover_color` write surface, security controls and compatibility/production/download authority boundaries are unchanged.
+
+## 2026-09-24 — PR #704 stale #701 verifier assertion repair
+
+- First repaired head `7cf9d1dfa05b29f6ced34df959d8979fd1073da9` restored valid verifier JavaScript.
+- Its single allowed status snapshot showed Integration PASS, four required workflows still running, review threads 0, and CI `36006394789` plus P12 Final `36006395019` failed only on stale #701 README wording.
+- Second verifier-only repair `83d5aa41cd04dcb334e1b5c87ea157af0676f0f9` replaces the stale `Gradient/image/video background` expectation with the canonical merged #701 wording `gradients, hover background, global tokens and broader authority remain excluded`.
+- No product resolver/test mutation or authority expansion occurred.
+- No second workflow/status refresh is performed in this milestone; the next user turn must verify the final repaired PR #704 head.
