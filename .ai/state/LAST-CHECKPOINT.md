@@ -1,31 +1,34 @@
 # Last Durable Checkpoint
 
-Status: VERIFYING  
+Status: BUILDING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`  
-Active Issue: `#715`  
-Active PR: `#716`  
-Active branch: `ai-native/post-pr-714-reconciliation`
+Observed main: `d99695e8e1183f152a01a308251d2f02f086e67f`  
+Active Issue: `#717`  
+Active PR: `not yet opened`  
+Active branch: `p15/button-typography-basics-batch`
 
-## Completed P15 Fast Batch #713 / PR #714
+## Completed reconciliation #715 / PR #716
 
-- Repaired final exact head `4e2cc76a309d99c8c37b73402bcd8f1f5050715d` passed all seven required gates with 0 unresolved review threads.
-- Runs: CI `36052348326`, CodeQL `36052348294`, Integration `36052348185`, P12 Offline `36052348208`, P12 Final `36052348220`, P15 target `36052348269`, P17 browser `36052348186`.
-- Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
-- Merged product scope: bounded normal Button text shadow, bounded normal Button box shadow, and explicit desktop/tablet/mobile integer-px border radius.
-- Compatibility, responsive inference/closure, production acceptance and download authority remain false/unclaimed.
+- Repaired final exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI `36056622412`, CodeQL `36056622443`, Integration `36056622458`, P12 Offline `36056622405`, P12 Final `36056622416`, P15 target `36056622409`, P17 browser `36056622471`.
+- Expected-head merge produced main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
+- Reconciliation changed no product/runtime behavior and granted no new compatibility, production, download or release authority.
 
-## Active reconciliation #715
+## Active P15 Fast Batch #717
 
-Synchronize post-merge README/verifier, compact state, deterministic claims, coordination queue, Runner benchmark, execution journal and memory-bank truth. No product/runtime or authority expansion is allowed.
+Three exact Elementor 4.2.4 Button typography capabilities are implemented under one batch:
+1. `typography_font_weight`;
+2. `typography_text_transform`;
+3. `typography_font_style`.
 
-## PR #716 first exact-head failure and repair
+Product commit: `df3b5cf079b8c3901231fa00f378d15462200406`.
 
-- Exact head `dfd830af5aa6e94e2b18c91a0fdbdedbecc17a4a` produced 5/7 required gates PASS with 0 unresolved review threads.
-- CI `36054283277` and P12 Final Release Artifact `36054283261` failed only at `status:verify`.
-- Root cause was one stale verifier phrase: README uses `Issue #715 / PR #716 now owns...`; verifier expected `Issue #715 now owns...`.
-- Repair updates that verifier matcher and records the failure/repair truth without changing product/runtime, security or authority boundaries.
+The resolver writes `typography_typography=custom` plus only explicitly requested bounded keys, rejects any pre-existing `typography_*` setting, and preserves exact Button text/alignment/link binding. Font family/size, variable-font axes, decoration, line height, letter/word spacing, padding, responsive typography, tokens/global-font resolution, inference, Figma/network mutation, compatibility, responsive closure, production and download authority remain excluded.
+
+## Option presentation contract
+
+Recommended action identity is stable, but visible numeric/order presentation is shuffled per material milestone. Numbers are not persistent action identifiers.
 
 ## Exact next safe action
 
-Resolve the repaired final bound PR #716 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+Open one PR for Issue #717 from `p15/button-typography-basics-batch`, bind its exact PR identity into durable state, and stop before polling the final exact-head gate set.
