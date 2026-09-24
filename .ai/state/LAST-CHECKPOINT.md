@@ -30,6 +30,8 @@ Active branch: `p15/button-hover-text-color`
 - CI `36001841995` and P12 Final `36001841957` failed on the same `scripts/verify-readme-progress.mjs:475` syntax error before product typecheck/test evaluation.
 - Root cause: the #703 hover-text verifier block was placed inside the final README progress `console.log` template literal.
 - Repair is verifier-placement only; the exact `hover_color` product write surface and all security/authority exclusions are unchanged.
+- First repaired head `7cf9d1dfa05b29f6ced34df959d8979fd1073da9` restored valid JavaScript, but CI `36006394789` and P12 Final `36006395019` then failed only because the #701 README verifier still expected stale wording.
+- Second verifier-only repair commit `83d5aa41cd04dcb334e1b5c87ea157af0676f0f9` replaces that stale assertion with the canonical merged #701 wording; product resolver/tests and authority boundaries remain unchanged.
 
 ## Exact next safe action
 
