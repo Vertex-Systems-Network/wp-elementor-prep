@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: b048569f774499dc47f402907c6e97271b110330
-active_issue: 693
-active_pr: 694
-active_branch: ai-native/post-pr-692-reconciliation
+observed_main_sha: 75e4202753fda69095f9485541e6c87aa579ed03
+active_issue: 695
+active_pr: 696
+active_branch: ai-native/post-pr-694-reconciliation
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -11,14 +11,14 @@ interaction:
   selection_semantics: NEW_USER_REQUEST
   selection_grants_authority: false
   max_visible_options: 4
-recommended_action_id: verify-pr-694
+recommended_action_id: verify-pr-696
 options:
-  - action_id: verify-pr-694
-    label: Verify PR #694
+  - action_id: verify-pr-696
+    label: Verify PR #696
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_694
-    request_payload: "Continue AI-Native plan: resolve the exact current head of PR #694, perform one consolidated required-gate refresh, and merge only in a later logical milestone if all required gates are green and review threads are clear."
+    action_token: VERIFY_PR_696
+    request_payload: "Continue AI-Native plan: resolve the exact current head of PR #696, perform one consolidated required-gate refresh, and merge only in a later logical milestone if all required gates are green and review threads are clear."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: UPDATE_AI_PLAN
-    request_payload: "Re-read current repository truth and review the AI-Native plan/status without bypassing PR #694 or any security/release authority boundary."
+    request_payload: "Re-read current repository truth and review the AI-Native plan/status without bypassing PR #696 or any security/release authority boundary."
     blocked_by: []
     blocked_reason: null
   - action_id: start-next-p15-slice
@@ -42,7 +42,7 @@ options:
     enabled: false
     recommended: false
     action_token: NEXT_P15
-    request_payload: "After PR #694 passes exact-head gates and merges, select and start the next independently evidenced bounded P15 commercial-V1 slice."
+    request_payload: "After PR #696 passes exact-head gates and merges, select and start the next independently evidenced bounded P15 commercial-V1 slice."
     blocked_by:
-      - PR_694_NOT_MERGED
-    blocked_reason: "Post-PR #692 durable-state reconciliation PR #694 must pass required exact-head gates and merge before the next P15 product slice starts."
+      - PR_696_NOT_MERGED
+    blocked_reason: "Post-PR #694 durable-state reconciliation PR #696 must pass required exact-head gates and merge before the next P15 product slice starts."
