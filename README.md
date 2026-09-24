@@ -46,7 +46,8 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#723 / PR #724` — completed P15 Fast Batch: Button typography metrics v1; terminal state transport #725 / PR #726 is pending exact-head certification;
+- `#723 / PR #724` — completed P15 Fast Batch: Button typography metrics v1; terminal state transport #725 / PR #726 completed 7/7 and merged;
+- `#727` — active P15 Fast Batch: Button responsive typography metrics v1;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -277,6 +278,17 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
+### Current P15 Fast Batch #727 implementation
+
+- Issue #727 owns four tightly-related Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing.
+- Product commit: `313c8e0443e3f8148f4f64a00a3285f88a93e1c5`; focused tests: `d70fd86b1bb8c0e7e9e757d7ec57b36d004ade38`.
+- Exact source evidence binds Typography group blob `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1`, where all four controls are explicitly responsive, plus Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` for `<id>_<device>` suffix semantics and Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`.
+- Writes are bounded to `typography_typography=custom` plus requested `typography_font_size_tablet/mobile`, `typography_line_height_tablet/mobile`, `typography_letter_spacing_tablet/mobile`, and `typography_word_spacing_tablet/mobile`.
+- Font size is integer px `1..200`; line height is repository-bounded integer px `1..400`; letter spacing is px `-5..10` in `0.1` increments; word spacing is repository-bounded integer px `0..50`.
+- Exact neutral-source + base-candidate binding and Button text/alignment/link revalidation remain fail-closed; requested conflicting responsive keys reject rather than overwrite.
+- Desktop metric writes, font family/global fonts, variable axes, custom breakpoints, inheritance synthesis, responsive inference, CSS/custom units, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain excluded.
+- Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.
+
 ### Completed P15 Fast Batch #723 / PR #724 implementation
 
 - Issue #723 / PR #724 completed five tightly-related Elementor 4.2.4 Button typography metrics: literal font family plus explicit desktop-px font size, line height, letter spacing and word spacing.
@@ -448,7 +460,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #723 / PR #724 merged after repaired 7/7 exact-head gates; terminal transport #725 closes canonical post-merge state before the next 3-5-capability Fast Batch; responsive typography, global/token fonts, variable axes, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #727 batches explicit Button tablet/mobile px font size/line height/letter spacing/word spacing; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -565,7 +577,7 @@ Development now defaults to **3-5 closely related capabilities per product batch
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. exact-head verify and merge terminal state transport #725, then select the next 3-5-capability P15 Fast Batch while preserving exact source/evidence and authority boundaries;
+2. exact-head verify and merge Fast Batch #727 containing explicit Button responsive typography metrics while preserving exact source/evidence and authority boundaries;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;

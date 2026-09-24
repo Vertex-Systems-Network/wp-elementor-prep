@@ -147,7 +147,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: 'terminal transport #725 closes canonical post-merge state',
+  next: '#727 batches explicit Button tablet/mobile px font size/line height/letter spacing/word spacing',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -672,6 +672,16 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
+if (!readme.includes('### Current P15 Fast Batch #727 implementation')
+  || !readme.includes('Issue #727 owns four tightly-related Elementor 4.2.4 Button responsive typography capabilities')
+  || !readme.includes('`typography_font_size_tablet/mobile`')
+  || !readme.includes('`typography_line_height_tablet/mobile`')
+  || !readme.includes('`typography_letter_spacing_tablet/mobile`')
+  || !readme.includes('`typography_word_spacing_tablet/mobile`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #727 Button responsive typography Fast Batch truth is stale or missing.');
+}
+
 if (!readme.includes('### Completed P15 Fast Batch #723 / PR #724 implementation')
   || !readme.includes('Issue #723 / PR #724 completed five tightly-related Elementor 4.2.4 Button typography metrics')
   || !readme.includes('`typography_font_family`')

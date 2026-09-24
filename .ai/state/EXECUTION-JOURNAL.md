@@ -270,3 +270,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - PR creation head was `650959442d97fa28f961492d20155943cc281e7b`.
 - Transport Issue #725 / PR #726 is not the canonical lifecycle owner; `active_issue` and `active_pr` remain null.
 - Next milestone is one consolidated exact-head seven-gate observation with review-thread check.
+
+## 2026-09-25 — terminal transport #726 completed; P15 Fast Batch #727 started
+
+- PR #726 exact head `221a94f731fdc9847ead403965fff2a0ea029262` passed 7/7 required gates with 0 unresolved review threads and expected-head merge produced main `3b632502e70b8df9b5562c90770230b30e20d5be`.
+- Issue #727 / branch `p15/button-responsive-typography-metrics-batch` starts four tightly-related responsive Button typography metrics.
+- Exact Elementor 4.2.4 Typography group blob `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1` marks font_size, line_height, letter_spacing and word_spacing responsive.
+- Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` anchors non-desktop `<id>_<device>` suffix semantics.
+- Product commit `313c8e0443e3f8148f4f64a00a3285f88a93e1c5`; focused tests commit `d70fd86b1bb8c0e7e9e757d7ec57b36d004ade38`.
+- Desktop metrics, custom breakpoints, inheritance synthesis, responsive inference, global/token font resolution, variable axes, compatibility, production and download authority remain excluded.
