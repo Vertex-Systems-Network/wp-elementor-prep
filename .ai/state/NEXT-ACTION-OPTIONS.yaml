@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 012edb7f8403c18eb5bab8f41ac1fd2572e4be0e
-active_issue: 713
-active_pr: 714
-active_branch: p15/button-visual-depth-radius-batch
+observed_main_sha: f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c
+active_issue: 715
+active_pr: null
+active_branch: ai-native/post-pr-714-reconciliation
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -11,14 +11,14 @@ interaction:
   selection_semantics: NEW_USER_REQUEST
   selection_grants_authority: false
   max_visible_options: 4
-recommended_action_id: verify-pr-714
+recommended_action_id: open-reconciliation-pr
 options:
-  - action_id: verify-pr-714
-    label: Verify Fast Batch PR #714
+  - action_id: open-reconciliation-pr
+    label: Open post-#714 reconciliation PR
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_714
-    request_payload: "Resolve the repaired exact current head of PR #714 and perform one consolidated required-gate refresh for the completed 3-capability Button visual-depth/radius Fast Batch."
+    action_token: OPEN_RECONCILIATION_PR
+    request_payload: "Open the post-PR #714 AI-native reconciliation PR for Issue #715, bind its exact PR identity into durable state, and stop before exact-head CI verification."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Re-read current repository truth and review the AI-Native roadmap/status without bypassing PR #714."
+    request_payload: "Review the AI-Native roadmap from current main truth while Issue #715 owns post-merge reconciliation."
     blocked_by: []
     blocked_reason: null
   - action_id: start-next-p15-batch
@@ -42,7 +42,7 @@ options:
     enabled: false
     recommended: false
     action_token: NEXT_P15_BATCH
-    request_payload: "After PR #714 passes exact-head gates and merges, start the next 3-5-capability Fast Batch under one Issue/branch/PR."
+    request_payload: "After Issue #715 reconciliation passes exact-head gates and merges, start the next 3-5-capability P15 Fast Batch."
     blocked_by:
-      - PR_714_NOT_MERGED
-    blocked_reason: "Current Button visual-depth/radius Fast Batch must verify and merge first."
+      - RECONCILIATION_715_NOT_MERGED
+    blocked_reason: "Post-PR #714 reconciliation must verify and merge first."

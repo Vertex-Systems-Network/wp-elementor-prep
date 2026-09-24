@@ -139,3 +139,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Older rolling-journal history is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-002.md`; the active journal is compacted below the hard ceiling.
 - Product resolver/tests, Button write surfaces, security controls, required checks, and compatibility/production/download authority boundaries are unchanged.
 - The repaired PR head is intentionally uncertified until one consolidated exact-head gate refresh completes; no PASS is claimed yet.
+
+## 2026-09-25 — PR #714 merged; post-merge reconciliation #715 started
+
+- Repaired PR #714 exact head `4e2cc76a309d99c8c37b73402bcd8f1f5050715d` passed all seven required gates with 0 unresolved review threads: CI `36052348326`, CodeQL `36052348294`, Integration `36052348185`, P12 Offline `36052348208`, P12 Final `36052348220`, P15 target `36052348269`, P17 browser `36052348186`.
+- Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
+- Issue #715 and branch `ai-native/post-pr-714-reconciliation` started post-merge AI-native reconciliation only.
+- Reconciliation scope is README/verifier, compact state, deterministic claims, coordination queue, Runner benchmark, execution journal and memory-bank truth.
+- No product/runtime behavior, security control, compatibility, responsive closure, production, download or release authority is changed.
+- The next P15 product batch remains unactivated until the reconciliation PR is exact-head verified and merged.

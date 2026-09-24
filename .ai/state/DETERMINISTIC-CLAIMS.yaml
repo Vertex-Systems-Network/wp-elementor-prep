@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 012edb7f8403c18eb5bab8f41ac1fd2572e4be0e
+observed_main_sha: f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -230,3 +230,6 @@ claims:
   - {id: CL-227, statement: issue_713_pr_714_is_active_button_visual_depth_radius_fast_batch_with_three_related_capabilities, value: true}
   - {id: CL-228, statement: p15_713_text_shadow_box_shadow_and_explicit_three_device_border_radius_are_exact_source_bound, value: true}
   - {id: CL-229, statement: p15_713_preserves_false_responsive_inference_compatibility_production_and_download_authority, value: true}
+  - {id: CL-230, statement: pr_714_repaired_exact_head_4e2cc76a_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
+  - {id: CL-231, statement: pr_714_merged_with_expected_head_as_main_f25acc0e_and_issue_713_closed_completed, value: true}
+  - {id: CL-232, statement: issue_715_owns_post_pr_714_ai_native_reconciliation_only_and_does_not_change_product_runtime_security_or_authority, value: true}
