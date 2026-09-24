@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 02a1225c4a0843580f10e09b58107e45b60da259
+observed_main_sha: a36219fb01e90780c1c962dc7b534dbbcda40bed
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -198,3 +198,9 @@ claims:
   - {id: CL-195, statement: pr_704_second_verifier_repair_aligns_701_assertion_with_canonical_merged_readme_wording_without_product_or_authority_change, value: true}
   - {id: CL-196, statement: pr_704_head_0e621622_failed_only_ci_and_p12_final_on_stale_701_exact_head_phrase_while_five_other_required_gates_passed_and_review_threads_were_zero, value: true}
   - {id: CL-197, statement: pr_704_final_phrase_repair_2e0321be_aligns_verifier_with_canonical_merged_701_readme_without_product_test_security_or_authority_change, value: true}
+  - {id: CL-198, statement: pr_704_exact_head_39ce33bf_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
+  - {id: CL-199, statement: pr_704_merged_with_expected_head_as_main_a36219fb_and_issue_703_closed_completed, value: true}
+  - {id: CL-200, statement: issue_705_owns_exact_bound_elementor_4_2_4_button_hover_classic_background_color_v1, value: true}
+  - {id: CL-201, statement: p15_705_write_surface_is_only_button_background_hover_background_classic_plus_button_background_hover_color_lowercase_six_digit_hex, value: true}
+  - {id: CL-202, statement: p15_705_excludes_hover_text_normal_text_normal_background_gradients_image_video_tokens_responsive_inference_and_production_download_authority, value: true}
+  - {id: CL-203, statement: pr_706_is_active_exact_head_verification_path_for_p15_705_button_hover_classic_background_color, value: true}
