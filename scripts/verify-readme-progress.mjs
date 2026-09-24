@@ -16,6 +16,7 @@ const p15TextEditorTextColorSource = await readFile('src/targets/elementor/text-
 const p15ButtonTextColorSource = await readFile('src/targets/elementor/button-text-color-resolution.ts', 'utf8');
 const p15ButtonBackgroundColorSource = await readFile('src/targets/elementor/button-background-color-resolution.ts', 'utf8');
 const p15ButtonHoverTextColorSource = await readFile('src/targets/elementor/button-hover-text-color-resolution.ts', 'utf8');
+const p15ButtonHoverBackgroundColorSource = await readFile('src/targets/elementor/button-hover-background-color-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -141,7 +142,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#703',
+  next: '#705',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -488,12 +489,43 @@ for (const fragment of p15ButtonHoverTextColorRequiredFragments) {
     throw new Error(`P15 #703 Button hover text-color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #703 implementation')
-  || !readme.includes('PR #704 is open')
+if (!readme.includes('### Completed P15 #703 implementation')
+  || !readme.includes('final exact head `39ce33bff3a7914466b00c11932aaa8118f56336`')
+  || !readme.includes('Issue #703 closed completed')
   || !readme.includes('`hover_color`')
-  || !readme.includes('hover background `button_background_hover`')
+  || !readme.includes('hover background and broader compatibility/production/download authority remain excluded')) {
+  throw new Error('README P15 #703 / PR #704 merged Button hover text-color truth is stale or missing.');
+}
+
+const p15ButtonHoverBackgroundColorRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "backgroundGroupControlSourceBlobSha: 'ac8e1a510ec663f3f428c9f564dc2c5b727435e1'",
+  "groupName: 'button_background_hover'",
+  "backgroundTypeSettingKey: 'button_background_hover_background'",
+  "backgroundColorSettingKey: 'button_background_hover_color'",
+  "hoverTextColorControlName: 'hover_color'",
+  "normalTextColorControlName: 'button_text_color'",
+  "normalBackgroundGroupName: 'background'",
+  "selector: '{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus'",
+  "acceptedBackgroundType: 'classic'",
+  "^#[0-9a-f]{6}$",
+  "P15_ELEMENTOR_BUTTON_HOVER_BACKGROUND_COLOR_EVIDENCE.backgroundTypeSettingKey",
+  "P15_ELEMENTOR_BUTTON_HOVER_BACKGROUND_COLOR_EVIDENCE.backgroundColorSettingKey",
+];
+for (const fragment of p15ButtonHoverBackgroundColorRequiredFragments) {
+  if (!p15ButtonHoverBackgroundColorSource.includes(fragment)) {
+    throw new Error(`P15 #705 Button hover classic background-color contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 #705 implementation')
+  || !readme.includes('PR #706 is open')
+  || !readme.includes('`button_background_hover_background=classic`')
+  || !readme.includes('`button_background_hover_color`')
+  || !readme.includes('gradients and gradient child fields')
   || !readme.includes('production acceptance and download authority remain false/out of scope')) {
-  throw new Error('README P15 #703 / PR #704 Button hover text-color truth is stale or missing.');
+  throw new Error('README P15 #705 / PR #706 Button hover classic background-color truth is stale or missing.');
 }
 
 console.log(
