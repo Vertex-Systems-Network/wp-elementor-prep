@@ -463,7 +463,7 @@ for (const fragment of p15ButtonBackgroundColorRequiredFragments) {
   }
 }
 if (!readme.includes('### Completed P15 #701 implementation')
-  || !readme.includes('PR #702 exact head')
+  || !readme.includes('Callback-safe syntax repair produced exact head')
   || !readme.includes('`background_background=classic`')
   || !readme.includes('`background_color`')
   || !readme.includes('gradients, hover background, global tokens and broader authority remain excluded')) {
