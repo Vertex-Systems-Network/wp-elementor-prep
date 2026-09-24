@@ -326,3 +326,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - User-facing updates are reduced to batch start, material blocker/failure and batch completion/verification boundary.
 - PR #708 remains the transitional final micro-slice; no product-scope expansion is introduced into it.
 - Security fail-closed, required checks, expected-head merge and production/release authority remain unchanged.
+
+## 2026-09-24 — P15 Fast Batch #709 Button hover interaction styling
+
+- PR #708 exact head `0fe42e9393c46815fc8d44ceb9c02d84468ea341` passed all seven required gates with 0 unresolved review threads and merged as main `17832e372d43de32cb886ed6da03982d24e1fdaa`; Issue #707 closed completed.
+- Issue #709 / PR #710 is the first product milestone executed under Fast Batch Mode.
+- Product commit `92e1d05b1aa69c2ce43600532bb3b73cca46a388` adds one composite exact-bound resolver and focused tests for three related Button-hover capabilities: bounded box shadow, transition seconds and core hover animation.
+- Core handoff commit `9e21c87e072e48388b99fbfb870aa396b7512e9d` synchronizes compact state, coordination queue, Runner machine record, README and verifier.
+- Remote exact-head CI is deferred to one final bound-head refresh in the next milestone.
+- Security fail-closed and compatibility/production/download authority boundaries remain unchanged.
