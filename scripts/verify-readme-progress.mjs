@@ -147,7 +147,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#721 transport -> next P15 Fast Batch',
+  next: 'terminal transport #721 closes state recursion',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
