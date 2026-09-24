@@ -258,3 +258,36 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Root cause was branch-construction replacement-string `$'` interpretation, which corrupted `acceptedColorPattern: '^#[0-9a-f]{6}$'` and duplicated the source suffix.
 - Repair rebuilds the resolver from the verified Button text-color source using callback-safe replacement.
 - No product write-surface, test intent, security control or compatibility/production/download authority boundary is broadened.
+
+## 2026-09-24 — P15 #703 Button hover text-color implementation started
+
+- PR #702 repaired exact head `c8a2e93046811d43bffb1c2fd081ecde7b74e697` passed all seven required gates with 0 unresolved review threads and merged as main `02a1225c4a0843580f10e09b58107e45b60da259`; Issue #701 closed completed.
+- Issue #703 and branch `p15/button-hover-text-color` activated the next real P15 product slice without a reconciliation-only loop.
+- Product commit `bc961cbd7aca04dce73bd0d9d2f4acd8f4a3fa57` adds exact source-bound Button hover/focus text-color resolution plus focused tests.
+- PR #704 opened against exact main `02a1225c4a0843580f10e09b58107e45b60da259`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
+- Exact write surface is only strict lowercase six-digit `hover_color`; normal text/background, hover background, gradients, tokens, responsive inference and production/download authority remain out of scope.
+- Final bound PR #704 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
+
+## 2026-09-24 — PR #704 verifier-placement repair
+
+- Exact head `d9eeadda0aa3105089ab71d3891bbd99c309c594` completed with 5/7 required gates PASS and 0 unresolved review threads.
+- CI `36001841995` and P12 Final `36001841957` failed on the same `status:verify` JavaScript syntax defect at `scripts/verify-readme-progress.mjs:475`.
+- Root cause was the #703 hover-text verifier block being inserted inside the final README progress `console.log` template literal.
+- Repair relocates that verifier block immediately before the final log statement and restores the canonical PASS log.
+- Product resolver/tests, exact `hover_color` write surface, security controls and compatibility/production/download authority boundaries are unchanged.
+
+## 2026-09-24 — PR #704 stale #701 verifier assertion repair
+
+- First repaired head `7cf9d1dfa05b29f6ced34df959d8979fd1073da9` restored valid verifier JavaScript.
+- Its single allowed status snapshot showed Integration PASS, four required workflows still running, review threads 0, and CI `36006394789` plus P12 Final `36006395019` failed only on stale #701 README wording.
+- Second verifier-only repair `83d5aa41cd04dcb334e1b5c87ea157af0676f0f9` replaces the stale `Gradient/image/video background` expectation with the canonical merged #701 wording `gradients, hover background, global tokens and broader authority remain excluded`.
+- No product resolver/test mutation or authority expansion occurred.
+- No second workflow/status refresh is performed in this milestone; the next user turn must verify the final repaired PR #704 head.
+
+## 2026-09-24 — PR #704 final stale #701 verifier phrase repair
+
+- Exact head `0e6216227dacfbbc662e6f58ef53c5638b9a4802` completed with 5/7 required gates PASS and 0 unresolved review threads.
+- CI `36006802511` and P12 Final `36006802828` failed only because #701 verifier truth still required literal `PR #702 exact head`.
+- Canonical merged README instead records `Callback-safe syntax repair produced exact head c8a2e930...`.
+- Verifier-only repair `2e0321be94e2241dfb066a7841fdc0e30884a036` replaces that stale phrase with the canonical wording.
+- #703 product resolver/tests, strict `hover_color` write surface, security controls and compatibility/production/download authority exclusions are unchanged.

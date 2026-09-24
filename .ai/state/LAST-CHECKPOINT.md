@@ -2,35 +2,39 @@
 
 Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `456a7a7fd4c9fcc97dacd206561df5f56a8d9e83`  
-Active Issue: `#701`  
-Active PR: `#702`  
-Active branch: `p15/button-normal-classic-background-color`
+Observed main: `02a1225c4a0843580f10e09b58107e45b60da259`  
+Active Issue: `#703`  
+Active PR: `#704`  
+Active branch: `p15/button-hover-text-color`
 
-## Completed #699 / PR #700 handoff
+## Completed P15 #701 / PR #702
 
-- PR #700 exact head `7f1a517850ecba1d47f59ca421983b9f43ded934` passed all seven required gates: CI `35997113657`, CodeQL `35997113611`, Integration `35997113633`, P12 Offline `35997113549`, P12 Final `35997113627`, P15 target `35997113650`, P17 browser `35997113649`.
+- PR #702 repaired exact head `c8a2e93046811d43bffb1c2fd081ecde7b74e697` passed all seven required gates: CI `35999794955`, CodeQL `35999794886`, Integration `35999794915`, P12 Offline `35999794925`, P12 Final `35999794887`, P15 target `35999794935`, P17 browser `35999794965`.
 - Unresolved review threads: 0.
-- Expected-head merge produced main `456a7a7fd4c9fcc97dacd206561df5f56a8d9e83`; Issue #699 closed completed.
+- Expected-head merge produced main `02a1225c4a0843580f10e09b58107e45b60da259`; Issue #701 closed completed.
+- Merged exact write surface remains only `background_background=classic` plus strict lowercase six-digit `background_color`; broader authority remains false.
 
-## P15 #701 / PR #702
+## P15 #703 / PR #704
 
-- Issue #701 owns exact-bound Elementor 4.2.4 Button normal classic background color v1.
-- Product implementation commit before PR lifecycle binding: `1ce451026ad0b8cf3e9679ca69bcd07bbc992ae6`.
-- Exact write surface is only `background_background=classic` plus explicit `background_color` strict lowercase six-digit hex.
-- Evidence is bound to Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`, Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, and Background group-control blob `ac8e1a510ec663f3f428c9f564dc2c5b727435e1`.
-- Gradient/image/video, hover/focus background, global/theme tokens, responsive inference, compatibility, production and download authority remain out of scope.
-- PR #702 is open against exact base main `456a7a7fd4c9fcc97dacd206561df5f56a8d9e83`.
+- Issue #703 owns exact-bound Elementor 4.2.4 Button hover text color v1.
+- Product implementation commit before PR lifecycle binding: `bc961cbd7aca04dce73bd0d9d2f4acd8f4a3fa57`.
+- Exact write surface is only explicit `hover_color` strict lowercase six-digit hex.
+- Evidence is bound to Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d` and Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`.
+- Normal text/background, hover background, gradients/images/video, global/theme tokens, responsive inference, compatibility, production and download authority remain out of scope.
+- PR #704 is open against exact base main `02a1225c4a0843580f10e09b58107e45b60da259`.
 - #287 remains admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred.
 
-## Failed exact head and repair
+## Failed exact head and verifier repair
 
-- Exact head `28de25ae1289d58d820750abcb988c2319ff28b1` passed 5/7 required gates.
-- CI `35998968559` and P12 Final `35998968479` failed on the same TypeScript parse defect in `button-background-color-resolution.ts`.
-- Root cause: replacement-string `
-` semantics corrupted the retained regex literal and duplicated the source suffix.
-- Repair is syntax-only and preserves #701's exact `background_background=classic` + strict lowercase six-digit `background_color` contract and all authority exclusions.
+- Exact head `d9eeadda0aa3105089ab71d3891bbd99c309c594` passed 5/7 required gates with 0 unresolved review threads.
+- CI `36001841995` and P12 Final `36001841957` failed on the same `scripts/verify-readme-progress.mjs:475` syntax error before product typecheck/test evaluation.
+- Root cause: the #703 hover-text verifier block was placed inside the final README progress `console.log` template literal.
+- Repair is verifier-placement only; the exact `hover_color` product write surface and all security/authority exclusions are unchanged.
+- First repaired head `7cf9d1dfa05b29f6ced34df959d8979fd1073da9` restored valid JavaScript, but CI `36006394789` and P12 Final `36006395019` then failed only because the #701 README verifier still expected stale wording.
+- Second verifier-only repair commit `83d5aa41cd04dcb334e1b5c87ea157af0676f0f9` replaces that stale assertion with the canonical merged #701 wording; product resolver/tests and authority boundaries remain unchanged.
+- Exact head `0e6216227dacfbbc662e6f58ef53c5638b9a4802` then passed 5/7 required gates with 0 unresolved review threads; CI `36006802511` and P12 Final `36006802828` failed only because the verifier still required stale literal `PR #702 exact head`.
+- Final verifier-only phrase repair `2e0321be94e2241dfb066a7841fdc0e30884a036` now requires canonical merged wording `Callback-safe syntax repair produced exact head`; product resolver/tests and authority boundaries remain unchanged.
 
 ## Exact next safe action
 
-Resolve the repaired final PR #702 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact repaired head is green and review threads are clear.
+Resolve the repaired final PR #704 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact repaired head is green and review threads are clear.
