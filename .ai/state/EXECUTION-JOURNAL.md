@@ -221,3 +221,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Canonical `active_issue` and `active_pr` remain null by design; PR #722 is transport metadata, not a canonical lifecycle owner.
 - The exact final transport head remains uncertified until its own required gate set completes.
 - No product/runtime/security behavior or authority scope changes.
+
+## 2026-09-25 — PR #722 status-verifier wording repair
+
+- First exact head `0401d5a7982761f1b4b9b442b23adb5ed8182a79` observed CI and P12 Final failures at `npm run status:verify` only.
+- Root cause: P15 README row truth was current, while `verify-readme-progress.mjs` required stale exact substring `#721 transport -> next P15 Fast Batch`.
+- Repair changes only the verifier matcher to the current README phrase `terminal transport #721 closes state recursion`.
+- Product/runtime/security behavior and compatibility/production/download/release authority remain unchanged.
+- Repaired exact head requires a fresh required-gate set before merge.
