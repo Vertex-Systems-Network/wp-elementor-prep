@@ -229,3 +229,28 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Repair changes only the verifier matcher to the current README phrase `terminal transport #721 closes state recursion`.
 - Product/runtime/security behavior and compatibility/production/download/release authority remain unchanged.
 - Repaired exact head requires a fresh required-gate set before merge.
+
+## 2026-09-25 — terminal transport completed; P15 Fast Batch #723 started
+
+- PR #722 repaired exact head `e1ccf9161c63daede80babfb2eb538ff5448ad10` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `1a89e7f34110ba11942b657a21be56bb64a45170`.
+- Terminal finalization #721/#722 is complete; recursive reconciliation remains disabled for that transport.
+- Issue #723 / branch `p15/button-typography-metrics-batch` starts the next P15 Fast Batch with five related Button typography metrics.
+- Product commit `e3d32384b439b0dbffd28c776bb43630d42cca64`; focused tests commit `f03b7d03afa4dcb9407168f1409fd99b1191612a`.
+- Scope: literal font family plus desktop px font size, line height, letter spacing and word spacing; all applied entries use `typography_typography=custom`.
+- No responsive typography writes, global/token resolution, variable axes, CSS/custom-unit parsing, compatibility, production or download authority.
+
+## 2026-09-25 — P15 Fast Batch #723 PR #724 opened
+
+- PR #724 opened from `p15/button-typography-metrics-batch` against exact base main `1a89e7f34110ba11942b657a21be56bb64a45170`.
+- PR creation head was `4864b5f08f857258fce6286469782ccd0c1abe37`.
+- The batch remains five capabilities: literal font family plus desktop px font size, line height, letter spacing and word spacing.
+- Final lifecycle binding records PR identity only; remote exact-head gate polling is deferred to the next user turn.
+- No responsive typography, global/token font resolution, variable axes, compatibility, production or download authority is added.
+
+## 2026-09-25 — PR #724 P15 status-verifier phrase repair
+
+- First exact head `3812e014faafb1ee42712e48e9b1e8e1354c4650` observed CI and P12 Final failures at `npm run status:verify` only.
+- Root cause: P15 README row correctly advertised active #723 Button typography metrics work, while `verify-readme-progress.mjs` still required the terminal #721 phrase.
+- Repair changes only the P15 row matcher to `#723 batches Button literal font family + desktop px font size/line height/letter spacing/word spacing`.
+- Product/runtime/security behavior and responsive/compatibility/production/download authority remain unchanged.
+- Repaired exact head requires a fresh seven-gate run before merge.
