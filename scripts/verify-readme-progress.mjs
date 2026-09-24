@@ -147,7 +147,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#719',
+  next: '#721 transport -> next P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -679,7 +679,9 @@ if (!readme.includes('### Completed P15 Fast Batch #717 / PR #718 implementation
   || !readme.includes('`typography_font_style`')
   || !readme.includes('Final exact head `747ce4312c7723e00235143510e1fc3d394aae7c` passed all seven required gates with 0 unresolved review threads.')
   || !readme.includes('Expected-head merge produced main `1cd8181cf863353c3f5e4bab7b1270156067b288`; Issue #717 closed completed.')
-  || !readme.includes('Issue #719 / PR #720 now owns post-merge AI-native reconciliation only')) {
+  || !readme.includes('PR #720 exact head `243e0aa91f7613e644bb98d6116c0ecc8aa28e0d` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `f3384739609ea68e9141f7488e924e20e5ac9d6b`; Issue #719 closed completed.')
+  || !readme.includes('Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.')
+  || !readme.includes('Issue #721 is transport-only terminal finalization.')) {
   throw new Error('README P15 #717 Button typography basics Fast Batch truth is stale or missing.');
 }
 

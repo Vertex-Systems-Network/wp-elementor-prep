@@ -204,3 +204,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - The final bound reconciliation head is intentionally uncertified; no workflow/status polling occurs in this lifecycle-binding milestone.
 - Randomized next-action presentation remains enabled and recommended semantics remain decoupled from displayed numbering.
 - No product/runtime behavior, security control or compatibility/production/download/release authority changes.
+
+## 2026-09-25 — PR #720 merged; terminal state finalization #721 started
+
+- PR #720 exact head `243e0aa91f7613e644bb98d6116c0ecc8aa28e0d` passed all seven required gates with 0 unresolved review threads: CI `36066841418`, CodeQL `36066841523`, Integration `36066841480`, P12 Offline `36066841327`, P12 Final `36066841299`, P15 target `36066841405`, P17 browser `36066841313`.
+- Expected-head merge produced main `f3384739609ea68e9141f7488e924e20e5ac9d6b`; Issue #719 closed completed.
+- Canonical state is now settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.
+- Issue #721 is terminal-finalization transport only. Its PR lifecycle remains GitHub metadata and is not written as active canonical work.
+- Protocol now explicitly prevents recursive reconciliation after a transport-only finalization merge when no product/runtime/security/authority truth changed.
+- Randomized next-action presentation remains required.

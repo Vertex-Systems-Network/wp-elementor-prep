@@ -136,6 +136,23 @@ Where applicable:
 - do not run untrusted lifecycle scripts during security lockfile generation unless explicitly reviewed;
 - keep production/distributable dependency audits separate from development-tooling audits when appropriate.
 
+## Terminal post-reconciliation finalization transport
+
+A dedicated state-only finalization PR MAY be used to close a reconciliation lifecycle without creating an infinite reconciliation chain.
+
+This exception is valid only when ALL are true:
+
+- the immediately preceding product/reconciliation PR is already exact-head certified and merged;
+- the finalization changes only protocol/state/README/verifier/Runner/journal/memory truth and grants no product/runtime/security/compatibility/production/download/release authority;
+- canonical `CURRENT-STATE.yaml` is written as the settled post-merge state with `active_issue: null`, `active_pr: null`, and `milestone_status: IDLE_READY_NEXT_P15_BATCH`;
+- the transport Issue/PR is NOT a canonical lifecycle owner and MUST NOT be written into `active_issue` / `active_pr`;
+- GitHub Issue/PR metadata is the authority for the transport review/merge lifecycle;
+- `observed_main_sha` records the exact main tip immediately before the terminal finalization transport PR. After that transport PR merges, the resulting merge commit does NOT by itself make canonical state stale and MUST NOT trigger another reconciliation PR;
+- the next material product/security/governance mutation refreshes `observed_main_sha` to the then-current main tip;
+- the transport PR still requires the normal exact-head merge/security gate set and expected-head merge protection.
+
+This exception MUST NOT be used to hide unfinished product work, failed CI, unresolved review threads, missing evidence, active security blockers, or authority gaps. It exists only to terminate state-only reconciliation recursion.
+
 ## Final response truth contract
 
 Keep completion messages compact and factual. Report repository, active/completed milestone, Issue/PR/commit evidence when available, CI state, blockers, exact next safe action, and the current next-action options from `.ai/state/NEXT-ACTION-OPTIONS.yaml`.
