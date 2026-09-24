@@ -46,7 +46,7 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#723 / PR #724` — active P15 Fast Batch: Button typography metrics v1;
+- `#723 / PR #724` — completed P15 Fast Batch: Button typography metrics v1; terminal state transport #725 / PR #726 is pending exact-head certification;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -277,16 +277,17 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
-### Current P15 Fast Batch #723 implementation
+### Completed P15 Fast Batch #723 / PR #724 implementation
 
-- Issue #723 / PR #724 owns five tightly-related Elementor 4.2.4 Button typography metrics: literal font family plus explicit desktop-px font size, line height, letter spacing and word spacing.
+- Issue #723 / PR #724 completed five tightly-related Elementor 4.2.4 Button typography metrics: literal font family plus explicit desktop-px font size, line height, letter spacing and word spacing.
 - Product commit: `e3d32384b439b0dbffd28c776bb43630d42cca64`; focused tests: `f03b7d03afa4dcb9407168f1409fd99b1191612a`.
 - Exact source evidence reuses Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, Typography group blob `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1`, and group-base blob `6117c06b286dbec336eefe63475c747e2fda0234` at Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
 - Writes are bounded to `typography_typography=custom`, `typography_font_family`, `typography_font_size`, `typography_line_height`, `typography_letter_spacing`, and `typography_word_spacing`.
 - Font size is integer px `1..200`; line height is locally bounded integer px `1..400`; letter spacing is px `-5..10` in `0.1` increments; word spacing is integer px `0..50`; font family is one bounded literal name without quotes, comma fallback lists, escapes or token syntax.
 - The resolver remains exact neutral-source + base-candidate bound, preserves Button text/alignment/link identity, rejects non-Button/stale/duplicate/authority-inflated manifests, and rejects any pre-existing `typography_*` setting rather than overwrite.
 - Responsive typography keys, CSS/custom units, fallback synthesis, global/token font resolution, variable-font axes, style/responsive inference, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain excluded.
-- Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.
+- Repaired exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates: CI `36072296742`, CodeQL `36072296478`, Integration `36072296670`, P12 Offline `36072296669`, P12 Final `36072296837`, P15 target `36072296432`, P17 browser `36072296352`; unresolved review threads were 0.
+- Expected-head merge produced main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`; Issue #723 closed.
 
 ### Completed P15 Fast Batch #717 / PR #718 implementation
 
@@ -447,7 +448,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | terminal #721 / PR #722 merged after repaired 7/7 exact-head gates; #723 batches Button literal font family + desktop px font size/line height/letter spacing/word spacing; responsive typography, global/token fonts, variable axes, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #723 / PR #724 merged after repaired 7/7 exact-head gates; terminal transport #725 closes canonical post-merge state before the next 3-5-capability Fast Batch; responsive typography, global/token fonts, variable axes, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -564,7 +565,7 @@ Development now defaults to **3-5 closely related capabilities per product batch
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. exact-head verify and merge Fast Batch #723 containing Button typography metrics while preserving exact source/evidence and authority boundaries;
+2. exact-head verify and merge terminal state transport #725, then select the next 3-5-capability P15 Fast Batch while preserving exact source/evidence and authority boundaries;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;

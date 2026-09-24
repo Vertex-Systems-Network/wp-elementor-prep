@@ -254,3 +254,19 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Repair changes only the P15 row matcher to `#723 batches Button literal font family + desktop px font size/line height/letter spacing/word spacing`.
 - Product/runtime/security behavior and responsive/compatibility/production/download authority remain unchanged.
 - Repaired exact head requires a fresh seven-gate run before merge.
+
+## 2026-09-25 — PR #724 merged; terminal finalization #725 prepared
+
+- PR #724 repaired exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI `36072296742`; CodeQL `36072296478`; Integration `36072296670`; P12 Offline `36072296669`; P12 Final `36072296837`; P15 target `36072296432`; P17 browser `36072296352`.
+- Expected-head merge produced main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`; Issue #723 closed.
+- Canonical state is prepared as `IDLE_READY_NEXT_P15_BATCH` with `active_issue: null`, `active_pr: null`, and `active_branch: main`.
+- Issue #725 is terminal state-only transport and is not the canonical owner. Its future merge must not trigger recursive reconciliation by itself.
+- Product/runtime/security/compatibility/production/download/release authority is unchanged by this finalization transport.
+
+## 2026-09-25 — terminal finalization PR #726 opened
+
+- PR #726 opened from `ai-native/terminal-finalize-pr-724` against exact base main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`.
+- PR creation head was `650959442d97fa28f961492d20155943cc281e7b`.
+- Transport Issue #725 / PR #726 is not the canonical lifecycle owner; `active_issue` and `active_pr` remain null.
+- Next milestone is one consolidated exact-head seven-gate observation with review-thread check.

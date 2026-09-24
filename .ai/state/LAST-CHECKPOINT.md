@@ -1,40 +1,38 @@
 # Last Durable Checkpoint
 
-Status: VERIFYING  
+Status: IDLE_READY_NEXT_P15_BATCH  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `1a89e7f34110ba11942b657a21be56bb64a45170`  
-Active Issue: `#723`  
-Active PR: `#724`  
-Active branch: `p15/button-typography-metrics-batch`
+Observed main: `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`  
+Observed-main semantics: `terminal_finalization_base_tip`  
+Canonical Active Issue: `none`  
+Canonical Active PR: `none`  
+Canonical Active branch: `main`
 
-## Terminal finalization completed
+## Completed P15 Fast Batch #723 / PR #724
 
-- Issue #721 / PR #722 transport exact head `e1ccf9161c63daede80babfb2eb538ff5448ad10` passed 7/7 required gates with 0 unresolved review threads.
-- Expected-head merge produced main `1a89e7f34110ba11942b657a21be56bb64a45170`; Issue #721 closed.
-- Terminal transport is complete and no recursive reconciliation is required.
+- Exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with 0 unresolved review threads.
+- CI `36072296742`
+- CodeQL `36072296478`
+- Integration Readiness `36072296670`
+- P12 Offline Acceptance `36072296669`
+- P12 Final Release Artifact `36072296837`
+- P15 Real Elementor Target Proof `36072296432`
+- P17 Local Browser Proof `36072296352`
+- Expected-head merge produced main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`; Issue #723 closed.
+- Five bounded Button typography metrics are retained: literal font family plus desktop px font size, line height, letter spacing and word spacing.
+- Responsive typography, global/token font resolution, variable-font axes, CSS/custom-unit inference, broad compatibility, production acceptance and download authority remain unclaimed.
 
-## Active P15 Fast Batch #723
+## Terminal finalization transport #725
 
-Button typography metrics v1 contains five exact Elementor 4.2.4 capabilities:
-1. literal `typography_font_family`;
-2. desktop px `typography_font_size`;
-3. desktop px `typography_line_height`;
-4. desktop px `typography_letter_spacing`;
-5. desktop px `typography_word_spacing`.
+Issue #725 / PR #726 is state-only transport under the protocol terminal-finalization exception. It is not the canonical lifecycle owner and does not populate `active_issue` or `active_pr`.
 
-All applied entries write `typography_typography=custom`. Exact neutral IR + base-candidate replay binding, Button binding and fail-closed `typography_*` conflict protection are retained.
+## Transport PR #726 lifecycle
 
-Responsive typography keys, CSS/custom units, fallback lists, global/token font resolution, variable-font axes, Figma/network mutation, compatibility, responsive closure, production and download authority remain excluded.
-
-Product commit: `e3d32384b439b0dbffd28c776bb43630d42cca64`.  
-Focused test commit: `f03b7d03afa4dcb9407168f1409fd99b1191612a`.
-
-## PR #724 lifecycle
-
-- PR #724 opened against exact base main `1a89e7f34110ba11942b657a21be56bb64a45170`.
-- PR creation head was `4864b5f08f857258fce6286469782ccd0c1abe37`.
-- Final lifecycle binding changes governance/status truth only; remote exact-head gates are intentionally deferred to the next user turn.
+- PR #726 opened against exact base main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`.
+- PR creation head was `650959442d97fa28f961492d20155943cc281e7b`.
+- PR #726 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
+- Remote exact-head gates are intentionally deferred to the next user turn.
 
 ## Exact next safe action
 
-Resolve the final bound PR #724 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green with zero unresolved review threads.
+Resolve the final bound PR #726 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green with zero unresolved review threads.

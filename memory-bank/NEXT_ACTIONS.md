@@ -21,7 +21,7 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 - P12 — **IN PROGRESS / 80%**; historical publishing authority remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`, plugin ID `1680034649341961379`.
 - P13 — **IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING**; #159 requires genuine Figma Desktop evidence.
 - P14 — **IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING**; R1-R6 are merged through PR #658, the exact production planning registry binding is present, internal/dev activation requires explicit confirmation + fresh authorization checks, and publishable release activation remains hard-disabled/stripped.
-- P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. Terminal #721 / PR #722 repaired exact head `e1ccf916...` passed 7/7 and merged as main `1a89e7f3...`. Issue #723 / PR #724 is the active five-capability Button typography metrics Fast Batch.
+- P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. Issue #723 / PR #724 completed Button typography metrics and merged as main `c887ab4d...` after repaired 7/7 exact-head gates. Terminal transport #725 / PR #726 is state-only and canonical P15 state is already settled `IDLE_READY_NEXT_P15_BATCH`.
 - P16 — **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
 - P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF**; #612/#613 static export, #614/#615 import safety preflight, #616/#617 neutral Web IR, #618/#623 IR→HTML/CSS generation and #628/#629 package validation are merged; #630 adds one exact local-only Chrome render observation. JavaScript execution, visual-fidelity comparison, Web→Figma reconstruction and production acceptance remain unclaimed.
 - P18-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
@@ -133,3 +133,5 @@ Do not fabricate any of these from CI/repository metadata.
 - one canonical status sync per behavior-changing train;
 - no synthetic overall percentage;
 - no synthetic runtime/target/external evidence.
+
+- Issue #725 / PR #726 is terminal state-only finalization after PR #724. It is not a canonical active Issue/PR. Exact-head certify PR #726; after its merge, do not create another reconciliation solely for the transport merge commit.
