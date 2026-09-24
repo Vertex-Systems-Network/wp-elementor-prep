@@ -358,3 +358,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Core handoff commit `e420bcc6a1f4f3e65ad2492ff20cc6ca96e4e548` synchronizes compact state, coordination queue, Runner machine record, README and verifier.
 - Responsive border width, border radius, padding, hover border, inference and compatibility/production/download authority remain outside the batch.
 - Remote exact-head CI is deferred to one final bound-head refresh in the next milestone.
+
+## 2026-09-24 — P15 Fast Batch #713 Button visual depth and radius
+
+- PR #712 final exact head `56607e9a5c42071167cd84aa9d82eefef74c4a3e` passed 7/7 with 0 unresolved review threads and merged as main `012edb7f8403c18eb5bab8f41ac1fd2572e4be0e`; Issue #711 closed completed.
+- Issue #713 / PR #714 is the next Fast Batch and keeps one Issue/branch/PR for three independently valid Button style capabilities.
+- Product commit `9dfdc83d5b41513bf04284ce65530d3fb6d0411d` adds one exact-bound composite resolver plus focused tests for normal text shadow, normal box shadow and explicit desktop/tablet/mobile border radius.
+- Core handoff commit `c5de9e4fa266274d2b38f46a0e429a4db3aeb75f` synchronizes compact state, coordination queue, Runner machine record, README and verifier.
+- Padding, normal/hover color/background/border mutation, inference and compatibility/production/download authority remain outside the batch.
+- Remote exact-head CI is deferred to one final bound-head refresh in the next milestone.
