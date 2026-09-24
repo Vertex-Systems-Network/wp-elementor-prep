@@ -308,3 +308,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Root cause was JavaScript replacement-string `$'` semantics corrupting the strict color-pattern literal in the generated test evidence block.
 - Repair `e2df76deb487c5012ea4fd5075b39cb07f255bf3` rebuilds the focused test from the verified normal-background test using callback-safe replacement.
 - The #705 resolver, exact hover classic background write surface, security controls and compatibility/production/download authority boundaries are unchanged.
+
+## 2026-09-24 — P15 #707 Button hover border-color implementation started
+
+- PR #706 repaired exact head `34f1714da4d09dfe35cc66bddb99e934ea2645f2` passed all seven required gates with 0 unresolved review threads and merged as main `1258ba0854847c91f5792f170be831bf96e4dbf3`; Issue #705 closed completed.
+- Issue #707 and branch `p15/button-hover-border-color` activated the next real P15 product slice without a reconciliation-only loop.
+- Product commit `77f22d2b2f40c51a15107f829a7c4f66b05bc970` adds exact source-bound Button hover/focus border-color resolution plus focused tests.
+- PR #708 opened against exact main `1258ba0854847c91f5792f170be831bf96e4dbf3`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
+- Exact write surface is only strict lowercase six-digit `button_hover_border_color`; hover text/background/shadow/transition/animation, normal styling, tokens, responsive inference and production/download authority remain out of scope.
+- Final bound PR #708 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
