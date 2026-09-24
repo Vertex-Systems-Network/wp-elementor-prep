@@ -46,7 +46,7 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#707` — active P15 exact-bound Button hover border-color implementation;
+- `#709` — active first P15 Fast Batch: Button hover interaction styling;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -246,14 +246,21 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `1258ba0854847c91f5792f170be831bf96e4dbf3`; Issue #705 closed completed.
 - Merged exact write surface remains only `button_background_hover_background=classic` plus strict lowercase six-digit `button_background_hover_color`; hover text, normal styling and broader authority remain excluded.
 
-### Current P15 #707 implementation
+### Completed P15 #707 implementation
 
-- Issue #707 owns one exact-bound Elementor 4.2.4 capability: Button hover/focus border color v1.
-- PR #708 is open from `p15/button-hover-border-color` against exact base main `1258ba0854847c91f5792f170be831bf96e4dbf3`.
-- Exact retained source evidence is Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d` and Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`.
-- Exact control/write surface is only direct `button_hover_border_color` with explicit strict lowercase six-digit hex.
-- Hover text `hover_color`, hover background `button_background_hover_*`, hover box shadow `button_hover_box_shadow_*`, transition duration, hover animation, normal text/background/border, responsive inference, global/theme tokens, Figma mutation, network access, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
-- No PASS is claimed for PR #708 until its final bound head receives the required exact-head gate batch.
+- Issue #707 / PR #708 delivered exact-bound Elementor 4.2.4 Button hover/focus border color v1.
+- Exact head `0fe42e9393c46815fc8d44ceb9c02d84468ea341` passed all seven required gates with 0 unresolved review threads.
+- Expected-head merge produced main `17832e372d43de32cb886ed6da03982d24e1fdaa`; Issue #707 closed completed.
+
+### Current P15 Fast Batch #709 implementation
+
+- Issue #709 / PR #710 is the first active Fast Batch under the canonical 3-5-capability policy.
+- Capability A: bounded hover box shadow using exact `button_hover_box_shadow_*` group-prefixed settings, target slider bounds and strict lowercase six-digit hex color.
+- Capability B: explicit `button_hover_transition_duration` from finite `0..10` seconds only, serialized as `{ unit:'s', size, sizes:[] }`.
+- Capability C: exact `hover_animation` limited to Elementor 4.2.4 core `get_default_animations()` names; filter-added/vendor animations are excluded.
+- Existing requested keys are rejected instead of overwritten; Button text/alignment/link and unrelated styling are preserved.
+- Style/responsive inference, CSS parsing, global/theme tokens, Figma/network access, compatibility, production acceptance and download authority remain false/out of scope.
+- No PASS is claimed for PR #710 until its final bound head receives one consolidated exact-head gate batch.
 
 ### Current P14 AI-native implementation track
 
@@ -381,7 +388,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #705 / PR #706 merged after repaired 7/7 exact-head gates; #707 / PR #708 adds only exact Elementor 4.2.4 Button `button_hover_border_color` with strict lowercase six-digit hex; hover text/background/shadow/transition/animation, normal border, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #707 / PR #708 merged after 7/7 exact-head gates; #709 / PR #710 is the first Fast Batch with bounded Button hover box shadow, transition seconds and core hover animation; inference, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -498,7 +505,7 @@ Development now defaults to **3-5 closely related capabilities per product batch
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. exact-head verify and merge #707 / PR #708 Button hover border-color v1 as the transitional final micro-slice; after merge, activate one Fast Batch Mode P15 milestone with 3-5 closely related independently evidenced capabilities under one Issue/branch/PR and one final exact-head CI cycle; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
+2. exact-head verify and merge the first Fast Batch #709 / PR #710 containing bounded Button hover box shadow, transition seconds and core hover animation; then continue with the next 3-5-capability batch while preserving exact source/evidence and authority boundaries;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;

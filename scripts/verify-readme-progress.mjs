@@ -18,6 +18,7 @@ const p15ButtonBackgroundColorSource = await readFile('src/targets/elementor/but
 const p15ButtonHoverTextColorSource = await readFile('src/targets/elementor/button-hover-text-color-resolution.ts', 'utf8');
 const p15ButtonHoverBackgroundColorSource = await readFile('src/targets/elementor/button-hover-background-color-resolution.ts', 'utf8');
 const p15ButtonHoverBorderColorSource = await readFile('src/targets/elementor/button-hover-border-color-resolution.ts', 'utf8');
+const p15ButtonHoverInteractionSource = await readFile('src/targets/elementor/button-hover-interaction-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -143,7 +144,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#707',
+  next: '#709',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -552,12 +553,39 @@ for (const fragment of p15ButtonHoverBorderColorRequiredFragments) {
     throw new Error(`P15 #707 Button hover border-color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 #707 implementation')
-  || !readme.includes('PR #708 is open')
-  || !readme.includes('`button_hover_border_color`')
-  || !readme.includes('hover box shadow `button_hover_box_shadow_*`')
+if (!readme.includes('### Completed P15 #707 implementation')
+  || !readme.includes('exact head `0fe42e9393c46815fc8d44ceb9c02d84468ea341`')
+  || !readme.includes('Issue #707 closed completed')) {
+  throw new Error('README P15 #707 / PR #708 merged Button hover border-color truth is stale or missing.');
+}
+
+const p15ButtonHoverInteractionRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "groupBaseSourceBlobSha: '6117c06b286dbec336eefe63475c747e2fda0234'",
+  "boxShadowGroupSourceBlobSha: '1c068c900db0ff2593089028d67fb6d897dbaa33'",
+  "boxShadowControlSourceBlobSha: 'e55cf9af34db5cc3e73dc295cd9f35b437da6fa7'",
+  "hoverAnimationControlSourceBlobSha: '157399fddae46264f07654bc178373a2c1050c4e'",
+  "boxShadowSettingKey: 'button_hover_box_shadow_box_shadow'",
+  "transitionSettingKey: 'button_hover_transition_duration'",
+  "animationSettingKey: 'hover_animation'",
+  "transitionSecondsMax: 10",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonHoverInteractionRequiredFragments) {
+  if (!p15ButtonHoverInteractionSource.includes(fragment)) {
+    throw new Error(`P15 #709 Fast Batch hover interaction contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #709 implementation')
+  || !readme.includes('PR #710')
+  || !readme.includes('bounded hover box shadow')
+  || !readme.includes('`button_hover_transition_duration`')
+  || !readme.includes('`hover_animation`')
   || !readme.includes('production acceptance and download authority remain false/out of scope')) {
-  throw new Error('README P15 #707 / PR #708 Button hover border-color truth is stale or missing.');
+  throw new Error('README P15 #709 / PR #710 Fast Batch truth is stale or missing.');
 }
 
 console.log(

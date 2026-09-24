@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 1258ba0854847c91f5792f170be831bf96e4dbf3
+observed_main_sha: 17832e372d43de32cb886ed6da03982d24e1fdaa
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -215,3 +215,8 @@ claims:
   - {id: CL-212, statement: fast_batch_mode_is_canonical_default_for_new_product_milestones_after_pr_708_with_three_to_five_related_capabilities_per_issue_branch_pr, value: true}
   - {id: CL-213, statement: fast_batch_mode_uses_one_final_bound_head_remote_ci_cycle_and_consolidated_pre_ci_readme_state_sync_without_weakening_security_expected_head_or_authority_controls, value: true}
   - {id: CL-214, statement: pr_708_remains_transitional_final_micro_slice_and_is_not_product_scope_expanded_by_fast_batch_governance_change, value: true}
+  - {id: CL-215, statement: pr_708_exact_head_0fe42e93_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
+  - {id: CL-216, statement: pr_708_merged_with_expected_head_as_main_17832e37_and_issue_707_closed_completed, value: true}
+  - {id: CL-217, statement: issue_709_pr_710_is_first_active_fast_batch_with_three_related_button_hover_interaction_capabilities, value: true}
+  - {id: CL-218, statement: p15_709_batch_contains_bounded_box_shadow_transition_seconds_and_core_hover_animation_with_exact_source_boundaries, value: true}
+  - {id: CL-219, statement: p15_709_batch_preserves_false_inference_network_compatibility_production_and_download_authority, value: true}
