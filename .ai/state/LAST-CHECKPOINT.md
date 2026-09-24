@@ -24,6 +24,13 @@ Active branch: `p15/button-hover-text-color`
 - PR #704 is open against exact base main `02a1225c4a0843580f10e09b58107e45b60da259`.
 - #287 remains admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred.
 
+## Failed exact head and verifier repair
+
+- Exact head `d9eeadda0aa3105089ab71d3891bbd99c309c594` passed 5/7 required gates with 0 unresolved review threads.
+- CI `36001841995` and P12 Final `36001841957` failed on the same `scripts/verify-readme-progress.mjs:475` syntax error before product typecheck/test evaluation.
+- Root cause: the #703 hover-text verifier block was placed inside the final README progress `console.log` template literal.
+- Repair is verifier-placement only; the exact `hover_color` product write surface and all security/authority exclusions are unchanged.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final bound PR #704 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+Resolve the repaired final PR #704 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact repaired head is green and review threads are clear.
