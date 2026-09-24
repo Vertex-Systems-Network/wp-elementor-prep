@@ -192,3 +192,5 @@ claims:
   - {id: CL-189, statement: p15_703_write_surface_is_only_hover_color_strict_lowercase_six_digit_hex, value: true}
   - {id: CL-190, statement: p15_703_excludes_normal_text_normal_background_hover_background_gradients_tokens_responsive_inference_and_production_download_authority, value: true}
   - {id: CL-191, statement: pr_704_is_active_exact_head_verification_path_for_p15_703_button_hover_text_color, value: true}
+  - {id: CL-192, statement: pr_704_initial_head_d9eeadda_failed_only_ci_and_p12_final_on_shared_status_verifier_placement_syntax_defect_while_five_other_required_gates_passed_and_review_threads_were_zero, value: true}
+  - {id: CL-193, statement: pr_704_verifier_placement_repair_preserves_exact_hover_color_write_surface_product_tests_security_controls_and_all_authority_exclusions, value: true}
