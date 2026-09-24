@@ -46,14 +46,14 @@ Open roadmap / acceptance dependencies:
 
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
-- `#703` — active P15 exact-bound Button hover text-color implementation;
+- `#705` — active P15 exact-bound Button hover classic background-color implementation;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
 Current verified main before this documentation sync:
 
-`02a1225c4a0843580f10e09b58107e45b60da259`
+`a36219fb01e90780c1c962dc7b534dbbcda40bed`
 
 ### Completed P15 #659 verification
 
@@ -229,24 +229,22 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Final head passed CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof; unresolved review threads were 0.
 - Merged exact write surface remains only `background_background=classic` plus strict lowercase six-digit `background_color`; gradients, hover background, global tokens and broader authority remain excluded.
 
-### Current P15 #703 implementation
+### Completed P15 #703 implementation
 
-- Issue #703 owns one exact-bound Elementor 4.2.4 capability: Button hover/focus text color v1.
-- PR #704 is open from `p15/button-hover-text-color` against exact base main `02a1225c4a0843580f10e09b58107e45b60da259`.
-- Exact retained source evidence is Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d` and Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`.
-- Exact write surface is only explicit `hover_color` strict lowercase six-digit hex.
-- Normal `button_text_color`, normal background `background_background` / `background_color`, hover background `button_background_hover`, gradients/images/video, global/theme tokens, responsive inference, Figma mutation, network access, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
-- No PASS is claimed for PR #704 until its final bound head receives the required exact-head gate batch.
+- Issue #703 owned exact-bound Elementor 4.2.4 Button hover/focus text color v1.
+- After verifier-only repairs, final exact head `39ce33bff3a7914466b00c11932aaa8118f56336` passed all seven required gates: CI `36008113395`, CodeQL `36008113561`, Integration `36008113472`, P12 Offline `36008113418`, P12 Final `36008113431`, P15 target `36008113515`, P17 browser `36008113459`.
+- Unresolved review threads were 0.
+- Expected-head merge produced main `a36219fb01e90780c1c962dc7b534dbbcda40bed`; Issue #703 closed completed.
+- Merged exact write surface remains only strict lowercase six-digit `hover_color`; normal text/background, hover background and broader compatibility/production/download authority remain excluded.
 
-#### PR #704 initial exact-head verifier repair
+### Current P15 #705 implementation
 
-- Initial exact head `d9eeadda0aa3105089ab71d3891bbd99c309c594` passed 5/7 required gates; CI `36001841995` and P12 Final `36001841957` failed on the same `status:verify` JavaScript syntax error.
-- Root cause was #703 verifier code being inserted inside the final README progress `console.log` template literal.
-- The repair only relocates the verifier block before the final log statement; Button `hover_color` product code/tests and all authority boundaries remain unchanged.
-- The repaired PR #704 head requires a fresh exact-head gate batch before merge.
-- First repaired head `7cf9d1dfa05b29f6ced34df959d8979fd1073da9` fixed the JavaScript syntax but then exposed one stale #701 README assertion; CI `36006394789` and P12 Final `36006395019` failed only on that verifier mismatch.
-- Second verifier-only repair `83d5aa41cd04dcb334e1b5c87ea157af0676f0f9` aligns the assertion with the canonical merged #701 wording; product resolver/tests and authority boundaries remain unchanged.
-- Final stale #701 verifier phrase repair `2e0321be94e2241dfb066a7841fdc0e30884a036` replaces the literal `PR #702 exact head` expectation with the canonical merged phrase `Callback-safe syntax repair produced exact head`; product resolver/tests and authority boundaries remain unchanged.
+- Issue #705 owns one exact-bound Elementor 4.2.4 capability: Button hover/focus classic background color v1.
+- PR #706 is open from `p15/button-hover-classic-background-color` against exact base main `a36219fb01e90780c1c962dc7b534dbbcda40bed`.
+- Exact retained source evidence is Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`, Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, Background group-control blob `ac8e1a510ec663f3f428c9f564dc2c5b727435e1`, and the group-prefix rule `{{ControlName}}_`.
+- Exact write surface is only `button_background_hover_background=classic` plus explicit strict lowercase six-digit `button_background_hover_color`.
+- Hover text `hover_color`, normal `button_text_color`, normal `background_background` / `background_color`, gradients and gradient child fields, image/video, global/theme tokens, responsive inference, Figma mutation, network access, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
+- No PASS is claimed for PR #706 until its final bound head receives the required exact-head gate batch.
 
 ### Current P14 AI-native implementation track
 
@@ -374,7 +372,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #701 / PR #702 merged after repaired 7/7 exact-head gates; #703 / PR #704 adds only exact Elementor 4.2.4 Button `hover_color` with strict lowercase six-digit hex; normal text/background, hover background, gradients, global tokens, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #703 / PR #704 merged after final 7/7 exact-head gates; #705 / PR #706 adds only exact Elementor 4.2.4 Button hover classic `button_background_hover_background=classic` + strict lowercase six-digit `button_background_hover_color`; hover text, normal text/background, gradients, global tokens, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -480,7 +478,7 @@ The AI-Native supervisor now maintains `.ai/state/NEXT-ACTION-OPTIONS.yaml` as t
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. exact-head verify and merge #703 / PR #704 Button hover text-color v1, then select/activate only the next independently evidenced bounded P15 commercial-V1 slice; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
+2. exact-head verify and merge #705 / PR #706 Button hover classic background-color v1, then select/activate only the next independently evidenced bounded P15 commercial-V1 slice; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;

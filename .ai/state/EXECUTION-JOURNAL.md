@@ -291,3 +291,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Canonical merged README instead records `Callback-safe syntax repair produced exact head c8a2e930...`.
 - Verifier-only repair `2e0321be94e2241dfb066a7841fdc0e30884a036` replaces that stale phrase with the canonical wording.
 - #703 product resolver/tests, strict `hover_color` write surface, security controls and compatibility/production/download authority exclusions are unchanged.
+
+## 2026-09-24 — P15 #705 Button hover classic background-color implementation started
+
+- PR #704 exact head `39ce33bff3a7914466b00c11932aaa8118f56336` passed all seven required gates with 0 unresolved review threads and merged as main `a36219fb01e90780c1c962dc7b534dbbcda40bed`; Issue #703 closed completed.
+- Issue #705 and branch `p15/button-hover-classic-background-color` activated the next real P15 product slice without a reconciliation-only loop.
+- Product commit `ad8692e1bc1498172fa405ab3620015988b20ef9` adds exact source-bound Button hover classic background-color resolution plus focused tests.
+- PR #706 opened against exact main `a36219fb01e90780c1c962dc7b534dbbcda40bed`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
+- Exact write surface is only `button_background_hover_background=classic` plus strict lowercase six-digit `button_background_hover_color`; hover text, normal text/background, gradients, image/video, tokens, responsive inference and production/download authority remain out of scope.
+- Final bound PR #706 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
