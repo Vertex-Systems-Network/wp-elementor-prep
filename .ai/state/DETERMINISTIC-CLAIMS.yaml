@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: f3384739609ea68e9141f7488e924e20e5ac9d6b
+observed_main_sha: 1a89e7f34110ba11942b657a21be56bb64a45170
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -251,3 +251,7 @@ claims:
   - {id: CL-248, statement: issue_721_is_transport_only_terminal_finalization_and_does_not_become_canonical_active_issue_or_pr, value: true}
   - {id: CL-249, statement: terminal_finalization_transport_merge_does_not_require_recursive_reconciliation_when_no_product_runtime_security_or_authority_truth_changes, value: true}
   - {id: CL-250, statement: pr_722_is_transport_only_terminal_finalization_and_is_not_a_canonical_active_pr, value: true}
+  - {id: CL-251, statement: pr_722_repaired_exact_head_e1ccf916_passed_all_seven_required_gates_with_zero_unresolved_review_threads_and_merged_as_main_1a89e7f3, value: true}
+  - {id: CL-252, statement: issue_723_owns_button_typography_metrics_fast_batch_with_font_family_font_size_line_height_letter_spacing_and_word_spacing, value: true}
+  - {id: CL-253, statement: p15_723_metrics_writes_literal_font_family_and_explicit_desktop_px_slider_values_only_with_no_responsive_typography_writes, value: true}
+  - {id: CL-254, statement: p15_723_preserves_false_global_font_token_variable_axis_responsive_inference_network_figma_compatibility_production_and_download_authority, value: true}

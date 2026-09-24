@@ -1,25 +1,34 @@
 # Last Durable Checkpoint
 
-Status: IDLE_READY_NEXT_P15_BATCH  
+Status: BUILDING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Terminal-finalization base main: `f3384739609ea68e9141f7488e924e20e5ac9d6b`  
-Active canonical Issue: `none`  
-Active canonical PR: `none`  
-Canonical branch: `main`
+Observed main: `1a89e7f34110ba11942b657a21be56bb64a45170`  
+Active Issue: `#723`  
+Active PR: `not yet opened`  
+Active branch: `p15/button-typography-metrics-batch`
 
-## Completed reconciliation #719 / PR #720
+## Terminal finalization completed
 
-- Final exact head `243e0aa91f7613e644bb98d6116c0ecc8aa28e0d` passed all seven required gates with 0 unresolved review threads.
-- Runs: CI `36066841418`, CodeQL `36066841523`, Integration `36066841480`, P12 Offline `36066841327`, P12 Final `36066841299`, P15 target `36066841405`, P17 browser `36066841313`.
-- Expected-head merge produced main `f3384739609ea68e9141f7488e924e20e5ac9d6b`; Issue #719 closed completed.
-- PR #720 was state/reconciliation-only; no product/runtime/security or authority expansion occurred.
+- Issue #721 / PR #722 transport exact head `e1ccf9161c63daede80babfb2eb538ff5448ad10` passed 7/7 required gates with 0 unresolved review threads.
+- Expected-head merge produced main `1a89e7f34110ba11942b657a21be56bb64a45170`; Issue #721 closed.
+- Terminal transport is complete and no recursive reconciliation is required.
 
-## Terminal finalization transport #721
+## Active P15 Fast Batch #723
 
-Issue #721 / PR #722 exists only to transport this settled state to protected main. PR #722 is deliberately not a canonical lifecycle owner. Once its exact head passes the normal required gates and merges with expected-head protection, no further reconciliation PR is required solely to record that transport merge SHA.
+Button typography metrics v1 contains five exact Elementor 4.2.4 capabilities:
+1. literal `typography_font_family`;
+2. desktop px `typography_font_size`;
+3. desktop px `typography_line_height`;
+4. desktop px `typography_letter_spacing`;
+5. desktop px `typography_word_spacing`.
 
-The next material product/security/governance mutation refreshes `observed_main_sha` from live main.
+All applied entries write `typography_typography=custom`. Exact neutral IR + base-candidate replay binding, Button binding and fail-closed `typography_*` conflict protection are retained.
+
+Responsive typography keys, CSS/custom units, fallback lists, global/token font resolution, variable-font axes, Figma/network mutation, compatibility, responsive closure, production and download authority remain excluded.
+
+Product commit: `e3d32384b439b0dbffd28c776bb43630d42cca64`.  
+Focused test commit: `f03b7d03afa4dcb9407168f1409fd99b1191612a`.
 
 ## Exact next safe action
 
-Resolve the exact current head of transport-only PR #722 and perform one consolidated required-gate refresh. Merge only after that exact head is green with zero unresolved review threads.
+Open the Issue #723 PR, bind exact PR identity into durable state, and defer exact-head remote gate polling to the next user turn.

@@ -229,3 +229,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Repair changes only the verifier matcher to the current README phrase `terminal transport #721 closes state recursion`.
 - Product/runtime/security behavior and compatibility/production/download/release authority remain unchanged.
 - Repaired exact head requires a fresh required-gate set before merge.
+
+## 2026-09-25 — terminal transport completed; P15 Fast Batch #723 started
+
+- PR #722 repaired exact head `e1ccf9161c63daede80babfb2eb538ff5448ad10` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `1a89e7f34110ba11942b657a21be56bb64a45170`.
+- Terminal finalization #721/#722 is complete; recursive reconciliation remains disabled for that transport.
+- Issue #723 / branch `p15/button-typography-metrics-batch` starts the next P15 Fast Batch with five related Button typography metrics.
+- Product commit `e3d32384b439b0dbffd28c776bb43630d42cca64`; focused tests commit `f03b7d03afa4dcb9407168f1409fd99b1191612a`.
+- Scope: literal font family plus desktop px font size, line height, letter spacing and word spacing; all applied entries use `typography_typography=custom`.
+- No responsive typography writes, global/token resolution, variable axes, CSS/custom-unit parsing, compatibility, production or download authority.
