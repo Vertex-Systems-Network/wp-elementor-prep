@@ -246,6 +246,16 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Hover text `hover_color`, normal `button_text_color`, normal `background_background` / `background_color`, gradients and gradient child fields, image/video, global/theme tokens, responsive inference, Figma mutation, network access, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
 - No PASS is claimed for PR #706 until its final bound head receives the required exact-head gate batch.
 
+
+#### PR #706 initial exact-head test repair
+
+- Initial exact head `056cfd720720e3f54f12038892a0803b32ea5aa0` had Integration, P12 Offline, P15 Target Proof and P17 Browser PASS, CodeQL still running, and CI `36010951996` plus P12 Final `36010952008` failed only at TypeScript parsing of the focused #705 test.
+- README status verification passed before the failure.
+- Root cause was test-generation replacement-string semantics corrupting the intended literal `acceptedColorPattern: '^#[0-9a-f]{6}$'`; the `$'` sequence was interpreted as a replacement token and injected the unmatched suffix.
+- Repair commit `e2df76deb487c5012ea4fd5075b39cb07f255bf3` rebuilds the focused test from the verified normal-background test using callback-safe replacement.
+- The #705 resolver, exact hover classic background write surface and all authority exclusions are unchanged.
+- The repaired PR #706 head requires a fresh exact-head gate batch before merge.
+
 ### Current P14 AI-native implementation track
 
 P14 implementation progress is measured against six explicit bounded slices, not against production acceptance:

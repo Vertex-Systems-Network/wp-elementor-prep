@@ -204,3 +204,5 @@ claims:
   - {id: CL-201, statement: p15_705_write_surface_is_only_button_background_hover_background_classic_plus_button_background_hover_color_lowercase_six_digit_hex, value: true}
   - {id: CL-202, statement: p15_705_excludes_hover_text_normal_text_normal_background_gradients_image_video_tokens_responsive_inference_and_production_download_authority, value: true}
   - {id: CL-203, statement: pr_706_is_active_exact_head_verification_path_for_p15_705_button_hover_classic_background_color, value: true}
+  - {id: CL-204, statement: pr_706_initial_head_056cfd72_failed_ci_and_p12_final_only_on_focused_test_generation_syntax_defect_after_readme_verifier_pass_with_four_other_required_gates_passed_codeql_running_and_zero_unresolved_review_threads, value: true}
+  - {id: CL-205, statement: pr_706_test_repair_e2df76de_uses_callback_safe_rebuild_and_preserves_exact_hover_background_write_surface_product_resolver_security_controls_and_all_authority_exclusions, value: true}

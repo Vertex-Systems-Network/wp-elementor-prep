@@ -300,3 +300,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - PR #706 opened against exact main `a36219fb01e90780c1c962dc7b534dbbcda40bed`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
 - Exact write surface is only `button_background_hover_background=classic` plus strict lowercase six-digit `button_background_hover_color`; hover text, normal text/background, gradients, image/video, tokens, responsive inference and production/download authority remain out of scope.
 - Final bound PR #706 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
+
+## 2026-09-24 — PR #706 focused test-generation repair
+
+- Exact head `056cfd720720e3f54f12038892a0803b32ea5aa0` passed README status verification; Integration, P12 Offline, P15 Target Proof and P17 Browser were PASS, CodeQL remained running at the single snapshot, and review threads were 0.
+- CI `36010951996` and P12 Final `36010952008` failed at TypeScript parsing of the new focused hover-background test.
+- Root cause was JavaScript replacement-string `$'` semantics corrupting the strict color-pattern literal in the generated test evidence block.
+- Repair `e2df76deb487c5012ea4fd5075b39cb07f255bf3` rebuilds the focused test from the verified normal-background test using callback-safe replacement.
+- The #705 resolver, exact hover classic background write surface, security controls and compatibility/production/download authority boundaries are unchanged.

@@ -24,6 +24,17 @@ Active branch: `p15/button-hover-classic-background-color`
 - PR #706 is open against exact base main `a36219fb01e90780c1c962dc7b534dbbcda40bed`.
 - #287 remains admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred.
 
+## Failed exact head and focused test repair
+
+- Exact head `056cfd720720e3f54f12038892a0803b32ea5aa0` had four required gates PASS, CodeQL still running at the single allowed snapshot, and 0 unresolved review threads.
+- CI `36010951996` and P12 Final `36010952008` both passed `status:verify` and failed at TypeScript parsing of `tests/p15-button-hover-background-color-resolution.test.ts`.
+- Primary error: line 108 `TS1002 Unterminated string literal`; downstream parser errors were cascading.
+- Root cause: generation of `acceptedColorPattern: '^#[0-9a-f]{6}
+` used a replacement string where `
+` is a special token.
+- Repair commit `e2df76deb487c5012ea4fd5075b39cb07f255bf3` rebuilds the test via callback-safe replacement.
+- Product resolver, exact `button_background_hover_background=classic` + `button_background_hover_color` write surface, security controls and authority exclusions are unchanged.
+
 ## Exact next safe action
 
-On the next user `continue`, resolve the final bound PR #706 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+Resolve the repaired final PR #706 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact repaired head is green and review threads are clear.
