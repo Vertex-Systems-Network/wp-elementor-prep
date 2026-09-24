@@ -21,7 +21,7 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 - P12 — **IN PROGRESS / 80%**; historical publishing authority remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`, plugin ID `1680034649341961379`.
 - P13 — **IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING**; #159 requires genuine Figma Desktop evidence.
 - P14 — **IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING**; R1-R6 are merged through PR #658, the exact production planning registry binding is present, internal/dev activation requires explicit confirmation + fresh authorization checks, and publishable release activation remains hard-disabled/stripped.
-- P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. #699 / PR #700 exact head `7f1a5178...` passed 7/7 and merged as main `456a7a7f...`; #701 / PR #702 is the active exact-bound Button normal classic background-color slice. Exact writes are only `background_background=classic` plus strict lowercase six-digit `background_color`; gradients/hover/global-token inference and broader authority remain false.
+- P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. #701 / PR #702 repaired head `c8a2e930...` passed 7/7 and merged as main `02a1225c...`; #703 / PR #704 is the active exact-bound Button hover text-color slice. Exact write surface is only strict lowercase six-digit `hover_color`; normal/background/hover-background expansion and broader authority remain false.
 - P16 — **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
 - P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF**; #612/#613 static export, #614/#615 import safety preflight, #616/#617 neutral Web IR, #618/#623 IR→HTML/CSS generation and #628/#629 package validation are merged; #630 adds one exact local-only Chrome render observation. JavaScript execution, visual-fidelity comparison, Web→Figma reconstruction and production acceptance remain unclaimed.
 - P18-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
@@ -103,7 +103,7 @@ Do not broaden semantics, responsive behavior or asset portability through heuri
 
 PR #662 exact head `f4d188ef9b056afeb50a82322ca62114be869f74` passed the complete required gate set and merged as main `143808f4e60b1d0a10ed8b148b4cc24bd6633a6e`; Issue #661 is completed.
 
-Issue #699 / PR #700 is closed completed after 7/7 exact-head gates and expected-head merge. Issue #701 / PR #702 is now the active P15 product milestone. The final bound PR #702 head must pass exact-head repository gates before merge and before another bounded product slice is selected.
+Issue #701 / PR #702 is closed completed after repaired 7/7 exact-head gates and expected-head merge. Issue #703 / PR #704 is now the active P15 product milestone. The final bound PR #704 head must pass exact-head repository gates before merge and before another bounded product slice is selected.
 
 ## P16 bounded retention evidence-integrity boundary
 
