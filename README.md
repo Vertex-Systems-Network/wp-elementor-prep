@@ -237,6 +237,14 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Exact write surface is only explicit `hover_color` strict lowercase six-digit hex.
 - Normal `button_text_color`, normal background `background_background` / `background_color`, hover background `button_background_hover`, gradients/images/video, global/theme tokens, responsive inference, Figma mutation, network access, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
 - No PASS is claimed for PR #704 until its final bound head receives the required exact-head gate batch.
+
+#### PR #704 initial exact-head verifier repair
+
+- Initial exact head `d9eeadda0aa3105089ab71d3891bbd99c309c594` passed 5/7 required gates; CI `36001841995` and P12 Final `36001841957` failed on the same `status:verify` JavaScript syntax error.
+- Root cause was #703 verifier code being inserted inside the final README progress `console.log` template literal.
+- The repair only relocates the verifier block before the final log statement; Button `hover_color` product code/tests and all authority boundaries remain unchanged.
+- The repaired PR #704 head requires a fresh exact-head gate batch before merge.
+
 ### Current P14 AI-native implementation track
 
 P14 implementation progress is measured against six explicit bounded slices, not against production acceptance:
