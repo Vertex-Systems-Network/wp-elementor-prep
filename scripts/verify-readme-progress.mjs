@@ -672,8 +672,8 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #717 implementation')
-  || !readme.includes('Issue #717 owns three tightly-related Elementor 4.2.4 Button typography capabilities')
+if (!readme.includes('### Current P15 Fast Batch #717 / PR #718 implementation')
+  || !readme.includes('Issue #717 / PR #718 owns three tightly-related Elementor 4.2.4 Button typography capabilities')
   || !readme.includes('`typography_font_weight`')
   || !readme.includes('`typography_text_transform`')
   || !readme.includes('`typography_font_style`')
