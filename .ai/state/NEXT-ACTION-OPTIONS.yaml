@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 456a7a7fd4c9fcc97dacd206561df5f56a8d9e83
-active_issue: 701
-active_pr: 702
-active_branch: p15/button-normal-classic-background-color
+observed_main_sha: 02a1225c4a0843580f10e09b58107e45b60da259
+active_issue: 703
+active_pr: 704
+active_branch: p15/button-hover-text-color
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -11,14 +11,14 @@ interaction:
   selection_semantics: NEW_USER_REQUEST
   selection_grants_authority: false
   max_visible_options: 4
-recommended_action_id: verify-pr-702
+recommended_action_id: verify-pr-704
 options:
-  - action_id: verify-pr-702
-    label: Verify PR #702
+  - action_id: verify-pr-704
+    label: Verify PR #704
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_702
-    request_payload: "Continue AI-Native plan: resolve the exact current head of PR #702 and perform one consolidated required-gate refresh. Do not merge unless a later logical milestone is selected after all required gates are green and review threads are clear."
+    action_token: VERIFY_PR_704
+    request_payload: "Continue AI-Native plan: resolve the exact current head of PR #704 and perform one consolidated required-gate refresh. Do not merge unless a later logical milestone is selected after all required gates are green and review threads are clear."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Re-read current repository truth and review the AI-Native roadmap/status without bypassing PR #702 or authority boundaries."
+    request_payload: "Re-read current repository truth and review the AI-Native roadmap/status without bypassing PR #704 or authority boundaries."
     blocked_by: []
     blocked_reason: null
   - action_id: start-next-p15-slice
@@ -42,7 +42,7 @@ options:
     enabled: false
     recommended: false
     action_token: NEXT_P15
-    request_payload: "After PR #702 passes exact-head gates and merges, select and start the next independently evidenced bounded P15 commercial-V1 slice."
+    request_payload: "After PR #704 passes exact-head gates and merges, select and start the next independently evidenced bounded P15 commercial-V1 slice."
     blocked_by:
-      - PR_702_NOT_MERGED
-    blocked_reason: "Current Button classic-background slice must pass exact-head repository gates and merge first."
+      - PR_704_NOT_MERGED
+    blocked_reason: "Current Button hover-text-color slice must pass exact-head repository gates and merge first."

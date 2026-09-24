@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 456a7a7fd4c9fcc97dacd206561df5f56a8d9e83
+observed_main_sha: 02a1225c4a0843580f10e09b58107e45b60da259
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -186,3 +186,9 @@ claims:
   - {id: CL-183, statement: pr_702_is_active_exact_head_verification_path_for_p15_701_button_background_color, value: true}
   - {id: CL-184, statement: pr_702_initial_head_28de25ae_failed_only_ci_and_p12_final_on_shared_typescript_parse_defect_while_five_other_required_gates_passed_and_review_threads_were_zero, value: true}
   - {id: CL-185, statement: pr_702_syntax_repair_preserves_exact_background_background_classic_plus_background_color_write_surface_and_all_authority_exclusions, value: true}
+  - {id: CL-186, statement: pr_702_repaired_exact_head_c8a2e930_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
+  - {id: CL-187, statement: pr_702_merged_with_expected_head_as_main_02a1225c_and_issue_701_closed_completed, value: true}
+  - {id: CL-188, statement: issue_703_owns_exact_bound_elementor_4_2_4_button_hover_text_color_v1, value: true}
+  - {id: CL-189, statement: p15_703_write_surface_is_only_hover_color_strict_lowercase_six_digit_hex, value: true}
+  - {id: CL-190, statement: p15_703_excludes_normal_text_normal_background_hover_background_gradients_tokens_responsive_inference_and_production_download_authority, value: true}
+  - {id: CL-191, statement: pr_704_is_active_exact_head_verification_path_for_p15_703_button_hover_text_color, value: true}
