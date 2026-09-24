@@ -246,6 +246,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - The repaired PR #704 head requires a fresh exact-head gate batch before merge.
 - First repaired head `7cf9d1dfa05b29f6ced34df959d8979fd1073da9` fixed the JavaScript syntax but then exposed one stale #701 README assertion; CI `36006394789` and P12 Final `36006395019` failed only on that verifier mismatch.
 - Second verifier-only repair `83d5aa41cd04dcb334e1b5c87ea157af0676f0f9` aligns the assertion with the canonical merged #701 wording; product resolver/tests and authority boundaries remain unchanged.
+- Final stale #701 verifier phrase repair `2e0321be94e2241dfb066a7841fdc0e30884a036` replaces the literal `PR #702 exact head` expectation with the canonical merged phrase `Callback-safe syntax repair produced exact head`; product resolver/tests and authority boundaries remain unchanged.
 
 ### Current P14 AI-native implementation track
 

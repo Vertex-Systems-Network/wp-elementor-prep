@@ -283,3 +283,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Second verifier-only repair `83d5aa41cd04dcb334e1b5c87ea157af0676f0f9` replaces the stale `Gradient/image/video background` expectation with the canonical merged #701 wording `gradients, hover background, global tokens and broader authority remain excluded`.
 - No product resolver/test mutation or authority expansion occurred.
 - No second workflow/status refresh is performed in this milestone; the next user turn must verify the final repaired PR #704 head.
+
+## 2026-09-24 — PR #704 final stale #701 verifier phrase repair
+
+- Exact head `0e6216227dacfbbc662e6f58ef53c5638b9a4802` completed with 5/7 required gates PASS and 0 unresolved review threads.
+- CI `36006802511` and P12 Final `36006802828` failed only because #701 verifier truth still required literal `PR #702 exact head`.
+- Canonical merged README instead records `Callback-safe syntax repair produced exact head c8a2e930...`.
+- Verifier-only repair `2e0321be94e2241dfb066a7841fdc0e30884a036` replaces that stale phrase with the canonical wording.
+- #703 product resolver/tests, strict `hover_color` write surface, security controls and compatibility/production/download authority exclusions are unchanged.

@@ -32,6 +32,8 @@ Active branch: `p15/button-hover-text-color`
 - Repair is verifier-placement only; the exact `hover_color` product write surface and all security/authority exclusions are unchanged.
 - First repaired head `7cf9d1dfa05b29f6ced34df959d8979fd1073da9` restored valid JavaScript, but CI `36006394789` and P12 Final `36006395019` then failed only because the #701 README verifier still expected stale wording.
 - Second verifier-only repair commit `83d5aa41cd04dcb334e1b5c87ea157af0676f0f9` replaces that stale assertion with the canonical merged #701 wording; product resolver/tests and authority boundaries remain unchanged.
+- Exact head `0e6216227dacfbbc662e6f58ef53c5638b9a4802` then passed 5/7 required gates with 0 unresolved review threads; CI `36006802511` and P12 Final `36006802828` failed only because the verifier still required stale literal `PR #702 exact head`.
+- Final verifier-only phrase repair `2e0321be94e2241dfb066a7841fdc0e30884a036` now requires canonical merged wording `Callback-safe syntax repair produced exact head`; product resolver/tests and authority boundaries remain unchanged.
 
 ## Exact next safe action
 
