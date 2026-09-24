@@ -30,6 +30,22 @@ current_blockers:
   - p15_broad_target_compatibility_and_production_authority_not_claimed
   - p13_live_figma_runtime_acceptance_issue_159_pending
   - p12_manual_release_exit_issue_84_pending
+development_batching:
+  mode: fast_batch
+  enabled: true
+  activation: next_product_milestone_after_pr_708_merge
+  current_pr_transition: finish_pr_708_without_product_scope_expansion
+  default_capabilities_per_batch_min: 3
+  default_capabilities_per_batch_max: 5
+  one_issue_branch_pr_per_batch: true
+  remote_ci_on_final_bound_head_only: true
+  readme_state_sync: final_pre_ci_handoff_or_material_blocker
+  user_updates:
+    - batch_start
+    - material_blocker_or_failure
+    - batch_complete_or_verification_boundary
+  micro_pr_default: false
+  security_and_authority_controls_unchanged: true
 timeout_control:
   max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1

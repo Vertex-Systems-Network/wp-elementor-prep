@@ -24,6 +24,16 @@ Active branch: `p15/button-hover-border-color`
 - PR #708 is open against exact base main `1258ba0854847c91f5792f170be831bf96e4dbf3`.
 - #287 remains admin-blocked; #159 and #84 remain external/manual evidence waits; #182 remains deferred.
 
+## Fast Batch Mode applied
+
+- Fast Batch Mode is now canonical repository policy.
+- Default new product milestone size is 3-5 closely related capabilities under one Issue/branch/PR.
+- Remote exact-head CI is performed once on the final bound batch head instead of once per small capability.
+- README/verifier/compact-state synchronization is consolidated at the final pre-CI handoff, except when a material blocker, security/authority boundary or Issue/PR lifecycle state changes earlier.
+- User-facing development updates are limited to batch start, material blocker/failure and batch completion/verification boundaries.
+- PR #708 remains the transitional final micro-slice and is not expanded mid-flight; the next P15 product milestone after its merge MUST use Fast Batch Mode by default.
+- Security, required checks, exact-head review, expected-head merge and production/release authority controls are unchanged.
+
 ## Exact next safe action
 
 On the next user `continue`, resolve the final bound PR #708 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.

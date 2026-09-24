@@ -38,11 +38,11 @@ options:
     blocked_by: []
     blocked_reason: null
   - action_id: start-next-p15-slice
-    label: Continue next P15 slice
+    label: Start next P15 batch
     enabled: false
     recommended: false
     action_token: NEXT_P15
-    request_payload: "After PR #708 passes exact-head gates and merges, select and start the next independently evidenced bounded P15 commercial-V1 slice."
+    request_payload: "After PR #708 passes exact-head gates and merges, start one Fast Batch Mode P15 milestone containing 3-5 closely related independently evidenced capabilities under one Issue/branch/PR, with one final bound-head CI cycle."
     blocked_by:
       - PR_708_NOT_MERGED
-    blocked_reason: "Current Button hover border-color slice must pass exact-head repository gates and merge first."
+    blocked_reason: "PR #708 is the transitional final micro-slice; it must pass exact-head repository gates and merge before the next 3-5-capability Fast Batch starts."

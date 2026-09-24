@@ -484,10 +484,21 @@ The AI-Native supervisor now maintains `.ai/state/NEXT-ACTION-OPTIONS.yaml` as t
 - Blocked next-development actions remain visible only with their blocking reason (or are omitted) until prerequisites are satisfied.
 - The menu is refreshed after PR/Issue lifecycle changes, merges, failures, blocker changes and plan updates so the user always has a clear route to continue development.
 
+### Fast Batch Mode
+
+Development now defaults to **3-5 closely related capabilities per product batch** instead of one tiny control per Issue/PR.
+
+- One batch = one Issue, one branch, one PR and one final exact-head CI cycle.
+- Related implementation/test commits are grouped; README/verifier/compact-state truth is synchronized once at the final pre-CI handoff unless a material blocker/security/authority/lifecycle change requires an earlier update.
+- User-facing progress updates are limited to batch start, material blocker/failure and batch completion/verification boundaries.
+- Micro-PRs are exceptions for isolation-sensitive security, migration/destructive work, unrelated evidence families, authority-boundary changes or focused failed-gate repairs.
+- Security checks, exact-head review, expected-head merge protection and production/release authority remain unchanged.
+- PR #708 remains the transitional final micro-slice; the next P15 product milestone after it merges will use Fast Batch Mode.
+
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. exact-head verify and merge #707 / PR #708 Button hover border-color v1, then select/activate only the next independently evidenced bounded P15 commercial-V1 slice; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
+2. exact-head verify and merge #707 / PR #708 Button hover border-color v1 as the transitional final micro-slice; after merge, activate one Fast Batch Mode P15 milestone with 3-5 closely related independently evidenced capabilities under one Issue/branch/PR and one final exact-head CI cycle; exact default-breakpoint align-content remains supported only where the same breakpoint has an explicit #576 `wrap` prerequisite, and custom breakpoints, responsive closure, arbitrary-host/general media portability plus target-compatibility/production/download authority remain unclaimed unless separate evidence explicitly changes them;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;

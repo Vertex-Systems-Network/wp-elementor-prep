@@ -317,3 +317,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - PR #708 opened against exact main `1258ba0854847c91f5792f170be831bf96e4dbf3`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
 - Exact write surface is only strict lowercase six-digit `button_hover_border_color`; hover text/background/shadow/transition/animation, normal styling, tokens, responsive inference and production/download authority remain out of scope.
 - Final bound PR #708 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
+
+## 2026-09-24 — Fast Batch Mode activated
+
+- User approved replacing micro-PR-by-default development with Fast Batch Mode.
+- Canonical default is now 3-5 closely related capabilities per product milestone, one Issue/branch/PR, and one final exact-head remote CI cycle after the batch is fully bound.
+- Intermediate related commits may defer README/state churn until final pre-CI handoff unless a blocker, security/authority boundary or lifecycle truth changes.
+- User-facing updates are reduced to batch start, material blocker/failure and batch completion/verification boundary.
+- PR #708 remains the transitional final micro-slice; no product-scope expansion is introduced into it.
+- Security fail-closed, required checks, expected-head merge and production/release authority remain unchanged.
