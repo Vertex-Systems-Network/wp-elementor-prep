@@ -168,7 +168,7 @@ PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven r
 
 ## Active P15 Fast Batch #727 Button responsive typography metrics
 
-Issue #727 on branch `p15/button-responsive-typography-metrics-batch` owns four tightly-related exact Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing. Exact Typography group source marks each control responsive and Controls Stack establishes the non-desktop suffix contract. Applied entries write `typography_typography=custom` plus only requested tablet/mobile px slider keys.
+Issue #727 / PR #728 on branch `p15/button-responsive-typography-metrics-batch` owns four tightly-related exact Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing. Exact Typography group source marks each control responsive and Controls Stack establishes the non-desktop suffix contract. Applied entries write `typography_typography=custom` plus only requested tablet/mobile px slider keys.
 
 Font size is integer px `1..200`; line height is locally bounded integer px `1..400`; letter spacing is `-5..10` px in `0.1` steps; word spacing is locally bounded integer px `0..50`. Desktop metric writes, font-family/global-token resolution, variable-font axes, custom breakpoints, inheritance synthesis, responsive inference, CSS/custom units, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
 

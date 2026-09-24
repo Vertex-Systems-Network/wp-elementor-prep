@@ -673,7 +673,7 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
   }
 }
 if (!readme.includes('### Current P15 Fast Batch #727 implementation')
-  || !readme.includes('Issue #727 owns four tightly-related Elementor 4.2.4 Button responsive typography capabilities')
+  || !readme.includes('Issue #727 / PR #728 owns four tightly-related Elementor 4.2.4 Button responsive typography capabilities')
   || !readme.includes('`typography_font_size_tablet/mobile`')
   || !readme.includes('`typography_line_height_tablet/mobile`')
   || !readme.includes('`typography_letter_spacing_tablet/mobile`')

@@ -47,7 +47,7 @@ Open roadmap / acceptance dependencies:
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
 - `#723 / PR #724` — completed P15 Fast Batch: Button typography metrics v1; terminal state transport #725 / PR #726 completed 7/7 and merged;
-- `#727` — active P15 Fast Batch: Button responsive typography metrics v1;
+- `#727 / PR #728` — active P15 Fast Batch: Button responsive typography metrics v1;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -280,7 +280,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 
 ### Current P15 Fast Batch #727 implementation
 
-- Issue #727 owns four tightly-related Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing.
+- Issue #727 / PR #728 owns four tightly-related Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing.
 - Product commit: `313c8e0443e3f8148f4f64a00a3285f88a93e1c5`; focused tests: `d70fd86b1bb8c0e7e9e757d7ec57b36d004ade38`.
 - Exact source evidence binds Typography group blob `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1`, where all four controls are explicitly responsive, plus Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` for `<id>_<device>` suffix semantics and Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`.
 - Writes are bounded to `typography_typography=custom` plus requested `typography_font_size_tablet/mobile`, `typography_line_height_tablet/mobile`, `typography_letter_spacing_tablet/mobile`, and `typography_word_spacing_tablet/mobile`.

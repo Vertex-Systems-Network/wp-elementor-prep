@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: BUILDING  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
 Observed main: `3b632502e70b8df9b5562c90770230b30e20d5be`  
 Active Issue: `#727`  
-Active PR: `not yet opened`  
+Active PR: `#728`  
 Active branch: `p15/button-responsive-typography-metrics-batch`
 
 ## Terminal finalization #725 / PR #726 completed
@@ -27,6 +27,12 @@ Writes are default tablet/mobile only, px slider shape only, exact source/base-c
 Product commit: `313c8e0443e3f8148f4f64a00a3285f88a93e1c5`.  
 Focused test commit: `d70fd86b1bb8c0e7e9e757d7ec57b36d004ade38`.
 
+## PR #728 lifecycle
+
+- PR #728 opened against exact base main `3b632502e70b8df9b5562c90770230b30e20d5be`.
+- PR creation head was `870e4eea2469072e55776bba8068d0b0c96967cb`.
+- Final lifecycle binding changes governance/status truth only; remote exact-head gates are intentionally deferred to the next user turn.
+
 ## Exact next safe action
 
-Open the Issue #727 PR, bind exact PR identity into durable state, and defer exact-head remote gate polling to the next user turn.
+Resolve the final bound PR #728 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green with zero unresolved review threads.

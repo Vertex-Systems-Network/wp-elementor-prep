@@ -126,7 +126,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-725-TRANSPORT | #725 / PR #726 | Terminal post-PR #724 state finalization | Required PR exact-head gate set | exact head `221a94f7...` passed 7/7; review threads 0; merged main `3b632502...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-727-FINAL | #727 | P15 Button responsive typography metrics v1 | Required PR exact-head gate set | PR not yet opened; four-capability exact responsive typography contract | `FINAL_BATCH` | final bound PR head must pass all seven required gates before merge | PR_NOT_YET_OPEN |
+| RQ-727-FINAL | #727 / PR #728 | P15 Button responsive typography metrics v1 | Required PR exact-head gate set | PR creation head `870e4eea...`; four-capability exact responsive typography contract | `FINAL_BATCH` | final bound PR head must pass all seven required gates before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 

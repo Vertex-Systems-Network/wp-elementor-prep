@@ -279,3 +279,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` anchors non-desktop `<id>_<device>` suffix semantics.
 - Product commit `313c8e0443e3f8148f4f64a00a3285f88a93e1c5`; focused tests commit `d70fd86b1bb8c0e7e9e757d7ec57b36d004ade38`.
 - Desktop metrics, custom breakpoints, inheritance synthesis, responsive inference, global/token font resolution, variable axes, compatibility, production and download authority remain excluded.
+
+## 2026-09-25 — P15 Fast Batch #727 PR #728 opened
+
+- PR #728 opened from `p15/button-responsive-typography-metrics-batch` against exact base main `3b632502e70b8df9b5562c90770230b30e20d5be`.
+- PR creation head was `870e4eea2469072e55776bba8068d0b0c96967cb`.
+- Batch scope remains four responsive capabilities: font size, line height, letter spacing and word spacing for explicit default tablet/mobile px values only.
+- Final lifecycle binding records PR identity only; remote exact-head gate polling is deferred to the next user turn.
+- Desktop metrics, custom breakpoints, inheritance synthesis, global/token font resolution, variable axes, compatibility, production and download authority remain excluded.
