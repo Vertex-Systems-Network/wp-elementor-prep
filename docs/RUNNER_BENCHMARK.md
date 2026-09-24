@@ -112,7 +112,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 | RQ-707-FINAL | #707 / PR #708 | P15 Button hover border color v1 | Required PR exact-head gate set | exact head `0fe42e93...` passed all seven required gates; threads 0; merged main `17832e37...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 | RQ-709-FINAL | #709 / PR #710 | P15 Button hover interaction Fast Batch v1 | Required PR exact-head gate set | exact head `e019e903...` passed all seven required gates; threads 0; merged main `c2c001d1...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 | RQ-711-FINAL | #711 / PR #712 | P15 Button normal border Fast Batch v1 | Required PR exact-head gate set | exact head `56607e9a...` passed all seven required gates; threads 0; merged main `012edb7f...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
-| RQ-713-FINAL | #713 / PR #714 | P15 Fast Batch Button visual depth and radius v1 | Required PR exact-head gate set | 3 capabilities: text shadow + box shadow + explicit responsive border radius; one final bound-head CI cycle | `FINAL_BATCH` | final bound PR head must pass all seven required gates before merge | PR_OPEN_AWAITING_EXACT_HEAD_BATCH |
+| RQ-713-FINAL | #713 / PR #714 | P15 Fast Batch Button visual depth and radius v1 | Required PR exact-head gate set | first head `ef7485e5...`: 5/7 PASS; CI + P12 Final failed only because rolling execution journal was 33,761 bytes > 32,768; archive/compaction repair preserves product/security/authority boundaries; repaired exact head still requires all seven gates | `FINAL_BATCH` | repaired final bound PR head must pass all seven required gates before merge | REPAIR_PENDING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 

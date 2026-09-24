@@ -275,6 +275,14 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - CSS parsing, unit conversion, global/theme tokens, Figma/network access, style/responsive inference, compatibility, production acceptance and download authority remain false/out of scope.
 - No PASS is claimed for PR #714 until its final bound head receives one consolidated exact-head gate batch.
 
+#### PR #714 first exact-head durable-state ceiling failure
+
+- Exact head `ef7485e54f9d022815f8678fc30a7a6dbc59bef1` returned 5/7 required gates PASS with 0 unresolved review threads.
+- CodeQL `36025880781`, Integration Readiness `36025880745`, P12 Offline Acceptance `36025880685`, P15 Real Elementor Target Proof `36025880732`, and P17 Local Browser Proof `36025880739` passed.
+- CI `36025880759` and P12 Final Release Artifact `36025880800` failed only on the compact-state ceiling: the rolling `.ai/state/EXECUTION-JOURNAL.md` was 33,761 bytes versus the 32,768-byte hard limit.
+- The repair archives older journal history into `.ai/history/EXECUTION-JOURNAL-ARCHIVE-002.md` and keeps the active journal below the ceiling. Product code, tests, required checks, security controls, and compatibility/production/download authority are unchanged.
+- The repaired head remains uncertified until its own exact-head gate batch completes.
+
 ### Current P14 AI-native implementation track
 
 P14 implementation progress is measured against six explicit bounded slices, not against production acceptance:

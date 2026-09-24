@@ -29,6 +29,13 @@ Radius requires explicit integer px values for desktop/tablet/mobile; no respons
 
 Existing requested target keys are rejected instead of overwritten. Button text/alignment/link and unrelated styling are preserved. CSS parsing, unit conversion, token resolution, Figma/network access, inference, compatibility, production and download authority remain false.
 
+## PR #714 first exact-head failure and repair
+
+- Exact head `ef7485e54f9d022815f8678fc30a7a6dbc59bef1` produced 5/7 required gates PASS with 0 unresolved review threads.
+- CI `36025880759` and P12 Final Release Artifact `36025880800` failed on the same single durable-state test: rolling `.ai/state/EXECUTION-JOURNAL.md` was 33,761 bytes against the 32,768-byte hard ceiling.
+- Older execution detail is moved to `.ai/history/EXECUTION-JOURNAL-ARCHIVE-002.md`; the active journal is compacted below the ceiling.
+- No product/runtime, security, compatibility, production or download authority boundary is changed by this repair.
+
 ## Exact next safe action
 
-Resolve the final bound PR #714 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
+Resolve the repaired final bound PR #714 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green and review threads are clear.
