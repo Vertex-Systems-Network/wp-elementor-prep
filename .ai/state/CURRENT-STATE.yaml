@@ -23,11 +23,11 @@ next_action_options:
   recommended_action_id: verify-terminal-finalization-pr-722
 milestone_status: IDLE_READY_NEXT_P15_BATCH
 last_completed_milestone: post_pr_718_reconciliation_pr_720_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: next_user_continue_resolves_terminal_transport_pr_722_head_and_performs_one_consolidated_exact_head_status_refresh
+exact_next_safe_action: verify_repaired_pr_722_exact_head_after_status_verifier_wording_sync
 pending_runner_ids: [RQ-721-TRANSPORT]
 blocked_runner_ids: []
 current_blockers:
-  - terminal_finalization_pr_722_not_yet_certified
+  - pr_722_repaired_exact_head_gate_set_not_yet_observed
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
