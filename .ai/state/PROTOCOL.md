@@ -116,11 +116,11 @@ Every completed or paused logical milestone MUST expose the valid next actions n
 - The canonical machine-readable surface is `.ai/state/NEXT-ACTION-OPTIONS.yaml`.
 - Options MUST be derived from current repository/runtime truth, not chat memory.
 - Each option MUST have a stable `action_id`, short `label`, exact `request_payload`, `enabled` state, `recommended` flag, and any `blocked_by` / `blocked_reason`.
-- Show 2-4 useful options when possible. The first enabled recommended option should be the exact next safe action.
+- Show 2-4 useful options when possible. Exactly one enabled recommended option should identify the exact next safe action. Visible presentation order MUST be shuffled or rotated at every material milestone and MUST NOT pin the recommended action to a fixed numeric slot; stable `action_id` and `recommended_action_id` carry semantics, not the displayed number.
 - When the host/client supports interactive quick actions or buttons, render enabled options as buttons. Clicking a button initiates the stored request payload as a NEW user request.
 - A button click NEVER grants new merge, deployment, destructive, security, production, release, or external-service authority. Normal authorization and one-milestone rules still apply.
 - Unsafe or sequencing-blocked actions MUST be disabled with a reason or omitted; never make a button a bypass around an active PR, required Runner gate, security blocker, manual evidence gate, or authority boundary.
-- When generic interactive buttons are unavailable, render the same labels plus copyable action tokens/request payloads as the required fallback. Do not pretend plain text is clickable.
+- When generic interactive buttons are unavailable, render the same labels in the current shuffled `presentation_order` plus copyable action tokens/request payloads as the required fallback. Numbering follows that presentation order only and has no persistent semantic meaning. Do not pretend plain text is clickable.
 - Refresh `NEXT-ACTION-OPTIONS.yaml` after every material state transition, PR/Issue lifecycle change, blocker change, or plan update that changes what the user can safely do next.
 - `CURRENT-STATE.yaml` MUST identify the current recommended `action_id` and the next-action-options source path.
 - A selected action starts the next user turn; it MUST NOT silently chain a second logical milestone into the current turn.
