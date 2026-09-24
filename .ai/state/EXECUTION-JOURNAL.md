@@ -139,3 +139,30 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Older rolling-journal history is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-002.md`; the active journal is compacted below the hard ceiling.
 - Product resolver/tests, Button write surfaces, security controls, required checks, and compatibility/production/download authority boundaries are unchanged.
 - The repaired PR head is intentionally uncertified until one consolidated exact-head gate refresh completes; no PASS is claimed yet.
+
+## 2026-09-25 — PR #714 merged; post-merge reconciliation #715 started
+
+- Repaired PR #714 exact head `4e2cc76a309d99c8c37b73402bcd8f1f5050715d` passed all seven required gates with 0 unresolved review threads: CI `36052348326`, CodeQL `36052348294`, Integration `36052348185`, P12 Offline `36052348208`, P12 Final `36052348220`, P15 target `36052348269`, P17 browser `36052348186`.
+- Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
+- Issue #715 and branch `ai-native/post-pr-714-reconciliation` started post-merge AI-native reconciliation only.
+- Reconciliation scope is README/verifier, compact state, deterministic claims, coordination queue, Runner benchmark, execution journal and memory-bank truth.
+- No product/runtime behavior, security control, compatibility, responsive closure, production, download or release authority is changed.
+- The next P15 product batch remains unactivated until the reconciliation PR is exact-head verified and merged.
+
+## 2026-09-25 — reconciliation PR #716 opened
+
+- PR #716 opened for Issue #715 from `ai-native/post-pr-714-reconciliation` against exact base main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`.
+- PR creation head was `1e6376d5ed0dd8aeddc547fccc0cc4f8ac2024e2`.
+- Lifecycle binding records PR #716 in compact state, coordination queue, Runner benchmark, README and memory-bank truth.
+- The final bound reconciliation head is intentionally uncertified; no workflow/status polling occurs in this lifecycle-binding milestone.
+- No product/runtime behavior, security control or compatibility/production/download/release authority changes.
+
+## 2026-09-25 — PR #716 verifier phrase repair
+
+- Exact head `dfd830af5aa6e94e2b18c91a0fdbdedbecc17a4a` completed with 5/7 required gates PASS and 0 unresolved review threads.
+- PASS: CodeQL `36054283243`, Integration Readiness `36054283267`, P12 Offline Acceptance `36054283413`, P15 Real Elementor Target Proof `36054283194`, P17 Local Browser Proof `36054283178`.
+- CI `36054283277` and P12 Final Release Artifact `36054283261` failed only at `status:verify`.
+- Root cause was README/verifier lifecycle wording drift: README correctly names `#715 / PR #716`, while the verifier still required the pre-PR `#715` phrase.
+- Repair changes the verifier matcher only for executable logic and synchronizes durable failure/repair metadata.
+- No product/runtime behavior, required check, security control, compatibility, production, download or release authority boundary is changed.
+- The repaired PR head is intentionally uncertified until the next consolidated exact-head verification turn.

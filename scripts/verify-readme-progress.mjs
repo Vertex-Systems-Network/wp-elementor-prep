@@ -146,7 +146,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#713',
+  next: '#715',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -640,13 +640,15 @@ for (const fragment of p15ButtonVisualDepthRadiusRequiredFragments) {
     throw new Error(`P15 #713 Fast Batch Button visual-depth/radius contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #713 implementation')
-  || !readme.includes('PR #714')
+if (!readme.includes('### Completed P15 Fast Batch #713 implementation')
+  || !readme.includes('Repaired final exact head `4e2cc76a309d99c8c37b73402bcd8f1f5050715d`')
+  || !readme.includes('Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.')
+  || !readme.includes('Issue #715 / PR #716 now owns post-merge AI-native reconciliation only')
   || !readme.includes('`text_shadow_text_shadow`')
   || !readme.includes('`button_box_shadow_box_shadow`')
   || !readme.includes('`border_radius_tablet`')
   || !readme.includes('production acceptance and download authority remain false/out of scope')) {
-  throw new Error('README P15 #713 / PR #714 Button visual-depth/radius Fast Batch truth is stale or missing.');
+  throw new Error('README P15 #713 / PR #714 merged Button visual-depth/radius Fast Batch truth is stale or missing.');
 }
 
 console.log(

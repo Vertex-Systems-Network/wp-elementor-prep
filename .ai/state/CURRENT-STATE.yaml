@@ -2,14 +2,14 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 012edb7f8403c18eb5bab8f41ac1fd2572e4be0e
+observed_main_sha: f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c
 observed_main_branch: main
-active_issue: 713
-active_pr: 714
-active_branch: p15/button-visual-depth-radius-batch
+active_issue: 715
+active_pr: 716
+active_branch: ai-native/post-pr-714-reconciliation
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_button_visual_depth_radius_fast_batch_v1
+current_milestone: post_pr_714_ai_native_reconciliation
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -17,14 +17,14 @@ next_action_options:
   fallback_action_tokens_required: true
   click_semantics: new_user_request_only
   grants_authority: false
-  recommended_action_id: verify-pr-714
+  recommended_action_id: verify-pr-716
 milestone_status: VERIFYING
-last_completed_milestone: p15_pr_712_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: next_user_continue_resolves_repaired_pr_714_head_and_performs_one_consolidated_exact_head_status_refresh
-pending_runner_ids: [RQ-713-FINAL]
+last_completed_milestone: p15_pr_714_repaired_exact_head_passed_7_of_7_and_merged
+exact_next_safe_action: next_user_continue_resolves_repaired_pr_716_head_and_performs_one_consolidated_exact_head_status_refresh
+pending_runner_ids: [RQ-715-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_714_repaired_exact_head_gate_set_not_yet_observed
+  - pr_716_repaired_exact_head_gate_set_not_yet_observed
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
@@ -34,7 +34,7 @@ development_batching:
   mode: fast_batch
   enabled: true
   activation: active
-  current_batch_capabilities: 3
+  current_batch_capabilities: 0
   default_capabilities_per_batch_min: 3
   default_capabilities_per_batch_max: 5
   one_issue_branch_pr_per_batch: true
