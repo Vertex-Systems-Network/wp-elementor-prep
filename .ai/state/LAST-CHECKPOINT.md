@@ -31,8 +31,11 @@ Focused test commit: `d70fd86b1bb8c0e7e9e757d7ec57b36d004ade38`.
 
 - PR #728 opened against exact base main `3b632502e70b8df9b5562c90770230b30e20d5be`.
 - PR creation head was `870e4eea2469072e55776bba8068d0b0c96967cb`.
-- Final lifecycle binding changes governance/status truth only; remote exact-head gates are intentionally deferred to the next user turn.
+- First exact-head run on `2b96b4b2b0d634ae845c2519e0e288e5f271c19d`: CodeQL, Integration Readiness, P12 Offline, P15 Target Proof and P17 Browser Proof passed; CI and P12 Final Release Artifact failed.
+- CI reported 1,730 passed / 3 failed. All three were assertions expecting responsive-qualified status names while the resolver's declared result union uses the shorter status names. P12 Final Release Artifact runs the same test suite before package assembly and stopped on those assertions.
+- Repair aligns the three test expectations with the resolver's declared status contract; no product runtime behavior or authority changed.
+- Repaired final PR-bound head still requires one consolidated exact-head gate refresh before merge.
 
 ## Exact next safe action
 
-Resolve the final bound PR #728 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green with zero unresolved review threads.
+Resolve the repaired final bound PR #728 head and perform exactly one consolidated required-gate refresh. Do not merge until all seven required gates are green on that exact head with zero unresolved review threads.
