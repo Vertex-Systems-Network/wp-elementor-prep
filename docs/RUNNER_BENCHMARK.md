@@ -136,7 +136,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-735-FINAL | #735 / PR #736 | P15 Button content metadata basics v1 | Required PR exact-head gate set | repaired exact head `80c63a72...` passed 7/7; review threads 0; merged main `0593dd79...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-737-TRANSPORT | #737 | Terminal post-PR #736 state finalization | Required PR exact-head gate set | state-only/non-canonical transport against main `0593dd79...` | `FINAL_BATCH` | final transport PR head must pass all seven required gates with 0 unresolved review threads before expected-head merge | PREPARING |
+| RQ-737-TRANSPORT | #737 / PR #738 | Terminal post-PR #736 state finalization | Required PR exact-head gate set | PR creation head `aece9d71...`; state-only/non-canonical transport | `FINAL_BATCH` | final bound head must pass all seven required gates with 0 unresolved review threads before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 

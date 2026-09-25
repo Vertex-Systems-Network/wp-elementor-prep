@@ -176,7 +176,7 @@ The merged scope retains three exact Elementor 4.2.4 Button content controls fro
 
 The first PR head failed only in lifecycle verification due a syntactically corrupted status-verifier insertion; repaired exact head restored the verifier without changing product behavior. Icon/custom-attribute mutation, arbitrary classes/HTML, responsive/style inference, Figma/network mutation, target compatibility, production acceptance and download authority remain false/out of scope.
 
-Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #737 is transport-only terminal finalization and does not become canonical lifecycle ownership.
+Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #737 / PR #738 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #731 / PR #732 Button responsive padding
 

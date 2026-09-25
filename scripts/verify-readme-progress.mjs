@@ -698,7 +698,7 @@ if (!readme.includes('### Completed P15 Fast Batch #735 / PR #736 implementation
   || !readme.includes('`button_css_id` accepts only ASCII letters, digits and underscore with length `1..128`')
   || !readme.includes('Repaired final exact head `80c63a7294ea29e00187b802fe8b81b197f81505` passed all seven required gates with 0 unresolved review threads.')
   || !readme.includes('Expected-head merge produced main `0593dd7945038915859d86248c32de74f9d61d2c`; Issue #735 closed completed.')
-  || !readme.includes('Issue #737 is transport-only terminal finalization.')) {
+  || !readme.includes('Issue #737 / PR #738 is transport-only terminal finalization.')) {
   throw new Error('README P15 #735 / PR #736 merged Button content metadata Fast Batch truth is stale or missing.');
 }
 
