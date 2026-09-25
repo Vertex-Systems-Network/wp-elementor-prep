@@ -321,3 +321,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - PR creation head was `6d6956f764521fe3c680d8477cd30647e0507938`.
 - Scope remains only desktop/tablet/mobile Button `text_padding` px DIMENSIONS; no product authority was widened during lifecycle binding.
 - Remote exact-head seven-gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — P15 Fast Batch #731 / PR #732 completed; terminal finalization #733 prepared
+
+- Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI:36198227983,CodeQL:36198227949,Integration_Readiness:36198227976,P12_Offline_Acceptance:36198227940,P12_Final_Release_Artifact:36198227946,P15_Real_Elementor_Target_Proof:36198228027,P17_Local_Browser_Proof:36198227980.
+- Expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`; Issue #731 closed.
+- Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.
+- Issue #733 / branch `ai-native/terminal-finalize-pr-732` is state-only terminal finalization under the protocol exception and grants no product/runtime/security/compatibility/production/download/release authority.
+- Next step is to open the transport PR, bind its exact identity, and stop at the remote exact-head gate boundary.

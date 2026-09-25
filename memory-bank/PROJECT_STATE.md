@@ -166,13 +166,15 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
-## Active P15 Fast Batch #731 Button responsive padding
+## Completed P15 Fast Batch #731 / PR #732 Button responsive padding
 
-Issue #731 / branch `p15/button-responsive-padding-batch` owns three exact Elementor 4.2.4 Button padding capabilities: explicit desktop `text_padding`, tablet `text_padding_tablet`, and mobile `text_padding_mobile` px DIMENSIONS.
+Issue #731 / PR #732 is closed completed. Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`.
 
-The resolver is bound to exact neutral-source and generated base-candidate identities, revalidates Button text/link/alignment, accepts exact top/right/bottom/left finite values only in `0..4096`, derives `isLinked` deterministically, rejects conflicting existing target keys and never synthesizes omitted device values.
+The merged scope retains three exact Elementor 4.2.4 Button padding capabilities: explicit desktop `text_padding`, tablet `text_padding_tablet`, and mobile `text_padding_mobile` px DIMENSIONS. Exact neutral-source and generated base-candidate identities remain replay-bound; Button text/link/alignment is revalidated; existing requested target keys reject rather than overwrite.
 
-Percent/em/rem/vw/custom units, icon/typography mutation, responsive inference, custom breakpoints, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
+Values remain exact top/right/bottom/left finite px in `0..4096`, with deterministic `isLinked`. Non-px units, custom breakpoints, responsive inference, icon/typography mutation, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
+
+Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #733 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #727 / PR #728 Button responsive typography metrics
 
