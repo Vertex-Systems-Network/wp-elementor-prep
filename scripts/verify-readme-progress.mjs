@@ -23,6 +23,7 @@ const p15ButtonBorderStyleSource = await readFile('src/targets/elementor/button-
 const p15ButtonVisualDepthRadiusSource = await readFile('src/targets/elementor/button-visual-depth-radius-resolution.ts', 'utf8');
 const p15ButtonTypographyBasicsSource = await readFile('src/targets/elementor/button-typography-basics-resolution.ts', 'utf8');
 const p15ButtonResponsivePaddingSource = await readFile('src/targets/elementor/button-responsive-padding-resolution.ts', 'utf8');
+const p15ButtonContentMetadataSource = await readFile('src/targets/elementor/button-content-metadata-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -148,7 +149,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#733 terminally finalizes merged #731/#732 state before the next bounded P15 Fast Batch',
+  next: '#735 batches exact Button type/size/safe CSS-id content controls',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -673,6 +674,103 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
+const p15ButtonContentMetadataRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "buttonTypeSettingKey: 'button_type'",
+  "sizeSettingKey: 'size'",
+  "cssIdSettingKey: 'button_css_id'",
+  "cssIdPattern: '^[A-Za-z0-9_]{1,128}
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "dimensionsControlSourceBlobSha: '7de34809d407e5fa208935b77a6b6648c72d3c5d'",
+  "controlsStackSourceBlobSha: '00b280e518b89925c8f85a059b34136177ff3d4d'",
+  "controlName: 'text_padding'",
+  "desktopSettingKey: 'text_padding'",
+  "tabletSettingKey: 'text_padding_tablet'",
+  "mobileSettingKey: 'text_padding_mobile'",
+  "maxPx: P15_NEUTRAL_EXPORT_MAX_SPACING_PX",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonResponsivePaddingRequiredFragments) {
+  if (!p15ButtonResponsivePaddingSource.includes(fragment)) {
+    throw new Error(`P15 #731 Button responsive padding contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Completed P15 Fast Batch #731 / PR #732 implementation')
+  || !readme.includes('Issue #731 / PR #732 completed three tightly-related Elementor 4.2.4 Button responsive padding capabilities')
+  || !readme.includes('`text_padding`')
+  || !readme.includes('`text_padding_tablet`')
+  || !readme.includes('`text_padding_mobile`')
+  || !readme.includes('finite values remain bounded to `0..4096`')
+  || !readme.includes('Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`; Issue #731 closed completed.')
+  || !readme.includes('Issue #733 / PR #734 is transport-only terminal finalization.')) {
+  throw new Error('README P15 #731 / PR #732 merged Button responsive padding Fast Batch truth is stale or missing.');
+}
+
+if (!readme.includes('### Completed P15 Fast Batch #727 / PR #728 implementation')
+  || !readme.includes('Issue #727 / PR #728 completed four tightly-related Elementor 4.2.4 Button responsive typography capabilities')
+  || !readme.includes('`typography_font_size_tablet/mobile`')
+  || !readme.includes('`typography_line_height_tablet/mobile`')
+  || !readme.includes('`typography_letter_spacing_tablet/mobile`')
+  || !readme.includes('`typography_word_spacing_tablet/mobile`')
+  || !readme.includes('Repaired exact head `98a65b5f043deea9fc2945326eeacef2be51752a` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `ceb64cfdd8a989a01ec671eb235598bdec68596f`; Issue #727 closed completed.')
+  || !readme.includes('Issue #729 / PR #730 is transport-only terminal finalization.')) {
+  throw new Error('README P15 #727 / PR #728 merged responsive typography Fast Batch truth is stale or missing.');
+}
+
+if (!readme.includes('### Completed P15 Fast Batch #723 / PR #724 implementation')
+  || !readme.includes('Issue #723 / PR #724 completed five tightly-related Elementor 4.2.4 Button typography metrics')
+  || !readme.includes('`typography_font_family`')
+  || !readme.includes('`typography_font_size`')
+  || !readme.includes('`typography_line_height`')
+  || !readme.includes('`typography_letter_spacing`')
+  || !readme.includes('`typography_word_spacing`')
+  || !readme.includes('Expected-head merge produced main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`; Issue #723 closed.')) {
+  throw new Error('README P15 #723 Button typography metrics Fast Batch truth is stale or missing.');
+}
+
+if (!readme.includes('### Completed P15 Fast Batch #717 / PR #718 implementation')
+  || !readme.includes('Issue #717 / PR #718 owns three tightly-related Elementor 4.2.4 Button typography capabilities')
+  || !readme.includes('`typography_font_weight`')
+  || !readme.includes('`typography_text_transform`')
+  || !readme.includes('`typography_font_style`')
+  || !readme.includes('Final exact head `747ce4312c7723e00235143510e1fc3d394aae7c` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `1cd8181cf863353c3f5e4bab7b1270156067b288`; Issue #717 closed completed.')
+  || !readme.includes('PR #720 exact head `243e0aa91f7613e644bb98d6116c0ecc8aa28e0d` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `f3384739609ea68e9141f7488e924e20e5ac9d6b`; Issue #719 closed completed.')
+  || !readme.includes('Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.')
+  || !readme.includes('Issue #721 is transport-only terminal finalization.')) {
+  throw new Error('README P15 #717 Button typography basics Fast Batch truth is stale or missing.');
+}
+
+console.log(
+  `README progress contract PASS: ${rows.length} stage-separated modules, no synthetic overall percentage, runtime registry ${schemaTag}.`,
+);
+",
+  "P15_ELEMENTOR_BUTTON_CSS_ID_MAX_LENGTH = 128",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonContentMetadataRequiredFragments) {
+  if (!p15ButtonContentMetadataSource.includes(fragment)) {
+    throw new Error(`P15 #735 Button content metadata contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #735 implementation')
+  || !readme.includes('Issue #735 owns three tightly-related Elementor 4.2.4 Button content metadata capabilities')
+  || !readme.includes('`button_type`')
+  || !readme.includes('`button_css_id` accepts only ASCII letters, digits and underscore with length `1..128`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #735 Button content metadata Fast Batch truth is stale or missing.');
+}
+
 const p15ButtonResponsivePaddingRequiredFragments = [
   "elementorVersion: '4.2.4'",
   "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",

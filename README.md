@@ -278,6 +278,18 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
+### Current P15 Fast Batch #735 implementation
+
+- Issue #735 owns three tightly-related Elementor 4.2.4 Button content metadata capabilities from `register_button_content_controls()`: `button_type`, `size`, and `button_css_id`.
+- Product commit: `2eaa7bcd4413645c18aa63de2845ff55396ffe83`; focused tests: `7cf00ccf9a42c8222f7aef1f458f617e5027c519`.
+- Exact source evidence binds Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5` at Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
+- `button_type` accepts only `info|success|warning|danger`; omission preserves the Elementor default.
+- `size` accepts only `xs|sm|md|lg|xl`.
+- `button_css_id` accepts only ASCII letters, digits and underscore with length `1..128`; spaces, dashes, selectors, HTML and custom attributes are rejected.
+- Exact neutral-source + base-candidate identity binding and Button text/link/alignment revalidation remain fail-closed; requested existing target keys reject rather than overwrite.
+- Icon/selected_icon mutation, icon position/spacing, arbitrary classes/HTML/custom attributes, style/responsive inference, Figma/network mutation, target compatibility, production acceptance and download authority remain excluded.
+- Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.
+
 ### Completed P15 Fast Batch #731 / PR #732 implementation
 
 - Issue #731 / PR #732 completed three tightly-related Elementor 4.2.4 Button responsive padding capabilities: explicit desktop, default-tablet and default-mobile px DIMENSIONS for `text_padding`.
@@ -477,7 +489,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #733 terminally finalizes merged #731/#732 state before the next bounded P15 Fast Batch; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #735 batches exact Button type/size/safe CSS-id content controls; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |

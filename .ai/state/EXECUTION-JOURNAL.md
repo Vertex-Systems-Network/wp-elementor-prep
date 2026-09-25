@@ -272,3 +272,12 @@ Rolling-history note: older pre-Fast-Batch execution entries were pruned on 2026
 - Product/runtime/security/compatibility/production/download/release authority was unchanged.
 - The rolling journal was compacted by pruning older pre-Fast-Batch entries while retaining recent Fast Batch history and authoritative durable/GitHub evidence.
 - Repaired transport head requires one fresh consolidated seven-gate observation before merge.
+
+## 2026-09-26 — terminal PR #734 completed; P15 Fast Batch #735 started
+
+- PR #734 repaired exact head `f64d29d8fcf055be04f601a0a7282fef3d134c3f` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `9175c99008c36352ff02843c33b8ceef2d8f8687`; Issue #733 closed.
+- Issue #735 / branch `p15/button-content-metadata-basics` starts three tightly-related Button content controls: `button_type`, `size`, and safe `button_css_id`.
+- Exact Elementor 4.2.4 evidence binds Button trait `31192aaee6851c445f79d1998499f6ce73ba7da5`.
+- Product commit `2eaa7bcd4413645c18aa63de2845ff55396ffe83`; focused tests `7cf00ccf9a42c8222f7aef1f458f617e5027c519`.
+- Type/size are exact enums; CSS ID is ASCII alphanumeric/underscore only, 1..128 characters.
+- Icon/custom-attribute mutation, inference, Figma/network access, compatibility, production and download authority remain excluded.
