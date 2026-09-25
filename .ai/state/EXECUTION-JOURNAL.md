@@ -296,3 +296,11 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.
 - Issue #729 and branch `ai-native/terminal-finalize-pr-728` are state-only terminal finalization under the protocol exception and grant no product/runtime/security/compatibility/production/download/release authority.
 - Next step is to open the transport PR, bind its exact identity, and stop at the remote exact-head gate boundary.
+
+## 2026-09-26 — terminal finalization PR #730 opened
+
+- PR #730 opened from `ai-native/terminal-finalize-pr-728` against exact base main `ceb64cfdd8a989a01ec671eb235598bdec68596f`.
+- PR creation head was `4bda070cea36d77973a8d57fb1b861603be76f7f`.
+- Transport Issue #729 / PR #730 is not the canonical lifecycle owner; `active_issue` and `active_pr` remain null.
+- Product/runtime/security/compatibility/production/download/release authority remains unchanged.
+- Next milestone is one consolidated exact-head seven-gate observation with review-thread check; no CI polling is performed in this handoff turn.
