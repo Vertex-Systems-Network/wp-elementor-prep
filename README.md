@@ -278,6 +278,17 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
+### Current P15 Fast Batch #731 implementation
+
+- Issue #731 owns three tightly-related Elementor 4.2.4 Button responsive padding capabilities: explicit desktop, default-tablet and default-mobile px DIMENSIONS for `text_padding`.
+- Product commit: `5bd2648d9795b32a8046dba2f636373f1f4f94cd`; focused tests: `6acd7da60baa4b0b3bfc6a1b7f10e1a1419221b`.
+- Exact source evidence binds Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, DIMENSIONS control blob `7de34809d407e5fa208935b77a6b6648c72d3c5d`, Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d`, and Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
+- Writes are bounded to explicitly requested `text_padding`, `text_padding_tablet`, and `text_padding_mobile` only.
+- Every value is an exact top/right/bottom/left px DIMENSIONS object with deterministic `isLinked`; finite values are bounded to `0..4096`.
+- Exact neutral-source + base-candidate identity binding and Button text/link/alignment revalidation remain fail-closed; any pre-existing requested target padding key rejects rather than overwrites.
+- Omitted devices remain omitted. Percent/em/rem/vw/custom units, responsive inference, custom breakpoints, icon mutation, typography mutation, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain excluded.
+- Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.
+
 ### Completed P15 Fast Batch #727 / PR #728 implementation
 
 - Issue #727 / PR #728 completed four tightly-related Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing.
@@ -464,7 +475,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #727 batches explicit Button tablet/mobile px font size/line height/letter spacing/word spacing; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #731 batches explicit Button desktop/tablet/mobile px text_padding DIMENSIONS; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
