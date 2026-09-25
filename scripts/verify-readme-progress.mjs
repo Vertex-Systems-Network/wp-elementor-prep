@@ -680,7 +680,7 @@ if (!readme.includes('### Completed P15 Fast Batch #727 / PR #728 implementation
   || !readme.includes('`typography_word_spacing_tablet/mobile`')
   || !readme.includes('Repaired exact head `98a65b5f043deea9fc2945326eeacef2be51752a` passed all seven required gates with 0 unresolved review threads.')
   || !readme.includes('Expected-head merge produced main `ceb64cfdd8a989a01ec671eb235598bdec68596f`; Issue #727 closed completed.')
-  || !readme.includes('Issue #729 is transport-only terminal finalization.')) {
+  || !readme.includes('Issue #729 / PR #730 is transport-only terminal finalization.')) {
   throw new Error('README P15 #727 / PR #728 merged responsive typography Fast Batch truth is stale or missing.');
 }
 
