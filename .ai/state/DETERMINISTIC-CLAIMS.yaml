@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 3b632502e70b8df9b5562c90770230b30e20d5be
+observed_main_sha: ceb64cfdd8a989a01ec671eb235598bdec68596f
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -266,3 +266,8 @@ claims:
   - {id: CL-263, statement: p15_727_writes_only_explicit_default_tablet_mobile_px_typography_metrics_and_preserves_desktop_metric_keys, value: true}
   - {id: CL-264, statement: p15_727_preserves_false_custom_breakpoint_inheritance_responsive_inference_global_font_variable_axis_network_figma_compatibility_production_and_download_authority, value: true}
   - {id: CL-265, statement: pr_728_is_active_final_exact_head_verification_path_for_issue_727_button_responsive_typography_metrics_fast_batch, value: true}
+  - {id: CL-266, statement: pr_728_repaired_exact_head_98a65b5f_passed_all_seven_required_gates_with_zero_unresolved_review_threads_and_merged_as_main_ceb64cfd, value: true}
+  - {id: CL-267, statement: issue_727_is_closed_completed_after_pr_728_expected_head_merge, value: true}
+  - {id: CL-268, statement: canonical_state_is_idle_ready_for_next_p15_batch_after_pr_728_merge_with_no_active_issue_or_pr, value: true}
+  - {id: CL-269, statement: issue_729_is_transport_only_terminal_finalization_after_pr_728_and_is_not_a_canonical_active_issue_or_pr, value: true}
+  - {id: CL-270, statement: pr_730_is_transport_only_terminal_finalization_after_pr_728_and_is_not_a_canonical_active_pr, value: true}

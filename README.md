@@ -47,7 +47,7 @@ Open roadmap / acceptance dependencies:
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
 - `#723 / PR #724` — completed P15 Fast Batch: Button typography metrics v1; terminal state transport #725 / PR #726 completed 7/7 and merged;
-- `#727 / PR #728` — active P15 Fast Batch: Button responsive typography metrics v1;
+- `#727 / PR #728` — completed P15 Fast Batch: Button responsive typography metrics v1; `#729 / PR #730` is transport-only terminal state finalization;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -278,18 +278,20 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
-### Current P15 Fast Batch #727 implementation
+### Completed P15 Fast Batch #727 / PR #728 implementation
 
-- Issue #727 / PR #728 owns four tightly-related Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing.
+- Issue #727 / PR #728 completed four tightly-related Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing.
 - Product commit: `313c8e0443e3f8148f4f64a00a3285f88a93e1c5`; focused tests: `d70fd86b1bb8c0e7e9e757d7ec57b36d004ade38`.
 - First exact-head CI and P12 Final Release Artifact runs on `2b96b4b2b0d634ae845c2519e0e288e5f271c19d` both stopped on the same test suite: 1,730 passed and 3 status-name assertions failed; CodeQL, Integration Readiness, P12 Offline Acceptance, P15 Target Proof and P17 Browser Proof passed.
-- The focused tests now assert the resolver's declared result statuses. This repairs the test contract without changing product runtime behavior.
+- The focused tests were repaired to assert the resolver's declared result statuses without changing product runtime behavior.
+- Repaired exact head `98a65b5f043deea9fc2945326eeacef2be51752a` passed all seven required gates with 0 unresolved review threads.
+- Expected-head merge produced main `ceb64cfdd8a989a01ec671eb235598bdec68596f`; Issue #727 closed completed.
 - Exact source evidence binds Typography group blob `eea951b6331bd84c80e24b7fb6ab249e5c4c41a1`, where all four controls are explicitly responsive, plus Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d` for `<id>_<device>` suffix semantics and Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`.
 - Writes are bounded to `typography_typography=custom` plus requested `typography_font_size_tablet/mobile`, `typography_line_height_tablet/mobile`, `typography_letter_spacing_tablet/mobile`, and `typography_word_spacing_tablet/mobile`.
 - Font size is integer px `1..200`; line height is repository-bounded integer px `1..400`; letter spacing is px `-5..10` in `0.1` increments; word spacing is repository-bounded integer px `0..50`.
 - Exact neutral-source + base-candidate binding and Button text/alignment/link revalidation remain fail-closed; requested conflicting responsive keys reject rather than overwrite.
 - Desktop metric writes, font family/global fonts, variable axes, custom breakpoints, inheritance synthesis, responsive inference, CSS/custom units, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain excluded.
-- Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.
+- Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR; Issue #729 / PR #730 is transport-only terminal finalization.
 
 ### Completed P15 Fast Batch #723 / PR #724 implementation
 

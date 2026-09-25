@@ -672,14 +672,16 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #727 implementation')
-  || !readme.includes('Issue #727 / PR #728 owns four tightly-related Elementor 4.2.4 Button responsive typography capabilities')
+if (!readme.includes('### Completed P15 Fast Batch #727 / PR #728 implementation')
+  || !readme.includes('Issue #727 / PR #728 completed four tightly-related Elementor 4.2.4 Button responsive typography capabilities')
   || !readme.includes('`typography_font_size_tablet/mobile`')
   || !readme.includes('`typography_line_height_tablet/mobile`')
   || !readme.includes('`typography_letter_spacing_tablet/mobile`')
   || !readme.includes('`typography_word_spacing_tablet/mobile`')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
-  throw new Error('README P15 #727 Button responsive typography Fast Batch truth is stale or missing.');
+  || !readme.includes('Repaired exact head `98a65b5f043deea9fc2945326eeacef2be51752a` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `ceb64cfdd8a989a01ec671eb235598bdec68596f`; Issue #727 closed completed.')
+  || !readme.includes('Issue #729 / PR #730 is transport-only terminal finalization.')) {
+  throw new Error('README P15 #727 / PR #728 merged responsive typography Fast Batch truth is stale or missing.');
 }
 
 if (!readme.includes('### Completed P15 Fast Batch #723 / PR #724 implementation')
