@@ -47,7 +47,7 @@ Open roadmap / acceptance dependencies:
 - `#84` — P12 retained final validation/release-exit truth;
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
 - `#723 / PR #724` — completed P15 Fast Batch: Button typography metrics v1; terminal state transport #725 / PR #726 completed 7/7 and merged;
-- `#727 / PR #728` — completed P15 Fast Batch: Button responsive typography metrics v1; `#729` is transport-only terminal state finalization;
+- `#727 / PR #728` — completed P15 Fast Batch: Button responsive typography metrics v1; `#729 / PR #730` is transport-only terminal state finalization;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
@@ -291,7 +291,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Font size is integer px `1..200`; line height is repository-bounded integer px `1..400`; letter spacing is px `-5..10` in `0.1` increments; word spacing is repository-bounded integer px `0..50`.
 - Exact neutral-source + base-candidate binding and Button text/alignment/link revalidation remain fail-closed; requested conflicting responsive keys reject rather than overwrite.
 - Desktop metric writes, font family/global fonts, variable axes, custom breakpoints, inheritance synthesis, responsive inference, CSS/custom units, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain excluded.
-- Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR; Issue #729 is transport-only terminal finalization.
+- Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR; Issue #729 / PR #730 is transport-only terminal finalization.
 
 ### Completed P15 Fast Batch #723 / PR #724 implementation
 
