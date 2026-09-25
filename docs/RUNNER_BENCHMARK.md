@@ -128,6 +128,8 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-727-FINAL | #727 / PR #728 | P15 Button responsive typography metrics v1 | Required PR exact-head gate set | repaired exact head `98a65b5f...` passed 7/7; review threads 0; merged main `ceb64cfd...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
+| RQ-729-TRANSPORT | #729 / PR #730 | Terminal post-PR #728 state finalization | Required PR exact-head gate set | PR creation head `4bda070c...`; state-only/non-canonical transport | `FINAL_BATCH` | final bound head must pass all seven required gates with 0 unresolved review threads before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
+
 ## Blocking-now queue
 
 | Queue ID | Phase / issue | Why blocking now | Runner / workflow | Expected evidence | Status |
