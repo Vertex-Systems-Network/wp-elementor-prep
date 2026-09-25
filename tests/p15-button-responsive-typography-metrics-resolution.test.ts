@@ -103,7 +103,7 @@ describe('P15 Fast Batch responsive Button typography metrics', () => {
       .toBe('eea951b6331bd84c80e24b7fb6ab249e5c4c41a1');
     expect(P15_ELEMENTOR_BUTTON_RESPONSIVE_TYPOGRAPHY_METRICS_EVIDENCE.controlsStackSourceBlobSha)
       .toBe('00b280e518b89925c8f85a059b34136177ff3d4d');
-    expect(result.status).toBe('BUTTON_RESPONSIVE_TYPOGRAPHY_METRICS_RESOLVED');
+    expect(result.status).toBe('BUTTON_TYPOGRAPHY_METRICS_RESOLVED');
 
     const settings = settingsOf(result.template?.content[0]?.elements[0]);
     expect(settings.typography_typography).toBe('custom');
@@ -237,7 +237,7 @@ describe('P15 Fast Batch responsive Button typography metrics', () => {
       mobileWordSpacingPx: 50,
     }]));
 
-    expect(result.status).toBe('BUTTON_RESPONSIVE_TYPOGRAPHY_METRICS_RESOLVED');
+    expect(result.status).toBe('BUTTON_TYPOGRAPHY_METRICS_RESOLVED');
     const settings = settingsOf(result.template?.content[0]?.elements[0]);
     expect(settings.typography_font_size_tablet).toEqual(sliderPx(200));
     expect(settings.typography_line_height_mobile).toEqual(sliderPx(400));
@@ -253,7 +253,7 @@ describe('P15 Fast Batch responsive Button typography metrics', () => {
   it('supports empty manifests, rejects authority inflation and serializes sanitized responsive evidence only', () => {
     const source = sourceDocument();
     const empty = resolveP15ElementorButtonResponsiveTypographyMetrics(source, manifest(source, []));
-    expect(empty.status).toBe('NO_BUTTON_RESPONSIVE_TYPOGRAPHY_METRICS_OVERRIDES');
+    expect(empty.status).toBe('NO_BUTTON_TYPOGRAPHY_METRICS_OVERRIDES');
     expect(empty.baseCandidateIdentityDigest).toBe(empty.resolvedCandidateIdentityDigest);
 
     const raw = manifest(source, [{
