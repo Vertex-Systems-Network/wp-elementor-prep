@@ -174,7 +174,7 @@ The merged scope retains four tightly-related exact Elementor 4.2.4 Button respo
 
 Font size is integer px `1..200`; line height is locally bounded integer px `1..400`; letter spacing is `-5..10` px in `0.1` steps; word spacing is locally bounded integer px `0..50`. Desktop metric writes, font-family/global-token resolution, variable-font axes, custom breakpoints, inheritance synthesis, responsive inference, CSS/custom units, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
 
-Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #729 is transport-only terminal finalization and does not become canonical lifecycle ownership.
+Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #729 / PR #730 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #723 / PR #724 Button typography metrics
 
