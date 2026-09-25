@@ -21,7 +21,10 @@ Canonical Active branch: `main`
 - PR #730 opened against exact base main `ceb64cfdd8a989a01ec671eb235598bdec68596f`.
 - PR creation head was `4bda070cea36d77973a8d57fb1b861603be76f7f`.
 - Issue #729 / PR #730 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
-- Remote exact-head gates are intentionally deferred to the next user turn.
+- Exact head `0f7e4a26731043ee64a48a7eaad59d3946a21d17` passed CodeQL, Integration Readiness, P12 Offline Acceptance, P15 Real Elementor Target Proof and P17 Local Browser Proof, with 0 unresolved review threads.
+- CI `36194588760` and P12 Final Release Artifact `36194588838` failed only at `status:verify`: the verifier still expected `Issue #729 is transport-only terminal finalization.` after README had correctly advanced to `Issue #729 / PR #730 is transport-only terminal finalization.`
+- The repair changes only that verifier phrase; product/runtime/security/compatibility/production/download/release authority is unchanged.
+- Repaired final head requires one fresh consolidated exact-head gate observation before merge.
 - A future successful transport merge does not itself require recursive reconciliation.
 
 ## Exact next safe action
