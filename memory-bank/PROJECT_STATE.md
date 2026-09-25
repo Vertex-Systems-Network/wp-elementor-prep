@@ -166,11 +166,15 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
-## Active P15 Fast Batch #727 Button responsive typography metrics
+## Completed P15 Fast Batch #727 / PR #728 Button responsive typography metrics
 
-Issue #727 / PR #728 on branch `p15/button-responsive-typography-metrics-batch` owns four tightly-related exact Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing. Exact Typography group source marks each control responsive and Controls Stack establishes the non-desktop suffix contract. Applied entries write `typography_typography=custom` plus only requested tablet/mobile px slider keys.
+Issue #727 / PR #728 is closed completed. Repaired exact head `98a65b5f043deea9fc2945326eeacef2be51752a` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `ceb64cfdd8a989a01ec671eb235598bdec68596f`.
+
+The merged scope retains four tightly-related exact Elementor 4.2.4 Button responsive typography capabilities: explicit default tablet/mobile font size, line height, letter spacing and word spacing. Exact Typography group source marks each control responsive and Controls Stack establishes the non-desktop suffix contract. Applied entries write `typography_typography=custom` plus only requested tablet/mobile px slider keys.
 
 Font size is integer px `1..200`; line height is locally bounded integer px `1..400`; letter spacing is `-5..10` px in `0.1` steps; word spacing is locally bounded integer px `0..50`. Desktop metric writes, font-family/global-token resolution, variable-font axes, custom breakpoints, inheritance synthesis, responsive inference, CSS/custom units, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
+
+Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #729 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #723 / PR #724 Button typography metrics
 
