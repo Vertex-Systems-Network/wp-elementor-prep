@@ -132,7 +132,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-731-FINAL | #731 / PR #732 | P15 Button responsive padding v1 | Required PR exact-head gate set | exact head `8ba3ec30...` passed 7/7; review threads 0; merged main `d0404cfc...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-733-TRANSPORT | #733 / PR #734 | Terminal post-PR #732 state finalization | Required PR exact-head gate set | PR creation head `3cc87904...`; state-only/non-canonical transport | `FINAL_BATCH` | final bound head must pass all seven required gates with 0 unresolved review threads before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
+| RQ-733-TRANSPORT | #733 / PR #734 | Terminal post-PR #732 state finalization | Required PR exact-head gate set | head `86be4550...` passed 5/7 with 0 review threads; CI `36198817569` + P12 Final `36198817591` failed only on 34,135-byte rolling journal > 32,768-byte ceiling; journal compacted | `FINAL_BATCH` | repaired final head must pass all seven required gates with 0 unresolved review threads before expected-head merge | REPAIR_PUSHED_AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 

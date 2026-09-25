@@ -22,7 +22,10 @@ Canonical Active branch: `main`
 - PR #734 opened against exact base main `d0404cfc13745f6a13f13581d8e793deefad62d5`.
 - PR creation head was `3cc87904c10b9cf1c9256e8232b4a690c92a0484`.
 - Issue #733 / PR #734 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
-- Remote exact-head gates are intentionally deferred to the next user turn.
+- Exact head `86be4550863f3af9158a864d1a3e2e0848b06f87` passed five of seven required gates with 0 unresolved review threads.
+- CI `36198817569` and P12 Final Release Artifact `36198817591` failed only because `.ai/state/EXECUTION-JOURNAL.md` measured 34,135 bytes against the 32,768-byte hard ceiling.
+- The rolling journal was compacted by pruning older pre-Fast-Batch entries; product/runtime/security/compatibility/production/download/release authority is unchanged.
+- Repaired final head requires one fresh consolidated exact-head gate observation before merge.
 - A future successful transport merge does not itself require recursive reconciliation.
 
 ## Exact next safe action
