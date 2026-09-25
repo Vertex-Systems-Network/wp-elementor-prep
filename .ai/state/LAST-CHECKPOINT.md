@@ -16,10 +16,14 @@ Canonical Active branch: `main`
 - Four bounded Button responsive typography capabilities are retained for explicit default tablet/mobile font size, line height, letter spacing and word spacing.
 - Desktop metric writes, font family/global-token resolution, variable axes, custom breakpoints, inheritance synthesis, responsive inference, CSS/custom units, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain unclaimed.
 
-## Terminal finalization transport #729
+## Terminal finalization transport #729 / PR #730
 
-Issue #729 is state-only transport under the protocol terminal-finalization exception. It is not the canonical lifecycle owner and does not populate `active_issue` or `active_pr`.
+- PR #730 opened against exact base main `ceb64cfdd8a989a01ec671eb235598bdec68596f`.
+- PR creation head was `4bda070cea36d77973a8d57fb1b861603be76f7f`.
+- Issue #729 / PR #730 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
+- Remote exact-head gates are intentionally deferred to the next user turn.
+- A future successful transport merge does not itself require recursive reconciliation.
 
 ## Exact next safe action
 
-Open the state-only terminal finalization PR from `ai-native/terminal-finalize-pr-728` against exact base main `ceb64cfdd8a989a01ec671eb235598bdec68596f`, then bind its PR identity and defer remote exact-head gate observation to the next user turn.
+Resolve the final bound PR #730 head and perform exactly one consolidated required-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
