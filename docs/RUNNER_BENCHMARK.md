@@ -126,7 +126,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-725-TRANSPORT | #725 / PR #726 | Terminal post-PR #724 state finalization | Required PR exact-head gate set | exact head `221a94f7...` passed 7/7; review threads 0; merged main `3b632502...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-727-FINAL | #727 / PR #728 | P15 Button responsive typography metrics v1 | Required PR exact-head gate set | PR creation head `870e4eea...`; four-capability exact responsive typography contract | `FINAL_BATCH` | initial head 2b96b4b2b0d634ae845c2519e0e288e5f271c19d failed CI 36074415491 and P12 Final 36074415483 on the same three status-name assertions (1,730/1,733 tests passed); focused test expectations now match the resolver status union; repaired final bound PR head must pass all seven gates before merge | REPAIR_PUSHED_AWAITING_EXACT_HEAD_BATCH |
+| RQ-727-FINAL | #727 / PR #728 | P15 Button responsive typography metrics v1 | Required PR exact-head gate set | repaired exact head `98a65b5f...` passed 7/7; review threads 0; merged main `ceb64cfd...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
 ## Blocking-now queue
 
