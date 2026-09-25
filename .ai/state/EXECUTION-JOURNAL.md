@@ -287,3 +287,12 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Batch scope remains four responsive capabilities: font size, line height, letter spacing and word spacing for explicit default tablet/mobile px values only.
 - Final lifecycle binding records PR identity only; remote exact-head gate polling is deferred to the next user turn.
 - Desktop metrics, custom breakpoints, inheritance synthesis, global/token font resolution, variable axes, compatibility, production and download authority remain excluded.
+
+## 2026-09-26 — P15 Fast Batch #727 / PR #728 completed; terminal finalization #729 prepared
+
+- Repaired exact head `98a65b5f043deea9fc2945326eeacef2be51752a` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI:36118683631, CodeQL:36118683695, Integration_Readiness:36118683627, P12_Offline_Acceptance:36118683577, P12_Final_Release_Artifact:36118683537, P15_Real_Elementor_Target_Proof:36118683651, P17_Local_Browser_Proof:36118683569.
+- Expected-head merge produced main `ceb64cfdd8a989a01ec671eb235598bdec68596f`; Issue #727 closed automatically.
+- Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.
+- Issue #729 and branch `ai-native/terminal-finalize-pr-728` are state-only terminal finalization under the protocol exception and grant no product/runtime/security/compatibility/production/download/release authority.
+- Next step is to open the transport PR, bind its exact identity, and stop at the remote exact-head gate boundary.
