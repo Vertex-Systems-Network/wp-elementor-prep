@@ -701,7 +701,7 @@ if (!readme.includes('### Completed P15 Fast Batch #731 / PR #732 implementation
   || !readme.includes('finite values remain bounded to `0..4096`')
   || !readme.includes('Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with 0 unresolved review threads.')
   || !readme.includes('Expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`; Issue #731 closed completed.')
-  || !readme.includes('Issue #733 is transport-only terminal finalization.')) {
+  || !readme.includes('Issue #733 / PR #734 is transport-only terminal finalization.')) {
   throw new Error('README P15 #731 / PR #732 merged Button responsive padding Fast Batch truth is stale or missing.');
 }
 

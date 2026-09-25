@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: post-pr-732-terminal-prep
+  presentation_epoch: pr-734-terminal-handoff
   presentation_order:
-    - review-next-p15-map
     - review-security-blocker-287
-    - open-terminal-pr-733
+    - review-next-p15-map
     - review-ai-plan
-recommended_action_id: open-terminal-pr-733
+    - verify-terminal-pr-734
+recommended_action_id: verify-terminal-pr-734
 options:
-  - action_id: open-terminal-pr-733
-    label: Open terminal finalization PR for #733
+  - action_id: verify-terminal-pr-734
+    label: Verify terminal finalization PR #734
     enabled: true
     recommended: true
-    action_token: OPEN_TERMINAL_PR_733
-    request_payload: "Open the state-only terminal finalization PR for Issue #733 against exact main d0404cfc13745f6a13f13581d8e793deefad62d5, bind its PR identity, and stop at the exact-head Runner boundary."
+    action_token: VERIFY_TERMINAL_PR_734
+    request_payload: "Resolve the exact current head of transport-only PR #734 and perform one consolidated required-gate refresh plus review-thread check."
     blocked_by: []
     blocked_reason: null
   - action_id: review-next-p15-map
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_NEXT_P15_MAP
-    request_payload: "Review the remaining P15 capability map without starting product work before terminal finalization #733 is certified."
+    request_payload: "Review remaining P15 capability map while terminal finalization PR #734 is awaiting certification."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -50,6 +50,6 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review the AI-Native roadmap from the settled post-PR #732 canonical state while terminal finalization #733 remains transport-only."
+    request_payload: "Review current AI-Native roadmap from the settled post-PR #732 canonical state while PR #734 remains transport-only."
     blocked_by: []
     blocked_reason: null

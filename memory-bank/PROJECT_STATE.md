@@ -174,7 +174,7 @@ The merged scope retains three exact Elementor 4.2.4 Button padding capabilities
 
 Values remain exact top/right/bottom/left finite px in `0..4096`, with deterministic `isLinked`. Non-px units, custom breakpoints, responsive inference, icon/typography mutation, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
 
-Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #733 is transport-only terminal finalization and does not become canonical lifecycle ownership.
+Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #733 / PR #734 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #727 / PR #728 Button responsive typography metrics
 
