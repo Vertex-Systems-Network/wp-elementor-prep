@@ -1,38 +1,41 @@
 # Last Durable Checkpoint
 
-Status: IDLE_READY_NEXT_P15_BATCH  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`  
-Observed-main semantics: `terminal_finalization_base_tip`  
-Canonical Active Issue: `none`  
-Canonical Active PR: `none`  
-Canonical Active branch: `main`
+Observed main: `3b632502e70b8df9b5562c90770230b30e20d5be`  
+Active Issue: `#727`  
+Active PR: `#728`  
+Active branch: `p15/button-responsive-typography-metrics-batch`
 
-## Completed P15 Fast Batch #723 / PR #724
+## Terminal finalization #725 / PR #726 completed
 
-- Exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with 0 unresolved review threads.
-- CI `36072296742`
-- CodeQL `36072296478`
-- Integration Readiness `36072296670`
-- P12 Offline Acceptance `36072296669`
-- P12 Final Release Artifact `36072296837`
-- P15 Real Elementor Target Proof `36072296432`
-- P17 Local Browser Proof `36072296352`
-- Expected-head merge produced main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`; Issue #723 closed.
-- Five bounded Button typography metrics are retained: literal font family plus desktop px font size, line height, letter spacing and word spacing.
-- Responsive typography, global/token font resolution, variable-font axes, CSS/custom-unit inference, broad compatibility, production acceptance and download authority remain unclaimed.
+- Exact transport head `221a94f731fdc9847ead403965fff2a0ea029262` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI `36073430532`, CodeQL `36073430617`, Integration `36073430432`, P12 Offline `36073430517`, P12 Final `36073430767`, P15 target `36073430429`, P17 browser `36073430394`.
+- Expected-head merge produced main `3b632502e70b8df9b5562c90770230b30e20d5be`; Issue #725 closed.
+- No recursive reconciliation is required for that transport merge.
 
-## Terminal finalization transport #725
+## Active P15 Fast Batch #727
 
-Issue #725 / PR #726 is state-only transport under the protocol terminal-finalization exception. It is not the canonical lifecycle owner and does not populate `active_issue` or `active_pr`.
+Button responsive typography metrics v1 contains four exact Elementor 4.2.4 capabilities:
+1. explicit tablet/mobile font size;
+2. explicit tablet/mobile line height;
+3. explicit tablet/mobile letter spacing;
+4. explicit tablet/mobile word spacing.
 
-## Transport PR #726 lifecycle
+Writes are default tablet/mobile only, px slider shape only, exact source/base-candidate bound and Button text/alignment/link preserving. Desktop metric keys, font family/global fonts, variable axes, custom breakpoints, inheritance synthesis, responsive inference, CSS/custom units, Figma/network mutation, compatibility, responsive closure, production and download authority remain excluded.
 
-- PR #726 opened against exact base main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`.
-- PR creation head was `650959442d97fa28f961492d20155943cc281e7b`.
-- PR #726 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
-- Remote exact-head gates are intentionally deferred to the next user turn.
+Product commit: `313c8e0443e3f8148f4f64a00a3285f88a93e1c5`.  
+Focused test commit: `d70fd86b1bb8c0e7e9e757d7ec57b36d004ade38`.
+
+## PR #728 lifecycle
+
+- PR #728 opened against exact base main `3b632502e70b8df9b5562c90770230b30e20d5be`.
+- PR creation head was `870e4eea2469072e55776bba8068d0b0c96967cb`.
+- First exact-head run on `2b96b4b2b0d634ae845c2519e0e288e5f271c19d`: CodeQL, Integration Readiness, P12 Offline, P15 Target Proof and P17 Browser Proof passed; CI and P12 Final Release Artifact failed.
+- CI reported 1,730 passed / 3 failed. All three were assertions expecting responsive-qualified status names while the resolver's declared result union uses the shorter status names. P12 Final Release Artifact runs the same test suite before package assembly and stopped on those assertions.
+- Repair aligns the three test expectations with the resolver's declared status contract; no product runtime behavior or authority changed.
+- Repaired final PR-bound head still requires one consolidated exact-head gate refresh before merge.
 
 ## Exact next safe action
 
-Resolve the final bound PR #726 head and perform exactly one consolidated required-gate refresh. Do not merge until that exact head is green with zero unresolved review threads.
+Resolve the repaired final bound PR #728 head and perform exactly one consolidated required-gate refresh. Do not merge until all seven required gates are green on that exact head with zero unresolved review threads.
