@@ -166,6 +166,14 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
+## Active P15 Fast Batch #735 Button content metadata basics
+
+Issue #735 / PR #736 / branch `p15/button-content-metadata-basics` owns three exact Elementor 4.2.4 Button content controls from the same Button trait source family: `button_type`, `size`, and `button_css_id`.
+
+`button_type` is restricted to `info|success|warning|danger`; `size` to `xs|sm|md|lg|xl`; `button_css_id` to ASCII letters/digits/underscore, 1..128 characters. The resolver is exact source/base-candidate bound, revalidates Button text/link/alignment, and fails closed on existing requested target keys.
+
+Icon mutation, arbitrary classes/HTML/custom attributes, responsive/style inference, Figma/network mutation, compatibility, production acceptance and download authority remain false/out of scope.
+
 ## Completed P15 Fast Batch #731 / PR #732 Button responsive padding
 
 Issue #731 / PR #732 is closed completed. Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`.
@@ -174,7 +182,7 @@ The merged scope retains three exact Elementor 4.2.4 Button padding capabilities
 
 Values remain exact top/right/bottom/left finite px in `0..4096`, with deterministic `isLinked`. Non-px units, custom breakpoints, responsive inference, icon/typography mutation, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain false/out of scope.
 
-Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #733 / PR #734 is transport-only terminal finalization and does not become canonical lifecycle ownership.
+Canonical AI-native state advanced through transport-only Issue #733 / PR #734; repaired exact head `f64d29d8fcf055be04f601a0a7282fef3d134c3f` passed 7/7 and merged as main `9175c99008c36352ff02843c33b8ceef2d8f8687` without becoming canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #727 / PR #728 Button responsive typography metrics
 

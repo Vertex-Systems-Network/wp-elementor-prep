@@ -23,6 +23,7 @@ const p15ButtonBorderStyleSource = await readFile('src/targets/elementor/button-
 const p15ButtonVisualDepthRadiusSource = await readFile('src/targets/elementor/button-visual-depth-radius-resolution.ts', 'utf8');
 const p15ButtonTypographyBasicsSource = await readFile('src/targets/elementor/button-typography-basics-resolution.ts', 'utf8');
 const p15ButtonResponsivePaddingSource = await readFile('src/targets/elementor/button-responsive-padding-resolution.ts', 'utf8');
+const p15ButtonContentMetadataSource = await readFile('src/targets/elementor/button-content-metadata-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -148,7 +149,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#733 terminally finalizes merged #731/#732 state before the next bounded P15 Fast Batch',
+  next: '#735 batches exact Button type/size/safe CSS-id content controls',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -673,6 +674,32 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
+const p15ButtonContentMetadataRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "buttonTypeSettingKey: 'button_type'",
+  "sizeSettingKey: 'size'",
+  "cssIdSettingKey: 'button_css_id'",
+  "cssIdPattern: '^[A-Za-z0-9_]{1,128}$'",
+  "P15_ELEMENTOR_BUTTON_CSS_ID_MAX_LENGTH = 128",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonContentMetadataRequiredFragments) {
+  if (!p15ButtonContentMetadataSource.includes(fragment)) {
+    throw new Error(`P15 #735 Button content metadata contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #735 implementation')
+  || !readme.includes('Issue #735 / PR #736 owns three tightly-related Elementor 4.2.4 Button content metadata capabilities')
+  || !readme.includes('`button_type`')
+  || !readme.includes('`button_css_id` accepts only ASCII letters, digits and underscore with length `1..128`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #735 Button content metadata Fast Batch truth is stale or missing.');
+}
+
 const p15ButtonResponsivePaddingRequiredFragments = [
   "elementorVersion: '4.2.4'",
   "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",

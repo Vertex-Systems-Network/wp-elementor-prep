@@ -1,33 +1,49 @@
 # Last Durable Checkpoint
 
-Status: IDLE_READY_NEXT_P15_BATCH  
+Status: IMPLEMENTING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `d0404cfc13745f6a13f13581d8e793deefad62d5`  
-Observed-main semantics: `terminal_finalization_base_tip`  
-Canonical Active Issue: `none`  
-Canonical Active PR: `none`  
-Canonical Active branch: `main`
+Observed main: `9175c99008c36352ff02843c33b8ceef2d8f8687`  
+Active Issue: `#735`  
+Active PR: `#736`  
+Active branch: `p15/button-content-metadata-basics`
 
-## Completed P15 Fast Batch #731 / PR #732
+## Terminal finalization #733 / PR #734 completed
 
-- Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with 0 unresolved review threads.
-- Runs: CI `36198227983`, CodeQL `36198227949`, Integration `36198227976`, P12 Offline `36198227940`, P12 Final `36198227946`, P15 target `36198228027`, P17 browser `36198227980`.
-- Expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`; Issue #731 closed.
-- Three bounded Button padding capabilities are retained: explicit desktop `text_padding`, tablet `text_padding_tablet`, and mobile `text_padding_mobile` px DIMENSIONS.
-- Exact source/base-candidate binding, Button text/link/alignment revalidation and existing-key conflict rejection remain fail-closed.
-- Non-px units, custom breakpoints, responsive inference, icon/typography mutation, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain unclaimed.
+- Repaired exact head `f64d29d8fcf055be04f601a0a7282fef3d134c3f` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI `36199207598`, CodeQL `36199207593`, Integration `36199207605`, P12 Offline `36199207594`, P12 Final `36199207611`, P15 target `36199207587`, P17 browser `36199207651`.
+- Expected-head merge produced main `9175c99008c36352ff02843c33b8ceef2d8f8687`; Issue #733 closed.
+- Transport remained non-canonical and requires no recursive reconciliation.
 
-## Terminal finalization transport #733 / PR #734
+## Active P15 Fast Batch #735
 
-- PR #734 opened against exact base main `d0404cfc13745f6a13f13581d8e793deefad62d5`.
-- PR creation head was `3cc87904c10b9cf1c9256e8232b4a690c92a0484`.
-- Issue #733 / PR #734 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
-- Exact head `86be4550863f3af9158a864d1a3e2e0848b06f87` passed five of seven required gates with 0 unresolved review threads.
-- CI `36198817569` and P12 Final Release Artifact `36198817591` failed only because `.ai/state/EXECUTION-JOURNAL.md` measured 34,135 bytes against the 32,768-byte hard ceiling.
-- The rolling journal was compacted by pruning older pre-Fast-Batch entries; product/runtime/security/compatibility/production/download/release authority is unchanged.
-- Repaired final head requires one fresh consolidated exact-head gate observation before merge.
-- A future successful transport merge does not itself require recursive reconciliation.
+Button content metadata basics v1 contains three exact Elementor 4.2.4 controls:
+1. explicit `button_type` in `info|success|warning|danger`;
+2. explicit `size` in `xs|sm|md|lg|xl`;
+3. explicit safe `button_css_id` using ASCII letters/digits/underscore only, 1..128 chars.
+
+All three are registered by Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5` at Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
+
+- exact source IR + base-candidate identity binding;
+- Button text/link/alignment revalidated;
+- existing requested target keys fail closed;
+- no icon/selected_icon mutation, icon spacing/alignment, arbitrary HTML/classes/custom attributes, inference, Figma/network mutation, compatibility, production acceptance or download authority.
+
+Product commit: `2eaa7bcd4413645c18aa63de2845ff55396ffe83`.  
+Focused tests: `7cf00ccf9a42c8222f7aef1f458f617e5027c519`.
+
+## PR #736 handoff
+
+- PR #736 is the only PR for Issue #735 and targets exact base main `9175c99008c36352ff02843c33b8ceef2d8f8687`.
+- PR creation head: `7330349d46aee460e7617e0ce55879dea173e4ca`.
+- First exact head `de7d33178f52e5c76051c57f6029d4b27a7e6dfb` passed five of seven required gates with 0 unresolved review threads.
+- CI `36200085870` and P12 Final `36200085911` failed before typecheck/tests because `scripts/verify-readme-progress.mjs` was syntactically corrupted by `
 
 ## Exact next safe action
 
-Resolve the final bound PR #734 head and perform exactly one consolidated required-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
+PR #736 opened from `p15/button-content-metadata-basics` against exact main `9175c99008c36352ff02843c33b8ceef2d8f8687`; creation head `7330349d46aee460e7617e0ce55879dea173e4ca`. Resolve the repaired final bound PR #736 head and perform exactly one consolidated seven-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
+` replacement expansion while inserting the CSS-ID evidence string.
+- The verifier is rebuilt from the valid main version and #735 contract insertion now uses literal-safe content; product runtime code is unchanged.
+
+## Exact next safe action
+
+PR #736 opened from `p15/button-content-metadata-basics` against exact main `9175c99008c36352ff02843c33b8ceef2d8f8687`; creation head `7330349d46aee460e7617e0ce55879dea173e4ca`. Resolve the final bound PR #736 head and perform exactly one consolidated seven-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
