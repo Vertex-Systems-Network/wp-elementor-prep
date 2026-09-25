@@ -295,3 +295,13 @@ Rolling-history note: older pre-Fast-Batch execution entries were pruned on 2026
 - CI `36200085870` and P12 Final `36200085911` failed before typecheck/tests because the #735 status-verifier insertion was corrupted by JavaScript replacement-string `$'` expansion.
 - The verifier was rebuilt from valid main and the #735 contract was inserted literally; product resolver/tests and authority bounds were unchanged.
 - Repaired exact head requires one fresh consolidated seven-gate observation before merge.
+
+## 2026-09-26 — P15 Fast Batch #735 / PR #736 completed; terminal finalization #737 prepared
+
+- Repaired exact head `80c63a7294ea29e00187b802fe8b81b197f81505` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI:36200948137,CodeQL:36200948157,Integration_Readiness:36200948166,P12_Offline_Acceptance:36200948134,P12_Final_Release_Artifact:36200948168,P15_Real_Elementor_Target_Proof:36200948135,P17_Local_Browser_Proof:36200948146.
+- Expected-head merge produced main `0593dd7945038915859d86248c32de74f9d61d2c`; Issue #735 closed.
+- The malformed prior checkpoint failure note is replaced by a clean durable checkpoint in this transport.
+- Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.
+- Issue #737 / branch `ai-native/terminal-finalize-pr-736` is state-only terminal finalization under the protocol exception and grants no product/runtime/security/compatibility/production/download/release authority.
+- Next step is to open the transport PR, bind its exact identity, and stop at the remote exact-head gate boundary.

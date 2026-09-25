@@ -149,7 +149,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#735 batches exact Button type/size/safe CSS-id content controls',
+  next: '#737 terminally finalizes merged #735/#736 state before the next bounded P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -692,12 +692,14 @@ for (const fragment of p15ButtonContentMetadataRequiredFragments) {
     throw new Error(`P15 #735 Button content metadata contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #735 implementation')
-  || !readme.includes('Issue #735 / PR #736 owns three tightly-related Elementor 4.2.4 Button content metadata capabilities')
+if (!readme.includes('### Completed P15 Fast Batch #735 / PR #736 implementation')
+  || !readme.includes('Issue #735 / PR #736 completed three tightly-related Elementor 4.2.4 Button content metadata capabilities')
   || !readme.includes('`button_type`')
   || !readme.includes('`button_css_id` accepts only ASCII letters, digits and underscore with length `1..128`')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
-  throw new Error('README P15 #735 Button content metadata Fast Batch truth is stale or missing.');
+  || !readme.includes('Repaired final exact head `80c63a7294ea29e00187b802fe8b81b197f81505` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `0593dd7945038915859d86248c32de74f9d61d2c`; Issue #735 closed completed.')
+  || !readme.includes('Issue #737 is transport-only terminal finalization.')) {
+  throw new Error('README P15 #735 / PR #736 merged Button content metadata Fast Batch truth is stale or missing.');
 }
 
 const p15ButtonResponsivePaddingRequiredFragments = [
