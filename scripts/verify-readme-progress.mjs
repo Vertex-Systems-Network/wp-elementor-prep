@@ -22,6 +22,7 @@ const p15ButtonHoverInteractionSource = await readFile('src/targets/elementor/bu
 const p15ButtonBorderStyleSource = await readFile('src/targets/elementor/button-border-style-resolution.ts', 'utf8');
 const p15ButtonVisualDepthRadiusSource = await readFile('src/targets/elementor/button-visual-depth-radius-resolution.ts', 'utf8');
 const p15ButtonTypographyBasicsSource = await readFile('src/targets/elementor/button-typography-basics-resolution.ts', 'utf8');
+const p15ButtonResponsivePaddingSource = await readFile('src/targets/elementor/button-responsive-padding-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -147,7 +148,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#727 batches explicit Button tablet/mobile px font size/line height/letter spacing/word spacing',
+  next: '#731 batches explicit Button desktop/tablet/mobile px text_padding DIMENSIONS',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -672,6 +673,36 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
+const p15ButtonResponsivePaddingRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "dimensionsControlSourceBlobSha: '7de34809d407e5fa208935b77a6b6648c72d3c5d'",
+  "controlsStackSourceBlobSha: '00b280e518b89925c8f85a059b34136177ff3d4d'",
+  "controlName: 'text_padding'",
+  "desktopSettingKey: 'text_padding'",
+  "tabletSettingKey: 'text_padding_tablet'",
+  "mobileSettingKey: 'text_padding_mobile'",
+  "maxPx: P15_NEUTRAL_EXPORT_MAX_SPACING_PX",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonResponsivePaddingRequiredFragments) {
+  if (!p15ButtonResponsivePaddingSource.includes(fragment)) {
+    throw new Error(`P15 #731 Button responsive padding contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #731 implementation')
+  || !readme.includes('Issue #731 owns three tightly-related Elementor 4.2.4 Button responsive padding capabilities')
+  || !readme.includes('`text_padding`')
+  || !readme.includes('`text_padding_tablet`')
+  || !readme.includes('`text_padding_mobile`')
+  || !readme.includes('finite values are bounded to `0..4096`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #731 Button responsive padding Fast Batch truth is stale or missing.');
+}
+
 if (!readme.includes('### Completed P15 Fast Batch #727 / PR #728 implementation')
   || !readme.includes('Issue #727 / PR #728 completed four tightly-related Elementor 4.2.4 Button responsive typography capabilities')
   || !readme.includes('`typography_font_size_tablet/mobile`')

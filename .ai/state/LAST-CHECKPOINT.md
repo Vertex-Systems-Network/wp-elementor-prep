@@ -1,32 +1,44 @@
 # Last Durable Checkpoint
 
-Status: IDLE_READY_NEXT_P15_BATCH  
+Status: IMPLEMENTING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `ceb64cfdd8a989a01ec671eb235598bdec68596f`  
-Observed-main semantics: `terminal_finalization_base_tip`  
-Canonical Active Issue: `none`  
-Canonical Active PR: `none`  
-Canonical Active branch: `main`
+Observed main: `9cf147db96662723845c57bfab13d5d8582c96c3`  
+Active Issue: `#731`  
+Active PR: `#732`  
+Active branch: `p15/button-responsive-padding-batch`
 
-## Completed P15 Fast Batch #727 / PR #728
+## Terminal finalization #729 / PR #730 completed
 
-- Repaired exact head `98a65b5f043deea9fc2945326eeacef2be51752a` passed all seven required gates with 0 unresolved review threads.
-- Runs: CI `36118683631`, CodeQL `36118683695`, Integration `36118683627`, P12 Offline `36118683577`, P12 Final `36118683537`, P15 target `36118683651`, P17 browser `36118683569`.
-- Expected-head merge produced main `ceb64cfdd8a989a01ec671eb235598bdec68596f`; Issue #727 closed.
-- Four bounded Button responsive typography capabilities are retained for explicit default tablet/mobile font size, line height, letter spacing and word spacing.
-- Desktop metric writes, font family/global-token resolution, variable axes, custom breakpoints, inheritance synthesis, responsive inference, CSS/custom units, Figma/network mutation, target compatibility, responsive closure, production acceptance and download authority remain unclaimed.
+- Repaired exact head `2250c7f5e535478e4ff78a2d84d9876fa9cf2267` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI `36195559888`, CodeQL `36195559890`, Integration `36195559886`, P12 Offline `36195559965`, P12 Final `36195560030`, P15 target `36195560098`, P17 browser `36195559961`.
+- Expected-head merge produced main `9cf147db96662723845c57bfab13d5d8582c96c3`; Issue #729 closed.
+- Terminal transport is non-canonical and requires no recursive reconciliation.
 
-## Terminal finalization transport #729 / PR #730
+## Active P15 Fast Batch #731
 
-- PR #730 opened against exact base main `ceb64cfdd8a989a01ec671eb235598bdec68596f`.
-- PR creation head was `4bda070cea36d77973a8d57fb1b861603be76f7f`.
-- Issue #729 / PR #730 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
-- Exact head `0f7e4a26731043ee64a48a7eaad59d3946a21d17` passed CodeQL, Integration Readiness, P12 Offline Acceptance, P15 Real Elementor Target Proof and P17 Local Browser Proof, with 0 unresolved review threads.
-- CI `36194588760` and P12 Final Release Artifact `36194588838` failed only at `status:verify`: the verifier still expected `Issue #729 is transport-only terminal finalization.` after README had correctly advanced to `Issue #729 / PR #730 is transport-only terminal finalization.`
-- The repair changes only that verifier phrase; product/runtime/security/compatibility/production/download/release authority is unchanged.
-- Repaired final head requires one fresh consolidated exact-head gate observation before merge.
-- A future successful transport merge does not itself require recursive reconciliation.
+Button responsive padding v1 contains three exact Elementor 4.2.4 capabilities:
+1. explicit desktop `text_padding` px DIMENSIONS;
+2. explicit default-tablet `text_padding_tablet` px DIMENSIONS;
+3. explicit default-mobile `text_padding_mobile` px DIMENSIONS.
+
+Exact evidence is bound to Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, DIMENSIONS control blob `7de34809d407e5fa208935b77a6b6648c72d3c5d`, Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d`, and Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
+
+- px only, finite `0..4096`;
+- exact source IR + base-candidate identity binding;
+- Button text/link/alignment revalidated;
+- existing target padding keys fail closed;
+- omitted devices remain omitted;
+- no responsive inference, custom breakpoints, unit conversion, Figma/network mutation, compatibility, responsive closure, production acceptance or download authority.
+
+Product commit: `5bd2648d9795b32a8046dba2f636373f1f4f94cd`.  
+Focused test commit: `6acd7da60baa4b0b3bfc6a1b7f10e1a1419221b`.
+
+## PR #732 handoff
+
+- PR #732 is the only PR for Issue #731 and targets exact base main `9cf147db96662723845c57bfab13d5d8582c96c3`.
+- PR creation head: `6d6956f764521fe3c680d8477cd30647e0507938`.
+- Remote exact-head gate observation is deferred to the next user turn.
 
 ## Exact next safe action
 
-Resolve the final bound PR #730 head and perform exactly one consolidated required-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
+PR #732 opened from `p15/button-responsive-padding-batch` against exact base main `9cf147db96662723845c57bfab13d5d8582c96c3`; creation head `6d6956f764521fe3c680d8477cd30647e0507938`. Resolve the final bound PR #732 head and perform exactly one consolidated seven-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
