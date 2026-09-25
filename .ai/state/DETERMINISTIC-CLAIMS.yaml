@@ -284,3 +284,4 @@ claims:
   - {id: CL-281, statement: issue_733_is_closed_completed_after_pr_734_expected_head_merge, value: true}
   - {id: CL-282, statement: issue_735_owns_button_content_metadata_basics_fast_batch_for_button_type_size_and_safe_button_css_id, value: true}
   - {id: CL-283, statement: p15_735_button_type_and_size_are_exact_enums_and_button_css_id_is_ascii_alnum_underscore_1_through_128_with_source_candidate_binding_and_false_external_authority, value: true}
+  - {id: CL-284, statement: pr_736_is_active_final_exact_head_verification_path_for_issue_735_button_content_metadata_basics_fast_batch, value: true}

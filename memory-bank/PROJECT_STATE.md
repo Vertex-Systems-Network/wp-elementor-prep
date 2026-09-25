@@ -168,7 +168,7 @@ PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven r
 
 ## Active P15 Fast Batch #735 Button content metadata basics
 
-Issue #735 / branch `p15/button-content-metadata-basics` owns three exact Elementor 4.2.4 Button content controls from the same Button trait source family: `button_type`, `size`, and `button_css_id`.
+Issue #735 / PR #736 / branch `p15/button-content-metadata-basics` owns three exact Elementor 4.2.4 Button content controls from the same Button trait source family: `button_type`, `size`, and `button_css_id`.
 
 `button_type` is restricted to `info|success|warning|danger`; `size` to `xs|sm|md|lg|xl`; `button_css_id` to ASCII letters/digits/underscore, 1..128 characters. The resolver is exact source/base-candidate bound, revalidates Button text/link/alignment, and fails closed on existing requested target keys.
 

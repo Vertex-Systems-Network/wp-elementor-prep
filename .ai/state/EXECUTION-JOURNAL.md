@@ -281,3 +281,10 @@ Rolling-history note: older pre-Fast-Batch execution entries were pruned on 2026
 - Product commit `2eaa7bcd4413645c18aa63de2845ff55396ffe83`; focused tests `7cf00ccf9a42c8222f7aef1f458f617e5027c519`.
 - Type/size are exact enums; CSS ID is ASCII alphanumeric/underscore only, 1..128 characters.
 - Icon/custom-attribute mutation, inference, Figma/network access, compatibility, production and download authority remain excluded.
+
+## 2026-09-26 — P15 Fast Batch #735 PR #736 opened
+
+- PR #736 opened from `p15/button-content-metadata-basics` against exact base main `9175c99008c36352ff02843c33b8ceef2d8f8687`.
+- PR creation head was `7330349d46aee460e7617e0ce55879dea173e4ca`.
+- Scope remains only exact `button_type`, `size`, and safe `button_css_id`; no icon/custom-attribute/external authority was widened.
+- Remote exact-head seven-gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.

@@ -2,7 +2,7 @@ schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
 observed_main_sha: 9175c99008c36352ff02843c33b8ceef2d8f8687
 active_issue: 735
-active_pr: null
+active_pr: 736
 active_branch: p15/button-content-metadata-basics
 interaction:
   render_required: true
@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: issue-735-pre-pr
+  presentation_epoch: pr-736-handoff
   presentation_order:
+    - review-ai-plan
+    - verify-pr-736
     - review-security-blocker-287
     - inspect-batch-735
-    - open-pr-735
-    - review-ai-plan
-recommended_action_id: open-pr-735
+recommended_action_id: verify-pr-736
 options:
-  - action_id: open-pr-735
-    label: Open Button metadata PR
+  - action_id: verify-pr-736
+    label: Verify Button metadata PR #736
     enabled: true
     recommended: true
-    action_token: OPEN_PR_735
-    request_payload: "Open one PR for Issue #735 from p15/button-content-metadata-basics after final README/state/Runner sync, bind the exact PR head, and stop at the exact-head gate boundary."
+    action_token: VERIFY_PR_736
+    request_payload: "Resolve the exact current head of PR #736 and perform one consolidated required-gate refresh plus review-thread check for P15 Button content metadata basics."
     blocked_by: []
     blocked_reason: null
   - action_id: inspect-batch-735
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: INSPECT_735
-    request_payload: "Inspect Issue #735 exact Elementor evidence, enum/id bounds, fail-closed binding and focused tests without widening scope."
+    request_payload: "Inspect exact Elementor evidence, enum/id bounds, fail-closed binding and focused tests for Issue #735 / PR #736 without widening scope."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -50,6 +50,6 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review the AI-Native roadmap while Issue #735 remains the active bounded P15 batch."
+    request_payload: "Review current AI-Native roadmap while PR #736 remains the active bounded P15 batch."
     blocked_by: []
     blocked_reason: null

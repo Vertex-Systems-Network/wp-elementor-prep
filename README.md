@@ -280,7 +280,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 
 ### Current P15 Fast Batch #735 implementation
 
-- Issue #735 owns three tightly-related Elementor 4.2.4 Button content metadata capabilities from `register_button_content_controls()`: `button_type`, `size`, and `button_css_id`.
+- Issue #735 / PR #736 owns three tightly-related Elementor 4.2.4 Button content metadata capabilities from `register_button_content_controls()`: `button_type`, `size`, and `button_css_id`.
 - Product commit: `2eaa7bcd4413645c18aa63de2845ff55396ffe83`; focused tests: `7cf00ccf9a42c8222f7aef1f458f617e5027c519`.
 - Exact source evidence binds Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5` at Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
 - `button_type` accepts only `info|success|warning|danger`; omission preserves the Elementor default.
