@@ -148,7 +148,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#731 batches explicit Button desktop/tablet/mobile px text_padding DIMENSIONS',
+  next: '#733 terminally finalizes merged #731/#732 state before the next bounded P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -693,14 +693,16 @@ for (const fragment of p15ButtonResponsivePaddingRequiredFragments) {
     throw new Error(`P15 #731 Button responsive padding contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #731 implementation')
-  || !readme.includes('Issue #731 owns three tightly-related Elementor 4.2.4 Button responsive padding capabilities')
+if (!readme.includes('### Completed P15 Fast Batch #731 / PR #732 implementation')
+  || !readme.includes('Issue #731 / PR #732 completed three tightly-related Elementor 4.2.4 Button responsive padding capabilities')
   || !readme.includes('`text_padding`')
   || !readme.includes('`text_padding_tablet`')
   || !readme.includes('`text_padding_mobile`')
-  || !readme.includes('finite values are bounded to `0..4096`')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
-  throw new Error('README P15 #731 Button responsive padding Fast Batch truth is stale or missing.');
+  || !readme.includes('finite values remain bounded to `0..4096`')
+  || !readme.includes('Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`; Issue #731 closed completed.')
+  || !readme.includes('Issue #733 / PR #734 is transport-only terminal finalization.')) {
+  throw new Error('README P15 #731 / PR #732 merged Button responsive padding Fast Batch truth is stale or missing.');
 }
 
 if (!readme.includes('### Completed P15 Fast Batch #727 / PR #728 implementation')

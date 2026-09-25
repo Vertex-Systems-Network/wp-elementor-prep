@@ -4,81 +4,7 @@ This journal records durable AI-native execution-policy milestones only. It is n
 
 > Rolling journal: history before P14 R6/P15 #659 is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-001.md`; P14 R6/P15 #659 through pre-P15 #701 history is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-002.md`. Canonical claims, coordination and Runner evidence remain in their machine ledgers.
 
-## 2026-09-24 — P15 #701 Button normal classic background-color implementation started
-
-- PR #700 exact head `7f1a517850ecba1d47f59ca421983b9f43ded934` passed all seven required gates with 0 unresolved review threads and merged as main `456a7a7fd4c9fcc97dacd206561df5f56a8d9e83`; Issue #699 closed completed.
-- Issue #701 and branch `p15/button-normal-classic-background-color` activated the next real P15 product slice rather than another reconciliation-only loop.
-- Product commit `1ce451026ad0b8cf3e9679ca69bcd07bbc992ae6` adds exact source-bound normal Button classic background resolution plus focused tests.
-- PR #702 opened against exact main `456a7a7fd4c9fcc97dacd206561df5f56a8d9e83`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
-- Exact write surface is only `background_background=classic` plus strict lowercase six-digit `background_color`; gradients, hover, global tokens, responsive inference and production/download authority remain out of scope.
-- Final bound PR #702 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
-
-## 2026-09-24 — PR #702 syntax-only repair
-
-- Exact head `28de25ae1289d58d820750abcb988c2319ff28b1` completed with 5/7 required gates PASS and 0 unresolved review threads.
-- CI `35998968559` and P12 Final `35998968479` failed on the same TypeScript parse defect in `src/targets/elementor/button-background-color-resolution.ts`.
-- Root cause was branch-construction replacement-string `$'` interpretation, which corrupted `acceptedColorPattern: '^#[0-9a-f]{6}$'` and duplicated the source suffix.
-- Repair rebuilds the resolver from the verified Button text-color source using callback-safe replacement.
-- No product write-surface, test intent, security control or compatibility/production/download authority boundary is broadened.
-
-## 2026-09-24 — P15 #703 Button hover text-color implementation started
-
-- PR #702 repaired exact head `c8a2e93046811d43bffb1c2fd081ecde7b74e697` passed all seven required gates with 0 unresolved review threads and merged as main `02a1225c4a0843580f10e09b58107e45b60da259`; Issue #701 closed completed.
-- Issue #703 and branch `p15/button-hover-text-color` activated the next real P15 product slice without a reconciliation-only loop.
-- Product commit `bc961cbd7aca04dce73bd0d9d2f4acd8f4a3fa57` adds exact source-bound Button hover/focus text-color resolution plus focused tests.
-- PR #704 opened against exact main `02a1225c4a0843580f10e09b58107e45b60da259`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
-- Exact write surface is only strict lowercase six-digit `hover_color`; normal text/background, hover background, gradients, tokens, responsive inference and production/download authority remain out of scope.
-- Final bound PR #704 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
-
-## 2026-09-24 — PR #704 verifier-placement repair
-
-- Exact head `d9eeadda0aa3105089ab71d3891bbd99c309c594` completed with 5/7 required gates PASS and 0 unresolved review threads.
-- CI `36001841995` and P12 Final `36001841957` failed on the same `status:verify` JavaScript syntax defect at `scripts/verify-readme-progress.mjs:475`.
-- Root cause was the #703 hover-text verifier block being inserted inside the final README progress `console.log` template literal.
-- Repair relocates that verifier block immediately before the final log statement and restores the canonical PASS log.
-- Product resolver/tests, exact `hover_color` write surface, security controls and compatibility/production/download authority boundaries are unchanged.
-
-## 2026-09-24 — PR #704 stale #701 verifier assertion repair
-
-- First repaired head `7cf9d1dfa05b29f6ced34df959d8979fd1073da9` restored valid verifier JavaScript.
-- Its single allowed status snapshot showed Integration PASS, four required workflows still running, review threads 0, and CI `36006394789` plus P12 Final `36006395019` failed only on stale #701 README wording.
-- Second verifier-only repair `83d5aa41cd04dcb334e1b5c87ea157af0676f0f9` replaces the stale `Gradient/image/video background` expectation with the canonical merged #701 wording `gradients, hover background, global tokens and broader authority remain excluded`.
-- No product resolver/test mutation or authority expansion occurred.
-- No second workflow/status refresh is performed in this milestone; the next user turn must verify the final repaired PR #704 head.
-
-## 2026-09-24 — PR #704 final stale #701 verifier phrase repair
-
-- Exact head `0e6216227dacfbbc662e6f58ef53c5638b9a4802` completed with 5/7 required gates PASS and 0 unresolved review threads.
-- CI `36006802511` and P12 Final `36006802828` failed only because #701 verifier truth still required literal `PR #702 exact head`.
-- Canonical merged README instead records `Callback-safe syntax repair produced exact head c8a2e930...`.
-- Verifier-only repair `2e0321be94e2241dfb066a7841fdc0e30884a036` replaces that stale phrase with the canonical wording.
-- #703 product resolver/tests, strict `hover_color` write surface, security controls and compatibility/production/download authority exclusions are unchanged.
-
-## 2026-09-24 — P15 #705 Button hover classic background-color implementation started
-
-- PR #704 exact head `39ce33bff3a7914466b00c11932aaa8118f56336` passed all seven required gates with 0 unresolved review threads and merged as main `a36219fb01e90780c1c962dc7b534dbbcda40bed`; Issue #703 closed completed.
-- Issue #705 and branch `p15/button-hover-classic-background-color` activated the next real P15 product slice without a reconciliation-only loop.
-- Product commit `ad8692e1bc1498172fa405ab3620015988b20ef9` adds exact source-bound Button hover classic background-color resolution plus focused tests.
-- PR #706 opened against exact main `a36219fb01e90780c1c962dc7b534dbbcda40bed`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
-- Exact write surface is only `button_background_hover_background=classic` plus strict lowercase six-digit `button_background_hover_color`; hover text, normal text/background, gradients, image/video, tokens, responsive inference and production/download authority remain out of scope.
-- Final bound PR #706 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
-
-## 2026-09-24 — PR #706 focused test-generation repair
-
-- Exact head `056cfd720720e3f54f12038892a0803b32ea5aa0` passed README status verification; Integration, P12 Offline, P15 Target Proof and P17 Browser were PASS, CodeQL remained running at the single snapshot, and review threads were 0.
-- CI `36010951996` and P12 Final `36010952008` failed at TypeScript parsing of the new focused hover-background test.
-- Root cause was JavaScript replacement-string `$'` semantics corrupting the strict color-pattern literal in the generated test evidence block.
-- Repair `e2df76deb487c5012ea4fd5075b39cb07f255bf3` rebuilds the focused test from the verified normal-background test using callback-safe replacement.
-- The #705 resolver, exact hover classic background write surface, security controls and compatibility/production/download authority boundaries are unchanged.
-
-## 2026-09-24 — P15 #707 Button hover border-color implementation started
-
-- PR #706 repaired exact head `34f1714da4d09dfe35cc66bddb99e934ea2645f2` passed all seven required gates with 0 unresolved review threads and merged as main `1258ba0854847c91f5792f170be831bf96e4dbf3`; Issue #705 closed completed.
-- Issue #707 and branch `p15/button-hover-border-color` activated the next real P15 product slice without a reconciliation-only loop.
-- Product commit `77f22d2b2f40c51a15107f829a7c4f66b05bc970` adds exact source-bound Button hover/focus border-color resolution plus focused tests.
-- PR #708 opened against exact main `1258ba0854847c91f5792f170be831bf96e4dbf3`; lifecycle binding synchronizes durable state, README/verifier, Runner benchmark and memory-bank truth.
-- Exact write surface is only strict lowercase six-digit `button_hover_border_color`; hover text/background/shadow/transition/animation, normal styling, tokens, responsive inference and production/download authority remain out of scope.
-- Final bound PR #708 head is intentionally uncertified until the next user turn performs one consolidated exact-head gate refresh.
+Rolling-history note: older pre-Fast-Batch execution entries were pruned on 2026-09-26 to preserve the canonical 32 KiB journal ceiling. Durable claims/checkpoints and GitHub history retain authoritative evidence.
 
 ## 2026-09-24 — Fast Batch Mode activated
 
@@ -321,3 +247,28 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - PR creation head was `6d6956f764521fe3c680d8477cd30647e0507938`.
 - Scope remains only desktop/tablet/mobile Button `text_padding` px DIMENSIONS; no product authority was widened during lifecycle binding.
 - Remote exact-head seven-gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — P15 Fast Batch #731 / PR #732 completed; terminal finalization #733 prepared
+
+- Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI:36198227983,CodeQL:36198227949,Integration_Readiness:36198227976,P12_Offline_Acceptance:36198227940,P12_Final_Release_Artifact:36198227946,P15_Real_Elementor_Target_Proof:36198228027,P17_Local_Browser_Proof:36198227980.
+- Expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`; Issue #731 closed.
+- Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.
+- Issue #733 / branch `ai-native/terminal-finalize-pr-732` is state-only terminal finalization under the protocol exception and grants no product/runtime/security/compatibility/production/download/release authority.
+- Next step is to open the transport PR, bind its exact identity, and stop at the remote exact-head gate boundary.
+
+## 2026-09-26 — terminal finalization PR #734 opened
+
+- PR #734 opened from `ai-native/terminal-finalize-pr-732` against exact base main `d0404cfc13745f6a13f13581d8e793deefad62d5`.
+- PR creation head was `3cc87904c10b9cf1c9256e8232b4a690c92a0484`.
+- Transport Issue #733 / PR #734 is not the canonical lifecycle owner; `active_issue` and `active_pr` remain null.
+- Product/runtime/security/compatibility/production/download/release authority remains unchanged.
+- Next milestone is one consolidated exact-head seven-gate observation with review-thread check; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — PR #734 first exact-head failure; journal ceiling repair
+
+- Exact head `86be4550863f3af9158a864d1a3e2e0848b06f87` passed CodeQL, Integration Readiness, P12 Offline Acceptance, P15 Real Elementor Target Proof and P17 Local Browser Proof with 0 unresolved review threads.
+- CI `36198817569` and P12 Final Release Artifact `36198817591` failed only because `.ai/state/EXECUTION-JOURNAL.md` was 34,135 bytes, exceeding the canonical 32,768-byte ceiling.
+- Product/runtime/security/compatibility/production/download/release authority was unchanged.
+- The rolling journal was compacted by pruning older pre-Fast-Batch entries while retaining recent Fast Batch history and authoritative durable/GitHub evidence.
+- Repaired transport head requires one fresh consolidated seven-gate observation before merge.
