@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-728-final-handoff
+  presentation_epoch: pr-728-repair-handoff
   presentation_order:
-    - review-ai-plan
     - inspect-batch-727
     - review-security-blocker-287
     - verify-pr-728
+    - review-ai-plan
 recommended_action_id: verify-pr-728
 options:
   - action_id: verify-pr-728
-    label: Verify responsive typography PR #728
+    label: Verify repaired responsive typography PR #728
     enabled: true
     recommended: true
     action_token: VERIFY_PR_728
-    request_payload: "Resolve the exact current head of PR #728 and perform one consolidated required-gate refresh for the Button responsive typography metrics Fast Batch."
+    request_payload: "Resolve the repaired final head of PR #728 and perform one consolidated required-gate refresh for the Button responsive typography metrics Fast Batch."
     blocked_by: []
     blocked_reason: null
   - action_id: inspect-batch-727
