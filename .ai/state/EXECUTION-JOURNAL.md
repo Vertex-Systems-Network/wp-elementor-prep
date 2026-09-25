@@ -288,3 +288,10 @@ Rolling-history note: older pre-Fast-Batch execution entries were pruned on 2026
 - PR creation head was `7330349d46aee460e7617e0ce55879dea173e4ca`.
 - Scope remains only exact `button_type`, `size`, and safe `button_css_id`; no icon/custom-attribute/external authority was widened.
 - Remote exact-head seven-gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — PR #736 status-verifier syntax repair
+
+- Exact head `de7d33178f52e5c76051c57f6029d4b27a7e6dfb` passed CodeQL, Integration Readiness, P12 Offline Acceptance, P15 Real Elementor Target Proof and P17 Local Browser Proof with 0 unresolved review threads.
+- CI `36200085870` and P12 Final `36200085911` failed before typecheck/tests because the #735 status-verifier insertion was corrupted by JavaScript replacement-string `$'` expansion.
+- The verifier was rebuilt from valid main and the #735 contract was inserted literally; product resolver/tests and authority bounds were unchanged.
+- Repaired exact head requires one fresh consolidated seven-gate observation before merge.

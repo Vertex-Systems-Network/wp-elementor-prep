@@ -35,7 +35,14 @@ Focused tests: `7cf00ccf9a42c8222f7aef1f458f617e5027c519`.
 
 - PR #736 is the only PR for Issue #735 and targets exact base main `9175c99008c36352ff02843c33b8ceef2d8f8687`.
 - PR creation head: `7330349d46aee460e7617e0ce55879dea173e4ca`.
-- Remote exact-head gate observation is deferred to the next user turn.
+- First exact head `de7d33178f52e5c76051c57f6029d4b27a7e6dfb` passed five of seven required gates with 0 unresolved review threads.
+- CI `36200085870` and P12 Final `36200085911` failed before typecheck/tests because `scripts/verify-readme-progress.mjs` was syntactically corrupted by `
+
+## Exact next safe action
+
+PR #736 opened from `p15/button-content-metadata-basics` against exact main `9175c99008c36352ff02843c33b8ceef2d8f8687`; creation head `7330349d46aee460e7617e0ce55879dea173e4ca`. Resolve the repaired final bound PR #736 head and perform exactly one consolidated seven-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
+` replacement expansion while inserting the CSS-ID evidence string.
+- The verifier is rebuilt from the valid main version and #735 contract insertion now uses literal-safe content; product runtime code is unchanged.
 
 ## Exact next safe action
 
