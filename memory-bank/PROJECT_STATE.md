@@ -166,13 +166,17 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
-## Active P15 Fast Batch #735 Button content metadata basics
+## Completed P15 Fast Batch #735 / PR #736 Button content metadata basics
 
-Issue #735 / PR #736 / branch `p15/button-content-metadata-basics` owns three exact Elementor 4.2.4 Button content controls from the same Button trait source family: `button_type`, `size`, and `button_css_id`.
+Issue #735 / PR #736 is closed completed. Repaired exact head `80c63a7294ea29e00187b802fe8b81b197f81505` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `0593dd7945038915859d86248c32de74f9d61d2c`.
 
-`button_type` is restricted to `info|success|warning|danger`; `size` to `xs|sm|md|lg|xl`; `button_css_id` to ASCII letters/digits/underscore, 1..128 characters. The resolver is exact source/base-candidate bound, revalidates Button text/link/alignment, and fails closed on existing requested target keys.
+The merged scope retains three exact Elementor 4.2.4 Button content controls from Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`: `button_type`, `size`, and `button_css_id`.
 
-Icon mutation, arbitrary classes/HTML/custom attributes, responsive/style inference, Figma/network mutation, compatibility, production acceptance and download authority remain false/out of scope.
+`button_type` remains restricted to `info|success|warning|danger`; `size` to `xs|sm|md|lg|xl`; `button_css_id` to ASCII letters/digits/underscore, 1..128 characters. Exact neutral-source and generated base-candidate identities remain replay-bound; Button text/link/alignment is revalidated; existing requested target keys reject rather than overwrite.
+
+The first PR head failed only in lifecycle verification due a syntactically corrupted status-verifier insertion; repaired exact head restored the verifier without changing product behavior. Icon/custom-attribute mutation, arbitrary classes/HTML, responsive/style inference, Figma/network mutation, target compatibility, production acceptance and download authority remain false/out of scope.
+
+Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #737 / PR #738 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #731 / PR #732 Button responsive padding
 
