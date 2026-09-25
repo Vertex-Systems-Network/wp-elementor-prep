@@ -304,3 +304,13 @@ This journal records durable AI-native execution-policy milestones only. It is n
 - Transport Issue #729 / PR #730 is not the canonical lifecycle owner; `active_issue` and `active_pr` remain null.
 - Product/runtime/security/compatibility/production/download/release authority remains unchanged.
 - Next milestone is one consolidated exact-head seven-gate observation with review-thread check; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — terminal PR #730 completed; P15 Fast Batch #731 started
+
+- PR #730 repaired exact head `2250c7f5e535478e4ff78a2d84d9876fa9cf2267` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `9cf147db96662723845c57bfab13d5d8582c96c3`; Issue #729 closed.
+- Issue #731 / branch `p15/button-responsive-padding-batch` starts three tightly-related Button responsive padding capabilities: desktop, tablet and mobile `text_padding` px DIMENSIONS.
+- Exact Elementor 4.2.4 evidence binds Button trait `31192aaee6851c445f79d1998499f6ce73ba7da5`, DIMENSIONS control `7de34809d407e5fa208935b77a6b6648c72d3c5d`, and Controls Stack `00b280e518b89925c8f85a059b34136177ff3d4d`.
+- Product commit `5bd2648d9795b32a8046dba2f636373f1f4f94cd`; focused tests `6acd7da60baa4b0b3bfc6a1b7f10e1a1419221b2`.
+- Values are explicit finite px `0..4096`; omitted devices remain omitted; conflicts fail closed.
+- Inference, custom breakpoints, non-px units, Figma/network mutation, compatibility, responsive closure, production and download authority remain excluded.
+- README/status verifier and Runner handoff are synchronized before PR creation.
