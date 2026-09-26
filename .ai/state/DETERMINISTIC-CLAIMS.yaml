@@ -310,3 +310,8 @@ claims:
   - {id: CL-307, statement: canonical_state_is_idle_ready_for_next_p15_batch_after_pr_744_merge_with_no_active_issue_or_pr, value: true}
   - {id: CL-308, statement: issue_745_is_transport_only_terminal_finalization_after_pr_744_and_is_not_a_canonical_active_issue_or_pr, value: true}
   - {id: CL-309, statement: pr_746_is_transport_only_terminal_finalization_after_pr_744_and_is_not_a_canonical_active_pr, value: true}
+  - {id: CL-310, statement: pr_746_exact_head_7c484349_passed_all_seven_required_gates_with_zero_unresolved_review_threads_and_merged_as_main_c4095311, value: true}
+  - {id: CL-311, statement: issue_745_is_closed_completed_after_pr_746_expected_head_merge, value: true}
+  - {id: CL-312, statement: issue_747_owns_button_normal_and_hover_linear_gradient_backgrounds_plus_explicit_angle_fast_batch_v1, value: true}
+  - {id: CL-313, statement: p15_747_linear_gradients_are_lowercase_hex_with_ordered_integer_percent_stops_optional_integer_0_through_360_degree_angle_and_no_radial_media_token_or_responsive_inference, value: true}
+  - {id: CL-314, statement: pr_748_is_active_final_exact_head_verification_path_for_issue_747_button_linear_gradient_backgrounds_fast_batch, value: true}

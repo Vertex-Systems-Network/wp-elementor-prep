@@ -26,6 +26,7 @@ const p15ButtonResponsivePaddingSource = await readFile('src/targets/elementor/b
 const p15ButtonContentMetadataSource = await readFile('src/targets/elementor/button-content-metadata-resolution.ts', 'utf8');
 const p15ButtonStretchContentAlignmentSource = await readFile('src/targets/elementor/button-stretch-content-alignment-resolution.ts', 'utf8');
 const p15ButtonIconBasicsSource = await readFile('src/targets/elementor/button-icon-basics-resolution.ts', 'utf8');
+const p15ButtonLinearGradientSource = await readFile('src/targets/elementor/button-linear-gradient-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -151,7 +152,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#745 terminally finalizes merged #743/#744 state before the next bounded P15 Fast Batch',
+  next: '#747 / PR #748 batches bounded Button normal/hover linear gradients + explicit angle',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -703,8 +704,39 @@ if (!readme.includes('### Completed P15 Fast Batch #743 / PR #744 implementation
   || !readme.includes('`icon_align` accepts only `row|row-reverse`')
   || !readme.includes('Final exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with 0 unresolved review threads.')
   || !readme.includes('Expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`; Issue #743 closed completed.')
-  || !readme.includes('Issue #745 / PR #746 is transport-only terminal finalization.')) {
+  || !readme.includes('Terminal #745 / PR #746 later passed all seven required gates with 0 unresolved review threads and merged as main `c4095311e9243d8c00796bbbf34463580ef74f86`; transport remained non-canonical.')) {
   throw new Error('README P15 #743 / PR #744 merged Button icon basics Fast Batch truth is stale or missing.');
+}
+
+const p15ButtonLinearGradientRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "backgroundGroupControlSourceBlobSha: 'ac8e1a510ec663f3f428c9f564dc2c5b727435e1'",
+  "normalGroupName: 'background'",
+  "hoverGroupName: 'button_background_hover'",
+  "acceptedBackgroundType: 'gradient'",
+  "acceptedGradientType: 'linear'",
+  "angleMin: 0",
+  "angleMax: 360",
+  "gradientInferencePerformed: false",
+  "responsiveInferencePerformed: false",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonLinearGradientRequiredFragments) {
+  if (!p15ButtonLinearGradientSource.includes(fragment)) {
+    throw new Error(`P15 #747 Button linear gradient contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #747 / PR #748 implementation')
+  || !readme.includes('normal and hover/focus linear-gradient backgrounds')
+  || !readme.includes('ordered integer `0..100%`')
+  || !readme.includes('optional explicit integer `0..360deg` angle')
+  || !readme.includes('Radial gradients, image/video backgrounds, custom CSS/units and token/global resolution remain excluded.')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #747 Button linear gradient Fast Batch truth is stale or missing.');
 }
 
 const p15ButtonStretchContentAlignmentRequiredFragments = [

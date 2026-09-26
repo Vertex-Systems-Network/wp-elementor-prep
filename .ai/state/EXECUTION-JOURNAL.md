@@ -155,3 +155,27 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Transport Issue #745 / PR #746 is not the canonical lifecycle owner; `active_issue` and `active_pr` remain null.
 - Product/runtime/security/compatibility/production/download/release authority remains unchanged.
 - Next milestone is one consolidated exact-head seven-gate observation with review-thread check; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — terminal PR #746 completed; P15 Fast Batch #747 started
+
+- PR #746 exact head `7c484349c9be42eefcec4c6d89ff6149656dc49f` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `c4095311e9243d8c00796bbbf34463580ef74f86`; Issue #745 closed.
+- Issue #747 / branch `p15/button-linear-gradient-backgrounds` starts three closely-related Button capabilities: normal linear gradient, hover/focus linear gradient, and optional explicit linear angle.
+- Exact Elementor 4.2.4 evidence binds Button trait `31192aaee6851c445f79d1998499f6ce73ba7da5` and Background group `ac8e1a510ec663f3f428c9f564dc2c5b727435e1`.
+- Repository v1 allows only lowercase six-digit hex colors, ordered integer 0..100 percent stops and optional integer 0..360 degree angle.
+- Radial/media/custom CSS, token resolution, responsive inference, Figma/network access, compatibility, production and download authority remain excluded.
+- Product commit `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`.
+
+## 2026-09-26 — P15 Fast Batch #747 PR #748 opened
+
+- PR #748 opened from `p15/button-linear-gradient-backgrounds` against exact base main `c4095311e9243d8c00796bbbf34463580ef74f86`.
+- PR creation head was `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`.
+- Durable state, README, verifier and Runner truth are synchronized in the same batch before final exact-head certification.
+- Next milestone is one consolidated exact-head seven-gate observation plus review-thread check; no repeated CI polling is authorized.
+
+## 2026-09-26 — PR #748 first exact-head status verifier mismatch
+
+- Exact head `f7870feb05f54f2ebf2eebb77f415abdc167c05b` had 0 unresolved review threads.
+- Integration Readiness `36232130577`, P12 Offline Acceptance `36232130684`, and P17 Local Browser Proof `36232130608` passed.
+- CI `36232130693` and P12 Final Release Artifact `36232130670` failed only at `status:verify`; CodeQL `36232130729` and P15 Real Elementor Target Proof `36232130665` were still running at the observation boundary.
+- Root cause: historical #743 verifier text still required `Issue #745 / PR #746 is transport-only terminal finalization.`, but README correctly records that transport as 7/7-passed and merged main `c4095311...`.
+- Repair changes only the status verifier assertion. Product behavior, gradient contract, security controls and authority boundaries are unchanged.

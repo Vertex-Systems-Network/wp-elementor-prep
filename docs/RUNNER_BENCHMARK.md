@@ -144,7 +144,9 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-743-FINAL | #743 / PR #744 | P15 Button icon basics v1 | Required PR exact-head gate set | exact head `a17d0ca3...` passed 7/7; review threads 0; merged main `4e5ea4eb...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-745-TRANSPORT | #745 / PR #746 | Terminal post-PR #744 state finalization | Required PR exact-head gate set | PR creation head `4312e1df...`; state-only/non-canonical transport | `FINAL_BATCH` | final bound head must pass all seven required gates with 0 unresolved review threads before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
+| RQ-745-TRANSPORT | #745 / PR #746 | Terminal post-PR #744 state finalization | Required PR exact-head gate set | exact head `7c484349...` passed 7/7; review threads 0; merged main `c4095311...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
+
+| RQ-747-FINAL | #747 / PR #748 | P15 Button linear gradient backgrounds v1 | Required PR exact-head gate set | creation head `c4ff7825...`; normal + hover linear gradients and explicit bounded angle | `FINAL_BATCH` | final bound head must pass all seven required gates with 0 unresolved review threads before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 
