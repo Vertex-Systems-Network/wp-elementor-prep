@@ -176,7 +176,7 @@ Every mutation remains explicit. A neutral source Button with existing explicit 
 
 Icon mutation, custom breakpoints, arbitrary CSS/classes/HTML, responsive/style inference, Figma/network mutation, target compatibility, production acceptance and download authority remain false/out of scope.
 
-Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #741 is transport-only terminal finalization and does not become canonical lifecycle ownership.
+Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #741 / PR #742 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #735 / PR #736 Button content metadata basics
 

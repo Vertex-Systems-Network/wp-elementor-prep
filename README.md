@@ -290,7 +290,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Final exact head `0a4cc0d2782c7a67dd187c6e8821e70eb6186f35` passed all seven required gates with 0 unresolved review threads.
 - Expected-head merge produced main `5e839f4edce59dc3bcab67a26f16965495a31b5d`; Issue #739 closed completed.
 - Icon mutation, custom breakpoints, arbitrary CSS/classes/HTML, Figma/network mutation, target compatibility, production acceptance and download authority remain excluded.
-- Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR; Issue #741 is transport-only terminal finalization.
+- Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR; Issue #741 / PR #742 is transport-only terminal finalization.
 
 ### Completed P15 Fast Batch #735 / PR #736 implementation
 

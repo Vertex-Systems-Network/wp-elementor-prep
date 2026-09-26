@@ -701,7 +701,7 @@ if (!readme.includes('### Completed P15 Fast Batch #739 / PR #740 implementation
   || !readme.includes('a neutral source Button with existing explicit `align` remains rejected')
   || !readme.includes('Final exact head `0a4cc0d2782c7a67dd187c6e8821e70eb6186f35` passed all seven required gates with 0 unresolved review threads.')
   || !readme.includes('Expected-head merge produced main `5e839f4edce59dc3bcab67a26f16965495a31b5d`; Issue #739 closed completed.')
-  || !readme.includes('Issue #741 is transport-only terminal finalization.')) {
+  || !readme.includes('Issue #741 / PR #742 is transport-only terminal finalization.')) {
   throw new Error('README P15 #739 / PR #740 merged Button stretch content alignment Fast Batch truth is stale or missing.');
 }
 
