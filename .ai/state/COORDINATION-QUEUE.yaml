@@ -64,7 +64,8 @@ items:
   - {id: CQ-757, issue: 757, pr: 758, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-759, issue: 759, pr: 760, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-761, issue: 761, pr: 762, status: MERGED_CLOSED, priority: 0, accepted: true}
-  - {id: CQ-763, issue: 763, pr: 764, status: ACTIVE_VERIFYING, priority: 1, accepted: true}
+  - {id: CQ-763, issue: 763, pr: 764, status: MERGED_CLOSED, priority: 0, accepted: true}
+  - {id: CQ-765, issue: 765, status: TERMINAL_TRANSPORT_PREPARING, priority: 1, accepted: true}
   - {id: CQ-287, issue: 287, status: BLOCKED_ADMIN, priority: 2, accepted: true}
   - {id: CQ-119, issue: 119, status: ACTIVE_ROADMAP_OWNER, priority: 3, accepted: true}
   - {id: CQ-159, issue: 159, status: WAITING_EXTERNAL_RUNTIME_EVIDENCE, priority: 4, accepted: true}

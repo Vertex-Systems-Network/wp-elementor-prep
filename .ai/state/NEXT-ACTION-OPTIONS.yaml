@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 7f5a86b0b17205477212ec40eb98790303bc976f
-active_issue: 763
-active_pr: 764
-active_branch: p15/button-responsive-linear-gradient-stops
+observed_main_sha: 143ffcabf8069234b57e804c40c125d0867a59de
+active_issue: null
+active_pr: null
+active_branch: main
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,28 +13,28 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-764-handoff
+  presentation_epoch: post-pr-764-terminal-prep
   presentation_order:
-    - review-security-blocker-287
-    - verify-pr-764
-    - inspect-batch-763
     - review-ai-plan
-recommended_action_id: verify-pr-764
+    - verify-terminal-after-765
+    - review-security-blocker-287
+    - review-next-p15-map
+recommended_action_id: verify-terminal-after-765
 options:
-  - action_id: verify-pr-764
-    label: Verify responsive stop PR #764
+  - action_id: verify-terminal-after-765
+    label: Verify terminal state PR
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_764
-    request_payload: "Resolve the exact current head of PR #764 and perform one consolidated required-gate refresh plus review-thread check for P15 Button responsive linear gradient stop locations v1."
+    action_token: VERIFY_TERMINAL_AFTER_765
+    request_payload: "Resolve the transport PR created for Issue #765, verify its exact head once across the required gate set plus review threads, and merge only if fully green."
     blocked_by: []
     blocked_reason: null
-  - action_id: inspect-batch-763
-    label: Inspect responsive stop batch
+  - action_id: review-next-p15-map
+    label: Review next P15 capability map
     enabled: true
     recommended: false
-    action_token: INSPECT_763
-    request_payload: "Inspect exact Elementor responsive stop-pair evidence, normal/hover tablet/mobile write surfaces and focused tests for Issue #763 / PR #764 without widening scope."
+    action_token: REVIEW_NEXT_P15_MAP
+    request_payload: "Review remaining P15 capability map from settled product main 143ffcab without widening authority."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -50,6 +50,6 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review current AI-Native roadmap while PR #764 remains the active bounded P15 responsive linear-stop Fast Batch."
+    request_payload: "Review current AI-Native roadmap from merged main 143ffcab while terminal Issue #765 remains transport-only."
     blocked_by: []
     blocked_reason: null
