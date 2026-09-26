@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: post-pr-760-terminal-prep
+  presentation_epoch: pr-762-terminal-handoff
   presentation_order:
     - review-security-blocker-287
     - review-next-p15-map
     - review-ai-plan
     - verify-terminal-after-761
-recommended_action_id: verify-terminal-after-761
+recommended_action_id: verify-terminal-pr-762
 options:
-  - action_id: verify-terminal-after-761
-    label: Verify terminal state PR
+  - action_id: verify-terminal-pr-762
+    label: Verify terminal PR #762
     enabled: true
     recommended: true
-    action_token: VERIFY_TERMINAL_AFTER_761
-    request_payload: "Resolve the transport PR created for Issue #761, verify its exact head once across the required gate set plus review threads, and merge only if fully green."
+    action_token: VERIFY_TERMINAL_PR_762
+    request_payload: "Resolve the exact current head of transport-only PR #762 and perform one consolidated required-gate refresh plus review-thread check; merge only if fully green."
     blocked_by: []
     blocked_reason: null
   - action_id: review-next-p15-map

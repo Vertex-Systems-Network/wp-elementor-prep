@@ -205,4 +205,4 @@ A development/release train may not be called complete while:
 
 | RQ-759-FINAL | #759 / PR #760 | P15 Button responsive linear gradient angles v1 | Required PR exact-head gate set | exact head `ef1687c1...` passed 7/7; review threads 0; merged main `105f7594...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-761-TRANSPORT | #761 | Terminal post-PR #760 state finalization | Required PR exact-head gate set | transport PR not yet bound | `FINAL_BATCH` | final transport head must pass all required gates with 0 unresolved review threads before expected-head merge | AWAITING_PR_BINDING |
+| RQ-761-TRANSPORT | #761 / PR #762 | Terminal post-PR #760 state finalization | Required PR exact-head gate set | PR creation head `99e27935...`; state-only/non-canonical transport | `FINAL_BATCH` | final transport head must pass all required gates with 0 unresolved review threads before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
