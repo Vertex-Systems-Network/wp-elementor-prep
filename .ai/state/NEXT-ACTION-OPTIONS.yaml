@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 5f7fa2b59030613cd83630f0135b56cc568e030d
-active_issue: 773
-active_pr: 774
-active_branch: p15/button-responsive-border-width
+observed_main_sha: 6ef3ea5859f1e6ea993c942bf5ba085b3f0a9bef
+active_issue: 775
+active_pr: 776
+active_branch: p15/container-border-style
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-774-product-handoff
+  presentation_epoch: pr-776-product-handoff
   presentation_order:
     - review-security-blocker-287
     - review-next-p15-map
     - verify-terminal-after-769
     - review-ai-plan
-recommended_action_id: verify-pr-774
+recommended_action_id: verify-pr-776
 options:
-  - action_id: verify-pr-774
-    label: Verify Button border PR #774
+  - action_id: verify-pr-776
+    label: Verify Container border PR #776
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_774
-    request_payload: "Resolve exact current head of product PR #774 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
+    action_token: VERIFY_PR_776
+    request_payload: "Resolve exact current head of product PR #776 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
     blocked_by: []
     blocked_reason: null
   - action_id: review-next-p15-map
