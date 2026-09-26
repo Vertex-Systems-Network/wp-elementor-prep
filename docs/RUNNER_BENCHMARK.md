@@ -211,4 +211,6 @@ A development/release train may not be called complete while:
 
 | RQ-765-TRANSPORT | #765 / PR #766 | Terminal post-PR #764 state finalization | Required PR exact-head gate set | exact head `944fc059...` passed 7/7; review threads 0; merged main `c3328728...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-767-FINAL | #767 / PR #768 | P15 Button responsive radial gradient stop locations v1 | Required PR exact-head gate set | creation head `ced2408a...`; normal/hover tablet/mobile radial stop pairs | `FINAL_BATCH` | final bound head must pass all seven required gates with 0 unresolved review threads before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
+| RQ-767-FINAL | #767 / PR #768 | P15 Button responsive radial gradient stop locations v1 | Required PR exact-head gate set | exact head `db2dcdba...` passed 7/7; review threads 0; merged main `16a67afb...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
+
+| RQ-769-TRANSPORT | #769 | Terminal post-PR #768 state finalization | Required PR exact-head gate set | transport PR not yet bound | `FINAL_BATCH` | final transport head must pass all required gates with 0 unresolved review threads before expected-head merge | AWAITING_PR_BINDING |

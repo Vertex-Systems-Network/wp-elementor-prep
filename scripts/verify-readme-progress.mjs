@@ -153,7 +153,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#767 / PR #768 batches explicit normal/hover tablet/mobile radial-gradient stop pairs',
+  next: '#769 terminally finalizes merged #767/#768 state before the next bounded P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -830,13 +830,15 @@ for (const fragment of p15ButtonResponsiveRadialStopRequiredFragments) {
     throw new Error(`P15 #767 Button responsive radial-stop contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #767 / PR #768 implementation')
+if (!readme.includes('### Completed P15 Fast Batch #767 / PR #768 implementation')
   || !readme.includes('responsive radial-gradient stop-pair capabilities')
   || !readme.includes('`tabletStopA/tabletStopB` and `mobileStopA/mobileStopB`')
   || !readme.includes('`color_stop_tablet/mobile` and `color_b_stop_tablet/mobile`')
   || !readme.includes('Omitted tablet/mobile pairs remain omitted')
   || !readme.includes('Terminal #765 / PR #766 passed all seven required gates on exact head `944fc059beff227be6a70e386c047eb4df624325`')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  || !readme.includes('Final exact head `db2dcdbaa42e03a3270be4b21d9750b71955b7b6` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `16a67afb4f25f6d051a79499d84a291b43db8ba6`; Issue #767 closed completed.')
+  || !readme.includes('Issue #769 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #767 / PR #768 responsive radial-stop Fast Batch truth is stale or missing.');
 }
 
