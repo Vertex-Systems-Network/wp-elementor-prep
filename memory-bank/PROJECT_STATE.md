@@ -166,6 +166,14 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
+## Active P15 Fast Batch #739 Button stretch content alignment
+
+Issue #739 / branch `p15/button-stretch-content-alignment` owns four tightly-related exact Elementor 4.2.4 Button layout capabilities: explicit `align=justify` stretch plus `content_align`, `content_align_tablet`, and `content_align_mobile`.
+
+Every entry must explicitly request `stretch: true`. The source Button must not already declare neutral `align`; source alignment conflicts reject rather than overwrite design intent. Content alignment is restricted to `start|center|end|space-between`, omitted breakpoints stay omitted, and no responsive inference is performed.
+
+The resolver is exact source/base-candidate bound, revalidates Button text/link/base alignment state, and fails closed on existing requested target keys. Icon mutation, custom breakpoints, arbitrary CSS/classes/HTML, Figma/network mutation, compatibility, production acceptance and download authority remain false/out of scope.
+
 ## Completed P15 Fast Batch #735 / PR #736 Button content metadata basics
 
 Issue #735 / PR #736 is closed completed. Repaired exact head `80c63a7294ea29e00187b802fe8b81b197f81505` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `0593dd7945038915859d86248c32de74f9d61d2c`.
@@ -176,7 +184,7 @@ The merged scope retains three exact Elementor 4.2.4 Button content controls fro
 
 The first PR head failed only in lifecycle verification due a syntactically corrupted status-verifier insertion; repaired exact head restored the verifier without changing product behavior. Icon/custom-attribute mutation, arbitrary classes/HTML, responsive/style inference, Figma/network mutation, target compatibility, production acceptance and download authority remain false/out of scope.
 
-Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #737 / PR #738 is transport-only terminal finalization and does not become canonical lifecycle ownership.
+Canonical AI-native state advanced through transport-only Issue #737 / PR #738; exact head `abcd5c3a2dffd89ef66075b95daf692898dd6099` passed 7/7 and merged as main `bc6052cdfd35e8592da0ddd4955583f40ef7433a` without becoming canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #731 / PR #732 Button responsive padding
 

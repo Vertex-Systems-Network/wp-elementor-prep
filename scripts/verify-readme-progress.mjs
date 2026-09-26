@@ -24,6 +24,7 @@ const p15ButtonVisualDepthRadiusSource = await readFile('src/targets/elementor/b
 const p15ButtonTypographyBasicsSource = await readFile('src/targets/elementor/button-typography-basics-resolution.ts', 'utf8');
 const p15ButtonResponsivePaddingSource = await readFile('src/targets/elementor/button-responsive-padding-resolution.ts', 'utf8');
 const p15ButtonContentMetadataSource = await readFile('src/targets/elementor/button-content-metadata-resolution.ts', 'utf8');
+const p15ButtonStretchContentAlignmentSource = await readFile('src/targets/elementor/button-stretch-content-alignment-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -149,7 +150,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#737 terminally finalizes merged #735/#736 state before the next bounded P15 Fast Batch',
+  next: '#739 batches explicit Button stretch + responsive content alignment',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -674,6 +675,34 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
+const p15ButtonStretchContentAlignmentRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "controlsStackSourceBlobSha: '00b280e518b89925c8f85a059b34136177ff3d4d'",
+  "stretchSettingKey: 'align'",
+  "stretchValue: 'justify'",
+  "desktopContentAlignmentSettingKey: 'content_align'",
+  "tabletContentAlignmentSettingKey: 'content_align_tablet'",
+  "mobileContentAlignmentSettingKey: 'content_align_mobile'",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonStretchContentAlignmentRequiredFragments) {
+  if (!p15ButtonStretchContentAlignmentSource.includes(fragment)) {
+    throw new Error(`P15 #739 Button stretch content alignment contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #739 implementation')
+  || !readme.includes('Issue #739 owns four tightly-related Elementor 4.2.4 Button layout capabilities')
+  || !readme.includes('`align=justify`')
+  || !readme.includes('`content_align_tablet`')
+  || !readme.includes('a neutral source Button with existing explicit `align` is rejected')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #739 Button stretch content alignment Fast Batch truth is stale or missing.');
+}
+
 const p15ButtonContentMetadataRequiredFragments = [
   "elementorVersion: '4.2.4'",
   "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
