@@ -45,6 +45,12 @@ Product commit: `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`.
 - README/verifier/durable-state synchronization is part of the same PR before final exact-head gate observation.
 - No merge is allowed until the final exact PR head passes all seven required workflows with zero unresolved review threads.
 
+## First exact-head verification result
+
+- Head `f7870feb05f54f2ebf2eebb77f415abdc167c05b` produced PASS for Integration Readiness, P12 Offline Acceptance and P17 Local Browser Proof; CI and P12 Final Release Artifact failed at `status:verify`; CodeQL and P15 target proof were still running at the observation boundary; review threads were 0.
+- Failure root cause is a status-only verifier mismatch: README correctly records terminal #745 / PR #746 as 7/7-passed and merged, while the historical #743 verifier assertion still demanded the old pre-merge transport sentence.
+- Product code, gradient bounds, security/authority controls and target write surfaces are unchanged by this repair.
+
 ## Exact next safe action
 
-Resolve the final bound PR #748 head and perform exactly one consolidated seven-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
+Resolve the repaired final PR #748 head and perform exactly one consolidated seven-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.

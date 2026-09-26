@@ -171,3 +171,11 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - PR creation head was `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`.
 - Durable state, README, verifier and Runner truth are synchronized in the same batch before final exact-head certification.
 - Next milestone is one consolidated exact-head seven-gate observation plus review-thread check; no repeated CI polling is authorized.
+
+## 2026-09-26 — PR #748 first exact-head status verifier mismatch
+
+- Exact head `f7870feb05f54f2ebf2eebb77f415abdc167c05b` had 0 unresolved review threads.
+- Integration Readiness `36232130577`, P12 Offline Acceptance `36232130684`, and P17 Local Browser Proof `36232130608` passed.
+- CI `36232130693` and P12 Final Release Artifact `36232130670` failed only at `status:verify`; CodeQL `36232130729` and P15 Real Elementor Target Proof `36232130665` were still running at the observation boundary.
+- Root cause: historical #743 verifier text still required `Issue #745 / PR #746 is transport-only terminal finalization.`, but README correctly records that transport as 7/7-passed and merged main `c4095311...`.
+- Repair changes only the status verifier assertion. Product behavior, gradient contract, security controls and authority boundaries are unchanged.
