@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: ebbe9ee835e50129fbee9b4c343aae816a53dc79
-active_issue: 777
-active_pr: 778
-active_branch: p15/container-hover-border
+observed_main_sha: 21848e94e369fd9486102bb176587a4b5479a4e7
+active_issue: 779
+active_pr: 780
+active_branch: p15/container-hover-background-color
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-778-product-handoff
+  presentation_epoch: pr-780-product-handoff
   presentation_order:
     - review-security-blocker-287
     - review-next-p15-map
     - verify-terminal-after-769
     - review-ai-plan
-recommended_action_id: verify-pr-778
+recommended_action_id: verify-pr-780
 options:
-  - action_id: verify-pr-778
-    label: Verify Container hover border PR #778
+  - action_id: verify-pr-780
+    label: Verify Container hover background PR #780
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_778
-    request_payload: "Resolve exact current head of product PR #778 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
+    action_token: VERIFY_PR_780
+    request_payload: "Resolve exact current head of product PR #780 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
     blocked_by: []
     blocked_reason: null
   - action_id: review-next-p15-map
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_NEXT_P15_MAP
-    request_payload: "Review remaining P15 capability map from settled product main ebbe9ee8 without widening authority."
+    request_payload: "Review remaining P15 capability map from settled product main 21848e94 without widening authority."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287

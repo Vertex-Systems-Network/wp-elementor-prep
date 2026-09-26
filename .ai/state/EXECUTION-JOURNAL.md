@@ -333,3 +333,8 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 
 - #776 passed 7/7 on `2c1a8c5d`, zero threads; merged main `ebbe9ee835e50129fbee9b4c343aae816a53dc79`; #775 closed.
 - #777/#778 adds isolated Container hover border type/color and responsive widths. Local 1,795 tests, typecheck and build PASS; final gates pending. No new target authority.
+
+## 2026-09-26 — P15 #778 merge and #779/#780
+
+- #778 passed 7/7 on `74641fd6`, zero threads; merged main `21848e94e369fd9486102bb176587a4b5479a4e7`; #777 closed.
+- #779/#780 adds isolated Container classic hover background color. Local 1,800 tests, typecheck and build PASS; final gates pending. No new target authority.
