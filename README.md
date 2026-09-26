@@ -278,17 +278,19 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
-### Current P15 Fast Batch #743 implementation
+### Completed P15 Fast Batch #743 / PR #744 implementation
 
-- Issue #743 / PR #744 owns three tightly-related Elementor 4.2.4 Button icon capabilities: exact bounded `selected_icon`, `icon_align`, and px `icon_indent`.
+- Issue #743 / PR #744 completed three tightly-related Elementor 4.2.4 Button icon capabilities: exact bounded `selected_icon`, `icon_align`, and px `icon_indent`.
 - Product commit: `bcc66e294cdb516e0a9f0f2e6a079c271e397e67`; focused tests: `a56258e9438ba3b5bf6705295d7a1fc6c79ffbaf`.
 - Exact source evidence binds Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, Icons control blob `d7d9445cb94c852bbb4731e076667fd97dec0554`, exact Button icon fixture blob `ba4b5b444ab41fa69f982dc74af655aa03417783`, and Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
 - `selected_icon` accepts only matching Font Awesome class/library pairs: `fas/fa-solid`, `far/fa-regular`, or `fab/fa-brands`, followed by one bounded `fa-<name>` icon token.
-- SVG/URL media payloads, custom icon libraries and extra class tokens reject.
+- SVG/URL media payloads, custom icon libraries and extra class tokens remain rejected.
 - `icon_align` accepts only `row|row-reverse`; `icon_indent` accepts explicit finite `0..50px` and serializes as `{unit:'px',size,sizes:[]}`.
 - Exact neutral-source + base-candidate identity binding and Button text/link/alignment revalidation remain fail-closed; requested existing target keys reject rather than overwrite.
+- Final exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with 0 unresolved review threads.
+- Expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`; Issue #743 closed completed.
 - Icon inference, SVG import, custom units, responsive icon spacing, Figma/network mutation, target compatibility, production acceptance and download authority remain excluded.
-- Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.
+- Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR; Issue #745 is transport-only terminal finalization.
 
 ### Completed P15 Fast Batch #739 / PR #740 implementation
 
@@ -518,7 +520,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #743 batches bounded Button selected icon + position + px spacing; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #745 terminally finalizes merged #743/#744 state before the next bounded P15 Fast Batch; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |

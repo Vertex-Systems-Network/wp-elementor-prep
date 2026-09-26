@@ -151,7 +151,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#743 batches bounded Button selected icon + position + px spacing',
+  next: '#745 terminally finalizes merged #743/#744 state before the next bounded P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -696,13 +696,15 @@ for (const fragment of p15ButtonIconBasicsRequiredFragments) {
     throw new Error(`P15 #743 Button icon basics contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #743 implementation')
-  || !readme.includes('Issue #743 / PR #744 owns three tightly-related Elementor 4.2.4 Button icon capabilities')
+if (!readme.includes('### Completed P15 Fast Batch #743 / PR #744 implementation')
+  || !readme.includes('Issue #743 / PR #744 completed three tightly-related Elementor 4.2.4 Button icon capabilities')
   || !readme.includes('`selected_icon` accepts only matching Font Awesome class/library pairs')
-  || !readme.includes('SVG/URL media payloads, custom icon libraries and extra class tokens reject.')
+  || !readme.includes('SVG/URL media payloads, custom icon libraries and extra class tokens remain rejected.')
   || !readme.includes('`icon_align` accepts only `row|row-reverse`')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
-  throw new Error('README P15 #743 Button icon basics Fast Batch truth is stale or missing.');
+  || !readme.includes('Final exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`; Issue #743 closed completed.')
+  || !readme.includes('Issue #745 is transport-only terminal finalization.')) {
+  throw new Error('README P15 #743 / PR #744 merged Button icon basics Fast Batch truth is stale or missing.');
 }
 
 const p15ButtonStretchContentAlignmentRequiredFragments = [
