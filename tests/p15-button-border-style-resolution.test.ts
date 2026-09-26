@@ -85,6 +85,59 @@ function settingsOf(element: unknown): Record<string, unknown> {
 }
 
 describe('P15 Fast Batch Button normal border styling', () => {
+  it('writes only explicitly supplied tablet/mobile width objects', () => {
+    const source = sourceDocument();
+    const widthPx = { top: 2, right: 3, bottom: 4, left: 5 };
+    const result = resolveP15ElementorButtonBorderStyles(source, manifest(source, [{
+      sourceNodeId: 'button', borderType: 'solid', widthPx, color: '#1a2b3c',
+      tabletWidthPx: { top: 1, right: 1, bottom: 1, left: 1 },
+    }]));
+    expect(result.status).toBe('BUTTON_BORDER_STYLES_RESOLVED');
+    const settings = settingsOf(result.template?.content[0]?.elements[0]);
+    expect(settings.border_width_tablet).toEqual({ unit: 'px', top: '1', right: '1', bottom: '1', left: '1', isLinked: true });
+    expect(settings).not.toHaveProperty('border_width_mobile');
+    expect(settings.border_width).toEqual({ unit: 'px', top: '2', right: '3', bottom: '4', left: '5', isLinked: false });
+    expect(result.responsiveInferencePerformed).toBe(false);
+    expect(result.responsiveClosureClaim).toBe(false);
+    expect(serializeP15ElementorButtonBorderStyleSummary(result))
+      .toBe(serializeP15ElementorButtonBorderStyleSummary(resolveP15ElementorButtonBorderStyles(source, manifest(source, [{
+        sourceNodeId: 'button', borderType: 'solid', widthPx, color: '#1a2b3c',
+        tabletWidthPx: { top: 1, right: 1, bottom: 1, left: 1 },
+      }]))));
+
+    const mobile = resolveP15ElementorButtonBorderStyles(source, manifest(source, [{
+      sourceNodeId: 'button', borderType: 'dashed', widthPx, color: '#1a2b3c',
+      mobileWidthPx: { top: 0, right: 2, bottom: 0, left: 2 },
+    }]));
+    const mobileSettings = settingsOf(mobile.template?.content[0]?.elements[0]);
+    expect(mobileSettings.border_width_mobile).toEqual({ unit: 'px', top: '0', right: '2', bottom: '0', left: '2', isLinked: false });
+    expect(mobileSettings).not.toHaveProperty('border_width_tablet');
+  });
+
+  it('rejects partial, unsafe or extra responsive width fields', () => {
+    const source = sourceDocument();
+    const base = { sourceNodeId: 'button', borderType: 'solid' as const, widthPx: { top: 1, right: 1, bottom: 1, left: 1 }, color: '#123456' };
+    for (const tabletWidthPx of [
+      { top: 1, right: 1, bottom: 1 },
+      { top: 1, right: 1, bottom: 1, left: 1, unit: 'px' },
+      { top: -1, right: 1, bottom: 1, left: 1 },
+      { top: 1.5, right: 1, bottom: 1, left: 1 },
+      { top: 101, right: 1, bottom: 1, left: 1 },
+    ]) {
+      const result = resolveP15ElementorButtonBorderStyles(source, manifest(source, [{ ...base, tabletWidthPx }] as never));
+      expect(result.issues.map((issue) => issue.code)).toContain('P15_BUTTON_BORDER_STYLE_WIDTH_INVALID');
+      expect(result.template).toBeNull();
+    }
+    const extra = resolveP15ElementorButtonBorderStyles(source, manifest(source, [{ ...base, mobileWidthPx: { ...base.widthPx, extra: 1 } }] as never));
+    expect(extra.issues.map((issue) => issue.code)).toContain('P15_BUTTON_BORDER_STYLE_WIDTH_INVALID');
+    const valid = resolveP15ElementorButtonBorderStyles(source, manifest(source, [{
+      ...base, tabletWidthPx: { top: 1, right: 1, bottom: 1, left: 1 },
+    }]));
+    expect(() => serializeP15ElementorButtonBorderStyleSummary({
+      ...valid,
+      resolvedBorderStyles: [{ ...valid.resolvedBorderStyles[0], tabletWidthPx: undefined }] as never,
+    })).toThrow('Invalid or authority-inflated');
+  });
   it('writes exact border type, desktop px width and color keys as one explicit profile', () => {
     const source = sourceDocument();
     const result = resolveP15ElementorButtonBorderStyles(source, manifest(source, [{

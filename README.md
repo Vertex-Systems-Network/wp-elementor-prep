@@ -284,6 +284,10 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
+### Active P15 Button responsive border width #773 / PR #774
+
+The existing exact Elementor `4.2.4` Button border-style resolver now accepts optional explicit tablet and mobile four-side integer px widths (`0..100`). It writes only `border_width_tablet` and/or `border_width_mobile` when requested, rejects malformed objects and target-key conflicts, and preserves exact source/candidate binding. Local typecheck and nine focused tests pass. PR #774 requires all seven exact-head workflows and zero unresolved review threads before merge. This code adds no responsive inference, target compatibility, production acceptance or runtime import claim.
+
 ### Completed P15 Fast Batch #767 / PR #768 implementation
 
 - Issue #767 / PR #768 owns four tightly-related Elementor 4.2.4 Button responsive radial-gradient stop-pair capabilities: normal tablet/mobile and hover/focus tablet/mobile.

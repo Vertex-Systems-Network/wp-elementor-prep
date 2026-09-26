@@ -78,6 +78,8 @@ export interface P15ElementorButtonBorderStyleEntryV1 {
   sourceNodeId: string;
   borderType: P15ElementorButtonBorderType;
   widthPx: P15ElementorButtonBorderWidthPxV1;
+  tabletWidthPx?: P15ElementorButtonBorderWidthPxV1;
+  mobileWidthPx?: P15ElementorButtonBorderWidthPxV1;
   color: string;
 }
 
@@ -183,6 +185,7 @@ const MANIFEST_KEYS = [
 ] as const;
 
 const ENTRY_KEYS = ['borderType', 'color', 'sourceNodeId', 'widthPx'] as const;
+const OPTIONAL_ENTRY_KEYS = ['mobileWidthPx', 'tabletWidthPx'] as const;
 const WIDTH_KEYS = ['bottom', 'left', 'right', 'top'] as const;
 
 const ISSUE_CODES: readonly P15ElementorButtonBorderStyleIssueCode[] = [
@@ -217,6 +220,12 @@ function exactKeys(value: Record<string, unknown>, expected: readonly string[]):
   const canonical = [...expected].sort();
   return actual.length === canonical.length
     && actual.every((key, index) => key === canonical[index]);
+}
+
+function entryKeysValid(value: Record<string, unknown>): boolean {
+  return Object.keys(value).every((key) =>
+    (ENTRY_KEYS as readonly string[]).includes(key) || (OPTIONAL_ENTRY_KEYS as readonly string[]).includes(key))
+    && ENTRY_KEYS.every((key) => Object.prototype.hasOwnProperty.call(value, key));
 }
 
 function validFingerprint(value: unknown): value is string {
@@ -258,6 +267,8 @@ function cloneEntry(value: P15ElementorButtonBorderStyleEntryV1): P15ElementorBu
     sourceNodeId: value.sourceNodeId,
     borderType: value.borderType,
     widthPx: cloneWidth(value.widthPx),
+    ...(value.tabletWidthPx === undefined ? {} : { tabletWidthPx: cloneWidth(value.tabletWidthPx) }),
+    ...(value.mobileWidthPx === undefined ? {} : { mobileWidthPx: cloneWidth(value.mobileWidthPx) }),
     color: value.color,
   };
 }
@@ -569,7 +580,7 @@ export function resolveP15ElementorButtonBorderStyles(
         const path = `$manifest.buttons[${index}]`;
 
         if (!isRecord(raw)
-          || !exactKeys(raw, ENTRY_KEYS)
+          || !entryKeysValid(raw)
           || !validSourceNodeId(raw.sourceNodeId)) {
           issues.push({
             code: 'P15_BUTTON_BORDER_STYLE_ENTRY_INVALID',
@@ -616,6 +627,16 @@ export function resolveP15ElementorButtonBorderStyles(
           continue;
         }
 
+        if ((Object.prototype.hasOwnProperty.call(raw, 'tabletWidthPx') && !validWidth(raw.tabletWidthPx))
+          || (Object.prototype.hasOwnProperty.call(raw, 'mobileWidthPx') && !validWidth(raw.mobileWidthPx))) {
+          issues.push({
+            code: 'P15_BUTTON_BORDER_STYLE_WIDTH_INVALID',
+            path: `${path}.responsiveWidthPx`,
+            message: 'Each supplied responsive width must contain four integer px sides from 0 through 100.',
+          });
+          continue;
+        }
+
         if (!validColor(raw.color)) {
           issues.push({
             code: 'P15_BUTTON_BORDER_STYLE_COLOR_INVALID',
@@ -629,6 +650,8 @@ export function resolveP15ElementorButtonBorderStyles(
           sourceNodeId,
           borderType: raw.borderType,
           widthPx: { ...raw.widthPx },
+          ...(raw.tabletWidthPx === undefined ? {} : { tabletWidthPx: cloneWidth(raw.tabletWidthPx as P15ElementorButtonBorderWidthPxV1) }),
+          ...(raw.mobileWidthPx === undefined ? {} : { mobileWidthPx: cloneWidth(raw.mobileWidthPx as P15ElementorButtonBorderWidthPxV1) }),
           color: raw.color,
         });
       }
@@ -681,6 +704,8 @@ export function resolveP15ElementorButtonBorderStyles(
       P15_ELEMENTOR_BUTTON_BORDER_STYLE_EVIDENCE.borderTypeSettingKey,
       P15_ELEMENTOR_BUTTON_BORDER_STYLE_EVIDENCE.borderWidthSettingKey,
       P15_ELEMENTOR_BUTTON_BORDER_STYLE_EVIDENCE.borderColorSettingKey,
+      ...(resolution.tabletWidthPx === undefined ? [] : [P15_ELEMENTOR_BUTTON_BORDER_STYLE_EVIDENCE.borderWidthTabletSettingKey]),
+      ...(resolution.mobileWidthPx === undefined ? [] : [P15_ELEMENTOR_BUTTON_BORDER_STYLE_EVIDENCE.borderWidthMobileSettingKey]),
     ];
 
     const conflictingKey = requestedKeys.find((key) =>
@@ -698,6 +723,14 @@ export function resolveP15ElementorButtonBorderStyles(
       resolution.borderType;
     target.settings[P15_ELEMENTOR_BUTTON_BORDER_STYLE_EVIDENCE.borderWidthSettingKey] =
       elementorDimensions(resolution.widthPx);
+    if (resolution.tabletWidthPx !== undefined) {
+      target.settings[P15_ELEMENTOR_BUTTON_BORDER_STYLE_EVIDENCE.borderWidthTabletSettingKey] =
+        elementorDimensions(resolution.tabletWidthPx);
+    }
+    if (resolution.mobileWidthPx !== undefined) {
+      target.settings[P15_ELEMENTOR_BUTTON_BORDER_STYLE_EVIDENCE.borderWidthMobileSettingKey] =
+        elementorDimensions(resolution.mobileWidthPx);
+    }
     target.settings[P15_ELEMENTOR_BUTTON_BORDER_STYLE_EVIDENCE.borderColorSettingKey] =
       resolution.color;
   }
@@ -748,10 +781,12 @@ function validIssue(issue: P15ElementorButtonBorderStyleIssueV1): boolean {
 
 function validSummaryEntry(entry: P15ElementorButtonBorderStyleEntryV1): boolean {
   return isRecord(entry)
-    && exactKeys(entry, ENTRY_KEYS)
+    && entryKeysValid(entry)
     && validSourceNodeId(entry.sourceNodeId)
     && validBorderType(entry.borderType)
     && validWidth(entry.widthPx)
+    && (!Object.prototype.hasOwnProperty.call(entry, 'tabletWidthPx') || validWidth(entry.tabletWidthPx))
+    && (!Object.prototype.hasOwnProperty.call(entry, 'mobileWidthPx') || validWidth(entry.mobileWidthPx))
     && validColor(entry.color);
 }
 
