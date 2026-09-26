@@ -10,7 +10,7 @@ WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving t
 
 ## P15 implementation provenance
 
-Product PR #774 (Issue #773) added explicit tablet/mobile Button `border_width` px objects; exact head `3fd122cd...` passed 7/7 and merged as main `6ef3ea58...`. Current PR #776 (Issue #775) adds bounded Container normal border type/color and explicit desktop/tablet/mobile widths; local typecheck and 1,790 tests pass, while remote gates and runtime acceptance remain pending. Terminal PR #770 merged as main `5f7fa2b59030613cd83630f0135b56cc568e030d`. PR #772 was closed unmerged because its broad capability prefixes overstated exact supported keys.
+Product PR #774 (Issue #773) added explicit tablet/mobile Button `border_width` px objects; exact head `3fd122cd...` passed 7/7 and merged as main `6ef3ea58...`. PR #776 (Issue #775) added bounded Container normal border type/color and explicit desktop/tablet/mobile widths; exact head `2c1a8c5d...` passed 7/7 and merged main `ebbe9ee8...`. Current PR #778 (Issue #777) adds isolated Container hover border and explicit responsive widths; local typecheck and 1,795 tests pass while final remote gates and runtime acceptance remain pending. Terminal PR #770 merged as main `5f7fa2b59030613cd83630f0135b56cc568e030d`. PR #772 was closed unmerged because its broad capability prefixes overstated exact supported keys.
 
 Accepted implementation baseline immediately preceding the stable operator-I/O hardening line:
 

@@ -217,4 +217,6 @@ A development/release train may not be called complete while:
 
 | RQ-773-FINAL | #773 / PR #774 | Explicit Button tablet/mobile border widths | Required PR exact-head gate set | head `3fd122cd...` passed 7/7, zero threads; merged main `6ef3ea58...` | `FINAL_BATCH` | exact-head gates PASS | DONE |
 
-| RQ-775-FINAL | #775 / PR #776 | Container normal border and responsive widths | Required PR exact-head gate set | initial head `40854345...`; final head pending | `FINAL_BATCH` | all seven workflows and zero unresolved threads on final head | AWAITING_EXACT_HEAD_BATCH |
+| RQ-775-FINAL | #775 / PR #776 | Container normal border and responsive widths | Required PR exact-head gate set | head `2c1a8c5d...` passed 7/7; zero threads; merged main `ebbe9ee8...` | `FINAL_BATCH` | exact-head gates PASS | DONE |
+
+| RQ-777-FINAL | #777 / PR #778 | Container hover border and responsive widths | Required PR exact-head gate set | initial head `bec3e06f...`; final head pending | `FINAL_BATCH` | all seven workflows and zero unresolved threads on final head | AWAITING_EXACT_HEAD_BATCH |

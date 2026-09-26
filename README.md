@@ -284,9 +284,13 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
-### Active P15 Container border style #775 / PR #776
+### Completed P15 Container border style #775 / PR #776
 
-The exact Elementor `4.2.4` Container normal-border resolver writes only `border_border`, `border_color`, and explicit desktop/tablet/mobile `border_width` four-side integer px objects (`0..100`). Omitted breakpoint values remain absent. It binds exact neutral source and base candidate identities, revalidates generated Container structure, rejects requested-key conflicts, and keeps runtime/compatibility/production authority false. Local typecheck, 1,790 tests, status verifier and build pass; final PR #776 remote gates are pending.
+The exact Elementor `4.2.4` Container normal-border resolver writes only `border_border`, `border_color`, and explicit desktop/tablet/mobile `border_width` four-side integer px objects (`0..100`). Omitted breakpoint values remain absent. It binds exact neutral source and base candidate identities, revalidates generated Container structure, rejects requested-key conflicts, and keeps runtime/compatibility/production authority false. Local typecheck, 1,790 tests, status verifier and build pass; PR #776 exact head `2c1a8c5d3b9a62326b1405706bee51484b9fab39` passed 7/7 and zero review threads; merged main `ebbe9ee835e50129fbee9b4c343aae816a53dc79`; #775 closed.
+
+### Active P15 Container hover border style #777 / PR #778
+
+The exact Elementor `4.2.4` Container hover group writes only `border_hover_border`, `border_hover_color`, and explicit `border_hover_width` desktop/tablet/mobile four-side integer px objects (`0..100`). Normal state and omitted breakpoints remain untouched. Exact source/candidate binding, generated Container revalidation, requested-key conflict rejection, sanitized summary and false authority remain. Local typecheck, 1,795 tests and build pass; final PR #778 remote gates are pending. No real import/render result is claimed.
 
 ### Completed P15 Button responsive border width #773 / PR #774
 
