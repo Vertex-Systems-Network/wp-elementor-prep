@@ -356,3 +356,8 @@ claims:
   - {id: CL-353, statement: pr_764_expected_head_merge_produced_main_143ffcab_and_issue_763_closed_completed, value: true}
   - {id: CL-354, statement: canonical_state_is_idle_ready_for_next_p15_batch_after_pr_764_merge_with_no_active_canonical_issue_or_pr, value: true}
   - {id: CL-355, statement: issue_765_is_transport_only_terminal_finalization_after_pr_764_and_is_not_canonical_lifecycle_ownership, value: true}
+  - {id: CL-356, statement: pr_766_exact_head_944fc059_passed_all_seven_required_gates_with_zero_unresolved_review_threads_and_merged_as_main_c3328728, value: true}
+  - {id: CL-357, statement: issue_765_is_closed_completed_after_pr_766_expected_head_merge_and_requires_no_recursive_reconciliation, value: true}
+  - {id: CL-358, statement: issue_767_owns_button_responsive_radial_gradient_stop_locations_fast_batch_for_normal_and_hover_tablet_mobile_stop_pairs, value: true}
+  - {id: CL-359, statement: p15_767_responsive_radial_stop_pairs_are_atomic_integer_zero_through_100_values_with_a_less_than_or_equal_to_b_and_no_inference, value: true}
+  - {id: CL-360, statement: pr_768_is_active_final_exact_head_verification_path_for_issue_767_button_responsive_radial_gradient_stop_locations_v1, value: true}
