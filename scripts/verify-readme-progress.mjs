@@ -153,7 +153,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#759 / PR #760 batches explicit normal/hover tablet/mobile linear-gradient angles',
+  next: '#761 terminally finalizes merged #759/#760 state before the next bounded P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -760,13 +760,15 @@ for (const fragment of p15ButtonResponsiveLinearAngleRequiredFragments) {
     throw new Error(`P15 #759 Button responsive linear-angle contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #759 / PR #760 implementation')
+if (!readme.includes('### Completed P15 Fast Batch #759 / PR #760 implementation')
   || !readme.includes('normal tablet/mobile and hover/focus tablet/mobile')
   || !readme.includes('`tabletAngleDeg` / `mobileAngleDeg`')
   || !readme.includes('`gradient_angle_tablet` / `gradient_angle_mobile`')
   || !readme.includes('Omitted tablet/mobile values remain omitted')
   || !readme.includes('Terminal #757 / PR #758 passed all seven required gates on exact head `bf6d9d5db6ddcbf1cc39938ddb7ed7c62870676e`')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  || !readme.includes('Final exact head `ef1687c1a34a45dfb6ed5efdbf0c1a7f38e43cad` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `105f7594c32441c2738325ca0c3d0695620dd54d`; Issue #759 closed completed.')
+  || !readme.includes('Issue #761 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #759 / PR #760 responsive linear-angle Fast Batch truth is stale or missing.');
 }
 

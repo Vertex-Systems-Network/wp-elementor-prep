@@ -343,3 +343,7 @@ claims:
   - {id: CL-340, statement: issue_759_owns_button_responsive_linear_gradient_angles_fast_batch_for_normal_and_hover_tablet_mobile_angles, value: true}
   - {id: CL-341, statement: p15_759_responsive_linear_angles_are_explicit_integer_zero_through_360_degree_values_and_omitted_breakpoints_remain_omitted_with_no_inference, value: true}
   - {id: CL-342, statement: pr_760_is_active_final_exact_head_verification_path_for_issue_759_button_responsive_linear_gradient_angles_v1, value: true}
+  - {id: CL-343, statement: pr_760_exact_head_ef1687c1_passed_all_seven_required_gates_with_zero_unresolved_review_threads, value: true}
+  - {id: CL-344, statement: pr_760_expected_head_merge_produced_main_105f7594_and_issue_759_closed_completed, value: true}
+  - {id: CL-345, statement: canonical_state_is_idle_ready_for_next_p15_batch_after_pr_760_merge_with_no_active_canonical_issue_or_pr, value: true}
+  - {id: CL-346, statement: issue_761_is_transport_only_terminal_finalization_after_pr_760_and_is_not_canonical_lifecycle_ownership, value: true}
