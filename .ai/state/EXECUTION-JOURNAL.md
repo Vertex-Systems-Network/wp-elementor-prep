@@ -324,15 +324,12 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Issue #769 / branch `ai-native/terminal-finalize-pr-768` is transport-only finalization and grants no product/runtime/security/compatibility/production/download/release authority.
 - Next step is to bind/open its transport PR and stop at the exact-head gate boundary.
 
-## 2026-09-26 — terminal finalization PR #770 opened
-
-- PR #770 opened from `ai-native/terminal-finalize-pr-768` against exact base main `16a67afb4f25f6d051a79499d84a291b43db8ba6`.
-- PR creation head was `868dfaba13f1959d625187e4e7f120dc3e0d8255`.
-- Issue #769 / PR #770 is transport-only and not canonical lifecycle ownership; `active_issue` / `active_pr` remain null.
-- Product/runtime/security/compatibility/production/download/release authority remains unchanged.
-- Remote exact-head gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
-
 ## 2026-09-26 — P15 #773/#774 and #775/#776
 
 - #774 passed 7/7 on `3fd122cd`, zero threads; merged main `6ef3ea58`; #773 closed.
 - #775/#776 adds Container normal border type/color and desktop/tablet/mobile widths. Local 1,790 tests, typecheck/build/status PASS; final gates pending.
+
+## 2026-09-26 — P15 #776 merge and #777/#778
+
+- #776 passed 7/7 on `2c1a8c5d`, zero threads; merged main `ebbe9ee835e50129fbee9b4c343aae816a53dc79`; #775 closed.
+- #777/#778 adds isolated Container hover border type/color and responsive widths. Local 1,795 tests, typecheck and build PASS; final gates pending. No new target authority.
