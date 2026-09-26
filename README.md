@@ -48,13 +48,14 @@ Open roadmap / acceptance dependencies:
 - `#119` — P13-P27 commercial/multi-target roadmap owner;
 - `#723 / PR #724` — completed P15 Fast Batch: Button typography metrics v1; terminal state transport #725 / PR #726 completed 7/7 and merged;
 - `#727 / PR #728` — completed P15 Fast Batch: Button responsive typography metrics v1; `#729 / PR #730` is transport-only terminal state finalization;
+- `#747 / PR #748` — active P15 Fast Batch: Button normal/hover linear gradients + explicit bounded angle;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
 Current verified main before this documentation sync:
 
-`1258ba0854847c91f5792f170be831bf96e4dbf3`
+`c4095311e9243d8c00796bbbf34463580ef74f86`
 
 ### Completed P15 #659 verification
 
@@ -278,6 +279,20 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
+### Current P15 Fast Batch #747 / PR #748 implementation
+
+- Issue #747 / PR #748 owns three closely-related exact Elementor 4.2.4 Button capabilities: normal and hover/focus linear-gradient backgrounds plus optional explicit linear angle.
+- Product commit: `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`.
+- Exact source evidence binds Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`, Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, and Background group blob `ac8e1a510ec663f3f428c9f564dc2c5b727435e1`.
+- Both states serialize only exact Background group keys for `gradient` + `linear`, two strict lowercase six-digit hex colors and ordered integer `0..100%` stops.
+- The angle is optional and, when present, is an optional explicit integer `0..360deg` angle; omitted angle remains omitted rather than inferred.
+- Radial gradients, image/video backgrounds, custom CSS/units and token/global resolution remain excluded.
+- Base/desktop settings only are written; responsive inheritance/synthesis remains excluded.
+- Exact neutral-source fingerprint + base-candidate identity binding and generated Button text/link/alignment revalidation remain fail-closed; requested existing keys reject rather than overwrite.
+- Figma/network mutation, responsive closure, target compatibility, production acceptance and download authority remain false.
+- Terminal #745 / PR #746 already passed 7/7 on exact head `7c484349c9be42eefcec4c6d89ff6149656dc49f`, had 0 unresolved review threads and merged as current base main `c4095311e9243d8c00796bbbf34463580ef74f86`.
+- Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.
+
 ### Completed P15 Fast Batch #743 / PR #744 implementation
 
 - Issue #743 / PR #744 completed three tightly-related Elementor 4.2.4 Button icon capabilities: exact bounded `selected_icon`, `icon_align`, and px `icon_indent`.
@@ -290,7 +305,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Final exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with 0 unresolved review threads.
 - Expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`; Issue #743 closed completed.
 - Icon inference, SVG import, custom units, responsive icon spacing, Figma/network mutation, target compatibility, production acceptance and download authority remain excluded.
-- Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR; Issue #745 / PR #746 is transport-only terminal finalization.
+- Terminal #745 / PR #746 later passed all seven required gates with 0 unresolved review threads and merged as main `c4095311e9243d8c00796bbbf34463580ef74f86`; transport remained non-canonical.
 
 ### Completed P15 Fast Batch #739 / PR #740 implementation
 
@@ -520,7 +535,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #745 terminally finalizes merged #743/#744 state before the next bounded P15 Fast Batch; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #747 / PR #748 batches bounded Button normal/hover linear gradients + explicit angle; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -637,7 +652,7 @@ Development now defaults to **3-5 closely related capabilities per product batch
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. exact-head verify and merge Fast Batch #727 containing explicit Button responsive typography metrics while preserving exact source/evidence and authority boundaries;
+2. exact-head verify Fast Batch #747 / PR #748 for bounded Button normal/hover linear gradients + explicit angle while preserving exact source/evidence and authority boundaries;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;

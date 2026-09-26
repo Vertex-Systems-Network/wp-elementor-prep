@@ -166,6 +166,20 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
+## Active P15 Fast Batch #747 / PR #748 Button linear gradient backgrounds
+
+Issue #747 / PR #748 is the canonical active P15 batch against exact base main `c4095311e9243d8c00796bbbf34463580ef74f86`.
+
+The bounded scope is normal linear-gradient background, hover/focus linear-gradient background, and optional explicit linear-gradient angle. Exact Elementor 4.2.4 evidence binds Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5` and Background group blob `ac8e1a510ec663f3f428c9f564dc2c5b727435e1`.
+
+Colors are strict lowercase six-digit hex; stops are ordered integer `0..100%`; optional angle is integer `0..360deg`. Only linear gradients are accepted. Radial gradients, images/video, custom CSS/units, global/theme tokens and responsive synthesis are excluded.
+
+Exact source/base-candidate binding, generated Button text/link/alignment revalidation and requested-key conflict rejection remain fail-closed. Figma/network mutation, target compatibility, production acceptance and download authority remain false.
+
+Product commit: `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`. Final exact-head seven-gate certification and zero unresolved review threads are still required before merge.
+
+Terminal #745 / PR #746 completed first: exact head `7c484349c9be42eefcec4c6d89ff6149656dc49f` passed 7/7 with zero unresolved review threads and merged as main `c4095311e9243d8c00796bbbf34463580ef74f86`; Issue #745 closed.
+
 ## Completed P15 Fast Batch #743 / PR #744 Button icon basics
 
 Issue #743 / PR #744 is closed completed. Exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`.
@@ -176,7 +190,7 @@ Selected icons remain restricted to exact Font Awesome `fa-solid|fa-regular|fa-b
 
 Exact neutral-source/base-candidate binding, Button text/link/alignment revalidation and existing-key conflict rejection remain fail-closed. Icon inference, SVG import, custom units, responsive icon spacing, Figma/network mutation, target compatibility, production acceptance and download authority remain false/out of scope.
 
-Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #745 / PR #746 is transport-only terminal finalization and does not become canonical lifecycle ownership.
+Terminal finalization #745 / PR #746 subsequently passed 7/7 on exact head `7c484349c9be42eefcec4c6d89ff6149656dc49f` with zero unresolved review threads and merged as main `c4095311e9243d8c00796bbbf34463580ef74f86`; it remained non-canonical lifecycle transport.
 
 ## Completed P15 Fast Batch #739 / PR #740 Button stretch content alignment
 
