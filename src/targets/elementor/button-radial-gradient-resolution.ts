@@ -51,8 +51,12 @@ export const P15_ELEMENTOR_BUTTON_RADIAL_GRADIENT_EVIDENCE = Object.freeze({
   backgroundTypeSuffix: 'background',
   colorASuffix: 'color',
   colorAStopSuffix: 'color_stop',
+  colorAStopTabletSuffix: 'color_stop_tablet',
+  colorAStopMobileSuffix: 'color_stop_mobile',
   colorBSuffix: 'color_b',
   colorBStopSuffix: 'color_b_stop',
+  colorBStopTabletSuffix: 'color_b_stop_tablet',
+  colorBStopMobileSuffix: 'color_b_stop_mobile',
   gradientTypeSuffix: 'gradient_type',
   gradientPositionSuffix: 'gradient_position',
   gradientPositionTabletSuffix: 'gradient_position_tablet',
@@ -71,6 +75,10 @@ export interface P15ElementorButtonRadialGradientV1 {
   colorB: string;
   stopA: number;
   stopB: number;
+  tabletStopA?: number;
+  tabletStopB?: number;
+  mobileStopA?: number;
+  mobileStopB?: number;
   position: P15ElementorButtonRadialGradientPosition;
   tabletPosition?: P15ElementorButtonRadialGradientPosition;
   mobilePosition?: P15ElementorButtonRadialGradientPosition;
@@ -188,7 +196,7 @@ const MANIFEST_KEYS = [
 ] as const;
 
 const ENTRY_KEYS = ['hover', 'normal', 'sourceNodeId'] as const;
-const GRADIENT_KEYS = ['colorA', 'colorB', 'mobilePosition', 'position', 'stopA', 'stopB', 'tabletPosition'] as const;
+const GRADIENT_KEYS = ['colorA', 'colorB', 'mobilePosition', 'mobileStopA', 'mobileStopB', 'position', 'stopA', 'stopB', 'tabletPosition', 'tabletStopA', 'tabletStopB'] as const;
 
 const ISSUE_CODES: readonly P15ElementorButtonRadialGradientIssueCode[] = [
   'P15_BUTTON_RADIAL_GRADIENT_SOURCE_IR_INVALID',
@@ -261,6 +269,23 @@ function validGradient(value: unknown): value is P15ElementorButtonRadialGradien
     || !Object.prototype.hasOwnProperty.call(value, 'position')) return false;
   if (!validColor(value.colorA) || !validColor(value.colorB)) return false;
   if (!validStop(value.stopA) || !validStop(value.stopB) || Number(value.stopA) > Number(value.stopB)) return false;
+
+  const hasTabletStopA = value.tabletStopA !== undefined;
+  const hasTabletStopB = value.tabletStopB !== undefined;
+  if (hasTabletStopA !== hasTabletStopB) return false;
+  if (hasTabletStopA
+    && (!validStop(value.tabletStopA)
+      || !validStop(value.tabletStopB)
+      || Number(value.tabletStopA) > Number(value.tabletStopB))) return false;
+
+  const hasMobileStopA = value.mobileStopA !== undefined;
+  const hasMobileStopB = value.mobileStopB !== undefined;
+  if (hasMobileStopA !== hasMobileStopB) return false;
+  if (hasMobileStopA
+    && (!validStop(value.mobileStopA)
+      || !validStop(value.mobileStopB)
+      || Number(value.mobileStopA) > Number(value.mobileStopB))) return false;
+
   if (!validPosition(value.position)) return false;
   if (value.tabletPosition !== undefined && !validPosition(value.tabletPosition)) return false;
   return value.mobilePosition === undefined || validPosition(value.mobilePosition);
@@ -272,6 +297,8 @@ function cloneGradient(value: P15ElementorButtonRadialGradientV1): P15ElementorB
     colorB: value.colorB,
     stopA: value.stopA,
     stopB: value.stopB,
+    ...(value.tabletStopA === undefined ? {} : { tabletStopA: value.tabletStopA, tabletStopB: value.tabletStopB }),
+    ...(value.mobileStopA === undefined ? {} : { mobileStopA: value.mobileStopA, mobileStopB: value.mobileStopB }),
     position: value.position,
     ...(value.tabletPosition === undefined ? {} : { tabletPosition: value.tabletPosition }),
     ...(value.mobilePosition === undefined ? {} : { mobilePosition: value.mobilePosition }),
@@ -413,6 +440,8 @@ function gradientSettingKeys(
     'gradient_type',
     'gradient_position',
   ];
+  if (gradient.tabletStopA !== undefined) suffixes.push('color_stop_tablet', 'color_b_stop_tablet');
+  if (gradient.mobileStopA !== undefined) suffixes.push('color_stop_mobile', 'color_b_stop_mobile');
   if (gradient.tabletPosition !== undefined) suffixes.push('gradient_position_tablet');
   if (gradient.mobilePosition !== undefined) suffixes.push('gradient_position_mobile');
   return suffixes.map((suffix) => `${prefix}_${suffix}`);
@@ -428,6 +457,14 @@ function applyGradient(
   settings[`${prefix}_color_stop`] = slider('%', gradient.stopA);
   settings[`${prefix}_color_b`] = gradient.colorB;
   settings[`${prefix}_color_b_stop`] = slider('%', gradient.stopB);
+  if (gradient.tabletStopA !== undefined && gradient.tabletStopB !== undefined) {
+    settings[`${prefix}_color_stop_tablet`] = slider('%', gradient.tabletStopA);
+    settings[`${prefix}_color_b_stop_tablet`] = slider('%', gradient.tabletStopB);
+  }
+  if (gradient.mobileStopA !== undefined && gradient.mobileStopB !== undefined) {
+    settings[`${prefix}_color_stop_mobile`] = slider('%', gradient.mobileStopA);
+    settings[`${prefix}_color_b_stop_mobile`] = slider('%', gradient.mobileStopB);
+  }
   settings[`${prefix}_gradient_type`] = 'radial';
   settings[`${prefix}_gradient_position`] = gradient.position;
   if (gradient.tabletPosition !== undefined) {
