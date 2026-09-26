@@ -1,32 +1,52 @@
 # Last Durable Checkpoint
 
-Status: IDLE_READY_NEXT_P15_BATCH  
+Status: IMPLEMENTING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `5e839f4edce59dc3bcab67a26f16965495a31b5d`  
-Observed-main semantics: `terminal_finalization_base_tip`  
-Canonical Active Issue: `none`  
-Canonical Active PR: `none`  
-Canonical Active branch: `main`
+Observed main: `6db4a456eae8451b964639399d5e7c3c705d2f4b`  
+Active Issue: `#743`  
+Active PR: `#744`  
+Active branch: `p15/button-icon-basics`
 
-## Completed P15 Fast Batch #739 / PR #740
+## Terminal finalization #741 / PR #742 completed
 
-- Final exact head `0a4cc0d2782c7a67dd187c6e8821e70eb6186f35` passed all seven required gates with 0 unresolved review threads.
-- Runs: CI `36203255158`, CodeQL `36203255169`, Integration `36203255135`, P12 Offline `36203255141`, P12 Final `36203255139`, P15 target `36203255193`, P17 browser `36203255156`.
-- Expected-head merge produced main `5e839f4edce59dc3bcab67a26f16965495a31b5d`; Issue #739 closed.
-- Four bounded Button layout capabilities are retained: explicit desktop `align=justify` stretch plus `content_align`, `content_align_tablet`, and `content_align_mobile`.
-- Content alignment remains restricted to `start|center|end|space-between`.
-- Explicit neutral source alignment still blocks stretch mutation; omitted responsive content-alignment breakpoints remain omitted.
-- Exact source/base-candidate binding, Button text/link/base-alignment revalidation and existing-key conflict rejection remain fail-closed.
-- Icon mutation, custom breakpoints, arbitrary CSS/classes/HTML, inference, Figma/network mutation, target compatibility, production acceptance and download authority remain unclaimed.
+- Exact transport head `23d39e56d0ed10bcd2444bcfe1963ae5d189f3b4` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI `36204445261`, CodeQL `36204445392`, Integration `36204445260`, P12 Offline `36204445311`, P12 Final `36204445277`, P15 target `36204445316`, P17 browser `36204445267`.
+- Expected-head merge produced main `6db4a456eae8451b964639399d5e7c3c705d2f4b`; Issue #741 closed.
+- Transport remained non-canonical and requires no recursive reconciliation.
 
-## Terminal finalization transport #741 / PR #742
+## Active P15 Fast Batch #743
 
-- PR #742 opened against exact base main `5e839f4edce59dc3bcab67a26f16965495a31b5d`.
-- PR creation head was `138b150bcbbb10331133b8e88dc2cdb6882c4ef3`.
-- Issue #741 / PR #742 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
-- Remote exact-head gates are intentionally deferred to the next user turn.
-- A future successful transport merge does not itself require recursive reconciliation.
+Button icon basics v1 contains three exact Elementor 4.2.4 capabilities:
+1. bounded Font Awesome `selected_icon`;
+2. exact `icon_align` position;
+3. exact `icon_indent` px spacing.
+
+Safety boundaries:
+- icon libraries are only `fa-solid|fa-regular|fa-brands`;
+- icon values must be exactly one matching `fas|far|fab` family token plus one `fa-<name>` token;
+- SVG, URL/media payloads, custom libraries and extra class tokens reject;
+- `icon_align` accepts only `row|row-reverse`;
+- `icon_indent` is an explicit finite px value in `0..50`, serialized as `{unit:'px',size,sizes:[]}`;
+- exact source IR + base-candidate identity binding;
+- Button text/link/alignment revalidated;
+- existing requested target keys fail closed;
+- no icon inference, responsive icon spacing, custom units, SVG import, Figma/network mutation, compatibility, production acceptance or download authority.
+
+Evidence:
+- Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`;
+- Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`;
+- Icons control blob `d7d9445cb94c852bbb4731e076667fd97dec0554`;
+- exact Button icon fixture blob `ba4b5b444ab41fa69f982dc74af655aa03417783`.
+
+Product commit: `bcc66e294cdb516e0a9f0f2e6a079c271e397e67`.  
+Focused tests: `a56258e9438ba3b5bf6705295d7a1fc6c79ffbaf`.
+
+## PR #744 handoff
+
+- PR #744 is the only PR for Issue #743 and targets exact base main `6db4a456eae8451b964639399d5e7c3c705d2f4b`.
+- PR creation head: `e9d8942af57f28cc63f2e643c35d7aeba4d3ef03`.
+- Remote exact-head gate observation is deferred to the next user turn.
 
 ## Exact next safe action
 
-Resolve the final bound PR #742 head and perform exactly one consolidated required-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
+Resolve the final bound PR #744 head and perform exactly one consolidated seven-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.

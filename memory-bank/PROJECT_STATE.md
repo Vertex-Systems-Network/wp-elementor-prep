@@ -166,6 +166,14 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
+## Active P15 Fast Batch #743 Button icon basics
+
+Issue #743 / PR #744 / branch `p15/button-icon-basics` owns three tightly-related exact Elementor 4.2.4 Button icon capabilities: bounded `selected_icon`, `icon_align`, and px `icon_indent`.
+
+Selected icons are restricted to exact Font Awesome `fa-solid|fa-regular|fa-brands` library pairs with matching `fas|far|fab` class prefixes and one bounded `fa-<name>` token. SVG, URL/media icon payloads, custom libraries and extra class tokens reject. Position is `row|row-reverse` only; spacing is explicit finite `0..50px`.
+
+Exact neutral-source/base-candidate binding, Button text/link/alignment revalidation and existing-key conflict rejection remain fail-closed. Icon inference, SVG import, custom units, responsive icon spacing, Figma/network mutation, compatibility, production acceptance and download authority remain false/out of scope.
+
 ## Completed P15 Fast Batch #739 / PR #740 Button stretch content alignment
 
 Issue #739 / PR #740 is closed completed. Exact head `0a4cc0d2782c7a67dd187c6e8821e70eb6186f35` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `5e839f4edce59dc3bcab67a26f16965495a31b5d`.
@@ -176,7 +184,7 @@ Every mutation remains explicit. A neutral source Button with existing explicit 
 
 Icon mutation, custom breakpoints, arbitrary CSS/classes/HTML, responsive/style inference, Figma/network mutation, target compatibility, production acceptance and download authority remain false/out of scope.
 
-Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #741 / PR #742 is transport-only terminal finalization and does not become canonical lifecycle ownership.
+Canonical AI-native state advanced through transport-only Issue #741 / PR #742; exact head `23d39e56d0ed10bcd2444bcfe1963ae5d189f3b4` passed 7/7 and merged as main `6db4a456eae8451b964639399d5e7c3c705d2f4b` without becoming canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #735 / PR #736 Button content metadata basics
 

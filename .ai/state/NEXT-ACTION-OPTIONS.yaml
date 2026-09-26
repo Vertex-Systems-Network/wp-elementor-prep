@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 5e839f4edce59dc3bcab67a26f16965495a31b5d
-active_issue: null
-active_pr: null
-active_branch: main
+observed_main_sha: 6db4a456eae8451b964639399d5e7c3c705d2f4b
+active_issue: 743
+active_pr: 744
+active_branch: p15/button-icon-basics
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,28 +13,28 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-742-terminal-handoff
+  presentation_epoch: pr-744-handoff
   presentation_order:
+    - inspect-batch-743
+    - verify-pr-744
     - review-security-blocker-287
-    - review-next-p15-map
-    - verify-terminal-pr-742
     - review-ai-plan
-recommended_action_id: verify-terminal-pr-742
+recommended_action_id: verify-pr-744
 options:
-  - action_id: verify-terminal-pr-742
-    label: Verify terminal finalization PR #742
+  - action_id: verify-pr-744
+    label: Verify Button icon PR #744
     enabled: true
     recommended: true
-    action_token: VERIFY_TERMINAL_PR_742
-    request_payload: "Resolve the exact current head of transport-only PR #742 and perform one consolidated required-gate refresh plus review-thread check."
+    action_token: VERIFY_PR_744
+    request_payload: "Resolve the exact current head of PR #744 and perform one consolidated required-gate refresh plus review-thread check for P15 Button icon basics."
     blocked_by: []
     blocked_reason: null
-  - action_id: review-next-p15-map
-    label: Review next P15 capability map
+  - action_id: inspect-batch-743
+    label: Inspect Button icon batch
     enabled: true
     recommended: false
-    action_token: REVIEW_NEXT_P15_MAP
-    request_payload: "Review remaining P15 capability map while terminal finalization PR #742 is awaiting certification."
+    action_token: INSPECT_743
+    request_payload: "Inspect exact Elementor icon evidence, Font Awesome payload bounds, spacing/position semantics and focused tests for Issue #743 / PR #744 without widening scope."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -50,6 +50,6 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_AI_PLAN
-    request_payload: "Review current AI-Native roadmap from the settled post-PR #740 canonical state while PR #742 remains transport-only."
+    request_payload: "Review current AI-Native roadmap while PR #744 remains the active bounded P15 batch."
     blocked_by: []
     blocked_reason: null

@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 5e839f4edce59dc3bcab67a26f16965495a31b5d
+observed_main_sha: 6db4a456eae8451b964639399d5e7c3c705d2f4b
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -300,3 +300,8 @@ claims:
   - {id: CL-297, statement: canonical_state_is_idle_ready_for_next_p15_batch_after_pr_740_merge_with_no_active_issue_or_pr, value: true}
   - {id: CL-298, statement: issue_741_is_transport_only_terminal_finalization_after_pr_740_and_is_not_a_canonical_active_issue_or_pr, value: true}
   - {id: CL-299, statement: pr_742_is_transport_only_terminal_finalization_after_pr_740_and_is_not_a_canonical_active_pr, value: true}
+  - {id: CL-300, statement: pr_742_exact_head_23d39e56_passed_all_seven_required_gates_with_zero_unresolved_review_threads_and_merged_as_main_6db4a456, value: true}
+  - {id: CL-301, statement: issue_741_is_closed_completed_after_pr_742_expected_head_merge, value: true}
+  - {id: CL-302, statement: issue_743_owns_button_icon_basics_fast_batch_for_selected_icon_icon_align_and_icon_indent, value: true}
+  - {id: CL-303, statement: p15_743_restricts_selected_icon_to_matching_font_awesome_class_library_pairs_and_rejects_svg_url_custom_library_and_extra_class_payloads, value: true}
+  - {id: CL-304, statement: pr_744_is_active_final_exact_head_verification_path_for_issue_743_button_icon_basics_fast_batch, value: true}
