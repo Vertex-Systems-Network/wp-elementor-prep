@@ -323,3 +323,11 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.
 - Issue #769 / branch `ai-native/terminal-finalize-pr-768` is transport-only finalization and grants no product/runtime/security/compatibility/production/download/release authority.
 - Next step is to bind/open its transport PR and stop at the exact-head gate boundary.
+
+## 2026-09-26 — terminal finalization PR #770 opened
+
+- PR #770 opened from `ai-native/terminal-finalize-pr-768` against exact base main `16a67afb4f25f6d051a79499d84a291b43db8ba6`.
+- PR creation head was `868dfaba13f1959d625187e4e7f120dc3e0d8255`.
+- Issue #769 / PR #770 is transport-only and not canonical lifecycle ownership; `active_issue` / `active_pr` remain null.
+- Product/runtime/security/compatibility/production/download/release authority remains unchanged.
+- Remote exact-head gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
