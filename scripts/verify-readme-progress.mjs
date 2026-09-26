@@ -153,7 +153,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#755 / PR #756 batches explicit normal/hover tablet/mobile radial-gradient positions',
+  next: '#757 terminally finalizes merged #755/#756 state before the next bounded P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -794,13 +794,15 @@ for (const fragment of p15ButtonResponsiveRadialPositionRequiredFragments) {
     throw new Error(`P15 #755 Button responsive radial-position contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #755 / PR #756 implementation')
+if (!readme.includes('### Completed P15 Fast Batch #755 / PR #756 implementation')
   || !readme.includes('normal tablet/mobile and hover/focus tablet/mobile')
   || !readme.includes('`tabletPosition` / `mobilePosition`')
   || !readme.includes('`gradient_position_tablet` / `gradient_position_mobile`')
   || !readme.includes('Omitted tablet/mobile values remain omitted')
   || !readme.includes('Terminal #753 / PR #754 passed all seven required gates on exact head `25fce9dbdf27eab595e30be730a91629639c9ab0`')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  || !readme.includes('Final exact head `180e3391826a07286f3272ff0da812f459176af6` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `43a2e22447362ff47de60856cc261cb7905eab16`; Issue #755 closed completed.')
+  || !readme.includes('Issue #757 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #755 / PR #756 responsive radial-position Fast Batch truth is stale or missing.');
 }
 

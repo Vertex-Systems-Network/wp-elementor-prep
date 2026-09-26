@@ -166,15 +166,15 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
-## Active P15 Fast Batch #755 / PR #756 Button responsive radial gradient positions
+## Completed P15 Fast Batch #755 / PR #756 Button responsive radial gradient positions
 
-Issue #755 / PR #756 is the canonical active P15 batch against exact base main `5b5519aa017b5a4cdeb936c1d12a08c886f63b40`.
+Issue #755 / PR #756 is closed completed. Exact head `180e3391826a07286f3272ff0da812f459176af6` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `43a2e22447362ff47de60856cc261cb7905eab16`.
 
 The batch adds four bounded Elementor 4.2.4 responsive radial-position capabilities: normal tablet/mobile and hover/focus tablet/mobile. Desktop radial position remains required. Tablet/mobile values are optional but, when present, must use Elementor's exact nine-value radial position enum. Omitted breakpoints remain omitted; no responsive inheritance or synthesis is performed.
 
 The only new target keys are `background_gradient_position_tablet`, `background_gradient_position_mobile`, `button_background_hover_gradient_position_tablet`, and `button_background_hover_gradient_position_mobile`. Exact neutral-source/base-candidate binding, Button text/link/alignment revalidation, requested-key conflict rejection, and all existing authority exclusions remain fail-closed.
 
-Product commit: `993bf3566771dad3ee9a28e867fa14b79216924e`. Final exact-head seven-gate certification and zero unresolved review threads are still required before merge.
+Product commit: `993bf3566771dad3ee9a28e867fa14b79216924e`. Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH`; Issue #757 is transport-only terminal finalization and is not canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #751 / PR #752 Button radial gradient backgrounds
 
