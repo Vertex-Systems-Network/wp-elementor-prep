@@ -281,7 +281,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
-### Current P15 Fast Batch #755 / PR #756 implementation
+### Completed P15 Fast Batch #755 / PR #756 implementation
 
 - Issue #755 / PR #756 owns four tightly-related Elementor 4.2.4 Button responsive radial-gradient position capabilities: normal tablet/mobile and hover/focus tablet/mobile.
 - Product commit: `993bf3566771dad3ee9a28e867fa14b79216924e`.
@@ -293,7 +293,9 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Exact neutral-source fingerprint + base-candidate identity and generated Button text/link/alignment revalidation remain fail-closed.
 - `responsiveInferencePerformed=false`, `responsiveClosureClaim=false`, Figma/network mutation, target compatibility, production acceptance and download authority remain false.
 - Terminal #753 / PR #754 passed all seven required gates on exact head `25fce9dbdf27eab595e30be730a91629639c9ab0`, had 0 unresolved review threads and merged as base main `5b5519aa017b5a4cdeb936c1d12a08c886f63b40`.
-- Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.
+- Final exact head `180e3391826a07286f3272ff0da812f459176af6` passed all seven required gates with 0 unresolved review threads.
+- Expected-head merge produced main `43a2e22447362ff47de60856cc261cb7905eab16`; Issue #755 closed completed.
+- Issue #757 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ### Completed P15 Fast Batch #751 / PR #752 implementation
 
@@ -569,7 +571,7 @@ Current R6 authority remains bounded: the development/internal build can expose 
 | R1 Reliability/compatibility gate contract | DEFINED / RECURRING | 100% | `██████████` | Execute profile/capability/validator/harness gate per adapter |
 | P13 Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance remains |
 | P14 Target-Ready Duplicate + Guided Prepare | IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING | 100% impl | `██████████` | R1-R6 merged through PR #658; internal/dev activation only; publishable release activation disabled; live/runtime acceptance and target compatibility remain separate |
-| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #755 / PR #756 batches explicit normal/hover tablet/mobile radial-gradient positions; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
+| P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | #725 / PR #726 terminal transport merged after 7/7 exact-head gates; #757 terminally finalizes merged #755/#756 state before the next bounded P15 Fast Batch; global/token fonts, variable axes, custom breakpoints, retained operator approval, broad compatibility, responsive closure and production/download authority remain unclaimed |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Exact chain + retention requirements/export/current-manifest validator + offline validation CLI + byte/structure-bounded/prototype-safe/alias-safe local I/O with stable immutable read snapshots + output-parent snapshot revalidation + temporary payload identity binding + non-recursive temporary cleanup + output-destination state binding + depth/value/text-bounded accessor/own-shape-safe direct canonicalization with object-cardinality preflight exist; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static export/import preflight/neutral Web IR/package validation + exact local Chrome render proof; visual fidelity, JS execution, Web→Figma reconstruction and production acceptance remain unclaimed |
 | P18 Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Neutral Web IR + adapter/build matrix retained |
@@ -686,7 +688,7 @@ Development now defaults to **3-5 closely related capabilities per product batch
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. exact-head verify Fast Batch #755 / PR #756 for explicit normal/hover tablet/mobile radial-gradient positions while preserving no-inference and authority boundaries;
+2. certify transport-only terminal finalization #757, then select the next bounded P15 Fast Batch from the remaining capability map;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;
