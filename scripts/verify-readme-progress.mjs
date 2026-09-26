@@ -697,7 +697,7 @@ for (const fragment of p15ButtonIconBasicsRequiredFragments) {
   }
 }
 if (!readme.includes('### Current P15 Fast Batch #743 implementation')
-  || !readme.includes('Issue #743 owns three tightly-related Elementor 4.2.4 Button icon capabilities')
+  || !readme.includes('Issue #743 / PR #744 owns three tightly-related Elementor 4.2.4 Button icon capabilities')
   || !readme.includes('`selected_icon` accepts only matching Font Awesome class/library pairs')
   || !readme.includes('SVG/URL media payloads, custom icon libraries and extra class tokens reject.')
   || !readme.includes('`icon_align` accepts only `row|row-reverse`')

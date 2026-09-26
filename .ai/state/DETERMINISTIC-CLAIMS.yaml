@@ -304,3 +304,4 @@ claims:
   - {id: CL-301, statement: issue_741_is_closed_completed_after_pr_742_expected_head_merge, value: true}
   - {id: CL-302, statement: issue_743_owns_button_icon_basics_fast_batch_for_selected_icon_icon_align_and_icon_indent, value: true}
   - {id: CL-303, statement: p15_743_restricts_selected_icon_to_matching_font_awesome_class_library_pairs_and_rejects_svg_url_custom_library_and_extra_class_payloads, value: true}
+  - {id: CL-304, statement: pr_744_is_active_final_exact_head_verification_path_for_issue_743_button_icon_basics_fast_batch, value: true}

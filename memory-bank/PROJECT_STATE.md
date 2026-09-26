@@ -168,7 +168,7 @@ PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven r
 
 ## Active P15 Fast Batch #743 Button icon basics
 
-Issue #743 / branch `p15/button-icon-basics` owns three tightly-related exact Elementor 4.2.4 Button icon capabilities: bounded `selected_icon`, `icon_align`, and px `icon_indent`.
+Issue #743 / PR #744 / branch `p15/button-icon-basics` owns three tightly-related exact Elementor 4.2.4 Button icon capabilities: bounded `selected_icon`, `icon_align`, and px `icon_indent`.
 
 Selected icons are restricted to exact Font Awesome `fa-solid|fa-regular|fa-brands` library pairs with matching `fas|far|fab` class prefixes and one bounded `fa-<name>` token. SVG, URL/media icon payloads, custom libraries and extra class tokens reject. Position is `row|row-reverse` only; spacing is explicit finite `0..50px`.
 

@@ -280,7 +280,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 
 ### Current P15 Fast Batch #743 implementation
 
-- Issue #743 owns three tightly-related Elementor 4.2.4 Button icon capabilities: exact bounded `selected_icon`, `icon_align`, and px `icon_indent`.
+- Issue #743 / PR #744 owns three tightly-related Elementor 4.2.4 Button icon capabilities: exact bounded `selected_icon`, `icon_align`, and px `icon_indent`.
 - Product commit: `bcc66e294cdb516e0a9f0f2e6a079c271e397e67`; focused tests: `a56258e9438ba3b5bf6705295d7a1fc6c79ffbaf`.
 - Exact source evidence binds Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, Icons control blob `d7d9445cb94c852bbb4731e076667fd97dec0554`, exact Button icon fixture blob `ba4b5b444ab41fa69f982dc74af655aa03417783`, and Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
 - `selected_icon` accepts only matching Font Awesome class/library pairs: `fas/fa-solid`, `far/fa-regular`, or `fab/fa-brands`, followed by one bounded `fa-<name>` icon token.
