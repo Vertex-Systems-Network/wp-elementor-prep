@@ -176,7 +176,7 @@ Selected icons remain restricted to exact Font Awesome `fa-solid|fa-regular|fa-b
 
 Exact neutral-source/base-candidate binding, Button text/link/alignment revalidation and existing-key conflict rejection remain fail-closed. Icon inference, SVG import, custom units, responsive icon spacing, Figma/network mutation, target compatibility, production acceptance and download authority remain false/out of scope.
 
-Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #745 is transport-only terminal finalization and does not become canonical lifecycle ownership.
+Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #745 / PR #746 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #739 / PR #740 Button stretch content alignment
 

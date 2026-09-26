@@ -20,10 +20,14 @@ Canonical Active branch: `main`
 - Exact source/base-candidate binding, Button text/link/alignment revalidation and existing-key conflict rejection remain fail-closed.
 - Icon inference, SVG import, custom units, responsive icon spacing, Figma/network mutation, target compatibility, production acceptance and download authority remain unclaimed.
 
-## Terminal finalization transport #745
+## Terminal finalization transport #745 / PR #746
 
-Issue #745 is state-only transport under the protocol terminal-finalization exception. It is not the canonical lifecycle owner and does not populate `active_issue` or `active_pr`.
+- PR #746 opened against exact base main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`.
+- PR creation head was `4312e1df8c58865d565312ca9704e65d65b3221f`.
+- Issue #745 / PR #746 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
+- Remote exact-head gates are intentionally deferred to the next user turn.
+- A future successful transport merge does not itself require recursive reconciliation.
 
 ## Exact next safe action
 
-Open the state-only terminal finalization PR from `ai-native/terminal-finalize-pr-744` against exact base main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`, then bind its PR identity and stop at the exact-head Runner boundary.
+Resolve the final bound PR #746 head and perform exactly one consolidated required-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.

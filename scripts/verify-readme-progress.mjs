@@ -703,7 +703,7 @@ if (!readme.includes('### Completed P15 Fast Batch #743 / PR #744 implementation
   || !readme.includes('`icon_align` accepts only `row|row-reverse`')
   || !readme.includes('Final exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with 0 unresolved review threads.')
   || !readme.includes('Expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`; Issue #743 closed completed.')
-  || !readme.includes('Issue #745 is transport-only terminal finalization.')) {
+  || !readme.includes('Issue #745 / PR #746 is transport-only terminal finalization.')) {
   throw new Error('README P15 #743 / PR #744 merged Button icon basics Fast Batch truth is stale or missing.');
 }
 
