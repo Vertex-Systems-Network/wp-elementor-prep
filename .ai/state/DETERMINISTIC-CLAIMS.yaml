@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: bc6052cdfd35e8592da0ddd4955583f40ef7433a
+observed_main_sha: 5e839f4edce59dc3bcab67a26f16965495a31b5d
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -295,3 +295,7 @@ claims:
   - {id: CL-292, statement: issue_739_owns_button_stretch_and_responsive_content_alignment_fast_batch_v1, value: true}
   - {id: CL-293, statement: p15_739_requires_explicit_stretch_true_rejects_source_buttons_with_existing_neutral_alignment_and_never_infers_omitted_content_alignment_breakpoints, value: true}
   - {id: CL-294, statement: pr_740_is_active_final_exact_head_verification_path_for_issue_739_button_stretch_content_alignment_fast_batch, value: true}
+  - {id: CL-295, statement: pr_740_exact_head_0a4cc0d2_passed_all_seven_required_gates_with_zero_unresolved_review_threads_and_merged_as_main_5e839f4e, value: true}
+  - {id: CL-296, statement: issue_739_is_closed_completed_after_pr_740_expected_head_merge, value: true}
+  - {id: CL-297, statement: canonical_state_is_idle_ready_for_next_p15_batch_after_pr_740_merge_with_no_active_issue_or_pr, value: true}
+  - {id: CL-298, statement: issue_741_is_transport_only_terminal_finalization_after_pr_740_and_is_not_a_canonical_active_issue_or_pr, value: true}

@@ -1,52 +1,28 @@
 # Last Durable Checkpoint
 
-Status: IMPLEMENTING  
+Status: IDLE_READY_NEXT_P15_BATCH  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `bc6052cdfd35e8592da0ddd4955583f40ef7433a`  
-Active Issue: `#739`  
-Active PR: `#740`  
-Active branch: `p15/button-stretch-content-alignment`
+Observed main: `5e839f4edce59dc3bcab67a26f16965495a31b5d`  
+Observed-main semantics: `terminal_finalization_base_tip`  
+Canonical Active Issue: `none`  
+Canonical Active PR: `none`  
+Canonical Active branch: `main`
 
-## Terminal finalization #737 / PR #738 completed
+## Completed P15 Fast Batch #739 / PR #740
 
-- Exact transport head `abcd5c3a2dffd89ef66075b95daf692898dd6099` passed all seven required gates with 0 unresolved review threads.
-- Runs: CI `36201861827`, CodeQL `36201861755`, Integration `36201861831`, P12 Offline `36201861814`, P12 Final `36201861964`, P15 target `36201861747`, P17 browser `36201861977`.
-- Expected-head merge produced main `bc6052cdfd35e8592da0ddd4955583f40ef7433a`; Issue #737 closed.
-- Transport remained non-canonical and requires no recursive reconciliation.
+- Final exact head `0a4cc0d2782c7a67dd187c6e8821e70eb6186f35` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI `36203255158`, CodeQL `36203255169`, Integration `36203255135`, P12 Offline `36203255141`, P12 Final `36203255139`, P15 target `36203255193`, P17 browser `36203255156`.
+- Expected-head merge produced main `5e839f4edce59dc3bcab67a26f16965495a31b5d`; Issue #739 closed.
+- Four bounded Button layout capabilities are retained: explicit desktop `align=justify` stretch plus `content_align`, `content_align_tablet`, and `content_align_mobile`.
+- Content alignment remains restricted to `start|center|end|space-between`.
+- Explicit neutral source alignment still blocks stretch mutation; omitted responsive content-alignment breakpoints remain omitted.
+- Exact source/base-candidate binding, Button text/link/base-alignment revalidation and existing-key conflict rejection remain fail-closed.
+- Icon mutation, custom breakpoints, arbitrary CSS/classes/HTML, inference, Figma/network mutation, target compatibility, production acceptance and download authority remain unclaimed.
 
-## Active P15 Fast Batch #739
+## Terminal finalization transport #741
 
-Button stretch content alignment v1 contains four exact Elementor 4.2.4 capabilities:
-1. explicit desktop `align=justify` stretch;
-2. explicit desktop `content_align`;
-3. explicit tablet `content_align_tablet`;
-4. explicit mobile `content_align_mobile`.
-
-Accepted content-alignment values are only `start|center|end|space-between`.
-
-Safety boundaries:
-- manifest must explicitly request `stretch: true`;
-- source Button must not already declare neutral `align`; otherwise reject rather than overwrite source intent;
-- omitted content-alignment breakpoints remain omitted;
-- exact source IR + base-candidate identity binding;
-- Button text/link/base alignment state revalidated;
-- existing requested target keys fail closed;
-- no icon mutation, arbitrary CSS/classes/HTML, custom breakpoints, inference, Figma/network mutation, compatibility, production acceptance or download authority.
-
-Evidence:
-- Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`;
-- Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`;
-- Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d`.
-
-Product commit: `9921714cbb471a5a4f9dec9209e24c1c3ebf3061`.  
-Focused tests: `99a3a56a8facbece086b80bc352fb7bbf8d8e991`.
-
-## PR #740 handoff
-
-- PR #740 is the only PR for Issue #739 and targets exact base main `bc6052cdfd35e8592da0ddd4955583f40ef7433a`.
-- PR creation head: `c46aa30d4cab751eec02f4664a9da4fe9947a244`.
-- Remote exact-head gate observation is deferred to the next user turn.
+Issue #741 is state-only transport under the protocol terminal-finalization exception. It is not the canonical lifecycle owner and does not populate `active_issue` or `active_pr`.
 
 ## Exact next safe action
 
-Resolve the final bound PR #740 head and perform exactly one consolidated seven-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
+Open the state-only terminal finalization PR from `ai-native/terminal-finalize-pr-740` against exact base main `5e839f4edce59dc3bcab67a26f16965495a31b5d`, then bind its PR identity and stop at the exact-head Runner boundary.

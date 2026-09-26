@@ -150,7 +150,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#739 batches explicit Button stretch + responsive content alignment',
+  next: '#741 terminally finalizes merged #739/#740 state before the next bounded P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -694,13 +694,15 @@ for (const fragment of p15ButtonStretchContentAlignmentRequiredFragments) {
     throw new Error(`P15 #739 Button stretch content alignment contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #739 implementation')
-  || !readme.includes('Issue #739 / PR #740 owns four tightly-related Elementor 4.2.4 Button layout capabilities')
+if (!readme.includes('### Completed P15 Fast Batch #739 / PR #740 implementation')
+  || !readme.includes('Issue #739 / PR #740 completed four tightly-related Elementor 4.2.4 Button layout capabilities')
   || !readme.includes('`align=justify`')
   || !readme.includes('`content_align_tablet`')
-  || !readme.includes('a neutral source Button with existing explicit `align` is rejected')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
-  throw new Error('README P15 #739 Button stretch content alignment Fast Batch truth is stale or missing.');
+  || !readme.includes('a neutral source Button with existing explicit `align` remains rejected')
+  || !readme.includes('Final exact head `0a4cc0d2782c7a67dd187c6e8821e70eb6186f35` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `5e839f4edce59dc3bcab67a26f16965495a31b5d`; Issue #739 closed completed.')
+  || !readme.includes('Issue #741 is transport-only terminal finalization.')) {
+  throw new Error('README P15 #739 / PR #740 merged Button stretch content alignment Fast Batch truth is stale or missing.');
 }
 
 const p15ButtonContentMetadataRequiredFragments = [
