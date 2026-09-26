@@ -166,13 +166,17 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
-## Active P15 Fast Batch #743 Button icon basics
+## Completed P15 Fast Batch #743 / PR #744 Button icon basics
 
-Issue #743 / PR #744 / branch `p15/button-icon-basics` owns three tightly-related exact Elementor 4.2.4 Button icon capabilities: bounded `selected_icon`, `icon_align`, and px `icon_indent`.
+Issue #743 / PR #744 is closed completed. Exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`.
 
-Selected icons are restricted to exact Font Awesome `fa-solid|fa-regular|fa-brands` library pairs with matching `fas|far|fab` class prefixes and one bounded `fa-<name>` token. SVG, URL/media icon payloads, custom libraries and extra class tokens reject. Position is `row|row-reverse` only; spacing is explicit finite `0..50px`.
+The merged scope retains three exact Elementor 4.2.4 Button icon controls: bounded `selected_icon`, `icon_align`, and px `icon_indent`.
 
-Exact neutral-source/base-candidate binding, Button text/link/alignment revalidation and existing-key conflict rejection remain fail-closed. Icon inference, SVG import, custom units, responsive icon spacing, Figma/network mutation, compatibility, production acceptance and download authority remain false/out of scope.
+Selected icons remain restricted to exact Font Awesome `fa-solid|fa-regular|fa-brands` library pairs with matching `fas|far|fab` prefixes and one bounded `fa-<name>` token. SVG/URL media payloads, custom libraries and extra class tokens reject. Position remains `row|row-reverse` only; spacing remains explicit finite `0..50px`.
+
+Exact neutral-source/base-candidate binding, Button text/link/alignment revalidation and existing-key conflict rejection remain fail-closed. Icon inference, SVG import, custom units, responsive icon spacing, Figma/network mutation, target compatibility, production acceptance and download authority remain false/out of scope.
+
+Canonical AI-native state is `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #745 / PR #746 is transport-only terminal finalization and does not become canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #739 / PR #740 Button stretch content alignment
 
