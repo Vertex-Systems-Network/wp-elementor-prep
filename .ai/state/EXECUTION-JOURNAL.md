@@ -250,3 +250,13 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Issue #757 / PR #758 is transport-only and not canonical lifecycle ownership; `active_issue` / `active_pr` remain null.
 - Product/runtime/security/compatibility/production/download/release authority remains unchanged.
 - Remote exact-head gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — terminal PR #758 completed; P15 responsive linear-angle Fast Batch #759 / PR #760 started
+
+- PR #758 exact head `bf6d9d5db6ddcbf1cc39938ddb7ed7c62870676e` passed all seven required gates with 0 unresolved review threads and merged as main `eb8f8ec2ef52b5916c470459363db80066388e43`; Issue #757 closed completed.
+- Issue #759 / PR #760 owns four bounded responsive linear-gradient angle capabilities: normal tablet/mobile and hover/focus tablet/mobile.
+- Product commit `d89373c1c2b18569f763ae2844ba1cc4cc33d4f6` extends only the merged linear-gradient resolver.
+- Tablet/mobile angles are optional explicit safe integers `0..360deg`; omitted breakpoints remain absent and `responsiveInferencePerformed=false`.
+- Exact added write surfaces are `background_gradient_angle_tablet/mobile` and `button_background_hover_gradient_angle_tablet/mobile`.
+- Existing source/candidate/Button binding, conflict rejection, security controls and false compatibility/production/download authority remain unchanged.
+- Final remote CI is deferred to the final exact PR head; no repeated polling.
