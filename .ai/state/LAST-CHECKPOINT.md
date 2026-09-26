@@ -1,33 +1,50 @@
 # Last Durable Checkpoint
 
-Status: IDLE_READY_NEXT_P15_BATCH  
+Status: VERIFYING  
 Repository: `Vertex-Systems-Network/wp-elementor-prep`  
-Observed main: `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`  
-Observed-main semantics: `terminal_finalization_base_tip`  
-Canonical Active Issue: `none`  
-Canonical Active PR: `none`  
-Canonical Active branch: `main`
+Observed main: `c4095311e9243d8c00796bbbf34463580ef74f86`  
+Observed-main semantics: `exact_current_main_tip_at_batch_start`  
+Canonical Active Issue: `#747`  
+Canonical Active PR: `#748`  
+Canonical Active branch: `p15/button-linear-gradient-backgrounds`
 
-## Completed P15 Fast Batch #743 / PR #744
+## Terminal finalization #745 / PR #746 completed
 
-- Final exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with 0 unresolved review threads.
-- Runs: CI `36206697836`, CodeQL `36206697842`, Integration `36206697865`, P12 Offline `36206697864`, P12 Final `36206697838`, P15 target `36206697899`, P17 browser `36206697881`.
-- Expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`; Issue #743 closed.
-- Three bounded Button icon capabilities are retained: exact bounded Font Awesome `selected_icon`, `icon_align`, and px `icon_indent`.
-- Selected icons remain restricted to exact matching `fas/fa-solid`, `far/fa-regular`, or `fab/fa-brands` class/library pairs with one bounded `fa-<name>` token.
-- SVG/URL media payloads, custom libraries and extra class tokens remain rejected.
-- `icon_align` remains `row|row-reverse` only; `icon_indent` remains explicit finite `0..50px`.
-- Exact source/base-candidate binding, Button text/link/alignment revalidation and existing-key conflict rejection remain fail-closed.
-- Icon inference, SVG import, custom units, responsive icon spacing, Figma/network mutation, target compatibility, production acceptance and download authority remain unclaimed.
+- Exact transport head `7c484349c9be42eefcec4c6d89ff6149656dc49f` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI `36207242983`, CodeQL `36207242991`, Integration `36207242980`, P12 Offline `36207242992`, P12 Final `36207242981`, P15 target `36207242989`, P17 browser `36207242982`.
+- Expected-head merge produced main `c4095311e9243d8c00796bbbf34463580ef74f86`; Issue #745 closed.
+- Transport remained non-canonical and changed no product/runtime/security/compatibility/production/download/release authority.
 
-## Terminal finalization transport #745 / PR #746
+## Active P15 Fast Batch #747 / PR #748
 
-- PR #746 opened against exact base main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`.
-- PR creation head was `4312e1df8c58865d565312ca9704e65d65b3221f`.
-- Issue #745 / PR #746 is transport-only and remains non-canonical; canonical `active_issue` / `active_pr` stay null.
-- Remote exact-head gates are intentionally deferred to the next user turn.
-- A future successful transport merge does not itself require recursive reconciliation.
+Button linear gradient backgrounds v1 contains three closely-related exact Elementor 4.2.4 capabilities:
+1. normal Button linear gradient background;
+2. hover/focus Button linear gradient background;
+3. optional explicit bounded linear-gradient angle.
+
+Bounds and safety:
+- exact Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`;
+- Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`;
+- Background group blob `ac8e1a510ec663f3f428c9f564dc2c5b727435e1`;
+- linear gradients only; radial/image/video/custom CSS remain excluded;
+- colors are strict lowercase six-digit hex;
+- stops are explicit integer `0..100%` and must be ordered;
+- optional angle is explicit integer `0..360deg`;
+- base/desktop keys only; no responsive inheritance or inference;
+- exact neutral-source fingerprint and base-candidate identity binding;
+- exact generated core Button binding with text/link/alignment revalidation;
+- requested pre-existing target settings reject rather than overwrite;
+- no token/global resolution, Figma mutation, network access, responsive closure, target compatibility, production acceptance or download authority.
+
+Product commit: `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`.
+
+## PR #748 handoff
+
+- PR #748 targets exact base main `c4095311e9243d8c00796bbbf34463580ef74f86`.
+- PR creation head: `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`.
+- README/verifier/durable-state synchronization is part of the same PR before final exact-head gate observation.
+- No merge is allowed until the final exact PR head passes all seven required workflows with zero unresolved review threads.
 
 ## Exact next safe action
 
-Resolve the final bound PR #746 head and perform exactly one consolidated required-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
+Resolve the final bound PR #748 head and perform exactly one consolidated seven-gate refresh plus review-thread check. Do not merge until that exact head is green with zero unresolved review threads.
