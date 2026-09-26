@@ -196,3 +196,13 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Issue #749 / PR #750 is transport-only and not canonical lifecycle ownership; `active_issue` / `active_pr` remain null.
 - Product/runtime/security/compatibility/production/download/release authority remains unchanged.
 - Remote exact-head gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — terminal PR #750 completed; P15 radial-gradient Fast Batch #751 / PR #752 started
+
+- PR #750 exact head `c18380ebedae1c0104fb15404075268884c5789a` passed all seven required gates with 0 unresolved review threads and merged as main `dd285d01cb054524242bd3b31aff26d52bd25522`; Issue #749 closed completed.
+- Issue #751 / PR #752 owns the next three-capability P15 Fast Batch: normal radial gradient, hover/focus radial gradient, and exact required radial position.
+- Exact upstream evidence remains Elementor 4.2.4 tag `0e292207...`, Button trait blob `31192a...`, Background group blob `ac8e1a...`.
+- Product commit `a4e0aadea3c2a31ca5cfb1178d591546a0052267` adds a separate radial resolver and focused tests; the merged linear resolver is not replaced.
+- Position is explicit from Elementor's exact nine-value enum; colors/stops remain bounded and responsive/device inference remains false.
+- No product authority widening: Figma/network mutation, target compatibility, production acceptance and download authority remain false.
+- Final remote CI is deferred to the final exact PR head; no repeated polling.

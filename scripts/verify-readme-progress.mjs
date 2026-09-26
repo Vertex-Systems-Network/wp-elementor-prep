@@ -27,6 +27,7 @@ const p15ButtonContentMetadataSource = await readFile('src/targets/elementor/but
 const p15ButtonStretchContentAlignmentSource = await readFile('src/targets/elementor/button-stretch-content-alignment-resolution.ts', 'utf8');
 const p15ButtonIconBasicsSource = await readFile('src/targets/elementor/button-icon-basics-resolution.ts', 'utf8');
 const p15ButtonLinearGradientSource = await readFile('src/targets/elementor/button-linear-gradient-resolution.ts', 'utf8');
+const p15ButtonRadialGradientSource = await readFile('src/targets/elementor/button-radial-gradient-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -152,7 +153,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#749 terminally finalizes merged #747/#748 state before the next bounded P15 Fast Batch',
+  next: '#751 / PR #752 batches bounded Button normal/hover radial gradients + exact position',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -739,6 +740,38 @@ if (!readme.includes('### Completed P15 Fast Batch #747 / PR #748 implementation
   || !readme.includes('Expected-head merge produced main `7659adaaf55c4f10357cfa9977c0504e7b32c41f`; Issue #747 closed completed.')
   || !readme.includes('Issue #749 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #747 Button linear gradient Fast Batch truth is stale or missing.');
+}
+
+const p15ButtonRadialGradientRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "backgroundGroupControlSourceBlobSha: 'ac8e1a510ec663f3f428c9f564dc2c5b727435e1'",
+  "normalGroupName: 'background'",
+  "hoverGroupName: 'button_background_hover'",
+  "gradientPositionSuffix: 'gradient_position'",
+  "acceptedBackgroundType: 'gradient'",
+  "acceptedGradientType: 'radial'",
+  "acceptedPositions: P15_ELEMENTOR_BUTTON_RADIAL_GRADIENT_POSITIONS",
+  "gradientInferencePerformed: false",
+  "responsiveInferencePerformed: false",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonRadialGradientRequiredFragments) {
+  if (!p15ButtonRadialGradientSource.includes(fragment)) {
+    throw new Error(`P15 #751 Button radial gradient contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #751 / PR #752 implementation')
+  || !readme.includes('normal radial-gradient background, hover/focus radial-gradient background')
+  || !readme.includes('required `gradient_position`')
+  || !readme.includes('Position accepts only Elementor\'s exact nine values')
+  || !readme.includes('Position omission, custom position strings, linear-angle fields')
+  || !readme.includes('Terminal #749 / PR #750 passed all seven required gates on exact head `c18380ebedae1c0104fb15404075268884c5789a`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #751 / PR #752 Button radial gradient Fast Batch truth is stale or missing.');
 }
 
 const p15ButtonStretchContentAlignmentRequiredFragments = [
