@@ -168,7 +168,7 @@ PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven r
 
 ## Active P15 Fast Batch #739 Button stretch content alignment
 
-Issue #739 / branch `p15/button-stretch-content-alignment` owns four tightly-related exact Elementor 4.2.4 Button layout capabilities: explicit `align=justify` stretch plus `content_align`, `content_align_tablet`, and `content_align_mobile`.
+Issue #739 / PR #740 / branch `p15/button-stretch-content-alignment` owns four tightly-related exact Elementor 4.2.4 Button layout capabilities: explicit `align=justify` stretch plus `content_align`, `content_align_tablet`, and `content_align_mobile`.
 
 Every entry must explicitly request `stretch: true`. The source Button must not already declare neutral `align`; source alignment conflicts reject rather than overwrite design intent. Content alignment is restricted to `start|center|end|space-between`, omitted breakpoints stay omitted, and no responsive inference is performed.
 

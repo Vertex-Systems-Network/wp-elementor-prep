@@ -695,7 +695,7 @@ for (const fragment of p15ButtonStretchContentAlignmentRequiredFragments) {
   }
 }
 if (!readme.includes('### Current P15 Fast Batch #739 implementation')
-  || !readme.includes('Issue #739 owns four tightly-related Elementor 4.2.4 Button layout capabilities')
+  || !readme.includes('Issue #739 / PR #740 owns four tightly-related Elementor 4.2.4 Button layout capabilities')
   || !readme.includes('`align=justify`')
   || !readme.includes('`content_align_tablet`')
   || !readme.includes('a neutral source Button with existing explicit `align` is rejected')

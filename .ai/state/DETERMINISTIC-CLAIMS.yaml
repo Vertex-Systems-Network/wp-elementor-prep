@@ -294,3 +294,4 @@ claims:
   - {id: CL-291, statement: issue_737_is_closed_completed_after_pr_738_expected_head_merge, value: true}
   - {id: CL-292, statement: issue_739_owns_button_stretch_and_responsive_content_alignment_fast_batch_v1, value: true}
   - {id: CL-293, statement: p15_739_requires_explicit_stretch_true_rejects_source_buttons_with_existing_neutral_alignment_and_never_infers_omitted_content_alignment_breakpoints, value: true}
+  - {id: CL-294, statement: pr_740_is_active_final_exact_head_verification_path_for_issue_739_button_stretch_content_alignment_fast_batch, value: true}

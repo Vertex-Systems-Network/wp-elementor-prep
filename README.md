@@ -280,7 +280,7 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 
 ### Current P15 Fast Batch #739 implementation
 
-- Issue #739 owns four tightly-related Elementor 4.2.4 Button layout capabilities: explicit desktop `align=justify` stretch plus `content_align`, `content_align_tablet`, and `content_align_mobile`.
+- Issue #739 / PR #740 owns four tightly-related Elementor 4.2.4 Button layout capabilities: explicit desktop `align=justify` stretch plus `content_align`, `content_align_tablet`, and `content_align_mobile`.
 - Product commit: `9921714cbb471a5a4f9dec9209e24c1c3ebf3061`; focused tests: `99a3a56a8facbece086b80bc352fb7bbf8d8e991`.
 - Exact source evidence binds Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5`, Controls Stack blob `00b280e518b89925c8f85a059b34136177ff3d4d`, and Elementor tag commit `0e292207b5b45f0e22603967ae41c0374211160d`.
 - Every requested Button must explicitly set `stretch: true`; a neutral source Button with existing explicit `align` is rejected instead of being silently overwritten.

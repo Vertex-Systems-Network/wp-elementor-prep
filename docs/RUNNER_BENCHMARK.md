@@ -138,7 +138,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-737-TRANSPORT | #737 / PR #738 | Terminal post-PR #736 state finalization | Required PR exact-head gate set | exact head `abcd5c3a...` passed 7/7; review threads 0; merged main `bc6052cd...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-739-FINAL | #739 | P15 Button stretch content alignment v1 | Required PR exact-head gate set | source `9921714c...`; tests `99a3a56a...`; explicit stretch + desktop/tablet/mobile content alignment | `FINAL_BATCH` | final PR-bound head must pass all seven required gates with 0 unresolved review threads before merge | IMPLEMENTED_AWAITING_PR_BINDING |
+| RQ-739-FINAL | #739 / PR #740 | P15 Button stretch content alignment v1 | Required PR exact-head gate set | PR creation head `c46aa30d...`; source `9921714c...`; tests `99a3a56a...`; explicit stretch + responsive content alignment | `FINAL_BATCH` | final bound head must pass all seven required gates with 0 unresolved review threads before merge | AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 
