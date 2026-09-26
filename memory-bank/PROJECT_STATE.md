@@ -166,6 +166,16 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
+## Active P15 Fast Batch #763 / PR #764 Button responsive linear gradient stop locations
+
+Issue #763 / PR #764 is the canonical active P15 batch against exact base main `7f5a86b0b17205477212ec40eb98790303bc976f`.
+
+The batch adds four bounded Elementor 4.2.4 responsive linear-gradient stop-pair capabilities: normal tablet/mobile and hover/focus tablet/mobile. Desktop `stopA` / `stopB` behavior remains unchanged. Each responsive breakpoint pair is optional but atomic: both A/B values must be present together, each is an integer `0..100`, and A must be <= B. Omitted pairs remain omitted; no responsive inheritance or synthesis is performed.
+
+The only new target keys are responsive `color_stop_tablet/mobile` and `color_b_stop_tablet/mobile` under normal or hover group prefixes. Exact neutral-source/base-candidate binding, Button text/link/alignment revalidation, requested-key conflict rejection, and all existing authority exclusions remain fail-closed.
+
+Product commit: `326043501558160ab4c8f425e09f8f3e02e75d56`. Final exact-head seven-gate certification and zero unresolved review threads are still required before merge.
+
 ## Completed P15 Fast Batch #759 / PR #760 Button responsive linear gradient angles
 
 Issue #759 / PR #760 is closed completed. Exact head `ef1687c1a34a45dfb6ed5efdbf0c1a7f38e43cad` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `105f7594c32441c2738325ca0c3d0695620dd54d`.

@@ -36,8 +36,12 @@ export const P15_ELEMENTOR_BUTTON_LINEAR_GRADIENT_EVIDENCE = Object.freeze({
   backgroundTypeSuffix: 'background',
   colorASuffix: 'color',
   colorAStopSuffix: 'color_stop',
+  colorAStopTabletSuffix: 'color_stop_tablet',
+  colorAStopMobileSuffix: 'color_stop_mobile',
   colorBSuffix: 'color_b',
   colorBStopSuffix: 'color_b_stop',
+  colorBStopTabletSuffix: 'color_b_stop_tablet',
+  colorBStopMobileSuffix: 'color_b_stop_mobile',
   gradientTypeSuffix: 'gradient_type',
   gradientAngleSuffix: 'gradient_angle',
   gradientAngleTabletSuffix: 'gradient_angle_tablet',
@@ -58,6 +62,10 @@ export interface P15ElementorButtonLinearGradientV1 {
   colorB: string;
   stopA: number;
   stopB: number;
+  tabletStopA?: number;
+  tabletStopB?: number;
+  mobileStopA?: number;
+  mobileStopB?: number;
   angleDeg?: number;
   tabletAngleDeg?: number;
   mobileAngleDeg?: number;
@@ -175,7 +183,7 @@ const MANIFEST_KEYS = [
 ] as const;
 
 const ENTRY_KEYS = ['hover', 'normal', 'sourceNodeId'] as const;
-const GRADIENT_KEYS = ['angleDeg', 'colorA', 'colorB', 'mobileAngleDeg', 'stopA', 'stopB', 'tabletAngleDeg'] as const;
+const GRADIENT_KEYS = ['angleDeg', 'colorA', 'colorB', 'mobileAngleDeg', 'mobileStopA', 'mobileStopB', 'stopA', 'stopB', 'tabletAngleDeg', 'tabletStopA', 'tabletStopB'] as const;
 
 const ISSUE_CODES: readonly P15ElementorButtonLinearGradientIssueCode[] = [
   'P15_BUTTON_LINEAR_GRADIENT_SOURCE_IR_INVALID',
@@ -244,6 +252,23 @@ function validGradient(value: unknown): value is P15ElementorButtonLinearGradien
     || !Object.prototype.hasOwnProperty.call(value, 'stopB')) return false;
   if (!validColor(value.colorA) || !validColor(value.colorB)) return false;
   if (!validStop(value.stopA) || !validStop(value.stopB) || Number(value.stopA) > Number(value.stopB)) return false;
+
+  const hasTabletStopA = value.tabletStopA !== undefined;
+  const hasTabletStopB = value.tabletStopB !== undefined;
+  if (hasTabletStopA !== hasTabletStopB) return false;
+  if (hasTabletStopA
+    && (!validStop(value.tabletStopA)
+      || !validStop(value.tabletStopB)
+      || Number(value.tabletStopA) > Number(value.tabletStopB))) return false;
+
+  const hasMobileStopA = value.mobileStopA !== undefined;
+  const hasMobileStopB = value.mobileStopB !== undefined;
+  if (hasMobileStopA !== hasMobileStopB) return false;
+  if (hasMobileStopA
+    && (!validStop(value.mobileStopA)
+      || !validStop(value.mobileStopB)
+      || Number(value.mobileStopA) > Number(value.mobileStopB))) return false;
+
   if (value.angleDeg !== undefined && !validAngle(value.angleDeg)) return false;
   if (value.tabletAngleDeg !== undefined && !validAngle(value.tabletAngleDeg)) return false;
   return value.mobileAngleDeg === undefined || validAngle(value.mobileAngleDeg);
@@ -255,6 +280,8 @@ function cloneGradient(value: P15ElementorButtonLinearGradientV1): P15ElementorB
     colorB: value.colorB,
     stopA: value.stopA,
     stopB: value.stopB,
+    ...(value.tabletStopA === undefined ? {} : { tabletStopA: value.tabletStopA, tabletStopB: value.tabletStopB }),
+    ...(value.mobileStopA === undefined ? {} : { mobileStopA: value.mobileStopA, mobileStopB: value.mobileStopB }),
     ...(value.angleDeg === undefined ? {} : { angleDeg: value.angleDeg }),
     ...(value.tabletAngleDeg === undefined ? {} : { tabletAngleDeg: value.tabletAngleDeg }),
     ...(value.mobileAngleDeg === undefined ? {} : { mobileAngleDeg: value.mobileAngleDeg }),
@@ -388,6 +415,8 @@ function gradientSettingKeys(
   gradient: P15ElementorButtonLinearGradientV1,
 ): string[] {
   const suffixes = ['background', 'color', 'color_stop', 'color_b', 'color_b_stop', 'gradient_type'];
+  if (gradient.tabletStopA !== undefined) suffixes.push('color_stop_tablet', 'color_b_stop_tablet');
+  if (gradient.mobileStopA !== undefined) suffixes.push('color_stop_mobile', 'color_b_stop_mobile');
   if (gradient.angleDeg !== undefined) suffixes.push('gradient_angle');
   if (gradient.tabletAngleDeg !== undefined) suffixes.push('gradient_angle_tablet');
   if (gradient.mobileAngleDeg !== undefined) suffixes.push('gradient_angle_mobile');
@@ -404,6 +433,14 @@ function applyGradient(
   settings[`${prefix}_color_stop`] = slider('%', gradient.stopA);
   settings[`${prefix}_color_b`] = gradient.colorB;
   settings[`${prefix}_color_b_stop`] = slider('%', gradient.stopB);
+  if (gradient.tabletStopA !== undefined && gradient.tabletStopB !== undefined) {
+    settings[`${prefix}_color_stop_tablet`] = slider('%', gradient.tabletStopA);
+    settings[`${prefix}_color_b_stop_tablet`] = slider('%', gradient.tabletStopB);
+  }
+  if (gradient.mobileStopA !== undefined && gradient.mobileStopB !== undefined) {
+    settings[`${prefix}_color_stop_mobile`] = slider('%', gradient.mobileStopA);
+    settings[`${prefix}_color_b_stop_mobile`] = slider('%', gradient.mobileStopB);
+  }
   settings[`${prefix}_gradient_type`] = 'linear';
   if (gradient.angleDeg !== undefined) {
     settings[`${prefix}_gradient_angle`] = slider('deg', gradient.angleDeg);

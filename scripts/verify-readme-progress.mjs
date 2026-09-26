@@ -153,7 +153,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#761 terminally finalizes merged #759/#760 state before the next bounded P15 Fast Batch',
+  next: '#763 / PR #764 batches explicit normal/hover tablet/mobile linear-gradient stop pairs',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -770,6 +770,38 @@ if (!readme.includes('### Completed P15 Fast Batch #759 / PR #760 implementation
   || !readme.includes('Expected-head merge produced main `105f7594c32441c2738325ca0c3d0695620dd54d`; Issue #759 closed completed.')
   || !readme.includes('Issue #761 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #759 / PR #760 responsive linear-angle Fast Batch truth is stale or missing.');
+}
+
+const p15ButtonResponsiveLinearStopRequiredFragments = [
+  "colorAStopTabletSuffix: 'color_stop_tablet'",
+  "colorAStopMobileSuffix: 'color_stop_mobile'",
+  "colorBStopTabletSuffix: 'color_b_stop_tablet'",
+  "colorBStopMobileSuffix: 'color_b_stop_mobile'",
+  "tabletStopA?: number",
+  "tabletStopB?: number",
+  "mobileStopA?: number",
+  "mobileStopB?: number",
+  "settings[`${prefix}_color_stop_tablet`] = slider('%', gradient.tabletStopA)",
+  "settings[`${prefix}_color_b_stop_mobile`] = slider('%', gradient.mobileStopB)",
+  "responsiveInferencePerformed: false",
+  "responsiveClosureClaim: false",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonResponsiveLinearStopRequiredFragments) {
+  if (!p15ButtonLinearGradientSource.includes(fragment)) {
+    throw new Error(`P15 #763 Button responsive linear-stop contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #763 / PR #764 implementation')
+  || !readme.includes('normal tablet/mobile and hover/focus tablet/mobile')
+  || !readme.includes('`tabletStopA/tabletStopB` and `mobileStopA/mobileStopB`')
+  || !readme.includes('`color_stop_tablet/mobile` and `color_b_stop_tablet/mobile`')
+  || !readme.includes('Omitted tablet/mobile pairs remain omitted')
+  || !readme.includes('Terminal #761 / PR #762 passed all seven required gates on exact head `95258082e7d28888da40d76898b3c4e8960b2b71`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #763 / PR #764 responsive linear-stop Fast Batch truth is stale or missing.');
 }
 
 const p15ButtonRadialGradientRequiredFragments = [
