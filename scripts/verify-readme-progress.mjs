@@ -153,7 +153,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#751 / PR #752 batches bounded Button normal/hover radial gradients + exact position',
+  next: '#753 terminally finalizes merged #751/#752 state before the next bounded P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -764,13 +764,15 @@ for (const fragment of p15ButtonRadialGradientRequiredFragments) {
     throw new Error(`P15 #751 Button radial gradient contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #751 / PR #752 implementation')
+if (!readme.includes('### Completed P15 Fast Batch #751 / PR #752 implementation')
   || !readme.includes('normal radial-gradient background, hover/focus radial-gradient background')
   || !readme.includes('required `gradient_position`')
   || !readme.includes('Position accepts only Elementor\'s exact nine values')
   || !readme.includes('Position omission, custom position strings, linear-angle fields')
   || !readme.includes('Terminal #749 / PR #750 passed all seven required gates on exact head `c18380ebedae1c0104fb15404075268884c5789a`')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  || !readme.includes('Final exact head `bea1e6212a0517480556589e00fde9c63bc1c04a` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `702177b31696f80d5ca30ce30ad1c69f56f71719`; Issue #751 closed completed.')
+  || !readme.includes('Issue #753 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #751 / PR #752 Button radial gradient Fast Batch truth is stale or missing.');
 }
 
