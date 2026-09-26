@@ -84,7 +84,7 @@ function settingsOf(element: unknown): Record<string, unknown> {
   return settings as Record<string, unknown>;
 }
 
-describe('P15 Fast Batch Button radial gradient backgrounds v1', () => {
+describe('P15 Fast Batch Button radial gradient backgrounds + responsive positions v1', () => {
   it('writes exact normal radial gradient keys with explicit exact position', () => {
     const source = sourceDocument();
     const result = resolveP15ElementorButtonRadialGradients(source, manifest(source, [{
@@ -109,6 +109,30 @@ describe('P15 Fast Batch Button radial gradient backgrounds v1', () => {
     expect(settings.align).toBe('left');
   });
 
+  it('writes explicit normal tablet/mobile radial positions without inference', () => {
+    const source = sourceDocument();
+    const result = resolveP15ElementorButtonRadialGradients(source, manifest(source, [{
+      sourceNodeId: 'button',
+      normal: {
+        colorA: '#112233',
+        colorB: '#aabbcc',
+        stopA: 10,
+        stopB: 90,
+        position: 'center center',
+        tabletPosition: 'top left',
+        mobilePosition: 'bottom right',
+      },
+    }]));
+    const settings = settingsOf(result.template?.content[0]?.elements[0]);
+
+    expect(settings.background_gradient_position).toBe('center center');
+    expect(settings.background_gradient_position_tablet).toBe('top left');
+    expect(settings.background_gradient_position_mobile).toBe('bottom right');
+    expect(settings).not.toHaveProperty('button_background_hover_gradient_position_tablet');
+    expect(result.responsiveInferencePerformed).toBe(false);
+    expect(result.responsiveClosureClaim).toBe(false);
+  });
+
   it('writes exact hover/focus radial gradient keys with explicit position', () => {
     const source = sourceDocument();
     const result = resolveP15ElementorButtonRadialGradients(source, manifest(source, [{
@@ -125,6 +149,27 @@ describe('P15 Fast Batch Button radial gradient backgrounds v1', () => {
     expect(settings.button_background_hover_gradient_type).toBe('radial');
     expect(settings.button_background_hover_gradient_position).toBe('center left');
     expect(settings).not.toHaveProperty('background_background');
+  });
+
+  it('writes explicit hover tablet/mobile positions and leaves omitted breakpoints absent', () => {
+    const source = sourceDocument();
+    const result = resolveP15ElementorButtonRadialGradients(source, manifest(source, [{
+      sourceNodeId: 'button',
+      hover: {
+        colorA: '#001122',
+        colorB: '#334455',
+        stopA: 0,
+        stopB: 100,
+        position: 'center left',
+        tabletPosition: 'top center',
+      },
+    }]));
+    const settings = settingsOf(result.template?.content[0]?.elements[0]);
+
+    expect(settings.button_background_hover_gradient_position).toBe('center left');
+    expect(settings.button_background_hover_gradient_position_tablet).toBe('top center');
+    expect(settings).not.toHaveProperty('button_background_hover_gradient_position_mobile');
+    expect(settings).not.toHaveProperty('background_gradient_position_tablet');
   });
 
   it('applies normal and hover gradients together and preserves exact linked Button binding', () => {
@@ -159,6 +204,8 @@ describe('P15 Fast Batch Button radial gradient backgrounds v1', () => {
       { colorA: '#112233', colorB: '#445566', stopA: -1, stopB: 100, position: 'center center' },
       { colorA: '#112233', colorB: '#445566', stopA: 80, stopB: 20, position: 'center center' },
       { colorA: '#112233', colorB: '#445566', stopA: 0, stopB: 100, position: 'middle center' },
+      { colorA: '#112233', colorB: '#445566', stopA: 0, stopB: 100, position: 'center center', tabletPosition: 'middle left' },
+      { colorA: '#112233', colorB: '#445566', stopA: 0, stopB: 100, position: 'center center', mobilePosition: 'bottom middle' },
       { colorA: '#112233', colorB: '#445566', stopA: 0, stopB: 100, position: 'center center', angleDeg: 90 },
     ]) {
       const result = resolveP15ElementorButtonRadialGradients(source, {
@@ -217,7 +264,15 @@ describe('P15 Fast Batch Button radial gradient backgrounds v1', () => {
 
     const result = resolveP15ElementorButtonRadialGradients(source, manifest(source, [{
       sourceNodeId: 'button',
-      hover: { colorA: '#102030', colorB: '#405060', stopA: 15, stopB: 85, position: 'bottom right' },
+      hover: {
+        colorA: '#102030',
+        colorB: '#405060',
+        stopA: 15,
+        stopB: 85,
+        position: 'bottom right',
+        tabletPosition: 'center right',
+        mobilePosition: 'top left',
+      },
     }]));
     const serialized = serializeP15ElementorButtonRadialGradientSummary(result);
     expect(serialized).not.toContain('PRIVATE BUTTON COPY');
@@ -227,6 +282,10 @@ describe('P15 Fast Batch Button radial gradient backgrounds v1', () => {
     expect(serialized).not.toContain('"template"');
     expect(serialized).toContain('"acceptedBackgroundType": "gradient"');
     expect(serialized).toContain('"acceptedGradientType": "radial"');
+    expect(serialized).toContain('"gradientPositionTabletSuffix": "gradient_position_tablet"');
+    expect(serialized).toContain('"gradientPositionMobileSuffix": "gradient_position_mobile"');
+    expect(serialized).toContain('"tabletPosition": "center right"');
+    expect(serialized).toContain('"mobilePosition": "top left"');
     expect(P15_ELEMENTOR_BUTTON_RADIAL_GRADIENT_POSITIONS).toEqual([
       'center center', 'center left', 'center right',
       'top center', 'top left', 'top right',
