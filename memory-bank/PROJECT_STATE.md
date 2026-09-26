@@ -166,9 +166,9 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
-## Active P15 Fast Batch #747 / PR #748 Button linear gradient backgrounds
+## Completed P15 Fast Batch #747 / PR #748 Button linear gradient backgrounds
 
-Issue #747 / PR #748 is the canonical active P15 batch against exact base main `c4095311e9243d8c00796bbbf34463580ef74f86`.
+Issue #747 / PR #748 is closed completed. Repaired exact head `b8da6da7a98a1b5833607f5b757f5c60324ff30e` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `7659adaaf55c4f10357cfa9977c0504e7b32c41f`.
 
 The bounded scope is normal linear-gradient background, hover/focus linear-gradient background, and optional explicit linear-gradient angle. Exact Elementor 4.2.4 evidence binds Button trait blob `31192aaee6851c445f79d1998499f6ce73ba7da5` and Background group blob `ac8e1a510ec663f3f428c9f564dc2c5b727435e1`.
 
@@ -176,7 +176,7 @@ Colors are strict lowercase six-digit hex; stops are ordered integer `0..100%`; 
 
 Exact source/base-candidate binding, generated Button text/link/alignment revalidation and requested-key conflict rejection remain fail-closed. Figma/network mutation, target compatibility, production acceptance and download authority remain false.
 
-Product commit: `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`. Final exact-head seven-gate certification and zero unresolved review threads are still required before merge.
+Product commit: `c4ff78257c8f0f8bf50e31b104f85dd4d555518f`. Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH`; Issue #749 is transport-only terminal finalization and is not canonical lifecycle ownership.
 
 Terminal #745 / PR #746 completed first: exact head `7c484349c9be42eefcec4c6d89ff6149656dc49f` passed 7/7 with zero unresolved review threads and merged as main `c4095311e9243d8c00796bbbf34463580ef74f86`; Issue #745 closed.
 

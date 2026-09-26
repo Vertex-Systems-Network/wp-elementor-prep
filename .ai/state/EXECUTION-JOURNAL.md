@@ -179,3 +179,20 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - CI `36232130693` and P12 Final Release Artifact `36232130670` failed only at `status:verify`; CodeQL `36232130729` and P15 Real Elementor Target Proof `36232130665` were still running at the observation boundary.
 - Root cause: historical #743 verifier text still required `Issue #745 / PR #746 is transport-only terminal finalization.`, but README correctly records that transport as 7/7-passed and merged main `c4095311...`.
 - Repair changes only the status verifier assertion. Product behavior, gradient contract, security controls and authority boundaries are unchanged.
+
+## 2026-09-26 — P15 Fast Batch #747 / PR #748 completed; terminal finalization #749 prepared
+
+- Repaired exact head `b8da6da7a98a1b5833607f5b757f5c60324ff30e` passed all seven required gates with 0 unresolved review threads.
+- Runs: CI:36232255469,CodeQL:36232255444,Integration_Readiness:36232255430,P12_Offline_Acceptance:36232255429,P12_Final_Release_Artifact:36232255461,P15_Real_Elementor_Target_Proof:36232255434,P17_Local_Browser_Proof:36232255442.
+- Expected-head merge produced main `7659adaaf55c4f10357cfa9977c0504e7b32c41f`; Issue #747 closed completed.
+- Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.
+- Issue #749 / branch `ai-native/terminal-finalize-pr-748` is transport-only finalization and grants no product/runtime/security/compatibility/production/download/release authority.
+- Next step is to bind/open its transport PR and stop at the exact-head gate boundary.
+
+## 2026-09-26 — terminal finalization PR #750 opened
+
+- PR #750 opened from `ai-native/terminal-finalize-pr-748` against exact base main `7659adaaf55c4f10357cfa9977c0504e7b32c41f`.
+- PR creation head was `97d9129775a02cd33b6f59f7affdc367197bb45b`.
+- Issue #749 / PR #750 is transport-only and not canonical lifecycle ownership; `active_issue` / `active_pr` remain null.
+- Product/runtime/security/compatibility/production/download/release authority remains unchanged.
+- Remote exact-head gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
