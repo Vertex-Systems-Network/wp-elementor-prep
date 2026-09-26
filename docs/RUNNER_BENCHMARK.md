@@ -148,7 +148,7 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-747-FINAL | #747 / PR #748 | P15 Button linear gradient backgrounds v1 | Required PR exact-head gate set | repaired exact head `b8da6da7...` passed 7/7; review threads 0; merged main `7659adaa...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-749-TRANSPORT | #749 | Terminal post-PR #748 state finalization | Required PR exact-head gate set | transport PR not yet bound | `FINAL_BATCH` | final transport head must pass all required gates with 0 unresolved review threads before expected-head merge | AWAITING_PR_BINDING |
+| RQ-749-TRANSPORT | #749 / PR #750 | Terminal post-PR #748 state finalization | Required PR exact-head gate set | PR creation head `97d91297...`; state-only/non-canonical transport | `FINAL_BATCH` | final transport head must pass all required gates with 0 unresolved review threads before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
 
 ## Blocking-now queue
 

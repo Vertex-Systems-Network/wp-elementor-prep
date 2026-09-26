@@ -27,11 +27,18 @@ Canonical Active branch: `main`
 
 ## Terminal finalization #749
 
-- Issue #749 / branch `ai-native/terminal-finalize-pr-748` is transport-only post-merge state reconciliation.
+- Issue #749 / PR #750 / branch `ai-native/terminal-finalize-pr-748` is transport-only post-merge state reconciliation.
 - It is not canonical lifecycle ownership; canonical `active_issue` / `active_pr` remain null.
 - It changes no product/runtime/security/compatibility/production/download/release authority.
 - A successful transport merge does not require recursive reconciliation when no material truth changes.
 
 ## Exact next safe action
 
-Open/bind the transport PR for Issue #749, certify its exact final head once, merge if all required gates are green with 0 unresolved review threads, then continue with the next bounded P15 Fast Batch.
+Resolve the final bound PR #750 head and perform exactly one consolidated required-gate refresh plus review-thread check. Merge only if that exact head is green with zero unresolved review threads.
+
+## PR #750 handoff
+
+- PR #750 opened against exact base main `7659adaaf55c4f10357cfa9977c0504e7b32c41f`.
+- PR creation head: `97d9129775a02cd33b6f59f7affdc367197bb45b`.
+- This PR remains transport-only and non-canonical.
+- Final exact-head gate observation is deferred to the next user turn under the one-refresh/no-polling rule.
