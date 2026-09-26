@@ -166,15 +166,15 @@ Issue #715 / PR #716 is closed completed after repaired exact head `ac5e676867b6
 
 PR #724 exact head `ea3d844754273d6601e4e2bd925b718d31834bd2` passed all seven required gates with zero unresolved review threads and merged as main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`. Canonical state is settled as `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR. Issue #725 / PR #726 is transport-only state finalization; its eventual merge does not by itself require another reconciliation PR.
 
-## Active P15 Fast Batch #751 / PR #752 Button radial gradient backgrounds
+## Completed P15 Fast Batch #751 / PR #752 Button radial gradient backgrounds
 
-Issue #751 / PR #752 is the canonical active P15 batch against exact base main `dd285d01cb054524242bd3b31aff26d52bd25522`.
+Issue #751 / PR #752 is closed completed. Exact head `bea1e6212a0517480556589e00fde9c63bc1c04a` passed all seven required gates with zero unresolved review threads and expected-head merge produced main `702177b31696f80d5ca30ce30ad1c69f56f71719`.
 
 The batch adds three bounded Elementor 4.2.4 Button capabilities: normal radial-gradient background, hover/focus radial-gradient background, and explicit required radial position from the exact nine-value Elementor enum. Colors remain strict lowercase six-digit hex, stops explicit ordered integer `0..100%`, and base/desktop keys only are written. The merged linear-gradient resolver remains separate.
 
 Exact neutral-source/base-candidate binding, Button text/link/alignment revalidation and requested-key conflict rejection remain fail-closed. Image/video/custom CSS/global-token resolution, responsive inference, Figma/network mutation, target compatibility, production acceptance and download authority remain false/out of scope.
 
-Product commit: `a4e0aadea3c2a31ca5cfb1178d591546a0052267`. Final exact-head seven-gate certification and zero unresolved review threads are still required before merge.
+Product commit: `a4e0aadea3c2a31ca5cfb1178d591546a0052267`. Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH`; Issue #753 is transport-only terminal finalization and is not canonical lifecycle ownership.
 
 ## Completed P15 Fast Batch #747 / PR #748 Button linear gradient backgrounds
 
