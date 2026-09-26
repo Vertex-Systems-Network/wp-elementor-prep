@@ -304,3 +304,13 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Issue #765 / PR #766 is transport-only and not canonical lifecycle ownership; `active_issue` / `active_pr` remain null.
 - Product/runtime/security/compatibility/production/download/release authority remains unchanged.
 - Remote exact-head gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — terminal PR #766 completed; P15 responsive radial-stop Fast Batch #767 / PR #768 started
+
+- PR #766 exact head `944fc059beff227be6a70e386c047eb4df624325` passed all seven required gates with 0 unresolved review threads and merged as main `c33287283e8ee383f2eda1d143778dac5142cf36`; Issue #765 closed completed.
+- Issue #767 / PR #768 owns four bounded responsive radial-gradient stop-pair capabilities: normal tablet/mobile and hover/focus tablet/mobile.
+- Product commit `ced2408ad4b6f458c3be51b83bed6d6e73b3a8a8` extends only the merged radial-gradient resolver.
+- Tablet/mobile stop pairs are atomic explicit safe integers `0..100` with A <= B; omitted breakpoint pairs remain absent and `responsiveInferencePerformed=false`.
+- Exact added write surfaces are responsive `color_stop` / `color_b_stop` tablet/mobile keys under normal or hover prefixes.
+- Existing source/candidate/Button binding, exact radial-position behavior, conflict rejection, security controls and false compatibility/production/download authority remain unchanged.
+- Final remote CI is deferred to the final exact PR head; no repeated polling.
