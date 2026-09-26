@@ -49,7 +49,7 @@ R0/R1 are recurring governance/acceptance gates. P13 implementation is complete 
 
 ## Current P15 implementation truth
 
-P15 is **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. PR #774 merged the bounded Button tablet/mobile border-width extension after 7/7 exact-head gates. Issue #775 / PR #776 merged Container normal border type/color plus explicit desktop/tablet/mobile widths after 7/7 exact-head gates as main `ebbe9ee8...`. Issue #777 / PR #778 adds isolated Container hover border and responsive widths pending remote gates. Neither expands the accepted target proof.
+P15 is **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. PR #774 merged the bounded Button tablet/mobile border-width extension after 7/7 exact-head gates. Issue #775 / PR #776 merged Container normal border type/color plus explicit desktop/tablet/mobile widths after 7/7 exact-head gates as main `ebbe9ee8...`. Issue #777 / PR #778 merged isolated Container hover border and responsive widths after 7/7 exact-head gates as main `21848e94...`. Issue #779 / PR #780 adds Container classic hover background color pending remote gates. Neither expands the accepted target proof.
 
 Bounded code-side surfaces now include:
 
