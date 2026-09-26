@@ -25,6 +25,7 @@ const p15ButtonTypographyBasicsSource = await readFile('src/targets/elementor/bu
 const p15ButtonResponsivePaddingSource = await readFile('src/targets/elementor/button-responsive-padding-resolution.ts', 'utf8');
 const p15ButtonContentMetadataSource = await readFile('src/targets/elementor/button-content-metadata-resolution.ts', 'utf8');
 const p15ButtonStretchContentAlignmentSource = await readFile('src/targets/elementor/button-stretch-content-alignment-resolution.ts', 'utf8');
+const p15ButtonIconBasicsSource = await readFile('src/targets/elementor/button-icon-basics-resolution.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -150,7 +151,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#741 terminally finalizes merged #739/#740 state before the next bounded P15 Fast Batch',
+  next: '#743 batches bounded Button selected icon + position + px spacing',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -675,6 +676,35 @@ for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
+const p15ButtonIconBasicsRequiredFragments = [
+  "elementorVersion: '4.2.4'",
+  "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",
+  "buttonTraitSourceBlobSha: '31192aaee6851c445f79d1998499f6ce73ba7da5'",
+  "iconsControlSourceBlobSha: 'd7d9445cb94c852bbb4731e076667fd97dec0554'",
+  "buttonIconFixtureBlobSha: 'ba4b5b444ab41fa69f982dc74af655aa03417783'",
+  "selectedIconSettingKey: 'selected_icon'",
+  "iconAlignSettingKey: 'icon_align'",
+  "iconIndentSettingKey: 'icon_indent'",
+  "P15_ELEMENTOR_BUTTON_ICON_INDENT_MAX_PX = 50",
+  "svgImportAllowed: false",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonIconBasicsRequiredFragments) {
+  if (!p15ButtonIconBasicsSource.includes(fragment)) {
+    throw new Error(`P15 #743 Button icon basics contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #743 implementation')
+  || !readme.includes('Issue #743 owns three tightly-related Elementor 4.2.4 Button icon capabilities')
+  || !readme.includes('`selected_icon` accepts only matching Font Awesome class/library pairs')
+  || !readme.includes('SVG/URL media payloads, custom icon libraries and extra class tokens reject.')
+  || !readme.includes('`icon_align` accepts only `row|row-reverse`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #743 Button icon basics Fast Batch truth is stale or missing.');
+}
+
 const p15ButtonStretchContentAlignmentRequiredFragments = [
   "elementorVersion: '4.2.4'",
   "elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d'",

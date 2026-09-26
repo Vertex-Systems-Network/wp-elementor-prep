@@ -140,7 +140,9 @@ Add one row immediately when a new Runner-dependent task is discovered. Do not w
 
 | RQ-739-FINAL | #739 / PR #740 | P15 Button stretch content alignment v1 | Required PR exact-head gate set | exact head `0a4cc0d2...` passed 7/7; review threads 0; merged main `5e839f4e...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
 
-| RQ-741-TRANSPORT | #741 / PR #742 | Terminal post-PR #740 state finalization | Required PR exact-head gate set | PR creation head `138b150b...`; state-only/non-canonical transport | `FINAL_BATCH` | final bound head must pass all seven required gates with 0 unresolved review threads before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
+| RQ-741-TRANSPORT | #741 / PR #742 | Terminal post-PR #740 state finalization | Required PR exact-head gate set | exact head `23d39e56...` passed 7/7; review threads 0; merged main `6db4a456...` | `FINAL_BATCH` | exact-head repository gates PASS | DONE |
+
+| RQ-743-FINAL | #743 | P15 Button icon basics v1 | Required PR exact-head gate set | source `bcc66e29...`; tests `a56258e9...`; bounded Font Awesome icon + position + px spacing | `FINAL_BATCH` | final PR-bound head must pass all seven required gates with 0 unresolved review threads before merge | IMPLEMENTED_AWAITING_PR_BINDING |
 
 ## Blocking-now queue
 

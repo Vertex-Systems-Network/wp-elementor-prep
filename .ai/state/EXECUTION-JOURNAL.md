@@ -123,3 +123,11 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Transport Issue #741 / PR #742 is not the canonical lifecycle owner; `active_issue` and `active_pr` remain null.
 - Product/runtime/security/compatibility/production/download/release authority remains unchanged.
 - Next milestone is one consolidated exact-head seven-gate observation with review-thread check; no CI polling is performed in this handoff turn.
+
+## 2026-09-26 — terminal PR #742 completed; P15 Fast Batch #743 started
+
+- PR #742 exact head `23d39e56d0ed10bcd2444bcfe1963ae5d189f3b4` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `6db4a456eae8451b964639399d5e7c3c705d2f4b`; Issue #741 closed.
+- Issue #743 / branch `p15/button-icon-basics` starts three tightly-related Button icon capabilities: bounded Font Awesome `selected_icon`, `icon_align`, and px `icon_indent`.
+- Exact Elementor 4.2.4 evidence binds Button trait `31192aaee6851c445f79d1998499f6ce73ba7da5`, Icons control `d7d9445cb94c852bbb4731e076667fd97dec0554`, and fixture `ba4b5b444ab41fa69f982dc74af655aa03417783`.
+- Product commit `bcc66e294cdb516e0a9f0f2e6a079c271e397e67`; focused tests `a56258e9438ba3b5bf6705295d7a1fc6c79ffbaf`.
+- SVG/URL/custom-library payloads, extra classes, icon inference, custom units, Figma/network access, compatibility, production and download authority remain excluded.
