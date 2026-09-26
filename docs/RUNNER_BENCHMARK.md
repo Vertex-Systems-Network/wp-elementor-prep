@@ -215,4 +215,6 @@ A development/release train may not be called complete while:
 
 | RQ-769-TRANSPORT | #769 / PR #770 | Terminal post-PR #768 state finalization | Required PR exact-head gate set | head `d8b354c1...` passed 7/7, zero review threads; merged main `5f7fa2b5...` | `FINAL_BATCH` | exact-head gates PASS | DONE |
 
-| RQ-773-FINAL | #773 / PR #774 | Explicit Button tablet/mobile border widths | Required PR exact-head gate set | initial head `47e4d2b9...`; final head pending | `FINAL_BATCH` | all seven required workflows and zero unresolved review threads on the final head before expected-head merge | AWAITING_EXACT_HEAD_BATCH |
+| RQ-773-FINAL | #773 / PR #774 | Explicit Button tablet/mobile border widths | Required PR exact-head gate set | head `3fd122cd...` passed 7/7, zero threads; merged main `6ef3ea58...` | `FINAL_BATCH` | exact-head gates PASS | DONE |
+
+| RQ-775-FINAL | #775 / PR #776 | Container normal border and responsive widths | Required PR exact-head gate set | initial head `40854345...`; final head pending | `FINAL_BATCH` | all seven workflows and zero unresolved threads on final head | AWAITING_EXACT_HEAD_BATCH |

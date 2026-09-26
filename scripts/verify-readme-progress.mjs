@@ -831,7 +831,8 @@ for (const fragment of p15ButtonResponsiveRadialStopRequiredFragments) {
   }
 }
 if (!readme.includes('### Completed P15 Fast Batch #767 / PR #768 implementation')
-  || !readme.includes('### Active P15 Button responsive border width #773 / PR #774')
+  || !readme.includes('### Completed P15 Button responsive border width #773 / PR #774')
+  || !readme.includes('### Active P15 Container border style #775 / PR #776')
   || !readme.includes('responsive radial-gradient stop-pair capabilities')
   || !readme.includes('`tabletStopA/tabletStopB` and `mobileStopA/mobileStopB`')
   || !readme.includes('`color_stop_tablet/mobile` and `color_b_stop_tablet/mobile`')

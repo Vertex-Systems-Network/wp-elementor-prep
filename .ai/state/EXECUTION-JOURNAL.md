@@ -332,8 +332,7 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Product/runtime/security/compatibility/production/download/release authority remains unchanged.
 - Remote exact-head gate observation is deferred to the next user turn; no CI polling is performed in this handoff turn.
 
-## 2026-09-26 — P15 #773 / PR #774
+## 2026-09-26 — P15 #773/#774 and #775/#776
 
-- Terminal #770 passed 7/7 on `d8b354c1`, zero review threads, merged main `5f7fa2b5`; #769 closed.
-- Registry #772 closed unmerged after overbroad prefixes were found; #771 closed not planned.
-- #773 / #774 adds explicit Button tablet/mobile px border widths under exact Elementor 4.2.4 evidence. Local typecheck, 9 focused tests and status verifier pass. Exact final PR gates remain pending.
+- #774 passed 7/7 on `3fd122cd`, zero threads; merged main `6ef3ea58`; #773 closed.
+- #775/#776 adds Container normal border type/color and desktop/tablet/mobile widths. Local 1,790 tests, typecheck/build/status PASS; final gates pending.

@@ -49,7 +49,7 @@ R0/R1 are recurring governance/acceptance gates. P13 implementation is complete 
 
 ## Current P15 implementation truth
 
-P15 is **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. Issue #773 / PR #774 contains a bounded code-only Button tablet/mobile border-width extension pending exact-head CI and review. It does not expand the accepted target proof.
+P15 is **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. PR #774 merged the bounded Button tablet/mobile border-width extension after 7/7 exact-head gates. Issue #775 / PR #776 adds Container normal border type/color plus explicit desktop/tablet/mobile widths pending remote gates. Neither expands the accepted target proof.
 
 Bounded code-side surfaces now include:
 
