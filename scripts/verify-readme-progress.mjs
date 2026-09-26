@@ -152,7 +152,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#747 / PR #748 batches bounded Button normal/hover linear gradients + explicit angle',
+  next: '#749 terminally finalizes merged #747/#748 state before the next bounded P15 Fast Batch',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -730,12 +730,14 @@ for (const fragment of p15ButtonLinearGradientRequiredFragments) {
     throw new Error(`P15 #747 Button linear gradient contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 Fast Batch #747 / PR #748 implementation')
+if (!readme.includes('### Completed P15 Fast Batch #747 / PR #748 implementation')
   || !readme.includes('normal and hover/focus linear-gradient backgrounds')
   || !readme.includes('ordered integer `0..100%`')
   || !readme.includes('optional explicit integer `0..360deg` angle')
   || !readme.includes('Radial gradients, image/video backgrounds, custom CSS/units and token/global resolution remain excluded.')
-  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  || !readme.includes('Repaired final exact head `b8da6da7a98a1b5833607f5b757f5c60324ff30e` passed all seven required gates with 0 unresolved review threads.')
+  || !readme.includes('Expected-head merge produced main `7659adaaf55c4f10357cfa9977c0504e7b32c41f`; Issue #747 closed completed.')
+  || !readme.includes('Issue #749 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #747 Button linear gradient Fast Batch truth is stale or missing.');
 }
 
