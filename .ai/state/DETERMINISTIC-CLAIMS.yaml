@@ -338,3 +338,8 @@ claims:
   - {id: CL-335, statement: pr_756_expected_head_merge_produced_main_43a2e224_and_issue_755_closed_completed, value: true}
   - {id: CL-336, statement: canonical_state_is_idle_ready_for_next_p15_batch_after_pr_756_merge_with_no_active_canonical_issue_or_pr, value: true}
   - {id: CL-337, statement: issue_757_is_transport_only_terminal_finalization_after_pr_756_and_is_not_canonical_lifecycle_ownership, value: true}
+  - {id: CL-338, statement: pr_758_exact_head_bf6d9d5d_passed_all_seven_required_gates_with_zero_unresolved_review_threads_and_merged_as_main_eb8f8ec2, value: true}
+  - {id: CL-339, statement: issue_757_is_closed_completed_after_pr_758_expected_head_merge_and_requires_no_recursive_reconciliation, value: true}
+  - {id: CL-340, statement: issue_759_owns_button_responsive_linear_gradient_angles_fast_batch_for_normal_and_hover_tablet_mobile_angles, value: true}
+  - {id: CL-341, statement: p15_759_responsive_linear_angles_are_explicit_integer_zero_through_360_degree_values_and_omitted_breakpoints_remain_omitted_with_no_inference, value: true}
+  - {id: CL-342, statement: pr_760_is_active_final_exact_head_verification_path_for_issue_759_button_responsive_linear_gradient_angles_v1, value: true}

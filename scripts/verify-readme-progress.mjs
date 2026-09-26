@@ -153,7 +153,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#757 terminally finalizes merged #755/#756 state before the next bounded P15 Fast Batch',
+  next: '#759 / PR #760 batches explicit normal/hover tablet/mobile linear-gradient angles',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -740,6 +740,34 @@ if (!readme.includes('### Completed P15 Fast Batch #747 / PR #748 implementation
   || !readme.includes('Expected-head merge produced main `7659adaaf55c4f10357cfa9977c0504e7b32c41f`; Issue #747 closed completed.')
   || !readme.includes('Issue #749 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #747 Button linear gradient Fast Batch truth is stale or missing.');
+}
+
+const p15ButtonResponsiveLinearAngleRequiredFragments = [
+  "gradientAngleTabletSuffix: 'gradient_angle_tablet'",
+  "gradientAngleMobileSuffix: 'gradient_angle_mobile'",
+  "tabletAngleDeg?: number",
+  "mobileAngleDeg?: number",
+  "settings[`${prefix}_gradient_angle_tablet`] = slider('deg', gradient.tabletAngleDeg)",
+  "settings[`${prefix}_gradient_angle_mobile`] = slider('deg', gradient.mobileAngleDeg)",
+  "responsiveInferencePerformed: false",
+  "responsiveClosureClaim: false",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonResponsiveLinearAngleRequiredFragments) {
+  if (!p15ButtonLinearGradientSource.includes(fragment)) {
+    throw new Error(`P15 #759 Button responsive linear-angle contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #759 / PR #760 implementation')
+  || !readme.includes('normal tablet/mobile and hover/focus tablet/mobile')
+  || !readme.includes('`tabletAngleDeg` / `mobileAngleDeg`')
+  || !readme.includes('`gradient_angle_tablet` / `gradient_angle_mobile`')
+  || !readme.includes('Omitted tablet/mobile values remain omitted')
+  || !readme.includes('Terminal #757 / PR #758 passed all seven required gates on exact head `bf6d9d5db6ddcbf1cc39938ddb7ed7c62870676e`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #759 / PR #760 responsive linear-angle Fast Batch truth is stale or missing.');
 }
 
 const p15ButtonRadialGradientRequiredFragments = [

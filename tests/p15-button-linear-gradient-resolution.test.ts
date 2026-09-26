@@ -83,7 +83,7 @@ function settingsOf(element: unknown): Record<string, unknown> {
   return settings as Record<string, unknown>;
 }
 
-describe('P15 Fast Batch Button linear gradient backgrounds v1', () => {
+describe('P15 Fast Batch Button linear gradient backgrounds + responsive angles v1', () => {
   it('writes exact normal linear gradient keys with bounded explicit angle', () => {
     const source = sourceDocument();
     const result = resolveP15ElementorButtonLinearGradients(source, manifest(source, [{
@@ -108,6 +108,30 @@ describe('P15 Fast Batch Button linear gradient backgrounds v1', () => {
     expect(settings.align).toBe('left');
   });
 
+  it('writes explicit normal tablet/mobile gradient angles without inference', () => {
+    const source = sourceDocument();
+    const result = resolveP15ElementorButtonLinearGradients(source, manifest(source, [{
+      sourceNodeId: 'button',
+      normal: {
+        colorA: '#112233',
+        colorB: '#aabbcc',
+        stopA: 10,
+        stopB: 90,
+        angleDeg: 180,
+        tabletAngleDeg: 135,
+        mobileAngleDeg: 90,
+      },
+    }]));
+    const settings = settingsOf(result.template?.content[0]?.elements[0]);
+
+    expect(settings.background_gradient_angle).toEqual({ unit: 'deg', size: 180, sizes: [] });
+    expect(settings.background_gradient_angle_tablet).toEqual({ unit: 'deg', size: 135, sizes: [] });
+    expect(settings.background_gradient_angle_mobile).toEqual({ unit: 'deg', size: 90, sizes: [] });
+    expect(settings).not.toHaveProperty('button_background_hover_gradient_angle_tablet');
+    expect(result.responsiveInferencePerformed).toBe(false);
+    expect(result.responsiveClosureClaim).toBe(false);
+  });
+
   it('writes exact hover/focus linear gradient keys without inventing an angle', () => {
     const source = sourceDocument();
     const result = resolveP15ElementorButtonLinearGradients(source, manifest(source, [{
@@ -124,6 +148,27 @@ describe('P15 Fast Batch Button linear gradient backgrounds v1', () => {
     expect(settings.button_background_hover_gradient_type).toBe('linear');
     expect(settings).not.toHaveProperty('button_background_hover_gradient_angle');
     expect(settings).not.toHaveProperty('background_background');
+  });
+
+  it('writes explicit hover tablet angle and leaves omitted mobile angle absent', () => {
+    const source = sourceDocument();
+    const result = resolveP15ElementorButtonLinearGradients(source, manifest(source, [{
+      sourceNodeId: 'button',
+      hover: {
+        colorA: '#001122',
+        colorB: '#334455',
+        stopA: 0,
+        stopB: 100,
+        tabletAngleDeg: 270,
+      },
+    }]));
+    const settings = settingsOf(result.template?.content[0]?.elements[0]);
+
+    expect(settings.button_background_hover_gradient_angle_tablet)
+      .toEqual({ unit: 'deg', size: 270, sizes: [] });
+    expect(settings).not.toHaveProperty('button_background_hover_gradient_angle_mobile');
+    expect(settings).not.toHaveProperty('button_background_hover_gradient_angle');
+    expect(settings).not.toHaveProperty('background_gradient_angle_tablet');
   });
 
   it('applies normal and hover gradients together and preserves exact linked Button binding', () => {
@@ -158,6 +203,8 @@ describe('P15 Fast Batch Button linear gradient backgrounds v1', () => {
       { colorA: '#112233', colorB: '#445566', stopA: -1, stopB: 100 },
       { colorA: '#112233', colorB: '#445566', stopA: 80, stopB: 20 },
       { colorA: '#112233', colorB: '#445566', stopA: 0, stopB: 100, angleDeg: 361 },
+      { colorA: '#112233', colorB: '#445566', stopA: 0, stopB: 100, tabletAngleDeg: -1 },
+      { colorA: '#112233', colorB: '#445566', stopA: 0, stopB: 100, mobileAngleDeg: 360.5 },
       { colorA: '#112233', colorB: '#445566', stopA: 0, stopB: 100, radial: true },
     ]) {
       const result = resolveP15ElementorButtonLinearGradients(source, {
@@ -216,7 +263,15 @@ describe('P15 Fast Batch Button linear gradient backgrounds v1', () => {
 
     const result = resolveP15ElementorButtonLinearGradients(source, manifest(source, [{
       sourceNodeId: 'button',
-      hover: { colorA: '#102030', colorB: '#405060', stopA: 15, stopB: 85, angleDeg: 180 },
+      hover: {
+        colorA: '#102030',
+        colorB: '#405060',
+        stopA: 15,
+        stopB: 85,
+        angleDeg: 180,
+        tabletAngleDeg: 120,
+        mobileAngleDeg: 60,
+      },
     }]));
     const serialized = serializeP15ElementorButtonLinearGradientSummary(result);
     expect(serialized).not.toContain('PRIVATE BUTTON COPY');
@@ -226,6 +281,10 @@ describe('P15 Fast Batch Button linear gradient backgrounds v1', () => {
     expect(serialized).not.toContain('"template"');
     expect(serialized).toContain('"acceptedBackgroundType": "gradient"');
     expect(serialized).toContain('"acceptedGradientType": "linear"');
+    expect(serialized).toContain('"gradientAngleTabletSuffix": "gradient_angle_tablet"');
+    expect(serialized).toContain('"gradientAngleMobileSuffix": "gradient_angle_mobile"');
+    expect(serialized).toContain('"tabletAngleDeg": 120');
+    expect(serialized).toContain('"mobileAngleDeg": 60');
 
     const inflated = { ...result, networkAccess: true } as unknown as P15ElementorButtonLinearGradientResultV1;
     expect(() => serializeP15ElementorButtonLinearGradientSummary(inflated))

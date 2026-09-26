@@ -40,6 +40,8 @@ export const P15_ELEMENTOR_BUTTON_LINEAR_GRADIENT_EVIDENCE = Object.freeze({
   colorBStopSuffix: 'color_b_stop',
   gradientTypeSuffix: 'gradient_type',
   gradientAngleSuffix: 'gradient_angle',
+  gradientAngleTabletSuffix: 'gradient_angle_tablet',
+  gradientAngleMobileSuffix: 'gradient_angle_mobile',
   acceptedBackgroundType: 'gradient',
   acceptedGradientType: 'linear',
   acceptedColorPattern: '^#[0-9a-f]{6}$',
@@ -57,6 +59,8 @@ export interface P15ElementorButtonLinearGradientV1 {
   stopA: number;
   stopB: number;
   angleDeg?: number;
+  tabletAngleDeg?: number;
+  mobileAngleDeg?: number;
 }
 
 export interface P15ElementorButtonLinearGradientEntryV1 {
@@ -171,7 +175,7 @@ const MANIFEST_KEYS = [
 ] as const;
 
 const ENTRY_KEYS = ['hover', 'normal', 'sourceNodeId'] as const;
-const GRADIENT_KEYS = ['angleDeg', 'colorA', 'colorB', 'stopA', 'stopB'] as const;
+const GRADIENT_KEYS = ['angleDeg', 'colorA', 'colorB', 'mobileAngleDeg', 'stopA', 'stopB', 'tabletAngleDeg'] as const;
 
 const ISSUE_CODES: readonly P15ElementorButtonLinearGradientIssueCode[] = [
   'P15_BUTTON_LINEAR_GRADIENT_SOURCE_IR_INVALID',
@@ -240,7 +244,9 @@ function validGradient(value: unknown): value is P15ElementorButtonLinearGradien
     || !Object.prototype.hasOwnProperty.call(value, 'stopB')) return false;
   if (!validColor(value.colorA) || !validColor(value.colorB)) return false;
   if (!validStop(value.stopA) || !validStop(value.stopB) || Number(value.stopA) > Number(value.stopB)) return false;
-  return value.angleDeg === undefined || validAngle(value.angleDeg);
+  if (value.angleDeg !== undefined && !validAngle(value.angleDeg)) return false;
+  if (value.tabletAngleDeg !== undefined && !validAngle(value.tabletAngleDeg)) return false;
+  return value.mobileAngleDeg === undefined || validAngle(value.mobileAngleDeg);
 }
 
 function cloneGradient(value: P15ElementorButtonLinearGradientV1): P15ElementorButtonLinearGradientV1 {
@@ -250,6 +256,8 @@ function cloneGradient(value: P15ElementorButtonLinearGradientV1): P15ElementorB
     stopA: value.stopA,
     stopB: value.stopB,
     ...(value.angleDeg === undefined ? {} : { angleDeg: value.angleDeg }),
+    ...(value.tabletAngleDeg === undefined ? {} : { tabletAngleDeg: value.tabletAngleDeg }),
+    ...(value.mobileAngleDeg === undefined ? {} : { mobileAngleDeg: value.mobileAngleDeg }),
   };
 }
 
@@ -375,9 +383,14 @@ function slider(unit: '%' | 'deg', size: number): Record<string, unknown> {
   return { unit, size, sizes: [] };
 }
 
-function gradientSettingKeys(prefix: 'background' | 'button_background_hover', includeAngle: boolean): string[] {
+function gradientSettingKeys(
+  prefix: 'background' | 'button_background_hover',
+  gradient: P15ElementorButtonLinearGradientV1,
+): string[] {
   const suffixes = ['background', 'color', 'color_stop', 'color_b', 'color_b_stop', 'gradient_type'];
-  if (includeAngle) suffixes.push('gradient_angle');
+  if (gradient.angleDeg !== undefined) suffixes.push('gradient_angle');
+  if (gradient.tabletAngleDeg !== undefined) suffixes.push('gradient_angle_tablet');
+  if (gradient.mobileAngleDeg !== undefined) suffixes.push('gradient_angle_mobile');
   return suffixes.map((suffix) => `${prefix}_${suffix}`);
 }
 
@@ -394,6 +407,12 @@ function applyGradient(
   settings[`${prefix}_gradient_type`] = 'linear';
   if (gradient.angleDeg !== undefined) {
     settings[`${prefix}_gradient_angle`] = slider('deg', gradient.angleDeg);
+  }
+  if (gradient.tabletAngleDeg !== undefined) {
+    settings[`${prefix}_gradient_angle_tablet`] = slider('deg', gradient.tabletAngleDeg);
+  }
+  if (gradient.mobileAngleDeg !== undefined) {
+    settings[`${prefix}_gradient_angle_mobile`] = slider('deg', gradient.mobileAngleDeg);
   }
 }
 
@@ -655,8 +674,8 @@ export function resolveP15ElementorButtonLinearGradients(
     }
 
     const requestedKeys = [
-      ...(resolution.normal === undefined ? [] : gradientSettingKeys('background', resolution.normal.angleDeg !== undefined)),
-      ...(resolution.hover === undefined ? [] : gradientSettingKeys('button_background_hover', resolution.hover.angleDeg !== undefined)),
+      ...(resolution.normal === undefined ? [] : gradientSettingKeys('background', resolution.normal)),
+      ...(resolution.hover === undefined ? [] : gradientSettingKeys('button_background_hover', resolution.hover)),
     ];
     const conflict = requestedKeys.find((key) => Object.prototype.hasOwnProperty.call(target.settings, key));
     if (conflict) {
