@@ -10,6 +10,8 @@ WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving t
 
 ## P15 implementation provenance
 
+Current product PR #774 (Issue #773) adds only explicit tablet/mobile Button `border_width` four-side integer px objects to the existing Elementor `4.2.4` resolver. Local typecheck and nine focused tests pass; final remote gates and import/runtime acceptance remain pending. Terminal PR #770 merged as main `5f7fa2b59030613cd83630f0135b56cc568e030d`. PR #772 was closed unmerged because its broad capability prefixes overstated exact supported keys.
+
 Accepted implementation baseline immediately preceding the stable operator-I/O hardening line:
 
 `d8d8ef2762dbe9aeae0da4bbcab3b46aae93535c`

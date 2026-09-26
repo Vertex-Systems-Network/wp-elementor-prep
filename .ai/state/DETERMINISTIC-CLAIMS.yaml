@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e
+observed_main_sha: 5f7fa2b59030613cd83630f0135b56cc568e030d
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -365,3 +365,6 @@ claims:
   - {id: CL-362, statement: pr_768_expected_head_merge_produced_main_16a67afb_and_issue_767_closed_completed, value: true}
   - {id: CL-363, statement: canonical_state_is_idle_ready_for_next_p15_batch_after_pr_768_merge_with_no_active_canonical_issue_or_pr, value: true}
   - {id: CL-364, statement: issue_769_is_transport_only_terminal_finalization_after_pr_768_and_is_not_canonical_lifecycle_ownership, value: true}
+  - {id: CL-365, statement: pr_770_exact_head_d8b354c1_passed_seven_required_gates_zero_unresolved_threads_and_merged_main_5f7fa2b5, value: true}
+  - {id: CL-366, statement: pr_772_closed_unmerged_due_to_overbroad_setting_prefix_claims_and_issue_771_closed_not_planned, value: true}
+  - {id: CL-367, statement: issue_773_pr_774_owns_explicit_button_tablet_mobile_border_width_px_with_no_responsive_inference, value: true}
