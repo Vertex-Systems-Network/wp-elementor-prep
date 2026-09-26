@@ -55,6 +55,8 @@ export const P15_ELEMENTOR_BUTTON_RADIAL_GRADIENT_EVIDENCE = Object.freeze({
   colorBStopSuffix: 'color_b_stop',
   gradientTypeSuffix: 'gradient_type',
   gradientPositionSuffix: 'gradient_position',
+  gradientPositionTabletSuffix: 'gradient_position_tablet',
+  gradientPositionMobileSuffix: 'gradient_position_mobile',
   acceptedBackgroundType: 'gradient',
   acceptedGradientType: 'radial',
   acceptedColorPattern: '^#[0-9a-f]{6}$',
@@ -70,6 +72,8 @@ export interface P15ElementorButtonRadialGradientV1 {
   stopA: number;
   stopB: number;
   position: P15ElementorButtonRadialGradientPosition;
+  tabletPosition?: P15ElementorButtonRadialGradientPosition;
+  mobilePosition?: P15ElementorButtonRadialGradientPosition;
 }
 
 export interface P15ElementorButtonRadialGradientEntryV1 {
@@ -184,7 +188,7 @@ const MANIFEST_KEYS = [
 ] as const;
 
 const ENTRY_KEYS = ['hover', 'normal', 'sourceNodeId'] as const;
-const GRADIENT_KEYS = ['colorA', 'colorB', 'position', 'stopA', 'stopB'] as const;
+const GRADIENT_KEYS = ['colorA', 'colorB', 'mobilePosition', 'position', 'stopA', 'stopB', 'tabletPosition'] as const;
 
 const ISSUE_CODES: readonly P15ElementorButtonRadialGradientIssueCode[] = [
   'P15_BUTTON_RADIAL_GRADIENT_SOURCE_IR_INVALID',
@@ -257,7 +261,9 @@ function validGradient(value: unknown): value is P15ElementorButtonRadialGradien
     || !Object.prototype.hasOwnProperty.call(value, 'position')) return false;
   if (!validColor(value.colorA) || !validColor(value.colorB)) return false;
   if (!validStop(value.stopA) || !validStop(value.stopB) || Number(value.stopA) > Number(value.stopB)) return false;
-  return validPosition(value.position);
+  if (!validPosition(value.position)) return false;
+  if (value.tabletPosition !== undefined && !validPosition(value.tabletPosition)) return false;
+  return value.mobilePosition === undefined || validPosition(value.mobilePosition);
 }
 
 function cloneGradient(value: P15ElementorButtonRadialGradientV1): P15ElementorButtonRadialGradientV1 {
@@ -267,6 +273,8 @@ function cloneGradient(value: P15ElementorButtonRadialGradientV1): P15ElementorB
     stopA: value.stopA,
     stopB: value.stopB,
     position: value.position,
+    ...(value.tabletPosition === undefined ? {} : { tabletPosition: value.tabletPosition }),
+    ...(value.mobilePosition === undefined ? {} : { mobilePosition: value.mobilePosition }),
   };
 }
 
@@ -392,7 +400,10 @@ function slider(unit: '%', size: number): Record<string, unknown> {
   return { unit, size, sizes: [] };
 }
 
-function gradientSettingKeys(prefix: 'background' | 'button_background_hover'): string[] {
+function gradientSettingKeys(
+  prefix: 'background' | 'button_background_hover',
+  gradient: P15ElementorButtonRadialGradientV1,
+): string[] {
   const suffixes = [
     'background',
     'color',
@@ -402,6 +413,8 @@ function gradientSettingKeys(prefix: 'background' | 'button_background_hover'): 
     'gradient_type',
     'gradient_position',
   ];
+  if (gradient.tabletPosition !== undefined) suffixes.push('gradient_position_tablet');
+  if (gradient.mobilePosition !== undefined) suffixes.push('gradient_position_mobile');
   return suffixes.map((suffix) => `${prefix}_${suffix}`);
 }
 
@@ -417,6 +430,12 @@ function applyGradient(
   settings[`${prefix}_color_b_stop`] = slider('%', gradient.stopB);
   settings[`${prefix}_gradient_type`] = 'radial';
   settings[`${prefix}_gradient_position`] = gradient.position;
+  if (gradient.tabletPosition !== undefined) {
+    settings[`${prefix}_gradient_position_tablet`] = gradient.tabletPosition;
+  }
+  if (gradient.mobilePosition !== undefined) {
+    settings[`${prefix}_gradient_position_mobile`] = gradient.mobilePosition;
+  }
 }
 
 function baseResult(
@@ -615,7 +634,7 @@ export function resolveP15ElementorButtonRadialGradients(
           issues.push({
             code: 'P15_BUTTON_RADIAL_GRADIENT_VALUE_INVALID',
             path,
-            message: 'Gradient colors must be lowercase #rrggbb, stops integer 0..100 in order, and position must be one exact Elementor radial position value.',
+            message: 'Gradient colors must be lowercase #rrggbb, stops integer 0..100 in order, desktop position must be one exact Elementor radial value, and optional tablet/mobile positions must use the same exact enum.',
           });
           continue;
         }
@@ -677,8 +696,8 @@ export function resolveP15ElementorButtonRadialGradients(
     }
 
     const requestedKeys = [
-      ...(resolution.normal === undefined ? [] : gradientSettingKeys('background')),
-      ...(resolution.hover === undefined ? [] : gradientSettingKeys('button_background_hover')),
+      ...(resolution.normal === undefined ? [] : gradientSettingKeys('background', resolution.normal)),
+      ...(resolution.hover === undefined ? [] : gradientSettingKeys('button_background_hover', resolution.hover)),
     ];
     const conflict = requestedKeys.find((key) => Object.prototype.hasOwnProperty.call(target.settings, key));
     if (conflict) {

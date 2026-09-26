@@ -153,7 +153,7 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#753 terminally finalizes merged #751/#752 state before the next bounded P15 Fast Batch',
+  next: '#755 / PR #756 batches explicit normal/hover tablet/mobile radial-gradient positions',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -774,6 +774,34 @@ if (!readme.includes('### Completed P15 Fast Batch #751 / PR #752 implementation
   || !readme.includes('Expected-head merge produced main `702177b31696f80d5ca30ce30ad1c69f56f71719`; Issue #751 closed completed.')
   || !readme.includes('Issue #753 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #751 / PR #752 Button radial gradient Fast Batch truth is stale or missing.');
+}
+
+const p15ButtonResponsiveRadialPositionRequiredFragments = [
+  "gradientPositionTabletSuffix: 'gradient_position_tablet'",
+  "gradientPositionMobileSuffix: 'gradient_position_mobile'",
+  "tabletPosition?: P15ElementorButtonRadialGradientPosition",
+  "mobilePosition?: P15ElementorButtonRadialGradientPosition",
+  "settings[`${prefix}_gradient_position_tablet`] = gradient.tabletPosition",
+  "settings[`${prefix}_gradient_position_mobile`] = gradient.mobilePosition",
+  "responsiveInferencePerformed: false",
+  "responsiveClosureClaim: false",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ButtonResponsiveRadialPositionRequiredFragments) {
+  if (!p15ButtonRadialGradientSource.includes(fragment)) {
+    throw new Error(`P15 #755 Button responsive radial-position contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### Current P15 Fast Batch #755 / PR #756 implementation')
+  || !readme.includes('normal tablet/mobile and hover/focus tablet/mobile')
+  || !readme.includes('`tabletPosition` / `mobilePosition`')
+  || !readme.includes('`gradient_position_tablet` / `gradient_position_mobile`')
+  || !readme.includes('Omitted tablet/mobile values remain omitted')
+  || !readme.includes('Terminal #753 / PR #754 passed all seven required gates on exact head `25fce9dbdf27eab595e30be730a91629639c9ab0`')
+  || !readme.includes('Remote exact-head CI is intentionally deferred until the final PR-bound handoff head.')) {
+  throw new Error('README P15 #755 / PR #756 responsive radial-position Fast Batch truth is stale or missing.');
 }
 
 const p15ButtonStretchContentAlignmentRequiredFragments = [
