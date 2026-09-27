@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-09-21
+Last updated: 2026-09-27
 
 ## Product direction
 
@@ -373,3 +373,8 @@ Continue the coherent Elementor-first internal V1 from the retained controlled p
 `selected Figma Frame -> deterministic extraction -> exact source-bound semantic/image-reference resolution where supplied -> exact bounded responsive direction/gap/alignment/padding/margin/min-height/boxed-width/z-index overrides where supplied -> mapping readiness -> fresh candidate -> local artifact validation/download -> exact declared TargetProfile -> exact retained profile/candidate reference binding -> exact controlled asset/reference observations where applicable -> sanitized observed evidence binding -> exact imported-file content integrity -> separate internal closure decision / durable target-managed portability proof + remaining responsive work -> bounded handoff`
 
 The retained WordPress `6.8` + Elementor `4.2.4` proof is a reference point, not broad version support. Keep P16 stable unless a concrete shared blocker appears. The explicitly opened P17 static-only line may continue in bounded dependency order; keep P18-P26 frozen, and preserve false compatibility/production/download authority until the applicable evidence and release gates explicitly change it.
+
+
+## Governance after PR #818
+
+PR #818 state finalization passed all seven exact-head gates on `dea45549df14cc23df01939139fa65793d654cc3`, had zero unresolved review threads, and merged under expected-head guard as main `13fb2f5b9200dc9ece2174be3d24d5d259ea29bd`. Issue #817 is complete; Issue #819 owns canonical post-merge state reconciliation. P15 work after #795 includes Container gradients (#797), hover transitions (#801), radial gradients (#805), and overlay blend/filter composition (#809). Re-derive the next capability from exact current resolver coverage; do not treat implementation CI as broad target or production acceptance.
