@@ -292,9 +292,13 @@ The exact Elementor `4.2.4` Container `box_shadow` and `box_shadow_hover` groups
 
 The bounded composer combines the four previously proven border/overlay families with normal/hover box shadows and classic hover background. It independently re-runs exact source and base-candidate bound resolvers, allowlists their added keys, checks whole-template drift and conflicts, and rebuilds one validated candidate. Omitted breakpoints and normal/hover isolation remain. Local typecheck, 304 test files / 1,825 tests, status verifier and build pass; PR #791 exact head `2aa8d19c307945e01122eccf9000057818721ca6` passed 7/7 and zero review threads; merged main `d24ed13be8225968727a965c69ecc03ab529b5ee`; #790 closed. No real import/render or expanded target authority is claimed.
 
-### Active P15 explicit Container radius composition #792 / PR #793
+### Completed P15 explicit Container radius composition #792 / PR #793
 
-The eight-family composer adds already proven explicit tablet/mobile normal and hover border-radius resolvers to the six-family candidate. It preserves generated desktop radius and omitted responsive settings, revalidates each family against exact source/base identity, rejects family drift and conflicting target keys, and keeps target authority false. Local typecheck, 304 test files / 1,826 tests, status verifier and build pass; final PR #793 gates are pending. No real import/render or responsive closure is claimed.
+The eight-family composer adds already proven explicit tablet/mobile normal and hover border-radius resolvers to the six-family candidate. It preserves generated desktop radius and omitted responsive settings, revalidates each family against exact source/base identity, rejects family drift and conflicting target keys, and keeps target authority false. Local typecheck, 304 test files / 1,826 tests, status verifier and build pass; PR #793 exact head `5e4048769f64ef24021439202293d4adf54c6157` passed 7/7 and zero review threads; merged main `e6de603b62abc60eb20e2341c308ad22f647efe1`; #792 closed. No real import/render or responsive closure is claimed.
+
+### Active P15 five-family Button color composition #794 / PR #795
+
+The local composer combines existing exact source/base-bound Button normal text/background and hover text/background/border-color resolvers. It applies only proven keys on Button widgets, rejects drift, malformed/stale family manifests, conflicting settings and authority inflation, and produces a sanitized summary. Local typecheck, 305 test files / 1,830 tests, status verifier and build pass; final PR #795 remote gates are pending. No new target setting, real import/render or target authority is claimed.
 
 ### Completed P15 Container overlay opacity #783 / PR #784
 
