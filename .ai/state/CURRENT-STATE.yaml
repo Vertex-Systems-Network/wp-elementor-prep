@@ -6,7 +6,7 @@ observed_main_sha: bdebce3e0efcf06d4c7596e2572e5611e254c267
 observed_main_sha_semantics: exact_current_main_tip_before_state_finalization_pr_merge
 observed_main_branch: main
 active_issue: 817
-active_pr: null
+active_pr: 818
 active_branch: ai-native/finalize-pr-816-state-817
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: continue-active-batch
 milestone_status: IN_PROGRESS
 last_completed_milestone: pr_816_state_reconciliation_passed_7_of_7_and_merged_as_bdebce3
-exact_next_safe_action: synchronize_canonical_main_state_after_pr_816_merge_and_prepare_current_p15_handoff
+exact_next_safe_action: observe_pr_818_exact_head_required_workflows_and_review_threads_then_guarded_merge
 pending_runner_ids: []
 blocked_runner_ids: []
 current_blockers:
