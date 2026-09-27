@@ -104,4 +104,43 @@ describe('P15 Container classic hover overlay color', () => {
     expect(summary).not.toContain('templateJson');
     expect(() => serializeP15ElementorContainerHoverOverlayColorSummary({ ...first, productionAcceptance: true } as never)).toThrow();
   });
+  it('writes explicit desktop/tablet/mobile opacity hundredths with no cross-state inference', () => {
+    const document = source();
+    const result = resolveP15ElementorContainerHoverOverlayColor(document, manifest(document, [{
+      ...entry, opacityHundredths: 50, tabletOpacityHundredths: 0, mobileOpacityHundredths: 100,
+    }]));
+    expect(result.status).toBe('CONTAINER_HOVER_OVERLAY_COLOR_RESOLVED');
+    expect(P15_ELEMENTOR_CONTAINER_HOVER_OVERLAY_COLOR_EVIDENCE).toMatchObject({
+      opacityDesktopSettingKey: 'background_overlay_hover_opacity',
+      opacityTabletSettingKey: 'background_overlay_hover_opacity_tablet',
+      opacityMobileSettingKey: 'background_overlay_hover_opacity_mobile',
+      sliderSourceBlobSha: 'f56798bd5e0a2bee5a7c3a7771ecbaf2af87fb7f',
+    });
+    expect(settings(result)).toMatchObject({
+      background_overlay_hover_opacity: { unit: 'px', size: 0.5, sizes: [] },
+      background_overlay_hover_opacity_tablet: { unit: 'px', size: 0, sizes: [] },
+      background_overlay_hover_opacity_mobile: { unit: 'px', size: 1, sizes: [] },
+    });
+    expect(settings(result)).not.toHaveProperty('background_overlay_opacity');
+    expect(result.responsiveInferencePerformed).toBe(false);
+    expect(result.responsiveClosureClaim).toBe(false);
+  });
+
+  it('omits unrequested breakpoints and rejects invalid opacity ranges and shapes', () => {
+    const document = source(); const valid = manifest(document, [entry]);
+    const tabletOnly = resolveP15ElementorContainerHoverOverlayColor(document, manifest(document, [{ ...entry, tabletOpacityHundredths: 25 }]));
+    expect(tabletOnly.status).toBe('CONTAINER_HOVER_OVERLAY_COLOR_RESOLVED');
+    expect(settings(tabletOnly)).not.toHaveProperty('background_overlay_hover_opacity');
+    expect(settings(tabletOnly)).not.toHaveProperty('background_overlay_hover_opacity_mobile');
+    expect(settings(tabletOnly)['background_overlay_hover_opacity_tablet']).toEqual({ unit: 'px', size: 0.25, sizes: [] });
+    for (const bad of [-1, 101, 1.5, Number.NaN, Number.POSITIVE_INFINITY, '50', { size: 50 }]) {
+      const result = resolveP15ElementorContainerHoverOverlayColor(document, { ...valid, containers: [{ ...entry, mobileOpacityHundredths: bad }] });
+      expect(result.issues.map(x => x.code)).toContain('P15_CONTAINER_HOVER_OVERLAY_COLOR_OPACITY_INVALID');
+      expect(result.template).toBeNull();
+    }
+    const summary = serializeP15ElementorContainerHoverOverlayColorSummary(tabletOnly);
+    expect(summary).not.toContain('PRIVATE');
+    expect(summary).not.toContain('templateJson');
+  });
+
 });
