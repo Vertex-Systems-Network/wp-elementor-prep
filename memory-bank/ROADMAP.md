@@ -139,6 +139,6 @@ PR #821 merged after all seven required exact-head gates passed on `0ff80cb98fff
 Pinned Elementor 4.2.4 Flex Item source supports responsive custom basis via a responsive type selector and conditional slider. The queued candidate is explicit tablet/mobile px only, bounded to 0..1000; controlled proof must confirm exact serialized target keys and shape.
 
 
-## P15 responsive Flex Item basis candidate — Issue #823
+## P15 responsive Flex Item basis implementation — Issue #823
 
-The source-backed candidate supports only explicit tablet/mobile custom basis in px, integer range 0..1000. Exact settings and candidate binding are covered by focused tests; controlled target proof and all seven exact-head gates remain pending. No broad compatibility, responsive closure, production or release authority is claimed.
+PR #823 passed all seven exact-head gates on a89bee55c3d43a0f40b2c97701c4a473ef9cce6b, had zero unresolved review threads, and merged as main b34f5b254dfe7bf8f217d691ecf8d58652674428 with expected-head guard. The bounded px custom-basis pair resolver preserves desktop settings and omitted breakpoints. Broader compatibility, responsive closure and production authority remain unclaimed.

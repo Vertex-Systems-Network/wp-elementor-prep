@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 65b2bcf34bee8829cbee8d3b7fa9e02c2eaabe56
+observed_main_sha: b34f5b254dfe7bf8f217d691ecf8d58652674428
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -407,3 +407,6 @@ claims:
 
   - {id: CL-400, statement: pr_822_exact_head_2a596f67_passed_all_seven_required_gates_zero_threads_and_expected_head_merge_produced_main_65b2bcf3, value: true}
   - {id: CL-401, statement: issue_823_is_active_p15_responsive_flex_item_basis_candidate_with_authority_false, value: true}
+
+  - {id: CL-402, statement: pr_823_exact_head_a89bee55_passed_all_seven_required_gates_zero_threads_expected_head_merge_produced_main_b34f5b25, value: true}
+  - {id: CL-403, statement: issue_824_pr_824_owns_post_pr_823_canonical_state_reconciliation, value: true}

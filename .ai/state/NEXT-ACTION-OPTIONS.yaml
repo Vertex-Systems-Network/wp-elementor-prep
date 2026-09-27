@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 65b2bcf34bee8829cbee8d3b7fa9e02c2eaabe56
-active_issue: 823
-active_pr: 823
-active_branch: p15/responsive-flex-item-basis-823
+observed_main_sha: b34f5b254dfe7bf8f217d691ecf8d58652674428
+active_issue: 824
+active_pr: 824
+active_branch: ai-native/finalize-pr-823-state-824
 active_execution_batch:
   target_duration: 5_HOURS_OR_AVAILABLE_WORKSPACE_CREDIT_SESSION_WHICHEVER_ENDS_FIRST
   continues_without_user_reconsent: true
@@ -17,18 +17,18 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: issue-823-p15-basis
+  presentation_epoch: issue-824-state-finalization
   presentation_order:
-    - implement-p15-823
+    - finalize-main-state-824
     - review-security-blocker-287
-recommended_action_id: implement-p15-823
+recommended_action_id: finalize-main-state-824
 options:
-  - action_id: implement-p15-823
-    label: Implement P15 responsive custom basis
+  - action_id: finalize-main-state-824
+    label: Finalize merged state
     enabled: true
     recommended: true
-    action_token: IMPLEMENT_P15_823
-    request_payload: "Implement Issue #823 responsive custom basis with exact source/candidate binding and all false authority flags."
+    action_token: FINALIZE_MAIN_STATE_824
+    request_payload: "Verify PR #824 exact-head gates for Issue #824, reconcile PR #823, and record exact main after merge."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
