@@ -808,3 +808,8 @@ Issue #804 adds exact Elementor 4.2.4 radial gradients with the documented nine 
 ### Completed P15 Container overlay visual composition #808 / PR #809
 
 Issue #808 adds exact normal `overlay_blend_mode` plus normal/hover CSS-filter families (`blur`, `brightness`, `contrast`, `saturate`, `hue`) with source-backed ranges. PR #809 exact head `1203cf4cb531307a0a31c73dae497fab0d70c888` passed all seven required workflows, zero unresolved review threads, merged as main `1c951a81831806892ab64a296a375cf864d26dc0`, and #808 closed.
+
+
+### Governance reconciliation after PR #814
+
+PR #814 merged on 2026-09-27 as main `5fdaab6cb50e3651da4b44c48ca9e81157dca843`. Its exact head passed all seven required workflows with zero unresolved review threads and an expected-head merge guard. Issue #813 is complete; duplicate Issue #812 is closed. Issue #815 tracks durable-state reconciliation. This governance update does not change P15 product support, target compatibility, runtime/import, production or release authority.
