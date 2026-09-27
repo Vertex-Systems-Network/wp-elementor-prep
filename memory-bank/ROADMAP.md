@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-09-21
+Last updated: 2026-09-27
 
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
@@ -123,3 +123,8 @@ The artifact is registered in `config/runtime-artifacts.json` schema v3 as the m
 10. Canonical memory/README truth synchronized only when behavior/status/authority actually changes.
 11. No synthetic runtime/external evidence or synthetic overall project percentage.
 12. Implementation-complete and production-accepted remain separate.
+
+
+## 2026-09-27 post-PR #818 status
+
+PR #818 state-only reconciliation merged as main `13fb2f5b9200dc9ece2174be3d24d5d259ea29bd` after all seven required exact-head gates passed with zero unresolved review threads. Issue #819 owns final canonical state reconciliation and refresh of the P15 capability map. P15 remains CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED; recent bounded additions include Container gradients, hover transitions, radial gradients and overlay blend/filter composition. Runtime, broad compatibility, production and download authority remain unclaimed.
