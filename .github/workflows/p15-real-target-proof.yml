@@ -267,6 +267,37 @@ jobs:
             and .productionAcceptance == false' \
             "$P15_PROOF_OUT_DIR/custom-order-controls.json"
 
+      - name: Probe controlled custom-order target import and export
+        run: |
+          set -euo pipefail
+          P15_WP_ROOT="$RUNNER_TEMP/p15-wordpress" php \
+            scripts/p15-custom-order-roundtrip-probe.php import \
+            "$P15_PROOF_OUT_DIR"
+          jq -e '.elementorVersion == "4.2.4"
+            and .savedSettingsMatchInput == true
+            and .editorValueObserved == false
+            and .editorGeneratedSerializationClaim == false
+            and .targetCompatibilityClaim == false
+            and .productionAcceptance == false' \
+            "$P15_PROOF_OUT_DIR/custom-order-import-observation.json"
+          TEMPLATE_ID="$(jq -r '.templateId' "$P15_PROOF_OUT_DIR/custom-order-import-observation.json")"
+          P15_WP_ROOT="$RUNNER_TEMP/p15-wordpress" php \
+            scripts/p15-custom-order-roundtrip-probe.php export "$TEMPLATE_ID" \
+            > "$P15_PROOF_OUT_DIR/custom-order-target-export.json"
+          jq -e '
+            [.content | .. | objects | select(.id == "c0150001") | .settings] as $one
+            | [.content | .. | objects | select(.id == "c0150002") | .settings] as $two
+            | ($one | length) == 1 and ($two | length) == 1
+              and $one[0]._flex_order_tablet == "custom"
+              and $one[0]._flex_order_custom_tablet == 2
+              and $one[0]._flex_order_mobile == "custom"
+              and $one[0]._flex_order_custom_mobile == -2
+              and $two[0]._flex_order_tablet == "custom"
+              and $two[0]._flex_order_custom_tablet == 1
+              and $two[0]._flex_order_mobile == "custom"
+              and $two[0]._flex_order_custom_mobile == 0
+          ' "$P15_PROOF_OUT_DIR/custom-order-target-export.json"
+
       - name: Provision fresh second WordPress 6.8 and Elementor 4.2.4 target
         run: |
           set -euo pipefail
