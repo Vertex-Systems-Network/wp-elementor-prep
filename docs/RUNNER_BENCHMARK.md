@@ -272,3 +272,17 @@ A development/release train may not be called complete while:
 - Source work: Issue #808 / PR #809; exact head `1203cf4cb531307a0a31c73dae497fab0d70c888`; merged main `1c951a81831806892ab64a296a375cf864d26dc0`.
 - Required gate family: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
 - Authority remains implementation-only; no runtime/import, production, compatibility or download claim.
+
+
+## PR #814 governance batch — completed
+
+- Exact PR head: `f9b957333e7db190e6a8aa3621714bab914a5352`; exact merged main: `5fdaab6cb50e3651da4b44c48ca9e81157dca843`.
+- Required exact-head workflows passed: CI #36291435136, CodeQL #36291435188, Integration Readiness #36291435113, P12 Offline Acceptance #36291435158, P12 Final Release Artifact #36291435129, P15 Real Elementor Target Proof #36291435116, P17 Local Browser Proof #36291435146.
+- Unresolved review threads: 0. Expected-head merge succeeded. Issue #813 completed; #812 duplicate closed.
+- Governance evidence only; no product/runtime/compatibility/production authority added.
+
+## PR #816 state reconciliation — active
+
+- Owner Issue #815; branch `ai-native/reconcile-pr-814-state-815`; base main `5fdaab6cb50e3651da4b44c48ca9e81157dca843`.
+- Required exact-head gates: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof, P17 Local Browser Proof.
+- Status: awaiting PR creation and exact-head runs. No PASS is claimed.
