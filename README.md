@@ -825,6 +825,10 @@ PR #816 state-only reconciliation passed all seven required exact-head gates on 
 PR #818 passed all seven required exact-head gates on `dea45549df14cc23df01939139fa65793d654cc3`, had zero unresolved review threads, and merged under expected-head guard as main `13fb2f5b9200dc9ece2174be3d24d5d259ea29bd`. Issue #817 is complete. Issue #819 tracks canonical post-merge state reconciliation and a fresh P15 capability-map review. No product or authority scope changed.
 
 
-### P15 #821 — responsive Container row/column gaps (implementation candidate)
+### P15 #821 — responsive Container row/column gaps (merged bounded implementation)
 
-Issue #821 is implementing explicit source-bound tablet/mobile row and column gaps on top of the existing linked-px responsive gap resolver. The candidate preserves desktop settings; both axes required at each breakpoint; unprovided breakpoints remain absent. Elementor 4.2.4 source is pinned in the issue and resolver. Exact-head CI has not yet certified this candidate. No broader target-compatibility result is claimed.
+PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven required exact-head workflows, had zero unresolved review threads, and merged with an expected-head guard as main `a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f`. The implementation adds explicit source-bound tablet/mobile row and column px pairs, preserves linked-px input and desktop settings, rejects incomplete or mixed pairs, and leaves unprovided breakpoints absent. This is bounded implementation evidence; it does not claim responsive closure or broader target compatibility.
+
+### P15 #823 — responsive Flex Item custom basis (queued candidate)
+
+Elementor 4.2.4 Flex Item source exposes responsive `basis_type` and a conditional `basis` slider with px range up to 1000. Issue #823 scopes explicit tablet/mobile px pairs only. Exact serialized keys and shape must be confirmed in controlled target proof; no compatibility, production, release or download authority is claimed.
