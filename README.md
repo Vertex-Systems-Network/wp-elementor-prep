@@ -798,3 +798,7 @@ Issue #796 implements two tightly related exact Elementor 4.2.4 Container backgr
 ### Completed P15 Container hover transition controls #800 / PR #801
 
 Issue #800 covers three exact Elementor 4.2.4 Container sliders: `background_hover_transition`, `background_overlay_hover_transition`, and `border_hover_transition`. Only finite explicit 0..3 second values on the documented 0.1 step are accepted. Source/candidate identity, duplicate/extra/conflict rejection and false authority boundaries remain enforced. Local focused tests, full suite (307 files / 1,834 tests), typecheck and build pass; PR #801 exact head `f6b1423ab7b6f304f8e385ba0e4d96a92f376a82` passed all seven required workflows, zero unresolved review threads, merged as main `adcb28f4054d700c5a42809e12318a96e5c45b64`, and #800 closed.
+
+### Completed P15 Container normal/hover radial gradients #804 / PR #805
+
+Issue #804 adds exact Elementor 4.2.4 radial gradients with the documented nine `gradient_position` values and explicit responsive stop pairs. Custom units, undocumented positions, inferred breakpoints and runtime/production authority remain rejected. PR #805 exact head `8b384f354ebbfe6a0e18bfd5b34c33525390eac2` passed all seven required workflows, zero unresolved review threads, merged as main `b90bf42a05dee28baddd300f19525234523798a5`, and #804 closed.
