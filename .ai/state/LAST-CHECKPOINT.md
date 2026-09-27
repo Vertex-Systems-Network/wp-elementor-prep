@@ -42,6 +42,8 @@ Resolve the final PR #814 head after the state-binding commit; observe required 
 
 ## Blockers / retained authority boundaries
 
+- P15 broader operator approval and broad target-compatibility / production claims remain ungranted; only exact bounded implementation slices may proceed.
+
 - #287 requires repository-admin settings access; branch protection remains unresolved.
 - #159 requires genuine operator-produced Figma Desktop runtime evidence.
 - #84 requires genuine manual publishing/account/2FA evidence.
