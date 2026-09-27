@@ -5,9 +5,9 @@ compact_state_path: .ai/state
 observed_main_sha: b8ed7584edc8052947f801046166291f5980c56c
 observed_main_sha_semantics: exact_current_main_tip_post_merge
 observed_main_branch: main
-active_issue: 796
+active_issue: null
 active_pr: null
-active_branch: p15/container-linear-gradient-composition
+active_branch: null
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
 current_milestone: p15_ready_for_next_fast_batch
@@ -20,8 +20,8 @@ next_action_options:
   grants_authority: false
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  recommended_action_id: implement-container-linear-gradient-796
-milestone_status: IMPLEMENTING
+  recommended_action_id: review-next-p15-map
+milestone_status: IDLE_READY_NEXT_P15_BATCH
 last_completed_milestone: p15_eight_family_container_composition_pr_793_exact_head_passed_7_of_7_and_merged
 exact_next_safe_action: resolve_final_pr_795_head_and_observe_required_gates_plus_review_threads
 pending_runner_ids: [RQ-796-FINAL]
