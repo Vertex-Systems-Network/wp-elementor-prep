@@ -4,7 +4,7 @@ This journal records durable AI-native execution-policy milestones only. It is n
 
 > Rolling journal: history before P14 R6/P15 #659 is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-001.md`; P14 R6/P15 #659 through pre-P15 #701 history is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-002.md`. Canonical claims, coordination and Runner evidence remain in their machine ledgers.
 
-Rolling-history note: older pre-Fast-Batch execution entries were pruned on 2026-09-26 to preserve the canonical 32 KiB journal ceiling. Durable claims/checkpoints and GitHub history retain authoritative evidence.
+Older entries are archived; canonical claims and Runner ledgers retain the evidence.
 
 Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 2026-09-26 to preserve the canonical 32 KiB journal ceiling. Durable claims/checkpoints, Runner ledgers and GitHub history retain authoritative evidence.
 
