@@ -348,8 +348,8 @@ Older Fast-Batch entries before #731 are archived; claims and Runner ledgers ret
 - #796 covers exact Elementor 4.2.4 Container normal/hover linear gradients with explicit responsive values only; focused tests and typecheck PASS; PR #797 passed 7/7, zero threads, merged `c1beb26b`; #796 closed.
 
 
-## 2026-09-27 — AI-native five-hour execution batch #813
+## 2026-09-27 — Batch #813
 
-- Main `9b33430475d00b20dd222ab176f7673b2ca354db`; Issue #813 / PR #814 active; #812 overlaps.
-- Governance-only policy update; no product authority.
-- P12 artifact verification exposed stale contract assertions; tests/guidance were aligned and the 32 KiB journal limit restored; final exact-head verification is pending.
+- Main `9b334304`; #813 / PR #814 active; #812 overlaps.
+- Governance-only change; no product authority.
+- Repaired stale tests and journal ceiling after P12 status failure; exact-head gates pending.
