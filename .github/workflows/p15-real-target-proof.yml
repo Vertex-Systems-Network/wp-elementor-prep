@@ -248,6 +248,25 @@ jobs:
           ' "$P15_PROOF_OUT_DIR/pre-browser-asset-server-observation.json"
 
 
+      - name: Observe runtime Flex Item order controls
+        run: |
+          set -euo pipefail
+          P15_WP_ROOT="$RUNNER_TEMP/p15-wordpress" php \
+            scripts/p15-custom-order-control-probe.php \
+            "$P15_PROOF_OUT_DIR/custom-order-controls.json"
+          jq -e '.elementorVersion == "4.2.4"
+            and .controlCount > 0
+            and .styleControlCount > 0
+            and .controls._flex_order.registered == true
+            and .controls._flex_order.stack == "style_controls"
+            and .controls._flex_order_custom.registered == true
+            and .controls._flex_order_custom.stack == "style_controls"
+            and .savedTemplateSerializationObserved == false
+            and .editorValueObserved == false
+            and .targetCompatibilityClaim == false
+            and .productionAcceptance == false' \
+            "$P15_PROOF_OUT_DIR/custom-order-controls.json"
+
       - name: Provision fresh second WordPress 6.8 and Elementor 4.2.4 target
         run: |
           set -euo pipefail
