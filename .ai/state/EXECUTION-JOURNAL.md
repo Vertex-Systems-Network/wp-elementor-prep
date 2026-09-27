@@ -324,11 +324,6 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Issue #769 / branch `ai-native/terminal-finalize-pr-768` is transport-only finalization and grants no product/runtime/security/compatibility/production/download/release authority.
 - Next step is to bind/open its transport PR and stop at the exact-head gate boundary.
 
-## 2026-09-26 — P15 #776 merge and #777/#778
-
-- #776 passed 7/7 on `2c1a8c5d`, zero threads; merged main `ebbe9ee835e50129fbee9b4c343aae816a53dc79`; #775 closed.
-- #777/#778 adds isolated Container hover border type/color and responsive widths. Local 1,795 tests, typecheck and build PASS; final gates pending. No new target authority.
-
 ## 2026-09-26 — P15 #778 merge and #779/#780
 
 - #778 passed 7/7 on `74641fd6`, zero threads; merged main `21848e94e369fd9486102bb176587a4b5479a4e7`; #777 closed.
@@ -338,3 +333,8 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 
 - #780 passed 7/7 on `7d59a098`, zero threads; merged main `cbec0be08b70bb3b44ef943590ee7480c110cd6f`; #779 closed.
 - #781/#782 adds isolated Container normal and hover classic overlay colors. Local 1,810 tests, typecheck/build/status PASS; final gates pending. No new target authority.
+
+## 2026-09-27 — P15 #782 merge and #783/#784
+
+- #782 passed 7/7 on `5e3976a1`, zero threads; merged main `5eb9390589fe541cdc65a1240205b412bc6ffb09`; #781 closed.
+- #783/#784 adds explicit Container normal/hover overlay opacity at desktop/tablet/mobile. Local 1,814 tests, typecheck/build/status PASS; final gates pending. No responsive inference or new target authority.

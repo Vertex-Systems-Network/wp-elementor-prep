@@ -284,6 +284,10 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
+### Active P15 Container overlay opacity #783 / PR #784
+
+The exact Elementor `4.2.4` Container normal and hover classic-overlay resolvers accept optional explicit desktop/tablet/mobile opacity hundredths (`0..100`) and write only requested `background_overlay_opacity` or `background_overlay_hover_opacity` breakpoint slider objects. Omitted values remain absent; normal/hover isolation, source/candidate binding, generated Container revalidation, requested-key conflict rejection, sanitized summaries and false authority remain. Local typecheck, 1,814 tests, status verifier and build pass; final PR #784 remote gates are pending. No real import/render result is claimed.
+
 ### Completed P15 Container classic hover background color #779 / PR #780
 
 The exact Elementor `4.2.4` Container `background_hover` group accepts an explicit lowercase six-digit hex color and writes only `background_hover_background=classic` and `background_hover_color`. Normal generated source color remains intact; omitted tablet/mobile settings stay absent. Exact source/candidate binding, generated Container revalidation, requested-key conflict rejection, sanitized summary and false authority remain. Local typecheck, 1,800 tests and build pass; PR #780 exact head `7d59a098010aee2bab9ae7d803fe5aabab04b819` passed 7/7 and zero review threads; merged main `cbec0be08b70bb3b44ef943590ee7480c110cd6f`; #779 closed. No real import/render result is claimed.
@@ -292,9 +296,9 @@ The exact Elementor `4.2.4` Container `background_hover` group accepts an explic
 
 The exact Elementor `4.2.4` Container normal-border resolver writes only `border_border`, `border_color`, and explicit desktop/tablet/mobile `border_width` four-side integer px objects (`0..100`). Omitted breakpoint values remain absent. It binds exact neutral source and base candidate identities, revalidates generated Container structure, rejects requested-key conflicts, and keeps runtime/compatibility/production authority false. Local typecheck, 1,790 tests, status verifier and build pass; PR #776 exact head `2c1a8c5d3b9a62326b1405706bee51484b9fab39` passed 7/7 and zero review threads; merged main `ebbe9ee835e50129fbee9b4c343aae816a53dc79`; #775 closed.
 
-### Active P15 Container overlay colors #781 / PR #782
+### Completed P15 Container overlay colors #781 / PR #782
 
-The exact Elementor `4.2.4` Container normal and hover overlay groups accept separate explicit lowercase six-digit hex colors, writing only `background_overlay_background/color` or `background_overlay_hover_background/color` respectively. Normal/hover isolation, omitted responsive values, exact source/candidate binding, generated Container revalidation, requested-key conflict rejection, sanitized summaries and false authority remain. Local typecheck, 1,810 tests, status verifier and build pass; final PR #782 remote gates are pending. No real import/render result is claimed.
+The exact Elementor `4.2.4` Container normal and hover overlay groups accept separate explicit lowercase six-digit hex colors, writing only `background_overlay_background/color` or `background_overlay_hover_background/color` respectively. Normal/hover isolation, omitted responsive values, exact source/candidate binding, generated Container revalidation, requested-key conflict rejection, sanitized summaries and false authority remain. Local typecheck, 1,810 tests, status verifier and build pass; PR #782 exact head `5e3976a155b180aff9f31c9243ddba2c697b3921` passed 7/7 and zero review threads; merged main `5eb9390589fe541cdc65a1240205b412bc6ffb09`; #781 closed. No real import/render result is claimed.
 
 ### Completed P15 Container hover border style #777 / PR #778
 
