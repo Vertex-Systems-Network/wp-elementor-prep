@@ -349,5 +349,4 @@ Older Fast-Batch entries before #731 are archived; claims and Runner ledgers ret
 
 ## 2026-09-27 — Batch #813 completed; reconciliation #815 started
 
-- PR #814 exact head `f9b95733` passed all seven required gates with zero review threads and merged under expected-head guard as `5fdaab6c`.
-- Issue #813 closed completed; duplicate #812 closed duplicate. State-only reconciliation #815 is active to bind canonical ledgers to merged main.
+- PR #814 passed 7/7 on `f9b95733`, zero threads; merged main `5fdaab6c`. Issue #813 completed; #812 duplicate closed. State-only #815 reconciliation active.
