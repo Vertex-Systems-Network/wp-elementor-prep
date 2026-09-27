@@ -141,6 +141,6 @@ Do not fabricate any of these from CI/repository metadata.
 - PR #816 exact head `14ae0c87b00776060ae3a05c83a8388c51da4e30` passed all seven required gates with zero unresolved review threads and merged as main `bdebce3e0efcf06d4c7596e2572e5611e254c267`; Issue #815 is complete. Issue #817 / branch `ai-native/finalize-pr-816-state-817` owns canonical post-merge state finalization. After that PR merges, refresh the P15 capability map from current source evidence before opening the next bounded product batch.
 
 
-## Current P15 batch — Issue #823
+## Current continuation after PR #823
 
-PR #822 reconciles state after PR #821; canonical base is 65b2bcf34bee8829cbee8d3b7fa9e02c2eaabe56. Issue #823 adds a bounded tablet/mobile custom Flex Item basis candidate from pinned Elementor 4.2.4 source, with paired custom-type/value inputs and px values 0..1000. The current branch is p15/responsive-flex-item-basis-823. Exact-head gates and controlled target proof are pending. Preserve P12/P27/operator/admin, broad compatibility, production, release and download boundaries.
+PR #823 exact head a89bee55c3d43a0f40b2c97701c4a473ef9cce6b passed all seven required workflows, had zero unresolved review threads, and merged under expected-head guard as main b34f5b254dfe7bf8f217d691ecf8d58652674428; Issue #823 is complete. Issue #824 owns canonical state reconciliation. All P12/P27/operator/admin and P15 broad compatibility, production, release and download boundaries remain unchanged.
