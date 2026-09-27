@@ -24,7 +24,7 @@ next_action_options:
 milestone_status: IN_PROGRESS
 last_completed_milestone: pr_822_post_pr_821_state_reconciliation_passed_7_of_7_and_merged_as_65b2bcf3
 exact_next_safe_action: implement_issue_823_exact_responsive_basis_source_bound_candidate_and_verify
-pending_runner_ids: [RQ-822-FINAL]
+pending_runner_ids: [RQ-823-FINAL]
 blocked_runner_ids: []
 current_blockers:
   - p15_retained_operator_approval_not_supplied_for_broader_compatibility_claims
