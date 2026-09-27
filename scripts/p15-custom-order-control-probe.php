@@ -37,10 +37,12 @@ $keys = [
 ];
 $observed = [];
 foreach ($keys as $key) {
-    $control = $controls[$key] ?? null;
+    $fromStyleControls = array_key_exists($key, $styleControls);
+    $control = $fromStyleControls ? $styleControls[$key] : ($controls[$key] ?? null);
     $observed[$key] = is_array($control)
         ? [
             'registered' => true,
+            'stack' => $fromStyleControls ? 'style_controls' : 'controls',
             'type' => $control['type'] ?? null,
             'responsive' => $control['responsive'] ?? null,
             'condition' => $control['condition'] ?? null,
@@ -59,7 +61,7 @@ $report = [
     'registeredStyleControlKeys' => array_keys($styleControls),
     'registeredFlexKeys' => array_values(array_filter(
         array_keys($controls),
-        static function ($key) { return strpos((string) $key, 'flex') !== false || strpos((string) $key, 'order') !== false; }
+        static function ($key) { return strpos((string) $key, 'flex_') === 0 || strpos((string) $key, '_flex_') === 0; }
     )),
     'controls' => $observed,
     'savedTemplateSerializationObserved' => false,
@@ -78,7 +80,9 @@ if (file_put_contents($out, $encoded) === false) {
     fwrite(STDERR, "Could not write control observation.\n");
     exit(2);
 }
-if (count($controls) === 0) {
-    fwrite(STDERR, "Container returned no controls.\n");
+if (count($controls) === 0 || count($styleControls) === 0
+    || !$observed['_flex_order']['registered']
+    || !$observed['_flex_order_custom']['registered']) {
+    fwrite(STDERR, "Expected Container style controls are unavailable.\n");
     exit(1);
 }
