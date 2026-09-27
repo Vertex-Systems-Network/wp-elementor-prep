@@ -291,3 +291,10 @@ A development/release train may not be called complete while:
 
 - Owner Issue #817; branch `ai-native/finalize-pr-816-state-817`; base main `bdebce3e0efcf06d4c7596e2572e5611e254c267`.
 - Required exact-head gates: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof. No gate result is claimed before PR creation.
+
+
+## 2026-09-27 — PR #818 and #820 state reconciliation
+
+- PR #818 exact head `dea45549df14cc23df01939139fa65793d654cc3` passed all seven required workflows: CI #36294778484, CodeQL #36294778509, Integration Readiness #36294778470, P12 Offline Acceptance #36294778583, P12 Final Release Artifact #36294778491, P15 Real Elementor Target Proof #36294778564 and P17 Local Browser Proof #36294778461. Zero unresolved review threads; expected-head merge produced main `13fb2f5b9200dc9ece2174be3d24d5d259ea29bd`.
+- Issue #819 / PR #820 reconciles canonical state after #818. Its PR creation head was `c3b80b8ea50ea28e7790640d48bcf2274f9286c6`; current exact head must be resolved from live PR metadata before checking gates.
+- P17 Local Browser Proof is path-filtered and runs when `docs/RUNNER_BENCHMARK.md` changes. This documentation records the relevant exact-head gate handoff; it claims no P17 result for PR #820.

@@ -60,9 +60,9 @@ Open roadmap / acceptance dependencies:
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
-Current verified main before this documentation sync:
+Current verified main after PR #818 merge and before this documentation sync:
 
-`c33287283e8ee383f2eda1d143778dac5142cf36`
+`13fb2f5b9200dc9ece2174be3d24d5d259ea29bd`
 
 ### Completed P15 #659 verification
 
@@ -787,7 +787,7 @@ Development now defaults to **3-5 closely related capabilities per product batch
 ## Immediate execution order
 
 1. keep P14 production acceptance non-authorizing while #159 genuine Figma evidence remains pending; internal/dev confirmed activation is merged but publishable release activation remains disabled;
-2. certify transport-only terminal finalization #769, then select the next bounded P15 Fast Batch from the remaining capability map;
+2. complete Issue #819 post-PR #818 state reconciliation, refresh the exact-main P15 capability map, then select a bounded P15 Fast Batch from documented Elementor 4.2.4 controls;
 3. for P16, do not create a stronger authority-bearing intake/decision from caller-supplied metadata; genuinely retained authenticated evidence is now the prerequisite for the next authority-bearing step;
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;
@@ -818,3 +818,8 @@ PR #814 merged on 2026-09-27 as main `5fdaab6cb50e3651da4b44c48ca9e81157dca843`.
 ### Governance reconciliation after PR #816
 
 PR #816 state-only reconciliation passed all seven required exact-head gates on `14ae0c87b00776060ae3a05c83a8388c51da4e30`, had zero unresolved review threads, and merged under expected-head guard as main `bdebce3e0efcf06d4c7596e2572e5611e254c267`. Issue #815 is complete. Issue #817 tracks canonical post-merge state finalization; no product or authority scope changed.
+
+
+### Governance reconciliation after PR #818
+
+PR #818 passed all seven required exact-head gates on `dea45549df14cc23df01939139fa65793d654cc3`, had zero unresolved review threads, and merged under expected-head guard as main `13fb2f5b9200dc9ece2174be3d24d5d259ea29bd`. Issue #817 is complete. Issue #819 tracks canonical post-merge state reconciliation and a fresh P15 capability-map review. No product or authority scope changed.

@@ -1,6 +1,6 @@
 # Next Actions
 
-Last updated: 2026-09-22
+Last updated: 2026-09-27
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 and must fail closed on stale or mismatched registered artifacts.
 
@@ -21,7 +21,7 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 - P12 — **IN PROGRESS / 80%**; historical publishing authority remains Final Release Artifact #20 from source `5f12b1d28146d5c2af815cc9f83eb30431dce4b5`, plugin ID `1680034649341961379`.
 - P13 — **IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING**; #159 requires genuine Figma Desktop evidence.
 - P14 — **IMPLEMENTATION COMPLETE / INTERNAL CONFIRMATION ACTIVATION / PRODUCTION ACCEPTANCE PENDING**; R1-R6 are merged through PR #658, the exact production planning registry binding is present, internal/dev activation requires explicit confirmation + fresh authorization checks, and publishable release activation remains hard-disabled/stripped.
-- P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. Terminal PR #770 passed 7/7 and merged as main `5f7fa2b5...`. Issue #773 / PR #774 passed 7/7 on exact head `3fd122cd...`, zero review threads, merged main `6ef3ea58...`; Issue #775 / PR #776 passed 7/7 on `2c1a8c5d...`, merged main `ebbe9ee8...`; Issue #777 / PR #778 passed 7/7 on `74641fd6...`, merged main `21848e94...`; Issue #779 / PR #780 passed 7/7 on `7d59a098...`, merged main `cbec0be0...`; Issue #781 / PR #782 passed 7/7 on `5e3976a1...`, merged main `5eb93905...`; Issue #783 / PR #784 passed 7/7 on `4389969f...`, merged main `d7c5cc87...`; Issue #785 / PR #787 passed 7/7 on `57a08f4b...`, merged main `965bb48e...`; Issue #788 / PR #789 passed 7/7 on `9ec87232...`, merged main `228b68a1...`; Issue #790 / PR #791 passed 7/7 on `2aa8d19c...`, merged main `d24ed13b...`; Issue #792 / PR #793 passed 7/7 on `5e404876...`, merged main `e6de603b...`; Issue #794 / PR #795 composes five bounded Button color families pending final gates; #786 closed duplicate. PR #772 closed unmerged after an overbroad registry review.
+- P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. Terminal PR #770 passed 7/7 and merged as main `5f7fa2b5...`. Issue #773 / PR #774 passed 7/7 on exact head `3fd122cd...`, zero review threads, merged main `6ef3ea58...`; Issue #775 / PR #776 passed 7/7 on `2c1a8c5d...`, merged main `ebbe9ee8...`; Issue #777 / PR #778 passed 7/7 on `74641fd6...`, merged main `21848e94...`; Issue #779 / PR #780 passed 7/7 on `7d59a098...`, merged main `cbec0be0...`; Issue #781 / PR #782 passed 7/7 on `5e3976a1...`, merged main `5eb93905...`; Issue #783 / PR #784 passed 7/7 on `4389969f...`, merged main `d7c5cc87...`; Issue #785 / PR #787 passed 7/7 on `57a08f4b...`, merged main `965bb48e...`; Issue #788 / PR #789 passed 7/7 on `9ec87232...`, merged main `228b68a1...`; Issue #790 / PR #791 passed 7/7 on `2aa8d19c...`, merged main `d24ed13b...`; Issue #792 / PR #793 passed 7/7 on `5e404876...`, merged main `e6de603b...`; Issue #794 / PR #795 composed five bounded Button color families and merged after 7/7 exact-head gates; #786 closed duplicate. PR #772 closed unmerged after an overbroad registry review.
 - P16 — **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
 - P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF**; #612/#613 static export, #614/#615 import safety preflight, #616/#617 neutral Web IR, #618/#623 IR→HTML/CSS generation and #628/#629 package validation are merged; #630 adds one exact local-only Chrome render observation. JavaScript execution, visual-fidelity comparison, Web→Figma reconstruction and production acceptance remain unclaimed.
 - P18-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
@@ -33,6 +33,10 @@ Never promote local artifact validation, environment qualification, evidence-cha
 ## P17 active implementation line
 
 Continue only static-first, non-authorizing slices from the merged neutral Web IR. #630 is the first controlled local-only browser observation and must stay bound to the exact R4-validated package, loopback allowlist and non-authorizing receipt. Any next slice must keep visual-fidelity comparison, JavaScript execution, Web→Figma reconstruction and production acceptance as separate evidence gates.
+
+## Current continuation after PR #818
+
+PR #818 exact head `dea45549df14cc23df01939139fa65793d654cc3` passed all seven required gates with zero unresolved review threads, expected-head merged as main `13fb2f5b9200dc9ece2174be3d24d5d259ea29bd`, and #817 closed. Issue #819 owns post-merge state reconciliation and a fresh P15 capability-map review. README and older P15 action lists still contain stale handoff text; update from exact current source before selecting a feature. Keep #84, #159, #182 and #287 authority blockers unchanged.
 
 ## P15 evidence-integrity provenance
 
