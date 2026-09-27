@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: d7c5cc8752c70b82b452b035e3ac4806c646582e
-active_issue: 785
-active_pr: 787
-active_branch: p15/container-style-composition
+observed_main_sha: 965bb48eaf4387bce0e22cd8715ced0ab3e8b3c4
+active_issue: 788
+active_pr: 789
+active_branch: p15/container-box-shadows
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-787-product-handoff
+  presentation_epoch: pr-789-product-handoff
   presentation_order:
     - review-security-blocker-287
     - review-next-p15-map
     - verify-terminal-after-769
     - review-ai-plan
-recommended_action_id: verify-pr-787
+recommended_action_id: verify-pr-789
 options:
-  - action_id: verify-pr-787
-    label: Verify Container style composition PR #787
+  - action_id: verify-pr-789
+    label: Verify Container box shadows PR #789
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_787
-    request_payload: "Resolve exact current head of product PR #787 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
+    action_token: VERIFY_PR_789
+    request_payload: "Resolve exact current head of product PR #789 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
     blocked_by: []
     blocked_reason: null
   - action_id: review-next-p15-map
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_NEXT_P15_MAP
-    request_payload: "Review remaining P15 capability map from settled product main d7c5cc87 without widening authority."
+    request_payload: "Review remaining P15 capability map from settled product main 965bb48e without widening authority."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
