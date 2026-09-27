@@ -1065,11 +1065,11 @@ for (const fragment of p15ResponsiveGapAxisRequiredFragments) {
     throw new Error(`P15 #821 responsive gap-axis contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### P15 #821 — responsive Container row/column gaps (implementation candidate)')
-  || !readme.includes('Issue #821 is implementing explicit source-bound tablet/mobile row and column gaps')
-  || !readme.includes('both axes required at each breakpoint')
-  || !readme.includes('Exact-head CI has not yet certified this candidate.')) {
-  throw new Error('README P15 #821 candidate status or boundaries are stale or missing.');
+if (!readme.includes('### P15 #821 — responsive Container row/column gaps (merged bounded implementation)')
+  || !readme.includes('PR #821 exact head')
+  || !readme.includes('passed all seven required exact-head workflows')
+  || !readme.includes('### P15 #823 — responsive Flex Item custom basis (queued candidate)')) {
+  throw new Error('README P15 #821 merge evidence or #823 candidate status is stale or missing.');
 }
 
 console.log(
