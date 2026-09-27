@@ -246,7 +246,7 @@ A development/release train may not be called complete while:
 
 ### RQ-800-FINAL — Container hover transitions
 
-- Source work: Issue #800 / PR pending; exact Elementor 4.2.4 transition slider family.
+- Source work: Issue #800 / PR #801; exact head `f6b1423ab7b6f304f8e385ba0e4d96a92f376a82`; merged main `adcb28f4054d700c5a42809e12318a96e5c45b64`.
 - Required gate family: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
 - Input identity: explicit finite 0..3 second values at 0.1 step for the three documented Container hover transition keys.
 - Authority: implementation evidence only; no responsive, runtime/import, compatibility, production or download authority.
