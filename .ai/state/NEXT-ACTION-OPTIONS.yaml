@@ -2,7 +2,7 @@ schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
 observed_main_sha: 13fb2f5b9200dc9ece2174be3d24d5d259ea29bd
 active_issue: 819
-active_pr: null
+active_pr: 820
 active_branch: ai-native/finalize-pr-818-state-819
 active_execution_batch:
   target_duration: 5_HOURS_OR_AVAILABLE_WORKSPACE_CREDIT_SESSION_WHICHEVER_ENDS_FIRST
@@ -29,7 +29,7 @@ options:
     enabled: true
     recommended: true
     action_token: FINALIZE_MAIN_STATE_819
-    request_payload: "Complete Issue #819 state reconciliation after PR #818, then refresh the current P15 capability map."
+    request_payload: "Verify PR #820 exact-head gates for Issue #819, then refresh the current P15 capability map."
     blocked_by: []
     blocked_reason: null
   - action_id: audit-p15-after-817
