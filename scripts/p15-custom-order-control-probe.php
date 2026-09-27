@@ -23,6 +23,10 @@ if (!$container) {
     exit(2);
 }
 $controls = $container->get_controls();
+$stack = $container->get_stack();
+$styleControls = isset($stack['style_controls']) && is_array($stack['style_controls'])
+    ? $stack['style_controls']
+    : [];
 $keys = [
     '_flex_order',
     '_flex_order_tablet',
@@ -50,6 +54,9 @@ $report = [
     'elementorVersion' => ELEMENTOR_VERSION,
     'source' => 'runtime-container-get_controls',
     'controlCount' => count($controls),
+    'registeredControlKeys' => array_keys($controls),
+    'styleControlCount' => count($styleControls),
+    'registeredStyleControlKeys' => array_keys($styleControls),
     'registeredFlexKeys' => array_values(array_filter(
         array_keys($controls),
         static function ($key) { return strpos((string) $key, 'flex') !== false || strpos((string) $key, 'order') !== false; }
