@@ -827,4 +827,4 @@ PR #818 passed all seven required exact-head gates on `dea45549df14cc23df0193913
 
 ### P15 #821 — responsive Container row/column gaps (implementation candidate)
 
-Issue #821 is implementing explicit source-bound tablet/mobile row and column gaps on top of the existing linked-px responsive gap resolver. The candidate preserves desktop settings; both axes required at each breakpoint; unprovided breakpoints remain absent. Elementor 4.2.4 source is pinned in the issue and resolver. Exact-head CI has not yet certified this candidate, and no broader target-compatibility result is claimed.
+Issue #821 is implementing explicit source-bound tablet/mobile row and column gaps on top of the existing linked-px responsive gap resolver. The candidate preserves desktop settings; both axes required at each breakpoint; unprovided breakpoints remain absent. Elementor 4.2.4 source is pinned in the issue and resolver. Exact-head CI has not yet certified this candidate. No no broader target-compatibility result is claimed.
