@@ -6,7 +6,7 @@ observed_main_sha: 5fdaab6cb50e3651da4b44c48ca9e81157dca843
 observed_main_sha_semantics: exact_current_main_tip_before_reconciliation_pr_merge
 observed_main_branch: main
 active_issue: 815
-active_pr: null
+active_pr: 816
 active_branch: ai-native/reconcile-pr-814-state-815
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
@@ -21,9 +21,9 @@ next_action_options:
   randomize_presentation_order: true
   recommended_slot_fixed: false
   recommended_action_id: continue-active-batch
-milestone_status: IMPLEMENTING_STATE_RECONCILIATION
+milestone_status: VERIFYING_EXACT_HEAD
 last_completed_milestone: pr_814_governance_batch_contract_passed_7_of_7_and_merged_as_5fdaab6
-exact_next_safe_action: finish_exact_main_state_reconciliation_then_open_pr_816
+exact_next_safe_action: observe_pr_816_exact_head_gates_and_review_threads_once_then_guarded_merge
 pending_runner_ids: []
 blocked_runner_ids: []
 current_blockers:
