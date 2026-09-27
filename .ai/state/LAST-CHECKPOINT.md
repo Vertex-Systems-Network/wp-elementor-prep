@@ -1,10 +1,10 @@
 # Last Durable Checkpoint
 
-Status: VERIFYING_EXACT_HEAD
+Status: IN_PROGRESS
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `5fdaab6cb50e3651da4b44c48ca9e81157dca843`
-Canonical active Issue/PR: `#815` / `#816`
-Branch: `ai-native/reconcile-pr-814-state-815`
+Observed main: `bdebce3e0efcf06d4c7596e2572e5611e254c267`
+Canonical active Issue/PR: `#817` / `#818`
+Branch: `ai-native/finalize-pr-816-state-817`
 Target batch boundary: up to five hours or available Workspace execution credit/session, whichever ends first.
 Authority: routine reversible work inside the accepted repository/roadmap boundary. Production, release, account/security, paid-provider and operator-only evidence remain excluded.
 
@@ -15,9 +15,9 @@ Authority: routine reversible work inside the accepted repository/roadmap bounda
 - Reconciled current state, coordination queue, deterministic claims, Runner evidence, README, journal and next-action metadata on this branch.
 - Corrected the RQ-796 record to exact PR #797 head/merge evidence; execution journal is 32,554 characters after the CI-driven trim and below the 32,768-byte ceiling.
 
-## Exact candidate
+## Completed candidate
 
-PR #816 initial head `26db1ac5f40cd2813bde5866d27dfeeb258d8667` failed CI and P12 Final Release Artifact because the journal was 32,770 bytes, two bytes over its 32,768-byte ceiling. The other five required workflows passed; unresolved review threads: 0. Journal trimmed by 130 bytes; current PR head is `f0722a6a5c921c6e971f7caa9a748d0cb8cef928`. All seven required gates must pass on this exact head before merge. Merge also requires zero unresolved threads, mergeability and expected-head guard.
+PR #816 exact head `14ae0c87b00776060ae3a05c83a8388c51da4e30` passed all seven required workflows: CI #36293709996, CodeQL #36293710011, Integration Readiness #36293710030, P12 Offline Acceptance #36293709972, P12 Final Release Artifact #36293709938, P15 Real Elementor Target Proof #36293709969 and P17 Local Browser Proof #36293709957. Unresolved review threads: 0; mergeable: true; expected-head merge succeeded as `bdebce3e0efcf06d4c7596e2572e5611e254c267`. Issue #815 is complete. GitHub compare confirms main is exactly `bdebce3e…`.
 
 ## Retained blockers and authority limits
 
@@ -29,4 +29,4 @@ PR #816 initial head `26db1ac5f40cd2813bde5866d27dfeeb258d8667` failed CI and P1
 
 ## Exact next safe action
 
-Observe PR #816 exact-head workflows and review threads once at a meaningful boundary. If all gates pass and the expected-head guard matches, merge; then reconcile exact new main and audit the live P15 capability map.
+Issue #817 / branch `ai-native/finalize-pr-816-state-817` owns canonical state finalization. Observe PR #818's exact-head workflows and review threads once at a meaningful boundary. Merge only after all seven gates pass, with zero unresolved threads, mergeability and expected-head guard; then refresh the live P15 capability map.

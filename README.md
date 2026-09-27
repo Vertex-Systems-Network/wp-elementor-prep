@@ -813,3 +813,8 @@ Issue #808 adds exact normal `overlay_blend_mode` plus normal/hover CSS-filter f
 ### Governance reconciliation after PR #814
 
 PR #814 merged on 2026-09-27 as main `5fdaab6cb50e3651da4b44c48ca9e81157dca843`. Its exact head passed all seven required workflows with zero unresolved review threads and an expected-head merge guard. Issue #813 is complete; duplicate Issue #812 is closed. Issue #815 tracks durable-state reconciliation. This governance update does not change P15 product support, target compatibility, runtime/import, production or release authority.
+
+
+### Governance reconciliation after PR #816
+
+PR #816 state-only reconciliation passed all seven required exact-head gates on `14ae0c87b00776060ae3a05c83a8388c51da4e30`, had zero unresolved review threads, and merged under expected-head guard as main `bdebce3e0efcf06d4c7596e2572e5611e254c267`. Issue #815 is complete. Issue #817 tracks canonical post-merge state finalization; no product or authority scope changed.

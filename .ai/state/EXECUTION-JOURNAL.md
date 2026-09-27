@@ -347,6 +347,6 @@ Older Fast-Batch entries before #731 are archived; claims and Runner ledgers ret
 
 - #796 covers exact Elementor 4.2.4 Container normal/hover linear gradients with explicit responsive values only; focused tests and typecheck PASS; PR #797 passed 7/7, zero threads, merged `c1beb26b`; #796 closed.
 
-## 2026-09-27 — Batch #813 completed; reconciliation #815 started
+## 2026-09-27 — PR #816 merged; #817 reconciliation
 
-- PR #814 passed 7/7 on `f9b95733`, zero threads; merged main `5fdaab6c`. Issue #813 completed; #812 duplicate closed. State-only #815 reconciliation active.
+- #816 passed 7/7 on `14ae0c87`, zero threads; main `bdebce3e`. #815 complete; #817 active.
