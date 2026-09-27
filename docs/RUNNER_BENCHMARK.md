@@ -307,3 +307,8 @@ PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven r
 ## P15 #823 — responsive Flex Item custom basis candidate
 
 Issue #823 is queued from pinned Elementor 4.2.4 Flex Item source. Candidate scope is tablet/mobile explicit px basis values in the source slider's 0..1000 range, requiring the responsive custom-basis type/value pair. Exact serialized target settings require controlled proof before any broader claim.
+
+
+## P15 #823 — responsive Flex Item custom basis candidate
+
+Pinned Elementor 4.2.4 flex-item.php source blob dc95ad439d8f9acfd5eefb1d129da67d9ff9c13a defines responsive basis_type and a conditional basis slider (px range max 1000). The QUnit Container fixture blob f06c5f60afa8fbef34ed922af419284cece09692 confirms responsive basis setting keys _flex_basis_tablet and _flex_basis_mobile. PR exact-head gates and controlled serialization proof are pending; all broader authority remains false.
