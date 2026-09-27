@@ -829,6 +829,6 @@ PR #818 passed all seven required exact-head gates on `dea45549df14cc23df0193913
 
 PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven required exact-head workflows, had zero unresolved review threads, and merged with an expected-head guard as main `a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f`. The implementation adds explicit source-bound tablet/mobile row and column px pairs, preserves linked-px input and desktop settings, rejects incomplete or mixed pairs, and leaves unprovided breakpoints absent. This is bounded implementation evidence; it does not claim responsive closure or broader target compatibility.
 
-### P15 #823 — responsive Flex Item custom basis (queued candidate)
+### P15 #823 — responsive Flex Item custom basis (implementation candidate)
 
-Elementor 4.2.4 Flex Item source exposes responsive `basis_type` and a conditional `basis` slider with px range up to 1000. Issue #823 scopes explicit tablet/mobile px pairs only. Exact serialized keys and shape must be confirmed in controlled target proof; no compatibility, production, release or download authority is claimed.
+Issue #823 adds a source-bound tablet/mobile custom Flex Item basis candidate with paired type/value inputs and integer px sizes from 0 through 1000. It writes the exact `_flex_basis_tablet` / `_flex_basis_mobile` objects with px units and preserves desktop settings and omitted breakpoints. The candidate awaits exact-head verification and controlled target proof; broader compatibility, responsive closure, production, release and download authority remain unclaimed.

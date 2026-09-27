@@ -1068,7 +1068,8 @@ for (const fragment of p15ResponsiveGapAxisRequiredFragments) {
 if (!readme.includes('### P15 #821 — responsive Container row/column gaps (merged bounded implementation)')
   || !readme.includes('PR #821 exact head')
   || !readme.includes('passed all seven required exact-head workflows')
-  || !readme.includes('### P15 #823 — responsive Flex Item custom basis (queued candidate)')) {
+  || !readme.includes('### P15 #823 — responsive Flex Item custom basis (implementation candidate)')
+  || !readme.includes('integer px sizes from 0 through 1000')) {
   throw new Error('README P15 #821 merge evidence or #823 candidate status is stale or missing.');
 }
 

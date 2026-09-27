@@ -2,9 +2,9 @@
 
 Status: IN_PROGRESS
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f`
-Canonical active Issue/PR: `#822` / `#822`
-Branch: `ai-native/finalize-pr-821-state-822`
+Observed main: `65b2bcf34bee8829cbee8d3b7fa9e02c2eaabe56`
+Canonical active Issue/PR: `#823` / `#823`
+Branch: `p15/responsive-flex-item-basis-823`
 Target batch boundary: up to five hours or available Workspace execution credit/session, whichever ends first.
 Authority: routine reversible work inside the accepted repository/roadmap boundary. Production, release, account/security, paid-provider and operator-only evidence remain excluded.
 
@@ -33,4 +33,4 @@ PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven r
 
 ## Exact next safe action
 
-Finish Issue #822 canonical state reconciliation. Issue #823 is queued as a bounded explicit tablet/mobile custom Flex Item basis candidate based on pinned Elementor 4.2.4 source. Its exact responsive serialization remains subject to controlled target proof. Preserve false runtime, compatibility, production, release and download authority.
+Issue #823 is the active P15 candidate. Implement explicit tablet/mobile custom basis px pairs, confirm responsive serialization in controlled proof, and preserve false runtime, compatibility, production, release and download authority.

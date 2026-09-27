@@ -388,3 +388,8 @@ The responsive gap resolver candidate supports explicit tablet/mobile row and co
 ## Governance after PR #821
 
 PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven required exact-head workflows with zero unresolved review threads and merged under expected-head guard as main `a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f`; Issue #821 is complete. Issue #822 owns canonical state reconciliation. P15's next bounded source-supported candidate is Issue #823: explicit tablet/mobile custom Flex Item basis in px only, with serialized keys and shape still requiring controlled target confirmation. No broader compatibility, responsive closure, production, release or download authority is implied.
+
+
+## P15 #823 — responsive Flex Item custom basis candidate
+
+Issue #823 adds explicit tablet/mobile custom basis px pairs, bounded to integer values 0..1000 and source-bound to Elementor 4.2.4 Flex Item controls. The candidate writes responsive _flex_basis_type_* and _flex_basis_* settings, preserves desktop and omitted breakpoints, and keeps all authority claims false. Exact-head gates and controlled target proof remain pending; no broader compatibility or responsive-closure claim is made.
