@@ -134,4 +134,4 @@ Do not fabricate any of these from CI/repository metadata.
 - no synthetic overall percentage;
 - no synthetic runtime/target/external evidence.
 
-- Issue #725 / PR #726 is closed completed terminal finalization. Issue #727 / PR #728 now owns explicit default tablet/mobile Button font size, line height, letter spacing and word spacing; verify only its final bound exact head before starting another product batch.
+- PR #814 passed 7/7 on exact head `f9b957333e7db190e6a8aa3621714bab914a5352`, merged as main `5fdaab6cb50e3651da4b44c48ca9e81157dca843`; #813 completed and #812 duplicate closed. Issue #815 / PR #816 reconciles state. Initial PR head `26db1ac5f40cd2813bde5866d27dfeeb258d8667` failed CI and P12 Final Release because the journal was 32,770 bytes, over the 32,768-byte ceiling; journal trimmed. Latest exact head must be resolved from live PR metadata before evaluating checks. After merge, refresh the P15 capability map from source evidence before opening the next bounded product batch.

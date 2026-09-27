@@ -2,35 +2,31 @@
 
 Status: VERIFYING_EXACT_HEAD
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `9b33430475d00b20dd222ab176f7673b2ca354db`
-Canonical active Issue/PR: `#813` / `#814`
-Branch: `ai-native/five-hour-execution-batches-813`
+Observed main: `5fdaab6cb50e3651da4b44c48ca9e81157dca843`
+Canonical active Issue/PR: `#815` / `#816`
+Branch: `ai-native/reconcile-pr-814-state-815`
 Target batch boundary: up to five hours or available Workspace execution credit/session, whichever ends first.
-Authority state: routine reversible work inside the accepted repository/roadmap boundary is authorized. Production, release, account/security and operator-only evidence remain excluded.
+Authority: routine reversible work inside the accepted repository/roadmap boundary. Production, release, account/security, paid-provider and operator-only evidence remain excluded.
 
 ## Completed
 
-- Implemented time/credit-bounded execution semantics in protocol, README, AI plan, AGENTS, Runner guidance and compact state.
-- Added strict tests for active-batch continuation and preserved per-milestone status-fetch, security, merge and authority boundaries.
-- Issue #812 overlaps #813 and will be reconciled after #813 closes.
+- PR #814 exact head `f9b957333e7db190e6a8aa3621714bab914a5352` passed all seven required workflows with zero unresolved review threads and merged under expected-head guard as main `5fdaab6cb50e3651da4b44c48ca9e81157dca843`.
+- Issue #813 closed completed; duplicate Issue #812 closed duplicate.
+- Reconciled current state, coordination queue, deterministic claims, Runner evidence, README, journal and next-action metadata on this branch.
+- Corrected the RQ-796 record to exact PR #797 head/merge evidence; execution journal is 32,554 characters after the CI-driven trim and below the 32,768-byte ceiling.
 
-## Exact verification record
+## Exact candidate
 
-- Main/base: `9b33430475d00b20dd222ab176f7673b2ca354db`.
-- PR #814 head `9eed4a93a67fd7be96f96e58eefed2d005503879`; review threads: 0; mergeable: true at last PR snapshot.
-- On that exact head: CodeQL, Integration Readiness, P17 Browser Proof, P12 Offline Acceptance and P15 Target Proof passed.
-- CI run `36291156010` and P12 Final Artifact run `36291156073` failed only at the governance test suite. `status:verify` and typecheck passed; 308/309 test files and 1,835/1,838 tests passed.
-- Remaining failures: the test expected the new batch constant in AGENTS, retained the old Runner polling sentence, and expected the prior AI-plan transport wording. The implementation remains unchanged; test/docs assertions are being aligned to the new policy.
-- This checkpoint sync advances the PR head. Resolve the exact current candidate from PR #814 metadata after the sync; do not treat any earlier run as passing on the new head.
+PR #816 initial head `26db1ac5f40cd2813bde5866d27dfeeb258d8667` failed CI and P12 Final Release Artifact because the journal was 32,770 bytes, two bytes over its 32,768-byte ceiling. The other five required workflows passed; unresolved review threads: 0. Journal trimmed by 130 bytes; current PR head is `f0722a6a5c921c6e971f7caa9a748d0cb8cef928`. All seven required gates must pass on this exact head before merge. Merge also requires zero unresolved threads, mergeability and expected-head guard.
+
+## Retained blockers and authority limits
+
+- #287 requires repository-admin settings.
+- #159 requires genuine Figma Desktop runtime evidence.
+- #84 requires operator-provided live publisher/account/2FA/final-exit evidence.
+- #182 owns final production/marketplace acceptance.
+- P15 remains bounded implementation evidence; no broader compatibility, production, import, runtime or download authority is inferred.
 
 ## Exact next safe action
 
-Observe the final PR #814 head at the next meaningful boundary. Merge only if all seven required workflows pass on the same head, review threads are zero, the PR is mergeable, scope is correct, and a fresh expected-head guard matches. Then reconcile main and close #812 as duplicate if confirmed.
-
-## Retained blockers / authority limits
-
-- P15 broad compatibility and production claims remain ungranted; only exact bounded slices are in scope.
-- #287 needs repository-admin settings access.
-- #159 needs genuine Figma Desktop evidence.
-- #84 needs manual publishing/account/2FA evidence.
-- #182 owns final production and marketplace acceptance.
+Observe PR #816 exact-head workflows and review threads once at a meaningful boundary. If all gates pass and the expected-head guard matches, merge; then reconcile exact new main and audit the live P15 capability map.

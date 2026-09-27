@@ -2,15 +2,15 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 9b33430475d00b20dd222ab176f7673b2ca354db
-observed_main_sha_semantics: exact_current_main_tip_before_active_pr_merge
+observed_main_sha: 5fdaab6cb50e3651da4b44c48ca9e81157dca843
+observed_main_sha_semantics: exact_current_main_tip_before_reconciliation_pr_merge
 observed_main_branch: main
-active_issue: 813
-active_pr: 814
-active_branch: ai-native/five-hour-execution-batches-813
+active_issue: 815
+active_pr: 816
+active_branch: ai-native/reconcile-pr-814-state-815
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: ai_native_5_hour_execution_batch_contract
+current_milestone: reconcile_state_after_pr_814_merge
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -22,8 +22,8 @@ next_action_options:
   recommended_slot_fixed: false
   recommended_action_id: continue-active-batch
 milestone_status: VERIFYING_EXACT_HEAD
-last_completed_milestone: p15_container_overlay_visual_composition_pr_809_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: resolve_final_pr_814_head_observe_required_gates_and_review_threads
+last_completed_milestone: pr_814_governance_batch_contract_passed_7_of_7_and_merged_as_5fdaab6
+exact_next_safe_action: observe_pr_816_exact_head_gates_and_review_threads_once_then_guarded_merge
 pending_runner_ids: []
 blocked_runner_ids: []
 current_blockers:
@@ -33,7 +33,6 @@ current_blockers:
   - issue_159_real_figma_runtime_evidence_requires_operator
   - issue_84_manual_p12_release_exit_evidence_requires_operator
   - issue_182_final_production_acceptance_and_marketplace_gates_deferred
-  - issue_812_overlapping_batch_protocol_issue_reconcile_as_duplicate_after_813_merge
 terminal_finalization:
   transport_issue: 769
   transport_pr: 770
