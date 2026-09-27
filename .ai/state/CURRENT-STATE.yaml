@@ -65,6 +65,7 @@ development_batching:
   micro_pr_default: false
   security_and_authority_controls_unchanged: true
 timeout_control:
+  max_consolidated_status_refreshes_per_milestone: 1
   max_runner_status_fetches_per_meaningful_boundary: 1
   busy_waiting_allowed: false
   tight_polling_allowed: false

@@ -184,11 +184,11 @@ When developing:
 Runner execution and Runner observation are separate concerns.
 
 - Start required Runner work when the milestone requires it.
-- After the batch starts, perform at most one Runner/check-status fetch in the current user turn.
-- If required work is queued/in-progress, retain exact head/run identifiers through GitHub metadata, checkpoint the next action and end the turn.
-- Never use sleep loops or repeated polling to keep a response open.
-- The next user `continue` performs the next single observation/fix/merge milestone.
-- `BLOCKING_NOW` blocks subsequent implementation across turns but does not override the one-fetch/no-busy-wait rule.
+- During an active five-hour/credit-bounded batch, a queued or running Runner does not automatically end the batch.
+- Preserve exact head/run identifiers through GitHub metadata, continue independent safe work without mutating the candidate under certification, and revisit status at a meaningful lifecycle boundary.
+- If no independent safe work remains, persist the durable checkpoint and wait without busy polling.
+- Never use sleep loops, repeated unchanged status fetches or retry-until-green behavior.
+- `BLOCKING_NOW` still blocks merge and any work that depends on that result; it does not prevent independent safe work elsewhere in the active batch.
 
 ## Completion rule
 

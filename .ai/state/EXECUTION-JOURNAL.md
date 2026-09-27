@@ -3,8 +3,6 @@
 This journal records durable AI-native execution-policy milestones only. It is not a CI polling log.
 
 
-Older entries archived; claims and Runner ledgers retain evidence.
-
 Older Fast-Batch entries before #731 are archived; claims and Runner ledgers retain evidence.
 
 ## 2026-09-26 — terminal PR #730 completed; P15 Fast Batch #731 started
@@ -350,13 +348,8 @@ Older Fast-Batch entries before #731 are archived; claims and Runner ledgers ret
 - #796 covers exact Elementor 4.2.4 Container normal/hover linear gradients with explicit responsive values only; focused tests and typecheck PASS; PR #797 passed 7/7, zero threads, merged `c1beb26b`; #796 closed.
 
 
-## 2026-09-27 — AI-native five-hour execution batch #813 started
+## 2026-09-27 — AI-native five-hour execution batch #813
 
-- Exact current main reconciled as `9b33430475d00b20dd222ab176f7673b2ca354db`; no open PRs existed at batch start.
-- Selected Issue #813 for the active batch protocol update. Issue #812 has overlapping acceptance criteria and is tracked for duplicate reconciliation.
-- Branch: `ai-native/five-hour-execution-batches-813`.
-- Scope is governance-only: autonomous in-scope continuation, safe green PR merge criteria, pending-CI independent work, no-busy-wait controls, action-option handling, and durable credit/session-boundary checkpointing. No product/runtime/compatibility/production authority is added.
-- Current blockers retained: #287 admin settings; #159 live Figma runtime evidence; #84 manual release evidence; #182 final production/marketplace gate.
-- Next: finish state sync, open PR, certify exact final head through the required gate set, merge only if green and expected-head guarded.
-
-- Opened PR #814 against base main `9b33430475d00b20dd222ab176f7673b2ca354db`; initial candidate head was `e76b981640631a7f8459e6c69d16ae379130bc03`. A final state-binding commit is next, so no exact-head CI result is yet claimed.
+- Main `9b33430475d00b20dd222ab176f7673b2ca354db`; Issue #813 / PR #814 active; #812 overlaps.
+- Governance-only policy update; no product authority.
+- Exact-head gates exposed stale tests; repair and verify final head, then merge only if green.
