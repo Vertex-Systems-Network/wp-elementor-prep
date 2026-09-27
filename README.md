@@ -39,6 +39,8 @@ The coordinated test/build matrix is explicit rather than accidental peer resolu
 > **Progress policy:** implementation, runtime acceptance and external review are separate evidence states. New future scope does not reduce already-completed historical core progress.
 >
 > **Progress sync policy:** every material repository mutation must synchronize the affected README module status/progress/blocker in the same milestone. Pure Runner-observation turns do not mutate an exact candidate head merely to log volatile check state; README is synchronized on the next material mutation or post-merge reconciliation.
+>
+> **Execution batch policy:** one explicit START/CONTINUE instruction authorizes routine in-scope work for up to five hours or available Workspace credit/session, whichever ends first. Milestone completion and pending CI do not end an active batch; continue independent safe work, preserve exact-head gates, and checkpoint at genuine blockers or the credit/session boundary. Re-consent is required only for material scope/authority expansion or genuine manual/external prerequisites.
 
 **Open PR/MR:** see the repository's current pull-request list; this README intentionally does not hardcode a count.
 

@@ -6,6 +6,12 @@ Established: 2026-09-21
 
 Machine-readable canonical ledger: `.ai/state/RUNNER-BENCHMARK.yaml`. This Markdown file is the human-readable policy/view and must not contradict the machine-readable ledger.
 
+## Active batch behavior while Runner work is pending
+
+One explicit batch-start instruction authorizes in-scope reversible repository work for up to five hours or available Workspace credit/session, whichever ends first. A pending Runner is not by itself a batch stop: record exact PR/head/check identifiers, do independent safe work without mutating the candidate under certification, and revisit the check at a meaningful lifecycle boundary. If no independent work remains, persist the durable checkpoint and wait without polling. Never weaken a required merge/security gate or treat a queued/running result as PASS.
+
+A green exact-head PR may merge only after all required workflows/security checks pass on that exact head, unresolved review threads are zero, the PR is mergeable, and an expected-head guard confirms no drift. After merge, reconcile the new main and continue with the next safe related in-scope batch. Re-consent is reserved for material scope/authority expansion or genuine manual/external prerequisites; existing production/release and live-runtime gates remain intact.
+
 ## Purpose
 
 This file is the canonical queue for development work that requires GitHub Actions, hosted/self-hosted runners, CI matrices, target harness runners, or other repository Runner execution.

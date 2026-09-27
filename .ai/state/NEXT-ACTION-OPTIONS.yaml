@@ -1,11 +1,15 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: adcb28f4054d700c5a42809e12318a96e5c45b64
-active_issue: null
+observed_main_sha: 9b33430475d00b20dd222ab176f7673b2ca354db
+active_issue: 813
 active_pr: null
-active_branch: null
+active_branch: ai-native/five-hour-execution-batches-813
+active_execution_batch:
+  target_duration: 5_HOURS_OR_AVAILABLE_WORKSPACE_CREDIT_SESSION_WHICHEVER_ENDS_FIRST
+  continues_without_user_reconsent: true
+  options_are_resume_metadata_only: true
 interaction:
-  render_required: true
+  render_required_at_batch_boundary: true
   prefer_interactive_buttons_when_host_supported: true
   fallback_action_tokens_required: true
   selection_semantics: NEW_USER_REQUEST
@@ -13,51 +17,35 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-795-product-handoff
+  presentation_epoch: issue-813-active-batch
   presentation_order:
     - review-security-blocker-287
-    - review-next-p15-map
-    - verify-terminal-after-769
-    - review-ai-plan
-recommended_action_id: review-next-p15-map
+    - continue-active-batch
+    - reconcile-overlapping-issue-812
+recommended_action_id: continue-active-batch
 options:
-  - action_id: implement-container-hover-transition-800
-    label: Implement Container hover transitions
+  - action_id: continue-active-batch
+    label: Continue the active execution batch
     enabled: true
     recommended: true
-    action_token: IMPLEMENT_CONTAINER_HOVER_TRANSITION_800
-    request_payload: "Implement and certify exact Elementor 4.2.4 Container hover transition controls for background, overlay and border."
-    blocked_by: []
-    blocked_reason: null
-  - action_id: review-next-p15-map
-    label: Verify Button color composition PR #795
-    enabled: true
-    recommended: true
-    action_token: REVIEW_NEXT_P15_MAP
-    request_payload: "Resolve exact current head of product PR #795 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
-    blocked_by: []
-    blocked_reason: null
-  - action_id: review-next-p15-map
-    label: Review next P15 capability map
-    enabled: true
-    recommended: false
-    action_token: REVIEW_NEXT_P15_MAP
-    request_payload: "Review remaining P15 capability map from settled product main e6de603b without widening authority."
+    action_token: CONTINUE_ACTIVE_BATCH
+    request_payload: "Continue the active five-hour/credit-bounded execution batch from its exact durable checkpoint; do not repeat completed work."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
-    label: Review security blocker #287
+    label: Review branch protection blocker
+    enabled: false
+    recommended: false
+    action_token: REVIEW_SECURITY_287
+    request_payload: "Review Issue #287 for required branch protection."
+    blocked_by:
+      - repository_admin_settings_interface
+    blocked_reason: "Connected GitHub interface does not expose repository administration writes."
+  - action_id: reconcile-overlapping-issue-812
+    label: Reconcile overlapping Issue #812
     enabled: true
     recommended: false
-    action_token: SECURITY_287
-    request_payload: "Review current repository security blocker #287 without weakening repository security controls."
-    blocked_by: []
-    blocked_reason: null
-  - action_id: review-ai-plan
-    label: Review AI-Native roadmap
-    enabled: true
-    recommended: false
-    action_token: REVIEW_AI_PLAN
-    request_payload: "Review current AI-Native roadmap from merged main 16a67afb while terminal Issue #769 remains transport-only."
+    action_token: RECONCILE_ISSUE_812
+    request_payload: "Close Issue #812 as duplicate after Issue #813's batch protocol change is merged and verified."
     blocked_by: []
     blocked_reason: null
