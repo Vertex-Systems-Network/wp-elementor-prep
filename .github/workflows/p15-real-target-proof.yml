@@ -285,8 +285,8 @@ jobs:
             scripts/p15-custom-order-roundtrip-probe.php export "$TEMPLATE_ID" \
             > "$P15_PROOF_OUT_DIR/custom-order-target-export.json"
           jq -e '
-            [.content | .. | objects | select(.id == "c0150001") | .settings] as $one
-            | [.content | .. | objects | select(.id == "c0150002") | .settings] as $two
+            [.content | .. | objects | select(.elType == "container" and any(.elements[]?; .widgetType == "heading" and .settings.title == "Custom Order One")) | .settings] as $one
+            | [.content | .. | objects | select(.elType == "container" and any(.elements[]?; .widgetType == "heading" and .settings.title == "Custom Order Two")) | .settings] as $two
             | ($one | length) == 1 and ($two | length) == 1
               and $one[0]._flex_order_tablet == "custom"
               and $one[0]._flex_order_custom_tablet == 2
