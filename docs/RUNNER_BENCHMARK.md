@@ -253,5 +253,5 @@ A development/release train may not be called complete while:
 
 ### RQ-804-FINAL — Container radial gradients
 
-- Source work: Issue #804 / PR #805; exact Elementor 4.2.4 radial gradient positions and explicit responsive stops.
+- Source work: Issue #804 / PR #805; exact head `8b384f354ebbfe6a0e18bfd5b34c33525390eac2`; merged main `b90bf42a05dee28baddd300f19525234523798a5`.
 - Required gate family includes P17 Local Browser Proof; no runtime or production authority is inferred.
