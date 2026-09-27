@@ -13,11 +13,11 @@ Authority: routine reversible work inside the accepted repository/roadmap bounda
 - PR #814 exact head `f9b957333e7db190e6a8aa3621714bab914a5352` passed all seven required workflows with zero unresolved review threads and merged under expected-head guard as main `5fdaab6cb50e3651da4b44c48ca9e81157dca843`.
 - Issue #813 closed completed; duplicate Issue #812 closed duplicate.
 - Reconciled current state, coordination queue, deterministic claims, Runner evidence, README, journal and next-action metadata on this branch.
-- Corrected the RQ-796 record to exact PR #797 head/merge evidence; execution journal is within its 32 KiB ceiling.
+- Corrected the RQ-796 record to exact PR #797 head/merge evidence; execution journal is 32,554 characters after the CI-driven trim and below the 32,768-byte ceiling.
 
 ## Exact candidate
 
-PR #816 is the state-only reconciliation candidate. Resolve its live exact head from GitHub PR metadata; do not treat earlier workflow evidence as applying to a changed head. Required gates are CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof. Merge only with all gates passing on that head, zero unresolved review threads, mergeability and expected-head guard.
+PR #816 initial head `26db1ac5f40cd2813bde5866d27dfeeb258d8667` failed CI and P12 Final Release Artifact because the journal was 32,770 bytes, two bytes over its 32,768-byte ceiling. The other five required workflows passed; unresolved review threads: 0. Journal trimmed by 130 bytes; current PR head is `f0722a6a5c921c6e971f7caa9a748d0cb8cef928`. All seven required gates must pass on this exact head before merge. Merge also requires zero unresolved threads, mergeability and expected-head guard.
 
 ## Retained blockers and authority limits
 
