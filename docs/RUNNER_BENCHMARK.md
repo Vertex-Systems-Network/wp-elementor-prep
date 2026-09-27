@@ -312,3 +312,7 @@ PR #823 exact head a89bee55c3d43a0f40b2c97701c4a473ef9cce6b passed all seven req
 ## P15 #823 — responsive Flex Item custom basis candidate
 
 Pinned Elementor 4.2.4 flex-item.php source blob dc95ad439d8f9acfd5eefb1d129da67d9ff9c13a defines responsive basis_type and a conditional basis slider (px range max 1000). The QUnit Container fixture blob f06c5f60afa8fbef34ed922af419284cece09692 confirms responsive basis setting keys _flex_basis_tablet and _flex_basis_mobile. PR exact-head gates and controlled serialization proof are pending; all broader authority remains false.
+
+## P15 #825 — runtime custom-order control observation
+
+PR #826 adds a bounded probe to the existing real Elementor 4.2.4 target workflow. It retains only registered Container Flex Item order control metadata and asserts the exact installed version. This records control registration; saved template serialization and editor-produced values remain unobserved. It grants no resolver, import parity, compatibility, download, production or release authority. The seven exact-head gate results must be recorded after completion.
