@@ -49,6 +49,11 @@ $report = [
     'schema' => 'p15-elementor-424-flex-item-order-control-observation-v1',
     'elementorVersion' => ELEMENTOR_VERSION,
     'source' => 'runtime-container-get_controls',
+    'controlCount' => count($controls),
+    'registeredFlexKeys' => array_values(array_filter(
+        array_keys($controls),
+        static function ($key) { return strpos((string) $key, 'flex') !== false || strpos((string) $key, 'order') !== false; }
+    )),
     'controls' => $observed,
     'savedTemplateSerializationObserved' => false,
     'editorValueObserved' => false,
