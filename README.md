@@ -802,3 +802,7 @@ Issue #800 covers three exact Elementor 4.2.4 Container sliders: `background_hov
 ### Completed P15 Container normal/hover radial gradients #804 / PR #805
 
 Issue #804 adds exact Elementor 4.2.4 radial gradients with the documented nine `gradient_position` values and explicit responsive stop pairs. Custom units, undocumented positions, inferred breakpoints and runtime/production authority remain rejected. PR #805 exact head `8b384f354ebbfe6a0e18bfd5b34c33525390eac2` passed all seven required workflows, zero unresolved review threads, merged as main `b90bf42a05dee28baddd300f19525234523798a5`, and #804 closed.
+
+### Completed P15 Container overlay visual composition #808 / PR #809
+
+Issue #808 adds exact normal `overlay_blend_mode` plus normal/hover CSS-filter families (`blur`, `brightness`, `contrast`, `saturate`, `hue`) with source-backed ranges. PR #809 exact head `1203cf4cb531307a0a31c73dae497fab0d70c888` passed all seven required workflows, zero unresolved review threads, merged as main `1c951a81831806892ab64a296a375cf864d26dc0`, and #808 closed.
