@@ -2,12 +2,12 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 21848e94e369fd9486102bb176587a4b5479a4e7
+observed_main_sha: cbec0be08b70bb3b44ef943590ee7480c110cd6f
 observed_main_sha_semantics: exact_current_main_tip_post_merge
 observed_main_branch: main
-active_issue: 779
-active_pr: 780
-active_branch: p15/container-hover-background-color
+active_issue: 781
+active_pr: 782
+active_branch: p15/container-overlay-colors
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
 current_milestone: p15_ready_for_next_fast_batch
@@ -20,14 +20,14 @@ next_action_options:
   grants_authority: false
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  recommended_action_id: verify-pr-780
+  recommended_action_id: verify-pr-782
 milestone_status: VERIFYING
-last_completed_milestone: p15_container_hover_border_pr_778_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: resolve_final_pr_780_head_and_observe_required_gates_plus_review_threads
-pending_runner_ids: [RQ-779-FINAL]
+last_completed_milestone: p15_container_hover_background_pr_780_exact_head_passed_7_of_7_and_merged
+exact_next_safe_action: resolve_final_pr_782_head_and_observe_required_gates_plus_review_threads
+pending_runner_ids: [RQ-781-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_780_exact_head_required_gates_not_yet_certified
+  - pr_782_exact_head_required_gates_not_yet_certified
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed

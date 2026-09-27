@@ -461,7 +461,7 @@ export function resolveP15ElementorContainerOverlayColor(
       issues.push({
         code: 'P15_CONTAINER_OVERLAY_COLOR_GENERATOR_BINDING_MISMATCH',
         path: '$.content',
-        message: `Generated Container binding missing for sourceNodeId ${sourceNodeId}.`,
+        message: 'Generated Container binding missing for a requested source node.',
       });
       continue;
     }
