@@ -22,9 +22,9 @@ interaction:
     - finalize-main-state-822
     - implement-next-p15-issue-823
     - review-security-blocker-287
-recommended_action_id: finalize-main-state-819
+recommended_action_id: finalize-main-state-822
 options:
-  - action_id: finalize-main-state-817
+  - action_id: finalize-main-state-822
     label: Finalize merged state
     enabled: true
     recommended: true
@@ -33,10 +33,10 @@ options:
     blocked_by: []
     blocked_reason: null
   - action_id: implement-p15-823
-    label: Audit next P15 capability map
+    label: Implement bounded P15 candidate #823
     enabled: true
     recommended: false
-    action_token: AUDIT_P15_AFTER_817
+    action_token: IMPLEMENT_P15_823
     request_payload: "After Issue #822 reconciliation, implement the bounded P15 candidate in Issue #823 without widening authority."
     blocked_by: []
     blocked_reason: null
