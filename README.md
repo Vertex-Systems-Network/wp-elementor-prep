@@ -296,9 +296,9 @@ The bounded composer combines the four previously proven border/overlay families
 
 The eight-family composer adds already proven explicit tablet/mobile normal and hover border-radius resolvers to the six-family candidate. It preserves generated desktop radius and omitted responsive settings, revalidates each family against exact source/base identity, rejects family drift and conflicting target keys, and keeps target authority false. Local typecheck, 304 test files / 1,826 tests, status verifier and build pass; PR #793 exact head `5e4048769f64ef24021439202293d4adf54c6157` passed 7/7 and zero review threads; merged main `e6de603b62abc60eb20e2341c308ad22f647efe1`; #792 closed. No real import/render or responsive closure is claimed.
 
-### Active P15 five-family Button color composition #794 / PR #795
+### Completed P15 five-family Button color composition #794 / PR #795
 
-The local composer combines existing exact source/base-bound Button normal text/background and hover text/background/border-color resolvers. It applies only proven keys on Button widgets, rejects drift, malformed/stale family manifests, conflicting settings and authority inflation, and produces a sanitized summary. Local typecheck, 305 test files / 1,830 tests, status verifier and build pass; final PR #795 remote gates are pending. No new target setting, real import/render or target authority is claimed.
+The local composer combines existing exact source/base-bound Button normal text/background and hover text/background/border-color resolvers. It applies only proven keys on Button widgets, rejects drift, malformed/stale family manifests, conflicting settings and authority inflation, and produces a sanitized summary. Local typecheck, 305 test files / 1,830 tests, status verifier and build pass; PR #795 passed its seven required exact-head workflows, had zero unresolved review threads, merged as main `b8ed7584edc8052947f801046166291f5980c56c`, and #794 closed. No new target setting, real import/render or target authority is claimed.
 
 ### Completed P15 Container overlay opacity #783 / PR #784
 
@@ -790,3 +790,7 @@ Development now defaults to **3-5 closely related capabilities per product batch
 4. additional P16 code-only work may remain read-only/supporting, but must preserve every false authority flag above;
 5. continue P17 in bounded static-first dependency order; keep P18-P26 frozen until their own prerequisites are explicitly opened;
 6. execute P27 #182 only after implementation/internal readiness is ready.
+
+### Active P15 Container normal/hover linear gradient composition #796
+
+Issue #796 implements two tightly related exact Elementor 4.2.4 Container background families: normal linear gradient and hover linear gradient. It accepts explicit lowercase hex colors, finite 0..100 stops, explicit degree angles, and optional tablet/mobile values; omitted breakpoints stay omitted. The resolver binds source and generated Container identities, rejects stale/duplicate/conflicting or inflated manifests, and keeps runtime, compatibility, production and download authority false. Focused tests and typecheck pass; PR and remote gates are pending.
