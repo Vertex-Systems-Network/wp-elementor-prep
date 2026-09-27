@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
 observed_main_sha: b8ed7584edc8052947f801046166291f5980c56c
-active_issue: 796
+active_issue: null
 active_pr: null
-active_branch: p15/container-linear-gradient-composition
+active_branch: null
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -19,13 +19,13 @@ interaction:
     - review-next-p15-map
     - verify-terminal-after-769
     - review-ai-plan
-recommended_action_id: implement-container-linear-gradient-796
+recommended_action_id: review-next-p15-map
 options:
-  - action_id: implement-container-linear-gradient-796
+  - action_id: review-next-p15-map
     label: Verify Button color composition PR #795
     enabled: true
     recommended: true
-    action_token: IMPLEMENT_CONTAINER_LINEAR_GRADIENT_796
+    action_token: REVIEW_NEXT_P15_MAP
     request_payload: "Resolve exact current head of product PR #795 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
     blocked_by: []
     blocked_reason: null
