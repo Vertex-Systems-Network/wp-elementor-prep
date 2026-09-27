@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f
+observed_main_sha: 65b2bcf34bee8829cbee8d3b7fa9e02c2eaabe56
 items:
   - {id: CQ-637, issue: 637, pr: 638, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-634, issue: 634, pr: 636, status: MERGED_CLOSED, priority: 0, accepted: true}
@@ -92,5 +92,5 @@ items:
   - {id: CQ-819, issue: 819, pr: 820, status: MERGED_CLOSED, priority: 0, accepted: true}
 
   - {id: CQ-821, issue: 821, pr: 821, status: MERGED_CLOSED, priority: 0, accepted: true}
-  - {id: CQ-822, issue: 822, pr: 822, status: ACTIVE_RECONCILIATION, priority: 1, accepted: true}
-  - {id: CQ-823, issue: 823, status: QUEUED_P15_CANDIDATE, priority: 2, accepted: true}
+  - {id: CQ-822, issue: 822, pr: 822, status: MERGED_CLOSED, priority: 0, accepted: true}
+  - {id: CQ-823, issue: 823, pr: 823, status: ACTIVE_P15_IMPLEMENTATION, priority: 1, accepted: true}
