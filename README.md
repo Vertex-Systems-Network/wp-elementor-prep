@@ -794,3 +794,7 @@ Development now defaults to **3-5 closely related capabilities per product batch
 ### Completed P15 Container normal/hover linear gradient composition #796 / PR #797
 
 Issue #796 implements two tightly related exact Elementor 4.2.4 Container background families: normal linear gradient and hover linear gradient. It accepts explicit lowercase hex colors, finite 0..100 stops, explicit degree angles, and optional tablet/mobile values; omitted breakpoints stay omitted. The resolver binds source and generated Container identities, rejects stale/duplicate/conflicting or inflated manifests, and keeps runtime, compatibility, production and download authority false. Focused tests and typecheck pass; PR #797 exact head `dc56b3d41277d656ef956406039fe411838d4056` passed all seven required workflows, zero unresolved review threads, merged as main `c1beb26bf99e094b7ab0ea48fd51acfc4dacbbcc`, and #796 closed.
+
+### Active P15 Container hover transition controls #800
+
+Issue #800 covers three exact Elementor 4.2.4 Container sliders: `background_hover_transition`, `background_overlay_hover_transition`, and `border_hover_transition`. Only finite explicit 0..3 second values on the documented 0.1 step are accepted. Source/candidate identity, duplicate/extra/conflict rejection and false authority boundaries remain enforced. Local focused tests, full suite (307 files / 1,834 tests), typecheck and build pass; remote certification is pending.

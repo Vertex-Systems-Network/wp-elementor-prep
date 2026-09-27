@@ -243,3 +243,10 @@ A development/release train may not be called complete while:
 - Required gate family: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
 - Input identity: exact Elementor 4.2.4 Container `background` and `background_hover` linear-gradient groups; explicit responsive values only.
 - Authority: implementation evidence only; runtime/import, broad compatibility, production and download authority remain false.
+
+### RQ-800-FINAL — Container hover transitions
+
+- Source work: Issue #800 / PR pending; exact Elementor 4.2.4 transition slider family.
+- Required gate family: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- Input identity: explicit finite 0..3 second values at 0.1 step for the three documented Container hover transition keys.
+- Authority: implementation evidence only; no responsive, runtime/import, compatibility, production or download authority.
