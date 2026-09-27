@@ -393,3 +393,8 @@ PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven r
 ## P15 #823 — responsive Flex Item custom basis candidate
 
 Issue #823 adds explicit tablet/mobile custom basis px pairs, bounded to integer values 0..1000 and source-bound to Elementor 4.2.4 Flex Item controls. The candidate writes responsive _flex_basis_type_* and _flex_basis_* settings, preserves desktop and omitted breakpoints, and keeps all authority claims false. Exact-head gates and controlled target proof remain pending; no broader compatibility or responsive-closure claim is made.
+
+
+## P15 #823 completion
+
+PR #823 merged as main b34f5b254dfe7bf8f217d691ecf8d58652674428 after all seven required exact-head workflows passed on a89bee55c3d43a0f40b2c97701c4a473ef9cce6b, with zero unresolved review threads and expected-head guard. The bounded responsive Flex Item custom basis px resolver preserves desktop settings and omitted breakpoints. Broad compatibility, responsive closure, production, release and download authority remain false. Issue #824 owns canonical state reconciliation.
