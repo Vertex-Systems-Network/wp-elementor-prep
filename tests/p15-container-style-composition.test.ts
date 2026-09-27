@@ -5,6 +5,8 @@ import { P15_ELEMENTOR_CONTAINER_BORDER_STYLE_MANIFEST_VERSION } from '../src/ta
 import { P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_MANIFEST_VERSION } from '../src/targets/elementor/container-hover-border-style-resolution';
 import { P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_MANIFEST_VERSION } from '../src/targets/elementor/container-overlay-color-resolution';
 import { P15_ELEMENTOR_CONTAINER_HOVER_OVERLAY_COLOR_MANIFEST_VERSION } from '../src/targets/elementor/container-hover-overlay-color-resolution';
+import { P15_CONTAINER_BOX_SHADOW_MANIFEST_VERSION } from '../src/targets/elementor/container-box-shadow-resolution';
+import { P15_ELEMENTOR_CONTAINER_HOVER_BACKGROUND_COLOR_MANIFEST_VERSION } from '../src/targets/elementor/container-hover-background-color-resolution';
 import { P15_NEUTRAL_EXPORT_IR_VERSION, type P15NeutralExportDocumentV1 } from '../src/targets/elementor/neutral-export-ir';
 import { fingerprintP15NeutralExportDocument } from '../src/targets/elementor/neutral-export-ir-identity';
 import { buildElementorTemplateCandidateIdentity } from '../src/targets/elementor/import-validation-contract';
@@ -39,15 +41,21 @@ function manifest(document: P15NeutralExportDocumentV1): P15ContainerStyleCompos
           tabletOpacityHundredths: 100 }] },
       hoverOverlay: { ...common, manifestVersion: P15_ELEMENTOR_CONTAINER_HOVER_OVERLAY_COLOR_MANIFEST_VERSION,
         containers: [{ sourceNodeId: 'nested', color: '#445566', mobileOpacityHundredths: 25 }] },
+      boxShadows: { ...common, manifestVersion: P15_CONTAINER_BOX_SHADOW_MANIFEST_VERSION,
+        styleInferencePerformed: false, containers: [{ sourceNodeId: 'root', normal: {
+          horizontal: -10, vertical: 10, blur: 20, spread: -5, color: '#123456', position: 'outline',
+        }, hover: { horizontal: 0, vertical: 8, blur: 0, spread: 5, color: '#abcdef', position: 'inset' } }] },
+      hoverBackground: { ...common, manifestVersion: P15_ELEMENTOR_CONTAINER_HOVER_BACKGROUND_COLOR_MANIFEST_VERSION,
+        containers: [{ sourceNodeId: 'nested', color: '#abcdef' }] },
     },
   };
 }
 
 describe('P15 bounded Container style composition', () => {
-  it('combines four independently validated normal/hover families on one candidate', () => {
+  it('combines six independently validated normal/hover families on one candidate', () => {
     const document = source(); const result = composeP15ContainerStyles(document, manifest(document));
     expect(result.status).toBe('RESOLVED');
-    expect(result.appliedFamilies).toEqual(['normalBorder', 'hoverBorder', 'normalOverlay', 'hoverOverlay']);
+    expect(result.appliedFamilies).toEqual(['normalBorder', 'hoverBorder', 'normalOverlay', 'hoverOverlay', 'boxShadows', 'hoverBackground']);
     expect(result.candidate?.status).toBe('READY_FOR_TARGET_IMPORT_VALIDATION');
     const root = result.template?.content[0];
     if (!root || Array.isArray(root.settings)) throw new Error('expected root settings');
@@ -56,16 +64,21 @@ describe('P15 bounded Container style composition', () => {
       border_width_tablet: { unit: 'px', top: '0', right: '0', bottom: '0', left: '0', isLinked: true },
       background_overlay_background: 'classic', background_overlay_color: '#112233',
       background_overlay_opacity: { unit: 'px', size: 0, sizes: [] },
-      background_overlay_opacity_tablet: { unit: 'px', size: 1, sizes: [] } });
+      background_overlay_opacity_tablet: { unit: 'px', size: 1, sizes: [] },
+      box_shadow_box_shadow_type: 'yes', box_shadow_box_shadow_position: ' ',
+      box_shadow_hover_box_shadow_type: 'yes', box_shadow_hover_box_shadow_position: 'inset' });
     expect(root.settings).not.toHaveProperty('border_width_mobile');
     expect(root.settings).not.toHaveProperty('background_overlay_opacity_mobile');
     expect(root.settings).not.toHaveProperty('background_overlay_hover_color');
     const nested = root.elements[1];
     if (!nested || Array.isArray(nested.settings)) throw new Error('expected nested settings');
     expect(nested.settings).toMatchObject({ background_overlay_hover_background: 'classic', background_overlay_hover_color: '#445566',
-      background_overlay_hover_opacity_mobile: { unit: 'px', size: .25, sizes: [] } });
+      background_overlay_hover_opacity_mobile: { unit: 'px', size: .25, sizes: [] },
+      background_hover_background: 'classic', background_hover_color: '#abcdef' });
     expect(nested.settings).not.toHaveProperty('background_overlay_color');
     expect(nested.settings).not.toHaveProperty('background_overlay_hover_opacity_tablet');
+    expect(nested.settings).not.toHaveProperty('box_shadow_box_shadow');
+    expect(root.settings).not.toHaveProperty('background_hover_color');
     expect(result.targetCompatibilityClaim).toBe(false);
     expect(result.productionAcceptance).toBe(false);
     expect(result.downloadEnabled).toBe(false);
@@ -118,6 +131,23 @@ describe('P15 bounded Container style composition', () => {
     expect(composeP15ContainerStyles(document, { ...valid, families: {
       ...valid.families, hoverOverlay: { ...(valid.families.hoverOverlay as object), downloadEnabled: true },
     } }).status).toBe('REJECTED');
+  });
+
+  it('rejects partial shadow objects, conflicting hover background keys and stale family candidate binding', () => {
+    const document = source(); const valid = manifest(document);
+    const shadow = valid.families.boxShadows as { containers: Array<Record<string, unknown>> };
+    const partial = { ...valid, families: { ...valid.families, boxShadows: {
+      ...(valid.families.boxShadows as object), containers: [{ ...shadow.containers[0], normal: { horizontal: 1 } }],
+    } } };
+    expect(composeP15ContainerStyles(document, partial).status).toBe('REJECTED');
+    const stale = { ...valid, families: { ...valid.families, hoverBackground: {
+      ...(valid.families.hoverBackground as object), baseCandidateIdentityDigest: 'sha256:' + '0'.repeat(64),
+    } } };
+    expect(composeP15ContainerStyles(document, stale).status).toBe('REJECTED');
+    const conflicting = { ...valid, families: { ...valid.families, hoverBackground: {
+      ...(valid.families.hoverBackground as object), productionAcceptance: true,
+    } } };
+    expect(composeP15ContainerStyles(document, conflicting).status).toBe('REJECTED');
   });
 
   it('serializes deterministic sanitized evidence and rejects inflated results', () => {

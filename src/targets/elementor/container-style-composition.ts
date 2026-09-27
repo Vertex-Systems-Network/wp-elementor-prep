@@ -10,12 +10,14 @@ import { resolveP15ElementorContainerBorderStyles } from './container-border-sty
 import { resolveP15ElementorContainerHoverBorderStyles } from './container-hover-border-style-resolution';
 import { resolveP15ElementorContainerOverlayColor } from './container-overlay-color-resolution';
 import { resolveP15ElementorContainerHoverOverlayColor } from './container-hover-overlay-color-resolution';
+import { resolveP15ContainerBoxShadows } from './container-box-shadow-resolution';
+import { resolveP15ElementorContainerHoverBackgroundColor } from './container-hover-background-color-resolution';
 import type { ElementorTemplateV04 } from './template-v04';
 import { generateElementorV3TemplateCandidate } from './v3-template-generator';
 
-export const P15_CONTAINER_STYLE_COMPOSITION_VERSION = 'p15-container-style-composition-v1' as const;
+export const P15_CONTAINER_STYLE_COMPOSITION_VERSION = 'p15-container-style-composition-v2' as const;
 export const P15_CONTAINER_STYLE_FAMILIES = [
-  'normalBorder', 'hoverBorder', 'normalOverlay', 'hoverOverlay',
+  'normalBorder', 'hoverBorder', 'normalOverlay', 'hoverOverlay', 'boxShadows', 'hoverBackground',
 ] as const;
 export type P15ContainerStyleFamily = typeof P15_CONTAINER_STYLE_FAMILIES[number];
 
@@ -88,6 +90,8 @@ const resolvers: Record<P15ContainerStyleFamily, (source: unknown, manifest: unk
   hoverBorder: resolveP15ElementorContainerHoverBorderStyles,
   normalOverlay: resolveP15ElementorContainerOverlayColor,
   hoverOverlay: resolveP15ElementorContainerHoverOverlayColor,
+  boxShadows: resolveP15ContainerBoxShadows,
+  hoverBackground: resolveP15ElementorContainerHoverBackgroundColor,
 };
 
 const allowedKeys: Record<P15ContainerStyleFamily, readonly string[]> = {
@@ -95,6 +99,9 @@ const allowedKeys: Record<P15ContainerStyleFamily, readonly string[]> = {
   hoverBorder: ['border_hover_border', 'border_hover_color', 'border_hover_width', 'border_hover_width_tablet', 'border_hover_width_mobile'],
   normalOverlay: ['background_overlay_background', 'background_overlay_color', 'background_overlay_opacity', 'background_overlay_opacity_tablet', 'background_overlay_opacity_mobile'],
   hoverOverlay: ['background_overlay_hover_background', 'background_overlay_hover_color', 'background_overlay_hover_opacity', 'background_overlay_hover_opacity_tablet', 'background_overlay_hover_opacity_mobile'],
+  boxShadows: ['box_shadow_box_shadow_type', 'box_shadow_box_shadow', 'box_shadow_box_shadow_position',
+    'box_shadow_hover_box_shadow_type', 'box_shadow_hover_box_shadow', 'box_shadow_hover_box_shadow_position'],
+  hoverBackground: ['background_hover_background', 'background_hover_color'],
 };
 
 const manifestKeys = ['schemaVersion', 'compositionVersion', 'sourceIrFingerprint', 'baseCandidateIdentityDigest',
@@ -158,7 +165,8 @@ export function composeP15ContainerStyles(sourceValue: unknown, manifestValue: u
     const resolved = resolvers[family](source, manifestValue.families[family]);
     if (!resolved.candidate || !resolved.template || resolved.issues.length
       || !['CONTAINER_BORDER_STYLES_RESOLVED', 'CONTAINER_HOVER_BORDER_STYLES_RESOLVED',
-        'CONTAINER_OVERLAY_COLOR_RESOLVED', 'CONTAINER_HOVER_OVERLAY_COLOR_RESOLVED'].includes(resolved.status)
+        'CONTAINER_OVERLAY_COLOR_RESOLVED', 'CONTAINER_HOVER_OVERLAY_COLOR_RESOLVED',
+        'RESOLVED', 'CONTAINER_HOVER_BACKGROUND_COLOR_RESOLVED'].includes(resolved.status)
       || resolved.sourceIrFingerprint !== fingerprint || resolved.baseCandidateIdentityDigest !== baseIdentity
       || resolved.responsiveInferencePerformed !== false || resolved.targetCompatibilityClaim !== false
       || resolved.productionAcceptance !== false || resolved.downloadEnabled !== false) {
