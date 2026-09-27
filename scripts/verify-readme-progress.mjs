@@ -5,6 +5,7 @@ const readme = await readFile('README.md', 'utf8');
 const p14Qualification = await readFile('src/core/p14-vertical-stack-qualification.ts', 'utf8');
 const p14RegistrySource = await readFile('src/core/p14-safe-recipe-registry.ts', 'utf8');
 const p15ResponsiveFullWidthSource = await readFile('src/targets/elementor/responsive-full-width-resolution.ts', 'utf8');
+const p15ResponsiveGapSource = await readFile('src/targets/elementor/responsive-gap-resolution.ts', 'utf8');
 const p15ResponsiveHoverBorderRadiusSource = await readFile('src/targets/elementor/responsive-hover-border-radius-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemAlignSelfSource = await readFile('src/targets/elementor/responsive-flex-item-align-self-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemFactorsSource = await readFile('src/targets/elementor/responsive-flex-item-factors-resolution.ts', 'utf8');
@@ -1041,6 +1042,34 @@ if (!readme.includes('### Completed P15 Fast Batch #717 / PR #718 implementation
   || !readme.includes('Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.')
   || !readme.includes('Issue #721 is transport-only terminal finalization.')) {
   throw new Error('README P15 #717 Button typography basics Fast Batch truth is stale or missing.');
+}
+
+
+const p15ResponsiveGapAxisRequiredFragments = [
+  "flexContainerSourceBlobSha: 'ce9e412e31b7710f33129ae35634ecb51e580d38'",
+  "controlName: 'gap'",
+  "tabletRowGapPx?: number",
+  "tabletColumnGapPx?: number",
+  "mobileRowGapPx?: number",
+  "mobileColumnGapPx?: number",
+  "gapAxesValue(row: number, column: number, isLinked: boolean)",
+  "gapAxesValue(resolution.tabletRowGapPx as number, resolution.tabletColumnGapPx as number, false)",
+  "responsiveInferencePerformed: false",
+  "responsiveClosureClaim: false",
+  "targetCompatibilityClaim: false",
+  "productionAcceptance: false",
+  "downloadEnabled: false",
+];
+for (const fragment of p15ResponsiveGapAxisRequiredFragments) {
+  if (!p15ResponsiveGapSource.includes(fragment)) {
+    throw new Error(`P15 #821 responsive gap-axis contract is stale or missing: ${fragment}`);
+  }
+}
+if (!readme.includes('### P15 #821 — responsive Container row/column gaps (implementation candidate)')
+  || !readme.includes('Issue #821 is implementing explicit source-bound tablet/mobile row and column gaps')
+  || !readme.includes('both axes required at each breakpoint')
+  || !readme.includes('Exact-head CI has not yet certified this candidate.')) {
+  throw new Error('README P15 #821 candidate status or boundaries are stale or missing.');
 }
 
 console.log(
