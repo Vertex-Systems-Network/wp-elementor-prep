@@ -75,8 +75,10 @@ describe('P15 source-bound responsive Flex Item custom basis', () => {
     const source = sourceDocument();
     const result = resolveP15ElementorResponsiveContainerFlexItemBasis(source, manifest(source, [{ sourceNodeId: 'nested', mobileBasisCustom: true, mobileBasisPx: 1000 }]));
     expect(result.status).toBe('RESPONSIVE_FLEX_ITEM_BASIS_RESOLVED');
-    const root = settingsOf(result.template?.content[0]);
-    const nested = settingsOf(result.template?.content[0].elements[0]);
+    const rootElement = result.template?.content[0];
+    if (!rootElement) throw new Error('expected generated root');
+    const root = settingsOf(rootElement);
+    const nested = settingsOf(rootElement.elements[0]);
     expect(root).not.toHaveProperty('_flex_basis_mobile');
     expect(nested._flex_basis_mobile).toEqual({ size: 1000, unit: 'px' });
     expect(nested).not.toHaveProperty('_flex_basis_tablet');
