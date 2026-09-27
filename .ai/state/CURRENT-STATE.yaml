@@ -2,15 +2,15 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f
+observed_main_sha: 65b2bcf34bee8829cbee8d3b7fa9e02c2eaabe56
 observed_main_sha_semantics: exact_current_main_tip_before_state_finalization_pr_merge
 observed_main_branch: main
-active_issue: 822
-active_pr: 822
-active_branch: ai-native/finalize-pr-821-state-822
+active_issue: 823
+active_pr: 823
+active_branch: p15/responsive-flex-item-basis-823
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: finalize_state_after_pr_821_merge
+current_milestone: implement_p15_responsive_flex_item_basis_823
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -22,8 +22,8 @@ next_action_options:
   recommended_slot_fixed: false
   recommended_action_id: continue-active-batch
 milestone_status: IN_PROGRESS
-last_completed_milestone: pr_821_responsive_gap_axes_passed_7_of_7_and_merged_as_a3396e90
-exact_next_safe_action: verify_pr_822_exact_head_gates_then_guarded_merge
+last_completed_milestone: pr_822_post_pr_821_state_reconciliation_passed_7_of_7_and_merged_as_65b2bcf3
+exact_next_safe_action: implement_issue_823_exact_responsive_basis_source_bound_candidate_and_verify
 pending_runner_ids: [RQ-822-FINAL]
 blocked_runner_ids: []
 current_blockers:
