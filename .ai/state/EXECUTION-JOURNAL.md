@@ -324,10 +324,6 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Issue #769 / branch `ai-native/terminal-finalize-pr-768` is transport-only finalization and grants no product/runtime/security/compatibility/production/download/release authority.
 - Next step is to bind/open its transport PR and stop at the exact-head gate boundary.
 
-## 2026-09-27 — P15 #782 merge and #783/#784
-
-- #782 passed 7/7 on `5e3976a1`, zero threads; merged main `5eb9390589fe541cdc65a1240205b412bc6ffb09`; #781 closed.
-- #783/#784 adds explicit Container normal/hover overlay opacity at desktop/tablet/mobile. Local 1,814 tests, typecheck/build/status PASS; final gates pending. No responsive inference or new target authority.
 
 ## 2026-09-27 — P15 #784 merge and #785/#787
 
@@ -338,3 +334,8 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 
 - #787 passed 7/7 on `57a08f4b`, zero threads; merged main `965bb48eaf4387bce0e22cd8715ced0ab3e8b3c4`; #785 closed.
 - #788/#789 adds isolated Container normal/hover box shadows. Local 1,824 tests, typecheck/build/status PASS; final gates pending. No target authority.
+
+## 2026-09-27 — P15 #789 merge and #790/#791
+
+- #789 passed 7/7 on `9ec87232`, zero threads; merged main `228b68a19a4edf88541dbcd8818e7d5643f8f026`; #788 closed.
+- #790/#791 composes six proven Container families. Local 1,825 tests, typecheck/build/status PASS; final gates pending. No target authority.
