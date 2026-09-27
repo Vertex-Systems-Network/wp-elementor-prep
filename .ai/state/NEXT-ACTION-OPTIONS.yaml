@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 595ff3a4955196db5ab8b8a690078f0873c33577
-active_issue: 800
+observed_main_sha: adcb28f4054d700c5a42809e12318a96e5c45b64
+active_issue: null
 active_pr: null
-active_branch: p15/container-hover-transition-composition
+active_branch: null
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -19,7 +19,7 @@ interaction:
     - review-next-p15-map
     - verify-terminal-after-769
     - review-ai-plan
-recommended_action_id: implement-container-hover-transition-800
+recommended_action_id: review-next-p15-map
 options:
   - action_id: implement-container-hover-transition-800
     label: Implement Container hover transitions
