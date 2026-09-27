@@ -383,3 +383,8 @@ PR #818 state finalization passed all seven exact-head gates on `dea45549df14cc2
 ## P15 implementation candidate — Issue #821
 
 The responsive gap resolver candidate supports explicit tablet/mobile row and column px pairs while retaining linked-px compatibility. Desktop settings and omitted breakpoints remain unchanged. Source basis is pinned to Elementor 4.2.4. The candidate awaits exact-head gates and claims no responsive closure, broad target compatibility, production readiness or release authority.
+
+
+## Governance after PR #821
+
+PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven required exact-head workflows with zero unresolved review threads and merged under expected-head guard as main `a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f`; Issue #821 is complete. Issue #822 owns canonical state reconciliation. P15's next bounded source-supported candidate is Issue #823: explicit tablet/mobile custom Flex Item basis in px only, with serialized keys and shape still requiring controlled target confirmation. No broader compatibility, responsive closure, production, release or download authority is implied.

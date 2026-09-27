@@ -300,6 +300,10 @@ A development/release train may not be called complete while:
 - P17 Local Browser Proof is path-filtered and runs when `docs/RUNNER_BENCHMARK.md` changes. This documentation records the relevant exact-head gate handoff; it claims no P17 result for PR #820.
 
 
-## P15 #821 — responsive Container gap-axis candidate
+## P15 #821 — responsive Container gap-axis implementation
 
-Pinned Elementor 4.2.4 source supports separate row and column gap values. This candidate extends the existing source/base-candidate-bound resolver with explicit tablet/mobile row/column px pairs. Linked-px input remains compatible; incomplete or mixed pairs are rejected; desktop and omitted breakpoints remain unchanged. Exact-head CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof are pending PR creation.
+PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven required workflows, had zero unresolved review threads, and merged with an expected-head guard as main `a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f`. The implementation preserves linked-px compatibility, desktop settings, source/base-candidate binding and omitted-breakpoint behavior while supporting complete explicit tablet/mobile row/column px pairs. No broader compatibility or responsive-closure claim follows from these gates.
+
+## P15 #823 — responsive Flex Item custom basis candidate
+
+Issue #823 is queued from pinned Elementor 4.2.4 Flex Item source. Candidate scope is tablet/mobile explicit px basis values in the source slider's 0..1000 range, requiring the responsive custom-basis type/value pair. Exact serialized target settings require controlled proof before any broader claim.

@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 13fb2f5b9200dc9ece2174be3d24d5d259ea29bd
+observed_main_sha: a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -400,3 +400,7 @@ claims:
 
   - {id: CL-395, statement: pr_818_exact_head_dea45549_passed_all_seven_required_gates_zero_threads_and_expected_head_merge_produced_main_13fb2f5b, value: true}
   - {id: CL-396, statement: issue_817_closed_completed_after_pr_818_merge, value: true}
+
+  - {id: CL-397, statement: pr_821_exact_head_0ff80cb9_passed_all_seven_required_gates_zero_threads_and_expected_head_merge_produced_main_a3396e90, value: true}
+  - {id: CL-398, statement: issue_822_pr_822_owns_post_pr_821_canonical_state_reconciliation, value: true}
+  - {id: CL-399, statement: issue_823_candidate_is_pinned_to_elementor_4_2_4_flex_item_basis_source_and_authority_remains_false, value: true}
