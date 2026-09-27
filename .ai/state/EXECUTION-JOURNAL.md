@@ -185,3 +185,8 @@ Archived execution detail for P15 Fast Batches #735–#753; exact PR heads and g
 
 - PR #822 exact head `2a596f6750ec507e6a51c157c456ce14ecf6ed73` passed all seven required workflows (CI:36317184495,CodeQL:36317184492,Integration_Readiness:36317184522,P12_Offline_Acceptance:36317184598,P12_Final_Release_Artifact:36317184488,P15_Real_Elementor_Target_Proof:36317184487,P17_Local_Browser_Proof:36317184515), had zero unresolved review threads, was mergeable, and merged with expected-head guard as main `65b2bcf34bee8829cbee8d3b7fa9e02c2eaabe56`; Issue #822 closed.
 - Issue #823 is the active P15 implementation candidate for source-bound tablet/mobile custom Flex Item basis in explicit px only, range 0..1000. Exact serialized settings are covered by the controlled target gate; no broader authority is claimed.
+
+## 2026-09-27 — PR #823 merged; #824 reconciliation
+
+- PR #823 exact head `a89bee55c3d43a0f40b2c97701c4a473ef9cce6b` passed all seven required workflows (CI:36318359912,CodeQL:36318359936,Integration_Readiness:36318359966,P12_Offline_Acceptance:36318359925,P12_Final_Release_Artifact:36318359980,P15_Real_Elementor_Target_Proof:36318359905,P17_Local_Browser_Proof:36318359886), had zero unresolved review threads, was mergeable, and merged under expected-head guard as main `b34f5b254dfe7bf8f217d691ecf8d58652674428`; Issue #823 closed.
+- Issue #824 owns canonical state reconciliation. No P12/P27/operator/admin or P15 authority boundary changed.
