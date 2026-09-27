@@ -89,7 +89,7 @@ items:
 
   - {id: CQ-815, issue: 815, pr: 816, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-817, issue: 817, pr: 818, status: MERGED_CLOSED, priority: 0, accepted: true}
-  - {id: CQ-819, issue: 819, status: ACTIVE_RECONCILIATION, priority: 1, accepted: true}
+  - {id: CQ-819, issue: 819, pr: 820, status: MERGED_CLOSED, priority: 0, accepted: true}
 
   - {id: CQ-821, issue: 821, pr: 821, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-822, issue: 822, pr: 822, status: ACTIVE_RECONCILIATION, priority: 1, accepted: true}
