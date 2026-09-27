@@ -325,10 +325,6 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Next step is to bind/open its transport PR and stop at the exact-head gate boundary.
 
 
-## 2026-09-27 — P15 #784 merge and #785/#787
-
-- #784 passed 7/7 on `4389969f`, zero threads; merged main `d7c5cc8752c70b82b452b035e3ac4806c646582e`; #783 closed.
-- #785/#787 composes four Container style families. Local 1,818 tests, typecheck/build/status PASS; final gates pending. #786 closed duplicate. No new target authority.
 
 ## 2026-09-27 — P15 #787 merge and #788/#789
 
@@ -339,3 +335,8 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 
 - #789 passed 7/7 on `9ec87232`, zero threads; merged main `228b68a19a4edf88541dbcd8818e7d5643f8f026`; #788 closed.
 - #790/#791 composes six proven Container families. Local 1,825 tests, typecheck/build/status PASS; final gates pending. No target authority.
+
+## 2026-09-27 — P15 #791 merge and #792/#793
+
+- #791 passed 7/7 on `2aa8d19c`, zero threads; merged main `d24ed13be8225968727a965c69ecc03ab529b5ee`; #790 closed.
+- #792/#793 composes explicit normal/hover Container responsive radii. Local 1,826 tests, typecheck/build/status PASS; final gates pending. No target authority.

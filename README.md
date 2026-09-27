@@ -288,9 +288,13 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 
 The exact Elementor `4.2.4` Container `box_shadow` and `box_shadow_hover` groups accept independent atomic horizontal/vertical, blur, spread, lowercase six-digit hex color and outline/inset values. It writes only each requested group’s type/value/position keys, rejects malformed/out-of-range and conflicting settings, and preserves source/candidate binding, normal/hover isolation, sanitized summaries and false authority. Local typecheck, 1,824 tests, status verifier and build pass; PR #789 exact head `9ec8723256d0a6168c260fb6d16ec81ef3d473f7` passed 7/7 and zero review threads; merged main `228b68a19a4edf88541dbcd8818e7d5643f8f026`; #788 closed. No real import/render result is claimed.
 
-### Active P15 six-family Container style composition #790 / PR #791
+### Completed P15 six-family Container style composition #790 / PR #791
 
-The bounded composer combines the four previously proven border/overlay families with normal/hover box shadows and classic hover background. It independently re-runs exact source and base-candidate bound resolvers, allowlists their added keys, checks whole-template drift and conflicts, and rebuilds one validated candidate. Omitted breakpoints and normal/hover isolation remain. Local typecheck, 304 test files / 1,825 tests, status verifier and build pass; final PR #791 gates are pending. No real import/render or expanded target authority is claimed.
+The bounded composer combines the four previously proven border/overlay families with normal/hover box shadows and classic hover background. It independently re-runs exact source and base-candidate bound resolvers, allowlists their added keys, checks whole-template drift and conflicts, and rebuilds one validated candidate. Omitted breakpoints and normal/hover isolation remain. Local typecheck, 304 test files / 1,825 tests, status verifier and build pass; PR #791 exact head `2aa8d19c307945e01122eccf9000057818721ca6` passed 7/7 and zero review threads; merged main `d24ed13be8225968727a965c69ecc03ab529b5ee`; #790 closed. No real import/render or expanded target authority is claimed.
+
+### Active P15 explicit Container radius composition #792 / PR #793
+
+The eight-family composer adds already proven explicit tablet/mobile normal and hover border-radius resolvers to the six-family candidate. It preserves generated desktop radius and omitted responsive settings, revalidates each family against exact source/base identity, rejects family drift and conflicting target keys, and keeps target authority false. Local typecheck, 304 test files / 1,826 tests, status verifier and build pass; final PR #793 gates are pending. No real import/render or responsive closure is claimed.
 
 ### Completed P15 Container overlay opacity #783 / PR #784
 
