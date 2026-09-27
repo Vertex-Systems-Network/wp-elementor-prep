@@ -19,7 +19,7 @@ interaction:
   recommended_slot_fixed: false
   presentation_epoch: issue-824-state-finalization
   presentation_order:
-    - implement-p15-823
+    - finalize-main-state-824
     - review-security-blocker-287
 recommended_action_id: finalize-main-state-824
 options:
