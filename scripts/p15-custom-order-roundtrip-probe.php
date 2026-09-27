@@ -94,6 +94,7 @@ if ($templateId <= 0) {
     fwrite(STDERR, "Elementor import returned no template ID.\n");
     exit(1);
 }
+update_option('p15_custom_order_template_id', $templateId, false);
 $raw = get_post_meta($templateId, '_elementor_data', true);
 $saved = is_string($raw) ? json_decode($raw, true, 512, JSON_THROW_ON_ERROR) : $raw;
 if (!is_array($saved)) {

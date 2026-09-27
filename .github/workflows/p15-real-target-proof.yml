@@ -438,6 +438,10 @@ jobs:
         continue-on-error: true
         run: node scripts/p15-real-target-proof-browser.mjs
 
+      - name: Observe controlled custom-order responsive render
+        continue-on-error: true
+        run: node scripts/p15-custom-order-render-probe.mjs
+
       - name: Run repository P15 evidence intakes
         id: p15-intakes
         if: always()
@@ -615,6 +619,16 @@ jobs:
         if: always()
         run: |
           set -euo pipefail
+          jq -e '.fullPass == true
+            and .sourceValuesAuthoredByProbe == true
+            and .editorGeneratedSerializationClaim == false
+            and .targetCompatibilityClaim == false
+            and .productionAcceptance == false
+            and .downloadEnabled == false
+            and (.viewports | length) == 3
+            and all(.viewports[]; .pass == true)' \
+            "$P15_PROOF_OUT_DIR/custom-order-render-observation.json"
+
           test "$P15_ENV_INTAKE_CODE" = "0"
           test "$P15_PROOF_INTAKE_CODE" = "0"
           test "$P15_CHAIN_INTAKE_CODE" = "0"

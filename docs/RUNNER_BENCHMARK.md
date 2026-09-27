@@ -320,3 +320,7 @@ PR #826 adds a bounded probe to the existing real Elementor 4.2.4 target workflo
 ## P15 #825 — controlled custom-order target roundtrip
 
 A focused probe imports a script-authored two-child Container template with explicit tablet/mobile `order=custom` and `order_custom` values (2/-2 and 1/0) into exact Elementor 4.2.4, observes saved `_elementor_data`, and exports it through Elementor's local Template Library source. The run retains input, import observation and target-exported JSON. This establishes only target persistence and export of the authored values if assertions pass. It does not establish editor-generated serialization, frontend order rendering, broad compatibility, download, or release authority. Exact-head gate results are pending.
+
+## P15 #825 — real target responsive order render
+
+The controlled custom-order template from PR #827 is rendered through exact Elementor 4.2.4 on local WordPress 6.8. A token-bound frontend endpoint and Chrome probe record computed order and visual top positions for two child Containers at desktop (1280px), tablet (768px) and mobile (375px). The values were authored by the probe and imported via the target library; the result establishes only behavior for those explicit cases. Editor-generated serialization, arbitrary templates, broad compatibility, download, production and release authority remain outside this proof. Exact-head gate results are pending.

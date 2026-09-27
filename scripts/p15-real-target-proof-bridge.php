@@ -656,6 +656,30 @@ function p15_proof_template_redirect() {
     $template_id = (int) get_option( 'p15_proof_template_id', 0 );
     $asset_template_id = (int) get_option( 'p15_asset_proof_template_id', 0 );
 
+    if ( 'A' === p15_target_role() && p15_proof_token_ok( 'p15_custom_order_render' ) ) {
+        $custom_order_id = (int) get_option( 'p15_custom_order_template_id', 0 );
+        if ( ! $custom_order_id || 'elementor_library' !== get_post_type( $custom_order_id ) ) {
+            status_header( 409 );
+            exit( 'P15 custom-order template unavailable.' );
+        }
+
+        $content = \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $custom_order_id, true );
+        nocache_headers();
+        ?><!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>P15 Custom Order Target Render</title>
+<?php wp_head(); ?>
+</head>
+<body>
+<main id="p15-custom-order-root"><?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></main>
+<?php wp_footer(); ?>
+</body>
+</html><?php
+        exit;
+    }
+
     if ( p15_proof_token_ok( 'p15_asset_proof_observe' ) ) {
         nocache_headers();
         header( 'Content-Type: application/json; charset=utf-8' );
