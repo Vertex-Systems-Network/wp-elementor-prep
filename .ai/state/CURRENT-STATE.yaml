@@ -6,7 +6,7 @@ observed_main_sha: 13fb2f5b9200dc9ece2174be3d24d5d259ea29bd
 observed_main_sha_semantics: exact_current_main_tip_before_state_finalization_pr_merge
 observed_main_branch: main
 active_issue: 819
-active_pr: null
+active_pr: 820
 active_branch: ai-native/finalize-pr-818-state-819
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: continue-active-batch
 milestone_status: IN_PROGRESS
 last_completed_milestone: pr_818_state_finalization_passed_7_of_7_and_merged_as_13fb2f5
-exact_next_safe_action: reconcile_pr_818_merge_on_issue_819_then_refresh_live_p15_capability_map
+exact_next_safe_action: observe_pr_820_latest_exact_head_gates_and_review_threads_then_guarded_merge
 pending_runner_ids: []
 blocked_runner_ids: []
 current_blockers:
