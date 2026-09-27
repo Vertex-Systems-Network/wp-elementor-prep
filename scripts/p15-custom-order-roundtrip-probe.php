@@ -101,20 +101,29 @@ if (!is_array($saved)) {
     exit(1);
 }
 $observed = [];
-$walk = static function ($nodes) use (&$walk, &$observed, $cases): void {
+$containers = [];
+$walk = static function ($nodes) use (&$walk, &$observed, &$containers, $cases): void {
     foreach ($nodes as $node) {
         if (!is_array($node)) {
             continue;
         }
-        foreach ($cases as $case) {
-            if (($node['id'] ?? null) === $case['id']) {
-                $settings = $node['settings'] ?? [];
-                $observed[$case['id']] = [
-                    'tabletOrder' => $settings['_flex_order_tablet'] ?? null,
-                    'tabletCustom' => $settings['_flex_order_custom_tablet'] ?? null,
-                    'mobileOrder' => $settings['_flex_order_mobile'] ?? null,
-                    'mobileCustom' => $settings['_flex_order_custom_mobile'] ?? null,
-                ];
+        if (($node['elType'] ?? null) === 'container') {
+            $settings = $node['settings'] ?? [];
+            $snapshot = [
+                'id' => $node['id'] ?? null,
+                'tabletOrder' => $settings['_flex_order_tablet'] ?? null,
+                'tabletCustom' => $settings['_flex_order_custom_tablet'] ?? null,
+                'mobileOrder' => $settings['_flex_order_mobile'] ?? null,
+                'mobileCustom' => $settings['_flex_order_custom_mobile'] ?? null,
+            ];
+            $containers[] = $snapshot;
+            foreach ($cases as $case) {
+                foreach (($node['elements'] ?? []) as $child) {
+                    if (($child['widgetType'] ?? null) === 'heading'
+                        && ($child['settings']['title'] ?? null) === $case['title']) {
+                        $observed[$case['title']] = $snapshot;
+                    }
+                }
             }
         }
         if (isset($node['elements']) && is_array($node['elements'])) {
@@ -125,7 +134,7 @@ $walk = static function ($nodes) use (&$walk, &$observed, $cases): void {
 $walk($saved);
 $matches = count($observed) === count($cases);
 foreach ($cases as $case) {
-    $actual = $observed[$case['id']] ?? null;
+    $actual = $observed[$case['title']] ?? null;
     $matches = $matches && $actual !== null
         && $actual['tabletOrder'] === 'custom'
         && $actual['tabletCustom'] === $case['tablet']
@@ -139,6 +148,7 @@ $report = [
     'inputSha256' => 'sha256:' . hash_file('sha256', $inputPath),
     'authoredCases' => $cases,
     'savedSettings' => $observed,
+    'containerSnapshots' => $containers,
     'savedSettingsMatchInput' => $matches,
     'editorValueObserved' => false,
     'editorGeneratedSerializationClaim' => false,
