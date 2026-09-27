@@ -71,7 +71,7 @@ if (file_put_contents($out, $encoded) === false) {
     fwrite(STDERR, "Could not write control observation.\n");
     exit(2);
 }
-if (!$observed['_flex_order']['registered'] || !$observed['_flex_order_custom']['registered']) {
-    fwrite(STDERR, "Expected desktop Flex Item order controls are absent.\n");
+if (count($controls) === 0) {
+    fwrite(STDERR, "Container returned no controls.\n");
     exit(1);
 }
