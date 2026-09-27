@@ -324,11 +324,6 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - Issue #769 / branch `ai-native/terminal-finalize-pr-768` is transport-only finalization and grants no product/runtime/security/compatibility/production/download/release authority.
 - Next step is to bind/open its transport PR and stop at the exact-head gate boundary.
 
-## 2026-09-26 — P15 #778 merge and #779/#780
-
-- #778 passed 7/7 on `74641fd6`, zero threads; merged main `21848e94e369fd9486102bb176587a4b5479a4e7`; #777 closed.
-- #779/#780 adds isolated Container classic hover background color. Local 1,800 tests, typecheck and build PASS; final gates pending. No new target authority.
-
 ## 2026-09-27 — P15 #780 merge and #781/#782
 
 - #780 passed 7/7 on `7d59a098`, zero threads; merged main `cbec0be08b70bb3b44ef943590ee7480c110cd6f`; #779 closed.
@@ -338,3 +333,8 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 
 - #782 passed 7/7 on `5e3976a1`, zero threads; merged main `5eb9390589fe541cdc65a1240205b412bc6ffb09`; #781 closed.
 - #783/#784 adds explicit Container normal/hover overlay opacity at desktop/tablet/mobile. Local 1,814 tests, typecheck/build/status PASS; final gates pending. No responsive inference or new target authority.
+
+## 2026-09-27 — P15 #784 merge and #785/#787
+
+- #784 passed 7/7 on `4389969f`, zero threads; merged main `d7c5cc8752c70b82b452b035e3ac4806c646582e`; #783 closed.
+- #785/#787 composes four Container style families. Local 1,818 tests, typecheck/build/status PASS; final gates pending. #786 closed duplicate. No new target authority.

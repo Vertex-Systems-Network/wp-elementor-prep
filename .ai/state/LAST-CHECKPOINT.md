@@ -2,20 +2,20 @@
 
 Status: VERIFYING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `5eb9390589fe541cdc65a1240205b412bc6ffb09`
-Canonical active Issue/PR: `#783` / `#784`
-Branch: `p15/container-overlay-opacity`
+Observed main: `d7c5cc8752c70b82b452b035e3ac4806c646582e`
+Canonical active Issue/PR: `#785` / `#787`
+Branch: `p15/container-style-composition`
 
 ## Reconciled product batch
 
-PR #782 exact head `5e3976a155b180aff9f31c9243ddba2c697b3921` passed all seven required workflows (CI:36281811515,CodeQL:36281811437,Integration_Readiness:36281811504,P12_Offline_Acceptance:36281811563,P12_Final_Release_Artifact:36281811440,P15_Real_Elementor_Target_Proof:36281811514,P17_Local_Browser_Proof:36281811633) and zero unresolved review threads. Expected-head merge yielded main `5eb9390589fe541cdc65a1240205b412bc6ffb09`; Issue #781 closed.
+PR #784 exact head `4389969f793b642259d27ce8d84305443261da08` passed all seven required workflows (CI:36282204044,CodeQL:36282204170,Integration_Readiness:36282204016,P12_Offline_Acceptance:36282204066,P12_Final_Release_Artifact:36282204054,P15_Real_Elementor_Target_Proof:36282204036,P17_Local_Browser_Proof:36282204117) and zero unresolved review threads. Expected-head merge yielded main `d7c5cc8752c70b82b452b035e3ac4806c646582e`; Issue #783 closed.
 
 ## Current product batch
 
-Issue #783 / PR #784 extends exact Elementor 4.2.4 Container normal and hover classic-overlay resolvers with optional explicit desktop/tablet/mobile opacity hundredths. Initial head `a40db8538f52d33c3f9d1d657bf5c019dfca3532` will change after state sync. Local typecheck, 302 test files / 1,814 tests, status verifier and build passed. Remote final-head certification pending.
+Issue #785 / PR #787 composes four previously evidenced Container normal/hover border and overlay families into one deterministic candidate. Initial head `adcf09f04a1005b66991b4ac953ccf396df77f5b` will change after state sync. Local typecheck, 303 test files / 1,818 tests, status verifier and build passed. Issue #786 closed duplicate. Remote final-head certification pending.
 
 ## Exact next safe action
 
-Resolve final PR #784 head; observe seven workflows and review threads. Merge only on all success, zero unresolved threads, mergeable state and fresh expected-head guard. Continue independent P15 code-side audit including composition gaps. No real Container import/render result is claimed.
+Resolve final PR #787 head; observe seven workflows and review threads. Merge only on all success, zero unresolved threads, mergeable state and fresh expected-head guard. Continue independent P15 code-side work; this is a bounded composition slice, not complete P15 coverage. No real import/render result is claimed.
 
 External boundaries: #287 admin branch protection; #159 real Figma runtime; #84 P12 release exit; #182 P27 final release; retained P15 operator approval/broad target authority.

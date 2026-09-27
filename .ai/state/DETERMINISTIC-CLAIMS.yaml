@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 5eb9390589fe541cdc65a1240205b412bc6ffb09
+observed_main_sha: d7c5cc8752c70b82b452b035e3ac4806c646582e
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -378,3 +378,5 @@ claims:
   - {id: CL-375, statement: issue_781_pr_782_owns_exact_elementor_4_2_4_container_normal_and_hover_overlay_classic_colors_without_responsive_inference, value: true}
   - {id: CL-376, statement: pr_782_exact_head_5e3976a1_passed_seven_gates_zero_threads_and_merged_main_5eb93905, value: true}
   - {id: CL-377, statement: issue_783_pr_784_owns_explicit_normal_hover_container_overlay_opacity_desktop_tablet_mobile_without_inference, value: true}
+  - {id: CL-378, statement: pr_784_exact_head_4389969f_passed_seven_gates_zero_threads_and_merged_main_d7c5cc87, value: true}
+  - {id: CL-379, statement: issue_785_pr_787_owns_bounded_four_family_container_composition_and_issue_786_closed_duplicate, value: true}
