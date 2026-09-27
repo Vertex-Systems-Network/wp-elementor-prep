@@ -3,7 +3,7 @@
 Status: ACTIVE_EXECUTION_BATCH_IMPLEMENTING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
 Observed main: `9b33430475d00b20dd222ab176f7673b2ca354db`
-Canonical active Issue/PR: `#813` / not opened yet
+Canonical active Issue/PR: `#813` / `#814`
 Branch: `ai-native/five-hour-execution-batches-813`
 Target batch boundary: up to five hours or available Workspace execution credit/session, whichever ends first.
 Authority state: in-scope reversible repository work is preauthorized for this active batch; no expansion to production, release, deployment, marketplace, manual runtime acceptance, credentials or external account/security actions.
@@ -16,6 +16,11 @@ Authority state: in-scope reversible repository work is preauthorized for this a
 - Issue #812 has materially overlapping acceptance criteria and is queued for duplicate reconciliation after #813 is completed.
 - Issues #287, #159, #84 and #182 remain genuine admin/manual/final-release boundaries.
 - Historical compact state/checkpoint and several progress records lag the live main tip; this branch synchronizes the active-batch contract and exact state without claiming external acceptance.
+
+## PR and candidate state
+
+- PR #814 is open against main base `9b33430475d00b20dd222ab176f7673b2ca354db`.
+- Initial candidate head `e76b981640631a7f8459e6c69d16ae379130bc03` contains the canonical protocol and durable state sync. A final state-binding commit is being added before certification; use the live PR head after that commit as the exact candidate.
 
 ## Completed in this batch
 
@@ -33,7 +38,7 @@ Authority state: in-scope reversible repository work is preauthorized for this a
 
 ## Exact next safe action
 
-Complete the canonical state/journal/claims/queue/options sync; open Issue #813's PR; verify the exact final head, all required checks and review threads; merge only if every merge condition passes. Then reconcile main and close Issue #812 as duplicate if its overlap is confirmed.
+Resolve the final PR #814 head after the state-binding commit; observe required workflows and review threads once at the meaningful final boundary; merge only if every merge condition passes. Then reconcile main and close Issue #812 as duplicate if its overlap is confirmed.
 
 ## Blockers / retained authority boundaries
 

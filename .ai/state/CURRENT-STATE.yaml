@@ -6,7 +6,7 @@ observed_main_sha: 9b33430475d00b20dd222ab176f7673b2ca354db
 observed_main_sha_semantics: exact_current_main_tip_before_active_pr_merge
 observed_main_branch: main
 active_issue: 813
-active_pr: null
+active_pr: 814
 active_branch: ai-native/five-hour-execution-batches-813
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: continue-active-batch
 milestone_status: ACTIVE_EXECUTION_BATCH_IMPLEMENTING
 last_completed_milestone: p15_container_overlay_visual_composition_pr_809_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: finish_state_sync_open_pr_813_run_exact_head_gates
+exact_next_safe_action: resolve_final_pr_814_head_observe_required_gates_and_review_threads
 pending_runner_ids: []
 blocked_runner_ids: []
 current_blockers:

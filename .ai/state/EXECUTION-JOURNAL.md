@@ -358,3 +358,5 @@ Older Fast-Batch entries before #731 are archived; claims and Runner ledgers ret
 - Scope is governance-only: autonomous in-scope continuation, safe green PR merge criteria, pending-CI independent work, no-busy-wait controls, action-option handling, and durable credit/session-boundary checkpointing. No product/runtime/compatibility/production authority is added.
 - Current blockers retained: #287 admin settings; #159 live Figma runtime evidence; #84 manual release evidence; #182 final production/marketplace gate.
 - Next: finish state sync, open PR, certify exact final head through the required gate set, merge only if green and expected-head guarded.
+
+- Opened PR #814 against base main `9b33430475d00b20dd222ab176f7673b2ca354db`; initial candidate head was `e76b981640631a7f8459e6c69d16ae379130bc03`. A final state-binding commit is next, so no exact-head CI result is yet claimed.
