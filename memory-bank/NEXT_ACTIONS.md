@@ -134,4 +134,4 @@ Do not fabricate any of these from CI/repository metadata.
 - no synthetic overall percentage;
 - no synthetic runtime/target/external evidence.
 
-- Issue #725 / PR #726 is closed completed terminal finalization. Issue #727 / PR #728 now owns explicit default tablet/mobile Button font size, line height, letter spacing and word spacing; verify only its final bound exact head before starting another product batch.
+- PR #814 completed the five-hour batch protocol change on exact head `f9b957333e7db190e6a8aa3621714bab914a5352`, merged as main `5fdaab6cb50e3651da4b44c48ca9e81157dca843` after all seven gates passed and zero review threads. Issue #813 is complete; #812 is closed as duplicate. Issue #815 / branch `ai-native/reconcile-pr-814-state-815` owns exact-main durable-state reconciliation. After that PR merges, refresh the P15 capability map from current source evidence before opening the next bounded product batch.
