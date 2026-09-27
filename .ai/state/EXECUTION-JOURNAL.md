@@ -352,4 +352,4 @@ Older Fast-Batch entries before #731 are archived; claims and Runner ledgers ret
 
 - Main `9b33430475d00b20dd222ab176f7673b2ca354db`; Issue #813 / PR #814 active; #812 overlaps.
 - Governance-only policy update; no product authority.
-- Exact-head gates exposed stale tests; repair and verify final head, then merge only if green.
+- P12 artifact verification exposed stale contract assertions; tests/guidance were aligned and the 32 KiB journal limit restored; final exact-head verification is pending.

@@ -1,50 +1,37 @@
 # Last Durable Checkpoint
 
-Status: ACTIVE_EXECUTION_BATCH_IMPLEMENTING
+Status: VERIFYING_EXACT_HEAD
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
 Observed main: `9b33430475d00b20dd222ab176f7673b2ca354db`
 Canonical active Issue/PR: `#813` / `#814`
 Branch: `ai-native/five-hour-execution-batches-813`
 Target batch boundary: up to five hours or available Workspace execution credit/session, whichever ends first.
-Authority state: in-scope reversible repository work is preauthorized for this active batch; no expansion to production, release, deployment, marketplace, manual runtime acceptance, credentials or external account/security actions.
+Authority state: routine reversible work within this repository, roadmap and accepted boundary is authorized; production, release, deployment, marketplace, credentials, account/security changes and genuine operator-only evidence remain outside this change.
 
-## Reconciliation
+## Completed
 
-- Current default branch is `main` at exact SHA `9b33430475d00b20dd222ab176f7673b2ca354db`.
-- There were no open PRs at batch start.
-- Issue #813 is the selected canonical governance work path.
-- Issue #812 has materially overlapping acceptance criteria and is queued for duplicate reconciliation after #813 is completed.
-- Issues #287, #159, #84 and #182 remain genuine admin/manual/final-release boundaries.
-- Historical compact state/checkpoint and several progress records lag the live main tip; this branch synchronizes the active-batch contract and exact state without claiming external acceptance.
+- Updated canonical batch semantics and mirrored guidance in `.ai/state/PROTOCOL.md`, `docs/AI_NATIVE_PLAN.md`, `AGENTS.md`, `docs/RUNNER_BENCHMARK.md`, README and machine-readable state.
+- Updated the contract tests to replace obsolete one-milestone/next-user-continue assertions.
+- Preserved per-milestone Runner-fetch limits, exact-head gates, zero-thread merge checks, expected-head guard and all production/manual boundaries.
+- Issue #812 remains tracked as overlapping and will be reconciled after #813 closes.
 
-## PR and candidate state
+## Exact verification record
 
-- PR #814 is open against main base `9b33430475d00b20dd222ab176f7673b2ca354db`.
-- Initial candidate head `e76b981640631a7f8459e6c69d16ae379130bc03` contains the canonical protocol and durable state sync. A final state-binding commit is being added before certification; use the live PR head after that commit as the exact candidate.
-
-## Completed in this batch
-
-- Began the five-hour/credit-bounded execution program.
-- Created branch from the exact observed main.
-- Updated the canonical protocol, Runner policy view, README progress policy, and durable state to encode time/credit-bounded autonomous continuation, safe in-scope PR merge authority, no-busy-wait behavior, active-batch action-option semantics, and boundary checkpointing.
-- No product/runtime/compatibility/production authority was added.
-
-## Verification
-
-- Local verification: not available through the connected GitHub file/commit interface.
-- Remote verification: pending PR creation and exact-head required workflows.
-- Unresolved review threads: pending PR creation.
-- Active candidate head: pending final state-sync commit.
+- Main/base SHA: `9b33430475d00b20dd222ab176f7673b2ca354db`.
+- PR #814 head `7ef132b3a454f21f277d9309db064b61f7592e0f` had 0 unresolved review threads and was mergeable.
+- On that head, Integration Readiness, P17 Browser Proof and P12 Offline Acceptance passed; P12 Final Release Artifact failed at `status:verify`. CI, CodeQL and P15 target proof were still running.
+- Failure run: P12 Final Release Artifact `36290686669`. The existing governance test still required the old one-milestone policy and compact state key; its journal-size contract also caught the new entry. README verifier and typecheck passed; 307/309 test files and 1,835/1,838 tests passed.
+- Repairs: updated the stale governance assertions and mirrored guidance, retained `max_consolidated_status_refreshes_per_milestone: 1`, and trimmed redundant journal text. No checks or safety boundaries were weakened.
+- The checkpoint sync itself advances the branch. Resolve the exact current candidate from PR #814 metadata after this commit; no passing result is claimed for the new head yet.
 
 ## Exact next safe action
 
-Resolve the final PR #814 head after the state-binding commit; observe required workflows and review threads once at the meaningful final boundary; merge only if every merge condition passes. Then reconcile main and close Issue #812 as duplicate if its overlap is confirmed.
+Observe the final PR #814 head once at the meaningful boundary. Inspect the required seven workflows and review threads, repair any genuine failure, and merge only if all gates pass on the same exact head with zero unresolved threads, mergeable state and a fresh expected-head guard. Reconcile main and close Issue #812 as duplicate only after #813 is merged.
 
-## Blockers / retained authority boundaries
+## Retained blockers / authority limits
 
 - P15 broader operator approval and broad target-compatibility / production claims remain ungranted; only exact bounded implementation slices may proceed.
-
-- #287 requires repository-admin settings access; branch protection remains unresolved.
+- #287 requires repository-admin settings access.
 - #159 requires genuine operator-produced Figma Desktop runtime evidence.
 - #84 requires genuine manual publishing/account/2FA evidence.
 - #182 owns final production/release/marketplace acceptance.
