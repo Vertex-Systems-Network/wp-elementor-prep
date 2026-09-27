@@ -260,3 +260,9 @@ A development/release train may not be called complete while:
 
 - Source work: Issue #808 / PR #809; exact Elementor 4.2.4 overlay blend and CSS-filter controls.
 - Authority remains implementation-only; P17 proof is required on the final head.
+
+### RQ-808-FINAL — Container overlay visual composition
+
+- Source work: Issue #808 / PR #809; exact head `1203cf4cb531307a0a31c73dae497fab0d70c888`; merged main `1c951a81831806892ab64a296a375cf864d26dc0`.
+- Required gate family: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- Authority remains implementation-only; no runtime/import, production, compatibility or download claim.
