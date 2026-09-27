@@ -378,3 +378,8 @@ The retained WordPress `6.8` + Elementor `4.2.4` proof is a reference point, not
 ## Governance after PR #818
 
 PR #818 state finalization passed all seven exact-head gates on `dea45549df14cc23df01939139fa65793d654cc3`, had zero unresolved review threads, and merged under expected-head guard as main `13fb2f5b9200dc9ece2174be3d24d5d259ea29bd`. Issue #817 is complete; Issue #819 owns canonical post-merge state reconciliation. P15 work after #795 includes Container gradients (#797), hover transitions (#801), radial gradients (#805), and overlay blend/filter composition (#809). Re-derive the next capability from exact current resolver coverage; do not treat implementation CI as broad target or production acceptance.
+
+
+## P15 implementation candidate — Issue #821
+
+The responsive gap resolver candidate supports explicit tablet/mobile row and column px pairs while retaining linked-px compatibility. Desktop settings and omitted breakpoints remain unchanged. Source basis is pinned to Elementor 4.2.4. The candidate awaits exact-head gates and claims no responsive closure, broad target compatibility, production readiness or release authority.

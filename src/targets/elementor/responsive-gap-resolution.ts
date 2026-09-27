@@ -38,7 +38,11 @@ export const P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE = Object.freeze({
 export interface P15ElementorResponsiveGapEntryV1 {
   sourceNodeId: string;
   tabletGapPx?: number;
+  tabletRowGapPx?: number;
+  tabletColumnGapPx?: number;
   mobileGapPx?: number;
+  mobileRowGapPx?: number;
+  mobileColumnGapPx?: number;
 }
 
 export interface P15ElementorResponsiveGapManifestV1 {
@@ -93,7 +97,11 @@ export type P15ElementorResponsiveGapStatus =
 export interface P15ElementorResponsiveGapSummaryEntryV1 {
   sourceNodeId: string;
   tabletGapPx: number | null;
+  tabletRowGapPx: number | null;
+  tabletColumnGapPx: number | null;
   mobileGapPx: number | null;
+  mobileRowGapPx: number | null;
+  mobileColumnGapPx: number | null;
 }
 
 export interface P15ElementorResponsiveGapResultV1 {
@@ -133,7 +141,15 @@ const MANIFEST_KEYS = [
   'sourceIrFingerprint',
   'targetCompatibilityClaim',
 ] as const;
-const ENTRY_KEYS = ['mobileGapPx', 'sourceNodeId', 'tabletGapPx'] as const;
+const ENTRY_KEYS = [
+  'mobileColumnGapPx',
+  'mobileGapPx',
+  'mobileRowGapPx',
+  'sourceNodeId',
+  'tabletColumnGapPx',
+  'tabletGapPx',
+  'tabletRowGapPx',
+] as const;
 
 const ISSUE_CODES: readonly P15ElementorResponsiveGapIssueCode[] = [
   'P15_RESPONSIVE_GAP_SOURCE_IR_INVALID',
@@ -191,11 +207,15 @@ function validGapPx(value: unknown): value is number {
 }
 
 function gapValue(value: number): Record<string, unknown> {
+  return gapAxesValue(value, value, true);
+}
+
+function gapAxesValue(row: number, column: number, isLinked: boolean): Record<string, unknown> {
   return {
     unit: 'px',
-    column: String(value),
-    row: String(value),
-    isLinked: true,
+    column: String(column),
+    row: String(row),
+    isLinked,
   };
 }
 
@@ -238,7 +258,7 @@ function baseResult(
  * Apply exact explicit px gap overrides to default tablet/mobile Elementor container controls.
  *
  * This contract never infers a responsive value, changes the desktop gap, converts units,
- * unlinks row/column gaps or claims responsive closure.
+ * splits responsive row/column values only when both explicit px axes are supplied.
  */
 export function resolveP15ElementorResponsiveContainerGaps(
   sourceValue: unknown,
@@ -371,7 +391,7 @@ export function resolveP15ElementorResponsiveContainerGaps(
           issues.push({
             code: 'P15_RESPONSIVE_GAP_ENTRY_INVALID',
             path,
-            message: 'Each responsive gap entry may contain only sourceNodeId plus tablet/mobile px gaps.',
+            message: 'Each responsive gap entry may contain only sourceNodeId plus linked gaps or complete tablet/mobile row/column px pairs.',
           });
           continue;
         }
@@ -394,18 +414,48 @@ export function resolveP15ElementorResponsiveContainerGaps(
           continue;
         }
 
-        const tabletProvided = raw.tabletGapPx !== undefined;
-        const mobileProvided = raw.mobileGapPx !== undefined;
+        const tabletLinked = raw.tabletGapPx !== undefined;
+        const tabletRow = raw.tabletRowGapPx !== undefined;
+        const tabletColumn = raw.tabletColumnGapPx !== undefined;
+        const mobileLinked = raw.mobileGapPx !== undefined;
+        const mobileRow = raw.mobileRowGapPx !== undefined;
+        const mobileColumn = raw.mobileColumnGapPx !== undefined;
+        const tabletSplit = tabletRow || tabletColumn;
+        const mobileSplit = mobileRow || mobileColumn;
+        if ((tabletLinked && tabletSplit) || (mobileLinked && mobileSplit)) {
+          issues.push({
+            code: 'P15_RESPONSIVE_GAP_ENTRY_INVALID',
+            path,
+            message: 'Use either linked gap or an explicit row/column pair for each breakpoint, not both.',
+          });
+          continue;
+        }
+        if (tabletRow !== tabletColumn || mobileRow !== mobileColumn) {
+          issues.push({
+            code: 'P15_RESPONSIVE_GAP_ENTRY_INVALID',
+            path,
+            message: 'Explicit responsive row and column gaps must be supplied together at each breakpoint.',
+          });
+          continue;
+        }
+
+        const tabletProvided = tabletLinked || tabletSplit;
+        const mobileProvided = mobileLinked || mobileSplit;
         if (!tabletProvided && !mobileProvided) {
           issues.push({
             code: 'P15_RESPONSIVE_GAP_OVERRIDE_REQUIRED',
             path,
-            message: 'Each responsive gap entry must provide tabletGapPx and/or mobileGapPx.',
+            message: 'Each responsive gap entry must provide linked gaps or explicit row/column px pairs.',
           });
           continue;
         }
-        if ((tabletProvided && !validGapPx(raw.tabletGapPx))
-          || (mobileProvided && !validGapPx(raw.mobileGapPx))) {
+        const values = [
+          ...(tabletLinked ? [raw.tabletGapPx] : []),
+          ...(tabletSplit ? [raw.tabletRowGapPx, raw.tabletColumnGapPx] : []),
+          ...(mobileLinked ? [raw.mobileGapPx] : []),
+          ...(mobileSplit ? [raw.mobileRowGapPx, raw.mobileColumnGapPx] : []),
+        ];
+        if (values.some((value) => !validGapPx(value))) {
           issues.push({
             code: 'P15_RESPONSIVE_GAP_VALUE_INVALID',
             path,
@@ -416,8 +466,16 @@ export function resolveP15ElementorResponsiveContainerGaps(
 
         resolutions.set(sourceNodeId, {
           sourceNodeId,
-          ...(tabletProvided ? { tabletGapPx: raw.tabletGapPx as number } : {}),
-          ...(mobileProvided ? { mobileGapPx: raw.mobileGapPx as number } : {}),
+          ...(tabletLinked ? { tabletGapPx: raw.tabletGapPx as number } : {}),
+          ...(tabletSplit ? {
+            tabletRowGapPx: raw.tabletRowGapPx as number,
+            tabletColumnGapPx: raw.tabletColumnGapPx as number,
+          } : {}),
+          ...(mobileLinked ? { mobileGapPx: raw.mobileGapPx as number } : {}),
+          ...(mobileSplit ? {
+            mobileRowGapPx: raw.mobileRowGapPx as number,
+            mobileColumnGapPx: raw.mobileColumnGapPx as number,
+          } : {}),
         });
       }
     }
@@ -481,7 +539,11 @@ export function resolveP15ElementorResponsiveContainerGaps(
       });
       continue;
     }
-    if (resolution.tabletGapPx !== undefined
+    const tabletProvided = resolution.tabletGapPx !== undefined
+      || resolution.tabletRowGapPx !== undefined;
+    const mobileProvided = resolution.mobileGapPx !== undefined
+      || resolution.mobileRowGapPx !== undefined;
+    if (tabletProvided
       && Object.prototype.hasOwnProperty.call(target.settings, P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.tabletSettingKey)) {
       issues.push({
         code: 'P15_RESPONSIVE_GAP_EXISTING_OVERRIDE_CONFLICT',
@@ -490,7 +552,7 @@ export function resolveP15ElementorResponsiveContainerGaps(
       });
       continue;
     }
-    if (resolution.mobileGapPx !== undefined
+    if (mobileProvided
       && Object.prototype.hasOwnProperty.call(target.settings, P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.mobileSettingKey)) {
       issues.push({
         code: 'P15_RESPONSIVE_GAP_EXISTING_OVERRIDE_CONFLICT',
@@ -500,11 +562,15 @@ export function resolveP15ElementorResponsiveContainerGaps(
       continue;
     }
 
-    if (resolution.tabletGapPx !== undefined) {
-      target.settings[P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.tabletSettingKey] = gapValue(resolution.tabletGapPx);
+    if (tabletProvided) {
+      target.settings[P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.tabletSettingKey] = resolution.tabletGapPx !== undefined
+        ? gapValue(resolution.tabletGapPx)
+        : gapAxesValue(resolution.tabletRowGapPx as number, resolution.tabletColumnGapPx as number, false);
     }
-    if (resolution.mobileGapPx !== undefined) {
-      target.settings[P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.mobileSettingKey] = gapValue(resolution.mobileGapPx);
+    if (mobileProvided) {
+      target.settings[P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE.mobileSettingKey] = resolution.mobileGapPx !== undefined
+        ? gapValue(resolution.mobileGapPx)
+        : gapAxesValue(resolution.mobileRowGapPx as number, resolution.mobileColumnGapPx as number, false);
     }
   }
 
@@ -548,7 +614,11 @@ export function resolveP15ElementorResponsiveContainerGaps(
     .map((entry) => ({
       sourceNodeId: entry.sourceNodeId,
       tabletGapPx: entry.tabletGapPx ?? null,
+      tabletRowGapPx: entry.tabletRowGapPx ?? null,
+      tabletColumnGapPx: entry.tabletColumnGapPx ?? null,
       mobileGapPx: entry.mobileGapPx ?? null,
+      mobileRowGapPx: entry.mobileRowGapPx ?? null,
+      mobileColumnGapPx: entry.mobileColumnGapPx ?? null,
     }))
     .sort((left, right) => left.sourceNodeId.localeCompare(right.sourceNodeId));
 
@@ -576,11 +646,36 @@ function validIssue(issue: P15ElementorResponsiveGapIssueV1): boolean {
 
 function validSummaryEntry(entry: P15ElementorResponsiveGapSummaryEntryV1): boolean {
   return isRecord(entry)
-    && exactKeys(entry, ['mobileGapPx', 'sourceNodeId', 'tabletGapPx'])
+    && exactKeys(entry, [
+      'mobileColumnGapPx',
+      'mobileGapPx',
+      'mobileRowGapPx',
+      'sourceNodeId',
+      'tabletColumnGapPx',
+      'tabletGapPx',
+      'tabletRowGapPx',
+    ])
     && validSourceNodeId(entry.sourceNodeId)
-    && (entry.tabletGapPx === null || validGapPx(entry.tabletGapPx))
-    && (entry.mobileGapPx === null || validGapPx(entry.mobileGapPx))
-    && (entry.tabletGapPx !== null || entry.mobileGapPx !== null);
+    && [
+      entry.tabletGapPx,
+      entry.tabletRowGapPx,
+      entry.tabletColumnGapPx,
+      entry.mobileGapPx,
+      entry.mobileRowGapPx,
+      entry.mobileColumnGapPx,
+    ].every((value) => value === null || validGapPx(value))
+    && (entry.tabletGapPx !== null
+      || entry.tabletRowGapPx !== null
+      || entry.tabletColumnGapPx !== null
+      || entry.mobileGapPx !== null
+      || entry.mobileRowGapPx !== null
+      || entry.mobileColumnGapPx !== null)
+    && (entry.tabletRowGapPx === null) === (entry.tabletColumnGapPx === null)
+    && (entry.mobileRowGapPx === null) === (entry.mobileColumnGapPx === null)
+    && !(entry.tabletGapPx !== null
+      && (entry.tabletRowGapPx !== null || entry.tabletColumnGapPx !== null))
+    && !(entry.mobileGapPx !== null
+      && (entry.mobileRowGapPx !== null || entry.mobileColumnGapPx !== null));
 }
 
 /** Serialize only sanitized responsive-gap metadata; source content, template JSON and candidate bytes are omitted. */

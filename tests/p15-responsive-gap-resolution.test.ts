@@ -97,6 +97,15 @@ function expectedGap(value: number): Record<string, unknown> {
   };
 }
 
+function expectedSplitGap(row: number, column: number): Record<string, unknown> {
+  return {
+    unit: 'px',
+    column: String(column),
+    row: String(row),
+    isLinked: false,
+  };
+}
+
 describe('P15 exact source-bound responsive container gap resolution', () => {
   it('writes exact Elementor 4.2.4 tablet/mobile gap objects while preserving desktop gap', () => {
     const source = sourceDocument();
@@ -152,7 +161,7 @@ describe('P15 exact source-bound responsive container gap resolution', () => {
     expect(nestedSettings).not.toHaveProperty('flex_gap_tablet');
     expect(nestedSettings.flex_gap_mobile).toEqual(expectedGap(4));
     expect(result.resolvedGaps).toEqual([
-      { sourceNodeId: 'nested', tabletGapPx: null, mobileGapPx: 4 },
+      { sourceNodeId: 'nested', tabletGapPx: null, tabletRowGapPx: null, tabletColumnGapPx: null, mobileGapPx: 4, mobileRowGapPx: null, mobileColumnGapPx: null },
     ]);
   });
 
@@ -171,6 +180,57 @@ describe('P15 exact source-bound responsive container gap resolution', () => {
     const mobileSettings = settingsOf(mobileOnly.template?.content[0]);
     expect(mobileSettings).not.toHaveProperty('flex_gap_tablet');
     expect(mobileSettings.flex_gap_mobile).toEqual(expectedGap(P15_NEUTRAL_EXPORT_MAX_SPACING_PX));
+  });
+
+  it('writes exact independent tablet/mobile row and column pairs and preserves the desktop gap', () => {
+    const source = sourceDocument();
+    const result = resolveP15ElementorResponsiveContainerGaps(source, manifest(source, [
+      {
+        sourceNodeId: 'root',
+        tabletRowGapPx: 18,
+        tabletColumnGapPx: 30,
+        mobileRowGapPx: 0,
+        mobileColumnGapPx: P15_NEUTRAL_EXPORT_MAX_SPACING_PX,
+      },
+    ]));
+
+    expect(result.status).toBe('RESPONSIVE_GAPS_RESOLVED');
+    const settings = settingsOf(result.template?.content[0]);
+    expect(settings.flex_gap).toEqual(expectedGap(24));
+    expect(settings.flex_gap_tablet).toEqual(expectedSplitGap(18, 30));
+    expect(settings.flex_gap_mobile).toEqual(expectedSplitGap(0, P15_NEUTRAL_EXPORT_MAX_SPACING_PX));
+    expect(result.resolvedGaps).toEqual([{
+      sourceNodeId: 'root',
+      tabletGapPx: null,
+      tabletRowGapPx: 18,
+      tabletColumnGapPx: 30,
+      mobileGapPx: null,
+      mobileRowGapPx: 0,
+      mobileColumnGapPx: P15_NEUTRAL_EXPORT_MAX_SPACING_PX,
+    }]);
+    expect(result.responsiveInferencePerformed).toBe(false);
+    expect(result.responsiveClosureClaim).toBe(false);
+    expect(result.targetCompatibilityClaim).toBe(false);
+    expect(result.productionAcceptance).toBe(false);
+  });
+
+  it('rejects partial split pairs and ambiguous linked-plus-split values at the same breakpoint', () => {
+    const source = sourceDocument();
+    const partial = resolveP15ElementorResponsiveContainerGaps(source, manifest(source, [{
+      sourceNodeId: 'root',
+      tabletRowGapPx: 14,
+    }]));
+    expect(partial.status).toBe('REJECTED_INVALID_MANIFEST');
+    expect(partial.issues.map((issue) => issue.code)).toContain('P15_RESPONSIVE_GAP_ENTRY_INVALID');
+
+    const mixed = resolveP15ElementorResponsiveContainerGaps(source, manifest(source, [{
+      sourceNodeId: 'root',
+      tabletGapPx: 14,
+      tabletRowGapPx: 14,
+      tabletColumnGapPx: 20,
+    }]));
+    expect(mixed.status).toBe('REJECTED_INVALID_MANIFEST');
+    expect(mixed.issues.map((issue) => issue.code)).toContain('P15_RESPONSIVE_GAP_ENTRY_INVALID');
   });
 
   it('returns a deterministic no-op when no gap overrides are supplied', () => {
@@ -237,6 +297,14 @@ describe('P15 exact source-bound responsive container gap resolution', () => {
         .toContain('P15_RESPONSIVE_GAP_VALUE_INVALID');
     }
 
+    const splitOutOfRange = resolveP15ElementorResponsiveContainerGaps(source, manifest(source, [{
+      sourceNodeId: 'root',
+      tabletRowGapPx: -1,
+      tabletColumnGapPx: 2,
+    }]));
+    expect(splitOutOfRange.issues.map((issue) => issue.code))
+      .toContain('P15_RESPONSIVE_GAP_VALUE_INVALID');
+
     const unknown = resolveP15ElementorResponsiveContainerGaps(source, {
       ...manifest(source, []),
       containers: [{ sourceNodeId: 'root', mobileGapPx: 5, unit: 'rem' }],
@@ -291,6 +359,7 @@ describe('P15 exact source-bound responsive container gap resolution', () => {
     expect(serialized).not.toContain('"candidate"');
     expect(serialized).not.toContain('"template"');
     expect(serialized).toContain('"flex_gap_mobile"');
+    expect(serialized).toContain('"tabletRowGapPx"');
 
     const mutatedIssue = {
       ...resolveP15ElementorResponsiveContainerGaps(source, {

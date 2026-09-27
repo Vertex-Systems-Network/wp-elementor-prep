@@ -128,3 +128,8 @@ The artifact is registered in `config/runtime-artifacts.json` schema v3 as the m
 ## 2026-09-27 post-PR #818 status
 
 PR #818 state-only reconciliation merged as main `13fb2f5b9200dc9ece2174be3d24d5d259ea29bd` after all seven required exact-head gates passed with zero unresolved review threads. Issue #819 owns final canonical state reconciliation and refresh of the P15 capability map. P15 remains CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED; recent bounded additions include Container gradients, hover transitions, radial gradients and overlay blend/filter composition. Runtime, broad compatibility, production and download authority remain unclaimed.
+
+
+## P15 responsive gap-axis candidate — Issue #821
+
+The bounded responsive mapping now has an implementation candidate for explicit tablet/mobile row/column gap pairs alongside linked-px gaps. Exact source/candidate binding remains required; broad compatibility and responsive closure remain unclaimed pending exact-head gates.

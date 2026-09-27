@@ -139,3 +139,8 @@ Do not fabricate any of these from CI/repository metadata.
 - no synthetic runtime/target/external evidence.
 
 - PR #816 exact head `14ae0c87b00776060ae3a05c83a8388c51da4e30` passed all seven required gates with zero unresolved review threads and merged as main `bdebce3e0efcf06d4c7596e2572e5611e254c267`; Issue #815 is complete. Issue #817 / branch `ai-native/finalize-pr-816-state-817` owns canonical post-merge state finalization. After that PR merges, refresh the P15 capability map from current source evidence before opening the next bounded product batch.
+
+
+## P15 current responsive gap-axis slice
+
+Issue #821 extends responsive Container gap resolution with explicit tablet/mobile row and column px pairs. It preserves linked-px entries, desktop settings, source/base-candidate identity binding, false authority flags and omitted-breakpoint semantics. The candidate is not certified until the final exact PR head passes all required gates.
