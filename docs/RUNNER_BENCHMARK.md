@@ -324,3 +324,7 @@ A focused probe imports a script-authored two-child Container template with expl
 ## P15 #825 — real target responsive order render
 
 The controlled custom-order template from PR #827 is rendered through exact Elementor 4.2.4 on local WordPress 6.8. A token-bound frontend endpoint and Chrome probe record computed order and visual top positions for two child Containers at desktop (1280px), tablet (768px) and mobile (375px). The values were authored by the probe and imported via the target library; the result establishes only behavior for those explicit cases. Editor-generated serialization, arbitrary templates, broad compatibility, download, production and release authority remain outside this proof. Exact-head gate results are pending.
+
+## P15 #825 — explicit custom-order resolver candidate
+
+The implementation uses source/base-candidate binding and complete tablet/mobile custom-order pairs in the repository policy range -1000..1000. The controlled Elementor 4.2.4 import/export and browser evidence is retained under PRs #827 and #828. This code adds no automatic breakpoint inference, production or download authority. Exact-head gates are pending.
