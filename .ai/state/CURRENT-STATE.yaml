@@ -2,7 +2,7 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: adcb28f4054d700c5a42809e12318a96e5c45b64
+observed_main_sha: b90bf42a05dee28baddd300f19525234523798a5
 observed_main_sha_semantics: exact_current_main_tip_post_merge
 observed_main_branch: main
 active_issue: null
@@ -22,12 +22,12 @@ next_action_options:
   recommended_slot_fixed: false
   recommended_action_id: review-next-p15-map
 milestone_status: IDLE_READY_NEXT_P15_BATCH
-last_completed_milestone: p15_container_linear_gradient_composition_pr_797_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: implement_and_certify_container_hover_transition_batch
+last_completed_milestone: p15_container_radial_gradient_composition_pr_805_exact_head_passed_7_of_7_and_merged
+exact_next_safe_action: review_next_exact_container_capability_map
 pending_runner_ids: []
 blocked_runner_ids: []
 current_blockers:
-  - pr_795_exact_head_required_gates_not_yet_certified
+  - p15_retained_operator_approval_not_supplied
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
