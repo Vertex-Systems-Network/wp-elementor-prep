@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 5fdaab6cb50e3651da4b44c48ca9e81157dca843
-active_issue: 815
-active_pr: 816
-active_branch: ai-native/reconcile-pr-814-state-815
+observed_main_sha: bdebce3e0efcf06d4c7596e2572e5611e254c267
+active_issue: 817
+active_pr: null
+active_branch: ai-native/finalize-pr-816-state-817
 active_execution_batch:
   target_duration: 5_HOURS_OR_AVAILABLE_WORKSPACE_CREDIT_SESSION_WHICHEVER_ENDS_FIRST
   continues_without_user_reconsent: true
@@ -17,27 +17,28 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: issue-815-state-reconciliation
+  presentation_epoch: issue-817-state-finalization
   presentation_order:
-    - continue-active-batch
+    - finalize-main-state-817
     - audit-next-p15-capability-map
     - review-security-blocker-287
-recommended_action_id: continue-active-batch
+    - review-security-blocker-287
+recommended_action_id: finalize-main-state-817
 options:
-  - action_id: continue-active-batch
-    label: Finish state reconciliation
+  - action_id: finalize-main-state-817
+    label: Finalize merged state
     enabled: true
     recommended: true
-    action_token: CONTINUE_ACTIVE_BATCH
-    request_payload: "Complete Issue #815 exact-main state reconciliation, verify the PR, then refresh the P15 capability map."
+    action_token: FINALIZE_MAIN_STATE_817
+    request_payload: "Complete Issue #817 state reconciliation, verify PR gates, then refresh the current P15 capability map."
     blocked_by: []
     blocked_reason: null
-  - action_id: audit-next-p15-capability-map
+  - action_id: audit-p15-after-817
     label: Audit next P15 capability map
     enabled: true
     recommended: false
-    action_token: AUDIT_NEXT_P15
-    request_payload: "After Issue #815 reconciliation, inspect current P15 capability evidence and select a bounded next slice without widening authority."
+    action_token: AUDIT_P15_AFTER_817
+    request_payload: "After Issue #817 reconciliation, inspect current P15 capability evidence and select a bounded next slice without widening authority."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
