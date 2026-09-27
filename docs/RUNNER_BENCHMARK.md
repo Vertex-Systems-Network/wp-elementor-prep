@@ -255,3 +255,8 @@ A development/release train may not be called complete while:
 
 - Source work: Issue #804 / PR #805; exact head `8b384f354ebbfe6a0e18bfd5b34c33525390eac2`; merged main `b90bf42a05dee28baddd300f19525234523798a5`.
 - Required gate family includes P17 Local Browser Proof; no runtime or production authority is inferred.
+
+### RQ-808-FINAL — Container overlay visual composition
+
+- Source work: Issue #808 / PR #809; exact Elementor 4.2.4 overlay blend and CSS-filter controls.
+- Authority remains implementation-only; P17 proof is required on the final head.
