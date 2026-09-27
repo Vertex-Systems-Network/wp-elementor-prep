@@ -19,8 +19,7 @@ interaction:
   recommended_slot_fixed: false
   presentation_epoch: issue-823-p15-basis
   presentation_order:
-    - finalize-main-state-822
-    - implement-next-p15-issue-823
+    - implement-p15-823
     - review-security-blocker-287
 recommended_action_id: implement-p15-823
 options:
@@ -30,14 +29,6 @@ options:
     recommended: true
     action_token: IMPLEMENT_P15_823
     request_payload: "Implement Issue #823 responsive custom basis with exact source/candidate binding and all false authority flags."
-    blocked_by: []
-    blocked_reason: null
-  - action_id: implement-p15-823
-    label: Implement bounded P15 candidate #823
-    enabled: true
-    recommended: false
-    action_token: IMPLEMENT_P15_823
-    request_payload: "Issue #823 implementation is active; exact-head gates and controlled target proof remain required."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
