@@ -24,7 +24,7 @@ next_action_options:
 milestone_status: IN_PROGRESS
 last_completed_milestone: pr_816_state_reconciliation_passed_7_of_7_and_merged_as_bdebce3
 exact_next_safe_action: synchronize_canonical_main_state_after_pr_816_merge_and_prepare_current_p15_handoff
-pending_runner_ids: [RQ-817-FINAL]
+pending_runner_ids: []
 blocked_runner_ids: []
 current_blockers:
   - p15_retained_operator_approval_not_supplied_for_broader_compatibility_claims
