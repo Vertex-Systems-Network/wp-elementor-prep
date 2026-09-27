@@ -7,6 +7,8 @@ import { P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_MANIFEST_VERSION } from '../src/t
 import { P15_ELEMENTOR_CONTAINER_HOVER_OVERLAY_COLOR_MANIFEST_VERSION } from '../src/targets/elementor/container-hover-overlay-color-resolution';
 import { P15_CONTAINER_BOX_SHADOW_MANIFEST_VERSION } from '../src/targets/elementor/container-box-shadow-resolution';
 import { P15_ELEMENTOR_CONTAINER_HOVER_BACKGROUND_COLOR_MANIFEST_VERSION } from '../src/targets/elementor/container-hover-background-color-resolution';
+import { P15_ELEMENTOR_RESPONSIVE_BORDER_RADIUS_MANIFEST_VERSION } from '../src/targets/elementor/responsive-border-radius-resolution';
+import { P15_ELEMENTOR_RESPONSIVE_HOVER_BORDER_RADIUS_MANIFEST_VERSION } from '../src/targets/elementor/responsive-hover-border-radius-resolution';
 import { P15_NEUTRAL_EXPORT_IR_VERSION, type P15NeutralExportDocumentV1 } from '../src/targets/elementor/neutral-export-ir';
 import { fingerprintP15NeutralExportDocument } from '../src/targets/elementor/neutral-export-ir-identity';
 import { buildElementorTemplateCandidateIdentity } from '../src/targets/elementor/import-validation-contract';
@@ -14,7 +16,7 @@ import { generateElementorV3TemplateCandidate } from '../src/targets/elementor/v
 
 function source(): P15NeutralExportDocumentV1 {
   return { schemaVersion: 1, irVersion: P15_NEUTRAL_EXPORT_IR_VERSION, title: 'PRIVATE SOURCE', documentType: 'section',
-    nodes: [{ kind: 'container', sourceNodeId: 'root', direction: 'column', children: [
+    nodes: [{ kind: 'container', sourceNodeId: 'root', direction: 'column', cornerRadiusPx: 12, children: [
       { kind: 'heading', sourceNodeId: 'heading', level: 'h2', text: 'PRIVATE HEADING' },
       { kind: 'container', sourceNodeId: 'nested', direction: 'row', children: [] },
     ] }],
@@ -47,15 +49,20 @@ function manifest(document: P15NeutralExportDocumentV1): P15ContainerStyleCompos
         }, hover: { horizontal: 0, vertical: 8, blur: 0, spread: 5, color: '#abcdef', position: 'inset' } }] },
       hoverBackground: { ...common, manifestVersion: P15_ELEMENTOR_CONTAINER_HOVER_BACKGROUND_COLOR_MANIFEST_VERSION,
         containers: [{ sourceNodeId: 'nested', color: '#abcdef' }] },
+      responsiveRadius: { ...common, manifestVersion: P15_ELEMENTOR_RESPONSIVE_BORDER_RADIUS_MANIFEST_VERSION,
+        containers: [{ sourceNodeId: 'root', tabletCornerRadiusPx: 20 }] },
+      responsiveHoverRadius: { ...common, manifestVersion: P15_ELEMENTOR_RESPONSIVE_HOVER_BORDER_RADIUS_MANIFEST_VERSION,
+        containers: [{ sourceNodeId: 'root', mobileCornerRadiusPx: 6 }] },
     },
   };
 }
 
 describe('P15 bounded Container style composition', () => {
-  it('combines six independently validated normal/hover families on one candidate', () => {
+  it('combines eight independently validated normal/hover families on one candidate', () => {
     const document = source(); const result = composeP15ContainerStyles(document, manifest(document));
     expect(result.status).toBe('RESOLVED');
-    expect(result.appliedFamilies).toEqual(['normalBorder', 'hoverBorder', 'normalOverlay', 'hoverOverlay', 'boxShadows', 'hoverBackground']);
+    expect(result.appliedFamilies).toEqual(['normalBorder', 'hoverBorder', 'normalOverlay', 'hoverOverlay', 'boxShadows', 'hoverBackground',
+      'responsiveRadius', 'responsiveHoverRadius']);
     expect(result.candidate?.status).toBe('READY_FOR_TARGET_IMPORT_VALIDATION');
     const root = result.template?.content[0];
     if (!root || Array.isArray(root.settings)) throw new Error('expected root settings');
@@ -66,7 +73,9 @@ describe('P15 bounded Container style composition', () => {
       background_overlay_opacity: { unit: 'px', size: 0, sizes: [] },
       background_overlay_opacity_tablet: { unit: 'px', size: 1, sizes: [] },
       box_shadow_box_shadow_type: 'yes', box_shadow_box_shadow_position: ' ',
-      box_shadow_hover_box_shadow_type: 'yes', box_shadow_hover_box_shadow_position: 'inset' });
+      box_shadow_hover_box_shadow_type: 'yes', box_shadow_hover_box_shadow_position: 'inset',
+      border_radius_tablet: { unit: 'px', top: '20', right: '20', bottom: '20', left: '20', isLinked: true },
+      border_radius_hover_mobile: { unit: 'px', top: '6', right: '6', bottom: '6', left: '6', isLinked: true } });
     expect(root.settings).not.toHaveProperty('border_width_mobile');
     expect(root.settings).not.toHaveProperty('background_overlay_opacity_mobile');
     expect(root.settings).not.toHaveProperty('background_overlay_hover_color');
@@ -79,6 +88,9 @@ describe('P15 bounded Container style composition', () => {
     expect(nested.settings).not.toHaveProperty('background_overlay_hover_opacity_tablet');
     expect(nested.settings).not.toHaveProperty('box_shadow_box_shadow');
     expect(root.settings).not.toHaveProperty('background_hover_color');
+    expect(root.settings).toHaveProperty('border_radius');
+    expect(root.settings).not.toHaveProperty('border_radius_mobile');
+    expect(root.settings).not.toHaveProperty('border_radius_hover_tablet');
     expect(result.targetCompatibilityClaim).toBe(false);
     expect(result.productionAcceptance).toBe(false);
     expect(result.downloadEnabled).toBe(false);
@@ -148,6 +160,26 @@ describe('P15 bounded Container style composition', () => {
       ...(valid.families.hoverBackground as object), productionAcceptance: true,
     } } };
     expect(composeP15ContainerStyles(document, conflicting).status).toBe('REJECTED');
+  });
+
+  it('rejects invalid responsive radius values, duplicate IDs and wrong source types', () => {
+    const document = source(); const valid = manifest(document);
+    for (const containers of [
+      [{ sourceNodeId: 'root', tabletCornerRadiusPx: -1 }],
+      [{ sourceNodeId: 'root', tabletCornerRadiusPx: 1.5 }],
+      [{ sourceNodeId: 'root', tabletCornerRadiusPx: NaN }],
+      [{ sourceNodeId: 'root', tabletCornerRadiusPx: 2, css: 'PRIVATE' }],
+      [{ sourceNodeId: 'heading', tabletCornerRadiusPx: 2 }],
+      [{ sourceNodeId: 'root', tabletCornerRadiusPx: 2 }, { sourceNodeId: 'root', mobileCornerRadiusPx: 3 }],
+    ]) {
+      const changed = { ...valid, families: { ...valid.families, responsiveRadius: {
+        ...(valid.families.responsiveRadius as object), containers,
+      } } };
+      expect(composeP15ContainerStyles(document, changed).status).toBe('REJECTED');
+    }
+    expect(composeP15ContainerStyles(document, { ...valid, families: { ...valid.families,
+      responsiveHoverRadius: { ...(valid.families.responsiveHoverRadius as object), responsiveClosureClaim: true },
+    } }).status).toBe('REJECTED');
   });
 
   it('serializes deterministic sanitized evidence and rejects inflated results', () => {
