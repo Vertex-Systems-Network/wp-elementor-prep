@@ -3,7 +3,7 @@
 Status: IN_PROGRESS
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
 Observed main: `bdebce3e0efcf06d4c7596e2572e5611e254c267`
-Canonical active Issue/PR: `#817` / PR not yet opened
+Canonical active Issue/PR: `#817` / `#818`
 Branch: `ai-native/finalize-pr-816-state-817`
 Target batch boundary: up to five hours or available Workspace execution credit/session, whichever ends first.
 Authority: routine reversible work inside the accepted repository/roadmap boundary. Production, release, account/security, paid-provider and operator-only evidence remain excluded.
@@ -29,4 +29,4 @@ PR #816 exact head `14ae0c87b00776060ae3a05c83a8388c51da4e30` passed all seven r
 
 ## Exact next safe action
 
-Issue #817 / branch `ai-native/finalize-pr-816-state-817` owns canonical state finalization. Open one state-only PR, certify all seven exact-head workflows, merge under expected-head guard, then refresh the live P15 capability map.
+Issue #817 / branch `ai-native/finalize-pr-816-state-817` owns canonical state finalization. Observe PR #818's exact-head workflows and review threads once at a meaningful boundary. Merge only after all seven gates pass, with zero unresolved threads, mergeability and expected-head guard; then refresh the live P15 capability map.
