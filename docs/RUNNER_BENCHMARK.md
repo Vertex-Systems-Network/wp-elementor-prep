@@ -304,9 +304,9 @@ A development/release train may not be called complete while:
 
 PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven required workflows, had zero unresolved review threads, and merged with an expected-head guard as main `a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f`. The implementation preserves linked-px compatibility, desktop settings, source/base-candidate binding and omitted-breakpoint behavior while supporting complete explicit tablet/mobile row/column px pairs. No broader compatibility or responsive-closure claim follows from these gates.
 
-## P15 #823 — responsive Flex Item custom basis candidate
+## P15 #823 — responsive Flex Item custom basis implementation
 
-Issue #823 is queued from pinned Elementor 4.2.4 Flex Item source. Candidate scope is tablet/mobile explicit px basis values in the source slider's 0..1000 range, requiring the responsive custom-basis type/value pair. Exact serialized target settings require controlled proof before any broader claim.
+PR #823 exact head a89bee55c3d43a0f40b2c97701c4a473ef9cce6b passed all seven required workflows, had zero unresolved review threads, and merged under expected-head guard as main b34f5b254dfe7bf8f217d691ecf8d58652674428. The implementation is bounded to complete tablet/mobile custom-type and integer px value pairs in 0..1000. Broader target compatibility, responsive closure and production authority remain unclaimed.
 
 
 ## P15 #823 — responsive Flex Item custom basis candidate
