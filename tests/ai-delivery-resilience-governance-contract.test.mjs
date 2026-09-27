@@ -44,7 +44,7 @@ describe('delivery-resilient AI execution governance', () => {
   it('keeps Runner batching compatible with active-batch checkpointing', () => {
     expect(runnerBenchmark).toContain('## Delivery-resilient Runner observation');
     expect(runnerBenchmark).toContain('queued or running Runner does not automatically end the batch');
-    expect(runnerBenchmark).toContain('Never use sleep loops or repeated polling');
+    expect(runnerBenchmark).toContain('Never use sleep loops, repeated unchanged status fetches or retry-until-green behavior.');
     expect(runnerBenchmark).toContain('BLOCKING_NOW');
     expect(runnerBenchmark).toContain('PROJECT_FINAL');
     expect(runnerBenchmark).toContain('## Project-final Runner queue');

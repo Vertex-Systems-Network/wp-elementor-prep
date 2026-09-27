@@ -304,7 +304,7 @@ Execution-bound constants and safety wording are machine-checked:
 - `MAX_RUNNER_STATUS_FETCHES_PER_MEANINGFUL_BOUNDARY = 1` limits each meaningful status boundary; it does not end an active batch.
 - `ROUTINE_IN_SCOPE_REPOSITORY_MUTATIONS = PREAUTHORIZED` and `SAFE_GREEN_PR_MERGE_WITHIN_SCOPE = PREAUTHORIZED` apply only within the accepted repository, roadmap and authority boundary.
 - Pending CI does not automatically end an active batch: preserve exact head/run identifiers, continue independent safe work, and recheck at a meaningful lifecycle boundary. Do not mutate a candidate under certification or busy-poll.
-- Required checks, exact-head merge gates, external/manual evidence, production/release authority and transport-failure limitations remain unchanged.
+- Required checks, exact-head merge gates, external/manual evidence, production/release authority and transport-failure limitations remain unchanged; this plan must not claim absolute protection from platform or external failures.
 - The separate hourly scheduled-supervisor cadence remains a bounded automation invocation; it does not shorten an explicitly active user-started execution batch.
 
 ### H. Mandatory end-of-work sync

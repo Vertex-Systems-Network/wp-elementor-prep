@@ -108,6 +108,8 @@ Compact limits are mandatory: CURRENT-STATE <=12 KiB; LAST-CHECKPOINT <=16 KiB; 
 
 Follow `.ai/state/PROTOCOL.md` on every development batch.
 
+- `MAX_LOGICAL_MILESTONES_PER_EXECUTION_BATCH = TIME_CREDIT_BOUNDED` bounds the active batch, not each user turn.
+
 - One explicit user START/CONTINUE instruction authorizes routine reversible repository work inside the accepted repository, roadmap and authority boundary for up to five hours or available Workspace credit/session, whichever ends first.
 - Continue safe in-scope work across ordinary milestone completion, PR merge and pending CI without repeated routine consent.
 - `MAX_RUNNER_STATUS_FETCHES_PER_MEANINGFUL_BOUNDARY = 1` limits each meaningful status boundary; it does not end an active batch.

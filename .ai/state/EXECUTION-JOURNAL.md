@@ -352,4 +352,4 @@ Older Fast-Batch entries before #731 are archived; claims and Runner ledgers ret
 
 - Main `9b334304`; #813 / PR #814 active; #812 overlaps.
 - Governance-only change; no product authority.
-- Repaired stale tests and journal ceiling after P12 status failure; exact-head gates pending.
+- P12/CI status failures exposed stale contract assertions; docs/tests repaired, with exact-head gates pending.
