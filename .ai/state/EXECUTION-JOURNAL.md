@@ -2,7 +2,6 @@
 
 This journal records durable AI-native execution-policy milestones only. It is not a CI polling log.
 
-> Rolling journal: history before P14 R6/P15 #659 is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-001.md`; P14 R6/P15 #659 through pre-P15 #701 history is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-002.md`. Canonical claims, coordination and Runner evidence remain in their machine ledgers.
 
 Older entries archived; claims and Runner ledgers retain evidence.
 
@@ -348,4 +347,4 @@ Older Fast-Batch entries before #731 are archived; claims and Runner ledgers ret
 
 ## 2026-09-27 — P15 #796 implementation
 
-- #796 covers exact Elementor 4.2.4 Container normal/hover linear gradients with explicit responsive values only; focused tests and typecheck PASS; PR pending.
+- #796 covers exact Elementor 4.2.4 Container normal/hover linear gradients with explicit responsive values only; focused tests and typecheck PASS; PR #797 passed 7/7, zero threads, merged `c1beb26b`; #796 closed.
