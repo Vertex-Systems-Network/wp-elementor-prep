@@ -4,9 +4,9 @@ This journal records durable AI-native execution-policy milestones only. It is n
 
 > Rolling journal: history before P14 R6/P15 #659 is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-001.md`; P14 R6/P15 #659 through pre-P15 #701 history is preserved in `.ai/history/EXECUTION-JOURNAL-ARCHIVE-002.md`. Canonical claims, coordination and Runner evidence remain in their machine ledgers.
 
-Older entries are archived; canonical claims and Runner ledgers retain the evidence.
+Older entries archived; claims and Runner ledgers retain evidence.
 
-Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 2026-09-26 to preserve the canonical 32 KiB journal ceiling. Durable claims/checkpoints, Runner ledgers and GitHub history retain authoritative evidence.
+Older Fast-Batch entries before #731 are archived; claims and Runner ledgers retain evidence.
 
 ## 2026-09-26 — terminal PR #730 completed; P15 Fast Batch #731 started
 
@@ -341,7 +341,11 @@ Rolling-history note: older Fast-Batch entries before P15 #731 were pruned on 20
 - #791 passed 7/7 on `2aa8d19c`, zero threads; merged main `d24ed13be8225968727a965c69ecc03ab529b5ee`; #790 closed.
 - #792/#793 composes explicit normal/hover Container responsive radii. Local 1,826 tests, typecheck/build/status PASS; final gates pending. No target authority.
 
-## 2026-09-27 — P15 #793 merge and #794/#795
+## 2026-09-27 — P15 merges and #796
 
 - #793 passed 7/7 on `5e404876`, zero threads; merged main `e6de603b62abc60eb20e2341c308ad22f647efe1`; #792 closed.
-- #794/#795 composes five existing Button color families. Local 1,830 tests, typecheck/build/status PASS; final gates pending. No new target authority.
+- #794/#795 composed five existing Button color families; exact seven gates passed, zero threads, merged main `b8ed7584`; #794 closed. No new target authority.
+
+## 2026-09-27 — P15 #796 implementation
+
+- #796 covers exact Elementor 4.2.4 Container normal/hover linear gradients with explicit responsive values only; focused tests and typecheck PASS; PR pending.

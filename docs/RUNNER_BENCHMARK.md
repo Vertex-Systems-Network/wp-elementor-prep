@@ -236,3 +236,10 @@ A development/release train may not be called complete while:
 | RQ-792-FINAL | #792 / PR #793 | Explicit normal/hover Container responsive radius composition | Required PR exact-head gate set | head `5e404876...` passed 7/7; zero threads; merged main `e6de603b...` | `FINAL_BATCH` | exact-head gates PASS | DONE |
 
 | RQ-794-FINAL | #794 / PR #795 | Five-family Button color composition | Required PR exact-head gate set | initial head `2ee1aaef...`; final head pending | `FINAL_BATCH` | all seven workflows and zero unresolved threads on final head | AWAITING_EXACT_HEAD_BATCH |
+
+### RQ-796-FINAL — Container linear-gradient composition
+
+- Source work: PR #797, Issue #796; exact head is recorded after final state sync.
+- Required gate family: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
+- Input identity: exact Elementor 4.2.4 Container `background` and `background_hover` linear-gradient groups; explicit responsive values only.
+- Authority: implementation evidence only; runtime/import, broad compatibility, production and download authority remain false.
