@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 9b33430475d00b20dd222ab176f7673b2ca354db
-active_issue: 813
-active_pr: 814
-active_branch: ai-native/five-hour-execution-batches-813
+observed_main_sha: 5fdaab6cb50e3651da4b44c48ca9e81157dca843
+active_issue: 815
+active_pr: null
+active_branch: ai-native/reconcile-pr-814-state-815
 active_execution_batch:
   target_duration: 5_HOURS_OR_AVAILABLE_WORKSPACE_CREDIT_SESSION_WHICHEVER_ENDS_FIRST
   continues_without_user_reconsent: true
@@ -17,19 +17,27 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: issue-813-active-batch
+  presentation_epoch: issue-815-state-reconciliation
   presentation_order:
-    - review-security-blocker-287
     - continue-active-batch
-    - reconcile-overlapping-issue-812
+    - audit-next-p15-capability-map
+    - review-security-blocker-287
 recommended_action_id: continue-active-batch
 options:
   - action_id: continue-active-batch
-    label: Continue the active execution batch
+    label: Finish state reconciliation
     enabled: true
     recommended: true
     action_token: CONTINUE_ACTIVE_BATCH
-    request_payload: "Continue the active five-hour/credit-bounded execution batch from its exact durable checkpoint; do not repeat completed work."
+    request_payload: "Complete Issue #815 exact-main state reconciliation, verify the PR, then refresh the P15 capability map."
+    blocked_by: []
+    blocked_reason: null
+  - action_id: audit-next-p15-capability-map
+    label: Audit next P15 capability map
+    enabled: true
+    recommended: false
+    action_token: AUDIT_NEXT_P15
+    request_payload: "After Issue #815 reconciliation, inspect current P15 capability evidence and select a bounded next slice without widening authority."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
@@ -37,15 +45,7 @@ options:
     enabled: false
     recommended: false
     action_token: REVIEW_SECURITY_287
-    request_payload: "Review Issue #287 for required branch protection."
+    request_payload: "Review repository admin requirement in Issue #287."
     blocked_by:
       - repository_admin_settings_interface
-    blocked_reason: "Connected GitHub interface does not expose repository administration writes."
-  - action_id: reconcile-overlapping-issue-812
-    label: Reconcile overlapping Issue #812
-    enabled: true
-    recommended: false
-    action_token: RECONCILE_ISSUE_812
-    request_payload: "Close Issue #812 as duplicate after Issue #813's batch protocol change is merged and verified."
-    blocked_by: []
-    blocked_reason: null
+    blocked_reason: "The connected GitHub interface cannot change repository administration settings."
