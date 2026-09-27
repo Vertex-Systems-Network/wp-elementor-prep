@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: cbec0be08b70bb3b44ef943590ee7480c110cd6f
-active_issue: 781
-active_pr: 782
-active_branch: p15/container-overlay-colors
+observed_main_sha: 5eb9390589fe541cdc65a1240205b412bc6ffb09
+active_issue: 783
+active_pr: 784
+active_branch: p15/container-overlay-opacity
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-782-product-handoff
+  presentation_epoch: pr-784-product-handoff
   presentation_order:
     - review-security-blocker-287
     - review-next-p15-map
     - verify-terminal-after-769
     - review-ai-plan
-recommended_action_id: verify-pr-782
+recommended_action_id: verify-pr-784
 options:
-  - action_id: verify-pr-782
-    label: Verify Container overlay colors PR #782
+  - action_id: verify-pr-784
+    label: Verify Container overlay opacity PR #784
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_782
-    request_payload: "Resolve exact current head of product PR #782 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
+    action_token: VERIFY_PR_784
+    request_payload: "Resolve exact current head of product PR #784 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
     blocked_by: []
     blocked_reason: null
   - action_id: review-next-p15-map
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_NEXT_P15_MAP
-    request_payload: "Review remaining P15 capability map from settled product main cbec0be0 without widening authority."
+    request_payload: "Review remaining P15 capability map from settled product main 5eb93905 without widening authority."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287

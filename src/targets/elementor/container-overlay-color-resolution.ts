@@ -35,6 +35,16 @@ export const P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE = Object.freeze({
   selector: '{{WRAPPER}}::before, {{WRAPPER}} > .elementor-background-video-container::before, {{WRAPPER}} > .e-con-inner > .elementor-background-video-container::before, {{WRAPPER}} > .elementor-background-slideshow::before, {{WRAPPER}} > .e-con-inner > .elementor-background-slideshow::before, {{WRAPPER}} > .elementor-motion-effects-container > .elementor-motion-effects-layer::before',
   acceptedBackgroundType: 'classic',
   acceptedColorPattern: '^#[0-9a-f]{6}$',
+  opacityControlName: 'background_overlay_opacity',
+  opacityDesktopSettingKey: 'background_overlay_opacity',
+  opacityTabletSettingKey: 'background_overlay_opacity_tablet',
+  opacityMobileSettingKey: 'background_overlay_opacity_mobile',
+  sliderSourcePath: 'includes/controls/slider.php',
+  sliderSourceBlobSha: 'f56798bd5e0a2bee5a7c3a7771ecbaf2af87fb7f',
+  baseUnitsSourcePath: 'includes/controls/base-units.php',
+  baseUnitsSourceBlobSha: '6ec6d40f5a7609114f0ceaa9b2f7250cc945823d',
+  opacityMinHundredths: 0,
+  opacityMaxHundredths: 100,
 });
 
 export type P15ElementorContainerOverlayColorValue = string;
@@ -42,6 +52,9 @@ export type P15ElementorContainerOverlayColorValue = string;
 export interface P15ElementorContainerOverlayColorEntryV1 {
   sourceNodeId: string;
   color: P15ElementorContainerOverlayColorValue;
+  opacityHundredths?: number;
+  tabletOpacityHundredths?: number;
+  mobileOpacityHundredths?: number;
 }
 
 export interface P15ElementorContainerOverlayColorManifestV1 {
@@ -74,6 +87,7 @@ export type P15ElementorContainerOverlayColorIssueCode =
   | 'P15_CONTAINER_OVERLAY_COLOR_DUPLICATE_SOURCE_ID'
   | 'P15_CONTAINER_OVERLAY_COLOR_SOURCE_NOT_CONTAINER'
   | 'P15_CONTAINER_OVERLAY_COLOR_VALUE_INVALID'
+  | 'P15_CONTAINER_OVERLAY_COLOR_OPACITY_INVALID'
   | 'P15_CONTAINER_OVERLAY_COLOR_AUTHORITY_FLAGS_INVALID'
   | 'P15_CONTAINER_OVERLAY_COLOR_GENERATOR_BINDING_MISMATCH'
   | 'P15_CONTAINER_OVERLAY_COLOR_EXISTING_OVERRIDE_CONFLICT'
@@ -95,6 +109,9 @@ export type P15ElementorContainerOverlayColorStatus =
 export interface P15ElementorContainerOverlayColorSummaryEntryV1 {
   sourceNodeId: string;
   color: P15ElementorContainerOverlayColorValue;
+  opacityHundredths?: number;
+  tabletOpacityHundredths?: number;
+  mobileOpacityHundredths?: number;
 }
 
 export interface P15ElementorContainerOverlayColorResultV1 {
@@ -135,7 +152,7 @@ const MANIFEST_KEYS = [
   'targetCompatibilityClaim',
 ] as const;
 
-const ENTRY_KEYS = ['color', 'sourceNodeId'] as const;
+const ENTRY_KEYS = ['color', 'sourceNodeId', 'opacityHundredths', 'tabletOpacityHundredths', 'mobileOpacityHundredths'] as const;
 
 const ISSUE_CODES: readonly P15ElementorContainerOverlayColorIssueCode[] = [
   'P15_CONTAINER_OVERLAY_COLOR_SOURCE_IR_INVALID',
@@ -152,6 +169,7 @@ const ISSUE_CODES: readonly P15ElementorContainerOverlayColorIssueCode[] = [
   'P15_CONTAINER_OVERLAY_COLOR_DUPLICATE_SOURCE_ID',
   'P15_CONTAINER_OVERLAY_COLOR_SOURCE_NOT_CONTAINER',
   'P15_CONTAINER_OVERLAY_COLOR_VALUE_INVALID',
+  'P15_CONTAINER_OVERLAY_COLOR_OPACITY_INVALID',
   'P15_CONTAINER_OVERLAY_COLOR_AUTHORITY_FLAGS_INVALID',
   'P15_CONTAINER_OVERLAY_COLOR_GENERATOR_BINDING_MISMATCH',
   'P15_CONTAINER_OVERLAY_COLOR_EXISTING_OVERRIDE_CONFLICT',
@@ -182,6 +200,14 @@ function validSourceNodeId(value: unknown): value is string {
     && value.length > 0
     && value.length <= 512
     && value.trim() === value;
+}
+
+function validOpacity(value: unknown): value is number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 && value <= 100;
+}
+
+function opacitySlider(value: number): Record<string, unknown> {
+  return { unit: 'px', size: value / 100, sizes: [] };
 }
 
 function validOverlayColor(value: unknown): value is P15ElementorContainerOverlayColorValue {
@@ -398,9 +424,22 @@ export function resolveP15ElementorContainerOverlayColor(
           continue;
         }
 
+        if (['opacityHundredths', 'tabletOpacityHundredths', 'mobileOpacityHundredths'].some((key) =>
+          Object.prototype.hasOwnProperty.call(raw, key) && !validOpacity(raw[key]))) {
+          issues.push({
+            code: 'P15_CONTAINER_OVERLAY_COLOR_OPACITY_INVALID',
+            path: `${path}.opacityHundredths`,
+            message: 'Each supplied opacity must be an integer hundredths value from 0 through 100.',
+          });
+          continue;
+        }
+
         resolutions.set(sourceNodeId, {
           sourceNodeId,
           color: raw.color,
+          ...(raw.opacityHundredths === undefined ? {} : { opacityHundredths: raw.opacityHundredths as number }),
+          ...(raw.tabletOpacityHundredths === undefined ? {} : { tabletOpacityHundredths: raw.tabletOpacityHundredths as number }),
+          ...(raw.mobileOpacityHundredths === undefined ? {} : { mobileOpacityHundredths: raw.mobileOpacityHundredths as number }),
         });
       }
     }
@@ -466,13 +505,14 @@ export function resolveP15ElementorContainerOverlayColor(
       continue;
     }
 
-    if (Object.prototype.hasOwnProperty.call(
-      target.settings,
+    const requestedKeys = [
       P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.typeSettingKey,
-    ) || Object.prototype.hasOwnProperty.call(
-      target.settings,
       P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.colorSettingKey,
-    )) {
+      ...(resolution.opacityHundredths === undefined ? [] : [P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.opacityDesktopSettingKey]),
+      ...(resolution.tabletOpacityHundredths === undefined ? [] : [P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.opacityTabletSettingKey]),
+      ...(resolution.mobileOpacityHundredths === undefined ? [] : [P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.opacityMobileSettingKey]),
+    ];
+    if (requestedKeys.some((key) => Object.prototype.hasOwnProperty.call(target.settings, key))) {
       issues.push({
         code: 'P15_CONTAINER_OVERLAY_COLOR_EXISTING_OVERRIDE_CONFLICT',
         path: `$source.${sourceNodeId}`,
@@ -483,6 +523,15 @@ export function resolveP15ElementorContainerOverlayColor(
 
     target.settings[P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.typeSettingKey] = 'classic';
     target.settings[P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.colorSettingKey] = resolution.color;
+    if (resolution.opacityHundredths !== undefined) {
+      target.settings[P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.opacityDesktopSettingKey] = opacitySlider(resolution.opacityHundredths);
+    }
+    if (resolution.tabletOpacityHundredths !== undefined) {
+      target.settings[P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.opacityTabletSettingKey] = opacitySlider(resolution.tabletOpacityHundredths);
+    }
+    if (resolution.mobileOpacityHundredths !== undefined) {
+      target.settings[P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_EVIDENCE.opacityMobileSettingKey] = opacitySlider(resolution.mobileOpacityHundredths);
+    }
   }
 
   if (issues.length > 0) {
@@ -549,9 +598,12 @@ function validIssue(issue: P15ElementorContainerOverlayColorIssueV1): boolean {
 
 function validSummaryEntry(entry: P15ElementorContainerOverlayColorSummaryEntryV1): boolean {
   return isRecord(entry)
-    && exactKeys(entry, ['color', 'sourceNodeId'])
+    && onlyAllowedKeys(entry, ENTRY_KEYS)
     && validSourceNodeId(entry.sourceNodeId)
-    && validOverlayColor(entry.color);
+    && validOverlayColor(entry.color)
+    && (!Object.prototype.hasOwnProperty.call(entry, 'opacityHundredths') || validOpacity(entry.opacityHundredths))
+    && (!Object.prototype.hasOwnProperty.call(entry, 'tabletOpacityHundredths') || validOpacity(entry.tabletOpacityHundredths))
+    && (!Object.prototype.hasOwnProperty.call(entry, 'mobileOpacityHundredths') || validOpacity(entry.mobileOpacityHundredths));
 }
 
 /** Serialize only sanitized color metadata; source content, template JSON and candidate bytes are omitted. */
