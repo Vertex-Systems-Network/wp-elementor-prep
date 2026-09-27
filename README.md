@@ -832,3 +832,7 @@ PR #821 exact head `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43` passed all seven r
 ### P15 #823 — responsive Flex Item custom basis (merged bounded implementation)
 
 PR #823 exact head `a89bee55c3d43a0f40b2c97701c4a473ef9cce6b` passed all seven required exact-head workflows, had zero unresolved review threads, and merged with an expected-head guard as main `b34f5b254dfe7bf8f217d691ecf8d58652674428`. The resolver accepts complete tablet/mobile custom-type and px-value pairs in the integer range 0..1000, binds to the exact source and base candidate, preserves desktop values, and leaves unselected breakpoints absent. This bounded implementation does not claim broader compatibility, responsive closure, production, release or download authority.
+
+### P15 #825 — explicit responsive Flex Item custom order candidate
+
+The source-bound resolver accepts complete tablet/mobile `custom` plus integer order pairs within the repository policy range -1000..1000. PRs #826–#828 retain real Elementor 4.2.4 control, import/export and responsive render evidence for controlled vectors. It does not infer breakpoint intent or claim editor-generated serialization, broad compatibility, download, production or release authority. See [the bounded contract](docs/P15_ELEMENTOR_RESPONSIVE_CUSTOM_ORDER.md). Exact-head implementation gates are pending.
