@@ -8,27 +8,32 @@ This protocol keeps AI-native repository work resumable while minimizing long-tu
 
 ## Machine-readable policy constants
 
-- `MAX_LOGICAL_MILESTONES_PER_TURN = 1`
-- `MAX_RUNNER_STATUS_FETCHES_PER_TURN = 1`
+- `MAX_LOGICAL_MILESTONES_PER_EXECUTION_BATCH = TIME_CREDIT_BOUNDED`
+- `EXECUTION_BATCH_TARGET_DURATION = 5_HOURS_OR_WORKSPACE_CREDIT_LIMIT`
+- `ACTIVE_BATCH_CONTINUES_WITHOUT_USER_RECONSENT = TRUE`
+- `ROUTINE_IN_SCOPE_REPOSITORY_MUTATIONS = PREAUTHORIZED`
+- `SAFE_GREEN_PR_MERGE_WITHIN_SCOPE = PREAUTHORIZED`
+- `NEXT_SAFE_IN_SCOPE_BATCH_AFTER_MERGE = AUTO_CONTINUE`
+- `USER_RECONSENT_REQUIRED_FOR_SCOPE_OR_AUTHORITY_EXPANSION_ONLY = TRUE`
+- `MAX_RUNNER_STATUS_FETCHES_PER_MEANINGFUL_BOUNDARY = 1`
 - `BUSY_WAITING = FORBIDDEN`
 - `SLEEP_POLL_LOOPS = FORBIDDEN`
-- `CHECKPOINT_BEFORE_EXTERNAL_WAIT = REQUIRED`
-- `RUNNER_PENDING_ACTION = CHECKPOINT_AND_END_TURN`
-- `RESUME_TRIGGER = NEXT_USER_CONTINUE`
+- `CHECKPOINT_BEFORE_EXTERNAL_WAIT_OR_CREDIT_EXHAUSTION = REQUIRED`
+- `RUNNER_PENDING_ACTION = CONTINUE_INDEPENDENT_SAFE_WORK_OR_RECHECK_AT_MEANINGFUL_BOUNDARY`
+- `RESUME_TRIGGER = ACTIVE_BATCH_OR_DURABLE_RESUME`
 - `DEFAULT_DEFERABLE_RUNNER_CLASS = PROJECT_FINAL`
 - `MERGE_REQUIRED_RUNNERS_MUST_NOT_DEFER = TRUE`
 - `REMOTE_RETRY_LOOPS = FORBIDDEN`
-- `NEXT_MILESTONE_AFTER_EXTERNAL_WAIT = FORBIDDEN`
-- `README_PROGRESS_SYNC = REQUIRED_ON_EVERY_MATERIAL_REPOSITORY_MUTATION`
+- `NEXT_MILESTONE_AFTER_EXTERNAL_WAIT = ALLOWED_WITHIN_ACTIVE_EXECUTION_BATCH`
+- `README_PROGRESS_SYNC = REQUIRED_ON_MATERIAL_REPOSITORY_MUTATION`
 - `NEXT_ACTION_OPTIONS_PATH = .ai/state/NEXT-ACTION-OPTIONS.yaml`
-- `FINAL_RESPONSE_NEXT_ACTION_OPTIONS = REQUIRED`
-- `INTERACTIVE_ACTION_BUTTONS = PREFER_WHEN_HOST_SUPPORTED`
-- `BUTTON_CLICK_STARTS_NEW_USER_REQUEST = TRUE`
+- `NEXT_ACTION_OPTIONS_DURING_ACTIVE_BATCH = FALLBACK_RESUME_METADATA_ONLY`
+- `FINAL_RESPONSE_NEXT_ACTION_OPTIONS = REQUIRED_AT_BATCH_BOUNDARY`
 - `BUTTON_CLICK_GRANTS_AUTHORITY = FALSE`
 - `FALLBACK_ACTION_TOKEN_REQUIRED = TRUE`
 - `FAST_BATCH_MODE = ACTIVE`
 - `DEFAULT_PRODUCT_CAPABILITIES_PER_BATCH = 3_TO_5`
-- `MICRO_PR_DEFAULT = FORBIDDEN`
+- `MICRO_PR_DEFAULT = FALSE`
 - `BATCH_REMOTE_CI = FINAL_BOUND_HEAD_ONLY`
 - `BATCH_README_SYNC = FINAL_PRE_CI_HANDOFF_OR_MATERIAL_BLOCKER`
 - `USER_UPDATE_CADENCE = BATCH_START_BLOCKER_BATCH_COMPLETE`
@@ -52,7 +57,7 @@ Compact state is only a resume index and NEVER overrides repository/runtime trut
 
 ## Fast Batch Mode
 
-Fast Batch Mode is the default product-development cadence. It preserves the one-logical-milestone rule while making a normal product milestone materially larger.
+Fast Batch Mode is the default development cadence inside an active execution batch. A user START/CONTINUE instruction activates one program bounded by up to five hours or available Workspace execution credit/session, whichever ends first. Normal milestone completion is not a stop condition.
 
 - A normal product batch SHOULD contain **3-5 closely related bounded capabilities** that share the same target/source-evidence family and security/authority boundary.
 - One batch uses one owning Issue, one branch and one PR/MR. Grouped implementation/test commits inside that PR are allowed.
@@ -63,7 +68,23 @@ Fast Batch Mode is the default product-development cadence. It preserves the one
 - User-facing progress chatter is minimized: report **batch start**, any **material blocker/failure that changes the plan**, and **batch completion/verification boundary**. Do not emit per-control or per-small-commit status updates unless needed for correctness.
 - A micro-PR remains valid when isolation is materially safer or necessary: security fixes, destructive/migration work, unrelated source/evidence families, authority-boundary changes, external/manual prerequisites, or focused repair of a failed merge-blocking gate.
 - Security fail-closed rules, required checks, expected-head merge protection, exact-head review, external/manual evidence gates and production/release authority are never weakened by batching.
-- PR #708 is the transitional final micro-slice. After it merges, new P15 product work defaults to Fast Batch Mode.
+- A successful merge is followed by exact-main/roadmap reconciliation and the next safe related in-scope batch while execution credit remains.
+
+## Active execution batch, consent and merge authority
+
+One explicit user instruction to start or continue a development batch authorizes routine reversible repository work inside the accepted repository, roadmap and authority boundary until the five-hour / available-credit boundary, completion of the approved program, a genuine external/manual blocker, or a need to expand authority. Do not ask repeatedly for routine consent or stop at an ordinary milestone.
+
+Within that boundary, proceed autonomously through repository reconciliation, Issues, branches, implementation, tests, documentation/state sync, PR creation/update, review and CI repair. A normal green PR may be merged only when its exact current head is known, all required workflows and security checks pass on that head, unresolved review threads are zero, the PR is mergeable, expected-head guard matches, and scope/authority checks pass. Then reconcile the resulting main and continue with the next safe related batch.
+
+Fresh user authority is required only when the next action materially expands scope or risk, including destructive/data migration work, secrets or credentials requiring user input, paid-provider actions, production deployment, marketplace publishing, external account/security changes, manual evidence only the operator can supply, or a materially different project/phase not covered by the active program. Existing production, release, external runtime, and manual-evidence gates remain unchanged.
+
+While checks are pending, preserve PR number, exact branch/head and check identities. Do not repeatedly fetch unchanged state, sleep-poll, or alter a certified candidate to record volatile status. Continue independent safe work; return to the check at the next meaningful boundary. If nothing independent remains, persist a durable checkpoint and wait for the external dependency.
+
+## Credit/session boundary and durable checkpoint
+
+As the five-hour or Workspace-credit/session boundary approaches, stop starting substantial new work, finish the current coherent batch where feasible, and persist a checkpoint with exact main SHA, active Issue/PR/branch/head, completed work, local and remote verification, unresolved threads, blockers, authority state, changed files, and exact next safe action. Resume from that evidence without repeating completed operations. Never interpret a timeout or lost output as proof that an operation failed.
+
+During an active batch, `.ai/state/NEXT-ACTION-OPTIONS.yaml` is fallback/resume metadata; it must not force a user interaction when a safe in-scope action is already authorized. Render selectable actions only at batch completion, credit/session exhaustion, genuine blocker, or a materially different scope/authority decision. An action token or button starts a new request and never grants authority by itself.
 
 ## Timeout / remote-call hard budget
 
@@ -73,7 +94,7 @@ Fast Batch Mode is the default product-development cadence. It preserves the one
 - The invariant is exactly: one consolidated CI/status refresh per milestone by default.
 - Never tight-poll, repeatedly fetch unchanged status, or rerun a workflow because a message timed out.
 - Persist VERIFYING or WAITING_EXTERNAL before the final exact-head observation.
-- If required CI is still running after the refresh, do not mutate the certified source head merely to record pending state; report pending and END the milestone.
+- If required CI is still running after the refresh, do not mutate the certified source head merely to record pending state. Record the exact PR/head/check state, continue independent safe work that does not mutate the candidate, and recheck at the next meaningful lifecycle boundary. If no independent safe work remains, checkpoint and wait without busy polling.
 - A second refresh in one milestone requires a material security, merge, incident/recovery, or provider state transition and a durable exception record.
 
 ## Issues / PRs first hard gate
@@ -235,15 +256,15 @@ Do not create extra checkpoint commits after an exact-head Runner batch has star
 
 ## Failure/retry rule
 
-A failed Runner is one future logical milestone:
+A failed Runner blocks merge of that exact candidate, but does not automatically end an active execution batch. Inspect the failure and continue other independent safe in-scope work where possible:
 
 - inspect the failure;
 - fix the cause;
 - push the affected branch;
 - allow the new exact-head batch to start;
-- checkpoint and end the turn after at most one status fetch.
+- checkpoint the exact identifiers and next safe action before any external wait or session/credit boundary.
 
-Never loop until green inside one user turn.
+Never busy-poll or rerun unchanged workflows. A later repair is allowed in the same active batch after the genuine failure is understood.
 
 ## Delivery limitation
 

@@ -1,5 +1,13 @@
 schema_version: 1
 policy:
+  execution_batch_target_duration: 5_HOURS_OR_WORKSPACE_CREDIT_LIMIT
+  active_batch_continues_without_user_reconsent: true
+  routine_in_scope_repository_mutations: PREAUTHORIZED
+  safe_green_pr_merge_within_scope: PREAUTHORIZED
+  next_safe_in_scope_batch_after_merge: AUTO_CONTINUE
+  user_reconsent_required_for_scope_or_authority_expansion_only: true
+  pending_runner_action: CONTINUE_INDEPENDENT_SAFE_WORK_OR_RECHECK_AT_MEANINGFUL_BOUNDARY
+  busy_waiting: FORBIDDEN
   registration_grants_execution_authority: false
   default_safe_non_blocking_class: PROJECT_FINAL
   immediate_if_security_critical: true

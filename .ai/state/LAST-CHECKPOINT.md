@@ -1,21 +1,36 @@
 # Last Durable Checkpoint
 
-Status: IDLE_READY_NEXT_P15_BATCH
+Status: VERIFYING_EXACT_HEAD
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `c1beb26bf99e094b7ab0ea48fd51acfc4dacbbcc`
-Canonical active Issue/PR: `#794` / `#795`
-Branch: `p15/container-linear-gradient-composition`
+Observed main: `9b33430475d00b20dd222ab176f7673b2ca354db`
+Canonical active Issue/PR: `#813` / `#814`
+Branch: `ai-native/five-hour-execution-batches-813`
+Target batch boundary: up to five hours or available Workspace execution credit/session, whichever ends first.
+Authority state: routine reversible work inside the accepted repository/roadmap boundary is authorized. Production, release, account/security and operator-only evidence remain excluded.
 
-## Reconciled product batch
+## Completed
 
-PR #793 exact head `5e4048769f64ef24021439202293d4adf54c6157` passed all seven required workflows (CI:36283762755,CodeQL:36283762746,Integration_Readiness:36283762756,P12_Offline_Acceptance:36283762757,P12_Final_Release_Artifact:36283762745,P15_Real_Elementor_Target_Proof:36283762762,P17_Local_Browser_Proof:36283762768) and zero unresolved review threads. Expected-head merge yielded main `b8ed7584edc8052947f801046166291f5980c56c`; Issue #792 closed.
+- Implemented time/credit-bounded execution semantics in protocol, README, AI plan, AGENTS, Runner guidance and compact state.
+- Added strict tests for active-batch continuation and preserved per-milestone status-fetch, security, merge and authority boundaries.
+- Issue #812 overlaps #813 and will be reconciled after #813 closes.
 
-## Current product batch
+## Exact verification record
 
-Issue #796 / PR #797 composes five previously evidenced Button normal/hover color families on one deterministic candidate. Initial product head `2ee1aaefe1b4b2c596c97d7659ac1dad8a559827` will change after durable state sync. Local typecheck, 305 test files / 1,830 tests, status verifier and build passed. Final-head remote certification pending. No new target setting or authority claim.
+- Main/base: `9b33430475d00b20dd222ab176f7673b2ca354db`.
+- PR #814 head `9eed4a93a67fd7be96f96e58eefed2d005503879`; review threads: 0; mergeable: true at last PR snapshot.
+- On that exact head: CodeQL, Integration Readiness, P17 Browser Proof, P12 Offline Acceptance and P15 Target Proof passed.
+- CI run `36291156010` and P12 Final Artifact run `36291156073` failed only at the governance test suite. `status:verify` and typecheck passed; 308/309 test files and 1,835/1,838 tests passed.
+- Remaining failures: the test expected the new batch constant in AGENTS, retained the old Runner polling sentence, and expected the prior AI-plan transport wording. The implementation remains unchanged; test/docs assertions are being aligned to the new policy.
+- This checkpoint sync advances the PR head. Resolve the exact current candidate from PR #814 metadata after the sync; do not treat any earlier run as passing on the new head.
 
 ## Exact next safe action
 
-Resolve final PR #795 head; observe seven workflows and review threads. Merge only on all success, zero unresolved threads, mergeable state and fresh expected-head guard. No real import/render result is claimed.
+Observe the final PR #814 head at the next meaningful boundary. Merge only if all seven required workflows pass on the same head, review threads are zero, the PR is mergeable, scope is correct, and a fresh expected-head guard matches. Then reconcile main and close #812 as duplicate if confirmed.
 
-External boundaries: #287 admin branch protection; #159 real Figma runtime; #84 P12 release exit; #182 P27 final release; retained P15 operator approval/broad target authority.
+## Retained blockers / authority limits
+
+- P15 broad compatibility and production claims remain ungranted; only exact bounded slices are in scope.
+- #287 needs repository-admin settings access.
+- #159 needs genuine Figma Desktop evidence.
+- #84 needs manual publishing/account/2FA evidence.
+- #182 owns final production and marketplace acceptance.

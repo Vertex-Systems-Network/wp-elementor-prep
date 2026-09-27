@@ -2,15 +2,15 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 1c951a81831806892ab64a296a375cf864d26dc0
-observed_main_sha_semantics: exact_current_main_tip_post_merge
+observed_main_sha: 9b33430475d00b20dd222ab176f7673b2ca354db
+observed_main_sha_semantics: exact_current_main_tip_before_active_pr_merge
 observed_main_branch: main
-active_issue: null
-active_pr: null
-active_branch: null
+active_issue: 813
+active_pr: 814
+active_branch: ai-native/five-hour-execution-batches-813
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_ready_for_next_fast_batch
+current_milestone: ai_native_5_hour_execution_batch_contract
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -20,19 +20,20 @@ next_action_options:
   grants_authority: false
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  recommended_action_id: review-next-p15-map
-milestone_status: IDLE_READY_NEXT_P15_BATCH
+  recommended_action_id: continue-active-batch
+milestone_status: VERIFYING_EXACT_HEAD
 last_completed_milestone: p15_container_overlay_visual_composition_pr_809_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: review_next_exact_container_capability_map
+exact_next_safe_action: resolve_final_pr_814_head_observe_required_gates_and_review_threads
 pending_runner_ids: []
 blocked_runner_ids: []
 current_blockers:
-  - p15_retained_operator_approval_not_supplied
-  - main_branch_protection_issue_287_admin_blocked
-  - p15_retained_operator_approval_not_supplied
+  - p15_retained_operator_approval_not_supplied_for_broader_compatibility_claims
   - p15_broad_target_compatibility_and_production_authority_not_claimed
-  - p13_live_figma_runtime_acceptance_issue_159_pending
-  - p12_manual_release_exit_issue_84_pending
+  - issue_287_admin_branch_protection_requires_repository_admin_interface
+  - issue_159_real_figma_runtime_evidence_requires_operator
+  - issue_84_manual_p12_release_exit_evidence_requires_operator
+  - issue_182_final_production_acceptance_and_marketplace_gates_deferred
+  - issue_812_overlapping_batch_protocol_issue_reconcile_as_duplicate_after_813_merge
 terminal_finalization:
   transport_issue: 769
   transport_pr: 770
@@ -45,12 +46,18 @@ development_batching:
   mode: fast_batch
   enabled: true
   activation: active
+  execution_batch_target_duration: 5_hours_or_available_workspace_credit_session_whichever_ends_first
   current_batch_capabilities: 5
   default_capabilities_per_batch_min: 3
   default_capabilities_per_batch_max: 5
   one_issue_branch_pr_per_batch: true
   remote_ci_on_final_bound_head_only: true
   readme_state_sync: final_pre_ci_handoff_or_material_blocker
+  active_batch_continues_without_user_reconsent: true
+  routine_in_scope_repository_mutations: preauthorized
+  safe_green_pr_merge_within_scope: preauthorized
+  next_safe_in_scope_batch_after_merge: auto_continue
+  user_reconsent_required_for_scope_or_authority_expansion_only: true
   user_updates:
     - batch_start
     - material_blocker_or_failure
@@ -58,20 +65,18 @@ development_batching:
   micro_pr_default: false
   security_and_authority_controls_unchanged: true
 timeout_control:
-  max_logical_milestones_per_turn: 1
   max_consolidated_status_refreshes_per_milestone: 1
-  max_runner_status_fetches_per_turn: 1
+  max_runner_status_fetches_per_meaningful_boundary: 1
   busy_waiting_allowed: false
   tight_polling_allowed: false
   sleep_poll_loops_allowed: false
   repeated_unchanged_status_fetch_allowed: false
   remote_retry_loops_allowed: false
   rerun_on_message_timeout_allowed: false
-  checkpoint_before_external_wait: true
+  checkpoint_before_external_wait_or_credit_exhaustion: true
   default_deferable_runner_class: project_final
-  pending_remote_action: END_MILESTONE
-  next_milestone_after_external_wait_allowed: false
-  second_refresh_requires_material_state_transition: true
+  pending_runner_action: continue_independent_safe_work_or_recheck_at_meaningful_boundary
+  next_milestone_after_external_wait_allowed_within_active_batch: true
 sources_of_truth:
   protocol: .ai/state/PROTOCOL.md
   last_checkpoint: .ai/state/LAST-CHECKPOINT.md

@@ -6,6 +6,12 @@ Established: 2026-09-21
 
 Machine-readable canonical ledger: `.ai/state/RUNNER-BENCHMARK.yaml`. This Markdown file is the human-readable policy/view and must not contradict the machine-readable ledger.
 
+## Active batch behavior while Runner work is pending
+
+One explicit batch-start instruction authorizes in-scope reversible repository work for up to five hours or available Workspace credit/session, whichever ends first. A pending Runner is not by itself a batch stop: record exact PR/head/check identifiers, do independent safe work without mutating the candidate under certification, and revisit the check at a meaningful lifecycle boundary. If no independent work remains, persist the durable checkpoint and wait without polling. Never weaken a required merge/security gate or treat a queued/running result as PASS.
+
+A green exact-head PR may merge only after all required workflows/security checks pass on that exact head, unresolved review threads are zero, the PR is mergeable, and an expected-head guard confirms no drift. After merge, reconcile the new main and continue with the next safe related in-scope batch. Re-consent is reserved for material scope/authority expansion or genuine manual/external prerequisites; existing production/release and live-runtime gates remain intact.
+
 ## Purpose
 
 This file is the canonical queue for development work that requires GitHub Actions, hosted/self-hosted runners, CI matrices, target harness runners, or other repository Runner execution.
@@ -178,11 +184,11 @@ When developing:
 Runner execution and Runner observation are separate concerns.
 
 - Start required Runner work when the milestone requires it.
-- After the batch starts, perform at most one Runner/check-status fetch in the current user turn.
-- If required work is queued/in-progress, retain exact head/run identifiers through GitHub metadata, checkpoint the next action and end the turn.
-- Never use sleep loops or repeated polling to keep a response open.
-- The next user `continue` performs the next single observation/fix/merge milestone.
-- `BLOCKING_NOW` blocks subsequent implementation across turns but does not override the one-fetch/no-busy-wait rule.
+- During an active five-hour/credit-bounded batch, a queued or running Runner does not automatically end the batch.
+- Preserve exact head/run identifiers through GitHub metadata, continue independent safe work without mutating the candidate under certification, and revisit status at a meaningful lifecycle boundary.
+- If no independent safe work remains, persist the durable checkpoint and wait without busy polling.
+- Never use sleep loops, repeated unchanged status fetches or retry-until-green behavior.
+- `BLOCKING_NOW` still blocks merge and any work that depends on that result; it does not prevent independent safe work elsewhere in the active batch.
 
 ## Completion rule
 

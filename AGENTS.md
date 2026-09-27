@@ -104,25 +104,26 @@ Before reporting COMPLETE/BLOCKED/VERIFYING/WAITING_EXTERNAL, durable state must
 
 Compact limits are mandatory: CURRENT-STATE <=12 KiB; LAST-CHECKPOINT <=16 KiB; EXECUTION-JOURNAL <=32 KiB.
 
-## Delivery-resilient turn budget
+## Delivery-resilient execution batches
 
-Follow `.ai/state/PROTOCOL.md` on every development turn.
+Follow `.ai/state/PROTOCOL.md` on every development batch.
 
-- `MAX_LOGICAL_MILESTONES_PER_TURN = 1`.
-- `MAX_RUNNER_STATUS_FETCHES_PER_TURN = 1` after a Runner batch has started.
-- Busy-waiting, repeated status polling and sleep/poll loops are forbidden.
-- When required checks are queued/in-progress on the one allowed status inspection, preserve exact issue/branch/PR/head/run identifiers and end the response. Resume only on the next user `continue`.
-- Never keep a user turn open merely to wait for CI, CodeQL, browser/target proof or another remote dependency.
+- `MAX_LOGICAL_MILESTONES_PER_EXECUTION_BATCH = TIME_CREDIT_BOUNDED` bounds the active batch, not each user turn.
+
+- One explicit user START/CONTINUE instruction authorizes routine reversible repository work inside the accepted repository, roadmap and authority boundary for up to five hours or available Workspace credit/session, whichever ends first.
+- Continue safe in-scope work across ordinary milestone completion, PR merge and pending CI without repeated routine consent.
+- `MAX_RUNNER_STATUS_FETCHES_PER_MEANINGFUL_BOUNDARY = 1` limits each meaningful status boundary; it does not end an active batch.
+- A green PR may merge only after exact-head required workflows and security checks pass, unresolved review threads are zero, the PR is mergeable, scope is correct, and an expected-head guard confirms no head drift.
+- After merge, reconcile exact new main and select the next safe related in-scope batch while credit remains.
+- When checks are queued/in progress, preserve exact issue/branch/PR/head/run identifiers. Continue independent safe work and return to checks at a meaningful lifecycle boundary; if nothing independent remains, checkpoint and wait without polling.
+- Busy-waiting, repeated unchanged status fetches, sleep/poll loops and retry-until-green behavior are forbidden.
 - Do not create status-only checkpoint commits after exact-head checks start. GitHub PR/check/run metadata is the volatile source of truth.
-- Before an external wait boundary, ensure the durable branch milestone and exact next action are recoverable from `.ai/state/*` plus the owning issue/PR.
-- A blocking/security-critical Runner result blocks later implementation across turns; it does not permit polling until completion in one turn.
-- Do not combine implementation, Runner waiting, merge, post-merge verification and next-task activation in one turn.
-- Never claim this protocol can eliminate transport/UI/service failures outside repository control.
-- These are strict MUST/MUST-NOT orders. Do not reinterpret them as suggestions to improve throughput.
-- Never use retry-until-green behavior or a second remote wait cycle in the same user turn.
-- Never start another development task after a Runner/external dependency boundary in the same turn.
-- Every discovered Runner activity must be classified immediately; safely deferable work goes to `PROJECT_FINAL`, while merge/security/acceptance-critical work must remain in its stricter class.
+- Before an external wait or credit/session boundary, ensure the durable checkpoint and exact next action are recoverable from `.ai/state/*` plus the owning issue/PR.
+- Fresh authority is required only for material scope/authority expansion or genuine manual/external prerequisites. Production, release, deployment, account/security and live-runtime gates stay separate.
+- Never claim this protocol can eliminate transport/UI/service failures outside repository control. These are strict MUST/MUST-NOT orders, not suggestions to improve throughput.
+- Every discovered Runner activity must be classified immediately; safely deferable work goes to `PROJECT_FINAL`, while merge/security/acceptance-critical work remains in its stricter class.
 - If classification is uncertain, fail closed: do not defer it to `PROJECT_FINAL`.
+
 
 ## Mandatory session end
 
