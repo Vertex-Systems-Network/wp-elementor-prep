@@ -284,9 +284,13 @@ Issue #679 / PR #680 is merged and closed. Exact head `ccd2c19d3a3c933a345aa8825
 - Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.
 - PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.
 
-### Active P15 Container normal/hover box shadows #788 / PR #789
+### Completed P15 Container normal/hover box shadows #788 / PR #789
 
-The exact Elementor `4.2.4` Container `box_shadow` and `box_shadow_hover` groups accept independent atomic horizontal/vertical, blur, spread, lowercase six-digit hex color and outline/inset values. It writes only each requested group’s type/value/position keys, rejects malformed/out-of-range and conflicting settings, and preserves source/candidate binding, normal/hover isolation, sanitized summaries and false authority. Local typecheck, 1,824 tests, status verifier and build pass; final PR #789 remote gates are pending. No real import/render result is claimed.
+The exact Elementor `4.2.4` Container `box_shadow` and `box_shadow_hover` groups accept independent atomic horizontal/vertical, blur, spread, lowercase six-digit hex color and outline/inset values. It writes only each requested group’s type/value/position keys, rejects malformed/out-of-range and conflicting settings, and preserves source/candidate binding, normal/hover isolation, sanitized summaries and false authority. Local typecheck, 1,824 tests, status verifier and build pass; PR #789 exact head `9ec8723256d0a6168c260fb6d16ec81ef3d473f7` passed 7/7 and zero review threads; merged main `228b68a19a4edf88541dbcd8818e7d5643f8f026`; #788 closed. No real import/render result is claimed.
+
+### Active P15 six-family Container style composition #790 / PR #791
+
+The bounded composer combines the four previously proven border/overlay families with normal/hover box shadows and classic hover background. It independently re-runs exact source and base-candidate bound resolvers, allowlists their added keys, checks whole-template drift and conflicts, and rebuilds one validated candidate. Omitted breakpoints and normal/hover isolation remain. Local typecheck, 304 test files / 1,825 tests, status verifier and build pass; final PR #791 gates are pending. No real import/render or expanded target authority is claimed.
 
 ### Completed P15 Container overlay opacity #783 / PR #784
 

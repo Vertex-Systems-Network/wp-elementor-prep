@@ -229,4 +229,6 @@ A development/release train may not be called complete while:
 
 | RQ-785-FINAL | #785 / PR #787 | Four-family Container style composition | Required PR exact-head gate set | head `57a08f4b...` passed 7/7; zero threads; merged main `965bb48e...` | `FINAL_BATCH` | exact-head gates PASS | DONE |
 
-| RQ-788-FINAL | #788 / PR #789 | Container normal/hover box shadows | Required PR exact-head gate set | initial head `6131325b...`; final head pending | `FINAL_BATCH` | all seven workflows and zero unresolved threads on final head | AWAITING_EXACT_HEAD_BATCH |
+| RQ-788-FINAL | #788 / PR #789 | Container normal/hover box shadows | Required PR exact-head gate set | head `9ec87232...` passed 7/7; zero threads; merged main `228b68a1...` | `FINAL_BATCH` | exact-head gates PASS | DONE |
+
+| RQ-790-FINAL | #790 / PR #791 | Six-family Container style composition | Required PR exact-head gate set | initial head `0aaa1bcf...`; final head pending | `FINAL_BATCH` | all seven workflows and zero unresolved threads on final head | AWAITING_EXACT_HEAD_BATCH |

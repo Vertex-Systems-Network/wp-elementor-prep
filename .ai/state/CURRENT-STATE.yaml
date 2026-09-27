@@ -2,12 +2,12 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 965bb48eaf4387bce0e22cd8715ced0ab3e8b3c4
+observed_main_sha: 228b68a19a4edf88541dbcd8818e7d5643f8f026
 observed_main_sha_semantics: exact_current_main_tip_post_merge
 observed_main_branch: main
-active_issue: 788
-active_pr: 789
-active_branch: p15/container-box-shadows
+active_issue: 790
+active_pr: 791
+active_branch: p15/container-style-composition-extension
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
 current_milestone: p15_ready_for_next_fast_batch
@@ -20,14 +20,14 @@ next_action_options:
   grants_authority: false
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  recommended_action_id: verify-pr-789
+  recommended_action_id: verify-pr-791
 milestone_status: VERIFYING
-last_completed_milestone: p15_container_style_composition_pr_787_exact_head_passed_7_of_7_and_merged
-exact_next_safe_action: resolve_final_pr_789_head_and_observe_required_gates_plus_review_threads
-pending_runner_ids: [RQ-788-FINAL]
+last_completed_milestone: p15_container_box_shadows_pr_789_exact_head_passed_7_of_7_and_merged
+exact_next_safe_action: resolve_final_pr_791_head_and_observe_required_gates_plus_review_threads
+pending_runner_ids: [RQ-790-FINAL]
 blocked_runner_ids: []
 current_blockers:
-  - pr_789_exact_head_required_gates_not_yet_certified
+  - pr_791_exact_head_required_gates_not_yet_certified
   - main_branch_protection_issue_287_admin_blocked
   - p15_retained_operator_approval_not_supplied
   - p15_broad_target_compatibility_and_production_authority_not_claimed
@@ -45,7 +45,7 @@ development_batching:
   mode: fast_batch
   enabled: true
   activation: active
-  current_batch_capabilities: 2
+  current_batch_capabilities: 6
   default_capabilities_per_batch_min: 3
   default_capabilities_per_batch_max: 5
   one_issue_branch_pr_per_batch: true
