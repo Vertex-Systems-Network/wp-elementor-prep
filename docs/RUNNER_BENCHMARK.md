@@ -239,7 +239,7 @@ A development/release train may not be called complete while:
 
 ### RQ-796-FINAL — Container linear-gradient composition
 
-- Source work: PR #797, Issue #796; exact head is recorded after final state sync.
+- Source work: PR #797, Issue #796; exact head `dc56b3d41277d656ef956406039fe411838d4056`; merged main `c1beb26bf99e094b7ab0ea48fd51acfc4dacbbcc`.
 - Required gate family: CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof.
 - Input identity: exact Elementor 4.2.4 Container `background` and `background_hover` linear-gradient groups; explicit responsive values only.
 - Authority: implementation evidence only; runtime/import, broad compatibility, production and download authority remain false.
