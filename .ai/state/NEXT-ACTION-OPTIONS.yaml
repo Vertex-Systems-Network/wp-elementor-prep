@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 228b68a19a4edf88541dbcd8818e7d5643f8f026
-active_issue: 790
-active_pr: 791
-active_branch: p15/container-style-composition-extension
+observed_main_sha: d24ed13be8225968727a965c69ecc03ab529b5ee
+active_issue: 792
+active_pr: 793
+active_branch: p15/container-responsive-radius-composition
 interaction:
   render_required: true
   prefer_interactive_buttons_when_host_supported: true
@@ -13,20 +13,20 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: pr-791-product-handoff
+  presentation_epoch: pr-793-product-handoff
   presentation_order:
     - review-security-blocker-287
     - review-next-p15-map
     - verify-terminal-after-769
     - review-ai-plan
-recommended_action_id: verify-pr-791
+recommended_action_id: verify-pr-793
 options:
-  - action_id: verify-pr-791
-    label: Verify six-family Container composition PR #791
+  - action_id: verify-pr-793
+    label: Verify responsive Container radius composition PR #793
     enabled: true
     recommended: true
-    action_token: VERIFY_PR_791
-    request_payload: "Resolve exact current head of product PR #791 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
+    action_token: VERIFY_PR_793
+    request_payload: "Resolve exact current head of product PR #793 and perform one consolidated seven-gate plus review-thread check; merge only if fully green."
     blocked_by: []
     blocked_reason: null
   - action_id: review-next-p15-map
@@ -34,7 +34,7 @@ options:
     enabled: true
     recommended: false
     action_token: REVIEW_NEXT_P15_MAP
-    request_payload: "Review remaining P15 capability map from settled product main 228b68a1 without widening authority."
+    request_payload: "Review remaining P15 capability map from settled product main d24ed13b without widening authority."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
