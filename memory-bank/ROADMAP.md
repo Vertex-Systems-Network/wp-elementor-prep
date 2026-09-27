@@ -23,7 +23,7 @@ Last updated: 2026-09-27
 | R1 | Reliability/compatibility gate | DEFINED / RECURRING | 100% | `██████████` | Execute TargetProfile/capability/validator/harness gate per adapter |
 | P13 | Build-Ready Score 2.0 + Responsive Risk | IMPLEMENTATION COMPLETE / RUNTIME ACCEPTANCE PENDING | 100% impl | `██████████` | #159 real-plugin parity/internal runtime acceptance |
 | P14 | Target-Ready Duplicate + Guided Prepare | CORE IMPLEMENTATION IN PROGRESS / RUNTIME UNWIRED | N/A | `──────────` | Read-only review active; production registry empty; #159 before real mutation exposure |
-| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded responsive mapping includes direction, linked-px gap, flex alignment, px padding, #576 explicit wrap and #578 wrap-conditioned align-content; #564–#574 managed-media evidence/decision contract remains bounded; no retained operator approval is supplied, and arbitrary-host/general media portability plus broader responsive/matrix coverage remain pending |
+| P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded responsive mapping includes direction, linked-px and split-axis px gaps (#821), flex alignment, px padding, #576 explicit wrap and #578 wrap-conditioned align-content; #564–#574 managed-media evidence/decision contract remains bounded; no retained operator approval is supplied, and arbitrary-host/general media portability plus broader responsive/matrix coverage remain pending |
 | P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 | HTML/CSS/JS export + code-to-design import | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static neutral IR/export/package gate + exact local Chrome render proof; visual fidelity, JS, reconstruction and production authority remain separate |
 | P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
@@ -130,6 +130,10 @@ The artifact is registered in `config/runtime-artifacts.json` schema v3 as the m
 PR #818 state-only reconciliation merged as main `13fb2f5b9200dc9ece2174be3d24d5d259ea29bd` after all seven required exact-head gates passed with zero unresolved review threads. Issue #819 owns final canonical state reconciliation and refresh of the P15 capability map. P15 remains CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED; recent bounded additions include Container gradients, hover transitions, radial gradients and overlay blend/filter composition. Runtime, broad compatibility, production and download authority remain unclaimed.
 
 
-## P15 responsive gap-axis candidate — Issue #821
+## P15 responsive Container gap-axis implementation — Issue #821
 
-The bounded responsive mapping now has an implementation candidate for explicit tablet/mobile row/column gap pairs alongside linked-px gaps. Exact source/candidate binding remains required; broad compatibility and responsive closure remain unclaimed pending exact-head gates.
+PR #821 merged after all seven required exact-head gates passed on `0ff80cb98fffeb444fc3ce0e610842c2d9ad9d43`, with zero unresolved review threads and expected-head guard; resulting main is `a3396e9030e33e9a0a8146eab5ec6dbeaa9a412f`. Explicit tablet/mobile row/column px pairs coexist with linked-px gaps under exact source/candidate binding. Broader compatibility and responsive closure remain unclaimed.
+
+## Next bounded P15 candidate — Issue #823
+
+Pinned Elementor 4.2.4 Flex Item source supports responsive custom basis via a responsive type selector and conditional slider. The queued candidate is explicit tablet/mobile px only, bounded to 0..1000; controlled proof must confirm exact serialized target keys and shape.
