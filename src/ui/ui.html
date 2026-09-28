@@ -140,8 +140,6 @@
       exportPanel.hidden = true;
       post('p14-plan-preview-request');
     });
-    document.getElementById('elementor-option-bank').addEventListener('change', (event) => { selectedOptionBankId = event.target.value; document.getElementById('option-bank-status').textContent = `Selected bank: ${selectedOptionBankId}`; post('option-bank-selection', { optionBankId: selectedOptionBankId }); });
-    document.getElementById('gutenberg-option-bank').addEventListener('change', (event) => { document.getElementById('option-bank-status').textContent = `Selected bank: ${event.target.value}`; post('option-bank-selection', { optionBankId: event.target.value }); });
     document.getElementById('p15-preview').addEventListener('click', () => {
       root.className = 'empty';
       root.textContent = 'Inspecting the selected Frame through the bounded read-only P15 Elementor path…';
@@ -156,6 +154,8 @@
       exportPanel.hidden = true;
       post('p15-elementor-target-profile-request', { wordpressVersion, elementorVersion });
     });
+    document.getElementById('elementor-option-bank').addEventListener('change', (event) => { selectedOptionBankId = event.target.value; document.getElementById('option-bank-status').textContent = `Selected bank: ${selectedOptionBankId}`; post('option-bank-selection', { optionBankId: selectedOptionBankId }); });
+    document.getElementById('gutenberg-option-bank').addEventListener('change', (event) => { document.getElementById('option-bank-status').textContent = `Selected bank: ${event.target.value}`; post('option-bank-selection', { optionBankId: event.target.value }); });
     document.getElementById('plan').addEventListener('click', () => {
       root.className = 'empty';
       root.textContent = 'Classifying conservative P5 Safe Fix eligibility…';
