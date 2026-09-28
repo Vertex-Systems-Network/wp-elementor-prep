@@ -6,7 +6,7 @@ observed_main_sha: 8bb14b12ba295704658881f506c0257f7dbe9635
 observed_main_sha_semantics: exact_current_main_tip_before_p18_react_preflight_pr_merge
 observed_main_branch: main
 active_issue: 848
-active_pr: null
+active_pr: 849
 active_branch: ai-native/p18-react-r0-r1-848
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
