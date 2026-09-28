@@ -184,3 +184,8 @@ The user authorized routine in-scope implementation and guarded green merges thr
 ## P18 runtime proof reconciliation
 
 The #858 receipt is evidence for generated React output installing, building and rendering on loopback in policy-supported Chrome with DOM/source-ref/request/error/screenshot observations. It is intentionally not a visual parity, Web-to-Figma, Elementor target or production acceptance result. Keep P19 frozen until the separate P15–P18 exit document is satisfied.
+
+
+## ANPOS adoption continuation after #871
+
+The bounded child-adoption foundation is implemented on the current release train. Validate `npm run anpos:validate` and the Integration Readiness check at the exact PR head. After merge, keep the matrix as the authority for selecting any further ANPOS requirement slice. Do not copy `commercial-service/` or activate PM/AI identity/consent/lease/repository-admin capabilities without a dedicated implementation, authorization and evidence contract. Existing P15–P18 and pre-P19 gates remain unchanged.
