@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: f6bbbd7db3d9220e8ade26cc59443fd1184f9f55
+observed_main_sha: d1fc115b9f6764d90c0c319b880e291009eb7199
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -421,3 +421,6 @@ claims:
   - {id: CL-411, statement: pr_839_exact_head_8fcb4180_passed_seven_gates_zero_threads_and_merged_as_f6bbbd7d_issue_838_closed, value: true}
   - {id: CL-412, statement: pella_nova_template_2_has_43_image_and_2_container_background_transient_figma_url_occurrences, value: true}
   - {id: CL-413, statement: issue_840_pr_841_review_documented_container_background_media_without_asset_closure_or_compatibility_authority, value: true}
+  - {id: CL-414, statement: pr_841_exact_head_449ffa6e_passed_seven_gates_zero_threads_and_merged_as_d1fc115b_issue_840_closed, value: true}
+  - {id: CL-415, statement: p17_static_foundation_was_already_in_progress_before_this_readme_reconciliation, value: true}
+  - {id: CL-416, statement: transport_842_843_is_state_only_and_not_a_canonical_active_lifecycle_owner, value: true}
