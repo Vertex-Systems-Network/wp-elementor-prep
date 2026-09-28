@@ -72,7 +72,7 @@ try {
   for (const file of artifact.files) await writeFile(join(project, 'src', file.path), file.content);
   const install = await run('npm', ['ci', '--ignore-scripts'], { cwd: project, env });
   const buildResult = await run('npm', ['run', 'build'], { cwd: project, env });
-  preview = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4178'], { cwd: project, env: { ...env, BROWSER: 'none' }, stdio: ['ignore', 'pipe', 'pipe'] });
+  preview = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4178'], { cwd: project, env: { ...env, BROWSER: 'none' }, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
   await waitForHttp('http://127.0.0.1:4178/');
   browser = await chromium.launch({ executablePath: chromePath, headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -119,5 +119,5 @@ try {
   throw error;
 } finally {
   if (browser) await browser.close().catch(() => {});
-  if (preview) preview.kill('SIGTERM');
+  if (preview) { try { process.kill(-preview.pid, 'SIGTERM'); } catch { preview.kill('SIGTERM'); } }
 }
