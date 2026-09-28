@@ -403,3 +403,8 @@ PR #823 merged as main b34f5b254dfe7bf8f217d691ecf8d58652674428 after all seven 
 ## 2026-09-28 — settled post-PR #835 handoff
 
 Exact main before state transport: `12758d9d19b634948adc07aa798b4593734abe2c`. PRs #824–#829 and #830/#832/#835 are merged; superseded #831/#833/#834 closed unmerged. #825 custom Flex Item order has source registration, controlled import/export and browser rendering evidence, plus a bounded resolver. These are controlled authored cases, not real demo visual parity or editor-generated serialization. The next P15 work should examine representative real template spacing and image references. #84/#159/#182/#287 remain blocked at their stated evidence/admin boundaries.
+
+
+## P15 #838 — transient Figma Image MEDIA references
+
+A representative external handoff reports 44/45 unique temporary Figma asset URLs in two Elementor Website Template ZIPs; its draft runtime probe did not perform browser render QA or permanent media localization. #838 adds a generic documented core Image MEDIA diagnostic for exact Figma MCP asset URLs, with only path/fingerprint in review output. Arbitrary ZIP fields, CSS background media, live image loads, spacing parity and broad compatibility remain outside this bounded candidate. PR #839 exact-head gates are pending.
