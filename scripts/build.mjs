@@ -69,7 +69,8 @@ await build({
   define: { ...provenanceDefines, ...p7BuildDefines },
 });
 
-const developmentUi = extendP15LocalTemplateDownloadUi(await readFile('src/ui/ui.html', 'utf8'));
+const optionBankRegistry = await readFile('docs/option-bank/registry.json', 'utf8');
+const developmentUi = extendP15LocalTemplateDownloadUi((await readFile('src/ui/ui.html', 'utf8')).replace('__OPTION_BANK_REGISTRY__', optionBankRegistry));
 await writeFile('dist/ui.html', buildSecureUi(developmentUi), 'utf8');
 
 const template = await readFile('manifest.template.json', 'utf8');

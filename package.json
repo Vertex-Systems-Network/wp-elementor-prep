@@ -48,7 +48,9 @@
     "p17:local-browser-proof": "node scripts/p17-local-browser-proof.mjs",
     "p18:react-static-build": "node scripts/p18-react-static-build.mjs",
     "p18:react-runtime-proof": "node scripts/p18-react-runtime-proof.mjs",
-    "option-bank:refresh": "node scripts/refresh-option-bank.mjs"
+    "option-bank:refresh": "node scripts/refresh-option-bank.mjs",
+    "audit:elementor": "node scripts/audit-option-bank.mjs",
+    "audit:gutenberg": "node scripts/audit-gutenberg.mjs"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.117.0",
