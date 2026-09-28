@@ -62,7 +62,7 @@ Open roadmap / acceptance dependencies:
 
 Current verified main before the state-only #836 transport:
 
-\`12758d9d19b634948adc07aa798b4593734abe2c\`
+`12758d9d19b634948adc07aa798b4593734abe2c`
 
 ### Current P15 and toolchain handoff
 
