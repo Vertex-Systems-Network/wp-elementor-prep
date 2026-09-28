@@ -7,7 +7,7 @@ P12 final release gate: #84 still required
 
 ## Purpose
 
-Calibrate Build-Ready Score 2.0 and Responsive Risk v1 against the already-retained real Pella Nova P9/P10 canonical Figma snapshot without committing private design snapshot data to this public repository.
+Calibrate Build-Ready Score 2.0 and Responsive Risk v1 against the already-retained real retained P9/P10 canonical Figma snapshot without committing private design snapshot data to this public repository.
 
 The retained source snapshot remains outside the repository. Only aggregate metrics, deterministic hashes, rule behavior and provenance are recorded here.
 
