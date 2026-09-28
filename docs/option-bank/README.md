@@ -66,6 +66,22 @@ Gutenberg is not represented as one fixed plugin option list. The bank tracks th
 
 Current official references are recorded in [gutenberg-official-contracts.json](./gutenberg-official-contracts.json). Refresh the references when WordPress/Gutenberg changes, then add a dated snapshot and re-run the implementation gap review.
 
+## Runtime receipt binding
+
+Once genuine target receipts exist, bind all three required surfaces to the selected bank version:
+
+```bash
+npm run p15:option-bank-runtime-binding -- \
+  --registry=docs/option-bank/registry.json \
+  --selection=elementor:4.3.2:4.3.0 \
+  --import=import-receipt.json \
+  --frontend=frontend-receipt.json \
+  --responsive=responsive-receipt.json \
+  --out=dist-p15/option-bank-runtime-binding.json
+```
+
+The gate fails closed when a receipt is missing, not PASS, or reports a different Elementor Free/Pro (or WordPress/Gutenberg) version. It only binds evidence; it cannot manufacture runtime proof.
+
 ## Status meanings
 
 - `INVENTORIED`: source/documentation was captured.
