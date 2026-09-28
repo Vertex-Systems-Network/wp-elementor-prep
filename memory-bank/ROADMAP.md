@@ -26,7 +26,7 @@ Last updated: 2026-09-27
 | P15 | Elementor native export + import validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Exact proof/profile/candidate binding retained; bounded responsive mapping includes direction, linked-px and split-axis px gaps (#821), flex alignment, px padding, #576 explicit wrap and #578 wrap-conditioned align-content; #564–#574 managed-media evidence/decision contract remains bounded; no retained operator approval is supplied, and arbitrary-host/general media portability plus broader responsive/matrix coverage remain pending |
 | P16 | Gutenberg native export + section transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Deterministic evidence/retention/operator foundation exists; genuine authenticated evidence and native target/editor/import/render validation remain unwired |
 | P17 | HTML/CSS/JS export + code-to-design import | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static neutral IR/export/package gate + exact local Chrome render proof; visual fidelity, JS, reconstruction and production authority remain separate |
-| P18 | Framework adapter platform | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | R0+R1, neutral component IR + adapter SDK + build matrix |
+| P18 | Framework adapter platform | PREFLIGHT OPEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | #846 opens R0+R1 evidence review, then bounded adapter SDK and first framework build/render proof |
 | P19 | Asset pack + font manifest + design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Stored-original vs rendered policy; font/API constraints |
 | P20 | Round-trip visual QA + exact section portability | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Target render harness + optional offline-first WP Builders Bridge |
 | P21 | Developer handoff + client/QA + bounded a11y/SEO advisories | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Build from accepted target outputs |
@@ -45,7 +45,7 @@ Last updated: 2026-09-27
 
 Overall project progress is intentionally not collapsed into one synthetic percentage. Implementation, runtime acceptance and external approval are separate evidence states.
 
-R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open. P14 is active with no stable numeric denominator and no production mutation authority. P15 has one retained controlled target proof but no broad compatibility/production authority; P16 remains target-validation unwired. Both remain `N/A` progress. P17 foundation implementation is active with a bounded controlled local browser proof and no visual-fidelity/reconstruction/production authority. P18-P26 remain preflight frozen/not started. P27 execution remains deferred.
+R0/R1 are recurring governance/acceptance gates. P13 implementation is complete but runtime acceptance remains open. P14 is active with no stable numeric denominator and no production mutation authority. P15 has one retained controlled target proof but no broad compatibility/production authority; P16 remains target-validation unwired. Both remain `N/A` progress. P17 foundation implementation is active with a bounded controlled local browser proof and no visual-fidelity/reconstruction/production authority. P18 preflight is open under #846, with implementation not started. P19-P26 remain preflight frozen/not started. P27 execution remains deferred.
 
 ## Current P15 implementation truth
 
@@ -142,3 +142,8 @@ Pinned Elementor 4.2.4 Flex Item source supports responsive custom basis via a r
 ## P15 responsive Flex Item basis implementation — Issue #823
 
 PR #823 passed all seven exact-head gates on a89bee55c3d43a0f40b2c97701c4a473ef9cce6b, had zero unresolved review threads, and merged as main b34f5b254dfe7bf8f217d691ecf8d58652674428 with expected-head guard. The bounded px custom-basis pair resolver preserves desktop settings and omitted breakpoints. Broader compatibility, responsive closure and production authority remain unclaimed.
+
+
+## Pre-P19 sequencing (2026-09-28)
+
+Issue #846 and [the evidence exit gate](../docs/PRE_P19_EVIDENCE_EXIT.md) require separate, genuine P15/P16/P17/P18 exits before P19 implementation. Routine in-scope work is preauthorized; absent source bytes, target runtime observations or authenticated evidence remain blockers rather than synthetic PASS. P18 R0/R1 preflight is open, but no adapter implementation or compatibility claim has started.

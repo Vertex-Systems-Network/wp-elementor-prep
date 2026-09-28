@@ -168,6 +168,11 @@ requireRow('P17', {
   progress: 'N/A',
   next: 'visual parity, JS execution and Web-to-Figma reconstruction are pending',
 });
+requireRow('P18', {
+  status: 'PREFLIGHT OPEN / IMPLEMENTATION NOT STARTED',
+  progress: '0%',
+  next: '#846 opens R0/R1 official-source review',
+});
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
   progress: '0% exec',
@@ -1112,6 +1117,9 @@ if (!historicalEvidence.includes('### Completed P15 #840 — Container backgroun
 
 const currentPhaseFragments = [
   '## Current phase progress',
+  '## Before P19',
+  '[P15–P18 evidence exit gate](docs/PRE_P19_EVIDENCE_EXIT.md)',
+  'P19 stays frozen until P15 imported media/layout proof',
   '**P15, P16 and P17 are in progress.**',
   '| **P15 · Elementor** — core foundation in progress |',
   '| **P16 · Gutenberg** — core foundation in progress; target validation unwired |',

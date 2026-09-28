@@ -2,21 +2,21 @@
 
 Status: VERIFYING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main before PR #845: `2ca818d500474182a3e04eacdd477df4761a1269`
-Canonical active Issue/PR: #844 / #845
-Branch: `ai-native/readme-current-progress-844`
-Candidate head source: GitHub PR #845 head.
+Observed main before PR #847: `6b79b569b14618dec67744310b2794a2bab49e29`
+Canonical active Issue/PR: #846 / #847
+Branch: `ai-native/pre-p19-evidence-gate-846`
+Candidate head source: GitHub PR #847 head.
 
 ## Verified prior work
 
-PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed seven required workflows and guarded merged as `d1fc115b9f6764d90c0c319b880e291009eb7199`; #840 closed. Terminal README/state PR #843 exact head `2649487fc978134387ae9ba7c635d8fcb240dd8a` passed seven required workflows, zero unresolved threads and guarded merged as `2ca818d500474182a3e04eacdd477df4761a1269`; #842 closed.
+PR #845 exact head `02450b354a31d7149f64da5f5b27f180d53e4bae` passed all seven required workflows, zero unresolved threads and guarded merged as `6b79b569b14618dec67744310b2794a2bab49e29`; #844 closed. README now has the P15/P16/P17 delivered-vs-missing evidence above the historical archive.
 
-## Active readability batch
+## Active pre-P19 gate
 
-README on main was 858 lines / ~135 KiB, with the P15–P17 module table buried after PR chronology and P15 next-step text referring to old transport. PR #845 preserves the original in `docs/README_PROGRESS_HISTORY_2026-09-28.md` and makes README a concise current status page with explicit P15/P16/P17 delivered vs missing evidence, current demo media/spacing limits and a compact all-phase table. The verifier reads the archive for historical evidence but enforces current phase progress directly in README. No target, runtime, compatibility, download or production authority changes. RQ-844-FINAL is pending.
+The user's standing instruction authorizes routine in-scope P15–P18 implementation and safe green merges before P19 without repeated confirmation. Issue #846 remains the program owner. PR #847 records genuine P15 imported media/layout, P16 authenticated editor, P17 visual/reconstruction and P18 framework build/render exits, opens P18 R0/R1 preflight, and holds P19 frozen. It grants no actual evidence, production, download, publishing or broad compatibility authority. RQ-846-FINAL awaits exact-head gates.
 
-## Retained limits and next safe action
+## Retained blockers and exact next action
 
-Pella Nova Package 13/14 image bytes, WordPress-managed mapping and browser visual comparison are absent. P16 genuine authenticated/native-editor evidence remains unwired; P17 visual fidelity, JS execution and Web-to-Figma reconstruction remain pending. #287, #159, #84 and #182 retain their admin/external/final gates.
+Package 13/14 source image bytes and WordPress-managed media mapping are missing. No browser Figma-vs-import spacing comparison, genuine authenticated Gutenberg native proof, P17 calibrated visual/reconstruction proof or P18 adapter build/render proof is retained. #287, #159, #84 and #182 remain independently open.
 
-Verify PR #845 final exact head across the seven required workflows, zero unresolved review threads and mergeability; guarded squash merge only if all pass. Reconcile main afterward.
+Verify PR #847 final exact head, all seven required workflows, zero unresolved threads and mergeability; guarded merge if green. Then refresh P18 R0 official-source research and continue bounded safe code work while external evidence remains pending. Do not start P19.
