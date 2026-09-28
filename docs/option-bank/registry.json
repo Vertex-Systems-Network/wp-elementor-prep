@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "elementor": [
+    {
+      "id": "elementor:4.3.2:4.3.0",
+      "label": "Elementor Free 4.3.2 + Pro 4.3.0",
+      "snapshot": "elementor-4.3.2-4.3.0.json",
+      "status": "INVENTORIED",
+      "generatedAt": "2026-09-28"
+    }
+  ],
+  "gutenberg": [
+    {
+      "id": "gutenberg:wordpress-docs-current",
+      "label": "Gutenberg / WordPress official contracts (current)",
+      "snapshot": "gutenberg-official-contracts.json",
+      "status": "INVENTORIED",
+      "generatedAt": "2026-09-28"
+    }
+  ]
+}
