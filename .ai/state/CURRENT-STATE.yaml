@@ -3,7 +3,7 @@ mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
 observed_main_sha: 06bcbe7b6d183e64d84d89b9703b1a3fb689941b
-observed_main_sha_semantics: exact_current_main_tip_before_state_finalization_pr_merge
+observed_main_sha_semantics: exact_current_main_tip_before_product_pr_merge
 observed_main_branch: main
 active_issue: 838
 active_pr: 839
