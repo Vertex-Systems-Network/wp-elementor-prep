@@ -66,7 +66,11 @@ Current verified main after state-only PR #837 merge and before this P15 candida
 
 ### P15 #838 — transient Image MEDIA URL review candidate
 
-A representative external handoff reported 44/45 unique temporary Figma asset URLs across two Elementor Website Template ZIPs; draft document-type persistence was observed, while permanent media localization and browser image-load comparison remain pending. This bounded change recognizes only exact `figma.com` / `www.figma.com` `/api/mcp/asset/` HTTPS URLs in the documented core Image MEDIA control, retains fingerprints and paths without emitting raw URLs, and requires review. It does not audit arbitrary ZIP media fields or CSS backgrounds, fetch/upload assets, alter template data, solve spacing parity, or grant import, compatibility, download, production or release authority. Exact-head gates are pending.
+A representative external handoff reported 44/45 unique temporary Figma asset URLs across two Elementor Website Template ZIPs; draft document-type persistence was observed, while permanent media localization and browser image-load comparison remain pending. This bounded change recognizes only exact `figma.com` / `www.figma.com` `/api/mcp/asset/` HTTPS URLs in the documented core Image MEDIA control, retains fingerprints and paths without emitting raw URLs, and requires review. It does not audit arbitrary ZIP media fields or CSS backgrounds, fetch/upload assets, alter template data, solve spacing parity, or grant import, compatibility, download, production or release authority. PR #839 passed all seven exact-head gates and merged as main `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`; Issue #838 closed.
+
+### P15 #840 — Container background MEDIA reference review candidate
+
+Template 2 has one desktop and one mobile Container background image with temporary Figma MCP URLs in addition to 43 core Image widget references. Elementor 4.2.4 source registers Container normal background group `background` and a responsive MEDIA `image` field. This candidate inventories only `background_image` and explicit tablet/mobile siblings on Containers, fingerprints URLs, flags temporary Figma asset links, and keeps closure, generation, download, compatibility and production false. Hover/slideshow and arbitrary ZIP fields are outside this source-bound review. The exact Package 13/14 asset bytes, target-managed WordPress media, live image-load and visual spacing parity remain pending. Exact-head gates are pending.
 
 ### Current P15 and toolchain handoff
 
