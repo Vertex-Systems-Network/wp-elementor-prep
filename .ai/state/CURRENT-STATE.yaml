@@ -2,8 +2,8 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 55474fb5fe03ca21ae53c7a8d883ce48bd1a9dd6
-observed_main_sha_semantics: exact_current_main_tip_after_anpos_child_adoption_foundation_pr_872_merge
+observed_main_sha: a078ba40e75e0723ea71190e0d976edb423a27be
+observed_main_sha_semantics: exact_main_tip_observed_before_anpos_state_reconciliation
 observed_main_branch: main
 active_issue: 846
 active_pr: null
@@ -22,7 +22,7 @@ next_action_options:
   recommended_slot_fixed: false
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: VERIFYING
-last_completed_milestone: pr_872_anpos_child_adoption_foundation_passed_required_gates_and_merged
+last_completed_milestone: pr_874_anpos_applicable_policy_contracts_passed_required_gates_and_merged
 exact_next_safe_action: continue_p18_evidence_or_select_matrix_backed_anpos_slice_without_promoting_external_authority
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
