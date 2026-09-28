@@ -2,15 +2,15 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 6b79b569b14618dec67744310b2794a2bab49e29
-observed_main_sha_semantics: exact_current_main_tip_before_readme_progress_pr_merge
+observed_main_sha: 8bb14b12ba295704658881f506c0257f7dbe9635
+observed_main_sha_semantics: exact_current_main_tip_before_p18_react_preflight_pr_merge
 observed_main_branch: main
-active_issue: 846
-active_pr: 847
-active_branch: ai-native/pre-p19-evidence-gate-846
+active_issue: 848
+active_pr: 849
+active_branch: ai-native/p18-react-r0-r1-848
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: pre_p19_p15_p18_evidence_exit_gate
+current_milestone: p18_react_r0_r1_preflight
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -22,9 +22,9 @@ next_action_options:
   recommended_slot_fixed: false
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: VERIFYING
-last_completed_milestone: pr_845_passed_7_of_7_and_merged_as_6b79b569
-exact_next_safe_action: verify_pr_847_final_exact_head_gates_then_guarded_merge_and_open_p18_r0_research
-pending_runner_ids: [RQ-846-FINAL]
+last_completed_milestone: pr_847_passed_7_of_7_and_merged_as_8bb14b12
+exact_next_safe_action: open_p18_react_r0_r1_pr_and_verify_exact_head_gates
+pending_runner_ids: [RQ-848-FINAL]
 blocked_runner_ids: []
 current_blockers:
   - p15_retained_operator_approval_not_supplied_for_broader_compatibility_claims

@@ -169,9 +169,9 @@ requireRow('P17', {
   next: 'visual parity, JS execution and Web-to-Figma reconstruction are pending',
 });
 requireRow('P18', {
-  status: 'PREFLIGHT OPEN / IMPLEMENTATION NOT STARTED',
+  status: 'REACT R0/R1 PREFLIGHT REVIEWED / IMPLEMENTATION NOT STARTED',
   progress: '0%',
-  next: '#846 opens R0/R1 official-source review',
+  next: '#848 records React first-slice research and compatibility matrix',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
