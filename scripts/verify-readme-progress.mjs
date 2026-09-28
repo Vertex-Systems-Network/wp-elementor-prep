@@ -1081,17 +1081,19 @@ if (!readme.includes('### Current P15 and toolchain handoff')
   throw new Error('README current P15 proof limits or coordinated toolchain handoff is missing.');
 }
 
-if (!readme.includes('### P15 #838 — transient Image MEDIA URL review candidate')
+if (!readme.includes('### Completed P15 #838 — transient Image MEDIA URL review')
   || !readme.includes('44/45 unique temporary Figma asset URLs')
   || !readme.includes('PR #839 passed all seven exact-head gates and merged as main `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`')) {
   throw new Error('README P15 #838 bounded transient media review merge status is missing.');
 }
 
-if (!readme.includes('### P15 #840 — Container background MEDIA reference review candidate')
+if (!readme.includes('### Completed P15 #840 — Container background MEDIA reference review')
   || !readme.includes('one desktop and one mobile Container background image')
+  || !readme.includes('PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven required workflows')
+  || !readme.includes('main `d1fc115b9f6764d90c0c319b880e291009eb7199`; Issue #840 closed.')
   || !readme.includes('The exact Package 13/14 asset bytes')
-  || !readme.includes('Exact-head gates are pending.')) {
-  throw new Error('README P15 #840 Container background media scope or evidence limits are missing.');
+  || !readme.includes('P17 foundation implementation has already started')) {
+  throw new Error('README P15 #840 merge evidence, P17 status or retained limits are missing.');
 }
 
 console.log(
