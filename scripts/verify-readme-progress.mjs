@@ -169,9 +169,9 @@ requireRow('P17', {
   next: 'visual parity, JS execution and Web-to-Figma reconstruction are pending',
 });
 requireRow('P18', {
-  status: 'REACT STATIC ADAPTER IMPLEMENTATION IN PROGRESS',
-  progress: '10% impl',
-  next: '#850 has deterministic TSX/CSS SDK and refusal tests',
+  status: 'REACT STATIC ADAPTER + CONTROLLED RUNTIME PROOF RETAINED',
+  progress: '20% impl',
+  next: '#850 SDK/refusal tests and #858 pinned React/Vite build + local Chrome receipt are green',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
