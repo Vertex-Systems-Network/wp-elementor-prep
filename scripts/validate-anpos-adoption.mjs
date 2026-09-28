@@ -24,7 +24,8 @@ const policyContractFiles = [
   'config/integrations/sync-authority.json',
   'config/traceability/requirements-traceability.json',
   'config/consent/consent-requests.json',
-  'config/testing/reference-e2e-matrix.json'
+  'config/testing/reference-e2e-matrix.json',
+  'config/protocol/blueprint-completion.json'
 ];
 const requiredFiles = [
   'AGENTS.md',
@@ -52,6 +53,7 @@ for (const path of policyContractFiles) {
 const manifest = await load('.ai/manifest.json');
 const instance = await load('config/protocol/instance.json');
 const adoption = await load('config/protocol/anpos-adoption.json');
+const completion = await load('config/protocol/blueprint-completion.json');
 if (manifest) {
   if (manifest.protocol !== 'ANPOS') failures.push('manifest.protocol must be ANPOS');
   if (manifest.adoption_mode !== 'child_adoption_foundation') failures.push('manifest.adoption_mode is invalid');
@@ -77,6 +79,14 @@ if (adoption) {
   const allowed = new Set(adoption.status_vocabulary ?? []);
   for (const group of groups) if (!allowed.has(group.status)) failures.push('unknown status in ' + group.id);
   if (groups.some((group) => !Array.isArray(group.evidence) || !group.evidence.length || !group.next)) failures.push('every requirement group needs evidence and next action');
+}
+if (completion) {
+  if (completion.status !== 'child_adoption_contract_map' || completion.authority !== false) failures.push('blueprint completion map must remain non-authoritative');
+  const requirements = completion.requirements ?? [];
+  const ids = requirements.map((entry) => entry.requirement_id);
+  const expected = Array.from({ length: 96 }, (_, index) => 'REQ-' + String(index + 1).padStart(2, '0'));
+  if (ids.length !== 96 || ids.some((id, index) => id !== expected[index])) failures.push('blueprint completion map must cover REQ-01..REQ-96 in order');
+  if (requirements.some((entry) => !entry.domain || !Array.isArray(entry.machine_controls) || !Array.isArray(entry.verification_refs))) failures.push('blueprint completion entries require domain, controls and verification refs');
 }
 if (failures.length) {
   console.error(JSON.stringify({ status: 'INVALID', failures }, null, 2));

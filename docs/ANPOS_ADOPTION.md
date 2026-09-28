@@ -43,3 +43,8 @@ A successful result means the adoption metadata is internally consistent. It doe
 ## Applicable policy contracts
 
 The adoption layer also carries inactive-by-default machine contracts for agent selection, trust/control-plane boundaries, quality gates, design evidence, data handling, release assurance, architecture decisions, risk, operations, PM selection/sync authority, consent requests and reference E2E scenarios. These files define safe defaults and evidence requirements; they do not connect providers, grant agent identity, enable privileged mutation or certify production.
+
+
+## Blueprint completion map
+
+`config/protocol/blueprint-completion.json` now mirrors the canonical ANPOS requirement range (`REQ-01` through `REQ-96`) for this child project. Each entry points to local docs, machine controls and verification refs, while retaining `adopted_contract_only` or `not_applicable_in_this_repo` status. `npm run anpos:validate` verifies ordering, coverage and non-authority. This map is traceability, not full runtime certification.

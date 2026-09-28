@@ -45,7 +45,8 @@
     "config/integrations/sync-authority.json",
     "config/traceability/requirements-traceability.json",
     "config/consent/consent-requests.json",
-    "config/testing/reference-e2e-matrix.json"
+    "config/testing/reference-e2e-matrix.json",
+    "config/protocol/blueprint-completion.json"
   ],
   "roles": {
     "bootstrap": [
@@ -56,7 +57,8 @@
       "config/ai/agent-catalog.json",
       "config/integrations/project-management.json",
       "config/security/trust-policy.json",
-      "config/quality/quality-policy.json"
+      "config/quality/quality-policy.json",
+      "config/protocol/blueprint-completion.json"
     ],
     "planner": [
       "memory-bank/PROJECT_STATE.md",
@@ -100,7 +102,8 @@
       "scripts/verify-readme-progress.mjs",
       "scripts/validate-anpos-adoption.mjs",
       "config/testing/reference-e2e-matrix.json",
-      "config/traceability/requirements-traceability.json"
+      "config/traceability/requirements-traceability.json",
+      "config/protocol/blueprint-completion.json"
     ],
     "security": [
       "SECURITY.md",
@@ -123,7 +126,8 @@
       ".github/workflows/main-pr-origin-audit.yml",
       "config/protocol/anpos-adoption.json",
       "config/architecture/decision-records.json",
-      "config/traceability/requirements-traceability.json"
+      "config/traceability/requirements-traceability.json",
+      "config/protocol/blueprint-completion.json"
     ]
   },
   "preservation_contract": {

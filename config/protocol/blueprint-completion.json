@@ -1,0 +1,1800 @@
+{
+  "schema_version": 1,
+  "status": "child_adoption_contract_map",
+  "activation_scope": "this_project",
+  "protocol_version": "1.4.0",
+  "requirement_range": {
+    "first": 1,
+    "last": 96,
+    "count": 96
+  },
+  "source_blueprint": "Vertex-Systems-Network/ai-native-project-operating-system/config/protocol/blueprint-completion.json",
+  "authority": false,
+  "requirements": [
+    {
+      "requirement_id": "REQ-01",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-02",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-03",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-04",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-05",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-06",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-07",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-08",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-09",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-10",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-11",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-12",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-13",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-14",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-15",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-16",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-17",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-18",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-19",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-20",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-21",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-22",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-23",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-24",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-25",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-26",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-27",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-28",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-29",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-30",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-31",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-32",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-33",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-34",
+      "domain": "core_project_lifecycle",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md",
+        "memory-bank/PROJECT_STATE.md"
+      ],
+      "machine_controls": [
+        ".ai/manifest.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-35",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-36",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-37",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-38",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-39",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-40",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-41",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-42",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-43",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-44",
+      "domain": "child_bootstrap_and_protocol",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/ANPOS_ADOPTION.md"
+      ],
+      "machine_controls": [
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-45",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-46",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-47",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-48",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-49",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-50",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-51",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-52",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-53",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-54",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-55",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-56",
+      "domain": "control_plane_security",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "AGENTS.md"
+      ],
+      "machine_controls": [
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-57",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-58",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-59",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-60",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-61",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-62",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-63",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-64",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-65",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-66",
+      "domain": "quality_release_and_integrations",
+      "authoritative_docs": [
+        "docs/INTEGRATION_READINESS.md",
+        "docs/RUNNER_BENCHMARK.md"
+      ],
+      "machine_controls": [
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/project-management.json",
+        "config/integrations/sync-authority.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-67",
+      "domain": "design_data_operations",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "docs/PRIVACY.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "machine_controls": [
+        "config/design/design-assurance.json",
+        "config/data/data-governance.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/risk/risk-register.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-68",
+      "domain": "design_data_operations",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "docs/PRIVACY.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "machine_controls": [
+        "config/design/design-assurance.json",
+        "config/data/data-governance.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/risk/risk-register.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-69",
+      "domain": "design_data_operations",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "docs/PRIVACY.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "machine_controls": [
+        "config/design/design-assurance.json",
+        "config/data/data-governance.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/risk/risk-register.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-70",
+      "domain": "design_data_operations",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "docs/PRIVACY.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "machine_controls": [
+        "config/design/design-assurance.json",
+        "config/data/data-governance.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/risk/risk-register.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-71",
+      "domain": "design_data_operations",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "docs/PRIVACY.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "machine_controls": [
+        "config/design/design-assurance.json",
+        "config/data/data-governance.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/risk/risk-register.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-72",
+      "domain": "design_data_operations",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "docs/PRIVACY.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "machine_controls": [
+        "config/design/design-assurance.json",
+        "config/data/data-governance.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/risk/risk-register.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-73",
+      "domain": "design_data_operations",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "docs/PRIVACY.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "machine_controls": [
+        "config/design/design-assurance.json",
+        "config/data/data-governance.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/risk/risk-register.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-74",
+      "domain": "design_data_operations",
+      "authoritative_docs": [
+        "SECURITY.md",
+        "docs/PRIVACY.md",
+        "docs/ARCHITECTURE.md"
+      ],
+      "machine_controls": [
+        "config/design/design-assurance.json",
+        "config/data/data-governance.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/risk/risk-register.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-75",
+      "domain": "commercial_distribution",
+      "authoritative_docs": [
+        "README.md",
+        "docs/COMMERCIAL_EXPANSION_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "not_applicable_in_this_repo",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-76",
+      "domain": "commercial_distribution",
+      "authoritative_docs": [
+        "README.md",
+        "docs/COMMERCIAL_EXPANSION_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "not_applicable_in_this_repo",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-77",
+      "domain": "commercial_distribution",
+      "authoritative_docs": [
+        "README.md",
+        "docs/COMMERCIAL_EXPANSION_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "not_applicable_in_this_repo",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-78",
+      "domain": "commercial_distribution",
+      "authoritative_docs": [
+        "README.md",
+        "docs/COMMERCIAL_EXPANSION_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "not_applicable_in_this_repo",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-79",
+      "domain": "commercial_distribution",
+      "authoritative_docs": [
+        "README.md",
+        "docs/COMMERCIAL_EXPANSION_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "not_applicable_in_this_repo",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-80",
+      "domain": "commercial_distribution",
+      "authoritative_docs": [
+        "README.md",
+        "docs/COMMERCIAL_EXPANSION_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "not_applicable_in_this_repo",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-81",
+      "domain": "commercial_distribution",
+      "authoritative_docs": [
+        "README.md",
+        "docs/COMMERCIAL_EXPANSION_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "not_applicable_in_this_repo",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-82",
+      "domain": "commercial_distribution",
+      "authoritative_docs": [
+        "README.md",
+        "docs/COMMERCIAL_EXPANSION_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "not_applicable_in_this_repo",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-83",
+      "domain": "product_assurance",
+      "authoritative_docs": [
+        "docs/AI_NATIVE_PLAN.md",
+        "docs/P26_OPTIONAL_AI_ASSISTANCE_SPEC.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-84",
+      "domain": "product_assurance",
+      "authoritative_docs": [
+        "docs/AI_NATIVE_PLAN.md",
+        "docs/P26_OPTIONAL_AI_ASSISTANCE_SPEC.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-85",
+      "domain": "product_assurance",
+      "authoritative_docs": [
+        "docs/AI_NATIVE_PLAN.md",
+        "docs/P26_OPTIONAL_AI_ASSISTANCE_SPEC.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-86",
+      "domain": "product_assurance",
+      "authoritative_docs": [
+        "docs/AI_NATIVE_PLAN.md",
+        "docs/P26_OPTIONAL_AI_ASSISTANCE_SPEC.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-87",
+      "domain": "product_assurance",
+      "authoritative_docs": [
+        "docs/AI_NATIVE_PLAN.md",
+        "docs/P26_OPTIONAL_AI_ASSISTANCE_SPEC.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-88",
+      "domain": "product_assurance",
+      "authoritative_docs": [
+        "docs/AI_NATIVE_PLAN.md",
+        "docs/P26_OPTIONAL_AI_ASSISTANCE_SPEC.md"
+      ],
+      "machine_controls": [
+        "config/protocol/anpos-adoption.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-89",
+      "domain": "governance_assurance",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/architecture/decision-records.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-90",
+      "domain": "governance_assurance",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/architecture/decision-records.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-91",
+      "domain": "governance_assurance",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/architecture/decision-records.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-92",
+      "domain": "governance_assurance",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/architecture/decision-records.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-93",
+      "domain": "governance_assurance",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/architecture/decision-records.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-94",
+      "domain": "governance_assurance",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/architecture/decision-records.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-95",
+      "domain": "governance_assurance",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/architecture/decision-records.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    },
+    {
+      "requirement_id": "REQ-96",
+      "domain": "governance_assurance",
+      "authoritative_docs": [
+        "AGENTS.md",
+        "docs/AI_NATIVE_PLAN.md"
+      ],
+      "machine_controls": [
+        "config/architecture/decision-records.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json",
+        "config/traceability/requirements-traceability.json"
+      ],
+      "verification_refs": [
+        "scripts/validate-anpos-adoption.mjs"
+      ],
+      "coverage_status": "adopted_contract_only",
+      "runtime_evidence_required_in_child": true
+    }
+  ],
+  "notes": [
+    "This map proves traceability coverage, not runtime certification.",
+    "Requirements marked adopted_contract_only still need applicable implementation/runtime evidence.",
+    "REQ-75..82 commercial distribution is intentionally not applicable in this repository."
+  ]
+}
