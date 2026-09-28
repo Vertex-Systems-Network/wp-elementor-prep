@@ -13,6 +13,8 @@ const proofDir = join(root, 'dist-p18', 'react-runtime-proof');
 const sha256 = (value) => createHash('sha256').update(value).digest('hex');
 const env = process.env;
 const chromePath = env.P18_REACT_CHROME_PATH || env.P17_CHROME_PATH;
+const referenceScreenshotPath = env.P18_REFERENCE_SCREENSHOT;
+const referenceIrSha256 = env.P18_REFERENCE_IR_SHA256;
 const commitSha = env.P18_REACT_PROOF_GIT_SHA || 'local-unpinned';
 const runId = env.P18_REACT_PROOF_RUN_ID || 'local';
 const runAttempt = env.P18_REACT_PROOF_RUN_ATTEMPT || '1';
@@ -121,6 +123,47 @@ try {
     },
   };
   if (sourceComparison.status !== 'PASS') throw new Error('Source-bound render comparison failed: ' + JSON.stringify({ dom, sourceComparison }));
+  let visualComparison = { status: 'NOT_RUN', reason: 'REFERENCE_SCREENSHOT_NOT_PROVIDED' };
+  if (referenceScreenshotPath) {
+    if (!referenceIrSha256 || referenceIrSha256 !== artifact.analysis.irSha256) {
+      throw new Error('Reference screenshot requires P18_REFERENCE_IR_SHA256 matching the generated IR hash.');
+    }
+    const reference = await readFile(resolve(referenceScreenshotPath));
+    const comparison = await page.evaluate(async ({ currentBase64, referenceBase64 }) => {
+      const decode = async (base64) => {
+        const response = await fetch('data:image/png;base64,' + base64);
+        const bitmap = await createImageBitmap(await response.blob());
+        const canvas = document.createElement('canvas');
+        canvas.width = bitmap.width; canvas.height = bitmap.height;
+        const context = canvas.getContext('2d', { willReadFrequently: true });
+        if (!context) throw new Error('Canvas context unavailable.');
+        context.drawImage(bitmap, 0, 0);
+        const data = context.getImageData(0, 0, bitmap.width, bitmap.height).data;
+        bitmap.close();
+        return { width: canvas.width, height: canvas.height, data: Array.from(data) };
+      };
+      const current = await decode(currentBase64); const reference = await decode(referenceBase64);
+      if (current.width !== reference.width || current.height !== reference.height) return { sameDimensions: false, changedPixelPct: 100, meanChannelDelta: 255 };
+      let changed = 0; let totalDelta = 0; const totalPixels = current.width * current.height;
+      for (let index = 0; index < current.data.length; index += 4) {
+        let pixelChanged = false;
+        for (let channel = 0; channel < 4; channel += 1) {
+          const delta = Math.abs(current.data[index + channel] - reference.data[index + channel]);
+          totalDelta += delta; if (delta > 8) pixelChanged = true;
+        }
+        if (pixelChanged) changed += 1;
+      }
+      return { sameDimensions: true, changedPixelPct: totalPixels ? (changed / totalPixels) * 100 : 0, meanChannelDelta: totalPixels ? totalDelta / (totalPixels * 4) : 0 };
+    }, { currentBase64: screenshot.toString('base64'), referenceBase64: reference.toString('base64') });
+    visualComparison = {
+      ...comparison,
+      status: comparison.sameDimensions && comparison.changedPixelPct <= 0.5 && comparison.meanChannelDelta <= 8 ? 'PASS' : 'FAIL',
+      referenceScreenshotSha256: sha256(reference),
+      referenceIrSha256,
+      threshold: { changedPixelPct: 0.5, meanChannelDelta: 8 },
+    };
+    if (visualComparison.status !== 'PASS') throw new Error('Bounded visual comparison failed: ' + JSON.stringify(visualComparison));
+  }
   const browserVersion = await browser.version();
   const receipt = {
     status: 'RUNTIME_BUILD_AND_PREVIEW_PASS',
@@ -131,7 +174,7 @@ try {
     toolchain: { node: process.version, react: '19.3.0', reactDom: '19.3.0', vite: '8.3.1', npmCi: 'PASS', build: 'PASS', npmCiStdoutSha256: sha256(install.stdout), buildStdoutSha256: sha256(buildResult.stdout) },
     browser: { family: 'Chrome', version: browserVersion, executablePath: chromePath, viewport: { width: 1440, height: 900 }, dom, consoleErrorCount: consoleErrors.length, pageErrorCount: pageErrors.length, requestCount: requests.length, externalRequestCount: externalRequests.length, screenshotSha256: sha256(screenshot) },
     sourceComparison,
-    visualComparison: 'NOT_RUN',
+    visualComparison,
     productionAcceptance: false,
     targetAcceptance: 'NOT_RUN',
     evidence: { commitSha, runId, runAttempt, generatedAt: new Date().toISOString(), scope: 'local React runtime preview only; Elementor target and visual parity are separate gates' }
