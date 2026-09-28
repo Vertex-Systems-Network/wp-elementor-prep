@@ -60,9 +60,9 @@ Open roadmap / acceptance dependencies:
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
-Current verified main after state-only PR #837 merge and before this P15 candidate:
+Current verified main after PR #841 merge and before this README/state transport:
 
-`06bcbe7b6d183e64d84d89b9703b1a3fb689941b`
+`d1fc115b9f6764d90c0c319b880e291009eb7199`
 
 ### Completed P15 #838 — transient Image MEDIA URL review
 
@@ -70,7 +70,7 @@ A representative external handoff reported 44/45 unique temporary Figma asset UR
 
 ### Completed P15 #840 — Container background MEDIA reference review
 
-Template 2 has one desktop and one mobile Container background image with temporary Figma MCP URLs in addition to 43 core Image widget references. Elementor 4.2.4 source registers Container normal background group `background` and a responsive MEDIA `image` field. This candidate inventories only `background_image` and explicit tablet/mobile siblings on Containers, fingerprints URLs, flags temporary Figma asset links, and keeps closure, generation, download, compatibility and production false. Hover/slideshow and arbitrary ZIP fields are outside this source-bound review. The exact Package 13/14 asset bytes, target-managed WordPress media, live image-load and visual spacing parity remain pending. PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven required workflows, zero unresolved review threads and guarded squash merge as main `d1fc115b9f6764d90c0c319b880e291009eb7199`; Issue #840 closed. This is bounded review coverage, not media localization or visual parity.
+Template 2 has one desktop and one mobile Container background image with temporary Figma MCP URLs in addition to 43 core Image widget references. Elementor 4.2.4 source registers Container normal background group `background` and a responsive MEDIA `image` field. The merged review inventories only `background_image` and explicit tablet/mobile siblings on Containers, fingerprints URLs, flags temporary Figma asset links, and keeps closure, generation, download, compatibility and production false. Hover/slideshow and arbitrary ZIP fields are outside this source-bound review. The exact Package 13/14 asset bytes, target-managed WordPress media, live image-load and visual spacing parity remain pending. PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven required workflows, zero unresolved review threads and guarded squash merge as main `d1fc115b9f6764d90c0c319b880e291009eb7199`; Issue #840 closed. This is bounded review coverage, not media localization or visual parity.
 
 ### Current P15 and P17 status
 
