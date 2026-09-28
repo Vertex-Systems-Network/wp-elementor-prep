@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+import { readFile, writeFile, access } from 'node:fs/promises';
+import { resolve, join, relative } from 'node:path';
+const args = Object.fromEntries(process.argv.slice(2).map((arg) => { const [key, ...rest] = arg.replace(/^--/, '').split('='); return [key, rest.join('=')]; }));
+const version = args['gutenberg-version'];
+if (!version) throw new Error('Usage: npm run audit:gutenberg -- --gutenberg-version=wordpress-6.8 [--contracts=/path/contracts.json]');
+const bankDir = resolve(args['bank-dir'] ?? 'docs/option-bank');
+await access(bankDir);
+const snapshotName = args.contracts ? relative(bankDir, resolve(args.contracts)) : 'gutenberg-official-contracts.json';
+const snapshot = { schemaVersion: 2, generatedAt: new Date().toISOString(), kind: 'gutenberg', version, source: snapshotName, status: 'INVENTORIED', notes: ['Official metadata/contracts inventory only; editor registration, serialization and rendering still require runtime evidence.'] };
+const out = join(bankDir, `gutenberg-${version}.json`);
+await writeFile(out, JSON.stringify(snapshot, null, 2) + '\\n');
+const registryPath = join(bankDir, 'registry.json');
+const registry = JSON.parse(await readFile(registryPath, 'utf8'));
+registry.gutenberg = Array.isArray(registry.gutenberg) ? registry.gutenberg.filter((entry) => entry.id !== `gutenberg:${version}`) : [];
+registry.gutenberg.push({ id: `gutenberg:${version}`, label: `Gutenberg/WordPress ${version}`, snapshot: snapshotName, status: 'INVENTORIED', generatedAt: snapshot.generatedAt });
+registry.gutenberg.sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
+await writeFile(registryPath, JSON.stringify(registry, null, 2) + '\\n');
+const gap = join(bankDir, `gap-report-gutenberg-${version}.json`);
+await writeFile(gap, JSON.stringify({ schemaVersion: 1, generatedAt: new Date().toISOString(), selection: `gutenberg:${version}`, evidence: { snapshot: snapshotName }, statuses: { INVENTORIED: 1, MAPPED: 0, RUNTIME_REQUIRED: 3, UNSUPPORTED: 0 }, notes: ['Metadata inventory is captured; registration, edit/save serialization and frontend rendering remain RUNTIME_REQUIRED.'] }, null, 2) + '\\n');
+console.log(JSON.stringify({ snapshot: out, registry: registryPath, gapReport: gap, version }, null, 2));
