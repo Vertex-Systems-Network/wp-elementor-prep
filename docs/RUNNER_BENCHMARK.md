@@ -332,3 +332,8 @@ The implementation uses source/base-candidate binding and complete tablet/mobile
 ## 2026-09-28 — CodeQL action pin coherence
 
 The separate Dependabot init/analyze pin candidates #832/#834 each failed CodeQL because a 4.38.2 step read the other step's 4.38.1 configuration. This PR pins both steps to the same immutable 4.38.2 revision. The repaired exact head requires its own CI, CodeQL, Integration, P12 Offline, P12 Final, P15 target and P17 browser gate observations before guarded merge; prior failed runs grant no pass claim. This change does not modify product, release or acceptance authority.
+
+
+## 2026-09-28 — exact-head closure through PR #835
+
+The earlier P15 #825 custom-order probe and resolver pending notes are historical pre-gate records. PRs #826–#829 completed their required exact-head gates and merged; the controlled authored values do not establish editor-generated serialization or arbitrary demo parity. Dependency PRs #830, #832 and #835 each passed all seven required exact-head workflows, zero unresolved threads and guarded merges. Their merge SHAs are respectively `a80d37f6f587a4bf2a5e7b9941f944fbae2e6327`, `d562ca20c3c67484bce52005c887b8d0d845f993` and `12758d9d19b634948adc07aa798b4593734abe2c`. Separate #831/#833/#834 candidates closed unmerged. This state transport requires its own fresh gates and grants no production or compatibility authority.
