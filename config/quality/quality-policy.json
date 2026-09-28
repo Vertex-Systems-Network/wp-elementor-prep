@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "active_contract_not_runtime_authority",
+  "universal_required_checks": [
+    "CI",
+    "CodeQL",
+    "P12 Final Release Artifact",
+    "P12 Offline Acceptance"
+  ],
+  "additional_repository_checks": [
+    "Integration Readiness",
+    "P15 Real Elementor Target Proof",
+    "P17 Local Browser Proof",
+    "P18 React Runtime Proof"
+  ],
+  "rules": {
+    "no_merge_on_failed_required_check": true,
+    "no_silent_check_skips": true,
+    "changed_behavior_requires_tests": true,
+    "generated_artifacts_require_validation": true,
+    "CI_success_does_not_equal_target_or_production_acceptance": true
+  }
+}
