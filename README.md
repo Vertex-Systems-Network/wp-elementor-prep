@@ -26,7 +26,7 @@ The two Package 13/14 Website Template ZIPs still contain temporary Figma asset 
 
 | Module | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---:|---|---|
-| AI-native governance + repo tooling | REPO-SIDE DETECTION COMPLETE / ADMIN ENFORCEMENT IN PROGRESS | N/A | `──────────` | Main PR-origin + forced-update audit is active; #287 admin branch/ruleset enforcement still required |
+| AI-native governance + repo tooling | ANPOS CHILD-ADOPTION FOUNDATION IMPLEMENTED / FULL ASSURANCE MAPPING IN PROGRESS | N/A | `──────────` | `.ai/manifest.json`, active-project identity, Requirements 1–96 applicability matrix and deterministic validator added; PM/agent identity/consent/lease/commercial capabilities remain explicitly inactive; #287 admin branch/ruleset enforcement still required |
 | P0–P4 historical core aggregate | COMPLETE | 100% | `██████████` | Compatibility summary only; individual P0-P4 rows below are canonical for phase visibility |
 | P0 AI-native foundation + audit-only scaffold | COMPLETE | 100% | `██████████` | Planning, memory-bank, deterministic audit-only scaffold and CI foundation established |
 | P1 Audit-Only MVP + golden-fixture calibration | COMPLETE | 100% | `██████████` | Read-only selected-frame audit, explainable scoring and fixture calibration complete |
@@ -60,6 +60,10 @@ The two Package 13/14 Website Template ZIPs still contain temporary Figma asset 
 | P27 Final production release + publisher/runtime evidence | GATE DEFINED / EXECUTION DEFERRED | 0% exec | `░░░░░░░░░░` | Coordinate retained #84 truth + final live runtime/publisher/2FA evidence |
 
 **Overall progress is intentionally not collapsed into one synthetic percentage.** The P15–P17 N/A entries mean their full acceptance scope has no validated denominator; they do not mean no work has been done.
+
+## ANPOS child-adoption status
+
+The repository now uses a project-specific ANPOS adoption layer documented in [`docs/ANPOS_ADOPTION.md`](docs/ANPOS_ADOPTION.md). This adds routing, active-project identity, a Requirements 1–96 applicability matrix and a deterministic validator without copying the canonical vendor/commercial runtime or changing the network-free Figma core. `npm run anpos:validate` verifies the metadata. Full ANPOS requirement certification, PM/AI identity/consent/lease integrations and commercial runtime remain separate and are not claimed.
 
 ## Versioned target option-bank status
 
