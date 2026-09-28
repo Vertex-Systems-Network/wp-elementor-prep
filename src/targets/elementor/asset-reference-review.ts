@@ -37,7 +37,8 @@ export type ElementorAssetReferenceReviewStatus =
   | 'BLOCKED_UPSTREAM'
   | 'NO_DOCUMENTED_ASSET_REFERENCES'
   | 'EXTERNAL_ASSET_CLOSURE_REQUIRED'
-  | 'REVIEW_REQUIRED_UNSUPPORTED_ASSET_SHAPE';
+  | 'REVIEW_REQUIRED_UNSUPPORTED_ASSET_SHAPE'
+  | 'REVIEW_REQUIRED_TRANSIENT_ASSET_REFERENCE';
 
 export type ElementorAssetReferenceMode = 'MEDIA_ID_AND_URL' | 'MEDIA_ID_ONLY' | 'URL_ONLY';
 
@@ -57,7 +58,8 @@ export type ElementorAssetReferenceIssueCode =
   | 'P15_ASSET_MEDIA_VALUE_NOT_OBJECT'
   | 'P15_ASSET_MEDIA_VALUE_UNKNOWN_FIELD'
   | 'P15_ASSET_MEDIA_ID_INVALID'
-  | 'P15_ASSET_MEDIA_URL_INVALID';
+  | 'P15_ASSET_MEDIA_URL_INVALID'
+  | 'P15_ASSET_MEDIA_TRANSIENT_FIGMA_URL';
 
 export interface ElementorAssetReferenceIssueV1 {
   code: ElementorAssetReferenceIssueCode;
@@ -96,6 +98,17 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function validFingerprint(value: unknown): value is string {
   return typeof value === 'string' && /^sha256:[0-9a-f]{64}$/.test(value);
+}
+
+function isTransientFigmaMcpAssetUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'https:'
+      && (parsed.hostname === 'figma.com' || parsed.hostname === 'www.figma.com')
+      && parsed.pathname.startsWith('/api/mcp/asset/');
+  } catch {
+    return false;
+  }
 }
 
 function inspectMediaValue(
@@ -174,7 +187,13 @@ function inspectMediaValue(
       urlFingerprint: url === null ? null : `sha256:${sha256Hex(url)}`,
       referenceMode,
     },
-    issues: [],
+    issues: url !== null && isTransientFigmaMcpAssetUrl(url)
+      ? [{
+        code: 'P15_ASSET_MEDIA_TRANSIENT_FIGMA_URL',
+        path: `${path}.url`,
+        message: 'Temporary Figma MCP asset URL requires permanent target-managed media localization and runtime image-load evidence.',
+      }]
+      : [],
   };
 }
 
@@ -288,6 +307,12 @@ function serializableReview(review: ElementorAssetReferenceReviewV1): boolean {
   if (review.status === 'REVIEW_REQUIRED_UNSUPPORTED_ASSET_SHAPE') {
     return review.assetReferenceStatus === 'REVIEW_REQUIRED' && review.issues.length > 0;
   }
+  if (review.status === 'REVIEW_REQUIRED_TRANSIENT_ASSET_REFERENCE') {
+    return review.assetReferenceStatus === 'REVIEW_REQUIRED'
+      && review.references.length > 0
+      && review.issues.length > 0
+      && review.issues.every((issue) => issue.code === 'P15_ASSET_MEDIA_TRANSIENT_FIGMA_URL');
+  }
   return false;
 }
 
@@ -339,7 +364,9 @@ export function reviewElementorAssetReferences(
   issues.sort((left, right) => left.path.localeCompare(right.path) || left.code.localeCompare(right.code));
 
   const status: ElementorAssetReferenceReviewStatus = issues.length > 0
-    ? 'REVIEW_REQUIRED_UNSUPPORTED_ASSET_SHAPE'
+    ? issues.every((issue) => issue.code === 'P15_ASSET_MEDIA_TRANSIENT_FIGMA_URL')
+      ? 'REVIEW_REQUIRED_TRANSIENT_ASSET_REFERENCE'
+      : 'REVIEW_REQUIRED_UNSUPPORTED_ASSET_SHAPE'
     : references.length > 0
       ? 'EXTERNAL_ASSET_CLOSURE_REQUIRED'
       : 'NO_DOCUMENTED_ASSET_REFERENCES';
