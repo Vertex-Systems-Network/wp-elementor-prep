@@ -423,3 +423,8 @@ PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven r
 ## Current README progress clarity candidate #844
 
 Exact main after terminal #843 is `2ca818d500474182a3e04eacdd477df4761a1269`. PR #845 reduces the current README from 858 lines to a concise phase-status page, preserves historical PR chronology in `docs/README_PROGRESS_HISTORY_2026-09-28.md`, and updates the verifier to distinguish current README claims from historical evidence. P15/P16/P17 remain in progress with no synthetic completion percentage. Exact-head gates pending; image localization, real visual parity, Gutenberg target validation, Web-to-Figma reconstruction and release authority remain unclaimed.
+
+
+## Pre-P19 evidence-gated program #846
+
+After PR #845 exact-head merge (pending at this snapshot), the user's standing instruction is to finish P15–P18 with genuine phase-specific evidence before P19 and not request routine implementation confirmations. `docs/PRE_P19_EVIDENCE_EXIT.md` opens P18 R0/R1 preflight only and preserves P19 frozen. No external image bytes, authenticated Gutenberg target evidence, P17 visual/reconstruction proof, P18 adapter build/render or production authority is inferred. Existing #84/#159/#287/#182 gates remain separate.
