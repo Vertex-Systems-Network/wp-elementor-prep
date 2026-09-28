@@ -6,6 +6,8 @@ Baseline main: `f0eaea1f184839b13435edddb21b9c89fa574f7d` (2026-09-29)
 
 P19 implementation stays frozen until P15, P16, P17 and P18 each have a separately reviewed, evidence-backed exit. This gate coordinates sequencing; it grants no runtime, production, publishing, download, or compatibility authority. Routine implementation and safe green merges before P19 are authorized by the user. Missing external proof remains missing even when code and CI pass.
 
+Consolidated phase evidence index: [`docs/P15_P18_EVIDENCE_REGISTER_2026-09-29.md`](P15_P18_EVIDENCE_REGISTER_2026-09-29.md).
+
 | Phase | Current retained state | Required exit evidence | Refusal boundary |
 |---|---|---|---|
 | P15 Elementor | Deterministic Template JSON candidate, explicit mappings and controlled WP 6.8 / Elementor 4.2.4 proof; read-only Image/Container MEDIA diagnostics | Supported artifact/package and source identity; durable target-managed Package 13/14 media mapping; loaded images; Figma-vs-import desktop/mobile geometry and spacing comparison; documented scope-specific internal decision | No arbitrary ZIP parity, portable numeric attachment ID, general compatibility, production/download claim from diagnostics or a draft document save |
