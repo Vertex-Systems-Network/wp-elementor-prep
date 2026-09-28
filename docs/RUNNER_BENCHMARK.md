@@ -347,3 +347,8 @@ Representative external Package 13/14 handoff evidence identified 44/45 unique t
 ## P15 #840 — documented Container background MEDIA review candidate
 
 PR #839 passed the seven required exact-head workflows and merged as `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`. The scoped #840 follow-up adds the exact normal Container background MEDIA keys (desktop/tablet/mobile) backed by pinned Elementor 4.2.4 source. Template 2's desktop/mobile background refs are temporary Figma URLs; the tests are synthetic and do not prove image loading, target-managed media, imported visual parity, or production acceptance. RQ-840-FINAL is merge-blocking on the final bound PR head; its gate results are pending.
+
+
+## 2026-09-28 — P15 #840 merge and terminal README reconciliation
+
+PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof; zero unresolved threads; guarded merge as `d1fc115b9f6764d90c0c319b880e291009eb7199`. The first head failed CI/P12 Final only on a deterministic path-order test assertion, repaired on final head. This does not establish media upload/load or visual parity. RQ-842-FINAL tracks terminal README/state-only PR #843; exact-head gates pending.

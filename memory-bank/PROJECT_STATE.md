@@ -413,3 +413,8 @@ A representative external handoff reports 44/45 unique temporary Figma asset URL
 ## P15 #838 merge and #840 Container background candidate
 
 PR #839 exact head `8fcb41806f03c525a89eb372f53d382b1432bdd1` passed all seven required workflows, zero unresolved threads and guarded merge as `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`; #838 closed. The Package 14 ZIP contains two additional temporary Figma refs in normal Container background MEDIA (desktop/mobile). #840 extends bounded review to those documented responsive controls without claiming permanent media localization, browser image-load, demo spacing parity, compatibility, download or production authority. Exact-head gates pending.
+
+
+## P15 #840 exact-head completion and README truth
+
+PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven required gates, had zero unresolved threads and guarded merged as `d1fc115b9f6764d90c0c319b880e291009eb7199`; Issue #840 closed. Only documented Container normal background MEDIA references gained read-only transient-link review. README/state terminal #842/#843 records the merge and that P17 foundation already started. No Package 13/14 media localization, runtime image-load, spacing parity, broad target compatibility, download or production authority is granted.
