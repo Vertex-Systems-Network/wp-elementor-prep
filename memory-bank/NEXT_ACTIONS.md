@@ -154,3 +154,8 @@ Exact main before state transport: `12758d9d19b634948adc07aa798b4593734abe2c`. P
 ## Active P15 #838 / PR #839
 
 Verify the bounded transient Image MEDIA diagnostic on the exact PR head. The representative external handoff has 44/45 unique temporary Figma URLs and no permanent media/browser render certification. After green gates and guarded merge, investigate full ZIP media references and selected visual spacing with genuine target screenshots; do not call this Image-widget-only check complete demo import parity.
+
+
+## Active P15 #840 Container background MEDIA review
+
+PR #839 merged as `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55` after seven exact-head gates. The representative Template 2 ZIP includes two temporary Figma background refs in addition to 43 Image widget refs. Issue #840 binds review to documented Elementor Container normal background MEDIA controls and preserves false closure/compatibility/download/production authority. Verify its final PR head before guarded merge; actual Package 13/14 media bytes, target uploads and render comparison remain external prerequisites.
