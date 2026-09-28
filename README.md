@@ -60,9 +60,9 @@ Open roadmap / acceptance dependencies:
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
-Current verified main before the state-only #836 transport:
+Current verified main after state-only PR #837 merge and before this P15 candidate:
 
-`12758d9d19b634948adc07aa798b4593734abe2c`
+`06bcbe7b6d183e64d84d89b9703b1a3fb689941b`
 
 ### P15 #838 — transient Image MEDIA URL review candidate
 
