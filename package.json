@@ -46,7 +46,8 @@
     "p15:target-managed-media-portability": "node scripts/p15-target-managed-media-portability-intake.mjs",
     "p15:target-managed-media-internal-decision": "node scripts/p15-target-managed-media-internal-decision.mjs",
     "p17:local-browser-proof": "node scripts/p17-local-browser-proof.mjs",
-    "p18:react-static-build": "node scripts/p18-react-static-build.mjs"
+    "p18:react-static-build": "node scripts/p18-react-static-build.mjs",
+    "p18:react-runtime-proof": "node scripts/p18-react-runtime-proof.mjs"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.117.0",
