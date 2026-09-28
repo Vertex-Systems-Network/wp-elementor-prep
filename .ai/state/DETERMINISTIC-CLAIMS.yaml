@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: b34f5b254dfe7bf8f217d691ecf8d58652674428
+observed_main_sha: 12758d9d19b634948adc07aa798b4593734abe2c
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -410,3 +410,11 @@ claims:
 
   - {id: CL-402, statement: pr_823_exact_head_a89bee55_passed_all_seven_required_gates_zero_threads_expected_head_merge_produced_main_b34f5b25, value: true}
   - {id: CL-403, statement: issue_824_pr_824_owns_post_pr_823_canonical_state_reconciliation, value: true}
+
+  - {id: CL-404, statement: pr_824_merged_as_main_46429381_and_issue_824_closed, value: true}
+  - {id: CL-405, statement: pr_829_exact_head_e784fc5b_passed_seven_gates_and_merged_as_ca23be08_with_issue_825_closed, value: true}
+  - {id: CL-406, statement: pr_830_exact_head_9de20bcc_passed_seven_gates_and_merged_as_a80d37f6, value: true}
+  - {id: CL-407, statement: pr_832_exact_head_edf91185_passed_seven_gates_and_merged_as_d562ca20, value: true}
+  - {id: CL-408, statement: pr_835_exact_head_88e69949_passed_seven_gates_and_merged_as_12758d9d, value: true}
+  - {id: CL-409, statement: prs_831_833_834_closed_unmerged_as_superseded, value: true}
+  - {id: CL-410, statement: real_demo_visual_spacing_and_image_parity_remain_unverified, value: true}
