@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "contract_defined_not_connected",
+  "default_authority": {
+    "code": "repository",
+    "branch": "repository",
+    "pull_request": "repository",
+    "merge_state": "repository",
+    "checks": "repository",
+    "release_evidence": "repository",
+    "business_priority": "project_policy"
+  },
+  "sync_controls": {
+    "idempotency_required_for_writes": true,
+    "provider_revision_required_when_supported": true,
+    "echo_loop_prevention_required": true,
+    "conflicts_must_be_recorded": true,
+    "repository_reconcile_before_provider_switch": true
+  }
+}
