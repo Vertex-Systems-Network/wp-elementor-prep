@@ -64,13 +64,18 @@ Current verified main after state-only PR #837 merge and before this P15 candida
 
 `06bcbe7b6d183e64d84d89b9703b1a3fb689941b`
 
-### P15 #838 — transient Image MEDIA URL review candidate
+### Completed P15 #838 — transient Image MEDIA URL review
 
 A representative external handoff reported 44/45 unique temporary Figma asset URLs across two Elementor Website Template ZIPs; draft document-type persistence was observed, while permanent media localization and browser image-load comparison remain pending. This bounded change recognizes only exact `figma.com` / `www.figma.com` `/api/mcp/asset/` HTTPS URLs in the documented core Image MEDIA control, retains fingerprints and paths without emitting raw URLs, and requires review. It does not audit arbitrary ZIP media fields or CSS backgrounds, fetch/upload assets, alter template data, solve spacing parity, or grant import, compatibility, download, production or release authority. PR #839 passed all seven exact-head gates and merged as main `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`; Issue #838 closed.
 
-### P15 #840 — Container background MEDIA reference review candidate
+### Completed P15 #840 — Container background MEDIA reference review
 
-Template 2 has one desktop and one mobile Container background image with temporary Figma MCP URLs in addition to 43 core Image widget references. Elementor 4.2.4 source registers Container normal background group `background` and a responsive MEDIA `image` field. This candidate inventories only `background_image` and explicit tablet/mobile siblings on Containers, fingerprints URLs, flags temporary Figma asset links, and keeps closure, generation, download, compatibility and production false. Hover/slideshow and arbitrary ZIP fields are outside this source-bound review. The exact Package 13/14 asset bytes, target-managed WordPress media, live image-load and visual spacing parity remain pending. Exact-head gates are pending.
+Template 2 has one desktop and one mobile Container background image with temporary Figma MCP URLs in addition to 43 core Image widget references. Elementor 4.2.4 source registers Container normal background group `background` and a responsive MEDIA `image` field. This candidate inventories only `background_image` and explicit tablet/mobile siblings on Containers, fingerprints URLs, flags temporary Figma asset links, and keeps closure, generation, download, compatibility and production false. Hover/slideshow and arbitrary ZIP fields are outside this source-bound review. The exact Package 13/14 asset bytes, target-managed WordPress media, live image-load and visual spacing parity remain pending. PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven required workflows, zero unresolved review threads and guarded squash merge as main `d1fc115b9f6764d90c0c319b880e291009eb7199`; Issue #840 closed. This is bounded review coverage, not media localization or visual parity.
+
+### Current P15 and P17 status
+
+- P15 core foundation remains in progress. PRs #839 and #841 add read-only diagnostics for documented Image widget and Container background MEDIA references; neither obtains image bytes, uploads WordPress media, proves browser image loads, or closes Figma-to-Elementor spacing parity.
+- P17 foundation implementation has already started: static export/import preflight, neutral Web IR, HTML/CSS generation and package validation are merged, with controlled local browser proof. Visual fidelity, JavaScript execution, Web-to-Figma reconstruction and production acceptance remain unclaimed.
 
 ### Current P15 and toolchain handoff
 
