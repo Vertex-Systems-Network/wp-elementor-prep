@@ -42,6 +42,18 @@ npm run audit:gutenberg -- \
 
 The plugin UI is built from `registry.json` and exposes separate Elementor Free + Pro and Gutenberg selectors. Selecting a bank is included in the P15 preview receipt; it does not turn static inventory into a runtime compatibility claim.
 
+## Adapter coverage matrix
+
+After a snapshot is created, compare its literal keys with the current Elementor generator:
+
+```bash
+npm run option-bank:coverage -- \
+  --input=docs/option-bank/elementor-<free>-<pro>.json \
+  --out=docs/option-bank/coverage-<free>-<pro>.json
+```
+
+`MAPPED` only means the key is emitted by the current static generator. Import, save serialization, frontend render and responsive parity remain explicit `NOT_RUN` gates until target evidence is captured.
+
 ## Gutenberg / WordPress
 
 Gutenberg is not represented as one fixed plugin option list. The bank tracks the stable official contracts used by blocks:
