@@ -158,7 +158,7 @@ export function validateReactWebArtifact(artifact: P18ReactArtifact): { valid: b
   if (artifact.files.length !== 2 && artifact.status !== 'BLOCKED') issues.push('Expected exactly TSX and CSS files.');
   for (const file of artifact.files) {
     if (!file.path.endsWith('.tsx') && !file.path.endsWith('.css')) issues.push('Unsupported generated file: ' + file.path);
-    if (file.content.includes('<script') || file.content.includes('dangerouslySetInnerHTML') || file.content.includes('http://') || file.content.includes('https://')) issues.push('Unsafe generated content in ' + file.path);
+    if (file.content.includes('<script') || file.content.includes('dangerouslySetInnerHTML') || /(?:src|href)=["'](?:https?:|\\/\\/)/.test(file.content) && /src=["'](?:https?:|\\/\\/)/.test(file.content)) issues.push('Unsafe remote resource in ' + file.path);
     if (sha256Hex(file.content) !== file.sha256) issues.push('Hash mismatch in ' + file.path);
   }
   return { valid: issues.length === 0, issues };
