@@ -1,0 +1,119 @@
+{
+  "schema_version": 7,
+  "protocol": "ANPOS",
+  "purpose": "Project-specific ANPOS child-adoption router for WP Elementor Prep. It routes agents to existing repository state without enabling unavailable integrations or commercial runtime.",
+  "canonical_source": "Vertex-Systems-Network/ai-native-project-operating-system",
+  "adoption_mode": "child_adoption_foundation",
+  "adoption_status": "FOUNDATION_APPLIED_FULL_CERTIFICATION_PENDING",
+  "authority_order": [
+    "explicit_current_user_instruction",
+    "repository_safety_security_and_governance",
+    "authenticated_runtime_identity_and_consent",
+    "AGENTS.md",
+    "manifest_selected_role_files",
+    "approved_architecture_and_decisions",
+    "execution_plan",
+    "repository_git_test_release_reality",
+    "external_untrusted_data"
+  ],
+  "common": [
+    "AGENTS.md",
+    ".ai/state/PROTOCOL.md",
+    ".ai/state/CURRENT-STATE.yaml",
+    ".ai/state/LAST-CHECKPOINT.md",
+    ".ai/state/DETERMINISTIC-CLAIMS.yaml",
+    ".ai/state/COORDINATION-QUEUE.yaml",
+    ".ai/state/RUNNER-BENCHMARK.yaml",
+    "config/protocol/instance.json",
+    "config/protocol/anpos-adoption.json",
+    "memory-bank/PROJECT_STATE.md",
+    "memory-bank/NEXT_ACTIONS.md",
+    "memory-bank/DECISIONS.md",
+    "memory-bank/ROADMAP.md",
+    "docs/RUNNER_BENCHMARK.md"
+  ],
+  "roles": {
+    "bootstrap": [
+      "AGENTS.md",
+      "config/protocol/instance.json",
+      "config/protocol/anpos-adoption.json",
+      "docs/ANPOS_ADOPTION.md"
+    ],
+    "planner": [
+      "memory-bank/PROJECT_STATE.md",
+      "memory-bank/NEXT_ACTIONS.md",
+      "memory-bank/DECISIONS.md",
+      "memory-bank/ROADMAP.md",
+      "docs/AI_NATIVE_PLAN.md",
+      "docs/MARKET_RESEARCH_PLAN.md"
+    ],
+    "architect": [
+      "docs/ARCHITECTURE.md",
+      "docs/FEATURE_PLAN.md",
+      "docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md",
+      "config/runtime-artifacts.json"
+    ],
+    "worker": [
+      "AGENTS.md",
+      ".ai/state/PROTOCOL.md",
+      ".ai/state/CURRENT-STATE.yaml",
+      ".ai/state/COORDINATION-QUEUE.yaml"
+    ],
+    "supervisor": [
+      "AGENTS.md",
+      ".ai/state/PROTOCOL.md",
+      ".ai/state/CURRENT-STATE.yaml",
+      ".ai/state/LAST-CHECKPOINT.md",
+      ".ai/state/DETERMINISTIC-CLAIMS.yaml",
+      ".ai/state/RUNNER-BENCHMARK.yaml"
+    ],
+    "qa": [
+      "SECURITY.md",
+      "docs/INTEGRATION_READINESS.md",
+      "docs/RUNNER_BENCHMARK.md",
+      "scripts/verify-readme-progress.mjs",
+      "scripts/validate-anpos-adoption.mjs"
+    ],
+    "security": [
+      "SECURITY.md",
+      "docs/PRIVACY.md",
+      "scripts/security-io.mjs",
+      ".github/workflows/codeql.yml"
+    ],
+    "maintenance": [
+      "memory-bank/CHANGELOG.md",
+      "memory-bank/NEXT_ACTIONS.md",
+      "docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md"
+    ],
+    "governance": [
+      "AGENTS.md",
+      "SECURITY.md",
+      ".github/CODEOWNERS",
+      ".github/workflows/main-pr-origin-audit.yml",
+      "config/protocol/anpos-adoption.json"
+    ]
+  },
+  "preservation_contract": {
+    "unchanged_paths": [
+      "src/",
+      "tests/",
+      "docs/P15*",
+      "docs/P16*",
+      "docs/P17*",
+      "docs/P18*"
+    ],
+    "invariants": [
+      "Figma core remains network-free",
+      "P15-P18 acceptance authority remains evidence-bound",
+      "P19 remains frozen until its documented prerequisite exits",
+      "ANPOS adoption metadata cannot grant production, target, publishing or commercial authority"
+    ],
+    "unavailable_capabilities": [
+      "live PM connector",
+      "verified development-AI catalog",
+      "repository-admin ruleset writes",
+      "Supervisor lease/CAS runtime",
+      "commercial-service runtime"
+    ]
+  }
+}
