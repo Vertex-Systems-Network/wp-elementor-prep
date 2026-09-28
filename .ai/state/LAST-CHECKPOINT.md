@@ -2,14 +2,14 @@
 
 Status: VERIFYING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `55474fb5fe03ca21ae53c7a8d883ce48bd1a9dd6`
+Observed main before this state reconciliation: `a078ba40e75e0723ea71190e0d976edb423a27be`
 Canonical active Issue/PR: #846 / none
 Branch: `main`
 Candidate head source: GitHub main.
 
 ## Verified work
 
-PR #872 / Issue #871 applied the bounded ANPOS 1.4.0 child-adoption foundation. Exact head `901b89cc64db1a8edadb10d6d654a80428f12d39` passed CI, CodeQL, P12 Final, P12 Offline, P15, P17, P18 and Integration Readiness; zero unresolved review threads; guarded merge produced main `55474fb5fe03ca21ae53c7a8d883ce48bd1a9dd6`.
+PR #872 / Issue #871 and PR #874 applied the bounded ANPOS 1.4.0 child-adoption foundation and applicable policy contracts. Exact head `901b89cc64db1a8edadb10d6d654a80428f12d39` passed CI, CodeQL, P12 Final, P12 Offline, P15, P17, P18 and Integration Readiness; zero unresolved review threads; guarded merge produced main `55474fb5fe03ca21ae53c7a8d883ce48bd1a9dd6`.
 
 The adoption layer adds `.ai/manifest.json`, `config/protocol/instance.json`, `config/protocol/anpos-adoption.json`, `docs/ANPOS_ADOPTION.md`, `scripts/validate-anpos-adoption.mjs`, the `anpos:validate` package command and an Integration Readiness validator step. Requirements 1–96 are covered by explicit evidence-backed applicability groups.
 
