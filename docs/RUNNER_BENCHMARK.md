@@ -328,3 +328,7 @@ The controlled custom-order template from PR #827 is rendered through exact Elem
 ## P15 #825 — explicit custom-order resolver candidate
 
 The implementation uses source/base-candidate binding and complete tablet/mobile custom-order pairs in the repository policy range -1000..1000. The controlled Elementor 4.2.4 import/export and browser evidence is retained under PRs #827 and #828. This code adds no automatic breakpoint inference, production or download authority. Exact-head gates are pending.
+
+## 2026-09-28 — CodeQL action pin coherence
+
+The separate Dependabot init/analyze pin candidates #832/#834 each failed CodeQL because a 4.38.2 step read the other step's 4.38.1 configuration. This PR pins both steps to the same immutable 4.38.2 revision. The repaired exact head requires its own CI, CodeQL, Integration, P12 Offline, P12 Final, P15 target and P17 browser gate observations before guarded merge; prior failed runs grant no pass claim. This change does not modify product, release or acceptance authority.
