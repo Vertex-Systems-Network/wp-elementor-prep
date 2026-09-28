@@ -372,3 +372,6 @@ The P18 React R0/R1 preflight and #850 React static adapter consume the existing
 ## P18 runtime receipt (2026-09-28)
 
 PR #858 merged exact head `2de98fa367243f155eacd1f0d71afe8f71ec8377` as main `4fc693b33051435ad5309e0e4cbcf068582cd95f`. The dedicated P18 workflow run `36443412796` passed the pinned React 19.3.0 / ReactDOM 19.3.0 / Vite 8.3.1 fixture, npm ci, Vite build, loopback preview and Chrome DOM/source-ref checks with zero external requests and zero console/page errors. This is runtime-preview evidence only; visual parity, Figma parity, Elementor target acceptance and production authority remain false.
+
+
+State reconciliation after PR #859 keeps P18 runtime receipt scope aligned with Project State and Next Actions; no new browser or target authority is inferred.
