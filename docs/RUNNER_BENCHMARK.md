@@ -362,3 +362,8 @@ PR #843 exact head `2649487fc978134387ae9ba7c635d8fcb240dd8a` passed all seven r
 ## 2026-09-28 — pre-P19 evidence gate #846
 
 PR #845 exact head `02450b354a31d7149f64da5f5b27f180d53e4bae` passed all seven required workflows, zero unresolved threads and guarded merged as `6b79b569b14618dec67744310b2794a2bab49e29`; #844 closed. PR #847 records phase-specific P15–P18 exits before P19 without granting actual target/release authority, and opens only P18 R0/R1 preflight. RQ-846-FINAL is blocking on final exact-head seven-workflow results.
+
+
+## P18 adapter handoff (2026-09-28)
+
+The P18 React R0/R1 preflight consumes the existing P17 static Web IR and local browser proof contract. This note records workflow-path continuity only; it does not add a React adapter or claim visual parity.
