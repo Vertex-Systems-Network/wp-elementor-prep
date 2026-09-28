@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "active_contract",
+  "risks": [
+    {
+      "id": "RISK-ANPOS-001",
+      "category": "architecture",
+      "title": "Blueprint overclaim",
+      "description": "Policy/blueprint presence could be mistaken for active runtime capability.",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigations": [
+        "Explicit adoption status",
+        "authority false",
+        "matrix next actions",
+        "validator"
+      ],
+      "disposition": "mitigating",
+      "linked_refs": [
+        "config/protocol/anpos-adoption.json"
+      ]
+    },
+    {
+      "id": "RISK-ANPOS-002",
+      "category": "security",
+      "title": "Privilege escalation through agent or external text",
+      "description": "Agent names or untrusted repository/PM/design text could be treated as authority.",
+      "likelihood": "medium",
+      "impact": "high",
+      "mitigations": [
+        "trust-policy",
+        "control-plane-policy",
+        "AGENTS.md"
+      ],
+      "disposition": "mitigating",
+      "linked_refs": [
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json"
+      ]
+    },
+    {
+      "id": "RISK-ANPOS-003",
+      "category": "operational",
+      "title": "Stale durable state",
+      "description": "Resume metadata could point at an old main or PR.",
+      "likelihood": "medium",
+      "impact": "medium",
+      "mitigations": [
+        "CURRENT-STATE",
+        "LAST-CHECKPOINT",
+        "post-merge reconciliation"
+      ],
+      "disposition": "mitigating",
+      "linked_refs": [
+        ".ai/state/PROTOCOL.md"
+      ]
+    }
+  ],
+  "allowed_dispositions": [
+    "open",
+    "mitigating",
+    "accepted",
+    "resolved",
+    "expired_acceptance"
+  ]
+}
