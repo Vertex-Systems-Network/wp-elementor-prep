@@ -194,3 +194,13 @@ The bounded child-adoption foundation is implemented on the current release trai
 ## ANPOS policy-contract continuation
 
 After the policy-contract slice merges, use the adoption matrix and traceability file to choose only applicable requirement work. Keep provider connections, privileged agent runtime, leases/consent/CAS, repository-admin enforcement and commercial service inactive until independently authorized and evidenced.
+
+
+## 2026-09-29 evidence-register sync
+
+- Consolidated evidence index: `docs/P15_P18_EVIDENCE_REGISTER_2026-09-29.md`.
+- Machine-readable register: `config/evidence/p15-p18-register.json`; ANPOS validator enforces ordered P15–P18 coverage, `authority:false`, `PRE_P19_OPEN` and four P19 unlock conditions.
+- P15 runtime binding is fail-closed and emits `RUNTIME_REVIEW_REQUIRED` for missing/unreadable import, frontend or responsive receipts.
+- P16 reproducible intake uses `--document`, `--profile`, `--receipt`, `--out`; missing input exits 2.
+- P17 controlled browser proof requires explicit Chrome path and retained git/run identity; local render remains separate from visual parity.
+- P19 remains frozen until P15 source/media/import evidence, P16 authenticated Gutenberg evidence, P17 genuine source comparison and P18 framework-specific evidence are retained.
