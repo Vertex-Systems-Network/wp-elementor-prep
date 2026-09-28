@@ -1,9 +1,11 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: f6bbbd7db3d9220e8ade26cc59443fd1184f9f55
-active_issue: 840
-active_pr: 841
-active_branch: ai-native/p15-container-background-media-840
+observed_main_sha: d1fc115b9f6764d90c0c319b880e291009eb7199
+active_issue: null
+active_pr: null
+active_branch: null
+terminal_transport_issue: 842
+terminal_transport_pr: 843
 active_execution_batch:
   target_duration: 5_HOURS_OR_AVAILABLE_WORKSPACE_CREDIT_SESSION_WHICHEVER_ENDS_FIRST
   continues_without_user_reconsent: true
@@ -17,18 +19,18 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: issue-840-container-background-review
+  presentation_epoch: terminal-p15-840-readme-state
   presentation_order:
     - review-security-blocker-287
-    - verify-p15-background-media-840
-recommended_action_id: verify-p15-background-media-840
+    - inspect-real-demo-media-and-spacing
+recommended_action_id: inspect-real-demo-media-and-spacing
 options:
-  - action_id: verify-p15-background-media-840
-    label: Verify background media review
+  - action_id: inspect-real-demo-media-and-spacing
+    label: Inspect demo evidence
     enabled: true
     recommended: true
-    action_token: VERIFY_P15_BACKGROUND_MEDIA_840
-    request_payload: "Verify PR #841 final exact-head gates, zero unresolved threads and mergeability; guarded merge if green, then reconcile main."
+    action_token: INSPECT_P15_DEMO_MEDIA_SPACING
+    request_payload: "After terminal PR #843 exact-head gates and guarded merge, inspect real Pella Nova media localization and spacing evidence for a bounded next P15 slice."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
