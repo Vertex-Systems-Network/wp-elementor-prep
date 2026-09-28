@@ -35,7 +35,7 @@ current_blockers:
   - issue_182_final_production_acceptance_and_marketplace_gates_deferred
 terminal_finalization:
   transport_issue: 836
-  transport_pr: null
+  transport_pr: 837
   transport_issue_is_canonical_owner: false
   transport_pr_is_canonical_owner: false
   recursive_reconciliation_required_after_transport_merge: false
