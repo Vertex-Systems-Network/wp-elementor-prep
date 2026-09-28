@@ -8,7 +8,7 @@ Security audit train #579 hardens exact-loopback proof-token use/retention, atom
 
 ## Current P18 preflight
 
-#849 merged as main `e5896d279988412736d1e0ea53ee5dc72081ba61` and #851 merged as `7f92b88a2b80eb92598ad76ef96be1d720c3b566`, each after seven exact-head workflows and zero unresolved review threads. #846 remains open. #848 records the React R0/R1 matrix and #850/#851 add the bounded deterministic static adapter with refusal tests. #852 now owns the first static TSX compile evidence harness; it records runtime package install and preview render as NOT_RUN. P12 #84, P17 visual parity and P19 remain independently pending.
+#849 merged as main `e5896d279988412736d1e0ea53ee5dc72081ba61` and #851 merged as `7f92b88a2b80eb92598ad76ef96be1d720c3b566`, each after seven exact-head workflows and zero unresolved review threads. #846 remains open. #848 records the React R0/R1 matrix; #850/#851 add the bounded deterministic static adapter with refusal tests; #852/#853 retain static TSX compile evidence. PR #858 then merged a pinned React/Vite runtime fixture and local Chrome receipt as main `4fc693b33051435ad5309e0e4cbcf068582cd95f`. P12 #84, visual parity, Elementor target acceptance and P19 remain independently pending.
 
 ## Toolchain baseline
 
@@ -28,7 +28,7 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 - P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. Terminal PR #770 passed 7/7 and merged as main `5f7fa2b5...`. Issue #773 / PR #774 passed 7/7 on exact head `3fd122cd...`, zero review threads, merged main `6ef3ea58...`; Issue #775 / PR #776 passed 7/7 on `2c1a8c5d...`, merged main `ebbe9ee8...`; Issue #777 / PR #778 passed 7/7 on `74641fd6...`, merged main `21848e94...`; Issue #779 / PR #780 passed 7/7 on `7d59a098...`, merged main `cbec0be0...`; Issue #781 / PR #782 passed 7/7 on `5e3976a1...`, merged main `5eb93905...`; Issue #783 / PR #784 passed 7/7 on `4389969f...`, merged main `d7c5cc87...`; Issue #785 / PR #787 passed 7/7 on `57a08f4b...`, merged main `965bb48e...`; Issue #788 / PR #789 passed 7/7 on `9ec87232...`, merged main `228b68a1...`; Issue #790 / PR #791 passed 7/7 on `2aa8d19c...`, merged main `d24ed13b...`; Issue #792 / PR #793 passed 7/7 on `5e404876...`, merged main `e6de603b...`; Issue #794 / PR #795 composed five bounded Button color families and merged after 7/7 exact-head gates; #786 closed duplicate. PR #772 closed unmerged after an overbroad registry review.
 - P16 — **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
 - P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF**; #612/#613 static export, #614/#615 import safety preflight, #616/#617 neutral Web IR, #618/#623 IR→HTML/CSS generation and #628/#629 package validation are merged; #630 adds one exact local-only Chrome render observation. JavaScript execution, visual-fidelity comparison, Web→Figma reconstruction and production acceptance remain unclaimed.
-- P18 — **PREFLIGHT OPEN / IMPLEMENTATION NOT STARTED** under #846; R0/R1 first, then bounded adapter SDK and first framework proof.
+- P18 — **REACT STATIC ADAPTER + CONTROLLED RUNTIME PROOF RETAINED / TARGET ACCEPTANCE PENDING**; #850 SDK/refusal tests and #858 pinned React/Vite + local Chrome receipt are green. Visual/Figma parity, Elementor target acceptance and production acceptance remain separate.
 - P19-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
 - P27 — **GATE DEFINED / EXECUTION DEFERRED** under #182.
 - #287 remains repository-admin branch/ruleset enforcement work.
@@ -179,3 +179,8 @@ PR #843 passed all seven exact-head gates and merged as `2ca818d500474182a3e04ea
 ## Pre-P19 evidence order and authorization
 
 The user authorized routine in-scope implementation and guarded green merges through the P15–P18 program without repeated confirmation before P19. Issue #846 and `docs/PRE_P19_EVIDENCE_EXIT.md` define separate real exits; this does not supply missing Package 13/14 asset bytes, Gutenberg authentication, visual parity, framework build/render results, production deployment or publishing evidence. Work through safe independent slices, record unavailable proof as pending and do not start P19.
+
+
+## P18 runtime proof reconciliation
+
+The #858 receipt is evidence for generated React output installing, building and rendering on loopback in policy-supported Chrome with DOM/source-ref/request/error/screenshot observations. It is intentionally not a visual parity, Web-to-Figma, Elementor target or production acceptance result. Keep P19 frozen until the separate P15–P18 exit document is satisfied.
