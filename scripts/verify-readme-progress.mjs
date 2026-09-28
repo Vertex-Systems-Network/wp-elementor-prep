@@ -169,9 +169,9 @@ requireRow('P17', {
   next: 'visual parity, JS execution and Web-to-Figma reconstruction are pending',
 });
 requireRow('P18', {
-  status: 'REACT R0/R1 PREFLIGHT REVIEWED / IMPLEMENTATION NOT STARTED',
-  progress: '0%',
-  next: '#848 records React first-slice research and compatibility matrix',
+  status: 'REACT STATIC ADAPTER IMPLEMENTATION IN PROGRESS',
+  progress: '10% impl',
+  next: '#850 has deterministic TSX/CSS SDK and refusal tests',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
