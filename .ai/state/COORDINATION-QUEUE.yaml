@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 12758d9d19b634948adc07aa798b4593734abe2c
+observed_main_sha: 06bcbe7b6d183e64d84d89b9703b1a3fb689941b
 items:
   - {id: CQ-637, issue: 637, pr: 638, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-634, issue: 634, pr: 636, status: MERGED_CLOSED, priority: 0, accepted: true}
@@ -103,3 +103,4 @@ items:
   - {id: CQ-833, pr: 833, status: SUPERSEDED_CLOSED_BY_835, priority: 0, accepted: false}
   - {id: CQ-834, pr: 834, status: SUPERSEDED_CLOSED_BY_832, priority: 0, accepted: false}
   - {id: CQ-835, pr: 835, status: MERGED_CLOSED, priority: 0, accepted: true}
+  - {id: CQ-838, issue: 838, pr: 839, status: ACTIVE_P15_CANDIDATE, priority: 1, accepted: true}
