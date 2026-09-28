@@ -1074,6 +1074,13 @@ if (!readme.includes('### P15 #821 — responsive Container row/column gaps (mer
   throw new Error('README P15 #821/#823 merge evidence or bounded scope is stale or missing.');
 }
 
+if (!readme.includes('### Current P15 and toolchain handoff')
+  || !readme.includes('Real demo spacing, images, editor-generated serialization and broad target compatibility remain unverified.')
+  || !readme.includes('PR #835 merged Figma typings 1.139.0 and Vite 8.3.1')
+  || !readme.includes('`@types/node 26.6.2`')) {
+  throw new Error('README current P15 proof limits or coordinated toolchain handoff is missing.');
+}
+
 console.log(
   `README progress contract PASS: ${rows.length} stage-separated modules, no synthetic overall percentage, runtime registry ${schemaTag}.`,
 );
