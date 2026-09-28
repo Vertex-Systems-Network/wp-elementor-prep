@@ -7,7 +7,7 @@ import { spawn } from 'node:child_process';
 import { build } from 'esbuild';
 import { chromium } from 'playwright-core';
 
-const root = resolve(new URL('..', import.meta.url).pathname, '..');
+const root = resolve(new URL('.', import.meta.url).pathname, '..');
 const fixtureRoot = join(root, 'fixtures', 'p18-react-runtime');
 const proofDir = join(root, 'dist-p18', 'react-runtime-proof');
 const sha256 = (value) => createHash('sha256').update(value).digest('hex');
