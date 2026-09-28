@@ -40,9 +40,15 @@ export type ElementorAssetReferenceReviewStatus =
   | 'REVIEW_REQUIRED_UNSUPPORTED_ASSET_SHAPE'
   | 'REVIEW_REQUIRED_TRANSIENT_ASSET_REFERENCE';
 
+export const ELEMENTOR_DOCUMENTED_CONTAINER_BACKGROUND_ASSET_CONTROLS_V1 = Object.freeze([
+  Object.freeze({ elementType: 'container', settingKey: 'background_image', breakpoint: 'desktop', controlType: 'MEDIA', sourcePath: 'includes/elements/container.php + includes/controls/groups/background.php', sourceSha: ELEMENTOR_ASSET_EVIDENCE_ELEMENTOR_SOURCE_SHA }),
+  Object.freeze({ elementType: 'container', settingKey: 'background_image_tablet', breakpoint: 'tablet', controlType: 'MEDIA', sourcePath: 'includes/elements/container.php + includes/controls/groups/background.php', sourceSha: ELEMENTOR_ASSET_EVIDENCE_ELEMENTOR_SOURCE_SHA }),
+  Object.freeze({ elementType: 'container', settingKey: 'background_image_mobile', breakpoint: 'mobile', controlType: 'MEDIA', sourcePath: 'includes/elements/container.php + includes/controls/groups/background.php', sourceSha: ELEMENTOR_ASSET_EVIDENCE_ELEMENTOR_SOURCE_SHA }),
+] as const);
+
 export type ElementorAssetReferenceMode = 'MEDIA_ID_AND_URL' | 'MEDIA_ID_ONLY' | 'URL_ONLY';
 
-export interface ElementorAssetReferenceEntryV1 {
+export interface ElementorImageAssetReferenceEntryV1 {
   path: string;
   widgetId: string;
   widgetType: 'image';
@@ -53,6 +59,23 @@ export interface ElementorAssetReferenceEntryV1 {
   urlFingerprint: string | null;
   referenceMode: ElementorAssetReferenceMode;
 }
+
+export interface ElementorContainerBackgroundAssetReferenceEntryV1 {
+  path: string;
+  containerId: string;
+  elementType: 'container';
+  settingKey: 'background_image' | 'background_image_tablet' | 'background_image_mobile';
+  breakpoint: 'desktop' | 'tablet' | 'mobile';
+  controlType: 'MEDIA';
+  mediaId: number | null;
+  urlPresent: boolean;
+  urlFingerprint: string | null;
+  referenceMode: ElementorAssetReferenceMode;
+}
+
+export type ElementorAssetReferenceEntryV1 =
+  | ElementorImageAssetReferenceEntryV1
+  | ElementorContainerBackgroundAssetReferenceEntryV1;
 
 export type ElementorAssetReferenceIssueCode =
   | 'P15_ASSET_MEDIA_VALUE_NOT_OBJECT'
@@ -114,7 +137,7 @@ function isTransientFigmaMcpAssetUrl(value: string): boolean {
 function inspectMediaValue(
   value: unknown,
   path: string,
-): { reference: Omit<ElementorAssetReferenceEntryV1, 'path' | 'widgetId' | 'widgetType'> | null; issues: ElementorAssetReferenceIssueV1[] } {
+): { reference: Pick<ElementorAssetReferenceEntryV1, 'mediaId' | 'urlPresent' | 'urlFingerprint' | 'referenceMode'> | null; issues: ElementorAssetReferenceIssueV1[] } {
   if (!isRecord(value)) {
     return {
       reference: null,
@@ -180,8 +203,6 @@ function inspectMediaValue(
 
   return {
     reference: {
-      settingKey: 'image',
-      controlType: 'MEDIA',
       mediaId,
       urlPresent: url !== null,
       urlFingerprint: url === null ? null : `sha256:${sha256Hex(url)}`,
@@ -197,7 +218,7 @@ function inspectMediaValue(
   };
 }
 
-function collectImageAssetReferences(
+function collectDocumentedAssetReferences(
   elements: ElementorElementV04[],
   parentPath: string,
   references: ElementorAssetReferenceEntryV1[],
@@ -219,6 +240,29 @@ function collectImageAssetReferences(
             path: controlPath,
             widgetId: element.id,
             widgetType: 'image',
+            settingKey: 'image',
+            controlType: 'MEDIA',
+            ...inspection.reference,
+          });
+        }
+      }
+    }
+
+    if (element.elType === 'container' && isRecord(element.settings)) {
+      const settings = element.settings;
+      for (const control of ELEMENTOR_DOCUMENTED_CONTAINER_BACKGROUND_ASSET_CONTROLS_V1) {
+        if (!Object.prototype.hasOwnProperty.call(settings, control.settingKey)) continue;
+        const controlPath = `${elementPath}.settings.${control.settingKey}`;
+        const inspection = inspectMediaValue(settings[control.settingKey], controlPath);
+        issues.push(...inspection.issues);
+        if (inspection.reference) {
+          references.push({
+            path: controlPath,
+            containerId: element.id,
+            elementType: 'container',
+            settingKey: control.settingKey,
+            breakpoint: control.breakpoint,
+            controlType: 'MEDIA',
             ...inspection.reference,
           });
         }
@@ -226,7 +270,7 @@ function collectImageAssetReferences(
     }
 
     if (element.elements.length > 0) {
-      collectImageAssetReferences(element.elements, `${elementPath}.elements`, references, issues);
+      collectDocumentedAssetReferences(element.elements, `${elementPath}.elements`, references, issues);
     }
   }
 }
@@ -240,16 +284,21 @@ function cloneIssues(issues: ElementorAssetReferenceIssueV1[]): ElementorAssetRe
 }
 
 function validReference(entry: ElementorAssetReferenceEntryV1): boolean {
-  if (entry.widgetType !== 'image'
-    || entry.settingKey !== 'image'
-    || entry.controlType !== 'MEDIA'
-    || typeof entry.path !== 'string'
+  if (typeof entry.path !== 'string'
     || entry.path.length === 0
-    || typeof entry.widgetId !== 'string'
-    || entry.widgetId.length === 0
+    || entry.controlType !== 'MEDIA'
     || (entry.mediaId !== null && (!Number.isSafeInteger(entry.mediaId) || entry.mediaId < 0))
-    || typeof entry.urlPresent !== 'boolean') {
-    return false;
+    || typeof entry.urlPresent !== 'boolean') return false;
+
+  if ('widgetType' in entry) {
+    if (entry.widgetType !== 'image' || entry.settingKey !== 'image'
+      || typeof entry.widgetId !== 'string' || entry.widgetId.length === 0) return false;
+  } else {
+    const control = ELEMENTOR_DOCUMENTED_CONTAINER_BACKGROUND_ASSET_CONTROLS_V1
+      .find((item) => item.settingKey === entry.settingKey);
+    if (entry.elementType !== 'container' || !control
+      || entry.breakpoint !== control.breakpoint
+      || typeof entry.containerId !== 'string' || entry.containerId.length === 0) return false;
   }
 
   if (entry.urlPresent !== (entry.urlFingerprint !== null)) return false;
@@ -317,7 +366,7 @@ function serializableReview(review: ElementorAssetReferenceReviewV1): boolean {
 }
 
 /**
- * Review only the explicitly documented core Image widget MEDIA control.
+ * Review only the documented core Image widget and Container normal background MEDIA controls.
  *
  * This gate intentionally does not shape-sniff arbitrary settings. It never downloads, resolves, rewrites,
  * checks reachability of, or emits raw media URLs. Attachment IDs are retained only as source evidence and
@@ -359,8 +408,8 @@ export function reviewElementorAssetReferences(
   const document = templateValue as ElementorTemplateV04;
   const references: ElementorAssetReferenceEntryV1[] = [];
   const issues: ElementorAssetReferenceIssueV1[] = [];
-  collectImageAssetReferences(document.content, '$.content', references, issues);
-  references.sort((left, right) => left.path.localeCompare(right.path) || left.widgetId.localeCompare(right.widgetId));
+  collectDocumentedAssetReferences(document.content, '$.content', references, issues);
+  references.sort((left, right) => left.path.localeCompare(right.path));
   issues.sort((left, right) => left.path.localeCompare(right.path) || left.code.localeCompare(right.code));
 
   const status: ElementorAssetReferenceReviewStatus = issues.length > 0
