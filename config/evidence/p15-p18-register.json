@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "kind": "p15_p18_evidence_register",
+  "project": "WP Builders Prepare",
+  "authority": false,
+  "status": "PRE_P19_OPEN",
+  "owner_issue": 846,
+  "updated": "2026-09-29",
+  "phases": [
+    {
+      "phase": "P15",
+      "target": "elementor",
+      "status": "implementation_partial_target_exit_pending",
+      "retained_evidence": [
+        "controlled WordPress 6.8 + Elementor 4.2.4 proof",
+        "deterministic template JSON candidate",
+        "read-only Image/Container MEDIA diagnostics"
+      ],
+      "verification_refs": [
+        "README.md",
+        "docs/P15_PACKAGE_13_14_ASSET_PROBE_2026-09-28.md"
+      ],
+      "required_exit": [
+        "source image bytes",
+        "WordPress-managed media mapping",
+        "browser image-load receipt",
+        "Figma/import spacing comparison"
+      ],
+      "refusal": [
+        "temporary Figma URLs are not source bytes",
+        "no package parity or production claim"
+      ]
+    },
+    {
+      "phase": "P16",
+      "target": "gutenberg",
+      "status": "implementation_partial_authenticated_target_pending",
+      "retained_evidence": [
+        "native candidate and receipt chain",
+        "offline evidence-retention validator",
+        "dated Gutenberg R0 contract"
+      ],
+      "verification_refs": [
+        "docs/P16_GUTENBERG_R0_CONTRACT_2026-09-29.md",
+        "docs/PRE_P19_EVIDENCE_EXIT.md"
+      ],
+      "required_exit": [
+        "authenticated WordPress target",
+        "native editor/import/render receipt",
+        "target-managed media proof"
+      ],
+      "refusal": [
+        "offline parser or caller metadata cannot grant target authority"
+      ]
+    },
+    {
+      "phase": "P17",
+      "target": "web",
+      "status": "implementation_partial_source_comparison_pending",
+      "retained_evidence": [
+        "neutral Web IR",
+        "deterministic HTML/CSS package",
+        "controlled local Chrome render",
+        "visual comparison contract"
+      ],
+      "verification_refs": [
+        "docs/P17_VISUAL_COMPARISON_CONTRACT_2026-09-29.md",
+        "docs/PRE_P19_EVIDENCE_EXIT.md"
+      ],
+      "required_exit": [
+        "genuine source capture bound to exact IR",
+        "calibrated geometry/pixel comparison",
+        "bounded static Web-to-Figma fixture"
+      ],
+      "refusal": [
+        "local Chrome is not visual parity",
+        "arbitrary JavaScript remains blocked"
+      ]
+    },
+    {
+      "phase": "P18",
+      "target": "framework_adapters",
+      "status": "react_slice_retained_broader_adapters_pending",
+      "retained_evidence": [
+        "neutral IR",
+        "bounded React TypeScript/plain-CSS SDK",
+        "deterministic refusal tests",
+        "pinned React/Vite build/render receipt",
+        "framework R0 matrix"
+      ],
+      "verification_refs": [
+        "docs/P18_REACT_R0_R1_2026-09-28.md",
+        "docs/P18_FRAMEWORK_R0_MATRIX_2026-09-29.md"
+      ],
+      "required_exit": [
+        "framework-specific fixtures for each new adapter",
+        "exact build/render/source-binding receipts",
+        "separate visual comparison"
+      ],
+      "refusal": [
+        "React cannot certify other frameworks",
+        "NestJS is not a visual renderer"
+      ]
+    }
+  ],
+  "p19_unlock_requires": [
+    "P15 exit retained",
+    "P16 exit retained",
+    "P17 exit retained",
+    "P18 exit retained"
+  ],
+  "release_gates": [
+    "P12#84",
+    "P13#159",
+    "admin#287",
+    "P27#182"
+  ]
+}

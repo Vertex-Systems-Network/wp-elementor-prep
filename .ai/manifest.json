@@ -46,7 +46,8 @@
     "config/traceability/requirements-traceability.json",
     "config/consent/consent-requests.json",
     "config/testing/reference-e2e-matrix.json",
-    "config/protocol/blueprint-completion.json"
+    "config/protocol/blueprint-completion.json",
+    "config/evidence/p15-p18-register.json"
   ],
   "roles": {
     "bootstrap": [
