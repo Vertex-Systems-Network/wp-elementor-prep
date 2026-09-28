@@ -5,11 +5,15 @@ import { resolve, basename } from 'node:path';
 const args = Object.fromEntries(process.argv.slice(2).map((arg) => { const [key, ...rest] = arg.replace(/^--/, '').split('='); return [key, rest.join('=')]; }));
 const required = ['registry', 'selection', 'import', 'frontend', 'responsive', 'out'];
 for (const key of required) if (!args[key]) throw new Error(`Missing --${key}.`);
-const load = async (path) => JSON.parse(await readFile(resolve(path), 'utf8'));
+const loadFailures = [];
+const load = async (path) => {
+  try { return JSON.parse(await readFile(resolve(path), 'utf8')); }
+  catch (error) { loadFailures.push(`${basename(path)}_UNREADABLE`); return null; }
+};
 const registry = await load(args.registry);
 const receipts = { import: await load(args.import), frontend: await load(args.frontend), responsive: await load(args.responsive) };
 const entry = [...(registry.elementor ?? []), ...(registry.gutenberg ?? [])].find((item) => item.id === args.selection);
-const issues = [];
+const issues = [...loadFailures];
 if (!entry) issues.push('OPTION_BANK_SELECTION_NOT_IN_REGISTRY');
 if (entry?.status === 'UNSUPPORTED') issues.push('OPTION_BANK_SELECTION_UNSUPPORTED');
 const target = entry?.id?.startsWith('elementor:')
