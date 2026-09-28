@@ -103,6 +103,39 @@ describe('P15 R1 Elementor documented asset-reference review gate', () => {
     expect(serialized).toContain(review.references[0]?.urlFingerprint ?? 'missing-fingerprint');
   });
 
+  it('flags only exact transient Figma MCP asset URLs and keeps raw references private', () => {
+    const rawUrl = 'https://www.figma.com/api/mcp/asset/fixture-image.svg?token=private-sentinel';
+    const review = reviewElementorAssetReferences(template('image', {
+      image: { url: rawUrl },
+    }), profile());
+    expect(review.status).toBe('REVIEW_REQUIRED_TRANSIENT_ASSET_REFERENCE');
+    expect(review.assetReferenceStatus).toBe('REVIEW_REQUIRED');
+    expect(review.references[0]?.referenceMode).toBe('URL_ONLY');
+    expect(review.issues).toEqual([{
+      code: 'P15_ASSET_MEDIA_TRANSIENT_FIGMA_URL',
+      path: '$.content[0].elements[0].settings.image.url',
+      message: 'Temporary Figma MCP asset URL requires permanent target-managed media localization and runtime image-load evidence.',
+    }]);
+    const serialized = serializeElementorAssetReferenceReview(review);
+    expect(serialized).not.toContain(rawUrl);
+    expect(serialized).not.toContain('private-sentinel');
+    expect(review.assetReferenceClosureClaim).toBe(false);
+    expect(review.downloadEnabled).toBe(false);
+    expect(review.productionAcceptance).toBe(false);
+
+    for (const stableUrl of [
+      'https://media.example.test/asset/fixture-image.svg',
+      'https://figma.com/api/mcp/assetish/fixture-image.svg',
+      'https://figma.com.evil.test/api/mcp/asset/fixture-image.svg',
+    ]) {
+      const stableReview = reviewElementorAssetReferences(template('image', {
+        image: { url: stableUrl },
+      }), profile());
+      expect(stableReview.status).toBe('EXTERNAL_ASSET_CLOSURE_REQUIRED');
+      expect(stableReview.issues).toEqual([]);
+    }
+  });
+
   it('accepts the documented core image default-style URL-only MEDIA value as external closure evidence', () => {
     const review = reviewElementorAssetReferences(template('image', {
       image: { url: 'https://source.example.test/placeholder.png' },

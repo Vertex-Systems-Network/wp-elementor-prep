@@ -1081,6 +1081,12 @@ if (!readme.includes('### Current P15 and toolchain handoff')
   throw new Error('README current P15 proof limits or coordinated toolchain handoff is missing.');
 }
 
+if (!readme.includes('### P15 #838 — transient Image MEDIA URL review candidate')
+  || !readme.includes('44/45 unique temporary Figma asset URLs')
+  || !readme.includes('Exact-head gates are pending.')) {
+  throw new Error('README P15 #838 bounded transient media review status is missing.');
+}
+
 console.log(
   `README progress contract PASS: ${rows.length} stage-separated modules, no synthetic overall percentage, runtime registry ${schemaTag}.`,
 );

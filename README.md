@@ -60,9 +60,13 @@ Open roadmap / acceptance dependencies:
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
-Current verified main before the state-only #836 transport:
+Current verified main after state-only PR #837 merge and before this P15 candidate:
 
-`12758d9d19b634948adc07aa798b4593734abe2c`
+`06bcbe7b6d183e64d84d89b9703b1a3fb689941b`
+
+### P15 #838 — transient Image MEDIA URL review candidate
+
+A representative external handoff reported 44/45 unique temporary Figma asset URLs across two Elementor Website Template ZIPs; draft document-type persistence was observed, while permanent media localization and browser image-load comparison remain pending. This bounded change recognizes only exact `figma.com` / `www.figma.com` `/api/mcp/asset/` HTTPS URLs in the documented core Image MEDIA control, retains fingerprints and paths without emitting raw URLs, and requires review. It does not audit arbitrary ZIP media fields or CSS backgrounds, fetch/upload assets, alter template data, solve spacing parity, or grant import, compatibility, download, production or release authority. Exact-head gates are pending.
 
 ### Current P15 and toolchain handoff
 
