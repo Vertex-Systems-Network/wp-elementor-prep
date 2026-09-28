@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 6b79b569b14618dec67744310b2794a2bab49e29
+observed_main_sha: a078ba40e75e0723ea71190e0d976edb423a27be
 items:
   - {id: CQ-637, issue: 637, pr: 638, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-634, issue: 634, pr: 636, status: MERGED_CLOSED, priority: 0, accepted: true}
@@ -108,3 +108,6 @@ items:
   - {id: CQ-842, issue: 842, pr: 843, status: MERGED_CLOSED_TERMINAL_TRANSPORT, priority: 1, accepted: true}
   - {id: CQ-844, issue: 844, pr: 845, status: MERGED_CLOSED, priority: 1, accepted: true}
   - {id: CQ-846, issue: 846, pr: 847, status: ACTIVE_PRE_P19_PROGRAM_GATE, priority: 1, accepted: true}
+
+  - {id: CQ-871, issue: 871, pr: 872, status: MERGED_CLOSED, priority: 0, accepted: true}
+  - {id: CQ-871-POLICY, issue: 871, pr: 874, status: MERGED_CLOSED, priority: 0, accepted: true}
