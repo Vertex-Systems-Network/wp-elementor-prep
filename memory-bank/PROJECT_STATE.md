@@ -408,3 +408,8 @@ Exact main before state transport: `12758d9d19b634948adc07aa798b4593734abe2c`. P
 ## P15 #838 — transient Figma Image MEDIA references
 
 A representative external handoff reports 44/45 unique temporary Figma asset URLs in two Elementor Website Template ZIPs; its draft runtime probe did not perform browser render QA or permanent media localization. #838 adds a generic documented core Image MEDIA diagnostic for exact Figma MCP asset URLs, with only path/fingerprint in review output. Arbitrary ZIP fields, CSS background media, live image loads, spacing parity and broad compatibility remain outside this bounded candidate. PR #839 exact-head gates are pending.
+
+
+## P15 #838 merge and #840 Container background candidate
+
+PR #839 exact head `8fcb41806f03c525a89eb372f53d382b1432bdd1` passed all seven required workflows, zero unresolved threads and guarded merge as `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`; #838 closed. The Package 14 ZIP contains two additional temporary Figma refs in normal Container background MEDIA (desktop/mobile). #840 extends bounded review to those documented responsive controls without claiming permanent media localization, browser image-load, demo spacing parity, compatibility, download or production authority. Exact-head gates pending.
