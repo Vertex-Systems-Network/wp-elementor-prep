@@ -1,7 +1,7 @@
 {
   "schema_version": 7,
   "protocol": "ANPOS",
-  "purpose": "Project-specific ANPOS child-adoption router for WP Elementor Prep. It routes agents to existing repository state without enabling unavailable integrations or commercial runtime.",
+  "purpose": "Project-specific ANPOS child-adoption router for WP Builders Prepare. It routes agents to existing repository state without enabling unavailable integrations or commercial runtime.",
   "canonical_source": "Vertex-Systems-Network/ai-native-project-operating-system",
   "adoption_mode": "child_adoption_foundation",
   "adoption_status": "FOUNDATION_APPLIED_FULL_CERTIFICATION_PENDING",
