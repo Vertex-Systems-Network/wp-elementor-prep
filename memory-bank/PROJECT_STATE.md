@@ -398,3 +398,8 @@ Issue #823 adds explicit tablet/mobile custom basis px pairs, bounded to integer
 ## P15 #823 completion
 
 PR #823 merged as main b34f5b254dfe7bf8f217d691ecf8d58652674428 after all seven required exact-head workflows passed on a89bee55c3d43a0f40b2c97701c4a473ef9cce6b, with zero unresolved review threads and expected-head guard. The bounded responsive Flex Item custom basis px resolver preserves desktop settings and omitted breakpoints. Broad compatibility, responsive closure, production, release and download authority remain false. Issue #824 owns canonical state reconciliation.
+
+
+## 2026-09-28 — settled post-PR #835 handoff
+
+Exact main before state transport: `12758d9d19b634948adc07aa798b4593734abe2c`. PRs #824–#829 and #830/#832/#835 are merged; superseded #831/#833/#834 closed unmerged. #825 custom Flex Item order has source registration, controlled import/export and browser rendering evidence, plus a bounded resolver. These are controlled authored cases, not real demo visual parity or editor-generated serialization. The next P15 work should examine representative real template spacing and image references. #84/#159/#182/#287 remain blocked at their stated evidence/admin boundaries.
