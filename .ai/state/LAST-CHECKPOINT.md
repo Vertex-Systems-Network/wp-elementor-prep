@@ -2,21 +2,21 @@
 
 Status: VERIFYING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main before PR #847: `6b79b569b14618dec67744310b2794a2bab49e29`
-Canonical active Issue/PR: #846 / #847
-Branch: `ai-native/pre-p19-evidence-gate-846`
-Candidate head source: GitHub PR #847 head.
+Observed main: `55474fb5fe03ca21ae53c7a8d883ce48bd1a9dd6`
+Canonical active Issue/PR: #846 / none
+Branch: `main`
+Candidate head source: GitHub main.
 
-## Verified prior work
+## Verified work
 
-PR #845 exact head `02450b354a31d7149f64da5f5b27f180d53e4bae` passed all seven required workflows, zero unresolved threads and guarded merged as `6b79b569b14618dec67744310b2794a2bab49e29`; #844 closed. README now has the P15/P16/P17 delivered-vs-missing evidence above the historical archive.
+PR #872 / Issue #871 applied the bounded ANPOS 1.4.0 child-adoption foundation. Exact head `901b89cc64db1a8edadb10d6d654a80428f12d39` passed CI, CodeQL, P12 Final, P12 Offline, P15, P17, P18 and Integration Readiness; zero unresolved review threads; guarded merge produced main `55474fb5fe03ca21ae53c7a8d883ce48bd1a9dd6`.
 
-## Active pre-P19 gate
+The adoption layer adds `.ai/manifest.json`, `config/protocol/instance.json`, `config/protocol/anpos-adoption.json`, `docs/ANPOS_ADOPTION.md`, `scripts/validate-anpos-adoption.mjs`, the `anpos:validate` package command and an Integration Readiness validator step. Requirements 1–96 are covered by explicit evidence-backed applicability groups.
 
-The user's standing instruction authorizes routine in-scope P15–P18 implementation and safe green merges before P19 without repeated confirmation. Issue #846 remains the program owner. PR #847 records genuine P15 imported media/layout, P16 authenticated editor, P17 visual/reconstruction and P18 framework build/render exits, opens P18 R0/R1 preflight, and holds P19 frozen. It grants no actual evidence, production, download, publishing or broad compatibility authority. RQ-846-FINAL awaits exact-head gates.
+## Authority boundary
 
-## Retained blockers and exact next action
+This is a compatibility/adoption foundation, not full ANPOS certification. PM provider connections, verified AI identities, Supervisor leases/CAS, replay-resistant consent, repository-admin rules, commercial-service runtime, production acceptance and external target evidence remain inactive or separately gated. P15–P18 truth and the P19 freeze are unchanged.
 
-Package 13/14 source image bytes and WordPress-managed media mapping are missing. No browser Figma-vs-import spacing comparison, genuine authenticated Gutenberg native proof, P17 calibrated visual/reconstruction proof or P18 adapter build/render proof is retained. #287, #159, #84 and #182 remain independently open.
+## Exact next safe action
 
-Verify PR #847 final exact head, all seven required workflows, zero unresolved threads and mergeability; guarded merge if green. Then refresh P18 R0 official-source research and continue bounded safe code work while external evidence remains pending. Do not start P19.
+Continue the P18/P15–P18 evidence program or select the next matrix-backed ANPOS requirement slice. Never promote policy presence, CI success or blueprint presence into external, target, production, publishing or commercial authority.
