@@ -2,15 +2,15 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: f6bbbd7db3d9220e8ade26cc59443fd1184f9f55
-observed_main_sha_semantics: exact_current_main_tip_before_product_pr_merge
+observed_main_sha: d1fc115b9f6764d90c0c319b880e291009eb7199
+observed_main_sha_semantics: exact_main_tip_before_terminal_state_transport
 observed_main_branch: main
-active_issue: 840
-active_pr: 841
-active_branch: ai-native/p15-container-background-media-840
+active_issue: null
+active_pr: null
+active_branch: null
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p15_container_background_media_reference_review
+current_milestone: p15_background_media_review_merged_and_readme_reconciled
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -20,11 +20,11 @@ next_action_options:
   grants_authority: false
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  recommended_action_id: verify-p15-background-media-840
-milestone_status: VERIFYING
-last_completed_milestone: pr_839_passed_7_of_7_and_merged_as_f6bbbd7d
-exact_next_safe_action: verify_pr_841_final_exact_head_gates_zero_threads_and_mergeability_then_guarded_merge
-pending_runner_ids: [RQ-840-FINAL]
+  recommended_action_id: inspect-real-demo-media-and-spacing
+milestone_status: IDLE_READY_NEXT_P15_BATCH
+last_completed_milestone: pr_841_passed_7_of_7_and_merged_as_d1fc115b
+exact_next_safe_action: verify_terminal_readme_state_transport_pr_843_then_inspect_real_demo_media_and_spacing_evidence
+pending_runner_ids: [RQ-842-FINAL]
 blocked_runner_ids: []
 current_blockers:
   - p15_retained_operator_approval_not_supplied_for_broader_compatibility_claims
@@ -34,8 +34,8 @@ current_blockers:
   - issue_84_manual_p12_release_exit_evidence_requires_operator
   - issue_182_final_production_acceptance_and_marketplace_gates_deferred
 terminal_finalization:
-  transport_issue: 836
-  transport_pr: 837
+  transport_issue: 842
+  transport_pr: 843
   transport_issue_is_canonical_owner: false
   transport_pr_is_canonical_owner: false
   recursive_reconciliation_required_after_transport_merge: false
