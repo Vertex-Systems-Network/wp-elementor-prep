@@ -64,6 +64,10 @@ Current verified main before the state-only #836 transport:
 
 `12758d9d19b634948adc07aa798b4593734abe2c`
 
+### P15 #838 — transient Image MEDIA URL review candidate
+
+A representative external handoff reported 44/45 unique temporary Figma asset URLs across two Elementor Website Template ZIPs; draft document-type persistence was observed, while permanent media localization and browser image-load comparison remain pending. This bounded change recognizes only exact `figma.com` / `www.figma.com` `/api/mcp/asset/` HTTPS URLs in the documented core Image MEDIA control, retains fingerprints and paths without emitting raw URLs, and requires review. It does not audit arbitrary ZIP media fields or CSS backgrounds, fetch/upload assets, alter template data, solve spacing parity, or grant import, compatibility, download, production or release authority. Exact-head gates are pending.
+
 ### Current P15 and toolchain handoff
 
 - PRs #824–#829 are merged; #825 is closed. Controlled Elementor 4.2.4 probes establish responsive Flex Item custom-order registration, persistence/export and selected Chrome rendering for script-authored values. The bounded resolver merged in #829. Real demo spacing, images, editor-generated serialization and broad target compatibility remain unverified.
