@@ -88,6 +88,9 @@ try {
     headingText: document.querySelector('h1')?.textContent || null,
     linkHref: document.querySelector('a')?.getAttribute('href') || null,
     rootChildCount: document.querySelector('main')?.children.length || 0,
+    rootDisplay: document.querySelector('main') ? getComputedStyle(document.querySelector('main')).display : null,
+    rootFlexDirection: document.querySelector('main') ? getComputedStyle(document.querySelector('main')).flexDirection : null,
+    rootGap: document.querySelector('main') ? getComputedStyle(document.querySelector('main')).gap : null,
     stylesheetCount: document.querySelectorAll('link[rel="stylesheet"]').length,
     inlineEventHandlerCount: Array.from(document.querySelectorAll('*')).filter((element) => Array.from(element.attributes).some((attribute) => attribute.name.startsWith('on'))).length
   }));
@@ -95,7 +98,29 @@ try {
   const hostnames = requests.map((url) => new URL(url).hostname);
   const externalRequests = hostnames.filter((hostname) => hostname !== '127.0.0.1' && hostname !== 'localhost');
   if (externalRequests.length || consoleErrors.length || pageErrors.length) throw new Error('Runtime safety checks failed: ' + JSON.stringify({ externalRequests, consoleErrors, pageErrors }));
-  if (dom.headingText !== 'P18 React runtime proof' || dom.linkHref !== 'https://example.com/docs' || dom.sourceRefs.length !== 4) throw new Error('Unexpected DOM observations: ' + JSON.stringify(dom));
+  const sourceComparison = {
+    status: dom.headingText === 'P18 React runtime proof'
+      && dom.linkHref === 'https://example.com/docs'
+      && dom.sourceRefs.length === 4
+      && dom.rootChildCount === 3
+      && dom.rootDisplay === 'flex'
+      && dom.rootFlexDirection === 'column'
+      && dom.rootGap === '16px'
+      && dom.stylesheetCount > 0
+      && dom.inlineEventHandlerCount === 0
+      ? 'PASS'
+      : 'FAIL',
+    checks: {
+      sourceRefs: dom.sourceRefs.length === 4,
+      text: dom.headingText === 'P18 React runtime proof',
+      link: dom.linkHref === 'https://example.com/docs',
+      hierarchy: dom.rootChildCount === 3,
+      layout: dom.rootDisplay === 'flex' && dom.rootFlexDirection === 'column' && dom.rootGap === '16px',
+      stylesheet: dom.stylesheetCount > 0,
+      noInlineHandlers: dom.inlineEventHandlerCount === 0,
+    },
+  };
+  if (sourceComparison.status !== 'PASS') throw new Error('Source-bound render comparison failed: ' + JSON.stringify({ dom, sourceComparison }));
   const browserVersion = await browser.version();
   const receipt = {
     status: 'RUNTIME_BUILD_AND_PREVIEW_PASS',
@@ -105,6 +130,7 @@ try {
     files: artifact.files.map((file) => ({ path: file.path, sha256: file.sha256 })),
     toolchain: { node: process.version, react: '19.3.0', reactDom: '19.3.0', vite: '8.3.1', npmCi: 'PASS', build: 'PASS', npmCiStdoutSha256: sha256(install.stdout), buildStdoutSha256: sha256(buildResult.stdout) },
     browser: { family: 'Chrome', version: browserVersion, executablePath: chromePath, viewport: { width: 1440, height: 900 }, dom, consoleErrorCount: consoleErrors.length, pageErrorCount: pageErrors.length, requestCount: requests.length, externalRequestCount: externalRequests.length, screenshotSha256: sha256(screenshot) },
+    sourceComparison,
     visualComparison: 'NOT_RUN',
     productionAcceptance: false,
     targetAcceptance: 'NOT_RUN',
