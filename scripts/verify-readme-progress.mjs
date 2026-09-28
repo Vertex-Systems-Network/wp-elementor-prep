@@ -1083,8 +1083,15 @@ if (!readme.includes('### Current P15 and toolchain handoff')
 
 if (!readme.includes('### P15 #838 — transient Image MEDIA URL review candidate')
   || !readme.includes('44/45 unique temporary Figma asset URLs')
+  || !readme.includes('PR #839 passed all seven exact-head gates and merged as main `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`')) {
+  throw new Error('README P15 #838 bounded transient media review merge status is missing.');
+}
+
+if (!readme.includes('### P15 #840 — Container background MEDIA reference review candidate')
+  || !readme.includes('one desktop and one mobile Container background image')
+  || !readme.includes('The exact Package 13/14 asset bytes')
   || !readme.includes('Exact-head gates are pending.')) {
-  throw new Error('README P15 #838 bounded transient media review status is missing.');
+  throw new Error('README P15 #840 Container background media scope or evidence limits are missing.');
 }
 
 console.log(

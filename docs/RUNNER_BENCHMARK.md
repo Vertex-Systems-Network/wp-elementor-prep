@@ -342,3 +342,8 @@ The earlier P15 #825 custom-order probe and resolver pending notes are historica
 ## P15 #838 — transient Figma Image MEDIA review candidate
 
 Representative external Package 13/14 handoff evidence identified 44/45 unique temporary Figma asset URLs, while browser render and permanent media localization remained pending. Only aggregate evidence is retained here; raw design URLs and client template data are not committed. The candidate recognizes exact HTTPS Figma MCP asset links in the documented core Image MEDIA control, emits a path and fingerprint plus review reason, and keeps all closure/compatibility/download/production flags false. It does not inspect arbitrary ZIP media fields or CSS backgrounds. Seven exact-head gates must be observed before merge.
+
+
+## P15 #840 — documented Container background MEDIA review candidate
+
+PR #839 passed the seven required exact-head workflows and merged as `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`. The scoped #840 follow-up adds the exact normal Container background MEDIA keys (desktop/tablet/mobile) backed by pinned Elementor 4.2.4 source. Template 2's desktop/mobile background refs are temporary Figma URLs; the tests are synthetic and do not prove image loading, target-managed media, imported visual parity, or production acceptance. RQ-840-FINAL is merge-blocking on the final bound PR head; its gate results are pending.

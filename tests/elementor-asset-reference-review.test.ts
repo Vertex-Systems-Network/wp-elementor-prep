@@ -136,6 +136,52 @@ describe('P15 R1 Elementor documented asset-reference review gate', () => {
     }
   });
 
+  it('reviews only documented Container background image MEDIA breakpoints', () => {
+    const desktop = 'https://figma.com/api/mcp/asset/desktop?secret=desktop';
+    const mobile = 'https://www.figma.com/api/mcp/asset/mobile?secret=mobile';
+    const value = template();
+    value.content[0]!.settings = {
+      background_background: 'classic',
+      background_image: { url: desktop },
+      background_image_mobile: { id: 0, url: mobile },
+      background_image_tablet: { id: 17, url: 'https://media.example.test/tablet.jpg' },
+      background_image_hover: { url: 'https://figma.com/api/mcp/asset/hover?secret=ignored' },
+    };
+    const review = reviewElementorAssetReferences(value, profile());
+    expect(review.status).toBe('REVIEW_REQUIRED_TRANSIENT_ASSET_REFERENCE');
+    expect(review.references).toHaveLength(3);
+    expect(review.references).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: '$.content[0].settings.background_image', containerId: 'container-1', elementType: 'container', settingKey: 'background_image', breakpoint: 'desktop', referenceMode: 'URL_ONLY' }),
+      expect.objectContaining({ path: '$.content[0].settings.background_image_mobile', containerId: 'container-1', elementType: 'container', settingKey: 'background_image_mobile', breakpoint: 'mobile', referenceMode: 'URL_ONLY' }),
+      expect.objectContaining({ path: '$.content[0].settings.background_image_tablet', containerId: 'container-1', elementType: 'container', settingKey: 'background_image_tablet', breakpoint: 'tablet', mediaId: 17 }),
+    ]));
+    expect(review.issues.map((issue) => issue.path)).toEqual([
+      '$.content[0].settings.background_image_mobile.url',
+      '$.content[0].settings.background_image.url',
+    ]);
+    const serialized = serializeElementorAssetReferenceReview(review);
+    expect(serialized).not.toContain(desktop);
+    expect(serialized).not.toContain(mobile);
+    expect(serialized).not.toContain('secret=');
+    expect(review.assetReferenceClosureClaim).toBe(false);
+    expect(review.targetCompatibilityClaim).toBe(false);
+    expect(review.downloadEnabled).toBe(false);
+  });
+
+  it('fails Container background MEDIA drift to review and ignores non-Container lookalikes', () => {
+    const value = template('heading', {
+      background_image: { url: 'https://figma.com/api/mcp/asset/widget' },
+    });
+    value.content[0]!.settings = { background_image_mobile: { id: 'invalid' } };
+    const review = reviewElementorAssetReferences(value, profile());
+    expect(review.status).toBe('REVIEW_REQUIRED_UNSUPPORTED_ASSET_SHAPE');
+    expect(review.references).toEqual([]);
+    expect(review.issues).toEqual([expect.objectContaining({
+      code: 'P15_ASSET_MEDIA_ID_INVALID',
+      path: '$.content[0].settings.background_image_mobile.id',
+    })]);
+  });
+
   it('accepts the documented core image default-style URL-only MEDIA value as external closure evidence', () => {
     const review = reviewElementorAssetReferences(template('image', {
       image: { url: 'https://source.example.test/placeholder.png' },

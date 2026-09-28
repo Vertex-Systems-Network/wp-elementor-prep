@@ -1,23 +1,22 @@
 # Last Durable Checkpoint
 
-Status: IDLE_READY_NEXT_P15_BATCH
+Status: VERIFYING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main before state-only transport: `12758d9d19b634948adc07aa798b4593734abe2c`
-Canonical active Issue/PR: none
-Transport Issue: #836 (GitHub metadata owns its PR lifecycle)
+Observed main before PR #841: `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`
+Canonical active Issue/PR: #840 / #841
+Branch: `ai-native/p15-container-background-media-840`
+Candidate head source: GitHub PR #841 head; verify exact SHA after final state sync.
 
-## Verified merged work
+## Verified merge and bounded candidate
 
-- PR #824 merged as `46429381f026fe0587e9d4fb9549686fa33fcfa7`.
-- P15 Issue #825 produced controlled Elementor 4.2.4 control, import/export and Chrome render probes in PRs #826–#828, then the bounded custom-order resolver in PR #829. PR #829 exact head `e784fc5b08cdf8e591888a96408b2420d14d120e` passed all seven gates and merged as `ca23be08302a444c783e5781c50f94d6aaa550cd`; #825 closed.
-- PR #830 repaired the Node typings patch contract, passed seven exact-head gates on `9de20bcc284d5cbf1eccae25898acc4df4907e0b`, zero unresolved threads, and merged as `a80d37f6f587a4bf2a5e7b9941f944fbae2e6327`.
-- PR #832 pinned CodeQL init/analyze to the same 4.38.2 revision, passed seven exact-head gates on `edf91185a4b22b911496936554ab97e47e9623aa`, zero unresolved threads, and merged as `d562ca20c3c67484bce52005c887b8d0d845f993`.
-- PR #835 reconciled Figma typings 1.139.0 and Vite 8.3.1 against Node typings 26.6.2. Seven exact-head gates passed on `88e6994957948b93534f167761823b95f499d95b`, zero unresolved threads, and guarded merge produced `12758d9d19b634948adc07aa798b4593734abe2c`. Superseded PRs #831, #833 and #834 closed unmerged.
+PR #839 exact head `8fcb41806f03c525a89eb372f53d382b1432bdd1` passed all seven required workflows, zero unresolved review threads and guarded squash merge as `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`; Issue #838 closed. It reviews only core Image MEDIA transient Figma links.
+
+Representative Template 2 has 43 Image widget references plus one desktop and one mobile Container background reference to temporary Figma MCP assets. PR #841 extends the source-bound, read-only review to the documented Elementor 4.2.4 Container normal background MEDIA controls with explicit tablet/mobile siblings. It retains paths/fingerprints and does not emit raw URLs. Focused tests and README/verifier state are in the branch. RQ-840-FINAL is pending exact-head gates.
 
 ## Retained limits
 
-#287 still requires repository admin settings. #159 needs genuine Figma Desktop runtime evidence. #84 needs live publisher/account/2FA/final-exit evidence. #182 is the deferred production and marketplace gate. The P15 probes use controlled script-authored values; arbitrary demo spacing, image availability, editor-generated serialization and broad compatibility remain unverified.
+No Package 13/14 image bytes or target-managed WordPress attachment mapping has been obtained. Browser image-load and visual spacing parity remain unverified. #287 requires admin settings; #159 Figma Desktop evidence; #84 publisher/account/2FA/final-exit evidence; #182 is the deferred final gate. Broad compatibility, generation, download and production authority remain false.
 
 ## Exact next safe action
 
-Verify this state-only transport PR on its exact head, zero unresolved threads and mergeability, then guarded merge. Its merge commit does not recursively require another state PR under the terminal transport rule. Resume P15 by auditing representative real demo spacing and image parity against existing repository evidence.
+Observe PR #841 final exact head and all seven required workflows once at a meaningful boundary. Resolve any concrete failure, inspect review threads and mergeability, then guarded squash merge only if every gate passes. Reconcile main afterward.
