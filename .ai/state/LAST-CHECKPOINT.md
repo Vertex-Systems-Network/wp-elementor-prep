@@ -1,22 +1,21 @@
 # Last Durable Checkpoint
 
-Status: VERIFYING
+Status: IDLE_READY_NEXT_P15_BATCH
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main before PR #841: `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`
-Canonical active Issue/PR: #840 / #841
-Branch: `ai-native/p15-container-background-media-840`
-Candidate head source: GitHub PR #841 head; verify exact SHA after final state sync.
+Observed main before terminal state transport: `d1fc115b9f6764d90c0c319b880e291009eb7199`
+Canonical active Issue/PR: none
+Transport Issue/PR: #842 / #843 (GitHub metadata owns lifecycle)
 
-## Verified merge and bounded candidate
+## Verified merged work
 
-PR #839 exact head `8fcb41806f03c525a89eb372f53d382b1432bdd1` passed all seven required workflows, zero unresolved review threads and guarded squash merge as `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`; Issue #838 closed. It reviews only core Image MEDIA transient Figma links.
+PR #839 exact head `8fcb41806f03c525a89eb372f53d382b1432bdd1` passed seven gates and merged as `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`; #838 closed. PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof. It had zero unresolved threads, was mergeable and guarded squash merged as `d1fc115b9f6764d90c0c319b880e291009eb7199`; #840 closed.
 
-Representative Template 2 has 43 Image widget references plus one desktop and one mobile Container background reference to temporary Figma MCP assets. PR #841 extends the source-bound, read-only review to the documented Elementor 4.2.4 Container normal background MEDIA controls with explicit tablet/mobile siblings. It retains paths/fingerprints and does not emit raw URLs. Focused tests and README/verifier state are in the branch. RQ-840-FINAL is pending exact-head gates.
+#841 extends read-only review to documented Elementor 4.2.4 Container normal background MEDIA desktop/tablet/mobile settings. Main README now records #838/#840 merges and P17's already-started static foundation. This terminal transport changes only README/verifier/state/Runner/memory truth. Its own exact-head gates remain pending.
 
 ## Retained limits
 
-No Package 13/14 image bytes or target-managed WordPress attachment mapping has been obtained. Browser image-load and visual spacing parity remain unverified. #287 requires admin settings; #159 Figma Desktop evidence; #84 publisher/account/2FA/final-exit evidence; #182 is the deferred final gate. Broad compatibility, generation, download and production authority remain false.
+Pella Nova Package 13/14 source image bytes and target WordPress media mapping are absent. Browser image-load and spacing parity are unverified. P17 foundation static export/IR/HTML-CSS/package validation and controlled local browser proof are already in progress; visual fidelity, JS execution, Web-to-Figma reconstruction and production acceptance remain unclaimed. #287, #159, #84 and #182 retain their admin/external/final gates.
 
 ## Exact next safe action
 
-Observe PR #841 final exact head and all seven required workflows once at a meaningful boundary. Resolve any concrete failure, inspect review threads and mergeability, then guarded squash merge only if every gate passes. Reconcile main afterward.
+Verify terminal PR #843 on its final exact head, seven required gates, zero unresolved threads and mergeability; guarded merge. The transport merge commit does not recursively stale canonical state. Then inspect representative real demo media and spacing evidence without inventing closure.
