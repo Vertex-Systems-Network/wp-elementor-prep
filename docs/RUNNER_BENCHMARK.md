@@ -366,4 +366,4 @@ PR #845 exact head `02450b354a31d7149f64da5f5b27f180d53e4bae` passed all seven r
 
 ## P18 adapter handoff (2026-09-28)
 
-The P18 React R0/R1 preflight and #850 React static adapter consume the existing P17 static Web IR and local browser proof contract. This note records workflow-path continuity only; it does not claim visual parity or target acceptance.
+The P18 React R0/R1 preflight and #850 React static adapter consume the existing P17 static Web IR and local browser proof contract. This note records workflow-path continuity only; it does not claim visual parity or target acceptance. State reconciliation after #853 keeps this boundary explicit.
