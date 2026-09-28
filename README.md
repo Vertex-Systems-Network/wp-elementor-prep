@@ -48,7 +48,7 @@ The two Package 13/14 Website Template ZIPs still contain temporary Figma asset 
 | P15 Elementor native export + validation | CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED | N/A | `──────────` | Local candidate + bounded Elementor 4.2.4 proof; permanent Package 13/14 media, imported image-load and Figma spacing parity are not verified |
 | P16 Gutenberg native export + transfer | CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED | N/A | `──────────` | Candidate/evidence-retention tooling exists; genuine authenticated evidence and real editor/import/render validation are pending |
 | P17 HTML/CSS/JS + code-to-design | FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF | N/A | `──────────` | Static IR to HTML/CSS package and local Chrome proof exist; visual parity, JS execution and Web-to-Figma reconstruction are pending |
-| P18 Framework adapter platform | REACT STATIC ADAPTER IMPLEMENTATION IN PROGRESS | 10% impl | `█░░░░░░░░░` | #850 has deterministic TSX/CSS SDK and refusal tests; pinned build/render proof and target acceptance remain pending |
+| P18 Framework adapter platform | REACT STATIC ADAPTER + CONTROLLED RUNTIME PROOF RETAINED | 20% impl | `██░░░░░░░░` | #850 SDK/refusal tests and #858 pinned React/Vite build + local Chrome receipt are green; visual parity, Figma parity, Elementor target acceptance and production acceptance remain pending |
 | P19 Assets/fonts/design-system export | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Asset/token provenance and font constraints retained |
 | P20 Round-trip QA + section portability | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Controlled render harness + calibrated QA required |
 | P21 Handoff/client QA/a11y-SEO advisories | PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED | 0% | `░░░░░░░░░░` | Build from accepted target outputs |
@@ -63,7 +63,7 @@ The two Package 13/14 Website Template ZIPs still contain temporary Figma asset 
 
 ## Before P19
 
-[P15–P18 evidence exit gate](docs/PRE_P19_EVIDENCE_EXIT.md) is open under #846. P18 React first-slice [R0/R1 review](docs/P18_REACT_R0_R1_2026-09-28.md) is retained under #848; #850 adds the bounded static adapter SDK and refusal tests. Build/render proof and target acceptance remain pending. P19 stays frozen until P15 imported media/layout proof, P16 authenticated native-editor proof, P17 visual/reconstruction proof and P18 framework build/render proof each pass a scope-specific internal review. CI or a controlled fixture alone does not close any of these exits.
+[P15–P18 evidence exit gate](docs/PRE_P19_EVIDENCE_EXIT.md) is open under #846. P18 React first-slice [R0/R1 review](docs/P18_REACT_R0_R1_2026-09-28.md) is retained under #848; #850 adds the bounded static adapter SDK and refusal tests, and #858 adds a green pinned React/Vite build + local Chrome runtime receipt. Visual/Figma parity, Elementor target acceptance and production acceptance remain separate pending gates. P19 stays frozen until P15 imported media/layout proof, P16 authenticated native-editor proof, P17 visual/reconstruction proof and P18 framework build/render proof each pass a scope-specific internal review. CI or a controlled fixture alone does not close any of these exits.
 
 ## Development and source of truth
 
