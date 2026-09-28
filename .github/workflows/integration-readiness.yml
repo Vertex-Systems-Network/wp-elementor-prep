@@ -31,6 +31,9 @@ jobs:
             '+refs/heads/feat/p6-advanced-structures:refs/remotes/origin/feat/p6-advanced-structures' \
             '+refs/heads/feat/p7-batch-queue-core:refs/remotes/origin/feat/p7-batch-queue-core'
 
+      - name: Validate ANPOS child adoption metadata
+        run: npm run anpos:validate
+
       - name: Report integration readiness
         run: node scripts/check-integration-readiness.mjs --github-summary
 
