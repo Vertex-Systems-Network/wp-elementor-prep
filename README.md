@@ -32,7 +32,7 @@ Machine-readable operational registry: `config/runtime-artifacts.json`, schema v
 
 The accepted repository toolchain requires **Node.js 22.12.0 or newer**. CI and Node-backed release/security proof workflows exercise the exact floor `22.12.0`; `.nvmrc` pins the same developer baseline.
 
-The coordinated test/build matrix is explicit rather than accidental peer resolution: `vitest 5.0.1`, `vite 8.3.0`, `esbuild 0.28.2`, `playwright-core 1.63.0` and `@types/node 26.6.2`. Locked installs use `npm ci`; `--force` and `--legacy-peer-deps` are not part of the accepted workflow.
+The coordinated test/build matrix is explicit rather than accidental peer resolution: `vitest 5.0.1`, `vite 8.3.1`, `esbuild 0.28.2`, `playwright-core 1.63.0` and `@types/node 26.6.2`. Locked installs use `npm ci`; `--force` and `--legacy-peer-deps` are not part of the accepted workflow.
 
 ## Live development status
 
