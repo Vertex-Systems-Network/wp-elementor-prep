@@ -57,6 +57,9 @@
     .profileField { font-size: 10px; opacity: .78; }
     .profileInput { width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg); color: var(--figma-color-text); font: inherit; }
     .fingerprint { font-size: 9px; word-break: break-all; opacity: .72; margin-top: 5px; }
+    .optionBankPanel { border: 1px solid var(--figma-color-border); border-radius: 8px; padding: 10px; margin-top: 12px; }
+    .optionBankField { font-size: 10px; opacity: .78; display: block; margin-top: 8px; }
+    .optionBankSelect { width: 100%; box-sizing: border-box; margin-top: 4px; padding: 7px; border-radius: 6px; border: 1px solid var(--figma-color-border); background: var(--figma-color-bg); color: var(--figma-color-text); font: inherit; }
   </style>
 </head>
 <body>
@@ -76,6 +79,17 @@
         </label>
       </div>
       <div class="inlineActions one"><button id="p15-profile">Assess declared target</button></div>
+    </div>
+    <div class="optionBankPanel">
+      <div class="status">Versioned target option bank</div>
+      <div class="meta">Select the audited Elementor Free + Pro or Gutenberg contract snapshot used for this preview. New snapshots appear after the next build.</div>
+      <label class="optionBankField">Elementor Free + Pro
+        <select id="elementor-option-bank" class="optionBankSelect"></select>
+      </label>
+      <label class="optionBankField">Gutenberg / WordPress
+        <select id="gutenberg-option-bank" class="optionBankSelect"></select>
+      </label>
+      <div id="option-bank-status" class="meta">No version selected yet.</div>
     </div>
     <div class="actions">
       <button id="audit">Run audit</button>
@@ -97,6 +111,17 @@
 
   <script>
     const root = document.getElementById('root');
+    const optionBankRegistry = __OPTION_BANK_REGISTRY__;
+    let selectedOptionBankId = optionBankRegistry.elementor[0]?.id || '';
+    function fillOptionBanks() {
+      for (const [id, entries] of [['elementor-option-bank', optionBankRegistry.elementor], ['gutenberg-option-bank', optionBankRegistry.gutenberg]]) {
+        const select = document.getElementById(id);
+        for (const entry of entries) { const option = document.createElement('option'); option.value = entry.id; option.textContent = `${entry.label} · ${entry.status}`; select.appendChild(option); }
+      }
+      const elementor = document.getElementById('elementor-option-bank'); if (elementor) elementor.value = selectedOptionBankId;
+      const status = document.getElementById('option-bank-status'); if (status) status.textContent = `Selected bank: ${selectedOptionBankId}`;
+    }
+    fillOptionBanks();
     const exportPanel = document.getElementById('export-panel');
     let latestAuditJson = '';
     let latestAuditMarkdown = '';
@@ -115,11 +140,13 @@
       exportPanel.hidden = true;
       post('p14-plan-preview-request');
     });
+    document.getElementById('elementor-option-bank').addEventListener('change', (event) => { selectedOptionBankId = event.target.value; document.getElementById('option-bank-status').textContent = `Selected bank: ${selectedOptionBankId}`; post('option-bank-selection', { optionBankId: selectedOptionBankId }); });
+    document.getElementById('gutenberg-option-bank').addEventListener('change', (event) => { document.getElementById('option-bank-status').textContent = `Selected bank: ${event.target.value}`; post('option-bank-selection', { optionBankId: event.target.value }); });
     document.getElementById('p15-preview').addEventListener('click', () => {
       root.className = 'empty';
       root.textContent = 'Inspecting the selected Frame through the bounded read-only P15 Elementor path…';
       exportPanel.hidden = true;
-      post('p15-elementor-preview-request');
+      post('p15-elementor-preview-request', { optionBankId: selectedOptionBankId });
     });
     document.getElementById('p15-profile').addEventListener('click', () => {
       const wordpressVersion = document.getElementById('p15-wp-version').value;
@@ -975,6 +1002,9 @@
         root.textContent = message.message || 'P14 Guided Prepare confirmation failed safely. Preview the current Frame again before retrying.';
         return;
       }
+
+      if (message.type === 'option-bank-selection-error') { document.getElementById('option-bank-status').textContent = message.message; return; }
+      if (message.type === 'option-bank-selection-result') { document.getElementById('option-bank-status').textContent = `Selected bank: ${message.optionBank.label}`; return; }
 
       if (message.type === 'p15-elementor-preview-result') {
         exportPanel.hidden = true;
