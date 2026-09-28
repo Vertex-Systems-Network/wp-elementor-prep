@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-28",
+  "platform": "wordpress-gutenberg",
+  "status": "INVENTORIED",
+  "scope": "official-contracts",
+  "contracts": [
+    {
+      "id": "block-json",
+      "title": "block.json metadata",
+      "fields": [
+        "name",
+        "title",
+        "category",
+        "description",
+        "attributes",
+        "supports",
+        "styles",
+        "variations",
+        "parent",
+        "ancestor",
+        "usesContext",
+        "providesContext",
+        "textdomain"
+      ],
+      "source": "https://developer.wordpress.org/block-editor/getting-started/fundamentals/block-json/"
+    },
+    {
+      "id": "block-metadata",
+      "title": "Block metadata reference",
+      "fields": [
+        "attributes",
+        "supports",
+        "styles",
+        "variations",
+        "editorScript",
+        "editorStyle",
+        "style",
+        "render",
+        "viewScript"
+      ],
+      "source": "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/"
+    },
+    {
+      "id": "attributes",
+      "title": "Block attributes",
+      "fields": [
+        "type",
+        "enum",
+        "source",
+        "selector",
+        "attribute",
+        "default",
+        "role"
+      ],
+      "source": "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/"
+    },
+    {
+      "id": "supports",
+      "title": "Block supports",
+      "fields": [
+        "anchor",
+        "align",
+        "color",
+        "dimensions",
+        "layout",
+        "position",
+        "spacing",
+        "typography",
+        "border",
+        "duotone",
+        "interactivity"
+      ],
+      "source": "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/"
+    },
+    {
+      "id": "core-blocks",
+      "title": "Core blocks reference",
+      "fields": [
+        "block name",
+        "availability",
+        "supports",
+        "experimental status",
+        "deprecated status"
+      ],
+      "source": "https://developer.wordpress.org/block-editor/reference-guides/core-blocks/"
+    },
+    {
+      "id": "registration",
+      "title": "Block registration",
+      "fields": [
+        "registerBlockType",
+        "metadata registration",
+        "server registration"
+      ],
+      "source": "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/"
+    },
+    {
+      "id": "edit-save",
+      "title": "Edit and save",
+      "fields": [
+        "edit",
+        "save",
+        "render",
+        "serialized markup"
+      ],
+      "source": "https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/"
+    },
+    {
+      "id": "inner-blocks",
+      "title": "Nested blocks",
+      "fields": [
+        "InnerBlocks",
+        "allowedBlocks",
+        "template",
+        "templateLock",
+        "orientation"
+      ],
+      "source": "https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/nested-blocks-inner-blocks/"
+    }
+  ],
+  "authorityBoundary": "Documentation inventory does not prove a target editor import, serialization, frontend render, theme support or production compatibility.",
+  "nextReview": "Refresh on WordPress/Gutenberg release or when a new block/support is implemented."
+}
