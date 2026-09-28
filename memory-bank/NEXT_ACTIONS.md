@@ -149,3 +149,8 @@ PR #823 exact head a89bee55c3d43a0f40b2c97701c4a473ef9cce6b passed all seven req
 ## Current continuation after PR #835
 
 Exact main before state transport: `12758d9d19b634948adc07aa798b4593734abe2c`. PRs #824–#829, #830, #832 and #835 are merged; #831/#833/#834 closed unmerged as superseded. There is no canonical active product Issue or PR. Inspect existing P15 template/asset evidence for a representative real demo spacing and image import gap, then scope a bounded fix with source and target proof. Do not infer broad compatibility or P12/P27 authority. #287/#159/#84/#182 remain as before.
+
+
+## Active P15 #838 / PR #839
+
+Verify the bounded transient Image MEDIA diagnostic on the exact PR head. The representative external handoff has 44/45 unique temporary Figma URLs and no permanent media/browser render certification. After green gates and guarded merge, investigate full ZIP media references and selected visual spacing with genuine target screenshots; do not call this Image-widget-only check complete demo import parity.
