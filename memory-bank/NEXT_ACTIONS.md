@@ -8,7 +8,7 @@ Security audit train #579 hardens exact-loopback proof-token use/retention, atom
 
 ## Current P18 preflight
 
-#847 merged as main `8bb14b12ba295704658881f506c0257f7dbe9635` after seven exact-head workflows and zero unresolved review threads. #846 remains open. #848 records a dated React first-slice official-source R0 and R1 compatibility matrix in `docs/P18_REACT_R0_R1_2026-09-28.md`; this is planning evidence only. P18 implementation and build/render proof have not started, P12 #84 remains independently pending, and P19 stays frozen.
+#849 merged as main `e5896d279988412736d1e0ea53ee5dc72081ba61` and #851 merged as `7f92b88a2b80eb92598ad76ef96be1d720c3b566`, each after seven exact-head workflows and zero unresolved review threads. #846 remains open. #848 records the React R0/R1 matrix and #850/#851 add the bounded deterministic static adapter with refusal tests. #852 now owns the first static TSX compile evidence harness; it records runtime package install and preview render as NOT_RUN. P12 #84, P17 visual parity and P19 remain independently pending.
 
 ## Toolchain baseline
 
