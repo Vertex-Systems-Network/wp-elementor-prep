@@ -45,3 +45,17 @@ A source screenshot must be obtained from the approved design/runtime path. A ha
 3. Review threshold calibration and classify any drift as PASS/REVIEW/BLOCKED.
 4. Add a separate static Web-to-Figma fixture only for the documented supported HTML/CSS subset.
 5. Keep P15/P16 target validation and P12/P27 release gates independent.
+
+## Reproducible controlled-render command
+
+The P17 local browser proof requires an explicit Chrome binary and retained run identity:
+
+```bash
+P17_CHROME_PATH=/absolute/chrome \\
+P17_PROOF_GIT_SHA=<exact-source-sha> \\
+P17_PROOF_RUN_ID=<retained-run-id> \\
+P17_PROOF_RUN_ATTEMPT=1 \\
+npm run p17:local-browser-proof
+```
+
+The command produces a controlled runtime receipt. It does not run visual parity unless a genuine source reference is separately supplied and bound to the exact IR hash.
