@@ -53,7 +53,8 @@
     "audit:gutenberg": "node scripts/audit-gutenberg.mjs",
     "option-bank:coverage": "node scripts/option-bank-coverage.mjs",
     "p15:option-bank-runtime-binding": "node scripts/p15-option-bank-runtime-binding.mjs",
-    "p18:reference-evidence-intake": "node scripts/p18-reference-evidence-intake.mjs"
+    "p18:reference-evidence-intake": "node scripts/p18-reference-evidence-intake.mjs",
+    "anpos:validate": "node scripts/validate-anpos-adoption.mjs"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.117.0",
