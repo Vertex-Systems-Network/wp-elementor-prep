@@ -38,7 +38,7 @@ const readVersion = async (dir, kind) => {
   const header = await findHeader(dir, kind === 'free' ? 'elementor.php' : 'elementor-pro.php');
   if (!header) throw new Error(`Could not find ${kind} plugin header in ZIP.`);
   const source = await readFile(header, 'utf8');
-  const match = source.match(/^[ \t]*Version:\s*([^\r\n]+)/m) ?? source.match(new RegExp(`${kind === 'free' ? 'ELEMENTOR_VERSION' : 'ELEMENTOR_PRO_VERSION'}\\\\s*[:=]\\\\s*['\"]([^'\"]+)`));
+  const match = source.match(/^[ \t]*Version:\s*([^\r\n]+)/m) ?? source.match(new RegExp(`${kind === 'free' ? 'ELEMENTOR_VERSION' : 'ELEMENTOR_PRO_VERSION'}\\s*[:=]\\s*['\"]([^'\"]+)`));
   if (!match?.[1]) throw new Error(`Could not detect ${kind} version from ${header}.`);
   return match[1].trim();
 };
