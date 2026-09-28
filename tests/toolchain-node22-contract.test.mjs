@@ -33,7 +33,7 @@ describe('coordinated Node 22 toolchain contract', () => {
     expect(lock.packages?.['node_modules/vite']?.version).toBe('8.3.0');
     expect(lock.packages?.['node_modules/esbuild']?.version).toBe('0.28.2');
     expect(lock.packages?.['node_modules/playwright-core']?.version).toBe('1.63.0');
-    expect(lock.packages?.['node_modules/@types/node']?.version).toBe('26.6.1');
+    expect(lock.packages?.['node_modules/@types/node']?.version).toBe('26.6.2');
   });
 
   it('runs every Node-backed acceptance workflow on the same exact Node floor', () => {
