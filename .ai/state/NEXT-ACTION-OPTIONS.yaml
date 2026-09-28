@@ -1,9 +1,9 @@
 schema_version: 1
 repository: Vertex-Systems-Network/wp-elementor-prep
-observed_main_sha: 2ca818d500474182a3e04eacdd477df4761a1269
-active_issue: 844
-active_pr: 845
-active_branch: ai-native/readme-current-progress-844
+observed_main_sha: 6b79b569b14618dec67744310b2794a2bab49e29
+active_issue: 846
+active_pr: 847
+active_branch: ai-native/pre-p19-evidence-gate-846
 active_execution_batch:
   target_duration: 5_HOURS_OR_AVAILABLE_WORKSPACE_CREDIT_SESSION_WHICHEVER_ENDS_FIRST
   continues_without_user_reconsent: true
@@ -17,18 +17,18 @@ interaction:
   max_visible_options: 4
   randomize_presentation_order: true
   recommended_slot_fixed: false
-  presentation_epoch: issue-844-readme-current-progress
+  presentation_epoch: issue-846-pre-p19-gate
   presentation_order:
     - review-security-blocker-287
-    - verify-readme-progress-844
-recommended_action_id: verify-readme-progress-844
+    - verify-pre-p19-gate-846
+recommended_action_id: verify-pre-p19-gate-846
 options:
-  - action_id: verify-readme-progress-844
-    label: Verify README progress
+  - action_id: verify-pre-p19-gate-846
+    label: Verify pre-P19 gate
     enabled: true
     recommended: true
-    action_token: VERIFY_README_PROGRESS_844
-    request_payload: "Verify PR #845 exact-head gates, zero unresolved threads and mergeability; guarded merge if green, then reconcile main."
+    action_token: VERIFY_PRE_P19_GATE_846
+    request_payload: "Verify PR #847 exact-head gates, zero unresolved threads and mergeability; guarded merge if green, then begin bounded P18 R0/R1 research while P19 remains frozen."
     blocked_by: []
     blocked_reason: null
   - action_id: review-security-blocker-287
