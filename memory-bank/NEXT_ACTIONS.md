@@ -12,7 +12,7 @@ Issue #634 establishes the coordinated repository baseline at Node.js `22.12.0+`
 
 ## Execution mode — focused Elementor V1 release train
 
-Prioritize one coherent Elementor commercial V1 while allowing the explicitly opened P17 static-only implementation line to proceed in bounded slices. Keep P16 stable unless a concrete shared blocker appears, and keep P18-P26 frozen during this window.
+Prioritize evidence-backed P15/P16/P17 closure and open P18 R0/R1 preflight under #846 before P19. Continue independent bounded implementation while real target/source proof is unavailable. Keep P19-P26 frozen; no synthetic phase-exit claim.
 
 Use focused typecheck/tests/builds while iterating. The exact integration head must pass the repository's full CI / P12 Final Release Artifact / P12 Offline Acceptance gates before merge. Canonical docs synchronize once per behavior-changing release train rather than in separate ceremonial docs PRs.
 
@@ -24,7 +24,8 @@ Use focused typecheck/tests/builds while iterating. The exact integration head m
 - P15 — **CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED**. Terminal PR #770 passed 7/7 and merged as main `5f7fa2b5...`. Issue #773 / PR #774 passed 7/7 on exact head `3fd122cd...`, zero review threads, merged main `6ef3ea58...`; Issue #775 / PR #776 passed 7/7 on `2c1a8c5d...`, merged main `ebbe9ee8...`; Issue #777 / PR #778 passed 7/7 on `74641fd6...`, merged main `21848e94...`; Issue #779 / PR #780 passed 7/7 on `7d59a098...`, merged main `cbec0be0...`; Issue #781 / PR #782 passed 7/7 on `5e3976a1...`, merged main `5eb93905...`; Issue #783 / PR #784 passed 7/7 on `4389969f...`, merged main `d7c5cc87...`; Issue #785 / PR #787 passed 7/7 on `57a08f4b...`, merged main `965bb48e...`; Issue #788 / PR #789 passed 7/7 on `9ec87232...`, merged main `228b68a1...`; Issue #790 / PR #791 passed 7/7 on `2aa8d19c...`, merged main `d24ed13b...`; Issue #792 / PR #793 passed 7/7 on `5e404876...`, merged main `e6de603b...`; Issue #794 / PR #795 composed five bounded Button color families and merged after 7/7 exact-head gates; #786 closed duplicate. PR #772 closed unmerged after an overbroad registry review.
 - P16 — **CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED**.
 - P17 — **FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF**; #612/#613 static export, #614/#615 import safety preflight, #616/#617 neutral Web IR, #618/#623 IR→HTML/CSS generation and #628/#629 package validation are merged; #630 adds one exact local-only Chrome render observation. JavaScript execution, visual-fidelity comparison, Web→Figma reconstruction and production acceptance remain unclaimed.
-- P18-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
+- P18 — **PREFLIGHT OPEN / IMPLEMENTATION NOT STARTED** under #846; R0/R1 first, then bounded adapter SDK and first framework proof.
+- P19-P26 — **PREFLIGHT FROZEN / IMPLEMENTATION NOT STARTED**.
 - P27 — **GATE DEFINED / EXECUTION DEFERRED** under #182.
 - #287 remains repository-admin branch/ruleset enforcement work.
 
@@ -169,3 +170,8 @@ PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed seven requi
 ## Active README clarity #844 / PR #845
 
 PR #843 passed all seven exact-head gates and merged as `2ca818d500474182a3e04eacdd477df4761a1269`; #842 closed. The README readability batch moves detailed historical chronology into a linked archive and puts P15/P16/P17 progress and missing evidence at the top. Verify the final PR #845 head before guarded merge. Demo asset bytes, WordPress media mapping and visual spacing parity are still pending; no phase completion/production authority is implied.
+
+
+## Pre-P19 evidence order and authorization
+
+The user authorized routine in-scope implementation and guarded green merges through the P15–P18 program without repeated confirmation before P19. Issue #846 and `docs/PRE_P19_EVIDENCE_EXIT.md` define separate real exits; this does not supply missing Package 13/14 asset bytes, Gutenberg authentication, visual parity, framework build/render results, production deployment or publishing evidence. Work through safe independent slices, record unavailable proof as pending and do not start P19.
