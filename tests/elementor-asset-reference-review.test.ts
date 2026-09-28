@@ -140,7 +140,7 @@ describe('P15 R1 Elementor documented asset-reference review gate', () => {
     const desktop = 'https://figma.com/api/mcp/asset/desktop?secret=desktop';
     const mobile = 'https://www.figma.com/api/mcp/asset/mobile?secret=mobile';
     const value = template();
-    value.content[0].settings = {
+    value.content[0]!.settings = {
       background_background: 'classic',
       background_image: { url: desktop },
       background_image_mobile: { id: 0, url: mobile },
@@ -172,7 +172,7 @@ describe('P15 R1 Elementor documented asset-reference review gate', () => {
     const value = template('heading', {
       background_image: { url: 'https://figma.com/api/mcp/asset/widget' },
     });
-    value.content[0].settings = { background_image_mobile: { id: 'invalid' } };
+    value.content[0]!.settings = { background_image_mobile: { id: 'invalid' } };
     const review = reviewElementorAssetReferences(value, profile());
     expect(review.status).toBe('REVIEW_REQUIRED_UNSUPPORTED_ASSET_SHAPE');
     expect(review.references).toEqual([]);
