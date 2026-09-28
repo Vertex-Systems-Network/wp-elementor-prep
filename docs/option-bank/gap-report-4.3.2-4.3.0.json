@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-28",
+  "selection": "elementor:4.3.2:4.3.0",
+  "evidence": {
+    "snapshot": "elementor-4.3.2-4.3.0.json",
+    "freeKeys": 649,
+    "proKeys": 1316
+  },
+  "statuses": {
+    "INVENTORIED": 2,
+    "MAPPED": 0,
+    "RUNTIME_REQUIRED": 2,
+    "UNSUPPORTED": 0
+  },
+  "notes": [
+    "Static inventory is recorded. Runtime/import/render/serialization mapping remains explicitly RUNTIME_REQUIRED until target evidence exists."
+  ]
+}
