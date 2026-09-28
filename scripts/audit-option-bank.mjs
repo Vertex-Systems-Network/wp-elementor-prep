@@ -38,7 +38,7 @@ const readVersion = async (dir, kind) => {
   const header = await findHeader(dir, kind === 'free' ? 'elementor.php' : 'elementor-pro.php');
   if (!header) throw new Error(`Could not find ${kind} plugin header in ZIP.`);
   const source = await readFile(header, 'utf8');
-  const match = source.match(/^[ \t]*Version:\s*([^\r\n]+)/m) ?? source.match(new RegExp(`${kind === 'free' ? 'ELEMENTOR_VERSION' : 'ELEMENTOR_PRO_VERSION'}\\s*[:=]\\s*['\"]([^'\"]+)`));
+  const match = source.match(/^[ \t/*#-]*Version:\s*([^\r\n]+)/m) ?? source.match(new RegExp(`${kind === 'free' ? 'ELEMENTOR_VERSION' : 'ELEMENTOR_PRO_VERSION'}\\s*[:=]\\s*['\"]([^'\"]+)`));
   if (!match?.[1]) throw new Error(`Could not detect ${kind} version from ${header}.`);
   return match[1].trim();
 };
@@ -78,7 +78,7 @@ try {
     notes: ['ZIPs were extracted into an isolated temporary directory.', 'Static literal registrations only; this does not prove import, save, frontend rendering, responsive behavior or target compatibility.'],
   };
   const snapshotName = `elementor-${freeVersion}-${proVersion}.json`;
-  await writeFile(join(outDir, snapshotName), JSON.stringify(snapshot, null, 2) + '\\n');
+  await writeFile(join(outDir, snapshotName), JSON.stringify(snapshot, null, 2) + '\n');
   const registryPath = join(outDir, 'registry.json');
   let registry = { schemaVersion: 1, elementor: [], gutenberg: [] };
   try { registry = JSON.parse(await readFile(registryPath, 'utf8')); } catch {}
@@ -92,8 +92,8 @@ try {
     const entry = { id: `gutenberg:${gutenbergVersion}`, label: `Gutenberg/WordPress ${gutenbergVersion}`, snapshot: contractsPath ? relative(outDir, resolve(contractsPath)) : 'gutenberg-official-contracts.json', status: 'INVENTORIED', generatedAt: new Date().toISOString() };
     registry.gutenberg = registry.gutenberg.filter((item) => item.id !== entry.id); registry.gutenberg.push(entry); registry.gutenberg.sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
   }
-  await writeFile(registryPath, JSON.stringify(registry, null, 2) + '\\n');
+  await writeFile(registryPath, JSON.stringify(registry, null, 2) + '\n');
   const gapReport = { schemaVersion: 1, generatedAt: new Date().toISOString(), selection: id, evidence: { snapshot: snapshotName, freeKeys: Object.keys(snapshot.targets.elementor_free.literalControlKeys).length, proKeys: Object.keys(snapshot.targets.elementor_pro.literalControlKeys).length }, statuses: { INVENTORIED: 2, MAPPED: 0, RUNTIME_REQUIRED: 2, UNSUPPORTED: 0 }, notes: ['Static inventory is recorded. Runtime/import/render/serialization mapping remains explicitly RUNTIME_REQUIRED until target evidence exists.'] };
-  await writeFile(join(outDir, `gap-report-${freeVersion}-${proVersion}.json`), JSON.stringify(gapReport, null, 2) + '\\n');
+  await writeFile(join(outDir, `gap-report-${freeVersion}-${proVersion}.json`), JSON.stringify(gapReport, null, 2) + '\n');
   console.log(JSON.stringify({ snapshot: join(outDir, snapshotName), registry: registryPath, gapReport: join(outDir, `gap-report-${freeVersion}-${proVersion}.json`), versions: snapshot.versions }, null, 2));
 } finally { await rm(temp, { recursive: true, force: true }); }

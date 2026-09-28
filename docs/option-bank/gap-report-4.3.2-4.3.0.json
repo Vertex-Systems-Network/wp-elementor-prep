@@ -4,8 +4,8 @@
   "selection": "elementor:4.3.2:4.3.0",
   "evidence": {
     "snapshot": "elementor-4.3.2-4.3.0.json",
-    "freeKeys": 649,
-    "proKeys": 1316
+    "freeKeys": 848,
+    "proKeys": 2153
   },
   "statuses": {
     "INVENTORIED": 2,
