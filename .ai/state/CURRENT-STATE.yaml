@@ -40,7 +40,7 @@ terminal_finalization:
   transport_pr_is_canonical_owner: false
   recursive_reconciliation_required_after_transport_merge: false
   transport_changes_product_runtime_security_authority: false
-  transport_status: IN_REVIEW_GITHUB_METADATA_ONLY
+  transport_status: GITHUB_METADATA_AUTHORITATIVE
 development_batching:
   mode: fast_batch
   enabled: true
