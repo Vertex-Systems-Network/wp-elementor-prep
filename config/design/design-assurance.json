@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "status": "contract_defined_not_approved",
+  "activation_scope": "Figma_source_and_target_visual_evidence",
+  "approved_design": {
+    "provider": "Figma",
+    "file_id": null,
+    "node_ids": [],
+    "revision": null,
+    "snapshot_ref": null,
+    "approval_status": "not_approved"
+  },
+  "verification": {
+    "visual_comparison_required_for_visual_acceptance": true,
+    "responsive_states_required_when_present": true,
+    "accessibility_target": "WCAG_2_2_AA_for_web_when_applicable",
+    "source_bound_evidence_required": true
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "status": "active_contract_not_production_certification",
+  "classification_levels": [
+    "public",
+    "internal",
+    "confidential",
+    "restricted",
+    "secret"
+  ],
+  "rules": {
+    "secrets_never_in_memory_bank_or_PM": true,
+    "sensitive_logs_redacted": true,
+    "private_design_data_not_committed": true,
+    "production_data_copy_requires_approval": true,
+    "retention_required_before_production": true
+  },
+  "current_data_scope": {
+    "Figma_design_content": "customer_content",
+    "runtime_receipts": "internal",
+    "credentials": "secret_not_stored",
+    "public_docs": "public"
+  }
+}

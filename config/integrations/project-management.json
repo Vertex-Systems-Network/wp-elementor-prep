@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "not_selected",
+  "canonical_code_system": "github",
+  "selection": {
+    "selected_provider_id": null,
+    "sync_enabled": false,
+    "verified_at": null
+  },
+  "selection_flow": {
+    "preferred_prompt": "Choose Project Management System",
+    "allow_skip": true,
+    "only_selectable_when_real_connection_path_exists": true,
+    "never_collect_raw_password_or_session_cookie_in_chat": true
+  }
+}

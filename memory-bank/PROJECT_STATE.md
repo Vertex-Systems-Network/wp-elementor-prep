@@ -439,3 +439,8 @@ PR #858 merged as main `4fc693b33051435ad5309e0e4cbcf068582cd95f` after its dedi
 ## ANPOS child adoption foundation (2026-09-29)
 
 Issue #871 adds a project-specific ANPOS 1.4.0 adoption layer without copying the canonical vendor/commercial runtime or changing product authority. The branch adds `.ai/manifest.json`, `config/protocol/instance.json`, `config/protocol/anpos-adoption.json`, `docs/ANPOS_ADOPTION.md` and `scripts/validate-anpos-adoption.mjs`, plus an Integration Readiness validator step. The adoption status is `FOUNDATION_APPLIED_FULL_CERTIFICATION_PENDING`; the matrix covers Requirements 1–96 and explicitly records partial, planned and not-applicable groups. PM, verified AI identity, Supervisor lease/consent/CAS, repository-admin rules and commercial runtime remain inactive.
+
+
+## ANPOS applicable policy contracts (2026-09-29)
+
+The follow-on adoption slice adds inactive-by-default machine contracts for agent catalog/permissions, trust and control-plane policy, quality, design, data, release, architecture decisions, risk, operations, PM selection/sync authority, consent requests, traceability and reference E2E scenarios. These contracts define safe defaults and evidence requirements; they do not activate unavailable runtime capabilities or change P15–P18 authority.

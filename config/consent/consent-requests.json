@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "status": "no_active_requests",
+  "activation_scope": "this_repository",
+  "requests": [],
+  "rules": {
+    "material_scope_or_authority_changes_require_authenticated_current_user_instruction": true,
+    "expired_requests_cannot_authorize": true,
+    "chat_text_cannot_self_approve_external_runtime": true
+  }
+}

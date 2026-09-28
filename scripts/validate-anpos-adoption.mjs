@@ -9,6 +9,23 @@ const load = async (relative) => {
   try { return JSON.parse(await readFile(resolve(root, relative), 'utf8')); }
   catch (error) { failures.push(relative + ': ' + error.message); return null; }
 };
+const policyContractFiles = [
+  'config/ai/agent-catalog.json',
+  'config/security/trust-policy.json',
+  'config/security/control-plane-policy.json',
+  'config/quality/quality-policy.json',
+  'config/design/design-assurance.json',
+  'config/data/data-governance.json',
+  'config/release/release-policy.json',
+  'config/architecture/decision-records.json',
+  'config/risk/risk-register.json',
+  'config/operations/runbooks-and-drills.json',
+  'config/integrations/project-management.json',
+  'config/integrations/sync-authority.json',
+  'config/traceability/requirements-traceability.json',
+  'config/consent/consent-requests.json',
+  'config/testing/reference-e2e-matrix.json'
+];
 const requiredFiles = [
   'AGENTS.md',
   '.ai/state/PROTOCOL.md',
@@ -27,6 +44,10 @@ const requiredFiles = [
 ];
 for (const path of requiredFiles) {
   try { await access(resolve(root, path)); } catch { failures.push('missing required adoption file: ' + path); }
+}
+for (const path of policyContractFiles) {
+  const policy = await load(path);
+  if (policy && typeof policy.status !== 'string') failures.push(path + ': status is required');
 }
 const manifest = await load('.ai/manifest.json');
 const instance = await load('config/protocol/instance.json');

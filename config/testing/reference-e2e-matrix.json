@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "contract_defined_not_certified",
+  "scenarios": [
+    {
+      "id": "fresh_child_bootstrap",
+      "status": "not_run",
+      "notes": "Canonical bootstrap is not executed in this repository."
+    },
+    {
+      "id": "existing_repository_adoption",
+      "status": "implemented_contract_only",
+      "evidence_refs": [
+        ".ai/manifest.json",
+        "config/protocol/instance.json",
+        "config/protocol/anpos-adoption.json",
+        "scripts/validate-anpos-adoption.mjs"
+      ]
+    },
+    {
+      "id": "pre_1_4_child_upgrade",
+      "status": "not_applicable",
+      "notes": "No prior ANPOS child instance is registered."
+    }
+  ]
+}

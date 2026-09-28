@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "matrix_backed_partial",
+  "source_matrix": "config/protocol/anpos-adoption.json",
+  "requirement_range": [
+    1,
+    96
+  ],
+  "links": [],
+  "link_template": {
+    "requirement_id": "REQ-001",
+    "evidence_refs": [],
+    "code_refs": [],
+    "test_refs": [],
+    "issue_refs": [],
+    "pull_request_refs": [],
+    "status": "planned",
+    "verification_status": "unverified"
+  },
+  "verification_rule": "Requirement verification requires linked acceptance evidence; policy presence or code existence alone is insufficient."
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "status": "active_contract_not_production_authority",
+  "release_candidate": {
+    "immutable_commit_required": true,
+    "required_checks_must_pass": true,
+    "review_threads_must_be_zero": true,
+    "expected_head_guard_required": true,
+    "artifact_digest_required_when_artifacts_exist": true,
+    "post_merge_main_reconciliation_required": true
+  },
+  "production": {
+    "deployment_authority": "not_configured",
+    "smoke_test_required": true,
+    "rollback_plan_required": true,
+    "external_acceptance_separate": true
+  }
+}

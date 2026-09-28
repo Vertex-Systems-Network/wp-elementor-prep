@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "active_contract",
+  "decisions": [
+    {
+      "id": "ADR-ANPOS-001",
+      "title": "Adopt ANPOS as a bounded child protocol layer",
+      "status": "accepted",
+      "evidence_refs": [
+        "docs/ANPOS_ADOPTION.md",
+        "config/protocol/anpos-adoption.json"
+      ],
+      "decision": "Route AI work through ANPOS-compatible authority/state/evidence contracts while preserving the existing deterministic product and leaving unavailable capabilities inactive.",
+      "consequences": [
+        "Existing P15-P18 contracts remain authoritative.",
+        "Full ANPOS capabilities require separate implementation and evidence."
+      ],
+      "decided_at": "2026-09-29"
+    }
+  ],
+  "allowed_statuses": [
+    "proposed",
+    "accepted",
+    "rejected",
+    "superseded"
+  ]
+}

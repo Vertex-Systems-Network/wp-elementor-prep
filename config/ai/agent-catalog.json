@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "status": "not_selected",
+  "activation_scope": "child_project_only",
+  "selection_flow": {
+    "preferred_prompt": "Choose Development AI",
+    "only_selectable_when_host_can_invoke": true,
+    "require_runtime_identity_evidence": true,
+    "require_privacy_boundary_record": true
+  },
+  "available_agents": [],
+  "selected_agents": [],
+  "role_assignments": {
+    "supervisor_agent_id": null,
+    "worker_agent_ids": []
+  },
+  "permission_defaults": {
+    "network_policy": "deny_unless_explicitly_required",
+    "secret_scope": "none_by_default",
+    "deployment_scope": "none_by_default",
+    "repository_admin": false,
+    "destructive_actions": false
+  },
+  "notes": "No agent identity or capability is inferred from model names or chat context."
+}

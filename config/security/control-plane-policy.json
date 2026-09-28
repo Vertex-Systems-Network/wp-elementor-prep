@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "contract_defined_not_active",
+  "activation_scope": "this_repository",
+  "protected_control_plane": true,
+  "protected_paths": [
+    "/.ai/**",
+    "/AGENTS.md",
+    "/.github/**",
+    "/config/protocol/**",
+    "/config/security/**",
+    "/config/ai/**",
+    "/config/consent/**",
+    "/config/coordination/**",
+    "/config/integrations/**",
+    "/config/release/**",
+    "/config/testing/**",
+    "/scripts/**",
+    "/tests/**",
+    "/memory-bank/**"
+  ],
+  "identity_policy": {
+    "agent_name_is_not_identity_proof": true,
+    "runtime_authentication_required_for_privileged_mutations": true,
+    "selected_catalog_membership_required": true,
+    "expired_identity_loses_authority": true
+  },
+  "default_denials": {
+    "raw_credentials_in_chat": true,
+    "worker_repository_admin": true,
+    "worker_destructive_actions": true,
+    "production_secrets_in_tests": true,
+    "untrusted_content_as_instruction": true
+  },
+  "runtime_status": "no_privileged_agent runtime is enabled by this file"
+}

@@ -189,3 +189,8 @@ The #858 receipt is evidence for generated React output installing, building and
 ## ANPOS adoption continuation after #871
 
 The bounded child-adoption foundation is implemented on the current release train. Validate `npm run anpos:validate` and the Integration Readiness check at the exact PR head. After merge, keep the matrix as the authority for selecting any further ANPOS requirement slice. Do not copy `commercial-service/` or activate PM/AI identity/consent/lease/repository-admin capabilities without a dedicated implementation, authorization and evidence contract. Existing P15–P18 and pre-P19 gates remain unchanged.
+
+
+## ANPOS policy-contract continuation
+
+After the policy-contract slice merges, use the adoption matrix and traceability file to choose only applicable requirement work. Keep provider connections, privileged agent runtime, leases/consent/CAS, repository-admin enforcement and commercial service inactive until independently authorized and evidenced.
