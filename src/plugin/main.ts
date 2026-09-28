@@ -64,6 +64,7 @@ import { FigmaP14VerticalStackRetainedDuplicateAdapter } from './p14-vertical-st
 import { buildP15ElementorV1PreviewFromFigmaFrame } from './p15-neutral-export-extractor';
 import { buildP15PluginPreviewReport } from './p15-plugin-preview-report';
 import { buildP15TargetProfilePreviewReport } from './p15-target-profile-preview-report';
+import { findOptionBank } from '../core/option-bank';
 import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
@@ -99,6 +100,7 @@ let p5OperationInFlight: P5ExclusiveOperation | null = null;
 let p7BatchState: BatchQueueState | null = null;
 let p7CancelRequested = false;
 let p14ReviewedActivation: P14InternalActivationSessionV1 | null = null;
+let selectedOptionBankId = 'elementor:4.3.2:4.3.0';
 const p7Metadata = createDefaultFigmaP7MetadataStore();
 
 figma.showUI(__html__, {
@@ -584,7 +586,8 @@ async function runP14GuidedPrepareConfirmed(): Promise<void> {
   }
 }
 
-function runP15ElementorPreview(): void {
+function runP15ElementorPreview(optionBankId?: unknown): void {
+  if (typeof optionBankId === 'string' && findOptionBank(optionBankId)) selectedOptionBankId = optionBankId;
   const frame = selectedFrame();
   if (!frame) {
     figma.ui.postMessage({
@@ -600,6 +603,7 @@ function runP15ElementorPreview(): void {
     figma.ui.postMessage({
       type: 'p15-elementor-preview-result',
       report,
+      optionBank: findOptionBank(selectedOptionBankId) ?? null,
     });
     figma.notify(`P15 Elementor preview: ${report.generation.status} · read-only / no download.`);
   } catch (error) {
@@ -1067,8 +1071,19 @@ figma.ui.onmessage = async (message: unknown) => {
     return;
   }
 
+  if (type === 'option-bank-selection') {
+    const payload = message as { optionBankId?: unknown };
+    if (typeof payload.optionBankId !== 'string' || !findOptionBank(payload.optionBankId)) {
+      figma.ui.postMessage({ type: 'option-bank-selection-error', message: 'Unknown option-bank version.' });
+      return;
+    }
+    selectedOptionBankId = payload.optionBankId;
+    figma.ui.postMessage({ type: 'option-bank-selection-result', optionBank: findOptionBank(selectedOptionBankId) });
+    return;
+  }
+
   if (type === 'p15-elementor-preview-request') {
-    runP15ElementorPreview();
+    runP15ElementorPreview((message as { optionBankId?: unknown }).optionBankId);
     return;
   }
 
