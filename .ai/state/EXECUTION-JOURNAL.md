@@ -190,3 +190,12 @@ Archived execution detail for P15 Fast Batches #735–#753; exact PR heads and g
 
 - PR #823 exact head `a89bee55c3d43a0f40b2c97701c4a473ef9cce6b` passed all seven required workflows (CI:36318359912,CodeQL:36318359936,Integration_Readiness:36318359966,P12_Offline_Acceptance:36318359925,P12_Final_Release_Artifact:36318359980,P15_Real_Elementor_Target_Proof:36318359905,P17_Local_Browser_Proof:36318359886), had zero unresolved review threads, was mergeable, and merged under expected-head guard as main `b34f5b254dfe7bf8f217d691ecf8d58652674428`; Issue #823 closed.
 - Issue #824 owns canonical state reconciliation. No P12/P27/operator/admin or P15 authority boundary changed.
+
+
+## 2026-09-28 — P15 evidence and dependency train reconciled
+
+- PR #824 merged as `46429381f026fe0587e9d4fb9549686fa33fcfa7`. Issue #825's controlled Elementor 4.2.4 order-control, target persistence/export and responsive browser observations merged in PRs #826–#828; the bounded resolver PR #829 passed seven exact-head checks and merged as `ca23be08302a444c783e5781c50f94d6aaa550cd`. Issue #825 closed.
+- #830 Node typings patch repaired contract and merged at exact green head `9de20bcc284d5cbf1eccae25898acc4df4907e0b` as `a80d37f6f587a4bf2a5e7b9941f944fbae2e6327`.
+- #832 CodeQL init/analyze 4.38.2 coherent pin passed seven exact-head checks and merged as `d562ca20c3c67484bce52005c887b8d0d845f993`.
+- #835 consolidated Figma typings 1.139.0 and Vite 8.3.1 on the Node typings baseline, passed seven exact-head checks and merged as `12758d9d19b634948adc07aa798b4593734abe2c`. #831/#833/#834 closed as superseded without merge.
+- Issue #836 is a state-only terminal transport, not canonical active work. Real demo spacing/image parity and editor-generated serialization remain unverified; #84/#159/#182/#287 blockers persist.
