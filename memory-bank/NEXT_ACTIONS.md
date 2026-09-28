@@ -1,10 +1,14 @@
 # Next Actions
 
-Last updated: 2026-09-27
+Last updated: 2026-09-28
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 and must fail closed on stale or mismatched registered artifacts.
 
 Security audit train #579 hardens exact-loopback proof-token use/retention, atomic output replacement and duplicate CLI options. #603/#604 hardens canonical snapshot local-file identity, #605/#606 blocks credentialed Figma REST redirects, #607/#608 hardens runtime artifact byte ceilings during descriptor reads with post-read identity revalidation, and #609 extends the same bounded-read/post-read identity rule to runtime-closure evidence and same-artifact verifier rereads. #287 remains repository-admin branch/ruleset enforcement work and must not be represented as code-complete.
+
+## Current P18 preflight
+
+#847 merged as main `8bb14b12ba295704658881f506c0257f7dbe9635` after seven exact-head workflows and zero unresolved review threads. #846 remains open. #848 records a dated React first-slice official-source R0 and R1 compatibility matrix in `docs/P18_REACT_R0_R1_2026-09-28.md`; this is planning evidence only. P18 implementation and build/render proof have not started, P12 #84 remains independently pending, and P19 stays frozen.
 
 ## Toolchain baseline
 
