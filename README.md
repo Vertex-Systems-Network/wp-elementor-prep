@@ -61,6 +61,10 @@ The two Package 13/14 Website Template ZIPs still contain temporary Figma asset 
 
 **Overall progress is intentionally not collapsed into one synthetic percentage.** The P15–P17 N/A entries mean their full acceptance scope has no validated denominator; they do not mean no work has been done.
 
+## Versioned target option-bank status
+
+The Elementor Free + Pro audit pipeline is now wired to versioned snapshots and gap reports. The current bank entry is Free 4.3.2 + Pro 4.3.0; Gutenberg has an official-contract entry. Run `npm run audit:elementor -- --elementor-free=... --elementor-pro=...` or `npm run audit:gutenberg -- --gutenberg-version=...` to append a new version. The plugin UI selectors are generated from `docs/option-bank/registry.json`; selecting a bank is carried into the read-only P15 preview receipt. Static inventory remains separate from runtime/import/render compatibility.
+
 ## Before P19
 
 [P15–P18 evidence exit gate](docs/PRE_P19_EVIDENCE_EXIT.md) is open under #846. P18 React first-slice [R0/R1 review](docs/P18_REACT_R0_R1_2026-09-28.md) is retained under #848; #850 adds the bounded static adapter SDK and refusal tests, and #858 adds a green pinned React/Vite build + local Chrome runtime receipt. Visual/Figma parity, Elementor target acceptance and production acceptance remain separate pending gates. P19 stays frozen until P15 imported media/layout proof, P16 authenticated native-editor proof, P17 visual/reconstruction proof and P18 framework build/render proof each pass a scope-specific internal review. CI or a controlled fixture alone does not close any of these exits.
