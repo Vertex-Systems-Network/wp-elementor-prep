@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "status": "contract_defined_not_production_operational",
+  "runbooks": [],
+  "drills": [],
+  "rules": {
+    "production_runbooks_required_before_production": true,
+    "drill_failure_requires_follow_up": true,
+    "unsafe_failure_injection_forbidden": true
+  }
+}
