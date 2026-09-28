@@ -59,7 +59,9 @@
         "AGENTS.md",
         "docs/AI_NATIVE_PLAN.md",
         "memory-bank/",
-        "docs/MARKET_RESEARCH_PLAN.md"
+        "docs/MARKET_RESEARCH_PLAN.md",
+        "config/architecture/decision-records.json",
+        "config/integrations/project-management.json"
       ],
       "next": "Map applicable discovery, planning, architecture, PM and multi-agent controls to explicit machine contracts before claiming closure."
     },
@@ -81,7 +83,9 @@
       "evidence": [
         ".ai/state/PROTOCOL.md",
         ".ai/state/CURRENT-STATE.yaml",
-        "scripts/verify-readme-progress.mjs"
+        "scripts/verify-readme-progress.mjs",
+        "config/protocol/instance.json",
+        "config/traceability/requirements-traceability.json"
       ],
       "next": "Implement or explicitly defer child bootstrap, formal schemas, atomic claims, Supervisor election/failover, migrations, traceability and path ownership."
     },
@@ -106,7 +110,11 @@
         "AGENTS.md",
         "SECURITY.md",
         "tests/ai-security-boundary-contract.test.mjs",
-        "tests/ai-supervisor-durable-state-contract.test.mjs"
+        "tests/ai-supervisor-durable-state-contract.test.mjs",
+        "config/ai/agent-catalog.json",
+        "config/security/trust-policy.json",
+        "config/security/control-plane-policy.json",
+        "config/consent/consent-requests.json"
       ],
       "next": "Do not claim verified identity, capability-scoped agents, leases, mutation fencing, consent or conformance runtime until dedicated controls and evidence exist."
     },
@@ -129,7 +137,10 @@
         ".github/workflows/",
         "docs/RUNNER_BENCHMARK.md",
         "scripts/verify-release-contract.mjs",
-        "scripts/verify-release-package.mjs"
+        "scripts/verify-release-package.mjs",
+        "config/quality/quality-policy.json",
+        "config/release/release-policy.json",
+        "config/integrations/sync-authority.json"
       ],
       "next": "Add capability-aware bootstrap, schema/version policy, environment/OIDC/SBOM provenance and PM conflict/idempotency contracts only when required by this project."
     },
@@ -150,7 +161,11 @@
         "SECURITY.md",
         "docs/PRIVACY.md",
         "docs/ARCHITECTURE.md",
-        "src/targets/"
+        "src/targets/",
+        "config/design/design-assurance.json",
+        "config/data/data-governance.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json"
       ],
       "next": "Retain target-specific evidence boundaries; data lifecycle, threat model, migration, SLO/incident/DR and budget guardrails need explicit applicability records."
     },
@@ -205,7 +220,10 @@
       "status": "PLANNED",
       "evidence": [
         "AGENTS.md",
-        "docs/AI_NATIVE_PLAN.md"
+        "docs/AI_NATIVE_PLAN.md",
+        "config/architecture/decision-records.json",
+        "config/risk/risk-register.json",
+        "config/operations/runbooks-and-drills.json"
       ],
       "next": "Responsible AI, compliance evidence, ADRs, AI asset identity, deprecation, runbooks, tamper-evident audit and unified risk lifecycle require dedicated controls."
     }
