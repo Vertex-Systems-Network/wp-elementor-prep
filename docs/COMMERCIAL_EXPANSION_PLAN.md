@@ -37,6 +37,10 @@ AI research should continuously inspect public product/market changes, official 
 
 Canonical process: `docs/MARKET_RESEARCH_PLAN.md`.
 
+### B0. Versioned capability-bank audit (AI-plan integration)
+
+Every Elementor audit that receives Free + Pro ZIPs must first detect both plugin versions, inventory the static control registrations in an isolated extraction, and persist a version-keyed snapshot under `docs/option-bank/`. The generated registry is the only source for the plugin UI selectors. Gutenberg audits persist the official contract snapshot by WordPress/Gutenberg version. Each selection also emits a gap report: static inventory is `INVENTORIED`; adapter/runtime/import/save/render coverage is explicitly `RUNTIME_REQUIRED` until real evidence closes it. This keeps future updates additive and prevents a new version from silently reusing an older compatibility claim.
+
 ### B. Elementor / Elementor Pro / WordPress native output
 
 Users should be able to:
