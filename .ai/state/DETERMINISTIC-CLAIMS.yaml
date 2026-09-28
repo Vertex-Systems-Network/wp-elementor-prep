@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: 2ca818d500474182a3e04eacdd477df4761a1269
+observed_main_sha: 6b79b569b14618dec67744310b2794a2bab49e29
 claims:
   - {id: CL-001, statement: repository_runtime_evidence_outranks_chat_memory, value: true}
   - {id: CL-002, statement: message_delivery_timeout_does_not_imply_prior_operation_failed, value: true}
@@ -426,3 +426,5 @@ claims:
   - {id: CL-416, statement: transport_842_843_is_state_only_and_not_a_canonical_active_lifecycle_owner, value: true}
   - {id: CL-417, statement: pr_843_exact_head_2649487f_passed_seven_gates_zero_threads_and_merged_as_2ca818d5_issue_842_closed, value: true}
   - {id: CL-418, statement: issue_844_pr_845_moves_readme_history_to_archive_and_surfaces_current_p15_p16_p17_evidence_limits, value: true}
+  - {id: CL-419, statement: pr_845_exact_head_02450b35_passed_seven_gates_zero_threads_and_merged_as_6b79b569_issue_844_closed, value: true}
+  - {id: CL-420, statement: issue_846_requires_genuine_p15_p16_p17_p18_exits_before_p19_and_opens_p18_r0_r1_preflight_only, value: true}
