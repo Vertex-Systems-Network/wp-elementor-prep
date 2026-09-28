@@ -146,7 +146,8 @@
       root.className = 'empty';
       root.textContent = 'Inspecting the selected Frame through the bounded read-only P15 Elementor path…';
       exportPanel.hidden = true;
-      post('p15-elementor-preview-request', { optionBankId: selectedOptionBankId });
+      post('option-bank-selection', { optionBankId: selectedOptionBankId });
+      post('p15-elementor-preview-request');
     });
     document.getElementById('p15-profile').addEventListener('click', () => {
       const wordpressVersion = document.getElementById('p15-wp-version').value;
