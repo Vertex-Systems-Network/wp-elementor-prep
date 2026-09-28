@@ -144,3 +144,8 @@ Do not fabricate any of these from CI/repository metadata.
 ## Current continuation after PR #823
 
 PR #823 exact head a89bee55c3d43a0f40b2c97701c4a473ef9cce6b passed all seven required workflows, had zero unresolved review threads, and merged under expected-head guard as main b34f5b254dfe7bf8f217d691ecf8d58652674428; Issue #823 is complete. Issue #824 owns canonical state reconciliation. All P12/P27/operator/admin and P15 broad compatibility, production, release and download boundaries remain unchanged.
+
+
+## Current continuation after PR #835
+
+Exact main before state transport: `12758d9d19b634948adc07aa798b4593734abe2c`. PRs #824–#829, #830, #832 and #835 are merged; #831/#833/#834 closed unmerged as superseded. There is no canonical active product Issue or PR. Inspect existing P15 template/asset evidence for a representative real demo spacing and image import gap, then scope a bounded fix with source and target proof. Do not infer broad compatibility or P12/P27 authority. #287/#159/#84/#182 remain as before.

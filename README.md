@@ -55,14 +55,20 @@ Open roadmap / acceptance dependencies:
 - `#755 / PR #756` — completed P15 Fast Batch: Button normal/hover tablet/mobile radial-gradient positions; terminal #757 / PR #758 completed 7/7 and merged;
 - `#759 / PR #760` — completed P15 Fast Batch: Button normal/hover tablet/mobile linear-gradient angles; terminal #761 / PR #762 completed 7/7 and merged;
 - `#763 / PR #764` — completed P15 Fast Batch: Button normal/hover tablet/mobile linear-gradient stop pairs; terminal #765 / PR #766 completed 7/7 and merged;
-- `#767 / PR #768` — active P15 Fast Batch: Button normal/hover tablet/mobile radial-gradient stop pairs;
+- `#767 / PR #768` — completed P15 Fast Batch: Button normal/hover tablet/mobile radial-gradient stop pairs;
 - `#159` — P13 real-plugin Build-Ready runtime/parity acceptance dependency;
 - `#182` — P27 final production-release gate;
 - `#287` — repository-admin branch-protection/ruleset hardening residual.
 
-Current verified main after PR #818 merge and before this documentation sync:
+Current verified main before the state-only #836 transport:
 
-`13fb2f5b9200dc9ece2174be3d24d5d259ea29bd`
+`12758d9d19b634948adc07aa798b4593734abe2c`
+
+### Current P15 and toolchain handoff
+
+- PRs #824–#829 are merged; #825 is closed. Controlled Elementor 4.2.4 probes establish responsive Flex Item custom-order registration, persistence/export and selected Chrome rendering for script-authored values. The bounded resolver merged in #829. Real demo spacing, images, editor-generated serialization and broad target compatibility remain unverified.
+- PR #830 merged the @types/node 26.6.2 lockfile patch and matching contract; PR #832 merged matching CodeQL 4.38.2 init/analyze pins; PR #835 merged Figma typings 1.139.0 and Vite 8.3.1 against the Node typings baseline. Each passed seven exact-head gates with zero unresolved threads and an expected-head merge. Superseded PRs #831, #833 and #834 closed unmerged.
+- #84, #159, #182 and #287 remain evidence/admin blockers. P12 publishing authority remains the historical release #20 source, and no production, download or general compatibility acceptance follows from these merges.
 
 ### Completed P15 #659 verification
 
