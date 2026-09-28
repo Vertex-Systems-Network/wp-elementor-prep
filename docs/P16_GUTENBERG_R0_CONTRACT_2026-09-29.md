@@ -54,3 +54,17 @@ This record defines the bounded Gutenberg target contract for the existing P16 c
 - Patterns: https://developer.wordpress.org/block-editor/reference-guides/block-api/block-patterns/
 - REST API Handbook: https://developer.wordpress.org/rest-api/
 - REST authentication: https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/
+
+## Reproducible offline intake command
+
+The native serialization intake CLI requires the candidate document, target profile and independent receipt explicitly:
+
+```bash
+npm run p16:native-serialization-intake -- \\
+  --document=/absolute/candidate-document.json \\
+  --profile=/absolute/wordpress-profile.json \\
+  --receipt=/absolute/serialization-receipt.json \\
+  --out=dist-p16/native-serialization-intake.json
+```
+
+Missing or unreadable inputs fail closed. The resulting receipt is still offline evidence and cannot authenticate or approve a live WordPress target.
