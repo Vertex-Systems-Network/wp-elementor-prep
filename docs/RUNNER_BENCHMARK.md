@@ -352,3 +352,8 @@ PR #839 passed the seven required exact-head workflows and merged as `f6bbbd7db3
 ## 2026-09-28 — P15 #840 merge and terminal README reconciliation
 
 PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed CI, CodeQL, Integration Readiness, P12 Offline Acceptance, P12 Final Release Artifact, P15 Real Elementor Target Proof and P17 Local Browser Proof; zero unresolved threads; guarded merge as `d1fc115b9f6764d90c0c319b880e291009eb7199`. The first head failed CI/P12 Final only on a deterministic path-order test assertion, repaired on final head. This does not establish media upload/load or visual parity. RQ-842-FINAL tracks terminal README/state-only PR #843; exact-head gates pending.
+
+
+## 2026-09-28 — README P15–P17 current progress clarity #844
+
+PR #843 exact head `2649487fc978134387ae9ba7c635d8fcb240dd8a` passed all seven required workflows and merged as `2ca818d500474182a3e04eacdd477df4761a1269`. Issue #844 / PR #845 archives the former 858-line README and makes current P15/P16/P17 delivered scope and missing acceptance evidence visible at the top, without synthetic progress percentages. The verifier checks current README truth directly and historical contracts in the archive. RQ-844-FINAL is merge-blocking and awaits final exact-head gate results.
