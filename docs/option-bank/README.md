@@ -21,6 +21,27 @@ npm run option-bank:refresh -- \
 
 The ZIP must be unpacked in an isolated directory first. Never execute plugin code during inventory.
 
+## Versioned audit command and registry
+
+Run the dedicated audit with both ZIPs attached. The command extracts each ZIP into an isolated temporary directory, rejects unsafe archive paths, detects the plugin headers, writes an immutable versioned snapshot, updates `registry.json`, and emits a version-specific gap report:
+
+```bash
+npm run audit:elementor -- \
+  --elementor-free=/path/to/elementor.zip \
+  --elementor-pro=/path/to/elementor-pro.zip
+```
+
+For a Gutenberg/WordPress contract snapshot, pass the documented version (and optionally a refreshed contract JSON):
+
+```bash
+npm run audit:gutenberg -- \
+  --elementor-free=/path/to/elementor.zip \
+  --elementor-pro=/path/to/elementor-pro.zip \
+  --gutenberg-version=wordpress-6.8
+```
+
+The plugin UI is built from `registry.json` and exposes separate Elementor Free + Pro and Gutenberg selectors. Selecting a bank is included in the P15 preview receipt; it does not turn static inventory into a runtime compatibility claim.
+
 ## Gutenberg / WordPress
 
 Gutenberg is not represented as one fixed plugin option list. The bank tracks the stable official contracts used by blocks:
