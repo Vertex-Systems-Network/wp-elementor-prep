@@ -375,3 +375,8 @@ PR #858 merged exact head `2de98fa367243f155eacd1f0d71afe8f71ec8377` as main `4f
 
 
 State reconciliation after PR #859 keeps P18 runtime receipt scope aligned with Project State and Next Actions; no new browser or target authority is inferred.
+
+
+## 2026-09-29 — ANPOS adoption and durable-state reconciliation
+
+PR #872 exact head `901b89cc64db1a8edadb10d6d654a80428f12d39` passed the required workflow set and merged as `55474fb5fe03ca21ae53c7a8d883ce48bd1a9dd6`. PR #874 exact head `a17d9f955a2c7f708ab108a0f0bf144e1c634605` passed its applicable workflow set and merged as `a078ba40e75e0723ea71190e0d976edb423a27be`. Both preserved ANPOS authority=false and did not alter product/runtime evidence boundaries. The current state-reconciliation PR is the next exact-head batch.
