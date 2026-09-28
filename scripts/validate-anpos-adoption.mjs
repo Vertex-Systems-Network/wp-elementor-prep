@@ -41,7 +41,8 @@ const requiredFiles = [
   'memory-bank/ROADMAP.md',
   'config/protocol/instance.json',
   'config/protocol/anpos-adoption.json',
-  '.ai/manifest.json'
+  '.ai/manifest.json',
+  'config/evidence/p15-p18-register.json'
 ];
 for (const path of requiredFiles) {
   try { await access(resolve(root, path)); } catch { failures.push('missing required adoption file: ' + path); }
@@ -54,6 +55,7 @@ const manifest = await load('.ai/manifest.json');
 const instance = await load('config/protocol/instance.json');
 const adoption = await load('config/protocol/anpos-adoption.json');
 const completion = await load('config/protocol/blueprint-completion.json');
+const phaseEvidence = await load('config/evidence/p15-p18-register.json');
 if (manifest) {
   if (manifest.protocol !== 'ANPOS') failures.push('manifest.protocol must be ANPOS');
   if (manifest.adoption_mode !== 'child_adoption_foundation') failures.push('manifest.adoption_mode is invalid');
@@ -87,6 +89,15 @@ if (completion) {
   const expected = Array.from({ length: 96 }, (_, index) => 'REQ-' + String(index + 1).padStart(2, '0'));
   if (ids.length !== 96 || ids.some((id, index) => id !== expected[index])) failures.push('blueprint completion map must cover REQ-01..REQ-96 in order');
   if (requirements.some((entry) => !entry.domain || !Array.isArray(entry.machine_controls) || !Array.isArray(entry.verification_refs))) failures.push('blueprint completion entries require domain, controls and verification refs');
+}
+if (phaseEvidence) {
+  if (phaseEvidence.kind !== 'p15_p18_evidence_register' || phaseEvidence.authority !== false) failures.push('P15-P18 evidence register must remain non-authoritative');
+  const phases = phaseEvidence.phases ?? [];
+  const expected = ['P15', 'P16', 'P17', 'P18'];
+  if (phases.length !== expected.length || phases.some((entry, index) => entry.phase !== expected[index])) failures.push('P15-P18 evidence register must cover phases in order');
+  if (phaseEvidence.status !== 'PRE_P19_OPEN') failures.push('P15-P18 evidence register must keep PRE_P19_OPEN status');
+  if (!Array.isArray(phaseEvidence.p19_unlock_requires) || phaseEvidence.p19_unlock_requires.length !== 4) failures.push('P19 unlock conditions must list all four phase exits');
+  if (phases.some((entry) => !entry.status || !Array.isArray(entry.retained_evidence) || !Array.isArray(entry.required_exit) || !Array.isArray(entry.refusal))) failures.push('every P15-P18 evidence entry requires status, retained evidence, exit and refusal data');
 }
 if (failures.length) {
   console.error(JSON.stringify({ status: 'INVALID', failures }, null, 2));
