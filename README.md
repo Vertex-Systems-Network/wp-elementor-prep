@@ -63,7 +63,7 @@ The two Package 13/14 Website Template ZIPs still contain temporary Figma asset 
 
 ## ANPOS child-adoption status
 
-The repository now uses a project-specific ANPOS adoption layer documented in [`docs/ANPOS_ADOPTION.md`](docs/ANPOS_ADOPTION.md). This adds routing, active-project identity, a Requirements 1–96 applicability matrix, inactive-by-default policy contracts and a deterministic validator without copying the canonical vendor/commercial runtime or changing the network-free Figma core. `npm run anpos:validate` verifies the metadata. Full ANPOS requirement certification, PM/AI identity/consent/lease integrations and commercial runtime remain separate and are not claimed.
+The repository now uses a project-specific ANPOS adoption layer documented in [`docs/ANPOS_ADOPTION.md`](docs/ANPOS_ADOPTION.md). This adds routing, active-project identity, a Requirements 1–96 applicability matrix, canonical completion map, inactive-by-default policy contracts and a deterministic validator without copying the canonical vendor/commercial runtime or changing the network-free Figma core. `npm run anpos:validate` verifies the metadata. Full ANPOS requirement certification, PM/AI identity/consent/lease integrations and commercial runtime remain separate and are not claimed.
 
 ## Versioned target option-bank status
 
