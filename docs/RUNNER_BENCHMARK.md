@@ -357,3 +357,8 @@ PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed CI, CodeQL,
 ## 2026-09-28 — README P15–P17 current progress clarity #844
 
 PR #843 exact head `2649487fc978134387ae9ba7c635d8fcb240dd8a` passed all seven required workflows and merged as `2ca818d500474182a3e04eacdd477df4761a1269`. Issue #844 / PR #845 archives the former 858-line README and makes current P15/P16/P17 delivered scope and missing acceptance evidence visible at the top, without synthetic progress percentages. The verifier checks current README truth directly and historical contracts in the archive. RQ-844-FINAL is merge-blocking and awaits final exact-head gate results.
+
+
+## 2026-09-28 — pre-P19 evidence gate #846
+
+PR #845 exact head `02450b354a31d7149f64da5f5b27f180d53e4bae` passed all seven required workflows, zero unresolved threads and guarded merged as `6b79b569b14618dec67744310b2794a2bab49e29`; #844 closed. PR #847 records phase-specific P15–P18 exits before P19 without granting actual target/release authority, and opens only P18 R0/R1 preflight. RQ-846-FINAL is blocking on final exact-head seven-workflow results.
