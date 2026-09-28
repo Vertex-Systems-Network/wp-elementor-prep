@@ -78,7 +78,7 @@ function decodeUndo(token: string): UndoMetadata {
 
 function createBackupFrame(transactionId: string): FrameNode {
   const backup = figma.createFrame();
-  backup.name = `__PellaBackup__ ${transactionId}`;
+  backup.name = `__WPBuildersPrepareBackup__ ${transactionId}`;
   backup.visible = false;
   backup.resize(1, 1);
   backup.x = STAGING_X;
@@ -109,7 +109,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
     if (siblingIndex < 0) throw new Error('Could not resolve original sibling index.');
 
     const candidate = original.clone();
-    const candidateStageName = `__PellaCandidate__ ${transactionId}`;
+    const candidateStageName = `__WPBuildersPrepareCandidate__ ${transactionId}`;
     figma.currentPage.appendChild(candidate);
     candidate.name = candidateStageName;
     candidate.x = STAGING_X + this.metadata.size * 2000;
