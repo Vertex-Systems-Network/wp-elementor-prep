@@ -30,14 +30,33 @@
     "memory-bank/NEXT_ACTIONS.md",
     "memory-bank/DECISIONS.md",
     "memory-bank/ROADMAP.md",
-    "docs/RUNNER_BENCHMARK.md"
+    "docs/RUNNER_BENCHMARK.md",
+    "config/ai/agent-catalog.json",
+    "config/security/trust-policy.json",
+    "config/security/control-plane-policy.json",
+    "config/quality/quality-policy.json",
+    "config/design/design-assurance.json",
+    "config/data/data-governance.json",
+    "config/release/release-policy.json",
+    "config/architecture/decision-records.json",
+    "config/risk/risk-register.json",
+    "config/operations/runbooks-and-drills.json",
+    "config/integrations/project-management.json",
+    "config/integrations/sync-authority.json",
+    "config/traceability/requirements-traceability.json",
+    "config/consent/consent-requests.json",
+    "config/testing/reference-e2e-matrix.json"
   ],
   "roles": {
     "bootstrap": [
       "AGENTS.md",
       "config/protocol/instance.json",
       "config/protocol/anpos-adoption.json",
-      "docs/ANPOS_ADOPTION.md"
+      "docs/ANPOS_ADOPTION.md",
+      "config/ai/agent-catalog.json",
+      "config/integrations/project-management.json",
+      "config/security/trust-policy.json",
+      "config/quality/quality-policy.json"
     ],
     "planner": [
       "memory-bank/PROJECT_STATE.md",
@@ -51,7 +70,10 @@
       "docs/ARCHITECTURE.md",
       "docs/FEATURE_PLAN.md",
       "docs/RELIABILITY_AND_COMPATIBILITY_AUDIT.md",
-      "config/runtime-artifacts.json"
+      "config/runtime-artifacts.json",
+      "config/architecture/decision-records.json",
+      "config/data/data-governance.json",
+      "config/release/release-policy.json"
     ],
     "worker": [
       "AGENTS.md",
@@ -65,20 +87,29 @@
       ".ai/state/CURRENT-STATE.yaml",
       ".ai/state/LAST-CHECKPOINT.md",
       ".ai/state/DETERMINISTIC-CLAIMS.yaml",
-      ".ai/state/RUNNER-BENCHMARK.yaml"
+      ".ai/state/RUNNER-BENCHMARK.yaml",
+      "config/security/control-plane-policy.json",
+      "config/consent/consent-requests.json",
+      "config/integrations/sync-authority.json",
+      "config/risk/risk-register.json"
     ],
     "qa": [
       "SECURITY.md",
       "docs/INTEGRATION_READINESS.md",
       "docs/RUNNER_BENCHMARK.md",
       "scripts/verify-readme-progress.mjs",
-      "scripts/validate-anpos-adoption.mjs"
+      "scripts/validate-anpos-adoption.mjs",
+      "config/testing/reference-e2e-matrix.json",
+      "config/traceability/requirements-traceability.json"
     ],
     "security": [
       "SECURITY.md",
       "docs/PRIVACY.md",
       "scripts/security-io.mjs",
-      ".github/workflows/codeql.yml"
+      ".github/workflows/codeql.yml",
+      "config/security/trust-policy.json",
+      "config/security/control-plane-policy.json",
+      "config/data/data-governance.json"
     ],
     "maintenance": [
       "memory-bank/CHANGELOG.md",
@@ -90,7 +121,9 @@
       "SECURITY.md",
       ".github/CODEOWNERS",
       ".github/workflows/main-pr-origin-audit.yml",
-      "config/protocol/anpos-adoption.json"
+      "config/protocol/anpos-adoption.json",
+      "config/architecture/decision-records.json",
+      "config/traceability/requirements-traceability.json"
     ]
   },
   "preservation_contract": {
