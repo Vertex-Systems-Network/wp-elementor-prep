@@ -7,7 +7,7 @@ P12 final gate: #84 remains separate and required for production release accepta
 
 ## Purpose
 
-P13 Build-Ready Score 2.0 is already implemented and calibrated against the retained accepted P9/P10 Pella Nova snapshot. This slice adds an evidence path that proves the same analyzer result was produced inside real Figma Desktop and can be compared deterministically with the CLI result.
+P13 Build-Ready Score 2.0 is already implemented and calibrated against the retained accepted P9/P10 canonical Figma snapshot. This slice adds an evidence path that proves the same analyzer result was produced inside real Figma Desktop and can be compared deterministically with the CLI result.
 
 The evidence path is read-only. It does not grant Safe Fix authority, production acceptance, publishing authority or release authority.
 
@@ -94,10 +94,10 @@ Exit code `0` means the evidence qualifies as a semantic parity candidate. Exit 
 
 ## Real Figma acceptance sequence
 
-For the retained Pella Nova baseline:
+For the retained canonical Figma baseline:
 
 1. build/import a traceable CI development artifact containing this slice;
-2. open the known accepted Pella Nova Figma file/frame used for P9/P10 calibration;
+2. open the known accepted canonical Figma file/frame used for P9/P10 calibration;
 3. run Audit on exactly that Frame;
 4. open `Developer: P13 Runtime Evidence`;
 5. copy the evidence JSON without editing it;
