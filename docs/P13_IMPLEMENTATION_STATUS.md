@@ -63,7 +63,7 @@ PR #160 added the runtime-evidence/viewer/parity path, PR #162 hardened stale-ev
 
 ## Real-baseline calibration
 
-The merged plugin/CLI deterministic core was calibrated against the already-retained accepted P9/P10 Pella Nova canonical snapshot without committing the private design snapshot to this repository.
+The merged plugin/CLI deterministic core was calibrated against the already-retained accepted P9/P10 canonical Figma snapshot without committing the private design snapshot to this repository.
 
 The calibration found and corrected false-positive pressure in the initial responsive-risk implementation:
 
