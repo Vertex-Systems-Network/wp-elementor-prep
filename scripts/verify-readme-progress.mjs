@@ -1092,7 +1092,9 @@ if (!readme.includes('### Completed P15 #840 — Container background MEDIA refe
   || !readme.includes('PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven required workflows')
   || !readme.includes('main `d1fc115b9f6764d90c0c319b880e291009eb7199`; Issue #840 closed.')
   || !readme.includes('The exact Package 13/14 asset bytes')
-  || !readme.includes('P17 foundation implementation has already started')) {
+  || !readme.includes('P17 foundation implementation has already started')
+  || !readme.includes('Current verified main after PR #841 merge and before this README/state transport:')
+  || !readme.includes('`d1fc115b9f6764d90c0c319b880e291009eb7199`')) {
   throw new Error('README P15 #840 merge evidence, P17 status or retained limits are missing.');
 }
 
