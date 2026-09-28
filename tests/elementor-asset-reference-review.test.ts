@@ -156,8 +156,8 @@ describe('P15 R1 Elementor documented asset-reference review gate', () => {
       expect.objectContaining({ path: '$.content[0].settings.background_image_tablet', containerId: 'container-1', elementType: 'container', settingKey: 'background_image_tablet', breakpoint: 'tablet', mediaId: 17 }),
     ]));
     expect(review.issues.map((issue) => issue.path)).toEqual([
-      '$.content[0].settings.background_image.url',
       '$.content[0].settings.background_image_mobile.url',
+      '$.content[0].settings.background_image.url',
     ]);
     const serialized = serializeElementorAssetReferenceReview(review);
     expect(serialized).not.toContain(desktop);
