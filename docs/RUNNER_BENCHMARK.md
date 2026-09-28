@@ -337,3 +337,8 @@ The separate Dependabot init/analyze pin candidates #832/#834 each failed CodeQL
 ## 2026-09-28 — exact-head closure through PR #835
 
 The earlier P15 #825 custom-order probe and resolver pending notes are historical pre-gate records. PRs #826–#829 completed their required exact-head gates and merged; the controlled authored values do not establish editor-generated serialization or arbitrary demo parity. Dependency PRs #830, #832 and #835 each passed all seven required exact-head workflows, zero unresolved threads and guarded merges. Their merge SHAs are respectively `a80d37f6f587a4bf2a5e7b9941f944fbae2e6327`, `d562ca20c3c67484bce52005c887b8d0d845f993` and `12758d9d19b634948adc07aa798b4593734abe2c`. Separate #831/#833/#834 candidates closed unmerged. This state transport requires its own fresh gates and grants no production or compatibility authority.
+
+
+## P15 #838 — transient Figma Image MEDIA review candidate
+
+Representative external Package 13/14 handoff evidence identified 44/45 unique temporary Figma asset URLs, while browser render and permanent media localization remained pending. Only aggregate evidence is retained here; raw design URLs and client template data are not committed. The candidate recognizes exact HTTPS Figma MCP asset links in the documented core Image MEDIA control, emits a path and fingerprint plus review reason, and keeps all closure/compatibility/download/production flags false. It does not inspect arbitrary ZIP media fields or CSS backgrounds. Seven exact-head gates must be observed before merge.
