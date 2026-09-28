@@ -45,18 +45,20 @@ try {
   const adapter = await import(bundlePath + '?sha=' + Date.now());
   const ir = {
     schemaVersion: 1,
+    irVersion: 'p17-neutral-web-ir-v1',
+    title: 'P18 runtime proof',
+    language: 'en',
     direction: 'DESIGN_TO_WEB',
-    documentId: 'p18-runtime-proof',
     nodes: [{
       nodeId: 'root',
       kind: 'container',
       semanticTag: 'main',
       layout: { mode: 'flex', direction: 'column', gapPx: 16, alignItems: 'start' },
-      provenance: { sourceRef: 'p18/root' },
+      provenance: { source: 'FIGMA', sourceRef: 'p18/root' },
       children: [
-        { nodeId: 'heading', kind: 'text', semantic: 'heading', headingLevel: 1, text: 'P18 React runtime proof', provenance: { sourceRef: 'p18/heading' } },
-        { nodeId: 'copy', kind: 'text', semantic: 'paragraph', text: 'Generated from the neutral web IR.', provenance: { sourceRef: 'p18/copy' } },
-        { nodeId: 'docs', kind: 'link', text: 'Read the docs', href: 'https://example.com/docs', openInNewTab: false, nofollow: false, provenance: { sourceRef: 'p18/docs' } }
+        { nodeId: 'heading', kind: 'text', semantic: 'heading', headingLevel: 1, text: 'P18 React runtime proof', provenance: { source: 'FIGMA', sourceRef: 'p18/heading' } },
+        { nodeId: 'copy', kind: 'text', semantic: 'paragraph', text: 'Generated from the neutral web IR.', provenance: { source: 'FIGMA', sourceRef: 'p18/copy' } },
+        { nodeId: 'docs', kind: 'link', text: 'Read the docs', href: 'https://example.com/docs', role: 'link', openInNewTab: false, nofollow: false, provenance: { source: 'FIGMA', sourceRef: 'p18/docs' } }
       ]
     }]
   };
