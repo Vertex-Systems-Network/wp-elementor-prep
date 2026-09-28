@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { realpath, readFile, stat, writeFile } from 'node:fs/promises';
+import { realpath, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const args = Object.fromEntries(process.argv.slice(2).map((arg) => { const [key, ...rest] = arg.replace(/^--/, '').split('='); return [key, rest.join('=')]; }));
@@ -8,9 +8,8 @@ if (!args.reference || !args['ir-hash'] || !args.out) throw new Error('Usage: no
 if (!/^[a-f0-9]{64}$/.test(args['ir-hash'])) throw new Error('--ir-hash must be a lowercase SHA-256 hex digest.');
 const input = resolve(args.reference); const output = resolve(args.out);
 if (await realpath(input) === await realpath(output).catch(() => '')) throw new Error('--out must not overwrite the reference input.');
-const info = await stat(input);
-if (!info.isFile() || info.size === 0) throw new Error('Reference must be a non-empty file.');
 const bytes = await readFile(input);
+if (bytes.length === 0) throw new Error('Reference must be a non-empty file.');
 if (bytes.length < 24 || bytes.subarray(0, 8).toString('hex') !== '89504e470d0a1a0a') throw new Error('Reference must be a PNG image.');
 const screenshotSha256 = createHash('sha256').update(bytes).digest('hex');
 const receipt = {
