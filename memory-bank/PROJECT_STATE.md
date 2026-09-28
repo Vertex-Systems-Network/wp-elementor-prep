@@ -418,3 +418,8 @@ PR #839 exact head `8fcb41806f03c525a89eb372f53d382b1432bdd1` passed all seven r
 ## P15 #840 exact-head completion and README truth
 
 PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven required gates, had zero unresolved threads and guarded merged as `d1fc115b9f6764d90c0c319b880e291009eb7199`; Issue #840 closed. Only documented Container normal background MEDIA references gained read-only transient-link review. README/state terminal #842/#843 records the merge and that P17 foundation already started. No Package 13/14 media localization, runtime image-load, spacing parity, broad target compatibility, download or production authority is granted.
+
+
+## Current README progress clarity candidate #844
+
+Exact main after terminal #843 is `2ca818d500474182a3e04eacdd477df4761a1269`. PR #845 reduces the current README from 858 lines to a concise phase-status page, preserves historical PR chronology in `docs/README_PROGRESS_HISTORY_2026-09-28.md`, and updates the verifier to distinguish current README claims from historical evidence. P15/P16/P17 remain in progress with no synthetic completion percentage. Exact-head gates pending; image localization, real visual parity, Gutenberg target validation, Web-to-Figma reconstruction and release authority remain unclaimed.

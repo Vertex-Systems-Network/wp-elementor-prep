@@ -164,3 +164,8 @@ PR #839 merged as `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55` after seven exact-h
 ## P15 #840 merged and README reconciliation
 
 PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed seven required workflows, zero threads and guarded merged as `d1fc115b9f6764d90c0c319b880e291009eb7199`; #840 closed. Terminal #842/#843 synchronizes README and compact state; it does not change product authority. P17 static foundation was already in progress. Pella Nova Package 13/14 still need genuine source image bytes, target-managed WordPress media and browser spacing/image-load comparison.
+
+
+## Active README clarity #844 / PR #845
+
+PR #843 passed all seven exact-head gates and merged as `2ca818d500474182a3e04eacdd477df4761a1269`; #842 closed. The README readability batch moves detailed historical chronology into a linked archive and puts P15/P16/P17 progress and missing evidence at the top. Verify the final PR #845 head before guarded merge. Demo asset bytes, WordPress media mapping and visual spacing parity are still pending; no phase completion/production authority is implied.

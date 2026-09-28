@@ -1,5 +1,5 @@
 schema_version: 1
-observed_main_sha: d1fc115b9f6764d90c0c319b880e291009eb7199
+observed_main_sha: 2ca818d500474182a3e04eacdd477df4761a1269
 items:
   - {id: CQ-637, issue: 637, pr: 638, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-634, issue: 634, pr: 636, status: MERGED_CLOSED, priority: 0, accepted: true}
@@ -105,4 +105,5 @@ items:
   - {id: CQ-835, pr: 835, status: MERGED_CLOSED, priority: 0, accepted: true}
   - {id: CQ-838, issue: 838, pr: 839, status: MERGED_CLOSED, priority: 1, accepted: true}
   - {id: CQ-840, issue: 840, pr: 841, status: MERGED_CLOSED, priority: 1, accepted: true}
-  - {id: CQ-842, issue: 842, pr: 843, status: TERMINAL_TRANSPORT_GITHUB_METADATA, priority: 1, accepted: true}
+  - {id: CQ-842, issue: 842, pr: 843, status: MERGED_CLOSED_TERMINAL_TRANSPORT, priority: 1, accepted: true}
+  - {id: CQ-844, issue: 844, pr: 845, status: ACTIVE_README_PROGRESS_CANDIDATE, priority: 1, accepted: true}

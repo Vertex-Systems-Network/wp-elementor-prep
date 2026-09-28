@@ -2,6 +2,8 @@ import { readFile } from 'node:fs/promises';
 import { assertRegistrySchemaReferences } from './status-schema-contract.mjs';
 
 const readme = await readFile('README.md', 'utf8');
+const readmeHistory = await readFile('docs/README_PROGRESS_HISTORY_2026-09-28.md', 'utf8');
+const historicalEvidence = `${readme}\n${readmeHistory}`;
 const p14Qualification = await readFile('src/core/p14-vertical-stack-qualification.ts', 'utf8');
 const p14RegistrySource = await readFile('src/core/p14-safe-recipe-registry.ts', 'utf8');
 const p15ResponsiveFullWidthSource = await readFile('src/targets/elementor/responsive-full-width-resolution.ts', 'utf8');
@@ -154,7 +156,17 @@ requireRow('P14', {
 requireRow('P15', {
   status: 'CORE FOUNDATION IN PROGRESS / CONTROLLED TARGET PROOF RETAINED',
   progress: 'N/A',
-  next: '#769 terminally finalizes merged #767/#768 state before the next bounded P15 Fast Batch',
+  next: 'permanent Package 13/14 media, imported image-load and Figma spacing parity are not verified',
+});
+requireRow('P16', {
+  status: 'CORE FOUNDATION IN PROGRESS / TARGET VALIDATION UNWIRED',
+  progress: 'N/A',
+  next: 'genuine authenticated evidence and real editor/import/render validation are pending',
+});
+requireRow('P17', {
+  status: 'FOUNDATION IMPLEMENTATION IN PROGRESS / CONTROLLED LOCAL BROWSER PROOF',
+  progress: 'N/A',
+  next: 'visual parity, JS execution and Web-to-Figma reconstruction are pending',
 });
 requireRow('P27', {
   status: 'GATE DEFINED / EXECUTION DEFERRED',
@@ -177,7 +189,7 @@ if (!p14Qualification.includes('runtimeMutationEnabled: true') || !p14Qualificat
 if (!p14RegistrySource.includes('createP14VerticalStackProductionRecipe()')) {
   throw new Error('P14 production registry exact vertical-stack binding is missing; README P14 progress is stale.');
 }
-if (!readme.includes('P14 implementation progress is 100% (6/6 bounded slices implemented)')) {
+if (!historicalEvidence.includes('P14 implementation progress is 100% (6/6 bounded slices implemented)')) {
   throw new Error('README P14 bounded-slice implementation progress explanation is stale or missing.');
 }
 const devBuild = await readFile('scripts/build.mjs', 'utf8');
@@ -202,10 +214,10 @@ for (const fragment of p15FullWidthRequiredFragments) {
     throw new Error(`P15 #659 merged responsive full-width contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #659 verification')
-  || !readme.includes('PR #660 exact head')
-  || !readme.includes('Issue #659 is closed completed')
-  || !readme.includes('`content_width=full`')) {
+if (!historicalEvidence.includes('### Completed P15 #659 verification')
+  || !historicalEvidence.includes('PR #660 exact head')
+  || !historicalEvidence.includes('Issue #659 is closed completed')
+  || !historicalEvidence.includes('`content_width=full`')) {
   throw new Error('README P15 #659 / PR #660 merged responsive full-width truth is stale or missing.');
 }
 
@@ -227,12 +239,12 @@ for (const fragment of p15HoverBorderRadiusRequiredFragments) {
     throw new Error(`P15 #663 responsive hover border-radius contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #663 / PR #664 verification')
-  || !readme.includes('5100c664cddf8fa28c7ed259d20ea7600f2a48b8')
-  || !readme.includes('15b2825e45cad543fc1950ecdcc361131043113d')
-  || !readme.includes('Issue #663 is closed completed')
-  || !readme.includes('`border_radius_hover_tablet`')
-  || !readme.includes('`border_radius_hover_mobile`')) {
+if (!historicalEvidence.includes('### Completed P15 #663 / PR #664 verification')
+  || !historicalEvidence.includes('5100c664cddf8fa28c7ed259d20ea7600f2a48b8')
+  || !historicalEvidence.includes('15b2825e45cad543fc1950ecdcc361131043113d')
+  || !historicalEvidence.includes('Issue #663 is closed completed')
+  || !historicalEvidence.includes('`border_radius_hover_tablet`')
+  || !historicalEvidence.includes('`border_radius_hover_mobile`')) {
   throw new Error('README P15 #663 / PR #664 merged hover border-radius truth is stale or missing.');
 }
 
@@ -255,12 +267,12 @@ for (const fragment of p15FlexItemAlignSelfRequiredFragments) {
     throw new Error(`P15 #665 responsive flex-item align-self contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #665 / PR #666 verification')
-  || !readme.includes('5e975dcbb2142c29c58cc6c3851cb80b8a97e58f')
-  || !readme.includes('e2839d8e32dab4a29db908f1ba1a1710579219af')
-  || !readme.includes('Issue #665 is closed completed')
-  || !readme.includes('`_flex_align_self_tablet`')
-  || !readme.includes('`_flex_align_self_mobile`')) {
+if (!historicalEvidence.includes('### Completed P15 #665 / PR #666 verification')
+  || !historicalEvidence.includes('5e975dcbb2142c29c58cc6c3851cb80b8a97e58f')
+  || !historicalEvidence.includes('e2839d8e32dab4a29db908f1ba1a1710579219af')
+  || !historicalEvidence.includes('Issue #665 is closed completed')
+  || !historicalEvidence.includes('`_flex_align_self_tablet`')
+  || !historicalEvidence.includes('`_flex_align_self_mobile`')) {
   throw new Error('README P15 #665 / PR #666 merged flex-item align-self truth is stale or missing.');
 }
 
@@ -284,14 +296,14 @@ for (const fragment of p15FlexItemFactorsRequiredFragments) {
     throw new Error(`P15 #667 responsive flex-item factor contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #667 / PR #668 verification')
-  || !readme.includes('c50627b66674d3b2d07dff23996e641742351646')
-  || !readme.includes('0ce4d23aa7cd9b7ecb5c7ed0003952e465da041f')
-  || !readme.includes('Issue #667 is closed completed')
-  || !readme.includes('`_flex_grow_tablet`')
-  || !readme.includes('`_flex_grow_mobile`')
-  || !readme.includes('`_flex_shrink_tablet`')
-  || !readme.includes('`_flex_shrink_mobile`')) {
+if (!historicalEvidence.includes('### Completed P15 #667 / PR #668 verification')
+  || !historicalEvidence.includes('c50627b66674d3b2d07dff23996e641742351646')
+  || !historicalEvidence.includes('0ce4d23aa7cd9b7ecb5c7ed0003952e465da041f')
+  || !historicalEvidence.includes('Issue #667 is closed completed')
+  || !historicalEvidence.includes('`_flex_grow_tablet`')
+  || !historicalEvidence.includes('`_flex_grow_mobile`')
+  || !historicalEvidence.includes('`_flex_shrink_tablet`')
+  || !historicalEvidence.includes('`_flex_shrink_mobile`')) {
   throw new Error('README P15 #667 / PR #668 merged flex-item factor truth is stale or missing.');
 }
 
@@ -314,12 +326,12 @@ for (const fragment of p15FlexItemOrderPresetRequiredFragments) {
     throw new Error(`P15 #669 responsive flex-item order preset contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #669 / PR #670 verification')
-  || !readme.includes('e244b3a2b8209d48429f454d7eaf0e4c0dd31e64')
-  || !readme.includes('687bb2105ce1c407ee4977582cefc354556e0325')
-  || !readme.includes('Issue #669 is closed completed')
-  || !readme.includes('`_flex_order_tablet`')
-  || !readme.includes('`_flex_order_mobile`')) {
+if (!historicalEvidence.includes('### Completed P15 #669 / PR #670 verification')
+  || !historicalEvidence.includes('e244b3a2b8209d48429f454d7eaf0e4c0dd31e64')
+  || !historicalEvidence.includes('687bb2105ce1c407ee4977582cefc354556e0325')
+  || !historicalEvidence.includes('Issue #669 is closed completed')
+  || !historicalEvidence.includes('`_flex_order_tablet`')
+  || !historicalEvidence.includes('`_flex_order_mobile`')) {
   throw new Error('README P15 #669 / PR #670 merged flex-item order preset truth is stale or missing.');
 }
 
@@ -340,12 +352,12 @@ for (const fragment of p15ContainerOverflowRequiredFragments) {
     throw new Error(`P15 #671 Container overflow contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #671 / PR #672 verification')
-  || !readme.includes('6454ac8ea0ef6070345a6b104513353274f3e661')
-  || !readme.includes('1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb')
-  || !readme.includes('Issue #671 is closed completed')
-  || !readme.includes('`overflow`')
-  || !readme.includes('`hidden | auto`')) {
+if (!historicalEvidence.includes('### Completed P15 #671 / PR #672 verification')
+  || !historicalEvidence.includes('6454ac8ea0ef6070345a6b104513353274f3e661')
+  || !historicalEvidence.includes('1f8b8ed3dab7b37c7fc58169ac5d001b3c2d5deb')
+  || !historicalEvidence.includes('Issue #671 is closed completed')
+  || !historicalEvidence.includes('`overflow`')
+  || !historicalEvidence.includes('`hidden | auto`')) {
   throw new Error('README P15 #671 / PR #672 merged Container overflow truth is stale or missing.');
 }
 
@@ -366,12 +378,12 @@ for (const fragment of p15ContainerSemanticHtmlTagRequiredFragments) {
     throw new Error(`P15 #673 Container semantic HTML tag contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #673 / PR #674 verification')
-  || !readme.includes('8c54239d33f687dd9730fc54174da115149f8d49')
-  || !readme.includes('424964452fa1b0d7055103116fd19260ef856393')
-  || !readme.includes('Issue #673 is closed completed')
-  || !readme.includes('`html_tag`')
-  || !readme.includes('`header | footer | main | article | section | aside | nav`')) {
+if (!historicalEvidence.includes('### Completed P15 #673 / PR #674 verification')
+  || !historicalEvidence.includes('8c54239d33f687dd9730fc54174da115149f8d49')
+  || !historicalEvidence.includes('424964452fa1b0d7055103116fd19260ef856393')
+  || !historicalEvidence.includes('Issue #673 is closed completed')
+  || !historicalEvidence.includes('`html_tag`')
+  || !historicalEvidence.includes('`header | footer | main | article | section | aside | nav`')) {
   throw new Error('README P15 #673 / PR #674 merged semantic HTML tag truth is stale or missing.');
 }
 
@@ -392,12 +404,12 @@ for (const fragment of p15HeadingTextColorRequiredFragments) {
     throw new Error(`P15 #675 Heading text color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #675 / PR #676 verification')
-  || !readme.includes('5d40e176aabf09d320c840ef0fd966997c07af83')
-  || !readme.includes('1ab21408bcf32c21bdcae7ca4c6b407a0670241f')
-  || !readme.includes('Issue #675 is closed completed')
-  || !readme.includes('`title_color`')
-  || !readme.includes('lowercase six-digit hex')) {
+if (!historicalEvidence.includes('### Completed P15 #675 / PR #676 verification')
+  || !historicalEvidence.includes('5d40e176aabf09d320c840ef0fd966997c07af83')
+  || !historicalEvidence.includes('1ab21408bcf32c21bdcae7ca4c6b407a0670241f')
+  || !historicalEvidence.includes('Issue #675 is closed completed')
+  || !historicalEvidence.includes('`title_color`')
+  || !historicalEvidence.includes('lowercase six-digit hex')) {
   throw new Error('README P15 #675 / PR #676 merged Heading text color truth is stale or missing.');
 }
 
@@ -420,11 +432,11 @@ for (const fragment of p15TextEditorTextColorRequiredFragments) {
     throw new Error(`P15 #677 Text Editor text color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #677 / PR #678 verification')
-  || !readme.includes('94ee08c1a8039ea8496483419a747b2ddd637c8a')
-  || !readme.includes('9ef893af8417706ef8904d1b879b91d498012e16')
-  || !readme.includes('Issue #677 is closed completed')
-  || !readme.includes('`text_color`')) {
+if (!historicalEvidence.includes('### Completed P15 #677 / PR #678 verification')
+  || !historicalEvidence.includes('94ee08c1a8039ea8496483419a747b2ddd637c8a')
+  || !historicalEvidence.includes('9ef893af8417706ef8904d1b879b91d498012e16')
+  || !historicalEvidence.includes('Issue #677 is closed completed')
+  || !historicalEvidence.includes('`text_color`')) {
   throw new Error('README P15 #677 / PR #678 merged Text Editor text color truth is stale or missing.');
 }
 
@@ -448,11 +460,11 @@ for (const fragment of p15ButtonTextColorRequiredFragments) {
     throw new Error(`P15 #679 Button text color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Current P15 post-PR #680 state')
-  || !readme.includes('Issue #679 / PR #680 is merged and closed.')
-  || !readme.includes('`button_text_color`')
-  || !readme.includes('lowercase six-digit hex')
-  || !readme.includes('hover/background mutation and broader inference remain out of scope')) {
+if (!historicalEvidence.includes('### Current P15 post-PR #680 state')
+  || !historicalEvidence.includes('Issue #679 / PR #680 is merged and closed.')
+  || !historicalEvidence.includes('`button_text_color`')
+  || !historicalEvidence.includes('lowercase six-digit hex')
+  || !historicalEvidence.includes('hover/background mutation and broader inference remain out of scope')) {
   throw new Error('README P15 #679 / PR #680 merged Button text color truth is stale or missing.');
 }
 
@@ -475,11 +487,11 @@ for (const fragment of p15ButtonBackgroundColorRequiredFragments) {
     throw new Error(`P15 #701 Button normal classic background-color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #701 implementation')
-  || !readme.includes('Callback-safe syntax repair produced exact head')
-  || !readme.includes('`background_background=classic`')
-  || !readme.includes('`background_color`')
-  || !readme.includes('gradients, hover background, global tokens and broader authority remain excluded')) {
+if (!historicalEvidence.includes('### Completed P15 #701 implementation')
+  || !historicalEvidence.includes('Callback-safe syntax repair produced exact head')
+  || !historicalEvidence.includes('`background_background=classic`')
+  || !historicalEvidence.includes('`background_color`')
+  || !historicalEvidence.includes('gradients, hover background, global tokens and broader authority remain excluded')) {
   throw new Error('README P15 #701 / PR #702 Button normal classic background-color truth is stale or missing.');
 }
 
@@ -501,11 +513,11 @@ for (const fragment of p15ButtonHoverTextColorRequiredFragments) {
     throw new Error(`P15 #703 Button hover text-color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #703 implementation')
-  || !readme.includes('final exact head `39ce33bff3a7914466b00c11932aaa8118f56336`')
-  || !readme.includes('Issue #703 closed completed')
-  || !readme.includes('`hover_color`')
-  || !readme.includes('hover background and broader compatibility/production/download authority remain excluded')) {
+if (!historicalEvidence.includes('### Completed P15 #703 implementation')
+  || !historicalEvidence.includes('final exact head `39ce33bff3a7914466b00c11932aaa8118f56336`')
+  || !historicalEvidence.includes('Issue #703 closed completed')
+  || !historicalEvidence.includes('`hover_color`')
+  || !historicalEvidence.includes('hover background and broader compatibility/production/download authority remain excluded')) {
   throw new Error('README P15 #703 / PR #704 merged Button hover text-color truth is stale or missing.');
 }
 
@@ -531,12 +543,12 @@ for (const fragment of p15ButtonHoverBackgroundColorRequiredFragments) {
     throw new Error(`P15 #705 Button hover classic background-color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #705 implementation')
-  || !readme.includes('exact head `34f1714da4d09dfe35cc66bddb99e934ea2645f2`')
-  || !readme.includes('Issue #705 closed completed')
-  || !readme.includes('`button_background_hover_background=classic`')
-  || !readme.includes('`button_background_hover_color`')
-  || !readme.includes('hover text, normal styling and broader authority remain excluded')) {
+if (!historicalEvidence.includes('### Completed P15 #705 implementation')
+  || !historicalEvidence.includes('exact head `34f1714da4d09dfe35cc66bddb99e934ea2645f2`')
+  || !historicalEvidence.includes('Issue #705 closed completed')
+  || !historicalEvidence.includes('`button_background_hover_background=classic`')
+  || !historicalEvidence.includes('`button_background_hover_color`')
+  || !historicalEvidence.includes('hover text, normal styling and broader authority remain excluded')) {
   throw new Error('README P15 #705 / PR #706 merged Button hover classic background-color truth is stale or missing.');
 }
 
@@ -563,9 +575,9 @@ for (const fragment of p15ButtonHoverBorderColorRequiredFragments) {
     throw new Error(`P15 #707 Button hover border-color contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 #707 implementation')
-  || !readme.includes('Exact head `0fe42e9393c46815fc8d44ceb9c02d84468ea341`')
-  || !readme.includes('Issue #707 closed completed')) {
+if (!historicalEvidence.includes('### Completed P15 #707 implementation')
+  || !historicalEvidence.includes('Exact head `0fe42e9393c46815fc8d44ceb9c02d84468ea341`')
+  || !historicalEvidence.includes('Issue #707 closed completed')) {
   throw new Error('README P15 #707 / PR #708 merged Button hover border-color truth is stale or missing.');
 }
 
@@ -589,9 +601,9 @@ for (const fragment of p15ButtonHoverInteractionRequiredFragments) {
     throw new Error(`P15 #709 Fast Batch hover interaction contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #709 implementation')
-  || !readme.includes('Final exact head `e019e903531b1d7db270df7aefe5b79851b801e9`')
-  || !readme.includes('Issue #709 closed completed')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #709 implementation')
+  || !historicalEvidence.includes('Final exact head `e019e903531b1d7db270df7aefe5b79851b801e9`')
+  || !historicalEvidence.includes('Issue #709 closed completed')) {
   throw new Error('README P15 #709 / PR #710 merged Fast Batch truth is stale or missing.');
 }
 
@@ -617,9 +629,9 @@ for (const fragment of p15ButtonBorderStyleRequiredFragments) {
     throw new Error(`P15 #711 Fast Batch Button border contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #711 implementation')
-  || !readme.includes('Final exact head `56607e9a5c42071167cd84aa9d82eefef74c4a3e`')
-  || !readme.includes('Issue #711 closed completed')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #711 implementation')
+  || !historicalEvidence.includes('Final exact head `56607e9a5c42071167cd84aa9d82eefef74c4a3e`')
+  || !historicalEvidence.includes('Issue #711 closed completed')) {
   throw new Error('README P15 #711 / PR #712 merged Button border Fast Batch truth is stale or missing.');
 }
 
@@ -648,14 +660,14 @@ for (const fragment of p15ButtonVisualDepthRadiusRequiredFragments) {
     throw new Error(`P15 #713 Fast Batch Button visual-depth/radius contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #713 implementation')
-  || !readme.includes('Repaired final exact head `4e2cc76a309d99c8c37b73402bcd8f1f5050715d`')
-  || !readme.includes('Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.')
-  || !readme.includes('PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.')
-  || !readme.includes('`text_shadow_text_shadow`')
-  || !readme.includes('`button_box_shadow_box_shadow`')
-  || !readme.includes('`border_radius_tablet`')
-  || !readme.includes('production acceptance and download authority remain false/out of scope')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #713 implementation')
+  || !historicalEvidence.includes('Repaired final exact head `4e2cc76a309d99c8c37b73402bcd8f1f5050715d`')
+  || !historicalEvidence.includes('Expected-head merge produced main `f25acc0e0f1d9dc1220c20856c2a1f3d20b71b3c`; Issue #713 closed completed.')
+  || !historicalEvidence.includes('PR #716 repaired exact head `ac5e676867b6755382af598b9695852ed8689c2c` passed all seven required gates with 0 unresolved review threads and merged as main `d99695e8e1183f152a01a308251d2f02f086e67f`; Issue #715 closed completed.')
+  || !historicalEvidence.includes('`text_shadow_text_shadow`')
+  || !historicalEvidence.includes('`button_box_shadow_box_shadow`')
+  || !historicalEvidence.includes('`border_radius_tablet`')
+  || !historicalEvidence.includes('production acceptance and download authority remain false/out of scope')) {
   throw new Error('README P15 #713 / PR #714 merged Button visual-depth/radius Fast Batch truth is stale or missing.');
 }
 
@@ -699,14 +711,14 @@ for (const fragment of p15ButtonIconBasicsRequiredFragments) {
     throw new Error(`P15 #743 Button icon basics contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #743 / PR #744 implementation')
-  || !readme.includes('Issue #743 / PR #744 completed three tightly-related Elementor 4.2.4 Button icon capabilities')
-  || !readme.includes('`selected_icon` accepts only matching Font Awesome class/library pairs')
-  || !readme.includes('SVG/URL media payloads, custom icon libraries and extra class tokens remain rejected.')
-  || !readme.includes('`icon_align` accepts only `row|row-reverse`')
-  || !readme.includes('Final exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`; Issue #743 closed completed.')
-  || !readme.includes('Terminal #745 / PR #746 later passed all seven required gates with 0 unresolved review threads and merged as main `c4095311e9243d8c00796bbbf34463580ef74f86`; transport remained non-canonical.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #743 / PR #744 implementation')
+  || !historicalEvidence.includes('Issue #743 / PR #744 completed three tightly-related Elementor 4.2.4 Button icon capabilities')
+  || !historicalEvidence.includes('`selected_icon` accepts only matching Font Awesome class/library pairs')
+  || !historicalEvidence.includes('SVG/URL media payloads, custom icon libraries and extra class tokens remain rejected.')
+  || !historicalEvidence.includes('`icon_align` accepts only `row|row-reverse`')
+  || !historicalEvidence.includes('Final exact head `a17d0ca3b9dc315e0e8a20fe796b3bb1f0a790b8` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `4e5ea4eb5a0bed8d54664bf99afa62e6b945ce9e`; Issue #743 closed completed.')
+  || !historicalEvidence.includes('Terminal #745 / PR #746 later passed all seven required gates with 0 unresolved review threads and merged as main `c4095311e9243d8c00796bbbf34463580ef74f86`; transport remained non-canonical.')) {
   throw new Error('README P15 #743 / PR #744 merged Button icon basics Fast Batch truth is stale or missing.');
 }
 
@@ -732,14 +744,14 @@ for (const fragment of p15ButtonLinearGradientRequiredFragments) {
     throw new Error(`P15 #747 Button linear gradient contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #747 / PR #748 implementation')
-  || !readme.includes('normal and hover/focus linear-gradient backgrounds')
-  || !readme.includes('ordered integer `0..100%`')
-  || !readme.includes('optional explicit integer `0..360deg` angle')
-  || !readme.includes('Radial gradients, image/video backgrounds, custom CSS/units and token/global resolution remain excluded.')
-  || !readme.includes('Repaired final exact head `b8da6da7a98a1b5833607f5b757f5c60324ff30e` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `7659adaaf55c4f10357cfa9977c0504e7b32c41f`; Issue #747 closed completed.')
-  || !readme.includes('Issue #749 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #747 / PR #748 implementation')
+  || !historicalEvidence.includes('normal and hover/focus linear-gradient backgrounds')
+  || !historicalEvidence.includes('ordered integer `0..100%`')
+  || !historicalEvidence.includes('optional explicit integer `0..360deg` angle')
+  || !historicalEvidence.includes('Radial gradients, image/video backgrounds, custom CSS/units and token/global resolution remain excluded.')
+  || !historicalEvidence.includes('Repaired final exact head `b8da6da7a98a1b5833607f5b757f5c60324ff30e` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `7659adaaf55c4f10357cfa9977c0504e7b32c41f`; Issue #747 closed completed.')
+  || !historicalEvidence.includes('Issue #749 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #747 Button linear gradient Fast Batch truth is stale or missing.');
 }
 
@@ -761,15 +773,15 @@ for (const fragment of p15ButtonResponsiveLinearAngleRequiredFragments) {
     throw new Error(`P15 #759 Button responsive linear-angle contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #759 / PR #760 implementation')
-  || !readme.includes('normal tablet/mobile and hover/focus tablet/mobile')
-  || !readme.includes('`tabletAngleDeg` / `mobileAngleDeg`')
-  || !readme.includes('`gradient_angle_tablet` / `gradient_angle_mobile`')
-  || !readme.includes('Omitted tablet/mobile values remain omitted')
-  || !readme.includes('Terminal #757 / PR #758 passed all seven required gates on exact head `bf6d9d5db6ddcbf1cc39938ddb7ed7c62870676e`')
-  || !readme.includes('Final exact head `ef1687c1a34a45dfb6ed5efdbf0c1a7f38e43cad` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `105f7594c32441c2738325ca0c3d0695620dd54d`; Issue #759 closed completed.')
-  || !readme.includes('Issue #761 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #759 / PR #760 implementation')
+  || !historicalEvidence.includes('normal tablet/mobile and hover/focus tablet/mobile')
+  || !historicalEvidence.includes('`tabletAngleDeg` / `mobileAngleDeg`')
+  || !historicalEvidence.includes('`gradient_angle_tablet` / `gradient_angle_mobile`')
+  || !historicalEvidence.includes('Omitted tablet/mobile values remain omitted')
+  || !historicalEvidence.includes('Terminal #757 / PR #758 passed all seven required gates on exact head `bf6d9d5db6ddcbf1cc39938ddb7ed7c62870676e`')
+  || !historicalEvidence.includes('Final exact head `ef1687c1a34a45dfb6ed5efdbf0c1a7f38e43cad` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `105f7594c32441c2738325ca0c3d0695620dd54d`; Issue #759 closed completed.')
+  || !historicalEvidence.includes('Issue #761 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #759 / PR #760 responsive linear-angle Fast Batch truth is stale or missing.');
 }
 
@@ -795,16 +807,16 @@ for (const fragment of p15ButtonResponsiveLinearStopRequiredFragments) {
     throw new Error(`P15 #763 Button responsive linear-stop contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #763 / PR #764 implementation')
-  || !readme.includes('normal tablet/mobile and hover/focus tablet/mobile')
-  || !readme.includes('`tabletStopA/tabletStopB` and `mobileStopA/mobileStopB`')
-  || !readme.includes('`color_stop_tablet/mobile` and `color_b_stop_tablet/mobile`')
-  || !readme.includes('Omitted tablet/mobile pairs remain omitted')
-  || !readme.includes('Terminal #761 / PR #762 passed all seven required gates on exact head `95258082e7d28888da40d76898b3c4e8960b2b71`')
-  || !readme.includes('Final exact head `82bc12ccfa375751afd7667ae5236f41fd9ff83b` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `143ffcabf8069234b57e804c40c125d0867a59de`; Issue #763 closed completed.')
-  || !readme.includes('Terminal #765 / PR #766 passed all seven required gates on exact head `944fc059beff227be6a70e386c047eb4df624325`')
-  || !readme.includes('merged as main `c33287283e8ee383f2eda1d143778dac5142cf36`; it remained transport-only and non-canonical.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #763 / PR #764 implementation')
+  || !historicalEvidence.includes('normal tablet/mobile and hover/focus tablet/mobile')
+  || !historicalEvidence.includes('`tabletStopA/tabletStopB` and `mobileStopA/mobileStopB`')
+  || !historicalEvidence.includes('`color_stop_tablet/mobile` and `color_b_stop_tablet/mobile`')
+  || !historicalEvidence.includes('Omitted tablet/mobile pairs remain omitted')
+  || !historicalEvidence.includes('Terminal #761 / PR #762 passed all seven required gates on exact head `95258082e7d28888da40d76898b3c4e8960b2b71`')
+  || !historicalEvidence.includes('Final exact head `82bc12ccfa375751afd7667ae5236f41fd9ff83b` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `143ffcabf8069234b57e804c40c125d0867a59de`; Issue #763 closed completed.')
+  || !historicalEvidence.includes('Terminal #765 / PR #766 passed all seven required gates on exact head `944fc059beff227be6a70e386c047eb4df624325`')
+  || !historicalEvidence.includes('merged as main `c33287283e8ee383f2eda1d143778dac5142cf36`; it remained transport-only and non-canonical.')) {
   throw new Error('README P15 #763 / PR #764 responsive linear-stop Fast Batch truth is stale or missing.');
 }
 
@@ -831,26 +843,26 @@ for (const fragment of p15ButtonResponsiveRadialStopRequiredFragments) {
     throw new Error(`P15 #767 Button responsive radial-stop contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #767 / PR #768 implementation')
-  || !readme.includes('### Completed P15 Button responsive border width #773 / PR #774')
-  || !readme.includes('### Completed P15 Container border style #775 / PR #776')
-  || !readme.includes('### Completed P15 Container hover border style #777 / PR #778')
-  || !readme.includes('### Completed P15 Container classic hover background color #779 / PR #780')
-  || !readme.includes('### Completed P15 Container overlay colors #781 / PR #782')
-  || !readme.includes('### Completed P15 Container overlay opacity #783 / PR #784')
-  || !readme.includes('### Completed P15 bounded Container style composition #785 / PR #787')
-  || !readme.includes('### Completed P15 Container normal/hover box shadows #788 / PR #789')
-  || !readme.includes('### Completed P15 six-family Container style composition #790 / PR #791')
-  || !readme.includes('### Completed P15 explicit Container radius composition #792 / PR #793')
-  || !readme.includes('### Completed P15 five-family Button color composition #794 / PR #795')
-  || !readme.includes('responsive radial-gradient stop-pair capabilities')
-  || !readme.includes('`tabletStopA/tabletStopB` and `mobileStopA/mobileStopB`')
-  || !readme.includes('`color_stop_tablet/mobile` and `color_b_stop_tablet/mobile`')
-  || !readme.includes('Omitted tablet/mobile pairs remain omitted')
-  || !readme.includes('Terminal #765 / PR #766 passed all seven required gates on exact head `944fc059beff227be6a70e386c047eb4df624325`')
-  || !readme.includes('Final exact head `db2dcdbaa42e03a3270be4b21d9750b71955b7b6` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `16a67afb4f25f6d051a79499d84a291b43db8ba6`; Issue #767 closed completed.')
-  || !readme.includes('Issue #769 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #767 / PR #768 implementation')
+  || !historicalEvidence.includes('### Completed P15 Button responsive border width #773 / PR #774')
+  || !historicalEvidence.includes('### Completed P15 Container border style #775 / PR #776')
+  || !historicalEvidence.includes('### Completed P15 Container hover border style #777 / PR #778')
+  || !historicalEvidence.includes('### Completed P15 Container classic hover background color #779 / PR #780')
+  || !historicalEvidence.includes('### Completed P15 Container overlay colors #781 / PR #782')
+  || !historicalEvidence.includes('### Completed P15 Container overlay opacity #783 / PR #784')
+  || !historicalEvidence.includes('### Completed P15 bounded Container style composition #785 / PR #787')
+  || !historicalEvidence.includes('### Completed P15 Container normal/hover box shadows #788 / PR #789')
+  || !historicalEvidence.includes('### Completed P15 six-family Container style composition #790 / PR #791')
+  || !historicalEvidence.includes('### Completed P15 explicit Container radius composition #792 / PR #793')
+  || !historicalEvidence.includes('### Completed P15 five-family Button color composition #794 / PR #795')
+  || !historicalEvidence.includes('responsive radial-gradient stop-pair capabilities')
+  || !historicalEvidence.includes('`tabletStopA/tabletStopB` and `mobileStopA/mobileStopB`')
+  || !historicalEvidence.includes('`color_stop_tablet/mobile` and `color_b_stop_tablet/mobile`')
+  || !historicalEvidence.includes('Omitted tablet/mobile pairs remain omitted')
+  || !historicalEvidence.includes('Terminal #765 / PR #766 passed all seven required gates on exact head `944fc059beff227be6a70e386c047eb4df624325`')
+  || !historicalEvidence.includes('Final exact head `db2dcdbaa42e03a3270be4b21d9750b71955b7b6` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `16a67afb4f25f6d051a79499d84a291b43db8ba6`; Issue #767 closed completed.')
+  || !historicalEvidence.includes('Issue #769 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #767 / PR #768 responsive radial-stop Fast Batch truth is stale or missing.');
 }
 
@@ -876,15 +888,15 @@ for (const fragment of p15ButtonRadialGradientRequiredFragments) {
     throw new Error(`P15 #751 Button radial gradient contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #751 / PR #752 implementation')
-  || !readme.includes('normal radial-gradient background, hover/focus radial-gradient background')
-  || !readme.includes('required `gradient_position`')
-  || !readme.includes('Position accepts only Elementor\'s exact nine values')
-  || !readme.includes('Position omission, custom position strings, linear-angle fields')
-  || !readme.includes('Terminal #749 / PR #750 passed all seven required gates on exact head `c18380ebedae1c0104fb15404075268884c5789a`')
-  || !readme.includes('Final exact head `bea1e6212a0517480556589e00fde9c63bc1c04a` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `702177b31696f80d5ca30ce30ad1c69f56f71719`; Issue #751 closed completed.')
-  || !readme.includes('Issue #753 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #751 / PR #752 implementation')
+  || !historicalEvidence.includes('normal radial-gradient background, hover/focus radial-gradient background')
+  || !historicalEvidence.includes('required `gradient_position`')
+  || !historicalEvidence.includes('Position accepts only Elementor\'s exact nine values')
+  || !historicalEvidence.includes('Position omission, custom position strings, linear-angle fields')
+  || !historicalEvidence.includes('Terminal #749 / PR #750 passed all seven required gates on exact head `c18380ebedae1c0104fb15404075268884c5789a`')
+  || !historicalEvidence.includes('Final exact head `bea1e6212a0517480556589e00fde9c63bc1c04a` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `702177b31696f80d5ca30ce30ad1c69f56f71719`; Issue #751 closed completed.')
+  || !historicalEvidence.includes('Issue #753 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #751 / PR #752 Button radial gradient Fast Batch truth is stale or missing.');
 }
 
@@ -906,15 +918,15 @@ for (const fragment of p15ButtonResponsiveRadialPositionRequiredFragments) {
     throw new Error(`P15 #755 Button responsive radial-position contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #755 / PR #756 implementation')
-  || !readme.includes('normal tablet/mobile and hover/focus tablet/mobile')
-  || !readme.includes('`tabletPosition` / `mobilePosition`')
-  || !readme.includes('`gradient_position_tablet` / `gradient_position_mobile`')
-  || !readme.includes('Omitted tablet/mobile values remain omitted')
-  || !readme.includes('Terminal #753 / PR #754 passed all seven required gates on exact head `25fce9dbdf27eab595e30be730a91629639c9ab0`')
-  || !readme.includes('Final exact head `180e3391826a07286f3272ff0da812f459176af6` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `43a2e22447362ff47de60856cc261cb7905eab16`; Issue #755 closed completed.')
-  || !readme.includes('Issue #757 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #755 / PR #756 implementation')
+  || !historicalEvidence.includes('normal tablet/mobile and hover/focus tablet/mobile')
+  || !historicalEvidence.includes('`tabletPosition` / `mobilePosition`')
+  || !historicalEvidence.includes('`gradient_position_tablet` / `gradient_position_mobile`')
+  || !historicalEvidence.includes('Omitted tablet/mobile values remain omitted')
+  || !historicalEvidence.includes('Terminal #753 / PR #754 passed all seven required gates on exact head `25fce9dbdf27eab595e30be730a91629639c9ab0`')
+  || !historicalEvidence.includes('Final exact head `180e3391826a07286f3272ff0da812f459176af6` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `43a2e22447362ff47de60856cc261cb7905eab16`; Issue #755 closed completed.')
+  || !historicalEvidence.includes('Issue #757 is transport-only terminal finalization and does not become canonical lifecycle ownership.')) {
   throw new Error('README P15 #755 / PR #756 responsive radial-position Fast Batch truth is stale or missing.');
 }
 
@@ -937,14 +949,14 @@ for (const fragment of p15ButtonStretchContentAlignmentRequiredFragments) {
     throw new Error(`P15 #739 Button stretch content alignment contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #739 / PR #740 implementation')
-  || !readme.includes('Issue #739 / PR #740 completed four tightly-related Elementor 4.2.4 Button layout capabilities')
-  || !readme.includes('`align=justify`')
-  || !readme.includes('`content_align_tablet`')
-  || !readme.includes('a neutral source Button with existing explicit `align` remains rejected')
-  || !readme.includes('Final exact head `0a4cc0d2782c7a67dd187c6e8821e70eb6186f35` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `5e839f4edce59dc3bcab67a26f16965495a31b5d`; Issue #739 closed completed.')
-  || !readme.includes('Issue #741 / PR #742 is transport-only terminal finalization.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #739 / PR #740 implementation')
+  || !historicalEvidence.includes('Issue #739 / PR #740 completed four tightly-related Elementor 4.2.4 Button layout capabilities')
+  || !historicalEvidence.includes('`align=justify`')
+  || !historicalEvidence.includes('`content_align_tablet`')
+  || !historicalEvidence.includes('a neutral source Button with existing explicit `align` remains rejected')
+  || !historicalEvidence.includes('Final exact head `0a4cc0d2782c7a67dd187c6e8821e70eb6186f35` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `5e839f4edce59dc3bcab67a26f16965495a31b5d`; Issue #739 closed completed.')
+  || !historicalEvidence.includes('Issue #741 / PR #742 is transport-only terminal finalization.')) {
   throw new Error('README P15 #739 / PR #740 merged Button stretch content alignment Fast Batch truth is stale or missing.');
 }
 
@@ -966,13 +978,13 @@ for (const fragment of p15ButtonContentMetadataRequiredFragments) {
     throw new Error(`P15 #735 Button content metadata contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #735 / PR #736 implementation')
-  || !readme.includes('Issue #735 / PR #736 completed three tightly-related Elementor 4.2.4 Button content metadata capabilities')
-  || !readme.includes('`button_type`')
-  || !readme.includes('`button_css_id` accepts only ASCII letters, digits and underscore with length `1..128`')
-  || !readme.includes('Repaired final exact head `80c63a7294ea29e00187b802fe8b81b197f81505` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `0593dd7945038915859d86248c32de74f9d61d2c`; Issue #735 closed completed.')
-  || !readme.includes('Issue #737 / PR #738 is transport-only terminal finalization.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #735 / PR #736 implementation')
+  || !historicalEvidence.includes('Issue #735 / PR #736 completed three tightly-related Elementor 4.2.4 Button content metadata capabilities')
+  || !historicalEvidence.includes('`button_type`')
+  || !historicalEvidence.includes('`button_css_id` accepts only ASCII letters, digits and underscore with length `1..128`')
+  || !historicalEvidence.includes('Repaired final exact head `80c63a7294ea29e00187b802fe8b81b197f81505` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `0593dd7945038915859d86248c32de74f9d61d2c`; Issue #735 closed completed.')
+  || !historicalEvidence.includes('Issue #737 / PR #738 is transport-only terminal finalization.')) {
   throw new Error('README P15 #735 / PR #736 merged Button content metadata Fast Batch truth is stale or missing.');
 }
 
@@ -996,51 +1008,51 @@ for (const fragment of p15ButtonResponsivePaddingRequiredFragments) {
     throw new Error(`P15 #731 Button responsive padding contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### Completed P15 Fast Batch #731 / PR #732 implementation')
-  || !readme.includes('Issue #731 / PR #732 completed three tightly-related Elementor 4.2.4 Button responsive padding capabilities')
-  || !readme.includes('`text_padding`')
-  || !readme.includes('`text_padding_tablet`')
-  || !readme.includes('`text_padding_mobile`')
-  || !readme.includes('finite values remain bounded to `0..4096`')
-  || !readme.includes('Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`; Issue #731 closed completed.')
-  || !readme.includes('Issue #733 / PR #734 is transport-only terminal finalization.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #731 / PR #732 implementation')
+  || !historicalEvidence.includes('Issue #731 / PR #732 completed three tightly-related Elementor 4.2.4 Button responsive padding capabilities')
+  || !historicalEvidence.includes('`text_padding`')
+  || !historicalEvidence.includes('`text_padding_tablet`')
+  || !historicalEvidence.includes('`text_padding_mobile`')
+  || !historicalEvidence.includes('finite values remain bounded to `0..4096`')
+  || !historicalEvidence.includes('Final exact head `8ba3ec30501bc2e6f8627d33b5c878eda6f173f0` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `d0404cfc13745f6a13f13581d8e793deefad62d5`; Issue #731 closed completed.')
+  || !historicalEvidence.includes('Issue #733 / PR #734 is transport-only terminal finalization.')) {
   throw new Error('README P15 #731 / PR #732 merged Button responsive padding Fast Batch truth is stale or missing.');
 }
 
-if (!readme.includes('### Completed P15 Fast Batch #727 / PR #728 implementation')
-  || !readme.includes('Issue #727 / PR #728 completed four tightly-related Elementor 4.2.4 Button responsive typography capabilities')
-  || !readme.includes('`typography_font_size_tablet/mobile`')
-  || !readme.includes('`typography_line_height_tablet/mobile`')
-  || !readme.includes('`typography_letter_spacing_tablet/mobile`')
-  || !readme.includes('`typography_word_spacing_tablet/mobile`')
-  || !readme.includes('Repaired exact head `98a65b5f043deea9fc2945326eeacef2be51752a` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `ceb64cfdd8a989a01ec671eb235598bdec68596f`; Issue #727 closed completed.')
-  || !readme.includes('Issue #729 / PR #730 is transport-only terminal finalization.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #727 / PR #728 implementation')
+  || !historicalEvidence.includes('Issue #727 / PR #728 completed four tightly-related Elementor 4.2.4 Button responsive typography capabilities')
+  || !historicalEvidence.includes('`typography_font_size_tablet/mobile`')
+  || !historicalEvidence.includes('`typography_line_height_tablet/mobile`')
+  || !historicalEvidence.includes('`typography_letter_spacing_tablet/mobile`')
+  || !historicalEvidence.includes('`typography_word_spacing_tablet/mobile`')
+  || !historicalEvidence.includes('Repaired exact head `98a65b5f043deea9fc2945326eeacef2be51752a` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `ceb64cfdd8a989a01ec671eb235598bdec68596f`; Issue #727 closed completed.')
+  || !historicalEvidence.includes('Issue #729 / PR #730 is transport-only terminal finalization.')) {
   throw new Error('README P15 #727 / PR #728 merged responsive typography Fast Batch truth is stale or missing.');
 }
 
-if (!readme.includes('### Completed P15 Fast Batch #723 / PR #724 implementation')
-  || !readme.includes('Issue #723 / PR #724 completed five tightly-related Elementor 4.2.4 Button typography metrics')
-  || !readme.includes('`typography_font_family`')
-  || !readme.includes('`typography_font_size`')
-  || !readme.includes('`typography_line_height`')
-  || !readme.includes('`typography_letter_spacing`')
-  || !readme.includes('`typography_word_spacing`')
-  || !readme.includes('Expected-head merge produced main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`; Issue #723 closed.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #723 / PR #724 implementation')
+  || !historicalEvidence.includes('Issue #723 / PR #724 completed five tightly-related Elementor 4.2.4 Button typography metrics')
+  || !historicalEvidence.includes('`typography_font_family`')
+  || !historicalEvidence.includes('`typography_font_size`')
+  || !historicalEvidence.includes('`typography_line_height`')
+  || !historicalEvidence.includes('`typography_letter_spacing`')
+  || !historicalEvidence.includes('`typography_word_spacing`')
+  || !historicalEvidence.includes('Expected-head merge produced main `c887ab4d1e39fe8ca0a2898580ba0757cedd5c90`; Issue #723 closed.')) {
   throw new Error('README P15 #723 Button typography metrics Fast Batch truth is stale or missing.');
 }
 
-if (!readme.includes('### Completed P15 Fast Batch #717 / PR #718 implementation')
-  || !readme.includes('Issue #717 / PR #718 owns three tightly-related Elementor 4.2.4 Button typography capabilities')
-  || !readme.includes('`typography_font_weight`')
-  || !readme.includes('`typography_text_transform`')
-  || !readme.includes('`typography_font_style`')
-  || !readme.includes('Final exact head `747ce4312c7723e00235143510e1fc3d394aae7c` passed all seven required gates with 0 unresolved review threads.')
-  || !readme.includes('Expected-head merge produced main `1cd8181cf863353c3f5e4bab7b1270156067b288`; Issue #717 closed completed.')
-  || !readme.includes('PR #720 exact head `243e0aa91f7613e644bb98d6116c0ecc8aa28e0d` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `f3384739609ea68e9141f7488e924e20e5ac9d6b`; Issue #719 closed completed.')
-  || !readme.includes('Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.')
-  || !readme.includes('Issue #721 is transport-only terminal finalization.')) {
+if (!historicalEvidence.includes('### Completed P15 Fast Batch #717 / PR #718 implementation')
+  || !historicalEvidence.includes('Issue #717 / PR #718 owns three tightly-related Elementor 4.2.4 Button typography capabilities')
+  || !historicalEvidence.includes('`typography_font_weight`')
+  || !historicalEvidence.includes('`typography_text_transform`')
+  || !historicalEvidence.includes('`typography_font_style`')
+  || !historicalEvidence.includes('Final exact head `747ce4312c7723e00235143510e1fc3d394aae7c` passed all seven required gates with 0 unresolved review threads.')
+  || !historicalEvidence.includes('Expected-head merge produced main `1cd8181cf863353c3f5e4bab7b1270156067b288`; Issue #717 closed completed.')
+  || !historicalEvidence.includes('PR #720 exact head `243e0aa91f7613e644bb98d6116c0ecc8aa28e0d` passed all seven required gates with 0 unresolved review threads and expected-head merge produced main `f3384739609ea68e9141f7488e924e20e5ac9d6b`; Issue #719 closed completed.')
+  || !historicalEvidence.includes('Canonical AI-native state is now `IDLE_READY_NEXT_P15_BATCH` with no active canonical Issue/PR.')
+  || !historicalEvidence.includes('Issue #721 is transport-only terminal finalization.')) {
   throw new Error('README P15 #717 Button typography basics Fast Batch truth is stale or missing.');
 }
 
@@ -1065,37 +1077,61 @@ for (const fragment of p15ResponsiveGapAxisRequiredFragments) {
     throw new Error(`P15 #821 responsive gap-axis contract is stale or missing: ${fragment}`);
   }
 }
-if (!readme.includes('### P15 #821 — responsive Container row/column gaps (merged bounded implementation)')
-  || !readme.includes('PR #821 exact head')
-  || !readme.includes('passed all seven required exact-head workflows')
-  || !readme.includes('### P15 #823 — responsive Flex Item custom basis (merged bounded implementation)')
-  || !readme.includes('PR #823 exact head')
-  || !readme.includes('integer range 0..1000')) {
+if (!historicalEvidence.includes('### P15 #821 — responsive Container row/column gaps (merged bounded implementation)')
+  || !historicalEvidence.includes('PR #821 exact head')
+  || !historicalEvidence.includes('passed all seven required exact-head workflows')
+  || !historicalEvidence.includes('### P15 #823 — responsive Flex Item custom basis (merged bounded implementation)')
+  || !historicalEvidence.includes('PR #823 exact head')
+  || !historicalEvidence.includes('integer range 0..1000')) {
   throw new Error('README P15 #821/#823 merge evidence or bounded scope is stale or missing.');
 }
 
-if (!readme.includes('### Current P15 and toolchain handoff')
-  || !readme.includes('Real demo spacing, images, editor-generated serialization and broad target compatibility remain unverified.')
-  || !readme.includes('PR #835 merged Figma typings 1.139.0 and Vite 8.3.1')
-  || !readme.includes('`@types/node 26.6.2`')) {
+if (!historicalEvidence.includes('### Current P15 and toolchain handoff')
+  || !historicalEvidence.includes('Real demo spacing, images, editor-generated serialization and broad target compatibility remain unverified.')
+  || !historicalEvidence.includes('PR #835 merged Figma typings 1.139.0 and Vite 8.3.1')
+  || !historicalEvidence.includes('`@types/node 26.6.2`')) {
   throw new Error('README current P15 proof limits or coordinated toolchain handoff is missing.');
 }
 
-if (!readme.includes('### Completed P15 #838 — transient Image MEDIA URL review')
-  || !readme.includes('44/45 unique temporary Figma asset URLs')
-  || !readme.includes('PR #839 passed all seven exact-head gates and merged as main `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`')) {
+if (!historicalEvidence.includes('### Completed P15 #838 — transient Image MEDIA URL review')
+  || !historicalEvidence.includes('44/45 unique temporary Figma asset URLs')
+  || !historicalEvidence.includes('PR #839 passed all seven exact-head gates and merged as main `f6bbbd7db3d9220e8ade26cc59443fd1184f9f55`')) {
   throw new Error('README P15 #838 bounded transient media review merge status is missing.');
 }
 
-if (!readme.includes('### Completed P15 #840 — Container background MEDIA reference review')
-  || !readme.includes('one desktop and one mobile Container background image')
-  || !readme.includes('PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven required workflows')
-  || !readme.includes('main `d1fc115b9f6764d90c0c319b880e291009eb7199`; Issue #840 closed.')
-  || !readme.includes('The exact Package 13/14 asset bytes')
-  || !readme.includes('P17 foundation implementation has already started')
-  || !readme.includes('Current verified main after PR #841 merge and before this README/state transport:')
-  || !readme.includes('`d1fc115b9f6764d90c0c319b880e291009eb7199`')) {
+if (!historicalEvidence.includes('### Completed P15 #840 — Container background MEDIA reference review')
+  || !historicalEvidence.includes('one desktop and one mobile Container background image')
+  || !historicalEvidence.includes('PR #841 exact head `449ffa6e9c1aa533a425d595e358e0a43eb3f2cd` passed all seven required workflows')
+  || !historicalEvidence.includes('main `d1fc115b9f6764d90c0c319b880e291009eb7199`; Issue #840 closed.')
+  || !historicalEvidence.includes('The exact Package 13/14 asset bytes')
+  || !historicalEvidence.includes('P17 foundation implementation has already started')
+  || !historicalEvidence.includes('Current verified main after PR #841 merge and before this README/state transport:')
+  || !historicalEvidence.includes('`d1fc115b9f6764d90c0c319b880e291009eb7199`')) {
   throw new Error('README P15 #840 merge evidence, P17 status or retained limits are missing.');
+}
+
+const currentPhaseFragments = [
+  '## Current phase progress',
+  '**P15, P16 and P17 are in progress.**',
+  '| **P15 · Elementor** — core foundation in progress |',
+  '| **P16 · Gutenberg** — core foundation in progress; target validation unwired |',
+  '| **P17 · Web export/code-to-design** — foundation implementation in progress |',
+  'Package 13/14 images need durable WordPress-managed media',
+  'Genuine authenticated evidence, then real Gutenberg native serialization',
+  'A local browser proof is not visual parity.',
+  '**44 unique URLs in Template 1 and 45 in Template 2**',
+  '**43 core Image widget occurrences and 2 Container background occurrences**',
+  'spacing and padding parity are **unverified**',
+  'P12 remains 80%',
+  '[README progress history through 2026-09-28](docs/README_PROGRESS_HISTORY_2026-09-28.md)',
+];
+for (const fragment of currentPhaseFragments) {
+  if (!readme.includes(fragment)) {
+    throw new Error(`Current README P15–P17 progress is missing: ${fragment}`);
+  }
+}
+if (readme.length > 20_000 || !readmeHistory.includes('### Completed P15 #840 — Container background MEDIA reference review')) {
+  throw new Error('README history archive or concise current status boundary is missing.');
 }
 
 console.log(
