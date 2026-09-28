@@ -434,3 +434,8 @@ After PR #845 passed seven exact-head gates and guarded merged as `6b79b569b1461
 ## P18 runtime proof reconciliation (2026-09-28)
 
 PR #858 merged as main `4fc693b33051435ad5309e0e4cbcf068582cd95f` after its dedicated workflow run `36443412796` passed. The retained scope is a pinned React 19.3.0 / ReactDOM 19.3.0 / Vite 8.3.1 fixture, generated adapter output, npm ci/build, loopback preview and policy-supported Chrome DOM/source-ref/request/error/screenshot receipt. This does not prove visual parity, Figma parity, Elementor target acceptance, production acceptance or Web-to-Figma reconstruction.
+
+
+## ANPOS child adoption foundation (2026-09-29)
+
+Issue #871 adds a project-specific ANPOS 1.4.0 adoption layer without copying the canonical vendor/commercial runtime or changing product authority. The branch adds `.ai/manifest.json`, `config/protocol/instance.json`, `config/protocol/anpos-adoption.json`, `docs/ANPOS_ADOPTION.md` and `scripts/validate-anpos-adoption.mjs`, plus an Integration Readiness validator step. The adoption status is `FOUNDATION_APPLIED_FULL_CERTIFICATION_PENDING`; the matrix covers Requirements 1–96 and explicitly records partial, planned and not-applicable groups. PM, verified AI identity, Supervisor lease/consent/CAS, repository-admin rules and commercial runtime remain inactive.

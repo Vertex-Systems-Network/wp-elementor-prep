@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "instance_status": "active_project",
+  "instance_id": "wp-elementor-prep",
+  "project_name": "WP Builders Prepare",
+  "repository": "Vertex-Systems-Network/wp-elementor-prep",
+  "repository_owner": "Vertex-Systems-Network",
+  "initialized_at": "2026-09-29",
+  "initialized_by": "ANPOS child-adoption foundation release train #871",
+  "source_protocol_version": "1.4.0",
+  "source_template_repository": "Vertex-Systems-Network/ai-native-project-operating-system",
+  "bootstrap_completed": false,
+  "adoption_mode": "compatibility_layer",
+  "adoption_status": "FOUNDATION_APPLIED_FULL_CERTIFICATION_PENDING",
+  "project_runtime_authority": "repository_evidence_only",
+  "notes": "This repository adopts the safe ANPOS routing/state/requirements boundary without copying the canonical source's vendor-only commercial-service runtime or pretending unavailable PM, AI identity, lease, consent, repository-admin or production capabilities are active.",
+  "preserved_state": [
+    ".ai/state/",
+    "memory-bank/",
+    "config/runtime-artifacts.json",
+    "docs/P15*",
+    "docs/P16*",
+    "docs/P17*",
+    "docs/P18*"
+  ],
+  "unavailable_capabilities": [
+    "ANPOS child bootstrap executable",
+    "authenticated PM provider and sync authority",
+    "verified development-AI catalog/runtime identities",
+    "Supervisor lease/fencing/CAS runtime",
+    "replay-resistant consent host callback",
+    "ANPOS commercial-service runtime",
+    "repository-admin branch/ruleset enforcement"
+  ]
+}
