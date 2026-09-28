@@ -38,3 +38,8 @@ npm run anpos:validate
 ```
 
 A successful result means the adoption metadata is internally consistent. It does not certify the full ANPOS protocol, external integrations, production runtime or any target adapter.
+
+
+## Applicable policy contracts
+
+The adoption layer also carries inactive-by-default machine contracts for agent selection, trust/control-plane boundaries, quality gates, design evidence, data handling, release assurance, architecture decisions, risk, operations, PM selection/sync authority, consent requests and reference E2E scenarios. These files define safe defaults and evidence requirements; they do not connect providers, grant agent identity, enable privileged mutation or certify production.
