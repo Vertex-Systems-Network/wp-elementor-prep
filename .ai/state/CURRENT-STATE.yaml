@@ -2,15 +2,15 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: a078ba40e75e0723ea71190e0d976edb423a27be
-observed_main_sha_semantics: exact_main_tip_observed_before_anpos_state_reconciliation
+observed_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
+observed_main_sha_semantics: exact_main_tip_observed_at_product_recovery_alignment_2026_10_08
 observed_main_branch: main
 active_issue: 846
-active_pr: null
-active_branch: main
+active_pr: 894
+active_branch: claude/youthful-ritchie-uch0qp
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: p18_react_build_render_evidence_with_anpos_adoption_foundation
+current_milestone: product_recovery_m0_critical_correctness_fixes
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -21,9 +21,9 @@ next_action_options:
   randomize_presentation_order: true
   recommended_slot_fixed: false
   recommended_action_id: verify-pre-p19-gate-846
-milestone_status: VERIFYING
-last_completed_milestone: pr_874_anpos_applicable_policy_contracts_passed_required_gates_and_merged
-exact_next_safe_action: continue_p18_evidence_or_select_matrix_backed_anpos_slice_without_promoting_external_authority
+milestone_status: IN_PROGRESS
+last_completed_milestone: product_recovery_plan_alignment_m_align
+exact_next_safe_action: execute_recovery_task_M0_1_release_ui_option_bank_placeholder_substitution_with_placeholder_free_release_test
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
@@ -86,3 +86,17 @@ sources_of_truth:
   runner_benchmark_human: docs/RUNNER_BENCHMARK.md
   volatile_runner_state: github_pr_issue_check_metadata
   next_action_options: .ai/state/NEXT-ACTION-OPTIONS.yaml
+recovery_program:
+  canonical_backlog: docs/PRODUCT_RECOVERY_PLAN.md
+  decisions: [D-047, D-048, D-049]
+  established: 2026-10-08
+  audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
+  active_milestone: M0
+  next_task: M0.1
+  last_completed_task: M-ALIGN.3
+  blocked_tasks: []
+  branch: claude/youthful-ritchie-uch0qp
+  open_pr: 894
+  resume_rule: take_first_unchecked_task_of_active_milestone_then_tick_advance_both_pointers_commit_push
+  doc_sync_cadence: plan_and_current_state_per_task_canonical_docs_once_per_milestone
+  milestone_order: [M0, M1, M2, M3, M4, M5, M6, M7, M8, M9]

@@ -9,12 +9,13 @@ Before making changes, read in this order:
 1. `.ai/state/PROTOCOL.md`
 2. `.ai/state/CURRENT-STATE.yaml`
 3. `.ai/state/LAST-CHECKPOINT.md`
-4. `memory-bank/PROJECT_STATE.md`
-5. `memory-bank/NEXT_ACTIONS.md`
-6. `memory-bank/DECISIONS.md`
-7. `memory-bank/ROADMAP.md`
-8. `docs/RUNNER_BENCHMARK.md`
-9. Relevant files under `docs/`
+4. `docs/PRODUCT_RECOVERY_PLAN.md` — **active canonical build backlog**; resume from its RESUME POINTER / `recovery_program` in `CURRENT-STATE.yaml`
+5. `memory-bank/PROJECT_STATE.md`
+6. `memory-bank/NEXT_ACTIONS.md`
+7. `memory-bank/DECISIONS.md`
+8. `memory-bank/ROADMAP.md`
+9. `docs/RUNNER_BENCHMARK.md`
+10. Relevant files under `docs/`
 
 Do not assume chat history is available or current.
 
@@ -55,6 +56,15 @@ After reading repository context and **before starting new implementation**, exe
    - use independent parallel workstreams where safe.
 
 Never fabricate runtime/manual evidence or bypass an acceptance gate simply to close an issue or merge a branch.
+
+## Active Product Recovery Program (D-047)
+
+Since 2026-10-08 the active development priority is `docs/PRODUCT_RECOVERY_PLAN.md` (milestones M0–M9). It turns the audited baseline into the product contract: version-driven target selection, read-only audit, target-ready duplicate beside the original, visually identical structure alignment, cross-breakpoint (desktop/tablet/mobile) alignment, native Elementor then Gutenberg export, assets and round-trip proof.
+
+- Resume from the plan's RESUME POINTER and `recovery_program` in `.ai/state/CURRENT-STATE.yaml`; take the first unchecked task of the active milestone.
+- After each task: tick it in the plan, advance both resume pointers, commit and push. Canonical memory-bank/README/runner/checkpoint sync happens once per milestone, or immediately when phase status, authority or target-support truth changes.
+- Every safety invariant and engineering rule in this file stays in force. The recovery program never claims the external/manual evidence owned by #84, #159, #182, #287, #846 or #856.
+- Do not add new governance/evidence/policy modules unless a recovery task requires one.
 
 ## Fast release-train execution
 

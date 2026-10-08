@@ -380,3 +380,17 @@ State reconciliation after PR #859 keeps P18 runtime receipt scope aligned with 
 ## 2026-09-29 — ANPOS adoption and durable-state reconciliation
 
 PR #872 exact head `901b89cc64db1a8edadb10d6d654a80428f12d39` passed the required workflow set and merged as `55474fb5fe03ca21ae53c7a8d883ce48bd1a9dd6`. PR #874 exact head `a17d9f955a2c7f708ab108a0f0bf144e1c634605` passed its applicable workflow set and merged as `a078ba40e75e0723ea71190e0d976edb423a27be`. Both preserved ANPOS authority=false and did not alter product/runtime evidence boundaries. The current state-reconciliation PR is the next exact-head batch.
+
+
+## 2026-10-08 — Product Recovery Program Runner rows
+
+These rows were discovered by `docs/PRODUCT_RECOVERY_PLAN.md` §6. Each `CONDITIONAL` row blocks only its own milestone acceptance. None of them is executed yet.
+
+| Queue ID | Phase / issue | Task / trigger | Runner / workflow | Dependencies | Class | Expected evidence | Status |
+|---|---|---|---|---|---|---|---|
+| RQ-REC-M0-RELEASE-PLACEHOLDERS | Recovery M0.1–M0.2 | Release package must carry no unsubstituted build placeholders and a traceable build identity | ci.yml release-package step | M0.1, M0.2 implemented | `FINAL_BATCH` | exact-head CI PASS with placeholder-free release package test | QUEUED |
+| RQ-REC-M3-ASSET-IMPORT | Recovery M3.6 | Asset pack imports into disposable WP+Elementor; every image HTTP 200 in render | p15-real-target-proof.yml | M3.1–M3.5 | `CONDITIONAL` | exact-head real-target run with image-load receipt | QUEUED |
+| RQ-REC-M4-RESPONSIVE-RENDER | Recovery M4.6 | Three-breakpoint fixture renders at 1440/1024/390 | p15-real-target-proof.yml (multi-width) | M4.1–M4.5 | `CONDITIONAL` | exact-head per-width render receipt | QUEUED |
+| RQ-REC-M7-ROUNDTRIP | Recovery M7.2 | Imported render vs Figma reference PNG comparison per breakpoint | real-target harness + core pixel-diff | M7.1, M4 | `CONDITIONAL` | per-section round-trip report on exact head | QUEUED |
+| RQ-REC-M8-GUTENBERG-EDITOR | Recovery M8.5 | Gutenberg markup parse/serialize + real editor import/render | new WordPress editor harness | M8.2–M8.4 | `CONDITIONAL` | exact-head editor-validity and render receipt | QUEUED |
+| RQ-894-AUDIT | Recovery PR #894 | `npm audit --audit-level=moderate` failed on new advisory GHSA-68fv-2mgg-jv7q (source-map-js 1.2.1, transitive via vite→postcss); lockfile-only bump to 1.2.2 | codeql.yml analyze | none | `BLOCKING_NOW` | exact-head analyze PASS | FIX_PUSHED |
