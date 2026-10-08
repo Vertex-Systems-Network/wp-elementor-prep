@@ -388,7 +388,7 @@ These rows were discovered by `docs/PRODUCT_RECOVERY_PLAN.md` §6. Each `CONDITI
 
 | Queue ID | Phase / issue | Task / trigger | Runner / workflow | Dependencies | Class | Expected evidence | Status |
 |---|---|---|---|---|---|---|---|
-| RQ-REC-M0-RELEASE-PLACEHOLDERS | Recovery M0.1–M0.2 | Release package must carry no unsubstituted build placeholders and a traceable build identity | ci.yml release-package step | M0.1, M0.2 implemented | `FINAL_BATCH` | exact-head CI PASS with placeholder-free release package test | QUEUED |
+| RQ-REC-M0-RELEASE-PLACEHOLDERS | Recovery M0.1–M0.2 (whole M0 train) | Release package must carry no unsubstituted build placeholders and a traceable build identity; full required gate set for the M0 train | ci.yml release-package step + required PR workflows | M0.1–M0.12 implemented | `FINAL_BATCH` | exact-head CI PASS with placeholder-free release package test | AWAITING_EXACT_HEAD_PR |
 | RQ-REC-M3-ASSET-IMPORT | Recovery M3.6 | Asset pack imports into disposable WP+Elementor; every image HTTP 200 in render | p15-real-target-proof.yml | M3.1–M3.5 | `CONDITIONAL` | exact-head real-target run with image-load receipt | QUEUED |
 | RQ-REC-M4-RESPONSIVE-RENDER | Recovery M4.6 | Three-breakpoint fixture renders at 1440/1024/390 | p15-real-target-proof.yml (multi-width) | M4.1–M4.5 | `CONDITIONAL` | exact-head per-width render receipt | QUEUED |
 | RQ-REC-M7-ROUNDTRIP | Recovery M7.2 | Imported render vs Figma reference PNG comparison per breakpoint | real-target harness + core pixel-diff | M7.1, M4 | `CONDITIONAL` | per-section round-trip report on exact head | QUEUED |

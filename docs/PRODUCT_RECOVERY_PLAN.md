@@ -7,9 +7,9 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M0 — Critical correctness fixes**
-> - Next task: **M0.12**
-> - Last completed task: **M0.11** (debounced background audit, panel preservation, scan bounds during traversal).
+> - Active milestone: **M0 — Critical correctness fixes** (12/12 implemented; M0 acceptance = green exact-head CI on its PR)
+> - Next task: **M0 acceptance**, then **M1.1**
+> - Last completed task: **M0.12** (M0 milestone canonical doc sync).
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -144,7 +144,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 - [x] **M0.9** _(done 2026-10-08: separate Elementor/Gutenberg selections, with `resolveElementorOptionBank` refusing a Gutenberg bank (`P15_OPTION_BANK_TARGET_MISMATCH`) or an unknown bank. The UI preview and download requests post `optionBankId`. The preview shows the bank label and status as a static inventory, and the local download result and receipt carry `optionBankId`. The README claim is corrected. A Chromium click smoke confirms both requests carry the id. Tests in `m0-option-bank-truth`. The bank does not change the mapping yet; that is M6.)_ Option-bank truth. Post the `optionBankId` from the UI, reject a Gutenberg bank on the Elementor preview, carry the bank id into the preview result and the download receipt, and correct the README claim. *Accept:* tests, and the README matches the code.
 - [x] **M0.10** _(done 2026-10-08: `scripts/ui-pixel-diff-runtime.mjs` compiles `src/core/pixel-diff.ts` with esbuild and both the dev and release UI builds inject it in place of `__PIXEL_DIFF_RUNTIME__`. The hand-written UI copy and the unreferenced `src/ui/release-ui.html` (a third copy) are removed. Tests evaluate the injected runtime against `comparePixelBuffers`. A Chromium smoke of real PNG pixel requests returned 0% for identical images and 100% for different ones, with no errors.)_ Single pixel-diff implementation. The UI uses the bundled `src/core/pixel-diff.ts` (injected at build), and the UI copy is removed. *Accept:* the tested code is the runtime code.
 - [x] **M0.11** _(done 2026-10-08: `createSelectionAuditScheduler` debounces selection-change audits by 250 ms and invalidates in-flight audits immediately. Automatic audits never post selection errors. The UI keeps an open P14/P15/Safe Fix/batch/validation panel and shows a background notice instead. `scanSceneNodeWithinBounds` enforces the Build-Ready visible-node budget (10k) and a 100k total cap during traversal and throws `SCAN_NODE_LIMIT_EXCEEDED`. Tests in `m0-audit-trigger-and-bounds`. A Chromium smoke confirmed the panel is preserved and the notice works; the manual re-render was smoked only with a stub report, whose render threw.)_ Debounce the selection-change auto-audit (or make it explicit). Do not overwrite an active P14, P15 or Safe Fix panel. Enforce `maxNodes` during the scan, not after it. *Accept:* tests.
-- [ ] **M0.12** M0 milestone sync, done once per R5: memory-bank, README module row and changelog.
+- [x] **M0.12** _(done 2026-10-08: PROJECT_STATE, NEXT_ACTIONS, ROADMAP, CHANGELOG, README row, Runner rows and checkpoint synced once for M0.)_ M0 milestone sync, done once per R5: memory-bank, README module row and changelog.
 
 ### M1 — Table-driven Elementor mapping engine
 

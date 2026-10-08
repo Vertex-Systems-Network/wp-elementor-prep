@@ -1,42 +1,28 @@
 # Last Durable Checkpoint
 
-Status: IN_PROGRESS
+Status: VERIFYING
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6`
+Observed main: `4bc20424fde5bbe527e2ac5fbb2fa5b32d86a81a`
 Canonical active program: Product Recovery Program (`docs/PRODUCT_RECOVERY_PLAN.md`, D-047/D-048/D-049)
-Branch: `claude/youthful-ritchie-uch0qp` (no PR yet)
+Branch: `claude/youthful-ritchie-uch0qp` (M0 train; PR to be opened)
 
 ## Verified work
 
-A full code audit compared the product contract with the code at main `9fdbe6f`. It covered:
-- the Figma plugin flow;
-- the audit/classifier;
-- the P5/P14 duplicate and recipes;
-- the P15 Elementor exporter;
-- P16/P17;
-- governance.
+Recovery milestone M0 is implemented: all 12 tasks, M0.1–M0.12, with one commit per task. Each commit records its evidence in the plan. The local evidence on the final head:
+- typecheck;
+- 320 test files / 1,898 tests;
+- dev and release builds;
+- the release contract, README and ANPOS validators;
+- Chromium smokes of the release UI: load, option-bank posts, the real PNG pixel request, and panel preservation.
 
-Baseline checks: typecheck is clean and 1,858/1,858 tests pass. Findings are in the plan §2.
+## Pending
 
-The plan was aligned in the following files:
-- the new canonical backlog (M0–M9, stable task IDs, resume protocol);
-- the `AGENTS.md` startup order;
-- `docs/AI_NATIVE_PLAN.md` (breakpoint-set workflow, §10);
-- NEXT_ACTIONS, ROADMAP, PROJECT_STATE, DECISIONS and CHANGELOG;
-- the README and the Runner ledger;
-- the `recovery_program` block in CURRENT-STATE.
-
-No product code changed.
-
-## Open queue at alignment
-
-- **Issues:** #84, #119, #159, #182, #287, #846, #848, #850, #852, #856. They are unchanged; their external/manual evidence is not claimed.
-- **PRs:** #890–#893 are Dependabot dev-dependency bumps and are independent of the recovery work.
+M0 acceptance requires green exact-head required workflows on the M0 PR (Runner row `RQ-REC-M0-RELEASE-PLACEHOLDERS`). Manual Figma Desktop verification remains owned by M5.7 and #159.
 
 ## Authority boundary
 
-The recovery program changes the execution priority and the doc-sync cadence only. Safety invariants, exact-head merge gates, P12–P18 truth and the P19 freeze are unchanged.
+There is no target compatibility, import, render or production claim. P12–P18 truth and the P19 freeze are unchanged.
 
 ## Exact next safe action
 
-Recovery task **M0.1**: make `buildReleaseUi` substitute `__OPTION_BANK_REGISTRY__`, and add a release-package test that rejects any remaining `__[A-Z0-9_]+__` placeholder. Then continue M0.2 → M0.12 in order.
+Open the M0 PR. On a green exact head with no unresolved threads, the maintainer merges it. Then start M1.1 (the `PropertyFamily` schema and codecs) on a branch restarted from the new main.

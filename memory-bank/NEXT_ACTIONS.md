@@ -7,20 +7,10 @@ Recovery queue added: 2026-10-08
 
 Canonical backlog: [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PLAN.md) (D-047). The resume pointer is also in `.ai/state/CURRENT-STATE.yaml` → `recovery_program`.
 
-1. **Active milestone: M0 — Critical correctness fixes. Next task: M0.1**
-   - M0.1: release UI `__OPTION_BANK_REGISTRY__` substitution, plus a placeholder-free release-package test.
-2. Then, in order:
-   - M0.2: release build identity defines;
-   - M0.3: keep the subtree of an image-fill frame;
-   - M0.4: no silent drop of strokes, effects and opacity;
-   - M0.5: duplicate placed beside the source;
-   - M0.6: per-file undo checkpoint;
-   - M0.7: pixel-broker resilience;
-   - M0.8: freshness hash;
-   - M0.9: option-bank truth;
-   - M0.10: single pixel-diff implementation;
-   - M0.11: audit trigger and bounds;
-   - M0.12: milestone sync.
+1. **M0 — Critical correctness fixes: all 12 tasks implemented on `claude/youthful-ritchie-uch0qp`.**
+   - Remaining for M0 acceptance: a green exact-head CI run on its PR (§5 of the plan; Runner row `RQ-REC-M0-RELEASE-PLACEHOLDERS`).
+   - Manual Figma Desktop verification stays with M5.7 and #159.
+2. **Next task: M1.1** — `PropertyFamily` schema and value codecs for the table-driven Elementor mapping engine.
 3. After M0, continue with:
    - M1: table-driven mapping engine;
    - M2: full extraction;

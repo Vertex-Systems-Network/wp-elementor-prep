@@ -21,10 +21,10 @@ next_action_options:
   randomize_presentation_order: true
   recommended_slot_fixed: false
   recommended_action_id: verify-pre-p19-gate-846
-milestone_status: IN_PROGRESS
+milestone_status: VERIFYING
 last_completed_milestone: product_recovery_plan_alignment_m_align
-exact_next_safe_action: execute_recovery_task_M0_12_milestone_m0_canonical_doc_sync_then_m0_acceptance
-pending_runner_ids: [RQ-852-FINAL]
+exact_next_safe_action: open_m0_pr_and_obtain_green_exact_head_ci_then_start_recovery_task_M1_1
+pending_runner_ids: [RQ-852-FINAL, RQ-REC-M0-RELEASE-PLACEHOLDERS]
 blocked_runner_ids: []
 current_blockers:
   - p15_retained_operator_approval_not_supplied_for_broader_compatibility_claims
@@ -92,8 +92,8 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M0
-  next_task: M0.12
-  last_completed_task: M0.11
+  next_task: M0_ACCEPTANCE_THEN_M1.1
+  last_completed_task: M0.12
   blocked_tasks: []
   branch: claude/youthful-ritchie-uch0qp
   open_pr: null
