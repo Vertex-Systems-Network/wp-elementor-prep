@@ -115,6 +115,10 @@ function code(family: AnyFamily, suffix: IssueSuffix | string): string {
   return family.issueCodes?.[suffix] ?? `${family.issuePrefix}_${suffix}`;
 }
 
+function leadingFlags(family: AnyFamily): Record<string, false> {
+  return Object.fromEntries((family.leadingAuthorityFlags ?? []).map((flag) => [flag, false]));
+}
+
 function baseResult(
   family: AnyFamily,
   status: ContainerFamilyStatus,
@@ -140,6 +144,7 @@ function baseResult(
     issues: issues.map((issue) => ({ ...issue })),
     template,
     candidate,
+    ...leadingFlags(family),
     responsiveInferencePerformed: false,
     figmaMutation: false,
     networkAccess: false,
@@ -191,7 +196,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   if (!isRecord(manifestValue)) {
     issues.push({ code: code(family, 'MANIFEST_NOT_OBJECT'), path: '$manifest', message: `${subject} manifest must be an object.` });
   } else {
-    if (!exactKeys(manifestValue, MANIFEST_KEYS)) {
+    if (!exactKeys(manifestValue, [...MANIFEST_KEYS, ...(family.leadingAuthorityFlags ?? [])])) {
       issues.push({ code: code(family, 'MANIFEST_FIELDS_INVALID'), path: '$manifest', message: `${subject} manifest contains unknown or missing fields.` });
     }
     if (manifestValue.schemaVersion !== 1 || manifestValue.manifestVersion !== family.manifestVersion) {
@@ -207,7 +212,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
     } else if (manifestValue.baseCandidateIdentityDigest !== baseIdentity.digest) {
       issues.push({ code: code(family, 'BASE_CANDIDATE_IDENTITY_MISMATCH'), path: '$manifest.baseCandidateIdentityDigest', message: 'Manifest is not bound to the exact current base candidate identity.' });
     }
-    if (MANIFEST_AUTHORITY_FLAGS.some((flag) => manifestValue[flag] !== false)) {
+    if ([...(family.leadingAuthorityFlags ?? []), ...MANIFEST_AUTHORITY_FLAGS].some((flag) => manifestValue[flag] !== false)) {
       issues.push({
         code: code(family, 'AUTHORITY_FLAGS_INVALID'),
         path: '$manifest',
@@ -221,7 +226,10 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
       for (let index = 0; index < manifestValue.containers.length; index += 1) {
         const raw: unknown = manifestValue.containers[index];
         const path = `$manifest.containers[${index}]`;
-        if (!isRecord(raw) || !onlyAllowedKeys(raw, family.entryKeys) || !validSourceNodeId(raw.sourceNodeId)) {
+        if (!isRecord(raw)
+          || !onlyAllowedKeys(raw, family.entryKeys)
+          || !(family.requiredEntryKeys ?? []).every((key) => hasOwn(raw, key))
+          || !validSourceNodeId(raw.sourceNodeId)) {
           issues.push({ code: code(family, 'ENTRY_INVALID'), path, message: family.entryEnvelopeMessage });
           continue;
         }
@@ -264,7 +272,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   for (const [sourceNodeId, entry] of resolutions) {
     const target = binding.containers.get(sourceNodeId);
     if (!target || !isRecord(target.settings)) {
-      (family.bindingIssuesLast ? bindingIssues : issues).push({ code: code(family, 'GENERATOR_BINDING_MISMATCH'), path: '$.content', message: `Generated container binding missing for sourceNodeId ${sourceNodeId}.` });
+      (family.bindingIssuesLast ? bindingIssues : issues).push({ code: code(family, 'GENERATOR_BINDING_MISMATCH'), path: '$.content', message: family.bindingMissingMessage?.(sourceNodeId) ?? `Generated container binding missing for sourceNodeId ${sourceNodeId}.` });
       continue;
     }
     const settings = target.settings as Record<string, unknown>;
@@ -274,7 +282,11 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
       continue;
     }
     const writes = family.writes(entry);
-    const conflicts = writes.filter((write) => write.checkConflict !== false && hasOwn(settings, write.settingKey));
+    const conflicts = writes
+      .map((write, order) => ({ write, rank: write.conflictRank ?? order }))
+      .filter(({ write }) => write.checkConflict !== false && hasOwn(settings, write.settingKey))
+      .sort((left, right) => left.rank - right.rank)
+      .map(({ write }) => write);
     const reported = family.conflictMode === 'all' ? conflicts : conflicts.slice(0, 1);
     for (const conflict of reported) {
       issues.push({
@@ -362,6 +374,7 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     || !statusShapeValid
     || !(list ?? []).every((entry) => family.validSummary(entry))
     || !validIssues
+    || (family.leadingAuthorityFlags ?? []).some((flag) => result[flag] !== false)
     || result.responsiveInferencePerformed !== false
     || result.figmaMutation !== false
     || result.networkAccess !== false
@@ -385,6 +398,7 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     [family.summaryField]: list ?? [],
     issues: result.issues.map((issue) => ({ code: issue.code, path: issue.path })),
     evidence: family.evidence,
+    ...leadingFlags(family),
     responsiveInferencePerformed: false,
     figmaMutation: false,
     networkAccess: false,

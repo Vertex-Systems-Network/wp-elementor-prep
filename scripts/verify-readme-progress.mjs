@@ -238,8 +238,8 @@ const p15HoverBorderRadiusRequiredFragments = [
   "desktopSettingKey: 'border_radius_hover'",
   "tabletSettingKey: 'border_radius_hover_tablet'",
   "mobileSettingKey: 'border_radius_hover_mobile'",
-  "P15_ELEMENTOR_RESPONSIVE_HOVER_BORDER_RADIUS_EVIDENCE.tabletSettingKey",
-  "P15_ELEMENTOR_RESPONSIVE_HOVER_BORDER_RADIUS_EVIDENCE.mobileSettingKey",
+  "field: 'tabletCornerRadiusPx', settingKey: EVIDENCE.tabletSettingKey",
+  "field: 'mobileCornerRadiusPx', settingKey: EVIDENCE.mobileSettingKey",
 ];
 for (const fragment of p15HoverBorderRadiusRequiredFragments) {
   if (!p15ResponsiveHoverBorderRadiusSource.includes(fragment)) {
@@ -351,8 +351,8 @@ const p15ContainerOverflowRequiredFragments = [
   "settingKey: 'overflow'",
   "defaultCssVariableValue: 'visible'",
   "acceptedValues: ['hidden', 'auto'] as const",
-  "validOverflow",
-  "target.settings[P15_ELEMENTOR_CONTAINER_OVERFLOW_EVIDENCE.settingKey] = resolution.overflow",
+  "enumCodec(EVIDENCE.acceptedValues)",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.overflow",
 ];
 for (const fragment of p15ContainerOverflowRequiredFragments) {
   if (!p15ContainerOverflowSource.includes(fragment)) {
@@ -377,8 +377,8 @@ const p15ContainerSemanticHtmlTagRequiredFragments = [
   "defaultTag: 'div'",
   "linkedTag: 'a'",
   "acceptedTags: ['header', 'footer', 'main', 'article', 'section', 'aside', 'nav'] as const",
-  "validSemanticHtmlTag",
-  "target.settings[P15_ELEMENTOR_CONTAINER_SEMANTIC_HTML_TAG_EVIDENCE.settingKey] = resolution.htmlTag",
+  "enumCodec(EVIDENCE.acceptedTags)",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.htmlTag",
 ];
 for (const fragment of p15ContainerSemanticHtmlTagRequiredFragments) {
   if (!p15ContainerSemanticHtmlTagSource.includes(fragment)) {

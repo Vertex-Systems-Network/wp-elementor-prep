@@ -41,6 +41,8 @@ export interface FamilySettingWrite {
   conflictSubject: string;
   /** Full conflict message, when the family's contract words it differently. */
   conflictMessage?: string;
+  /** Conflict reporting order when it differs from write order (lower first; default write order). */
+  conflictRank?: number;
   /** False for an enabling write (e.g. `content_width`) that the contract sets without a conflict check. */
   checkConflict?: boolean;
 }
@@ -75,6 +77,12 @@ export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string },
   readonly summaryField: string;
   /** Allowed entry keys including `sourceNodeId`. */
   readonly entryKeys: readonly string[];
+  /** Entry keys the shared envelope additionally requires to be present (own properties). */
+  readonly requiredEntryKeys?: readonly string[];
+  /** Family-specific authority flags placed before the shared ones (e.g. `styleInferencePerformed`). */
+  readonly leadingAuthorityFlags?: readonly string[];
+  /** Binding-missing message, when the contract words it differently from the shared default. */
+  bindingMissingMessage?(sourceNodeId: string): string;
   /** Message for an entry that fails the shared record/keys/sourceNodeId envelope. */
   readonly entryEnvelopeMessage: string;
   /** Per-suffix full issue codes that differ from `${issuePrefix}_${suffix}` (e.g. a value code). */
