@@ -255,6 +255,13 @@ function mapNode(
   if (node.kind === 'button') return buttonWidget(node, state);
   if (node.kind === 'image') return imageWidget(node, state);
 
+  for (const styleReview of node.styleReviews ?? []) {
+    state.reviewEntries.push({
+      sourceNodeId: node.sourceNodeId,
+      reasonCode: styleReview.reasonCode,
+      detail: styleReview.detail,
+    });
+  }
   const container: ElementorContainerV04 = {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'container',

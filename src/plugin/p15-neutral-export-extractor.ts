@@ -13,6 +13,7 @@ import {
   type P15NeutralJustification,
   type P15NeutralPaddingPx,
   type P15NeutralReviewNode,
+  type P15NeutralStyleReview,
   type P15NeutralTextAlignment,
   type P15NeutralExportValidationResult,
 } from '../targets/elementor/neutral-export-ir';
@@ -21,7 +22,7 @@ import {
   type P15ElementorV3GenerationResult,
 } from '../targets/elementor/v3-template-generator';
 
-export const P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION = 'p15-figma-neutral-export-extractor-v2' as const;
+export const P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION = 'p15-figma-neutral-export-extractor-v3' as const;
 
 export interface P15FigmaNeutralExtractionResult {
   schemaVersion: 1;
@@ -67,6 +68,10 @@ function hasImageFill(node: SceneNode): boolean {
     && (paint as { type?: unknown }).type === 'IMAGE'
     && (paint as { visible?: unknown }).visible !== false
   ));
+}
+
+function isContainerLike(node: SceneNode): boolean {
+  return node.type !== 'TEXT' && (childNodes(node).length > 0 || 'layoutMode' in recordOf(node));
 }
 
 function isAbsolute(node: SceneNode): boolean {
@@ -178,6 +183,14 @@ function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string>
     };
   }
   const paintRecord = paint as Record<string, unknown>;
+  if (paintRecord.type === 'IMAGE') {
+    return {
+      review: {
+        reasonCode: 'CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW',
+        detail: 'Container background image requires a retained asset export/upload reference; the container and its children are preserved.',
+      },
+    };
+  }
   if (paintRecord.type !== 'SOLID') {
     return {
       review: {
@@ -314,10 +327,13 @@ function extractContainer(
     );
   }
 
+  // Style facts that cannot be mapped yet stay REVIEW on the container itself, so the
+  // container's layout and children are still extracted instead of being dropped.
   const background = parseContainerBackground(node);
-  if (background.review) return review(node, background.review.reasonCode, background.review.detail);
   const radius = parseContainerRadius(node);
-  if (radius.review) return review(node, radius.review.reasonCode, radius.review.detail);
+  const styleReviews: P15NeutralStyleReview[] = [background.review, radius.review]
+    .filter((entry): entry is NonNullable<typeof entry> => entry !== undefined)
+    .map((entry) => ({ reasonCode: entry.reasonCode, detail: entry.detail }));
 
   const children: P15NeutralExportNode[] = [];
   for (const child of childNodes(node)) {
@@ -337,6 +353,7 @@ function extractContainer(
     justifyContent,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
+    ...(styleReviews.length > 0 ? { styleReviews } : {}),
     children,
   };
   return container;
@@ -360,11 +377,11 @@ function extractNode(
   if (isAbsolute(node)) {
     return review(node, 'ABSOLUTE_POSITION_REQUIRES_REVIEW', 'Absolute-positioned Figma content requires an explicit target mapping decision.');
   }
-  if (hasImageFill(node)) {
+  if (hasImageFill(node) && !isContainerLike(node)) {
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
   if (node.type === 'TEXT') return extractText(node);
-  if (childNodes(node).length > 0 || 'layoutMode' in recordOf(node)) {
+  if (isContainerLike(node)) {
     return extractContainer(node, depth, state);
   }
   return review(node, 'UNSUPPORTED_NODE_TYPE', `Unsupported visible Figma node type: ${node.type}.`);

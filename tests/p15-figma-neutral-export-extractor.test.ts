@@ -222,3 +222,57 @@ describe('P15 read-only Figma neutral export extractor', () => {
     expect(result.generation.reviewEntries[0]?.reasonCode).toBe('SPACING_OUT_OF_RANGE');
   });
 });
+
+describe('recovery M0.3 — image-backed containers keep their subtree', () => {
+  const imageFill = [{ type: 'IMAGE', visible: true, imageHash: 'fake-hash', scaleMode: 'FILL' }];
+
+  it('extracts the container and every child instead of collapsing the subtree into one review node', () => {
+    const selected = autoFrame('page', [
+      autoFrame('hero', [
+        textNode('hero-title', 'Welcome'),
+        textNode('hero-copy', 'Body copy'),
+      ], { fills: imageFill }),
+    ]);
+    const document = extractP15NeutralExportDocumentFromFigmaFrame(asFrame(selected));
+    const page = document.nodes[0];
+    expect(page?.kind).toBe('container');
+    const hero = page?.kind === 'container' ? page.children[0] : undefined;
+    expect(hero).toEqual(expect.objectContaining({
+      kind: 'container',
+      sourceNodeId: 'hero',
+      styleReviews: [expect.objectContaining({ reasonCode: 'CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW' })],
+    }));
+    expect(hero?.kind === 'container' ? hero.children.map((child) => child.sourceNodeId) : []).toEqual(['hero-title', 'hero-copy']);
+
+    const result = buildP15ElementorV1PreviewFromFigmaFrame(asFrame(selected));
+    expect(result.validation.valid).toBe(true);
+    expect(result.generation.status).toBe('REVIEW_REQUIRED');
+    expect(result.generation.template).toBeNull();
+    expect(result.generation.reviewEntries).toEqual([
+      expect.objectContaining({ sourceNodeId: 'hero', reasonCode: 'CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW' }),
+    ]);
+  });
+
+  it('surfaces child reviews inside an image-backed container instead of hiding them', () => {
+    const selected = autoFrame('page', [
+      autoFrame('card', [textNode('badge', 'New', { layoutPositioning: 'ABSOLUTE' })], { fills: imageFill }),
+    ]);
+    const result = buildP15ElementorV1PreviewFromFigmaFrame(asFrame(selected));
+    expect(result.generation.reviewEntries.map((entry) => `${entry.sourceNodeId}:${entry.reasonCode}`)).toEqual([
+      'card:CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW',
+      'badge:ABSOLUTE_POSITION_REQUIRES_REVIEW',
+    ]);
+  });
+
+  it('keeps leaf image fills and image-filled text as node-level asset reviews', () => {
+    const selected = autoFrame('page', [
+      { id: 'photo', name: 'photo', type: 'RECTANGLE', visible: true, layoutPositioning: 'AUTO', fills: imageFill },
+      textNode('image-text', 'Texture', { fills: imageFill }),
+    ]);
+    const result = buildP15ElementorV1PreviewFromFigmaFrame(asFrame(selected));
+    expect(result.generation.reviewEntries.map((entry) => `${entry.sourceNodeId}:${entry.reasonCode}`)).toEqual([
+      'photo:IMAGE_ASSET_EXPORT_REQUIRED',
+      'image-text:IMAGE_ASSET_EXPORT_REQUIRED',
+    ]);
+  });
+});
