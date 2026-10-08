@@ -142,6 +142,8 @@ function validateCli(cli) {
 function normalize(report) {
   const value = JSON.parse(JSON.stringify(report));
   delete value.generatedAt;
+  // contentHash is a plugin-only visual fingerprint; REST/CLI sources cannot reproduce it.
+  if (value.source && typeof value.source === 'object') delete value.source.contentHash;
   return value;
 }
 

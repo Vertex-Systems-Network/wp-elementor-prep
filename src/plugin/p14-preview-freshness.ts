@@ -42,6 +42,13 @@ export function assessP14PreviewFreshness(
   if (evidence.buildReady.source.structuralHash !== currentBuildReady.source.structuralHash) {
     failures.push('The selected Frame changed after its persisted P13 audit.');
   }
+  const persistedContent = evidence.buildReady.source.contentHash;
+  const currentContent = currentBuildReady.source.contentHash;
+  if (currentContent !== undefined && persistedContent === undefined) {
+    failures.push('Persisted P13 evidence predates visual-content fingerprinting and cannot prove the selected Frame is unchanged.');
+  } else if (persistedContent !== currentContent) {
+    failures.push('The selected Frame content changed (text, colours, fonts or effects) after its persisted P13 audit.');
+  }
   if (evidence.buildReady.source.configHash !== currentBuildReady.source.configHash) {
     failures.push('Persisted P13 Build-Ready configuration does not match the current preview configuration.');
   }

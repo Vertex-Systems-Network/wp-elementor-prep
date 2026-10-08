@@ -161,12 +161,32 @@ function canonicalNode(node: AuditNode): unknown {
   };
 }
 
+function contentHashField(root: AuditNode): { contentHash?: string } {
+  const contentHash = computeBuildReadyContentHash(root);
+  return contentHash === undefined ? {} : { contentHash };
+}
+
 function configHash(config: BuildReadyRunConfig): string {
   return fnv1a(JSON.stringify(config));
 }
 
 export function computeBuildReadyStructuralHash(root: AuditNode): string {
   return fnv1a(JSON.stringify(canonicalNode(root)));
+}
+
+/**
+ * Visual-content fingerprint (text content, fills, strokes, effects, fonts, radii) over the whole
+ * tree. Kept separate from `structuralHash`, which must stay comparable with REST/CLI sources for
+ * P13 parity. Returns undefined when the source tree carries no visual digests (non-Figma sources).
+ */
+export function computeBuildReadyContentHash(root: AuditNode): string | undefined {
+  const digests: string[] = [];
+  let present = false;
+  for (const node of flatten(root)) {
+    if (node.visualDigest !== undefined) present = true;
+    digests.push(`${node.id}:${node.visualDigest ?? '-'}`);
+  }
+  return present ? `content-${fnv1a(digests.join('|'))}` : undefined;
 }
 
 function severityRank(severity: BuildReadySeverity): number {
@@ -550,6 +570,7 @@ function insufficientReport(
       rootId: root.id,
       rootName: root.name,
       structuralHash: sourceHash,
+      ...contentHashField(root),
       configHash: cfgHash,
       analyzerVersion: BUILD_READY_ANALYZER_VERSION,
     },
@@ -625,6 +646,7 @@ export function buildBuildReadyReport(
       rootId: root.id,
       rootName: root.name,
       structuralHash: sourceHash,
+      ...contentHashField(root),
       configHash: cfgHash,
       analyzerVersion: BUILD_READY_ANALYZER_VERSION,
     },

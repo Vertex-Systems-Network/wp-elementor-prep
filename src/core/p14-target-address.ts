@@ -71,6 +71,7 @@ function cloneStableNode(node: AuditNode): unknown {
     clips: node.clipsContent,
     opacity: round(node.opacity),
     visible: node.visible,
+    ...(node.visualDigest !== undefined ? { visual: node.visualDigest } : {}),
     children: node.children.map(cloneStableNode),
   };
 }

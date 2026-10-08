@@ -29,6 +29,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 export function normalizeBuildReadyForParity(report: BuildReadyReportV2): unknown {
   const parsed = JSON.parse(JSON.stringify(report)) as Record<string, unknown>;
   delete parsed.generatedAt;
+  // contentHash is a plugin-only visual fingerprint; REST/CLI sources cannot reproduce it.
+  const source = parsed.source;
+  if (typeof source === 'object' && source !== null) delete (source as Record<string, unknown>).contentHash;
   return parsed;
 }
 

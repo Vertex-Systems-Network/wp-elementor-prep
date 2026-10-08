@@ -55,6 +55,60 @@ function readOpacity(node: SceneNode): number {
   return numeric((node as SceneNode & { opacity: unknown }).opacity, 1);
 }
 
+function fnv1a(value: string): string {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < value.length; i += 1) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+const VISUAL_FACT_KEYS = [
+  'fills', 'strokes', 'strokeWeight', 'strokeAlign', 'strokeTopWeight', 'strokeRightWeight',
+  'strokeBottomWeight', 'strokeLeftWeight', 'effects', 'blendMode', 'cornerRadius', 'topLeftRadius',
+  'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius', 'rotation', 'isMask',
+] as const;
+
+const TEXT_FACT_KEYS = [
+  'characters', 'fontName', 'fontSize', 'fontWeight', 'lineHeight', 'letterSpacing', 'paragraphSpacing',
+  'textCase', 'textDecoration', 'textAlignHorizontal', 'textAlignVertical',
+] as const;
+
+const STYLED_SEGMENT_FIELDS = ['fontName', 'fontSize', 'fills', 'letterSpacing', 'lineHeight', 'textCase', 'textDecoration'] as const;
+
+function serializeVisual(value: unknown): string {
+  // figma.mixed is a symbol; keep it visible in the digest instead of letting JSON drop it.
+  return JSON.stringify(value, (_key, entry: unknown) => (typeof entry === 'symbol' ? 'MIXED' : entry)) ?? 'undefined';
+}
+
+function styledTextSegments(node: SceneNode): unknown {
+  if (node.type !== 'TEXT') return null;
+  const read = (node as SceneNode & { getStyledTextSegments?: unknown }).getStyledTextSegments;
+  if (typeof read !== 'function') return null;
+  try {
+    return (read as (fields: readonly string[]) => unknown).call(node, STYLED_SEGMENT_FIELDS);
+  } catch {
+    return 'UNAVAILABLE';
+  }
+}
+
+/** Deterministic digest of the visual facts that geometry/structure alone cannot see. */
+export function computeVisualFactsDigest(node: SceneNode): string {
+  const record = node as unknown as Record<string, unknown>;
+  const facts: Record<string, unknown> = {};
+  for (const key of VISUAL_FACT_KEYS) {
+    if (key in record) facts[key] = record[key];
+  }
+  if (node.type === 'TEXT') {
+    for (const key of TEXT_FACT_KEYS) {
+      if (key in record) facts[key] = record[key];
+    }
+    facts.segments = styledTextSegments(node);
+  }
+  return `v1-${fnv1a(serializeVisual(facts))}`;
+}
+
 export function scanSceneNode(node: SceneNode): AuditNode {
   const children = childNodes(node).map(scanSceneNode);
   const mode = readLayoutMode(node);
@@ -83,6 +137,7 @@ export function scanSceneNode(node: SceneNode): AuditNode {
     clipsContent: clipsContent(node),
     opacity: readOpacity(node),
     visible: node.visible,
+    visualDigest: computeVisualFactsDigest(node),
     childIds: children.map((child) => child.id),
     children,
   };
