@@ -27,8 +27,8 @@ interface P15NeutralNodeBase {
 }
 
 /**
- * A container-level fidelity fact that cannot be mapped yet (for example an image background).
- * The container and its children are still extracted; the generator treats each entry as REVIEW.
+ * A node-level fidelity fact that cannot be mapped yet (for example an image background, a stroke
+ * or a shadow). The node and its children are still extracted; the generator treats each entry as REVIEW.
  */
 export interface P15NeutralStyleReview {
   reasonCode: string;
@@ -59,6 +59,7 @@ export interface P15NeutralTextNode extends P15NeutralNodeBase {
   kind: 'text';
   text: string;
   align?: P15NeutralTextAlignment;
+  styleReviews?: P15NeutralStyleReview[];
 }
 
 export interface P15NeutralButtonNode extends P15NeutralNodeBase {
@@ -341,8 +342,9 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'text') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'styleReviews'], path, state);
     validateText(value.text, `${path}.text`, state);
+    if (value.styleReviews !== undefined) validateStyleReviews(value.styleReviews, `${path}.styleReviews`, state);
     if (value.align !== undefined && !['start', 'center', 'end', 'justify'].includes(String(value.align))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.align`, 'Text alignment must be start, center, end or justify.');
     }

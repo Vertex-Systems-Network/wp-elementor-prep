@@ -13,6 +13,7 @@ import {
   type P15NeutralExportValidationResult,
   type P15NeutralHeadingNode,
   type P15NeutralImageNode,
+  type P15NeutralStyleReview,
   type P15NeutralTextAlignment,
   type P15NeutralTextNode,
 } from './neutral-export-ir';
@@ -237,6 +238,16 @@ function imageWidget(node: P15NeutralImageNode, state: GenerationState): Element
   };
 }
 
+function pushStyleReviews(
+  sourceNodeId: string,
+  styleReviews: readonly P15NeutralStyleReview[] | undefined,
+  state: GenerationState,
+): void {
+  for (const styleReview of styleReviews ?? []) {
+    state.reviewEntries.push({ sourceNodeId, reasonCode: styleReview.reasonCode, detail: styleReview.detail });
+  }
+}
+
 function mapNode(
   node: P15NeutralExportNode,
   depth: number,
@@ -251,17 +262,14 @@ function mapNode(
     return null;
   }
   if (node.kind === 'heading') return headingWidget(node, state);
-  if (node.kind === 'text') return textEditorWidget(node, state);
+  if (node.kind === 'text') {
+    pushStyleReviews(node.sourceNodeId, node.styleReviews, state);
+    return textEditorWidget(node, state);
+  }
   if (node.kind === 'button') return buttonWidget(node, state);
   if (node.kind === 'image') return imageWidget(node, state);
 
-  for (const styleReview of node.styleReviews ?? []) {
-    state.reviewEntries.push({
-      sourceNodeId: node.sourceNodeId,
-      reasonCode: styleReview.reasonCode,
-      detail: styleReview.detail,
-    });
-  }
+  pushStyleReviews(node.sourceNodeId, node.styleReviews, state);
   const container: ElementorContainerV04 = {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'container',

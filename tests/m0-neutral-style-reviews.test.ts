@@ -40,4 +40,18 @@ describe('recovery M0.3 — neutral container style reviews', () => {
       expect(codes.length).toBeGreaterThan(0);
     }
   });
+
+  it('accepts style reviews on text nodes and reports them as review findings (M0.4)', () => {
+    const document: P15NeutralExportDocumentV1 = {
+      schemaVersion: 1,
+      irVersion: P15_NEUTRAL_EXPORT_IR_VERSION,
+      title: 'Text style reviews',
+      documentType: 'section',
+      nodes: [{ kind: 'text', sourceNodeId: 'glow', text: 'Glow', styleReviews: [{ reasonCode: 'EFFECT_REQUIRES_REVIEW', detail: 'Drop shadow.' }] }],
+    };
+    expect(validateP15NeutralExportDocument(document).valid).toBe(true);
+    expect(assessP15ElementorCompatibilityReadiness(document).findings).toEqual([
+      { sourceNodeId: 'glow', category: 'UNKNOWN', reasonCode: 'EFFECT_REQUIRES_REVIEW' },
+    ]);
+  });
 });

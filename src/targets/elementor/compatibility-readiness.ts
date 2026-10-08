@@ -92,7 +92,7 @@ function collectFindings(nodes: readonly P15NeutralExportNode[], findings: P15El
       findings.push(classifyReview(node));
       continue;
     }
-    if (node.kind === 'container' && node.styleReviews !== undefined) {
+    if ((node.kind === 'container' || node.kind === 'text') && node.styleReviews !== undefined) {
       for (const styleReview of node.styleReviews) {
         findings.push(classifyReview({ sourceNodeId: node.sourceNodeId, reasonCode: styleReview.reasonCode }));
       }

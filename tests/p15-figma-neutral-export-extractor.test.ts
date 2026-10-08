@@ -276,3 +276,76 @@ describe('recovery M0.3 — image-backed containers keep their subtree', () => {
     ]);
   });
 });
+
+describe('recovery M0.4 — no silent drop of unmapped visual facts', () => {
+  function reasons(selected: MockNode): string[] {
+    const result = buildP15ElementorV1PreviewFromFigmaFrame(asFrame(selected));
+    expect(result.validation.valid).toBe(true);
+    return result.generation.reviewEntries.map((entry) => `${entry.sourceNodeId}:${entry.reasonCode}`);
+  }
+
+  it('reports every unmapped container visual fact as REVIEW while keeping the subtree', () => {
+    const card = autoFrame('card', [textNode('card-title', 'Card')], {
+      strokes: [{ type: 'SOLID', visible: true, color: { r: 0, g: 0, b: 0 } }],
+      strokeWeight: 1,
+      effects: [{ type: 'DROP_SHADOW', visible: true }, { type: 'LAYER_BLUR', visible: true }],
+      opacity: 0.8,
+      blendMode: 'MULTIPLY',
+      rotation: 5,
+      isMask: true,
+      clipsContent: true,
+      width: 100,
+      height: 100,
+    });
+    (card.children as MockNode[])[0]!.x = 0;
+    Object.assign((card.children as MockNode[])[0]!, { y: 0, width: 140, height: 20 });
+    expect(reasons(autoFrame('page', [card]))).toEqual([
+      'card:STROKE_REQUIRES_REVIEW',
+      'card:EFFECT_REQUIRES_REVIEW',
+      'card:LAYER_OPACITY_REQUIRES_REVIEW',
+      'card:BLEND_MODE_REQUIRES_REVIEW',
+      'card:ROTATION_REQUIRES_REVIEW',
+      'card:MASK_REQUIRES_REVIEW',
+      'card:CLIPPED_OVERFLOW_REQUIRES_REVIEW',
+    ]);
+    const document = extractP15NeutralExportDocumentFromFigmaFrame(asFrame(autoFrame('page', [card])));
+    const page = document.nodes[0];
+    const extractedCard = page?.kind === 'container' ? page.children[0] : undefined;
+    expect(extractedCard?.kind === 'container' ? extractedCard.children.map((child) => child.sourceNodeId) : []).toEqual(['card-title']);
+  });
+
+  it('reports unmapped text visual facts on the text node and keeps its content', () => {
+    const shadowed = textNode('shadowed', 'Glow', {
+      effects: [{ type: 'DROP_SHADOW', visible: true }],
+      strokes: [{ type: 'SOLID', visible: true }],
+      strokeWeight: 2,
+      opacity: 0.5,
+    });
+    expect(reasons(autoFrame('page', [shadowed]))).toEqual([
+      'shadowed:STROKE_REQUIRES_REVIEW',
+      'shadowed:EFFECT_REQUIRES_REVIEW',
+      'shadowed:LAYER_OPACITY_REQUIRES_REVIEW',
+    ]);
+    const document = extractP15NeutralExportDocumentFromFigmaFrame(asFrame(autoFrame('page', [shadowed])));
+    const page = document.nodes[0];
+    expect(page?.kind === 'container' ? page.children[0] : undefined).toEqual(expect.objectContaining({ kind: 'text', text: 'Glow' }));
+  });
+
+  it('does not flag default, hidden or zero-weight facts and in-bounds clipping', () => {
+    const plain = autoFrame('page', [
+      textNode('copy', 'Copy', { opacity: 1, blendMode: 'PASS_THROUGH', rotation: 0, x: 0, y: 0, width: 50, height: 20 }),
+    ], {
+      strokes: [{ type: 'SOLID', visible: true }],
+      strokeWeight: 0,
+      effects: [{ type: 'DROP_SHADOW', visible: false }],
+      clipsContent: true,
+      width: 100,
+      height: 100,
+      opacity: 1,
+      blendMode: 'PASS_THROUGH',
+    });
+    const result = buildP15ElementorV1PreviewFromFigmaFrame(asFrame(plain));
+    expect(result.generation.reviewEntries).toEqual([]);
+    expect(result.generation.template).not.toBeNull();
+  });
+});
