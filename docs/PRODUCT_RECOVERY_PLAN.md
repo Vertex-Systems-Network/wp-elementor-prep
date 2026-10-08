@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.3a**
-> - Last completed task: **M1.2** (shared container-family engine + golden baseline recorded from the original resolvers).
+> - Next task: **M1.3b** (layout families)
+> - Last completed task: **M1.3a** (gap, padding and margin re-expressed as engine families; 118/118 golden cases identical).
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -150,7 +150,12 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 
 - [x] **M1.1** _(done 2026-10-08: added `src/targets/elementor/mapping-engine/property-family.ts` (`ContainerPropertyFamily`, `responsiveSettingKey`), `codecs.ts` (px number, dimensions box, gap axes, hex colour, enum, switcher) and `shared-validation.ts`; tests in `m1-mapping-engine-codecs`. The typography-group, box-shadow, gradient and border codecs are added with the families that consume them (M1.3d, M1.4), so every encoding is proven by golden equivalence rather than written speculatively.)_ Define the `PropertyFamily` schema: `family`, `target kind`, `devices`, `key(device)`, value codec, `requires`/`conflictsWith`, and evidence (Elementor version, source path, SHA). Add value codecs: `dimension`, `dimensions box`, `color`, `typography group`, `box-shadow`, `gradient`, `border`, `enum`, `boolean`.
 - [x] **M1.2** _(done 2026-10-08: `mapping-engine/container-family-engine.ts` owns the full manifest/authority/binding/conflict/rebuild/summary/serializer contract (`resolveContainerPropertyFamily`, `serializeContainerPropertyFamilySummary`). The golden baseline `tests/golden/m1-responsive-{gap,padding,margin}.golden.json` (118 cases) was recorded from the original resolvers with `GOLDEN_WRITE=1`, and `tests/m1-container-family-golden.test.ts` replays it.)_ Create one shared module for the manifest envelope, authority flags, fingerprint/binding, conflict detection and result serialisation. This replaces the 48 copied helper sets.
-- [ ] **M1.3** Migrate the container families: gap, padding, margin, direction, alignment, wrap, align-content, boxed/full width, min-height, radius, border, shadow, overflow, z-index, html tag, background/overlay/gradient, and opacity. Each migration ships a golden equivalence test (old resolver output == engine output on every existing fixture). Then delete the old file.
+- [~] **M1.3** Migrate the container families. This is split into M1.3a–d, and each part ships its golden baseline before the switch:
+  - [x] **M1.3a** spacing _(done 2026-10-08: gap, padding and margin are families in `mapping-engine/families/responsive-spacing.ts`; the resolver files are thin typed wrappers, about 2,120 lines down to 436; 118/118 golden cases are identical and the original resolver tests pass unchanged; the README verifier now checks the gap-axis family table)._
+  - [ ] **M1.3b** layout: direction, wrap, alignment, align-content, text-alignment, button-alignment.
+  - [ ] **M1.3c** flex item and sizing: align-self, basis, factors, order preset/custom, min-height, boxed/full width, z-index.
+  - [ ] **M1.3d** container styles and compositions: border, hover border, radius, box-shadow, overflow, HTML tag, overlay, hover background, gradients, hover transition, style composition.
+- Original M1.3 wording, for reference: migrate the container families: gap, padding, margin, direction, alignment, wrap, align-content, boxed/full width, min-height, radius, border, shadow, overflow, z-index, html tag, background/overlay/gradient, and opacity. Each migration ships a golden equivalence test (old resolver output == engine output on every existing fixture). Then delete the old file.
 - [ ] **M1.4** Migrate the widget families: heading and text-editor colour, and every `button-*` family.
 - [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain.
 - [ ] **M1.6** Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.

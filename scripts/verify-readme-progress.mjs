@@ -8,6 +8,8 @@ const p14Qualification = await readFile('src/core/p14-vertical-stack-qualificati
 const p14RegistrySource = await readFile('src/core/p14-safe-recipe-registry.ts', 'utf8');
 const p15ResponsiveFullWidthSource = await readFile('src/targets/elementor/responsive-full-width-resolution.ts', 'utf8');
 const p15ResponsiveGapSource = await readFile('src/targets/elementor/responsive-gap-resolution.ts', 'utf8');
+// Recovery M1.3a: gap/padding/margin are mapping-engine families; the gap-axis encoding lives in the family table.
+const p15ResponsiveSpacingFamilySource = await readFile('src/targets/elementor/mapping-engine/families/responsive-spacing.ts', 'utf8');
 const p15ResponsiveHoverBorderRadiusSource = await readFile('src/targets/elementor/responsive-hover-border-radius-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemAlignSelfSource = await readFile('src/targets/elementor/responsive-flex-item-align-self-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemFactorsSource = await readFile('src/targets/elementor/responsive-flex-item-factors-resolution.ts', 'utf8');
@@ -1069,8 +1071,6 @@ const p15ResponsiveGapAxisRequiredFragments = [
   "tabletColumnGapPx?: number",
   "mobileRowGapPx?: number",
   "mobileColumnGapPx?: number",
-  "gapAxesValue(row: number, column: number, isLinked: boolean)",
-  "gapAxesValue(resolution.tabletRowGapPx as number, resolution.tabletColumnGapPx as number, false)",
   "responsiveInferencePerformed: false",
   "responsiveClosureClaim: false",
   "targetCompatibilityClaim: false",
@@ -1080,6 +1080,16 @@ const p15ResponsiveGapAxisRequiredFragments = [
 for (const fragment of p15ResponsiveGapAxisRequiredFragments) {
   if (!p15ResponsiveGapSource.includes(fragment)) {
     throw new Error(`P15 #821 responsive gap-axis contract is stale or missing: ${fragment}`);
+  }
+}
+const p15ResponsiveGapAxisFamilyFragments = [
+  "gapCodec.encode({ row: linked, column: linked, isLinked: true })",
+  "gapCodec.encode({ row, column: column as number, isLinked: false })",
+  "Explicit responsive row and column gaps must be supplied together at each breakpoint.",
+];
+for (const fragment of p15ResponsiveGapAxisFamilyFragments) {
+  if (!p15ResponsiveSpacingFamilySource.includes(fragment)) {
+    throw new Error(`P15 #821 responsive gap-axis family contract is stale or missing: ${fragment}`);
   }
 }
 if (!historicalEvidence.includes('### P15 #821 — responsive Container row/column gaps (merged bounded implementation)')
