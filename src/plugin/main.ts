@@ -111,9 +111,19 @@ figma.showUI(__html__, {
   themeColors: true,
 });
 
+/** Only the main panel answers pixel requests; viewers replace it for the rest of the session. */
+let mainPanelActive = true;
+
 const fullFrameValidator = new FullFrameValidator((message) => {
   figma.ui.postMessage(message);
-});
+}, undefined, () => mainPanelActive);
+
+/** Replace the main panel with a read-only viewer and fail any in-flight pixel validation fast. */
+function showViewerUi(html: string, options: ShowUIOptions): void {
+  mainPanelActive = false;
+  fullFrameValidator.failAllPending();
+  figma.showUI(html, options);
+}
 
 function postError(
   message: string,
@@ -358,7 +368,7 @@ async function runRuntimeSelfTest(): Promise<void> {
       runtimeProofPassedAt: proof.passedAt,
     });
 
-    figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+    showViewerUi(buildP5RuntimeEvidenceViewerHtml(evidence), {
       width: 520,
       height: 700,
       themeColors: true,
@@ -386,7 +396,7 @@ async function runRuntimeSelfTest(): Promise<void> {
 
 async function runP7RuntimeEvidenceInspector(): Promise<void> {
   const inspection = await inspectLatestP7RuntimeEvidence(figma.clientStorage);
-  figma.showUI(buildP7RuntimeEvidenceViewerHtml(inspection), {
+  showViewerUi(buildP7RuntimeEvidenceViewerHtml(inspection), {
     width: 520,
     height: 700,
     themeColors: true,
@@ -408,7 +418,7 @@ async function runP7RuntimeEvidenceInspector(): Promise<void> {
 async function runP13RuntimeEvidenceViewer(): Promise<void> {
   const inspection = await inspectLatestP13RuntimeEvidence(figma.clientStorage);
   const evidence = inspection.evidence;
-  figma.showUI(buildP13RuntimeEvidenceViewerHtml(evidence, inspection), {
+  showViewerUi(buildP13RuntimeEvidenceViewerHtml(evidence, inspection), {
     width: 540,
     height: 720,
     themeColors: true,
@@ -660,7 +670,7 @@ async function runRuntimeEvidenceViewer(): Promise<void> {
     figma.notify('No valid persisted P5 runtime acceptance evidence is available.');
     return;
   }
-  figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+  showViewerUi(buildP5RuntimeEvidenceViewerHtml(evidence), {
     width: 520,
     height: 700,
     themeColors: true,
@@ -669,7 +679,7 @@ async function runRuntimeEvidenceViewer(): Promise<void> {
 
 async function runP6ClosureEvidenceViewer(): Promise<void> {
   const inspection = await inspectP6ClosureEvidence(figma.clientStorage, RUNTIME_BUILD);
-  figma.showUI(buildP6ClosureViewerHtml(inspection), {
+  showViewerUi(buildP6ClosureViewerHtml(inspection), {
     width: 520,
     height: 720,
     themeColors: true,
@@ -723,7 +733,7 @@ async function runP6PageFlowDeveloperCalibration(): Promise<void> {
       runtimeBuild: { ...RUNTIME_BUILD },
     });
 
-    figma.showUI(evidenceView.html, { width: 520, height: 700, themeColors: true });
+    showViewerUi(evidenceView.html, { width: 520, height: 700, themeColors: true });
 
     if (outcome.status === 'BLOCKED') {
       figma.notify(`P6 clone calibration blocked: ${outcome.reason}`);

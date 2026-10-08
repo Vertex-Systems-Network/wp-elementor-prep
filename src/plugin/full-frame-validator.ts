@@ -5,6 +5,19 @@ import type { PixelDiffMetrics, ValidationReport } from '../core/validation-type
 const MAX_VALIDATION_RENDER_DIMENSION = 2048;
 const MAX_VALIDATION_PIXELS = MAX_VALIDATION_RENDER_DIMENSION * MAX_VALIDATION_RENDER_DIMENSION;
 export const DEFAULT_PIXEL_BROKER_TIMEOUT_MS = 30_000;
+export const PIXEL_BROKER_UNAVAILABLE_CODE = 'P3_PIXEL_BROKER_UNAVAILABLE' as const;
+
+/** Structured fail-fast error: the plugin UI that decodes pixels is not the active UI surface. */
+export class PixelBrokerUnavailableError extends Error {
+  readonly code = PIXEL_BROKER_UNAVAILABLE_CODE;
+
+  constructor(detail: string) {
+    super(`Pixel comparison is unavailable: ${detail}`);
+    this.name = 'PixelBrokerUnavailableError';
+  }
+}
+
+const BROKER_UNAVAILABLE_DETAIL = 'the main plugin panel (which decodes pixels) is not active because a viewer replaced it. Close the viewer, reopen the plugin and retry; nothing was committed.';
 
 export interface FullFrameValidationResult {
   report: ValidationReport;
@@ -103,6 +116,8 @@ export class FullFrameValidator {
   constructor(
     private readonly postMessage: (message: PixelRequestMessage) => void,
     private readonly pixelBrokerTimeoutMs = DEFAULT_PIXEL_BROKER_TIMEOUT_MS,
+    /** Whether the UI surface that answers pixel requests is active; checked before and after export. */
+    private readonly isBrokerAvailable: () => boolean = () => true,
   ) {
     if (!Number.isFinite(pixelBrokerTimeoutMs) || pixelBrokerTimeoutMs <= 0) {
       throw new Error('Pixel broker timeout must be a positive finite number.');
@@ -110,6 +125,7 @@ export class FullFrameValidator {
   }
 
   async validate(before: FrameNode, after: FrameNode): Promise<FullFrameValidationResult> {
+    if (!this.isBrokerAvailable()) throw new PixelBrokerUnavailableError(BROKER_UNAVAILABLE_DETAIL);
     const beforeSnapshot = captureIntegritySnapshot(before);
     const afterSnapshot = captureIntegritySnapshot(after);
     const report = validateIntegrity(beforeSnapshot, afterSnapshot, DEFAULT_VALIDATION_THRESHOLDS);
@@ -125,6 +141,8 @@ export class FullFrameValidator {
       before.exportAsync(exportSettings),
       after.exportAsync(exportSettings),
     ]);
+
+    if (!this.isBrokerAvailable()) throw new PixelBrokerUnavailableError(BROKER_UNAVAILABLE_DETAIL);
 
     this.sequence += 1;
     const validationId = this.sequence;
@@ -186,6 +204,20 @@ export class FullFrameValidator {
     clearTimeout(pending.timeoutHandle);
     pending.reject(new Error(`Pixel comparison failed: ${message}`));
     return true;
+  }
+
+  /**
+   * Reject every in-flight validation immediately, e.g. when the broker UI is replaced by a viewer.
+   * Without this, each pending candidate would wait for the full broker timeout before failing.
+   */
+  failAllPending(detail = BROKER_UNAVAILABLE_DETAIL): number {
+    const entries = [...this.pending.entries()];
+    this.pending.clear();
+    for (const [, pending] of entries) {
+      clearTimeout(pending.timeoutHandle);
+      pending.reject(new PixelBrokerUnavailableError(detail));
+    }
+    return entries.length;
   }
 
   get pendingCount(): number {

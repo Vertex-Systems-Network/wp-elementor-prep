@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { PixelDiffMetrics } from '../src/core/validation-types';
-import { FullFrameValidator, isValidPixelDiffMetrics } from '../src/plugin/full-frame-validator';
+import { FullFrameValidator, isValidPixelDiffMetrics, PIXEL_BROKER_UNAVAILABLE_CODE, PixelBrokerUnavailableError } from '../src/plugin/full-frame-validator';
 
 function fakeFrame(name: string): FrameNode {
   return {
@@ -108,5 +108,60 @@ describe('FullFrameValidator pixel broker lifecycle', () => {
     })).toBe(true);
     expect(validator.pendingCount).toBe(0);
     await rejection;
+  });
+});
+
+describe('recovery M0.7 — pixel broker resilience when a viewer replaces the main panel', () => {
+  it('fails fast with a structured error when the broker UI is not active, without exporting', async () => {
+    const posted: unknown[] = [];
+    const validator = new FullFrameValidator((message) => posted.push(message), 30_000, () => false);
+    const before = fakeFrame('Before');
+    await expect(validator.validate(before, fakeFrame('After'))).rejects.toMatchObject({
+      name: 'PixelBrokerUnavailableError',
+      code: PIXEL_BROKER_UNAVAILABLE_CODE,
+    });
+    expect(posted).toHaveLength(0);
+    expect(validator.pendingCount).toBe(0);
+  });
+
+  it('refuses to post when the broker becomes unavailable during export', async () => {
+    let available = true;
+    const posted: unknown[] = [];
+    const validator = new FullFrameValidator((message) => posted.push(message), 30_000, () => available);
+    const validationPromise = validator.validate(fakeFrame('Before'), fakeFrame('After'));
+    available = false;
+    await expect(validationPromise).rejects.toBeInstanceOf(PixelBrokerUnavailableError);
+    expect(posted).toHaveLength(0);
+  });
+
+  it('rejects every in-flight validation immediately instead of waiting for the timeout', async () => {
+    vi.useFakeTimers();
+    const posted: unknown[] = [];
+    const validator = new FullFrameValidator((message) => posted.push(message), 30_000);
+    const first = validator.validate(fakeFrame('A'), fakeFrame('B'));
+    const second = validator.validate(fakeFrame('C'), fakeFrame('D'));
+    const rejections = Promise.all([
+      expect(first).rejects.toBeInstanceOf(PixelBrokerUnavailableError),
+      expect(second).rejects.toBeInstanceOf(PixelBrokerUnavailableError),
+    ]);
+    await settleExports();
+    expect(validator.pendingCount).toBe(2);
+    expect(validator.failAllPending()).toBe(2);
+    expect(validator.pendingCount).toBe(0);
+    await rejections;
+    expect(vi.getTimerCount()).toBe(0);
+    vi.useRealTimers();
+  });
+});
+
+describe('recovery M0.7 — main panel wiring', () => {
+  it('routes every viewer through showViewerUi so in-flight pixel validation fails fast', async () => {
+    const { readFile } = await import('node:fs/promises');
+    const main = await readFile('src/plugin/main.ts', 'utf8');
+    const directShowUi = main.match(/figma\.showUI\(/g) ?? [];
+    expect(directShowUi).toHaveLength(2);
+    expect(main).toContain('figma.showUI(__html__, {');
+    expect(main).toMatch(/function showViewerUi\(html: string, options: ShowUIOptions\): void \{\n  mainPanelActive = false;\n  fullFrameValidator\.failAllPending\(\);\n  figma\.showUI\(html, options\);/);
+    expect(main).toContain('}, undefined, () => mainPanelActive);');
   });
 });
