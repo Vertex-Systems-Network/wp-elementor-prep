@@ -2,7 +2,7 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 4bc20424fde5bbe527e2ac5fbb2fa5b32d86a81a
+observed_main_sha: f18240e493fa541517081738ccf0c12c3ee4cc07
 observed_main_sha_semantics: exact_main_tip_observed_at_product_recovery_alignment_2026_10_08
 observed_main_branch: main
 active_issue: 846
@@ -10,7 +10,7 @@ active_pr: null
 active_branch: claude/youthful-ritchie-uch0qp
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: product_recovery_m0_critical_correctness_fixes
+current_milestone: product_recovery_m1_table_driven_elementor_mapping_engine
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -21,10 +21,10 @@ next_action_options:
   randomize_presentation_order: true
   recommended_slot_fixed: false
   recommended_action_id: verify-pre-p19-gate-846
-milestone_status: VERIFYING
-last_completed_milestone: product_recovery_plan_alignment_m_align
-exact_next_safe_action: open_m0_pr_and_obtain_green_exact_head_ci_then_start_recovery_task_M1_1
-pending_runner_ids: [RQ-852-FINAL, RQ-REC-M0-RELEASE-PLACEHOLDERS]
+milestone_status: IN_PROGRESS
+last_completed_milestone: product_recovery_m0_accepted_pr_895_merged_f18240e
+exact_next_safe_action: execute_recovery_task_M1_3b_layout_families_golden_baseline_then_engine_switch
+pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
   - p15_retained_operator_approval_not_supplied_for_broader_compatibility_claims
@@ -91,9 +91,9 @@ recovery_program:
   decisions: [D-047, D-048, D-049]
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
-  active_milestone: M0
-  next_task: M0_ACCEPTANCE_THEN_M1.1
-  last_completed_task: M0.12
+  active_milestone: M1
+  next_task: M1.3b
+  last_completed_task: M1.3a
   blocked_tasks: []
   branch: claude/youthful-ritchie-uch0qp
   open_pr: null

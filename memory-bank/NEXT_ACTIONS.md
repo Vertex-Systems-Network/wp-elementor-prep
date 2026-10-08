@@ -7,10 +7,10 @@ Recovery queue added: 2026-10-08
 
 Canonical backlog: [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PLAN.md) (D-047). The resume pointer is also in `.ai/state/CURRENT-STATE.yaml` → `recovery_program`.
 
-1. **M0 — Critical correctness fixes: all 12 tasks implemented on `claude/youthful-ritchie-uch0qp`.**
-   - Remaining for M0 acceptance: a green exact-head CI run on its PR (§5 of the plan; Runner row `RQ-REC-M0-RELEASE-PLACEHOLDERS`).
-   - Manual Figma Desktop verification stays with M5.7 and #159.
-2. **Next task: M1.1** — `PropertyFamily` schema and value codecs for the table-driven Elementor mapping engine.
+1. **M0 — Critical correctness fixes: ACCEPTED.** PR #895, exact head `e8672b0`, passed 10/10 required checks and was merged as `f18240e`.
+2. **Active: M1 — table-driven Elementor mapping engine.**
+   - M1.1 is done: schema, codecs and shared validation.
+   - **Next task: M1.2**, the shared container-family engine.
 3. After M0, continue with:
    - M1: table-driven mapping engine;
    - M2: full extraction;

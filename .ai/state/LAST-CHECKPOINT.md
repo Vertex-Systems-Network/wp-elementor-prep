@@ -1,28 +1,19 @@
 # Last Durable Checkpoint
 
-Status: VERIFYING
+Status: IN_PROGRESS
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `4bc20424fde5bbe527e2ac5fbb2fa5b32d86a81a`
+Observed main: `f18240e493fa541517081738ccf0c12c3ee4cc07`
 Canonical active program: Product Recovery Program (`docs/PRODUCT_RECOVERY_PLAN.md`, D-047/D-048/D-049)
-Branch: `claude/youthful-ritchie-uch0qp` (M0 train; PR to be opened)
+Branch: `claude/youthful-ritchie-uch0qp`. It was restarted from `f18240e` for the M1 train (PR-A = M1.1, M1.2, M1.3a).
 
 ## Verified work
 
-Recovery milestone M0 is implemented: all 12 tasks, M0.1–M0.12, with one commit per task. Each commit records its evidence in the plan. The local evidence on the final head:
-- typecheck;
-- 320 test files / 1,898 tests;
-- dev and release builds;
-- the release contract, README and ANPOS validators;
-- Chromium smokes of the release UI: load, option-bank posts, the real PNG pixel request, and panel preservation.
-
-## Pending
-
-M0 acceptance requires green exact-head required workflows on the M0 PR (Runner row `RQ-REC-M0-RELEASE-PLACEHOLDERS`). Manual Figma Desktop verification remains owned by M5.7 and #159.
+M0 is accepted: PR #895, exact head `e8672b0`, passed 10/10 required checks and was merged as `f18240e`. M1.1 adds the mapping-engine schema, codecs and shared validation, with tests.
 
 ## Authority boundary
 
-There is no target compatibility, import, render or production claim. P12–P18 truth and the P19 freeze are unchanged.
+No target compatibility, import, render or production claim. P12–P18 truth and the P19 freeze are unchanged.
 
 ## Exact next safe action
 
-Open the M0 PR. On a green exact head with no unresolved threads, the maintainer merges it. Then start M1.1 (the `PropertyFamily` schema and codecs) on a branch restarted from the new main.
+Recovery task M1.2: the shared container-family engine. Then M1.3a: capture golden outputs from the current gap, padding and margin resolvers, re-express them as engine families and prove equality.
