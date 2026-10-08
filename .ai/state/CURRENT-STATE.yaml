@@ -6,7 +6,7 @@ observed_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
 observed_main_sha_semantics: exact_main_tip_observed_at_product_recovery_alignment_2026_10_08
 observed_main_branch: main
 active_issue: 846
-active_pr: null
+active_pr: 894
 active_branch: claude/youthful-ritchie-uch0qp
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
@@ -96,7 +96,7 @@ recovery_program:
   last_completed_task: M-ALIGN.3
   blocked_tasks: []
   branch: claude/youthful-ritchie-uch0qp
-  open_pr: null
+  open_pr: 894
   resume_rule: take_first_unchecked_task_of_active_milestone_then_tick_advance_both_pointers_commit_push
   doc_sync_cadence: plan_and_current_state_per_task_canonical_docs_once_per_milestone
   milestone_order: [M0, M1, M2, M3, M4, M5, M6, M7, M8, M9]
