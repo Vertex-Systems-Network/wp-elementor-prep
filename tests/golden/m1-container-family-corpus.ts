@@ -25,6 +25,10 @@ export interface FamilyCorpusSpec {
   extraInvalid?: Array<Record<string, unknown>>;
   /** Fields every entry must carry (e.g. full width's contentWidthMode). */
   entryBase?: Record<string, unknown>;
+  /** Cases dropping each listed base key entirely (required-key envelopes, e.g. border style). */
+  omitBaseKeys?: string[];
+  /** Family-specific authority flags the manifest must carry as false (e.g. styleInferencePerformed). */
+  extraFlags?: string[];
 }
 
 export function sourceDocument(): P15NeutralExportDocumentV1 {
@@ -76,13 +80,14 @@ const FLAGS = {
 export function buildCorpus(spec: FamilyCorpusSpec): GoldenCase[] {
   const source = sourceDocument();
   const base = spec.entryBase ?? {};
+  const flags: Record<string, boolean> = { ...Object.fromEntries((spec.extraFlags ?? []).map((flag) => [flag, false])), ...FLAGS };
   const manifest = (containers: unknown, overrides: Record<string, unknown> = {}): Record<string, unknown> => ({
     schemaVersion: 1,
     manifestVersion: spec.manifestVersion,
     sourceIrFingerprint: fingerprintP15NeutralExportDocument(source),
     baseCandidateIdentityDigest: baseDigest(source),
     containers,
-    ...FLAGS,
+    ...flags,
     ...overrides,
   });
   const cases: GoldenCase[] = [
@@ -103,7 +108,7 @@ export function buildCorpus(spec: FamilyCorpusSpec): GoldenCase[] {
     { name: 'fingerprint-mismatch', source, manifest: manifest([], { sourceIrFingerprint: `sha256:${'0'.repeat(64)}` }) },
     { name: 'base-digest-malformed', source, manifest: manifest([], { baseCandidateIdentityDigest: 7 }) },
     { name: 'base-digest-mismatch', source, manifest: manifest([], { baseCandidateIdentityDigest: `sha256:${'1'.repeat(64)}` }) },
-    ...Object.keys(FLAGS).map((flag) => ({ name: `authority-${flag}`, source, manifest: manifest([], { [flag]: true }) })),
+    ...Object.keys(flags).map((flag) => ({ name: `authority-${flag}`, source, manifest: manifest([], { [flag]: true }) })),
     { name: 'containers-not-array', source, manifest: manifest({}) },
     { name: 'containers-too-many', source, manifest: manifest(Array.from({ length: 10_001 }, () => ({}))) },
     { name: 'entry-not-record', source, manifest: manifest(['root']) },
@@ -115,6 +120,11 @@ export function buildCorpus(spec: FamilyCorpusSpec): GoldenCase[] {
     { name: 'entry-no-override', source, manifest: manifest([{ sourceNodeId: 'root', ...base }]) },
     ...spec.invalidValues.map((fields, index) => ({ name: `entry-invalid-value-${index}`, source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...fields }]) })),
     ...(spec.extraInvalid ?? []).map((fields, index) => ({ name: `entry-extra-invalid-${index}`, source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...fields }]) })),
+    ...(spec.omitBaseKeys ?? []).map((key) => {
+      const entry: Record<string, unknown> = { sourceNodeId: 'root', ...base, ...spec.tabletValid };
+      delete entry[key];
+      return { name: `entry-missing-base-${key}`, source, manifest: manifest([entry]) };
+    }),
     { name: 'many-issues-accumulate', source, manifest: manifest([{ sourceNodeId: 'ghost', ...base, ...spec.tabletValid }, 'bad', { sourceNodeId: 'root', ...base }], { manifestVersion: 'x' }) },
     { name: 'source-invalid', source: { schemaVersion: 2 }, manifest: manifest([]) },
     { name: 'source-review-upstream', source: reviewSource(), manifest: manifest([]) },
