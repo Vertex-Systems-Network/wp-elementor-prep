@@ -111,7 +111,7 @@ export type ContainerFamilyResult = {
 
 type AnyFamily = ContainerPropertyFamily<{ sourceNodeId: string }, { sourceNodeId: string }>;
 
-function code(family: AnyFamily, suffix: IssueSuffix): string {
+function code(family: AnyFamily, suffix: IssueSuffix | string): string {
   return family.issueCodes?.[suffix] ?? `${family.issuePrefix}_${suffix}`;
 }
 
@@ -211,7 +211,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
       issues.push({
         code: code(family, 'AUTHORITY_FLAGS_INVALID'),
         path: '$manifest',
-        message: `${subject} resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority.`,
+        message: family.messages?.authority ?? `${subject} resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority.`,
       });
     }
 
@@ -236,7 +236,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
         }
         const parsed = family.parseEntry(raw as Record<string, unknown> & { sourceNodeId: string });
         if (!parsed.ok) {
-          issues.push({ code: code(family, parsed.code), path, message: parsed.message });
+          issues.push({ code: code(family, parsed.code), path: `${path}${parsed.pathSuffix ?? ''}`, message: parsed.message });
           continue;
         }
         resolutions.set(sourceNodeId, parsed.entry);
@@ -268,8 +268,13 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
       continue;
     }
     const settings = target.settings as Record<string, unknown>;
+    const precondition = family.precondition?.(settings) ?? null;
+    if (precondition) {
+      issues.push({ code: code(family, precondition.code), path: `$source.${sourceNodeId}`, message: precondition.message });
+      continue;
+    }
     const writes = family.writes(entry);
-    const conflicts = writes.filter((write) => hasOwn(settings, write.settingKey));
+    const conflicts = writes.filter((write) => write.checkConflict !== false && hasOwn(settings, write.settingKey));
     const reported = family.conflictMode === 'all' ? conflicts : conflicts.slice(0, 1);
     for (const conflict of reported) {
       issues.push({
@@ -310,7 +315,7 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
   const family = typedFamily as unknown as AnyFamily;
   const summaries = result[family.summaryField];
   const list = Array.isArray(summaries) ? summaries as Array<{ sourceNodeId: string }> : null;
-  const issueCodes = new Set<string>(ISSUE_SUFFIXES.map((suffix) => code(family, suffix)));
+  const issueCodes = new Set<string>([...ISSUE_SUFFIXES, ...(family.extraIssueSuffixes ?? [])].map((suffix) => code(family, suffix)));
   const validStatus = result.status === 'BLOCKED_INVALID_SOURCE_IR'
     || result.status === 'BLOCKED_UPSTREAM_GENERATION'
     || result.status === 'REJECTED_INVALID_MANIFEST'

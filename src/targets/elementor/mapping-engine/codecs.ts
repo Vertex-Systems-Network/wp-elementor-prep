@@ -134,3 +134,47 @@ export const switcherCodec: ValueCodec<boolean, 'yes' | ''> = {
   snapshot: (value) => value,
   encode: (value) => (value ? 'yes' : ''),
 };
+
+/** Finite integer within an inclusive range (z-index, min height, widths, flex order/basis). */
+export function intRangeCodec(range: PxRange): ValueCodec<number, number> {
+  return {
+    id: `int:${range.min}..${range.max}`,
+    is: (value): value is number => typeof value === 'number'
+      && Number.isFinite(value)
+      && Number.isInteger(value)
+      && value >= range.min
+      && value <= range.max,
+    snapshot: (value) => value,
+    encode: (value) => value,
+  };
+}
+
+/** Exactly one literal value (e.g. `true` for an explicit "custom" selection). */
+export function literalCodec<T extends string | number | boolean>(literal: T): ValueCodec<T, T> {
+  return {
+    id: `literal:${String(literal)}`,
+    is: (value): value is T => value === literal,
+    snapshot: (value) => value,
+    encode: (value) => value,
+  };
+}
+
+export function numberEnumCodec<T extends number>(values: readonly T[]): ValueCodec<T, T> {
+  return {
+    id: `number-enum:${values.join('|')}`,
+    is: (value): value is T => typeof value === 'number' && (values as readonly number[]).includes(value),
+    snapshot: (value) => value,
+    encode: (value) => value,
+  };
+}
+
+export interface ElementorSliderValue {
+  unit: 'px';
+  size: number;
+  sizes: [];
+}
+
+/** Elementor `slider` control px value as stored by the editor. */
+export function elementorPxSlider(size: number): ElementorSliderValue {
+  return { unit: 'px', size, sizes: [] };
+}

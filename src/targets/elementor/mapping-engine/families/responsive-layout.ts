@@ -1,5 +1,11 @@
 import { enumCodec, type ValueCodec } from '../codecs';
-import type { ContainerPropertyFamily, FamilyEvidence, FamilyMessageOverrides, FamilySettingWrite } from '../property-family';
+import type {
+  ContainerPropertyFamily,
+  FamilyEvidence,
+  FamilyMessageOverrides,
+  FamilyPreconditionFailure,
+  FamilySettingWrite,
+} from '../property-family';
 import { exactKeys, isRecord, validSourceNodeId } from '../shared-validation';
 
 /**
@@ -11,11 +17,20 @@ export interface EnumFieldSpec {
   /** Manifest/summary field, e.g. `tabletDirection`. */
   field: string;
   settingKey: string;
-  codec: ValueCodec<string, string>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  codec: ValueCodec<any, any>;
   /** Neutral → Elementor value mapping (identity when omitted). */
-  toElementor?: (value: string) => string;
+  toElementor?: (value: never) => unknown;
   conflictSubject: string;
   conflictMessage?: string;
+}
+
+/** A field every entry must carry with an exact value, checked before override/value checks. */
+export interface RequiredEntryField {
+  field: string;
+  value: unknown;
+  code: string;
+  message: string;
 }
 
 export interface ResponsiveEnumFamilyMeta {
@@ -37,13 +52,22 @@ export interface ResponsiveEnumFamilyMeta {
   messages?: FamilyMessageOverrides;
   bindingIssuesLast?: boolean;
   conflictMode?: 'first' | 'all';
+  /** Fields that must be provided together (type + value pairs); a mismatch is VALUE_INVALID. */
+  pairs?: ReadonlyArray<readonly [string, string]>;
+  requiredEntryFields?: readonly RequiredEntryField[];
+  /** Enabling writes emitted before the field writes, without a conflict check. */
+  leadingWrites?: ReadonlyArray<{ settingKey: string; value: unknown }>;
+  extraIssueSuffixes?: readonly string[];
+  precondition?: (settings: Record<string, unknown>) => FamilyPreconditionFailure | null;
 }
 
 type EnumEntry = { sourceNodeId: string } & Record<string, unknown>;
 
+/** Explicit per-breakpoint field family; the factory behind every scalar/enum responsive family. */
 export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerPropertyFamily<EnumEntry, EnumEntry> {
   const fieldNames = meta.fields.map((spec) => spec.field);
-  const summaryKeys = ['sourceNodeId', ...fieldNames];
+  const required = meta.requiredEntryFields ?? [];
+  const summaryKeys = ['sourceNodeId', ...required.map((spec) => spec.field), ...fieldNames];
   return {
     id: meta.id,
     issuePrefix: meta.issuePrefix,
@@ -60,32 +84,46 @@ export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerP
     ...(meta.messages ? { messages: meta.messages } : {}),
     ...(meta.bindingIssuesLast ? { bindingIssuesLast: true } : {}),
     ...(meta.conflictMode ? { conflictMode: meta.conflictMode } : {}),
+    ...(meta.extraIssueSuffixes ? { extraIssueSuffixes: meta.extraIssueSuffixes } : {}),
+    ...(meta.precondition ? { precondition: meta.precondition } : {}),
     codecs: [...new Set(meta.fields.map((spec) => spec.codec))],
     parseEntry(raw) {
+      for (const spec of required) {
+        if (raw[spec.field] !== spec.value) return { ok: false, code: spec.code, message: spec.message, pathSuffix: `.${spec.field}` };
+      }
       const provided = meta.fields.filter((spec) => raw[spec.field] !== undefined);
       if (provided.length === 0) return { ok: false, code: 'OVERRIDE_REQUIRED', message: meta.overrideRequiredMessage };
-      if (provided.some((spec) => !spec.codec.is(raw[spec.field]))) {
+      const unpaired = (meta.pairs ?? []).some(([left, right]) => (raw[left] !== undefined) !== (raw[right] !== undefined));
+      if (provided.some((spec) => !spec.codec.is(raw[spec.field])) || unpaired) {
         return { ok: false, code: 'VALUE_INVALID', message: meta.valueInvalidMessage };
       }
       const entry: EnumEntry = { sourceNodeId: raw.sourceNodeId };
+      for (const spec of required) entry[spec.field] = spec.value;
       for (const spec of provided) entry[spec.field] = raw[spec.field];
       return { ok: true, entry };
     },
     writes(entry) {
-      return meta.fields
+      const leading = (meta.leadingWrites ?? []).map((write): FamilySettingWrite => ({
+        settingKey: write.settingKey,
+        value: write.value,
+        conflictSubject: write.settingKey,
+        checkConflict: false,
+      }));
+      return [...leading, ...meta.fields
         .filter((spec) => entry[spec.field] !== undefined)
         .map((spec): FamilySettingWrite => {
-          const value = entry[spec.field] as string;
+          const value = entry[spec.field] as never;
           return {
             settingKey: spec.settingKey,
             value: spec.toElementor ? spec.toElementor(value) : value,
             conflictSubject: spec.conflictSubject,
             ...(spec.conflictMessage ? { conflictMessage: spec.conflictMessage } : {}),
           };
-        });
+        })];
     },
     summarize(entry) {
       const summary: EnumEntry = { sourceNodeId: entry.sourceNodeId };
+      for (const spec of required) summary[spec.field] = spec.value;
       for (const spec of meta.fields) summary[spec.field] = entry[spec.field] ?? null;
       return summary;
     },
@@ -93,6 +131,7 @@ export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerP
       return isRecord(entry)
         && exactKeys(entry, summaryKeys)
         && validSourceNodeId(entry.sourceNodeId)
+        && required.every((spec) => entry[spec.field] === spec.value)
         && meta.fields.every((spec) => entry[spec.field] === null || spec.codec.is(entry[spec.field]))
         && meta.fields.some((spec) => entry[spec.field] !== null);
     },

@@ -15,15 +15,23 @@ export function responsiveSettingKey(baseKey: string, device: ElementorDevice): 
   return device === 'desktop' ? baseKey : `${baseKey}_${device}`;
 }
 
+/** Exact Elementor source evidence for a family (paths, blob SHAs, setting keys, accepted ranges). */
 export interface FamilyEvidence {
   readonly elementorVersion: string;
-  readonly [key: string]: string;
+  readonly [key: string]: unknown;
 }
 
 /** Parsing outcome for one manifest entry, after the engine's shared envelope checks. */
 export type FamilyEntryParse<Entry> =
   | { ok: true; entry: Entry }
-  | { ok: false; code: 'ENTRY_INVALID' | 'OVERRIDE_REQUIRED' | 'VALUE_INVALID'; message: string };
+  | {
+    ok: false;
+    /** Issue suffix: a shared one, or one listed in the family's `extraIssueSuffixes`. */
+    code: 'ENTRY_INVALID' | 'OVERRIDE_REQUIRED' | 'VALUE_INVALID' | string;
+    message: string;
+    /** Appended to the entry path, e.g. `.contentWidthMode`. */
+    pathSuffix?: string;
+  };
 
 /** One setting write for an accepted entry; the engine refuses it when the key already exists. */
 export interface FamilySettingWrite {
@@ -33,6 +41,14 @@ export interface FamilySettingWrite {
   conflictSubject: string;
   /** Full conflict message, when the family's contract words it differently. */
   conflictMessage?: string;
+  /** False for an enabling write (e.g. `content_width`) that the contract sets without a conflict check. */
+  checkConflict?: boolean;
+}
+
+/** Refusal of a bound target's existing settings before any write (e.g. a content_width condition). */
+export interface FamilyPreconditionFailure {
+  code: string;
+  message: string;
 }
 
 /** Engine message keys a family may word differently from the subject-derived defaults. */
@@ -40,6 +56,7 @@ export interface FamilyMessageOverrides {
   readonly duplicate?: string;
   readonly notContainer?: string;
   readonly resolvedInvalid?: string;
+  readonly authority?: string;
 }
 
 export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string }, Summary extends { sourceNodeId: string }> {
@@ -67,6 +84,10 @@ export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string },
   readonly bindingIssuesLast?: boolean;
   /** `first` (default): one conflict issue per entry; `all`: one issue per conflicting key. */
   readonly conflictMode?: 'first' | 'all';
+  /** Family-specific issue suffixes beyond the shared set (e.g. `CONDITION_MISMATCH`). */
+  readonly extraIssueSuffixes?: readonly string[];
+  /** Checked on each bound target before conflicts and writes. */
+  precondition?(settings: Record<string, unknown>): FamilyPreconditionFailure | null;
   /** Codecs this family encodes with, declared for inventory and capability reporting. */
   readonly codecs: readonly ValueCodec<unknown>[];
   parseEntry(raw: Record<string, unknown> & { sourceNodeId: string }): FamilyEntryParse<Entry>;

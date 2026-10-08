@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.3c** (flex item and sizing families)
-> - Last completed task: **M1.3b** (direction, wrap and alignment re-expressed as engine families; 112/112 golden cases identical).
+> - Next task: **M1.3d** (container style families and compositions)
+> - Last completed task: **M1.3c** (9 flex-item/sizing families re-expressed as engine families; 333/333 golden cases identical).
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -157,7 +157,13 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - 112/112 golden cases recorded from the original resolvers (commit `baaa286`) are identical, and the original tests pass.
     - The engine gained per-family issue-code and message overrides, binding-issue ordering and an all-conflicts mode.
     - Scope moved: text-alignment and button-alignment bind widgets, so they move to M1.4. Align-content is chained on the wrap result (a wrapped-candidate base), so it moves to M1.5.
-  - [ ] **M1.3c** flex item and sizing: align-self, basis, factors, order preset/custom, min-height, boxed/full width, z-index.
+  - [x] **M1.3c** flex item and sizing _(done 2026-10-08):_
+    - Nine families moved onto the shared `responsiveEnumFamily` factory: align-self, basis, factors, order preset, custom order, min-height, boxed width, full width and z-index. Their codecs live in `mapping-engine/families/responsive-flex-item-sizing.ts` and `codecs.ts`.
+    - Golden equivalence: 333/333 cases recorded from the original resolvers (commit `bc805ef`) are identical.
+    - The engine gained parse-time condition codes with path suffixes, `extraIssueSuffixes`, a bound-target `precondition` hook, writes without a conflict check, required entry fields, type/value pairs, leading writes and an authority-message override.
+    - The original contract wording, typos included (for example "min-height" in the z-index and boxed-width conflict messages), is preserved exactly.
+    - Resolver files shrank by about 5,200 lines.
+    - The README verifier now checks the family tables.
   - [ ] **M1.3d** container styles and compositions: border, hover border, radius, box-shadow, overflow, HTML tag, overlay, hover background, gradients, hover transition, style composition.
 - Original M1.3 wording, for reference: migrate the container families: gap, padding, margin, direction, alignment, wrap, align-content, boxed/full width, min-height, radius, border, shadow, overflow, z-index, html tag, background/overlay/gradient, and opacity. Each migration ships a golden equivalence test (old resolver output == engine output on every existing fixture). Then delete the old file.
 - [ ] **M1.4** Migrate the widget families: heading and text-editor colour, and every `button-*` family.
