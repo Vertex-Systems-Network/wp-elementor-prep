@@ -144,7 +144,7 @@
       root.className = 'empty';
       root.textContent = 'Inspecting the selected Frame through the bounded read-only P15 Elementor path…';
       exportPanel.hidden = true;
-      post('p15-elementor-preview-request');
+      post('p15-elementor-preview-request', { optionBankId: selectedOptionBankId });
     });
     document.getElementById('p15-profile').addEventListener('click', () => {
       const wordpressVersion = document.getElementById('p15-wp-version').value;
@@ -155,7 +155,7 @@
       post('p15-elementor-target-profile-request', { wordpressVersion, elementorVersion });
     });
     document.getElementById('elementor-option-bank').addEventListener('change', (event) => { selectedOptionBankId = event.target.value; document.getElementById('option-bank-status').textContent = `Selected bank: ${selectedOptionBankId}`; post('option-bank-selection', { optionBankId: selectedOptionBankId }); });
-    document.getElementById('gutenberg-option-bank').addEventListener('change', (event) => { document.getElementById('option-bank-status').textContent = `Selected bank: ${event.target.value}`; post('option-bank-selection', { optionBankId: event.target.value }); });
+    document.getElementById('gutenberg-option-bank').addEventListener('change', (event) => { document.getElementById('option-bank-status').textContent = `Gutenberg bank: ${event.target.value} · Gutenberg export is not available yet`; post('option-bank-selection', { optionBankId: event.target.value }); });
     document.getElementById('plan').addEventListener('click', () => {
       root.className = 'empty';
       root.textContent = 'Classifying conservative P5 Safe Fix eligibility…';
@@ -667,6 +667,7 @@
           <div class="score">${escapeHtml(generation.status)}</div>
           <div class="status">P15 ELEMENTOR LOCAL PREVIEW · ${locked ? 'READ-ONLY / LOCKED' : 'UNEXPECTED AUTHORITY'}</div>
           <div class="meta">${escapeHtml(report.frame.name)} · Frame ${escapeHtml(report.frame.id)}</div>
+          <div class="meta">Target option bank: ${message.optionBank ? `${escapeHtml(message.optionBank.label)} · ${escapeHtml(message.optionBank.status)} (static inventory, not runtime compatibility)` : 'none'}</div>
           <div class="meta">Target import is not validated. No file download, section transfer, WordPress connection or Figma mutation is available here.</div>
           <div class="metricGrid">
             <div class="metric"><strong>${extraction.nodeCount}</strong>neutral nodes</div>
@@ -1011,7 +1012,7 @@
       }
 
       if (message.type === 'option-bank-selection-error') { document.getElementById('option-bank-status').textContent = message.message; return; }
-      if (message.type === 'option-bank-selection-result') { document.getElementById('option-bank-status').textContent = `Selected bank: ${message.optionBank.label}`; return; }
+      if (message.type === 'option-bank-selection-result') { document.getElementById('option-bank-status').textContent = message.exportAvailable === false ? `Gutenberg bank: ${message.optionBank.label} · Gutenberg export is not available yet; the Elementor preview keeps using ${selectedOptionBankId}` : `Elementor bank: ${message.optionBank.label}`; return; }
 
       if (message.type === 'p15-elementor-preview-result') {
         exportPanel.hidden = true;

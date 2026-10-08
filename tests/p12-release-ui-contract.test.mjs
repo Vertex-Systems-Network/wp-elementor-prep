@@ -24,7 +24,7 @@ describe('P12 publishable release UI capability contract', () => {
     const releaseUi = buildReleaseUi(developmentUi);
 
     expect(releaseUi).toContain('id="p15-preview"');
-    expect(releaseUi).toContain("post('p15-elementor-preview-request')");
+    expect(releaseUi).toContain("post('p15-elementor-preview-request', { optionBankId: selectedOptionBankId })");
     expect(releaseUi).toContain("message.type === 'p15-elementor-preview-result'");
     expect(releaseUi).toContain('function renderP15ElementorPreview(message)');
     expect(releaseUi).toContain('P15 ELEMENTOR LOCAL PREVIEW');
@@ -41,7 +41,7 @@ describe('P12 publishable release UI capability contract', () => {
 
     expect(releaseUi).toContain('id="p15-download"');
     expect(releaseUi).toContain('Download Elementor JSON');
-    expect(releaseUi).toContain("post('p15-elementor-local-template-download-request')");
+    expect(releaseUi).toContain("post('p15-elementor-local-template-download-request', { optionBankId: selectedOptionBankId })");
     expect(releaseUi).toContain("message.type === 'p15-elementor-local-template-download-result'");
     expect(releaseUi).toContain("message.type === 'p15-elementor-local-template-download-unavailable'");
     expect(releaseUi).toContain('function renderP15LocalTemplateDownload(message)');

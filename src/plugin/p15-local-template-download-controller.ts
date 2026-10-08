@@ -1,5 +1,6 @@
 import { buildP15ElementorV1PreviewFromFigmaFrame } from './p15-neutral-export-extractor';
 import { buildP15LocalTemplateDownloadResult } from './p15-local-template-download';
+import { DEFAULT_ELEMENTOR_OPTION_BANK_ID, resolveElementorOptionBank } from '../core/option-bank';
 
 function selectedFrame(): FrameNode | null {
   const selection = figma.currentPage.selection;
@@ -8,7 +9,15 @@ function selectedFrame(): FrameNode | null {
   return selected?.type === 'FRAME' ? selected : null;
 }
 
-function runP15LocalTemplateDownload(): void {
+function runP15LocalTemplateDownload(optionBankId?: unknown): void {
+  const bank = resolveElementorOptionBank(optionBankId, DEFAULT_ELEMENTOR_OPTION_BANK_ID);
+  if (!bank.ok) {
+    figma.ui.postMessage({
+      type: 'p15-elementor-local-template-download-unavailable',
+      message: `${bank.code}: ${bank.message}`,
+    });
+    return;
+  }
   const frame = selectedFrame();
   if (!frame) {
     figma.ui.postMessage({
@@ -22,7 +31,7 @@ function runP15LocalTemplateDownload(): void {
     // Freshness is intentional: every explicit request re-reads the current selected Frame and rebuilds
     // extraction -> readiness -> generation before the separate download contract revalidates the template.
     const extraction = buildP15ElementorV1PreviewFromFigmaFrame(frame);
-    const result = buildP15LocalTemplateDownloadResult({ id: frame.id }, extraction);
+    const result = buildP15LocalTemplateDownloadResult({ id: frame.id }, extraction, bank.optionBank.id);
     figma.ui.postMessage({
       type: 'p15-elementor-local-template-download-result',
       result,
@@ -49,7 +58,7 @@ figma.ui.onmessage = (message, props) => {
     && message !== null
     && 'type' in message
     && (message as { type?: unknown }).type === 'p15-elementor-local-template-download-request') {
-    runP15LocalTemplateDownload();
+    runP15LocalTemplateDownload((message as { optionBankId?: unknown }).optionBankId);
     return;
   }
 

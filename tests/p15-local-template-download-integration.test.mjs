@@ -21,7 +21,7 @@ describe('P15 local Template JSON integration boundaries', () => {
     const controller = readFileSync('src/plugin/p15-local-template-download-controller.ts', 'utf8');
     const selectedIndex = controller.indexOf('const frame = selectedFrame();');
     const extractionIndex = controller.indexOf('buildP15ElementorV1PreviewFromFigmaFrame(frame)');
-    const resultIndex = controller.indexOf('buildP15LocalTemplateDownloadResult({ id: frame.id }, extraction)');
+    const resultIndex = controller.indexOf('buildP15LocalTemplateDownloadResult({ id: frame.id }, extraction, bank.optionBank.id)');
 
     expect(selectedIndex).toBeGreaterThanOrEqual(0);
     expect(extractionIndex).toBeGreaterThan(selectedIndex);
@@ -50,7 +50,7 @@ describe('P15 local Template JSON integration boundaries', () => {
     expect(rawUi).not.toContain('id="p15-download"');
     expect(extended).toContain('id="p15-download"');
     expect(extended).toContain('Download Elementor JSON');
-    expect(extended).toContain("post('p15-elementor-local-template-download-request')");
+    expect(extended).toContain("post('p15-elementor-local-template-download-request', { optionBankId: selectedOptionBankId })");
     expect(extended).toContain("message.type === 'p15-elementor-local-template-download-result'");
     expect(extended).toContain('LOCAL ARTIFACT VALIDATED');
     expect(extended).toContain('TARGET IMPORT NOT VERIFIED');

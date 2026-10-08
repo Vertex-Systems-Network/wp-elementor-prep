@@ -94,7 +94,7 @@ The repository now uses a project-specific ANPOS adoption layer documented in [`
 
 ## Versioned target option-bank status
 
-The Elementor Free + Pro audit pipeline is now wired to versioned snapshots and gap reports. The current bank entry is Free 4.3.2 + Pro 4.3.0; Gutenberg has an official-contract entry. Run `npm run audit:elementor -- --elementor-free=... --elementor-pro=...` or `npm run audit:gutenberg -- --gutenberg-version=...` to append a new version. The plugin UI selectors are generated from `docs/option-bank/registry.json`. Each selector currently has one entry, and the 2026-10-08 audit found that the selection is not yet carried into the P15 preview or download receipt. Recovery task M0.9 owns that fix. Static inventory remains separate from runtime/import/render compatibility.
+The Elementor Free + Pro audit pipeline is now wired to versioned snapshots and gap reports. The current bank entry is Free 4.3.2 + Pro 4.3.0; Gutenberg has an official-contract entry. Run `npm run audit:elementor -- --elementor-free=... --elementor-pro=...` or `npm run audit:gutenberg -- --gutenberg-version=...` to append a new version. The plugin UI selectors are generated from `docs/option-bank/registry.json`, and each selector currently has one entry. The selected Elementor bank is carried into the read-only P15 preview and into the `optionBankId` of the local download receipt. A Gutenberg bank is refused for Elementor output (`P15_OPTION_BANK_TARGET_MISMATCH`), and Gutenberg export itself is not available yet (recovery M8). The bank is a static inventory: it does not change the generated mapping until version-driven profiles land in recovery M6. Static inventory remains separate from runtime/import/render compatibility.
 
 ## Before P19
 

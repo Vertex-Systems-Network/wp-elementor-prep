@@ -31,6 +31,8 @@ export interface P15LocalTemplateDownloadReceiptV1 {
   schemaVersion: 1;
   receiptVersion: typeof P15_LOCAL_TEMPLATE_DOWNLOAD_RECEIPT_VERSION;
   sourceFrameId: string;
+  /** Elementor option-bank (target version inventory) selected for this artifact; never a Gutenberg bank. */
+  optionBankId: string | null;
   extractorVersion: P15FigmaNeutralExtractionResult['extractorVersion'];
   generatorVersion: P15FigmaNeutralExtractionResult['generation']['generatorVersion'];
   candidateStatus: 'READY_FOR_TARGET_IMPORT_VALIDATION';
@@ -51,6 +53,7 @@ export interface P15LocalTemplateDownloadResultV1 {
   status: P15LocalTemplateDownloadStatus;
   source: {
     frameId: string;
+    optionBankId: string | null;
     extractorVersion: P15FigmaNeutralExtractionResult['extractorVersion'];
     generatorVersion: P15FigmaNeutralExtractionResult['generation']['generatorVersion'];
   };
@@ -119,6 +122,7 @@ function safeFileName(templateJson: string): string {
 export function buildP15LocalTemplateDownloadResult(
   frame: { id: string },
   extraction: P15FigmaNeutralExtractionResult,
+  optionBankId: string | null = null,
 ): P15LocalTemplateDownloadResultV1 {
   const compatibility = assessP15ElementorCompatibilityReadiness(extraction.document);
   const generationCandidate = extraction.generation.candidate;
@@ -158,6 +162,7 @@ export function buildP15LocalTemplateDownloadResult(
     resultVersion: P15_LOCAL_TEMPLATE_DOWNLOAD_RESULT_VERSION,
     source: {
       frameId: frame.id,
+      optionBankId,
       extractorVersion: extraction.extractorVersion,
       generatorVersion: extraction.generation.generatorVersion,
     },
@@ -191,6 +196,7 @@ export function buildP15LocalTemplateDownloadResult(
     schemaVersion: 1,
     receiptVersion: P15_LOCAL_TEMPLATE_DOWNLOAD_RECEIPT_VERSION,
     sourceFrameId: frame.id,
+    optionBankId,
     extractorVersion: extraction.extractorVersion,
     generatorVersion: extraction.generation.generatorVersion,
     candidateStatus: 'READY_FOR_TARGET_IMPORT_VALIDATION',
