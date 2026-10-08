@@ -339,6 +339,7 @@
           <div class="inlineActions">
             <button class="smallButton" id="restoreCheckpoint">Restore original</button>
             <button class="smallButton" id="finalizeCheckpoint">Finalize fix</button>
+            <button class="smallButton" id="clearStaleCheckpoint">Clear stale checkpoint</button>
           </div>
         </div>`;
     }
@@ -356,6 +357,12 @@
         root.className = 'empty';
         root.textContent = 'Finalizing Safe Fix checkpoint…';
         post('safe-fix-finalize-request');
+      });
+      const clearStale = document.getElementById('clearStaleCheckpoint');
+      if (clearStale) clearStale.addEventListener('click', () => {
+        root.className = 'empty';
+        root.textContent = 'Checking whether the Safe Fix checkpoint is stale…';
+        post('safe-fix-clear-stale-request');
       });
     }
 
@@ -1052,6 +1059,14 @@
         root.className = 'empty';
         root.textContent = message.restored
           ? 'Restore complete. The retained approved original is back in place and the committed candidate was removed.'
+          : 'No Safe Fix checkpoint was pending.';
+        return;
+      }
+
+      if (message.type === 'safe-fix-clear-stale-result') {
+        root.className = 'empty';
+        root.textContent = message.cleared
+          ? 'Stale Safe Fix checkpoint cleared. Its nodes no longer existed in this file, so nothing on the canvas was changed.'
           : 'No Safe Fix checkpoint was pending.';
         return;
       }

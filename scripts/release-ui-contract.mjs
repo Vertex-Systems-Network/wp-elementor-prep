@@ -60,6 +60,7 @@ const REQUIRED_PRODUCTION_TOKENS = [
   "post('safe-fix-apply-request'",
   "post('safe-fix-restore-request')",
   "post('safe-fix-finalize-request')",
+  "post('safe-fix-clear-stale-request')",
   "post('runtime-calibration-request')",
   "post('batch-start-request')",
   "post('batch-cancel-request')",

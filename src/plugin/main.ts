@@ -80,6 +80,8 @@ import { buildP6ClosureViewerHtml } from './p6-closure-viewer';
 import { runP6DeveloperPageFlowCalibration } from './p6-developer-calibration';
 import { buildP6DeveloperEvidenceView } from './p6-developer-evidence-view';
 import {
+  assessSafeFixCheckpoint,
+  clearStaleSafeFixCheckpoint,
   finalizeLastSafeFix,
   hasPendingSafeFixCheckpoint,
   restoreLastSafeFix,
@@ -95,7 +97,7 @@ const RUNTIME_BUILD = currentP5RuntimeBuildIdentity();
 const BACKLOG_STORAGE_PREFIX = 'p9-backlog-v1';
 let auditSequence = 0;
 
-type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize' | 'p6-page-flow-calibration' | 'batch-run' | 'batch-checkpoint' | 'p14-guided-prepare';
+type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize' | 'safe-fix-clear-stale' | 'p6-page-flow-calibration' | 'batch-run' | 'batch-checkpoint' | 'p14-guided-prepare';
 let p5OperationInFlight: P5ExclusiveOperation | null = null;
 let p7BatchState: BatchQueueState | null = null;
 let p7CancelRequested = false;
@@ -852,7 +854,33 @@ async function runSafeFixRestore(): Promise<void> {
     figma.notify(evidence ? 'Previous approved original restored.' : 'No Safe Fix checkpoint is pending.');
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    postError(`Safe Fix restore failed: ${message}`, 'safe-fix-error');
+    postError(`Safe Fix restore failed: ${message}${await staleCheckpointHint()}`, 'safe-fix-error');
+  } finally {
+    endExclusiveP5Operation(operation);
+  }
+}
+
+async function staleCheckpointHint(): Promise<string> {
+  try {
+    return (await assessSafeFixCheckpoint()) === 'STALE'
+      ? ' The checkpoint is stale in this file (its nodes no longer resolve); use "Clear stale checkpoint".'
+      : '';
+  } catch {
+    return '';
+  }
+}
+
+async function runSafeFixClearStale(): Promise<void> {
+  const operation: P5ExclusiveOperation = 'safe-fix-clear-stale';
+  if (!beginExclusiveP5Operation(operation, 'safe-fix-error')) return;
+
+  try {
+    const cleared = await clearStaleSafeFixCheckpoint();
+    figma.ui.postMessage({ type: 'safe-fix-clear-stale-result', cleared });
+    figma.notify(cleared ? 'Stale Safe Fix checkpoint cleared.' : 'No Safe Fix checkpoint is pending.');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    postError(`Clearing the Safe Fix checkpoint was refused: ${message}`, 'safe-fix-error');
   } finally {
     endExclusiveP5Operation(operation);
   }
@@ -868,7 +896,7 @@ async function runSafeFixFinalize(): Promise<void> {
     figma.notify(finalized ? 'Safe Fix finalized; previous original backup removed.' : 'No Safe Fix checkpoint is pending.');
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    postError(`Safe Fix finalize failed: ${message}`, 'safe-fix-error');
+    postError(`Safe Fix finalize failed: ${message}${await staleCheckpointHint()}`, 'safe-fix-error');
   } finally {
     endExclusiveP5Operation(operation);
   }
@@ -1120,6 +1148,11 @@ figma.ui.onmessage = async (message: unknown) => {
 
   if (type === 'safe-fix-finalize-request') {
     await runSafeFixFinalize();
+    return;
+  }
+
+  if (type === 'safe-fix-clear-stale-request') {
+    await runSafeFixClearStale();
     return;
   }
 
