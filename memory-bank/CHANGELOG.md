@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-08 — Product Recovery Program aligned
+
+- A full audit at main `9fdbe6f` compared the product contract with the code. Findings are recorded in `docs/PRODUCT_RECOVERY_PLAN.md` §2.
+- Added the canonical resumable backlog `docs/PRODUCT_RECOVERY_PLAN.md`:
+  - milestones M0–M9 with stable task IDs, acceptance criteria and Runner rows;
+  - a resume protocol mirrored in `.ai/state/CURRENT-STATE.yaml` → `recovery_program`.
+- Wired the plan into the startup read order of `AGENTS.md` and into `docs/AI_NATIVE_PLAN.md`:
+  - the core workflow now includes breakpoint sets and cross-breakpoint alignment;
+  - added §10.
+- Also wired it into NEXT_ACTIONS, ROADMAP, PROJECT_STATE and README.
+- Added decisions D-047 (recovery priority and per-milestone doc sync), D-048 (v3 Container first) and D-049 (explicit REVIEW-labelled partial export).
+- No product code changed. No authority boundary changed.
+
+
 ## 2026-09-21 — Coordinated Node 22 / Vitest 5 toolchain migration
 
 - Replaced the unsafe standalone Vitest 5 Dependabot path with coordinated issue #634.

@@ -1,6 +1,38 @@
 # Next Actions
 
-Last updated: 2026-09-28
+Last updated: 2026-09-28  
+Recovery queue added: 2026-10-08
+
+## ACTIVE QUEUE — Product Recovery Program (since 2026-10-08)
+
+Canonical backlog: [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PLAN.md) (D-047). The resume pointer is also in `.ai/state/CURRENT-STATE.yaml` → `recovery_program`.
+
+1. **Active milestone: M0 — Critical correctness fixes. Next task: M0.1**
+   - M0.1: release UI `__OPTION_BANK_REGISTRY__` substitution, plus a placeholder-free release-package test.
+2. Then, in order:
+   - M0.2: release build identity defines;
+   - M0.3: keep the subtree of an image-fill frame;
+   - M0.4: no silent drop of strokes, effects and opacity;
+   - M0.5: duplicate placed beside the source;
+   - M0.6: per-file undo checkpoint;
+   - M0.7: pixel-broker resilience;
+   - M0.8: freshness hash;
+   - M0.9: option-bank truth;
+   - M0.10: single pixel-diff implementation;
+   - M0.11: audit trigger and bounds;
+   - M0.12: milestone sync.
+3. After M0, continue with:
+   - M1: table-driven mapping engine;
+   - M2: full extraction;
+   - M3: assets;
+   - M4: responsive breakpoint engine;
+   - M5: smart duplicate and breakpoint alignment;
+   - M6: target profiles and v4 Atomic;
+   - M7: round-trip proof;
+   - M8: Gutenberg.
+
+The older sections below remain valid history and authority-boundary truth. Where they say "continue P15/P16/P17 evidence slices", that is superseded in priority by this queue (D-047).
+
 
 Runtime artifact preflight requires `config/runtime-artifacts.json` schema-v3 and must fail closed on stale or mismatched registered artifacts.
 

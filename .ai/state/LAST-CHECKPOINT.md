@@ -1,22 +1,42 @@
 # Last Durable Checkpoint
 
-Status: VERIFYING
+Status: IN_PROGRESS
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main before this state reconciliation: `a078ba40e75e0723ea71190e0d976edb423a27be`
-Canonical active Issue/PR: #846 / none
-Branch: `main`
-Candidate head source: GitHub main.
+Observed main: `9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6`
+Canonical active program: Product Recovery Program (`docs/PRODUCT_RECOVERY_PLAN.md`, D-047/D-048/D-049)
+Branch: `claude/youthful-ritchie-uch0qp` (no PR yet)
 
 ## Verified work
 
-PR #872 / Issue #871 and PR #874 applied the bounded ANPOS 1.4.0 child-adoption foundation and applicable policy contracts. Exact head `901b89cc64db1a8edadb10d6d654a80428f12d39` passed CI, CodeQL, P12 Final, P12 Offline, P15, P17, P18 and Integration Readiness; zero unresolved review threads; guarded merge produced main `55474fb5fe03ca21ae53c7a8d883ce48bd1a9dd6`.
+A full code audit compared the product contract with the code at main `9fdbe6f`. It covered:
+- the Figma plugin flow;
+- the audit/classifier;
+- the P5/P14 duplicate and recipes;
+- the P15 Elementor exporter;
+- P16/P17;
+- governance.
 
-The adoption layer adds `.ai/manifest.json`, `config/protocol/instance.json`, `config/protocol/anpos-adoption.json`, `docs/ANPOS_ADOPTION.md`, `scripts/validate-anpos-adoption.mjs`, the `anpos:validate` package command and an Integration Readiness validator step. Requirements 1–96 are covered by explicit evidence-backed applicability groups.
+Baseline checks: typecheck is clean and 1,858/1,858 tests pass. Findings are in the plan §2.
+
+The plan was aligned in the following files:
+- the new canonical backlog (M0–M9, stable task IDs, resume protocol);
+- the `AGENTS.md` startup order;
+- `docs/AI_NATIVE_PLAN.md` (breakpoint-set workflow, §10);
+- NEXT_ACTIONS, ROADMAP, PROJECT_STATE, DECISIONS and CHANGELOG;
+- the README and the Runner ledger;
+- the `recovery_program` block in CURRENT-STATE.
+
+No product code changed.
+
+## Open queue at alignment
+
+- **Issues:** #84, #119, #159, #182, #287, #846, #848, #850, #852, #856. They are unchanged; their external/manual evidence is not claimed.
+- **PRs:** #890–#893 are Dependabot dev-dependency bumps and are independent of the recovery work.
 
 ## Authority boundary
 
-This is a compatibility/adoption foundation, not full ANPOS certification. PM provider connections, verified AI identities, Supervisor leases/CAS, replay-resistant consent, repository-admin rules, commercial-service runtime, production acceptance and external target evidence remain inactive or separately gated. P15–P18 truth and the P19 freeze are unchanged.
+The recovery program changes the execution priority and the doc-sync cadence only. Safety invariants, exact-head merge gates, P12–P18 truth and the P19 freeze are unchanged.
 
 ## Exact next safe action
 
-Continue the P18/P15–P18 evidence program or select the next matrix-backed ANPOS requirement slice. Never promote policy presence, CI success or blueprint presence into external, target, production, publishing or commercial authority.
+Recovery task **M0.1**: make `buildReleaseUi` substitute `__OPTION_BANK_REGISTRY__`, and add a release-package test that rejects any remaining `__[A-Z0-9_]+__` placeholder. Then continue M0.2 → M0.12 in order.

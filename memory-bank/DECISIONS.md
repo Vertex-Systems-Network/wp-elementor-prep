@@ -342,3 +342,40 @@ Runner registration never grants execution authority. Safe non-blocking work may
 
 Compact state is size-bounded and must be reconciled before reporting COMPLETE/BLOCKED/VERIFYING/WAITING_EXTERNAL. Governance-only cycles do not rewrite large public dashboards unless public lifecycle truth materially changes.
 
+
+## D-047 — Product Recovery Program is the active development priority
+Date: 2026-10-08  
+Status: ACCEPTED (user START instruction; may be revised by the user)
+
+A full audit at main `9fdbe6f` showed the product layer lagging far behind the plan:
+- version selection is cosmetic;
+- the release UI is broken;
+- the Elementor export maps 6 container facts;
+- there is no breakpoint alignment and no Gutenberg markup;
+- the P14 duplicate exists in the dev build only;
+- about 95% of recent commits were governance/docs.
+
+`docs/PRODUCT_RECOVERY_PLAN.md` (M0–M9) becomes the canonical resumable build backlog. Execution priority moves from P15–P18 evidence-only slices to product completion in milestone order.
+
+Doc-sync cadence while a milestone is in progress:
+- only the plan and `CURRENT-STATE.yaml` change per task;
+- memory-bank, README, runner ledger and checkpoint are synced once per milestone, or immediately when phase status, authority or target-support truth changes.
+
+No new governance/evidence modules are added unless a task needs one. All safety invariants, exact-head merge gates and external-evidence boundaries (#84, #159, #182, #287, #846, #856) are unchanged.
+
+## D-048 — Elementor v3 Container schema is the first export target
+Date: 2026-10-08  
+Status: ACCEPTED (recommended default; user may override)
+
+The first native target is the documented v3 Container + core widgets schema inside Template data version `0.4`. It imports on Elementor 3.16+ and 4.x. v4 Atomic (`e-flexbox`/`e-div-block`) follows in recovery milestone M6 after an R0 refresh, as a separate versioned adapter over the same neutral IR. Gutenberg follows in M8.
+
+## D-049 — Partial export is allowed only as an explicit REVIEW-labelled artifact
+Date: 2026-10-08  
+Status: ACCEPTED
+
+Today any single REVIEW node makes the Elementor generator return `template: null`, so real designs never export. From recovery milestone M2:
+- the adapter may produce a partial template only when every unmapped item is listed in a machine-readable `REVIEW_ITEMS` list shown to the user;
+- unmapped content is preserved as an explicit placeholder, never a silent drop and never a screenshot/HTML fallback;
+- the artifact is labelled `REVIEW REQUIRED`, never `ARTIFACT VALIDATED` or ready.
+
+BLOCKED conditions (invalid schema, unsafe references, bounds exceeded) still yield no artifact.

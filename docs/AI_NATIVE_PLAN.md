@@ -5,7 +5,8 @@ Date: 2026-09-07
 Operational workflow updated: 2026-09-08  
 Commercial multi-target expansion aligned: 2026-09-11  
 Reliability/compatibility audit added: 2026-09-11  
-Runner benchmark / final-batch policy added: 2026-09-21
+Runner benchmark / final-batch policy added: 2026-09-21  
+Product recovery alignment added: 2026-10-08 (see §10 and `docs/PRODUCT_RECOVERY_PLAN.md`)
 
 ## 1. Product intent
 
@@ -17,15 +18,16 @@ The product is commercially useful only if option combinations, target versions,
 
 ## 2. Core workflow
 
-1. User selects a supported source scope.
-2. User selects a versioned target profile.
+1. User selects a supported source scope — one frame/section, or a **breakpoint set** (desktop/tablet/mobile frames of the same page/section).
+2. User selects a versioned target profile (e.g. Elementor v3 Container, Elementor v4 Atomic, Gutenberg WP 6.x); the selection drives the adapter and its capability descriptor.
 3. Plugin performs read-only audit.
 4. Scanner builds a normalized neutral model.
 5. Classifier detects layout patterns and risks.
 6. Scoring engine produces evidence-backed readiness results.
 7. Target compatibility engine reports supported, review and blocked mappings.
-8. If target preparation is needed, plugin offers a target-ready duplicate.
-9. Only previously proven recipes modify the candidate/duplicate.
+8. If target preparation is needed, plugin offers a target-ready duplicate placed beside the untouched original.
+9. Only previously proven recipes modify the candidate/duplicate; the prepared duplicate must remain visually identical to the original.
+9a. For a breakpoint set, nodes are matched across breakpoints and the duplicates are aligned to one shared hierarchy so each element maps to one target element with desktop base values and tablet/mobile responsive overrides; unmatched structure is REVIEW.
 10. Geometry/content/image/structure/pixel validation runs.
 11. A versioned target adapter generates an artifact atomically.
 12. Target schema/package/references/assets are validated.
@@ -366,3 +368,36 @@ P13 implementation remains blocked until the internal P12 release-exit gate in #
 - entitlements gate surfaces, not correctness;
 - no silent fallback changes the output strategy behind the user's back;
 - optional AI cannot authorize mutation, change score evidence, replace validators or claim unsupported target compatibility.
+
+## 10. Product recovery alignment (2026-10-08)
+
+A full code audit at main `9fdbe6f` found the governance/safety framework strong but the product layer thin:
+- target/version selection is cosmetic;
+- the release UI build is broken;
+- the Elementor extractor maps only six container facts, with no typography, sizing, styles or assets;
+- cross-breakpoint alignment does not exist;
+- Gutenberg markup generation does not exist;
+- the target-ready duplicate exists only in the dev build;
+- about 37k LOC of Elementor resolvers are unreachable from the plugin.
+
+The canonical response is `docs/PRODUCT_RECOVERY_PLAN.md`. It is the single resumable build backlog, organised as milestones with task IDs:
+
+| Milestone | Scope |
+|---|---|
+| M0 | Critical fixes |
+| M1 | Table-driven mapping engine |
+| M2 | Full extraction |
+| M3 | Assets |
+| M4 | Responsive breakpoint engine |
+| M5 | Smart duplicate + structure alignment |
+| M6 | Real target profiles incl. v4 Atomic |
+| M7 | Round-trip proof |
+| M8 | Gutenberg |
+| M9+ | Remaining P17–P27 |
+
+Rules for this alignment:
+- Decisions D-047, D-048 and D-049 govern the program.
+- Every principle in §5 and every invariant in `AGENTS.md` stays in force.
+- The program changes the execution priority and the doc-sync cadence. It does not change the safety or authority boundaries.
+
+Resume protocol: read the plan's RESUME POINTER (mirrored in `.ai/state/CURRENT-STATE.yaml` → `recovery_program`), take the first unchecked task of the active milestone, and after each task tick it, advance both pointers, commit and push.

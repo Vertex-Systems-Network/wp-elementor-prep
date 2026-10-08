@@ -2,6 +2,32 @@
 
 Deterministic Figma audit and target-ready preparation for WordPress builders and web code. The current Figma plugin core is network-free and does not visually redesign approved source frames.
 
+## Product Recovery Program (active since 2026-10-08)
+
+A full code audit at main `9fdbe6f` showed that the safety/evidence framework is strong but the product layer is thin. The audit found:
+- target/version selection is cosmetic;
+- the release UI build is broken;
+- the Elementor export maps only basic container layout, with no typography, sizing, styles or images;
+- desktop/tablet/mobile alignment does not exist yet;
+- Gutenberg block generation does not exist yet.
+
+The single resumable build backlog is [`docs/PRODUCT_RECOVERY_PLAN.md`](docs/PRODUCT_RECOVERY_PLAN.md). Its milestones:
+
+| Milestone | Scope |
+|---|---|
+| M0 | Critical fixes |
+| M1 | Mapping engine |
+| M2 | Full extraction |
+| M3 | Assets |
+| M4 | Responsive breakpoint engine |
+| M5 | Smart duplicate + structure alignment |
+| M6 | Target profiles / v4 Atomic |
+| M7 | Round-trip proof |
+| M8 | Gutenberg |
+| M9+ | Remaining phases |
+
+Current: **M0, next task M0.1**.
+
 ## Current phase progress
 
 **P15, P16 and P17 are in progress.** Their scopes are still expanding, so the repository does not assign a completion percentage to them. “Implemented” below means bounded code exists; it does not mean a real imported design matches Figma or is approved for production.
@@ -27,6 +53,7 @@ The two Package 13/14 Website Template ZIPs still contain temporary Figma asset 
 | Module | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---:|---|---|
 | AI-native governance + repo tooling | ANPOS CHILD-ADOPTION FOUNDATION IMPLEMENTED / FULL ASSURANCE MAPPING IN PROGRESS | N/A | `──────────` | `.ai/manifest.json`, active-project identity, Requirements 1–96 applicability matrix, applicable policy contracts and deterministic validator added; PM/agent identity/consent/lease/commercial capabilities remain explicitly inactive; #287 admin branch/ruleset enforcement still required |
+| Product Recovery Program (M0–M9) | IN PROGRESS / M0 ACTIVE | 0% | `░░░░░░░░░░` | 0/10 milestones accepted; plan aligned 2026-10-08; next task M0.1 release UI placeholder fix — see `docs/PRODUCT_RECOVERY_PLAN.md` |
 | P0–P4 historical core aggregate | COMPLETE | 100% | `██████████` | Compatibility summary only; individual P0-P4 rows below are canonical for phase visibility |
 | P0 AI-native foundation + audit-only scaffold | COMPLETE | 100% | `██████████` | Planning, memory-bank, deterministic audit-only scaffold and CI foundation established |
 | P1 Audit-Only MVP + golden-fixture calibration | COMPLETE | 100% | `██████████` | Read-only selected-frame audit, explainable scoring and fixture calibration complete |
@@ -67,7 +94,7 @@ The repository now uses a project-specific ANPOS adoption layer documented in [`
 
 ## Versioned target option-bank status
 
-The Elementor Free + Pro audit pipeline is now wired to versioned snapshots and gap reports. The current bank entry is Free 4.3.2 + Pro 4.3.0; Gutenberg has an official-contract entry. Run `npm run audit:elementor -- --elementor-free=... --elementor-pro=...` or `npm run audit:gutenberg -- --gutenberg-version=...` to append a new version. The plugin UI selectors are generated from `docs/option-bank/registry.json`; selecting a bank is carried into the read-only P15 preview receipt. Static inventory remains separate from runtime/import/render compatibility.
+The Elementor Free + Pro audit pipeline is now wired to versioned snapshots and gap reports. The current bank entry is Free 4.3.2 + Pro 4.3.0; Gutenberg has an official-contract entry. Run `npm run audit:elementor -- --elementor-free=... --elementor-pro=...` or `npm run audit:gutenberg -- --gutenberg-version=...` to append a new version. The plugin UI selectors are generated from `docs/option-bank/registry.json`. Each selector currently has one entry, and the 2026-10-08 audit found that the selection is not yet carried into the P15 preview or download receipt. Recovery task M0.9 owns that fix. Static inventory remains separate from runtime/import/render compatibility.
 
 ## Before P19
 

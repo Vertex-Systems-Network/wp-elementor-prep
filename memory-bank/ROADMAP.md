@@ -2,6 +2,24 @@
 
 Last updated: 2026-09-27
 
+## Product Recovery Program overlay (2026-10-08, D-047)
+
+The phase table below is unchanged. Execution order now follows [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PLAN.md):
+
+| Milestone | Primary phases served | Status |
+|---|---|---|
+| M0 Critical correctness fixes | P5, P11/P12 release build, P13, P14, P15 | ACTIVE — next task M0.1 |
+| M1 Table-driven Elementor mapping engine | P15 | QUEUED |
+| M2 Full single-frame extraction | P15 (and P17/P18 IR feed) | QUEUED |
+| M3 Assets | P15, P19 | QUEUED |
+| M4 Responsive breakpoint engine | P13, P15 | QUEUED |
+| M5 Smart duplicate + structure alignment | P5, P6, P14 | QUEUED |
+| M6 Version-driven target profiles + v4 Atomic | R0/R1, P15 | QUEUED |
+| M7 Round-trip visual proof | P15, P20 | QUEUED |
+| M8 Gutenberg native export | P16 | QUEUED |
+| M9+ Remaining roadmap | P17–P27 | QUEUED |
+
+
 | Module / Phase | Scope | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---|---:|---|---|
 | AI-native governance/tooling | Memory-bank, issue/PR-first lifecycle, R0 research, R1 reliability, CI/provenance | REPO-SIDE DETECTION COMPLETE / ADMIN ENFORCEMENT IN PROGRESS | N/A | `──────────` | Release-train cadence active; #287 admin branch/ruleset enforcement still required |

@@ -2,6 +2,26 @@
 
 Last updated: 2026-09-28
 
+## Product Recovery Program — audited truth (2026-10-08)
+
+A full code audit at main `9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6` (see `docs/PRODUCT_RECOVERY_PLAN.md` §2) found the following:
+
+- **Works:** the deterministic read-only audit and scoring, and the transaction/rollback scaffolding. Typecheck is clean and 1,858/1,858 tests pass (mock/fixture based).
+- **Broken in release:**
+  - the release UI keeps the raw `__OPTION_BANK_REGISTRY__` token, which stops the UI script;
+  - the release build lacks the `__WPEP_BUILD_*` identity defines, so Safe Fix and batch cannot unlock.
+- **Thin:** the Elementor export maps only direction, gap, padding, alignment, solid background and uniform radius. Text has no typography or colour. Images, vectors, absolute layout, gradients, strokes and effects cause REVIEW (whole template withheld) or a silent drop.
+- **Absent:**
+  - breakpoint (desktop/tablet/mobile) pairing and alignment;
+  - Gutenberg block markup generation;
+  - version-driven adapter selection (the option-bank select is cosmetic);
+  - a round-trip Figma-vs-render comparison.
+- **Dev-only:** the P14 target-ready duplicate. It lands on top of the source. The shipped P5 Safe Fix replaces the original in place.
+- **Unreachable:** about 37k LOC of `src/targets/elementor/*-resolution.ts` (manifest-driven, not bundled).
+
+The active priority is now recovery milestone **M0, next task M0.1** (D-047). Phase rows and authority boundaries below are unchanged.
+
+
 ## Product direction
 
 WP Builders Prepare is a deterministic Figma audit/safe-prep platform evolving toward validated multi-target build output while preserving offline/fail-closed authority boundaries.
