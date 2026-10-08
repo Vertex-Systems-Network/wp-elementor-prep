@@ -1,6 +1,7 @@
 import { extendP15LocalTemplateDownloadUi } from './p15-local-template-download-ui.mjs';
 import { buildSecureUi } from './ui-security-contract.mjs';
 import { injectOptionBankRegistry } from './option-bank-ui.mjs';
+import { injectPixelDiffRuntime } from './ui-pixel-diff-runtime.mjs';
 
 function requireReplacement(source, from, to, label) {
   if (!source.includes(from)) {
@@ -126,7 +127,7 @@ export function assertReleaseUiCapabilities(source) {
 }
 
 export function buildReleaseUi(developmentUi, optionBankRegistry) {
-  const extendedDevelopmentUi = extendP15LocalTemplateDownloadUi(injectOptionBankRegistry(developmentUi, optionBankRegistry));
+  const extendedDevelopmentUi = extendP15LocalTemplateDownloadUi(injectPixelDiffRuntime(injectOptionBankRegistry(developmentUi, optionBankRegistry)));
   let releaseUi = buildSecureUi(extendedDevelopmentUi).replace(/\r\n/g, '\n');
 
   releaseUi = requireReplacement(

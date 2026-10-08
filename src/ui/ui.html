@@ -238,55 +238,8 @@
       return { width: imageData.width, height: imageData.height, data: imageData.data };
     }
 
-    function comparePixels(before, after, channelTolerance) {
-      const sameDimensions = before.width === after.width && before.height === after.height;
-      if (!sameDimensions) {
-        return {
-          sameDimensions: false,
-          widthBefore: before.width,
-          heightBefore: before.height,
-          widthAfter: after.width,
-          heightAfter: after.height,
-          totalPixels: 0,
-          changedPixels: 0,
-          changedPixelPct: 100,
-          meanChannelDelta: 255,
-          maxChannelDelta: 255,
-          channelTolerance,
-        };
-      }
-
-      const totalPixels = before.width * before.height;
-      let changedPixels = 0;
-      let sumChannelDelta = 0;
-      let maxChannelDelta = 0;
-
-      for (let pixel = 0; pixel < totalPixels; pixel += 1) {
-        const offset = pixel * 4;
-        let changed = false;
-        for (let channel = 0; channel < 4; channel += 1) {
-          const delta = Math.abs(before.data[offset + channel] - after.data[offset + channel]);
-          sumChannelDelta += delta;
-          maxChannelDelta = Math.max(maxChannelDelta, delta);
-          if (delta > channelTolerance) changed = true;
-        }
-        if (changed) changedPixels += 1;
-      }
-
-      return {
-        sameDimensions: true,
-        widthBefore: before.width,
-        heightBefore: before.height,
-        widthAfter: after.width,
-        heightAfter: after.height,
-        totalPixels,
-        changedPixels,
-        changedPixelPct: totalPixels ? round((changedPixels / totalPixels) * 100) : 0,
-        meanChannelDelta: totalPixels ? round(sumChannelDelta / (totalPixels * 4)) : 0,
-        maxChannelDelta,
-        channelTolerance,
-      };
-    }
+    // Exactly the unit-tested src/core/pixel-diff.ts comparePixelBuffers, compiled in at build time.
+    const comparePixels = __PIXEL_DIFF_RUNTIME__;
 
     function renderBacklog(backlog) {
       if (!backlog || !Array.isArray(backlog.items)) return '';

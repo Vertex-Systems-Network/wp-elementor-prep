@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { extendP15LocalTemplateDownloadUi } from './p15-local-template-download-ui.mjs';
 import { buildSecureUi } from './ui-security-contract.mjs';
 import { injectOptionBankRegistry } from './option-bank-ui.mjs';
+import { injectPixelDiffRuntime } from './ui-pixel-diff-runtime.mjs';
 
 const packageJson = JSON.parse(await readFile('package.json', 'utf8'));
 await mkdir('dist', { recursive: true });
@@ -71,7 +72,7 @@ await build({
 });
 
 const optionBankRegistry = await readFile('docs/option-bank/registry.json', 'utf8');
-const developmentUi = extendP15LocalTemplateDownloadUi(injectOptionBankRegistry(await readFile('src/ui/ui.html', 'utf8'), optionBankRegistry));
+const developmentUi = extendP15LocalTemplateDownloadUi(injectPixelDiffRuntime(injectOptionBankRegistry(await readFile('src/ui/ui.html', 'utf8'), optionBankRegistry)));
 await writeFile('dist/ui.html', buildSecureUi(developmentUi), 'utf8');
 
 const template = await readFile('manifest.template.json', 'utf8');
