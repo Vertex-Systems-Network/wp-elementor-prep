@@ -64,8 +64,8 @@ function nativeReason(node: Exclude<P15NeutralExportNode, P15NeutralReviewNode>)
   return 'P15_NATIVE_IMAGE';
 }
 
-function classifyReview(node: P15NeutralReviewNode): P15ElementorCompatibilityFindingV1 {
-  if (node.reasonCode === 'IMAGE_ASSET_EXPORT_REQUIRED') {
+function classifyReview(node: Pick<P15NeutralReviewNode, 'sourceNodeId' | 'reasonCode'>): P15ElementorCompatibilityFindingV1 {
+  if (node.reasonCode === 'IMAGE_ASSET_EXPORT_REQUIRED' || node.reasonCode === 'CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW') {
     return {
       sourceNodeId: node.sourceNodeId,
       category: 'NATIVE_WITH_REVIEW',
@@ -92,11 +92,17 @@ function collectFindings(nodes: readonly P15NeutralExportNode[], findings: P15El
       findings.push(classifyReview(node));
       continue;
     }
-    findings.push({
-      sourceNodeId: node.sourceNodeId,
-      category: 'NATIVE',
-      reasonCode: nativeReason(node),
-    });
+    if ((node.kind === 'container' || node.kind === 'text') && node.styleReviews !== undefined) {
+      for (const styleReview of node.styleReviews) {
+        findings.push(classifyReview({ sourceNodeId: node.sourceNodeId, reasonCode: styleReview.reasonCode }));
+      }
+    } else {
+      findings.push({
+        sourceNodeId: node.sourceNodeId,
+        category: 'NATIVE',
+        reasonCode: nativeReason(node),
+      });
+    }
     if (node.kind === 'container') collectFindings(node.children, findings);
   }
 }

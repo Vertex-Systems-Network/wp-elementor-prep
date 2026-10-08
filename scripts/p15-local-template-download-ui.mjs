@@ -16,7 +16,7 @@ const CLICK_SOURCE = `    document.getElementById('p15-preview').addEventListene
       root.className = 'empty';
       root.textContent = 'Inspecting the selected Frame through the bounded read-only P15 Elementor path…';
       exportPanel.hidden = true;
-      post('p15-elementor-preview-request');
+      post('p15-elementor-preview-request', { optionBankId: selectedOptionBankId });
     });
     document.getElementById('p15-profile').addEventListener('click', () => {`;
 
@@ -24,13 +24,13 @@ const CLICK_EXTENDED = `    document.getElementById('p15-preview').addEventListe
       root.className = 'empty';
       root.textContent = 'Inspecting the selected Frame through the bounded read-only P15 Elementor path…';
       exportPanel.hidden = true;
-      post('p15-elementor-preview-request');
+      post('p15-elementor-preview-request', { optionBankId: selectedOptionBankId });
     });
     document.getElementById('p15-download').addEventListener('click', () => {
       root.className = 'empty';
       root.textContent = 'Re-reading the current selected Frame and building a fresh locally validated Elementor Template JSON…';
       exportPanel.hidden = true;
-      post('p15-elementor-local-template-download-request');
+      post('p15-elementor-local-template-download-request', { optionBankId: selectedOptionBankId });
     });
     document.getElementById('p15-profile').addEventListener('click', () => {`;
 

@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { build } from 'esbuild';
 import { assertSafeReleaseOutputOnDisk } from './release-path-safety.mjs';
 import { buildReleaseUi } from './release-ui-contract.mjs';
+import { assertNoUnresolvedPluginBuildDefines, releasePluginBuildDefines } from './release-build-defines.mjs';
 
 function parseArgs(argv) {
   const result = new Map();
@@ -82,13 +83,16 @@ await build({
   sourcemap: false,
   legalComments: 'none',
   define: {
-    __PLUGIN_VERSION__: JSON.stringify(packageJson.version),
-    __P5_SOURCE_SHA__: JSON.stringify(sourceSha),
-    __P5_GITHUB_RUN_ID__: JSON.stringify(githubRunId),
-    __P5_GITHUB_RUN_NUMBER__: JSON.stringify(githubRunNumber),
+    ...releasePluginBuildDefines({
+      pluginVersion: packageJson.version,
+      sourceSha,
+      runId: githubRunId,
+      runNumber: githubRunNumber,
+    }),
     __P14_INTERNAL_ACTIVATION__: 'false',
   },
 });
+assertNoUnresolvedPluginBuildDefines(await readFile(resolve(pluginDir, 'code.js'), 'utf8'), 'plugin/code.js');
 await writeFile(resolve(pluginDir, 'ui.html'), releaseUi, 'utf8');
 await writeFile(resolve(pluginDir, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
 

@@ -173,10 +173,10 @@ describe('P15 bounded container visual fidelity', () => {
       .toBe('CORNER_RADIUS_OUT_OF_RANGE');
   });
 
-  it('preserves the existing asset-closure review boundary for image fills', () => {
+  it('keeps an image-backed container as a container with a background-image REVIEW (recovery M0.3)', () => {
     expect(firstReason({
       fills: [{ type: 'IMAGE', visible: true, imageHash: 'fake-hash', scaleMode: 'FILL' }],
-    })).toBe('IMAGE_ASSET_EXPORT_REQUIRED');
+    })).toBe('CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW');
   });
 
   it('validates canonical color/radius facts and rejects malformed or target-specific style leakage', () => {

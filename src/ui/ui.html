@@ -66,6 +66,7 @@
   <div class="app">
     <h1>WP Builders Prepare</h1>
     <div class="sub">Audit + P13 Build-Ready + internal confirmed P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>
+    <div id="background-audit-notice" class="meta" hidden></div>
     <div id="root" class="empty">Select one Frame to audit/preview, two Frames to compare, or multiple Frames for P7 batch processing.</div>
     <div class="profilePanel">
       <div class="status">Declared TargetProfile compatibility</div>
@@ -111,6 +112,8 @@
 
   <script>
     const root = document.getElementById('root');
+    // True while the audit view (or the initial empty state) is shown; other panels are preserved.
+    let auditPanelActive = true;
     const optionBankRegistry = __OPTION_BANK_REGISTRY__;
     let selectedOptionBankId = optionBankRegistry.elementor[0]?.id || '';
     function fillOptionBanks() {
@@ -144,7 +147,7 @@
       root.className = 'empty';
       root.textContent = 'Inspecting the selected Frame through the bounded read-only P15 Elementor path…';
       exportPanel.hidden = true;
-      post('p15-elementor-preview-request');
+      post('p15-elementor-preview-request', { optionBankId: selectedOptionBankId });
     });
     document.getElementById('p15-profile').addEventListener('click', () => {
       const wordpressVersion = document.getElementById('p15-wp-version').value;
@@ -155,7 +158,7 @@
       post('p15-elementor-target-profile-request', { wordpressVersion, elementorVersion });
     });
     document.getElementById('elementor-option-bank').addEventListener('change', (event) => { selectedOptionBankId = event.target.value; document.getElementById('option-bank-status').textContent = `Selected bank: ${selectedOptionBankId}`; post('option-bank-selection', { optionBankId: selectedOptionBankId }); });
-    document.getElementById('gutenberg-option-bank').addEventListener('change', (event) => { document.getElementById('option-bank-status').textContent = `Selected bank: ${event.target.value}`; post('option-bank-selection', { optionBankId: event.target.value }); });
+    document.getElementById('gutenberg-option-bank').addEventListener('change', (event) => { document.getElementById('option-bank-status').textContent = `Gutenberg bank: ${event.target.value} · Gutenberg export is not available yet`; post('option-bank-selection', { optionBankId: event.target.value }); });
     document.getElementById('plan').addEventListener('click', () => {
       root.className = 'empty';
       root.textContent = 'Classifying conservative P5 Safe Fix eligibility…';
@@ -238,55 +241,8 @@
       return { width: imageData.width, height: imageData.height, data: imageData.data };
     }
 
-    function comparePixels(before, after, channelTolerance) {
-      const sameDimensions = before.width === after.width && before.height === after.height;
-      if (!sameDimensions) {
-        return {
-          sameDimensions: false,
-          widthBefore: before.width,
-          heightBefore: before.height,
-          widthAfter: after.width,
-          heightAfter: after.height,
-          totalPixels: 0,
-          changedPixels: 0,
-          changedPixelPct: 100,
-          meanChannelDelta: 255,
-          maxChannelDelta: 255,
-          channelTolerance,
-        };
-      }
-
-      const totalPixels = before.width * before.height;
-      let changedPixels = 0;
-      let sumChannelDelta = 0;
-      let maxChannelDelta = 0;
-
-      for (let pixel = 0; pixel < totalPixels; pixel += 1) {
-        const offset = pixel * 4;
-        let changed = false;
-        for (let channel = 0; channel < 4; channel += 1) {
-          const delta = Math.abs(before.data[offset + channel] - after.data[offset + channel]);
-          sumChannelDelta += delta;
-          maxChannelDelta = Math.max(maxChannelDelta, delta);
-          if (delta > channelTolerance) changed = true;
-        }
-        if (changed) changedPixels += 1;
-      }
-
-      return {
-        sameDimensions: true,
-        widthBefore: before.width,
-        heightBefore: before.height,
-        widthAfter: after.width,
-        heightAfter: after.height,
-        totalPixels,
-        changedPixels,
-        changedPixelPct: totalPixels ? round((changedPixels / totalPixels) * 100) : 0,
-        meanChannelDelta: totalPixels ? round(sumChannelDelta / (totalPixels * 4)) : 0,
-        maxChannelDelta,
-        channelTolerance,
-      };
-    }
+    // Exactly the unit-tested src/core/pixel-diff.ts comparePixelBuffers, compiled in at build time.
+    const comparePixels = __PIXEL_DIFF_RUNTIME__;
 
     function renderBacklog(backlog) {
       if (!backlog || !Array.isArray(backlog.items)) return '';
@@ -339,6 +295,7 @@
           <div class="inlineActions">
             <button class="smallButton" id="restoreCheckpoint">Restore original</button>
             <button class="smallButton" id="finalizeCheckpoint">Finalize fix</button>
+            <button class="smallButton" id="clearStaleCheckpoint">Clear stale checkpoint</button>
           </div>
         </div>`;
     }
@@ -356,6 +313,12 @@
         root.className = 'empty';
         root.textContent = 'Finalizing Safe Fix checkpoint…';
         post('safe-fix-finalize-request');
+      });
+      const clearStale = document.getElementById('clearStaleCheckpoint');
+      if (clearStale) clearStale.addEventListener('click', () => {
+        root.className = 'empty';
+        root.textContent = 'Checking whether the Safe Fix checkpoint is stale…';
+        post('safe-fix-clear-stale-request');
       });
     }
 
@@ -660,6 +623,7 @@
           <div class="score">${escapeHtml(generation.status)}</div>
           <div class="status">P15 ELEMENTOR LOCAL PREVIEW · ${locked ? 'READ-ONLY / LOCKED' : 'UNEXPECTED AUTHORITY'}</div>
           <div class="meta">${escapeHtml(report.frame.name)} · Frame ${escapeHtml(report.frame.id)}</div>
+          <div class="meta">Target option bank: ${message.optionBank ? `${escapeHtml(message.optionBank.label)} · ${escapeHtml(message.optionBank.status)} (static inventory, not runtime compatibility)` : 'none'}</div>
           <div class="meta">Target import is not validated. No file download, section transfer, WordPress connection or Figma mutation is available here.</div>
           <div class="metricGrid">
             <div class="metric"><strong>${extraction.nodeCount}</strong>neutral nodes</div>
@@ -966,7 +930,25 @@
         return;
       }
 
+      const backgroundNotice = document.getElementById('background-audit-notice');
+      if (message.type === 'audit-background-notice') {
+        backgroundNotice.textContent = typeof message.message === 'string' ? message.message : 'Background audit skipped.';
+        backgroundNotice.hidden = false;
+        return;
+      }
+      // An automatic (selection-change) audit must not replace a P14/P15/Safe Fix/batch/validation panel.
+      if (message.type === 'audit-result' && message.automatic === true && !auditPanelActive) {
+        backgroundNotice.textContent = 'Selection changed: the audit was refreshed in the background. Click "Run audit" to view it.';
+        backgroundNotice.hidden = false;
+        return;
+      }
+      if (message.type !== 'audit-result' && message.type !== 'audit-error' && message.type !== 'validation-pixel-request' && !message.type.startsWith('option-bank-')) {
+        auditPanelActive = false;
+      }
+
       if (message.type === 'audit-result') {
+        auditPanelActive = true;
+        backgroundNotice.hidden = true;
         latestAuditJson = typeof message.auditJson === 'string' ? message.auditJson : '';
         latestAuditMarkdown = typeof message.auditMarkdown === 'string' ? message.auditMarkdown : '';
         latestBacklogJson = typeof message.backlogJson === 'string' ? message.backlogJson : '';
@@ -1004,7 +986,7 @@
       }
 
       if (message.type === 'option-bank-selection-error') { document.getElementById('option-bank-status').textContent = message.message; return; }
-      if (message.type === 'option-bank-selection-result') { document.getElementById('option-bank-status').textContent = `Selected bank: ${message.optionBank.label}`; return; }
+      if (message.type === 'option-bank-selection-result') { document.getElementById('option-bank-status').textContent = message.exportAvailable === false ? `Gutenberg bank: ${message.optionBank.label} · Gutenberg export is not available yet; the Elementor preview keeps using ${selectedOptionBankId}` : `Elementor bank: ${message.optionBank.label}`; return; }
 
       if (message.type === 'p15-elementor-preview-result') {
         exportPanel.hidden = true;
@@ -1052,6 +1034,14 @@
         root.className = 'empty';
         root.textContent = message.restored
           ? 'Restore complete. The retained approved original is back in place and the committed candidate was removed.'
+          : 'No Safe Fix checkpoint was pending.';
+        return;
+      }
+
+      if (message.type === 'safe-fix-clear-stale-result') {
+        root.className = 'empty';
+        root.textContent = message.cleared
+          ? 'Stale Safe Fix checkpoint cleared. Its nodes no longer existed in this file, so nothing on the canvas was changed.'
           : 'No Safe Fix checkpoint was pending.';
         return;
       }

@@ -131,7 +131,7 @@ describe('P15 normal-plugin preview report', () => {
     const html = readFileSync('src/ui/ui.html', 'utf8');
     const main = readFileSync('src/plugin/main.ts', 'utf8');
 
-    expect(html).toContain("post('p15-elementor-preview-request')");
+    expect(html).toContain("post('p15-elementor-preview-request', { optionBankId: selectedOptionBankId })");
     expect(html).toContain("message.type === 'p15-elementor-preview-result'");
     expect(html).toContain("message.type === 'p15-elementor-preview-unavailable'");
     expect(main).toContain("type === 'p15-elementor-preview-request'");

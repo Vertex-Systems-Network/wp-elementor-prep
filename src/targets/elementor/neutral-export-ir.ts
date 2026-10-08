@@ -5,6 +5,7 @@ export const P15_NEUTRAL_EXPORT_MAX_TEXT_LENGTH = 20_000;
 export const P15_NEUTRAL_EXPORT_MAX_URL_LENGTH = 4_096;
 export const P15_NEUTRAL_EXPORT_MAX_SPACING_PX = 4_096;
 export const P15_NEUTRAL_EXPORT_MAX_RADIUS_PX = 4_096;
+export const P15_NEUTRAL_EXPORT_MAX_STYLE_REVIEWS = 16;
 
 export type P15NeutralDocumentType = 'page' | 'section';
 export type P15NeutralDirection = 'row' | 'column';
@@ -25,6 +26,15 @@ interface P15NeutralNodeBase {
   sourceNodeId: string;
 }
 
+/**
+ * A node-level fidelity fact that cannot be mapped yet (for example an image background, a stroke
+ * or a shadow). The node and its children are still extracted; the generator treats each entry as REVIEW.
+ */
+export interface P15NeutralStyleReview {
+  reasonCode: string;
+  detail: string;
+}
+
 export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   kind: 'container';
   direction: P15NeutralDirection;
@@ -34,6 +44,7 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   justifyContent?: P15NeutralJustification;
   backgroundColorHex?: string;
   cornerRadiusPx?: number;
+  styleReviews?: P15NeutralStyleReview[];
   children: P15NeutralExportNode[];
 }
 
@@ -48,6 +59,7 @@ export interface P15NeutralTextNode extends P15NeutralNodeBase {
   kind: 'text';
   text: string;
   align?: P15NeutralTextAlignment;
+  styleReviews?: P15NeutralStyleReview[];
 }
 
 export interface P15NeutralButtonNode extends P15NeutralNodeBase {
@@ -233,6 +245,29 @@ function validateText(value: unknown, path: string, state: ValidationState, maxL
   }
 }
 
+function validReviewReasonCode(value: unknown): boolean {
+  return boundedString(value, 128) && /^[A-Z0-9_:-]+$/.test(String(value));
+}
+
+function validateStyleReviews(value: unknown, path: string, state: ValidationState): void {
+  if (!Array.isArray(value) || value.length === 0 || value.length > P15_NEUTRAL_EXPORT_MAX_STYLE_REVIEWS) {
+    pushIssue(state, 'P15_IR_REVIEW_REASON_INVALID', path, `styleReviews must be a non-empty array of at most ${P15_NEUTRAL_EXPORT_MAX_STYLE_REVIEWS} entries when provided.`);
+    return;
+  }
+  value.forEach((entry, index) => {
+    const entryPath = `${path}[${index}]`;
+    if (!isRecord(entry)) {
+      pushIssue(state, 'P15_IR_REVIEW_REASON_INVALID', entryPath, 'Style review entries must be objects.');
+      return;
+    }
+    validateExactKeys(entry, ['reasonCode', 'detail'], entryPath, state);
+    if (!validReviewReasonCode(entry.reasonCode)) {
+      pushIssue(state, 'P15_IR_REVIEW_REASON_INVALID', `${entryPath}.reasonCode`, 'Review reasonCode must be a bounded uppercase identifier.');
+    }
+    validateText(entry.detail, `${entryPath}.detail`, state, 2_000);
+  });
+}
+
 function validateNode(value: unknown, path: string, depth: number, state: ValidationState): void {
   if (depth > P15_NEUTRAL_EXPORT_MAX_DEPTH) {
     pushIssue(state, 'P15_IR_DEPTH_LIMIT_EXCEEDED', path, `Neutral export nesting exceeds ${P15_NEUTRAL_EXPORT_MAX_DEPTH} levels.`);
@@ -258,7 +293,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -282,6 +317,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     if (value.justifyContent !== undefined && !['start', 'center', 'end', 'space-between', 'space-around', 'space-evenly'].includes(String(value.justifyContent))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.justifyContent`, 'justifyContent is outside the bounded neutral justification vocabulary.');
     }
+    if (value.styleReviews !== undefined) validateStyleReviews(value.styleReviews, `${path}.styleReviews`, state);
     if (!Array.isArray(value.children)) {
       pushIssue(state, 'P15_IR_CONTAINER_CHILDREN_INVALID', `${path}.children`, 'Container children must be an array.');
       return;
@@ -306,8 +342,9 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'text') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'styleReviews'], path, state);
     validateText(value.text, `${path}.text`, state);
+    if (value.styleReviews !== undefined) validateStyleReviews(value.styleReviews, `${path}.styleReviews`, state);
     if (value.align !== undefined && !['start', 'center', 'end', 'justify'].includes(String(value.align))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.align`, 'Text alignment must be start, center, end or justify.');
     }

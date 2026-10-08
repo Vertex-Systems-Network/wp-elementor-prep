@@ -26,7 +26,7 @@ The single resumable build backlog is [`docs/PRODUCT_RECOVERY_PLAN.md`](docs/PRO
 | M8 | Gutenberg |
 | M9+ | Remaining phases |
 
-Current: **M0, next task M0.1**.
+Current: **M0 implemented (12/12 tasks), exact-head CI pending; next M1.1**.
 
 ## Current phase progress
 
@@ -53,7 +53,7 @@ The two Package 13/14 Website Template ZIPs still contain temporary Figma asset 
 | Module | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---:|---|---|
 | AI-native governance + repo tooling | ANPOS CHILD-ADOPTION FOUNDATION IMPLEMENTED / FULL ASSURANCE MAPPING IN PROGRESS | N/A | `──────────` | `.ai/manifest.json`, active-project identity, Requirements 1–96 applicability matrix, applicable policy contracts and deterministic validator added; PM/agent identity/consent/lease/commercial capabilities remain explicitly inactive; #287 admin branch/ruleset enforcement still required |
-| Product Recovery Program (M0–M9) | IN PROGRESS / M0 ACTIVE | 0% | `░░░░░░░░░░` | 0/10 milestones accepted; plan aligned 2026-10-08; next task M0.1 release UI placeholder fix — see `docs/PRODUCT_RECOVERY_PLAN.md` |
+| Product Recovery Program (M0–M9) | IN PROGRESS / M0 IMPLEMENTED, EXACT-HEAD CI PENDING | 10% impl | `█░░░░░░░░░` | M0 12/12 tasks implemented; M0 acceptance needs a green exact-head PR; next M1.1 table-driven mapping engine — see `docs/PRODUCT_RECOVERY_PLAN.md` |
 | P0–P4 historical core aggregate | COMPLETE | 100% | `██████████` | Compatibility summary only; individual P0-P4 rows below are canonical for phase visibility |
 | P0 AI-native foundation + audit-only scaffold | COMPLETE | 100% | `██████████` | Planning, memory-bank, deterministic audit-only scaffold and CI foundation established |
 | P1 Audit-Only MVP + golden-fixture calibration | COMPLETE | 100% | `██████████` | Read-only selected-frame audit, explainable scoring and fixture calibration complete |
@@ -94,7 +94,7 @@ The repository now uses a project-specific ANPOS adoption layer documented in [`
 
 ## Versioned target option-bank status
 
-The Elementor Free + Pro audit pipeline is now wired to versioned snapshots and gap reports. The current bank entry is Free 4.3.2 + Pro 4.3.0; Gutenberg has an official-contract entry. Run `npm run audit:elementor -- --elementor-free=... --elementor-pro=...` or `npm run audit:gutenberg -- --gutenberg-version=...` to append a new version. The plugin UI selectors are generated from `docs/option-bank/registry.json`. Each selector currently has one entry, and the 2026-10-08 audit found that the selection is not yet carried into the P15 preview or download receipt. Recovery task M0.9 owns that fix. Static inventory remains separate from runtime/import/render compatibility.
+The Elementor Free + Pro audit pipeline is now wired to versioned snapshots and gap reports. The current bank entry is Free 4.3.2 + Pro 4.3.0; Gutenberg has an official-contract entry. Run `npm run audit:elementor -- --elementor-free=... --elementor-pro=...` or `npm run audit:gutenberg -- --gutenberg-version=...` to append a new version. The plugin UI selectors are generated from `docs/option-bank/registry.json`, and each selector currently has one entry. The selected Elementor bank is carried into the read-only P15 preview and into the `optionBankId` of the local download receipt. A Gutenberg bank is refused for Elementor output (`P15_OPTION_BANK_TARGET_MISMATCH`), and Gutenberg export itself is not available yet (recovery M8). The bank is a static inventory: it does not change the generated mapping until version-driven profiles land in recovery M6. Static inventory remains separate from runtime/import/render compatibility.
 
 ## Before P19
 

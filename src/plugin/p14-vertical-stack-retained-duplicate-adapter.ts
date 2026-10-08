@@ -33,6 +33,9 @@ const P14_VERTICAL_STACK_RULE_VERSION = 1;
 const P14_VERTICAL_STACK_RECIPE = 'vertical-stack';
 const P14_VERTICAL_STACK_MIN_CONFIDENCE = 90;
 const GEOMETRY_TOLERANCE = 0.5;
+/** Horizontal gap between the approved source and its retained prepared duplicate on the page. */
+export const P14_RETAINED_DUPLICATE_GAP_PX = 100;
+export const P14_RETAINED_DUPLICATE_NAME_SUFFIX = ' — Prepared';
 
 export interface P14FigmaRetainedDuplicateRuntime {
   getNodeByIdAsync(nodeId: string): Promise<BaseNode | null>;
@@ -100,6 +103,28 @@ function productionRuntime(): P14FigmaRetainedDuplicateRuntime {
 
 function numeric(value: unknown, fallback = 0): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+}
+
+/**
+ * Page-space origin of a node. Uses the Figma absolute transform when available and otherwise
+ * accumulates parent-relative offsets up to the page, so nested sources are placed correctly.
+ */
+function pageOrigin(node: SceneNode): { x: number; y: number } {
+  const transform = (node as SceneNode & { absoluteTransform?: unknown }).absoluteTransform;
+  if (Array.isArray(transform)) {
+    const tx = Array.isArray(transform[0]) ? transform[0][2] : undefined;
+    const ty = Array.isArray(transform[1]) ? transform[1][2] : undefined;
+    if (typeof tx === 'number' && Number.isFinite(tx) && typeof ty === 'number' && Number.isFinite(ty)) return { x: tx, y: ty };
+  }
+  let x = 0;
+  let y = 0;
+  let current: BaseNode | null = node;
+  while (current && current.type !== 'PAGE' && current.type !== 'DOCUMENT') {
+    x += numeric((current as SceneNode).x);
+    y += numeric((current as SceneNode).y);
+    current = current.parent;
+  }
+  return { x, y };
 }
 
 function childNodes(node: SceneNode): readonly SceneNode[] {
@@ -581,6 +606,14 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     if (node.id === metadata.sourceNodeId) {
       throw new Error('P14 adapter refused to retain the approved source as candidate output.');
     }
+
+    // Placement and naming happen only at retention, after every candidate validation, so the
+    // clone-stable witness and preservation checks see exactly the cloned source geometry.
+    const source = await frameById(this.runtime, metadata.sourceNodeId, 'Source');
+    const origin = pageOrigin(source);
+    node.x = origin.x + numeric(source.width) + P14_RETAINED_DUPLICATE_GAP_PX;
+    node.y = origin.y;
+    node.name = `${source.name}${P14_RETAINED_DUPLICATE_NAME_SUFFIX}`;
 
     node.setPluginData('p14:transactionId', transactionId);
     node.setPluginData('p14:sourceNodeId', metadata.sourceNodeId);

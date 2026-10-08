@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { lstat, readFile, readdir } from 'node:fs/promises';
 import { basename, resolve } from 'node:path';
 import { assertReleaseUiCapabilities } from './release-ui-contract.mjs';
+import { assertNoUnresolvedPluginBuildDefines } from './release-build-defines.mjs';
 import { readBoundedContainedFile, readBoundedContainedJsonFile } from './security-io.mjs';
 
 function sha256(bytes) {
@@ -127,6 +128,13 @@ for (const filename of expectedFiles) {
     });
   } catch (error) {
     fail(error instanceof Error ? error.message : String(error));
+  }
+  if (filename === 'code.js') {
+    try {
+      assertNoUnresolvedPluginBuildDefines(strictUtf8(file.bytes, 'plugin/code.js'), 'plugin/code.js');
+    } catch (error) {
+      fail(error instanceof Error ? error.message : String(error));
+    }
   }
   const actual = sha256(file.bytes);
   if (releaseInfo.fileHashes?.[filename] !== actual) fail(`${filename} SHA-256 mismatch.`);

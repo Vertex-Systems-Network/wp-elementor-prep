@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-10-08 — Recovery M0 (critical correctness fixes) implemented
+
+- **Release build:**
+  - M0.1: the publishable UI injects the option-bank registry, and the release contract rejects any unresolved `__TOKEN__`.
+  - M0.2: the release bundle compiles a traceable build identity and rejects unresolved plugin defines.
+- **Elementor export:**
+  - M0.3: image-backed containers keep their subtree and get container-level `styleReviews`.
+  - M0.4: strokes, effects, opacity, blend, rotation, mask and clipped overflow become explicit REVIEW.
+- **P14 duplicate (M0.5):** placed at the source's page origin + width + 100px and named `<source> — Prepared`.
+- **Safe Fix undo (M0.6):** the checkpoint lives in document plugin data; a legacy global token is adopted only in its own file; a stale checkpoint can be cleared.
+- **Pixel validation:**
+  - M0.7: a `PixelBrokerUnavailableError` fails fast when a viewer replaces the main panel.
+  - M0.10: the UI compiles in `src/core/pixel-diff.ts`, and the duplicate copies are removed.
+- **Build-Ready freshness (M0.8):** a per-node visual digest feeds a separate `source.contentHash` that P14 freshness enforces; `structuralHash` and P13 parity are unchanged.
+- **Option bank (M0.9):** separate Elementor/Gutenberg selections; `optionBankId` is recorded in the preview and the download receipt; a Gutenberg bank is refused for Elementor output.
+- **Selection audits (M0.11):**
+  - debounced background audits;
+  - open panels are kept and a notice is shown instead;
+  - the visible/total node budget is enforced during the scan.
+- **Verification:**
+  - local: typecheck, plus 320 test files / 1,898 tests;
+  - dev and release builds and the release, README and ANPOS contracts;
+  - Chromium smokes of the release UI.
+- **Pending:** exact-head CI on the PR. No target, import or production authority is claimed.
+
+
 ## 2026-10-08 — Product Recovery Program aligned
 
 - A full audit at main `9fdbe6f` compared the product contract with the code. Findings are recorded in `docs/PRODUCT_RECOVERY_PLAN.md` §2.

@@ -13,6 +13,7 @@ import {
   type P15NeutralJustification,
   type P15NeutralPaddingPx,
   type P15NeutralReviewNode,
+  type P15NeutralStyleReview,
   type P15NeutralTextAlignment,
   type P15NeutralExportValidationResult,
 } from '../targets/elementor/neutral-export-ir';
@@ -21,7 +22,7 @@ import {
   type P15ElementorV3GenerationResult,
 } from '../targets/elementor/v3-template-generator';
 
-export const P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION = 'p15-figma-neutral-export-extractor-v2' as const;
+export const P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION = 'p15-figma-neutral-export-extractor-v3' as const;
 
 export interface P15FigmaNeutralExtractionResult {
   schemaVersion: 1;
@@ -69,6 +70,10 @@ function hasImageFill(node: SceneNode): boolean {
   ));
 }
 
+function isContainerLike(node: SceneNode): boolean {
+  return node.type !== 'TEXT' && (childNodes(node).length > 0 || 'layoutMode' in recordOf(node));
+}
+
 function isAbsolute(node: SceneNode): boolean {
   return recordOf(node).layoutPositioning === 'ABSOLUTE';
 }
@@ -89,6 +94,83 @@ function finiteRadius(value: unknown): number | null {
     && value <= P15_NEUTRAL_EXPORT_MAX_RADIUS_PX
     ? value
     : null;
+}
+
+const GEOMETRY_TOLERANCE_PX = 0.5;
+
+function visiblePaintList(value: unknown): Record<string, unknown>[] | 'MIXED' {
+  if (value === undefined) return [];
+  if (!Array.isArray(value)) return 'MIXED';
+  return value.filter((paint): paint is Record<string, unknown> => (
+    typeof paint === 'object' && paint !== null && (paint as { visible?: unknown }).visible !== false
+  ));
+}
+
+function hasPositiveStrokeWeight(record: Record<string, unknown>): boolean {
+  const weights = [record.strokeWeight, record.strokeTopWeight, record.strokeRightWeight, record.strokeBottomWeight, record.strokeLeftWeight];
+  // A mixed (non-number) weight is treated as visible: it cannot be proven to be zero.
+  return weights.some((weight) => weight !== undefined && (typeof weight !== 'number' || weight > 0));
+}
+
+function childOverflowsBounds(node: SceneNode): boolean {
+  const record = recordOf(node);
+  const width = record.width;
+  const height = record.height;
+  if (typeof width !== 'number' || typeof height !== 'number') return false;
+  return childNodes(node).some((child) => {
+    if (!visible(child)) return false;
+    const box = recordOf(child);
+    const { x, y } = box;
+    const childWidth = box.width;
+    const childHeight = box.height;
+    if (typeof x !== 'number' || typeof y !== 'number' || typeof childWidth !== 'number' || typeof childHeight !== 'number') return true;
+    return x < -GEOMETRY_TOLERANCE_PX
+      || y < -GEOMETRY_TOLERANCE_PX
+      || x + childWidth > width + GEOMETRY_TOLERANCE_PX
+      || y + childHeight > height + GEOMETRY_TOLERANCE_PX;
+  });
+}
+
+/**
+ * Visual facts the bounded generator does not map yet. Each one becomes an explicit REVIEW on the
+ * node instead of being dropped silently, so the output can never look complete while missing them.
+ */
+function unmappedVisualFactReviews(node: SceneNode): P15NeutralStyleReview[] {
+  const record = recordOf(node);
+  const reviews: P15NeutralStyleReview[] = [];
+
+  const strokes = visiblePaintList(record.strokes);
+  if (strokes === 'MIXED' || (strokes.length > 0 && hasPositiveStrokeWeight(record))) {
+    reviews.push({ reasonCode: 'STROKE_REQUIRES_REVIEW', detail: 'Visible Figma strokes/borders are not mapped yet and would be lost.' });
+  }
+
+  const effects = visiblePaintList(record.effects);
+  if (effects === 'MIXED' || effects.length > 0) {
+    const types = effects === 'MIXED' ? 'MIXED' : [...new Set(effects.map((effect) => String(effect.type ?? 'UNKNOWN')))].sort().join(', ');
+    reviews.push({ reasonCode: 'EFFECT_REQUIRES_REVIEW', detail: `Visible Figma effects are not mapped yet and would be lost: ${types}.` });
+  }
+
+  if (record.opacity !== undefined && record.opacity !== 1) {
+    reviews.push({ reasonCode: 'LAYER_OPACITY_REQUIRES_REVIEW', detail: `Layer opacity ${String(record.opacity)} is not mapped yet.` });
+  }
+
+  if (record.blendMode !== undefined && record.blendMode !== 'NORMAL' && record.blendMode !== 'PASS_THROUGH') {
+    reviews.push({ reasonCode: 'BLEND_MODE_REQUIRES_REVIEW', detail: `Blend mode ${String(record.blendMode)} is not mapped yet.` });
+  }
+
+  if (record.rotation !== undefined && record.rotation !== 0) {
+    reviews.push({ reasonCode: 'ROTATION_REQUIRES_REVIEW', detail: `Rotation ${String(record.rotation)}° is not mapped yet.` });
+  }
+
+  if (record.isMask === true) {
+    reviews.push({ reasonCode: 'MASK_REQUIRES_REVIEW', detail: 'Figma mask layers are not mapped yet.' });
+  }
+
+  if (record.clipsContent === true && childOverflowsBounds(node)) {
+    reviews.push({ reasonCode: 'CLIPPED_OVERFLOW_REQUIRES_REVIEW', detail: 'Container clips children that overflow its bounds; overflow clipping is not mapped yet.' });
+  }
+
+  return reviews;
 }
 
 function review(node: SceneNode, reasonCode: string, detail: string): P15NeutralReviewNode {
@@ -178,6 +260,14 @@ function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string>
     };
   }
   const paintRecord = paint as Record<string, unknown>;
+  if (paintRecord.type === 'IMAGE') {
+    return {
+      review: {
+        reasonCode: 'CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW',
+        detail: 'Container background image requires a retained asset export/upload reference; the container and its children are preserved.',
+      },
+    };
+  }
   if (paintRecord.type !== 'SOLID') {
     return {
       review: {
@@ -275,11 +365,13 @@ function extractText(node: SceneNode): P15NeutralExportNode {
   if (align === null) {
     return review(node, 'UNSUPPORTED_TEXT_ALIGNMENT', `Unsupported Figma text alignment: ${String(node.textAlignHorizontal)}.`);
   }
+  const styleReviews = unmappedVisualFactReviews(node);
   return {
     kind: 'text',
     sourceNodeId: node.id,
     text: node.characters,
     align,
+    ...(styleReviews.length > 0 ? { styleReviews } : {}),
   };
 }
 
@@ -314,10 +406,16 @@ function extractContainer(
     );
   }
 
+  // Style facts that cannot be mapped yet stay REVIEW on the container itself, so the
+  // container's layout and children are still extracted instead of being dropped.
   const background = parseContainerBackground(node);
-  if (background.review) return review(node, background.review.reasonCode, background.review.detail);
   const radius = parseContainerRadius(node);
-  if (radius.review) return review(node, radius.review.reasonCode, radius.review.detail);
+  const styleReviews: P15NeutralStyleReview[] = [
+    ...[background.review, radius.review]
+      .filter((entry): entry is NonNullable<typeof entry> => entry !== undefined)
+      .map((entry) => ({ reasonCode: entry.reasonCode, detail: entry.detail })),
+    ...unmappedVisualFactReviews(node),
+  ];
 
   const children: P15NeutralExportNode[] = [];
   for (const child of childNodes(node)) {
@@ -337,6 +435,7 @@ function extractContainer(
     justifyContent,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
+    ...(styleReviews.length > 0 ? { styleReviews } : {}),
     children,
   };
   return container;
@@ -360,11 +459,11 @@ function extractNode(
   if (isAbsolute(node)) {
     return review(node, 'ABSOLUTE_POSITION_REQUIRES_REVIEW', 'Absolute-positioned Figma content requires an explicit target mapping decision.');
   }
-  if (hasImageFill(node)) {
+  if (hasImageFill(node) && !isContainerLike(node)) {
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
   if (node.type === 'TEXT') return extractText(node);
-  if (childNodes(node).length > 0 || 'layoutMode' in recordOf(node)) {
+  if (isContainerLike(node)) {
     return extractContainer(node, depth, state);
   }
   return review(node, 'UNSUPPORTED_NODE_TYPE', `Unsupported visible Figma node type: ${node.type}.`);

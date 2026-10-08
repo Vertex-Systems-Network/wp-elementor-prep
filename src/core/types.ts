@@ -24,6 +24,12 @@ export interface AuditNode {
   clipsContent: boolean;
   opacity: number;
   visible: boolean;
+  /**
+   * Digest of visual facts not otherwise captured (text content, fills, strokes, effects, fonts,
+   * radii, blend mode). Optional so non-Figma sources stay valid; when present it participates in
+   * the Build-Ready freshness hash so a same-length text or colour edit is detected as stale.
+   */
+  visualDigest?: string;
   childIds: string[];
   children: AuditNode[];
 }

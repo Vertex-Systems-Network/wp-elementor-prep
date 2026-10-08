@@ -72,3 +72,13 @@ export async function restoreLastSafeFix(): Promise<CommitEvidence | null> {
 export async function finalizeLastSafeFix(): Promise<boolean> {
   return checkpointAdapter().finalizeLastCommit();
 }
+
+/** Clear a Safe Fix checkpoint whose nodes no longer resolve in this document; refuses a valid one. */
+export async function clearStaleSafeFixCheckpoint(): Promise<boolean> {
+  return checkpointAdapter().clearStaleUndo();
+}
+
+/** Whether the pending checkpoint can still be restored/finalized (VALID) or only cleared (STALE). */
+export async function assessSafeFixCheckpoint(): Promise<'NONE' | 'VALID' | 'STALE'> {
+  return checkpointAdapter().assessPendingUndo();
+}

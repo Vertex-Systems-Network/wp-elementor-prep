@@ -1,8 +1,8 @@
 import type { CommitEvidence, CandidateHandle, CandidateTransactionAdapter } from '../core/transaction-types';
 import type { ValidationReport } from '../core/validation-types';
+import { figmaUndoCheckpointStore, UNDO_BACKUP_FRAME_NAME_PREFIX, type UndoCheckpointState } from './undo-checkpoint-store';
 
 const STAGING_X = 100000;
-const UNDO_STORAGE_KEY = 'pella-elementor-prep:last-transaction-undo';
 
 interface CandidateMetadata {
   transactionId: string;
@@ -64,7 +64,7 @@ function encodeUndo(metadata: UndoMetadata): string {
   ].join('|');
 }
 
-function decodeUndo(token: string): UndoMetadata {
+export function decodeUndo(token: string): UndoMetadata {
   const [version, originalNodeId, committedNodeId, parentNodeId, index, x, y, backupFrameId] = token.split('|');
   if (version !== 'p4v1' || !originalNodeId || !committedNodeId || !parentNodeId || !backupFrameId) {
     throw new Error('Undo token is invalid or unsupported.');
@@ -78,7 +78,7 @@ function decodeUndo(token: string): UndoMetadata {
 
 function createBackupFrame(transactionId: string): FrameNode {
   const backup = figma.createFrame();
-  backup.name = `__WPBuildersPrepareBackup__ ${transactionId}`;
+  backup.name = `${UNDO_BACKUP_FRAME_NAME_PREFIX} ${transactionId}`;
   backup.visible = false;
   backup.resize(1, 1);
   backup.x = STAGING_X;
@@ -95,6 +95,7 @@ function createBackupFrame(transactionId: string): FrameNode {
  */
 export class FigmaCandidateTransactionAdapter implements CandidateTransactionAdapter {
   private readonly metadata = new Map<string, CandidateMetadata>();
+  private readonly undoStore = figmaUndoCheckpointStore(decodeUndo);
 
   constructor(private readonly options: FigmaTransactionAdapterOptions) {}
 
@@ -155,8 +156,17 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
   }
 
   async hasPendingUndo(): Promise<boolean> {
-    const token = await figma.clientStorage.getAsync(UNDO_STORAGE_KEY);
-    return typeof token === 'string' && token.length > 0;
+    return (await this.undoStore.get()) !== null;
+  }
+
+  /** NONE, VALID (restore/finalize possible) or STALE (its nodes no longer resolve in this document). */
+  async assessPendingUndo(): Promise<UndoCheckpointState> {
+    return this.undoStore.assess();
+  }
+
+  /** Clear only a STALE checkpoint; a VALID one must be restored or finalized. */
+  async clearStaleUndo(): Promise<boolean> {
+    return this.undoStore.clearStale();
   }
 
   async commitCandidate(handle: CandidateHandle, transactionId: string): Promise<CommitEvidence> {
@@ -207,7 +217,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
         originalY: metadata.originalY,
         backupFrameId: backup.id,
       });
-      await figma.clientStorage.setAsync(UNDO_STORAGE_KEY, undoToken);
+      await this.undoStore.set(undoToken);
       undoStored = true;
       this.metadata.delete(handle.candidateNodeId);
 
@@ -222,7 +232,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
     } catch (error) {
       let rollbackError: unknown = null;
       try {
-        if (undoStored) await figma.clientStorage.deleteAsync(UNDO_STORAGE_KEY);
+        if (undoStored) await this.undoStore.clear();
         if (originalBackedUp || original.parent?.id !== metadata.parentNodeId) {
           parent.insertChild(metadata.siblingIndex, original);
           original.x = metadata.originalX;
@@ -248,7 +258,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
   }
 
   async restoreLastCommit(undoToken?: string): Promise<CommitEvidence | null> {
-    const token = undoToken ?? await figma.clientStorage.getAsync(UNDO_STORAGE_KEY);
+    const token = undoToken ?? await this.undoStore.get();
     if (typeof token !== 'string' || token.length === 0) return null;
     const undo = decodeUndo(token);
 
@@ -268,7 +278,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
     original.y = undo.originalY;
     committed.remove();
     if (backupNode.children.length === 0) backupNode.remove();
-    await figma.clientStorage.deleteAsync(UNDO_STORAGE_KEY);
+    await this.undoStore.clear();
 
     return {
       transactionId: 'restore',
@@ -284,7 +294,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
    * This keeps undo storage bounded to one checkpoint and is intentionally irreversible.
    */
   async finalizeLastCommit(): Promise<boolean> {
-    const token = await figma.clientStorage.getAsync(UNDO_STORAGE_KEY);
+    const token = await this.undoStore.get();
     if (typeof token !== 'string' || token.length === 0) return false;
     const undo = decodeUndo(token);
     const original = await frameById(undo.originalNodeId);
@@ -293,7 +303,7 @@ export class FigmaCandidateTransactionAdapter implements CandidateTransactionAda
     if (original.parent?.id !== backupNode.id) throw new Error('Retained original moved outside its backup; refusing to finalize stale checkpoint.');
 
     backupNode.remove();
-    await figma.clientStorage.deleteAsync(UNDO_STORAGE_KEY);
+    await this.undoStore.clear();
     return true;
   }
 }

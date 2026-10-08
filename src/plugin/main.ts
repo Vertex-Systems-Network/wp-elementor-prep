@@ -13,7 +13,8 @@ import {
 import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
 import type { SafeRecipeKind } from '../core/safe-recipe-types';
-import { scanSceneNode } from '../core/scanner';
+import { scanSceneNode, scanSceneNodeWithinBounds, type ScanBounds } from '../core/scanner';
+import { createSelectionAuditScheduler } from './selection-audit-scheduler';
 import { buildBuildReadyReport, serializeBuildReadyReportJson } from '../core/build-ready';
 import { buildP14PreparationConfirmation } from '../core/p14-preparation-confirmation';
 import { runP14RetainedDuplicateTransaction } from '../core/p14-retained-duplicate-transaction';
@@ -64,7 +65,7 @@ import { FigmaP14VerticalStackRetainedDuplicateAdapter } from './p14-vertical-st
 import { buildP15ElementorV1PreviewFromFigmaFrame } from './p15-neutral-export-extractor';
 import { buildP15PluginPreviewReport } from './p15-plugin-preview-report';
 import { buildP15TargetProfilePreviewReport } from './p15-target-profile-preview-report';
-import { findOptionBank } from '../core/option-bank';
+import { DEFAULT_ELEMENTOR_OPTION_BANK_ID, findElementorOptionBank, findGutenbergOptionBank, resolveElementorOptionBank } from '../core/option-bank';
 import { currentP5RuntimeBuildIdentity } from './p5-runtime-build-identity';
 import { runP5RuntimeCalibration } from './p5-runtime-calibration';
 import { updateP5RuntimeProofFromCalibration } from './p5-runtime-proof-storage';
@@ -80,6 +81,8 @@ import { buildP6ClosureViewerHtml } from './p6-closure-viewer';
 import { runP6DeveloperPageFlowCalibration } from './p6-developer-calibration';
 import { buildP6DeveloperEvidenceView } from './p6-developer-evidence-view';
 import {
+  assessSafeFixCheckpoint,
+  clearStaleSafeFixCheckpoint,
   finalizeLastSafeFix,
   hasPendingSafeFixCheckpoint,
   restoreLastSafeFix,
@@ -95,12 +98,13 @@ const RUNTIME_BUILD = currentP5RuntimeBuildIdentity();
 const BACKLOG_STORAGE_PREFIX = 'p9-backlog-v1';
 let auditSequence = 0;
 
-type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize' | 'p6-page-flow-calibration' | 'batch-run' | 'batch-checkpoint' | 'p14-guided-prepare';
+type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize' | 'safe-fix-clear-stale' | 'p6-page-flow-calibration' | 'batch-run' | 'batch-checkpoint' | 'p14-guided-prepare';
 let p5OperationInFlight: P5ExclusiveOperation | null = null;
 let p7BatchState: BatchQueueState | null = null;
 let p7CancelRequested = false;
 let p14ReviewedActivation: P14InternalActivationSessionV1 | null = null;
-let selectedOptionBankId = 'elementor:4.3.2:4.3.0';
+let selectedElementorOptionBankId = DEFAULT_ELEMENTOR_OPTION_BANK_ID;
+let selectedGutenbergOptionBankId: string | null = null;
 const p7Metadata = createDefaultFigmaP7MetadataStore();
 
 figma.showUI(__html__, {
@@ -109,9 +113,19 @@ figma.showUI(__html__, {
   themeColors: true,
 });
 
+/** Only the main panel answers pixel requests; viewers replace it for the rest of the session. */
+let mainPanelActive = true;
+
 const fullFrameValidator = new FullFrameValidator((message) => {
   figma.ui.postMessage(message);
-});
+}, undefined, () => mainPanelActive);
+
+/** Replace the main panel with a read-only viewer and fail any in-flight pixel validation fast. */
+function showViewerUi(html: string, options: ShowUIOptions): void {
+  mainPanelActive = false;
+  fullFrameValidator.failAllPending();
+  figma.showUI(html, options);
+}
 
 function postError(
   message: string,
@@ -170,18 +184,23 @@ async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string |
   return { valid: true, passedAt: stored.passedAt, build: { ...stored.build } };
 }
 
-async function runAudit(sequence: number): Promise<void> {
+/** Matches the Build-Ready default `maxNodes`; enforced while scanning instead of after a full scan. */
+const AUDIT_SCAN_BOUNDS: ScanBounds = { maxVisibleNodes: 10_000, maxTotalNodes: 100_000 };
+
+async function runAudit(sequence: number, options: { automatic?: boolean } = {}): Promise<void> {
+  const automatic = options.automatic === true;
   const page = figma.currentPage;
   const selection = page.selection;
 
+  // Automatic (selection-change) audits never replace the panel with an error for an unsupported selection.
   if (selection.length !== 1) {
-    if (sequence === auditSequence) postError('Select exactly one desktop frame to audit.');
+    if (!automatic && sequence === auditSequence) postError('Select exactly one desktop frame to audit.');
     return;
   }
 
   const selected = selection[0];
   if (!selected || selected.type !== 'FRAME') {
-    if (sequence === auditSequence) postError('Audit currently supports one selected Figma Frame.');
+    if (!automatic && sequence === auditSequence) postError('Audit currently supports one selected Figma Frame.');
     return;
   }
 
@@ -191,7 +210,7 @@ async function runAudit(sequence: number): Promise<void> {
   const storageKey = backlogStorageKey(fileKey, pageId, selected.id);
 
   try {
-    const root = scanSceneNode(selected);
+    const root = scanSceneNodeWithinBounds(selected, AUDIT_SCAN_BOUNDS);
     const report = buildAuditReport(root, PLUGIN_VERSION);
     const buildReady = buildBuildReadyReport(root, {}, report.generatedAt);
     const stored = await figma.clientStorage.getAsync(storageKey) as unknown;
@@ -234,6 +253,7 @@ async function runAudit(sequence: number): Promise<void> {
 
     figma.ui.postMessage({
       type: 'audit-result',
+      automatic,
       report,
       backlog,
       buildReady,
@@ -248,6 +268,10 @@ async function runAudit(sequence: number): Promise<void> {
   } catch (error) {
     if (sequence !== auditSequence) return;
     const message = error instanceof Error ? error.message : String(error);
+    if (automatic) {
+      figma.ui.postMessage({ type: 'audit-background-notice', message: `Background audit skipped: ${message}` });
+      return;
+    }
     postError(`Audit failed: ${message}`);
   }
 }
@@ -356,7 +380,7 @@ async function runRuntimeSelfTest(): Promise<void> {
       runtimeProofPassedAt: proof.passedAt,
     });
 
-    figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+    showViewerUi(buildP5RuntimeEvidenceViewerHtml(evidence), {
       width: 520,
       height: 700,
       themeColors: true,
@@ -384,7 +408,7 @@ async function runRuntimeSelfTest(): Promise<void> {
 
 async function runP7RuntimeEvidenceInspector(): Promise<void> {
   const inspection = await inspectLatestP7RuntimeEvidence(figma.clientStorage);
-  figma.showUI(buildP7RuntimeEvidenceViewerHtml(inspection), {
+  showViewerUi(buildP7RuntimeEvidenceViewerHtml(inspection), {
     width: 520,
     height: 700,
     themeColors: true,
@@ -406,7 +430,7 @@ async function runP7RuntimeEvidenceInspector(): Promise<void> {
 async function runP13RuntimeEvidenceViewer(): Promise<void> {
   const inspection = await inspectLatestP13RuntimeEvidence(figma.clientStorage);
   const evidence = inspection.evidence;
-  figma.showUI(buildP13RuntimeEvidenceViewerHtml(evidence, inspection), {
+  showViewerUi(buildP13RuntimeEvidenceViewerHtml(evidence, inspection), {
     width: 540,
     height: 720,
     themeColors: true,
@@ -587,7 +611,12 @@ async function runP14GuidedPrepareConfirmed(): Promise<void> {
 }
 
 function runP15ElementorPreview(optionBankId?: unknown): void {
-  if (typeof optionBankId === 'string' && findOptionBank(optionBankId)) selectedOptionBankId = optionBankId;
+  const bank = resolveElementorOptionBank(optionBankId, selectedElementorOptionBankId);
+  if (!bank.ok) {
+    figma.ui.postMessage({ type: 'p15-elementor-preview-unavailable', message: `${bank.code}: ${bank.message}` });
+    return;
+  }
+  selectedElementorOptionBankId = bank.optionBank.id;
   const frame = selectedFrame();
   if (!frame) {
     figma.ui.postMessage({
@@ -603,7 +632,7 @@ function runP15ElementorPreview(optionBankId?: unknown): void {
     figma.ui.postMessage({
       type: 'p15-elementor-preview-result',
       report,
-      optionBank: findOptionBank(selectedOptionBankId) ?? null,
+      optionBank: bank.optionBank,
     });
     figma.notify(`P15 Elementor preview: ${report.generation.status} · read-only / no download.`);
   } catch (error) {
@@ -658,7 +687,7 @@ async function runRuntimeEvidenceViewer(): Promise<void> {
     figma.notify('No valid persisted P5 runtime acceptance evidence is available.');
     return;
   }
-  figma.showUI(buildP5RuntimeEvidenceViewerHtml(evidence), {
+  showViewerUi(buildP5RuntimeEvidenceViewerHtml(evidence), {
     width: 520,
     height: 700,
     themeColors: true,
@@ -667,7 +696,7 @@ async function runRuntimeEvidenceViewer(): Promise<void> {
 
 async function runP6ClosureEvidenceViewer(): Promise<void> {
   const inspection = await inspectP6ClosureEvidence(figma.clientStorage, RUNTIME_BUILD);
-  figma.showUI(buildP6ClosureViewerHtml(inspection), {
+  showViewerUi(buildP6ClosureViewerHtml(inspection), {
     width: 520,
     height: 720,
     themeColors: true,
@@ -721,7 +750,7 @@ async function runP6PageFlowDeveloperCalibration(): Promise<void> {
       runtimeBuild: { ...RUNTIME_BUILD },
     });
 
-    figma.showUI(evidenceView.html, { width: 520, height: 700, themeColors: true });
+    showViewerUi(evidenceView.html, { width: 520, height: 700, themeColors: true });
 
     if (outcome.status === 'BLOCKED') {
       figma.notify(`P6 clone calibration blocked: ${outcome.reason}`);
@@ -852,7 +881,33 @@ async function runSafeFixRestore(): Promise<void> {
     figma.notify(evidence ? 'Previous approved original restored.' : 'No Safe Fix checkpoint is pending.');
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    postError(`Safe Fix restore failed: ${message}`, 'safe-fix-error');
+    postError(`Safe Fix restore failed: ${message}${await staleCheckpointHint()}`, 'safe-fix-error');
+  } finally {
+    endExclusiveP5Operation(operation);
+  }
+}
+
+async function staleCheckpointHint(): Promise<string> {
+  try {
+    return (await assessSafeFixCheckpoint()) === 'STALE'
+      ? ' The checkpoint is stale in this file (its nodes no longer resolve); use "Clear stale checkpoint".'
+      : '';
+  } catch {
+    return '';
+  }
+}
+
+async function runSafeFixClearStale(): Promise<void> {
+  const operation: P5ExclusiveOperation = 'safe-fix-clear-stale';
+  if (!beginExclusiveP5Operation(operation, 'safe-fix-error')) return;
+
+  try {
+    const cleared = await clearStaleSafeFixCheckpoint();
+    figma.ui.postMessage({ type: 'safe-fix-clear-stale-result', cleared });
+    figma.notify(cleared ? 'Stale Safe Fix checkpoint cleared.' : 'No Safe Fix checkpoint is pending.');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    postError(`Clearing the Safe Fix checkpoint was refused: ${message}`, 'safe-fix-error');
   } finally {
     endExclusiveP5Operation(operation);
   }
@@ -868,7 +923,7 @@ async function runSafeFixFinalize(): Promise<void> {
     figma.notify(finalized ? 'Safe Fix finalized; previous original backup removed.' : 'No Safe Fix checkpoint is pending.');
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    postError(`Safe Fix finalize failed: ${message}`, 'safe-fix-error');
+    postError(`Safe Fix finalize failed: ${message}${await staleCheckpointHint()}`, 'safe-fix-error');
   } finally {
     endExclusiveP5Operation(operation);
   }
@@ -1073,12 +1128,20 @@ figma.ui.onmessage = async (message: unknown) => {
 
   if (type === 'option-bank-selection') {
     const payload = message as { optionBankId?: unknown };
-    if (typeof payload.optionBankId !== 'string' || !findOptionBank(payload.optionBankId)) {
-      figma.ui.postMessage({ type: 'option-bank-selection-error', message: 'Unknown option-bank version.' });
+    const elementorBank = findElementorOptionBank(payload.optionBankId);
+    const gutenbergBank = findGutenbergOptionBank(payload.optionBankId);
+    if (elementorBank) {
+      selectedElementorOptionBankId = elementorBank.id;
+      figma.ui.postMessage({ type: 'option-bank-selection-result', target: 'elementor', optionBank: elementorBank, exportAvailable: true });
       return;
     }
-    selectedOptionBankId = payload.optionBankId;
-    figma.ui.postMessage({ type: 'option-bank-selection-result', optionBank: findOptionBank(selectedOptionBankId) });
+    if (gutenbergBank) {
+      // Gutenberg export is not implemented yet (recovery M8); never attach this bank to Elementor output.
+      selectedGutenbergOptionBankId = gutenbergBank.id;
+      figma.ui.postMessage({ type: 'option-bank-selection-result', target: 'gutenberg', optionBank: gutenbergBank, exportAvailable: false });
+      return;
+    }
+    figma.ui.postMessage({ type: 'option-bank-selection-error', message: 'Unknown option-bank version.' });
     return;
   }
 
@@ -1120,6 +1183,11 @@ figma.ui.onmessage = async (message: unknown) => {
 
   if (type === 'safe-fix-finalize-request') {
     await runSafeFixFinalize();
+    return;
+  }
+
+  if (type === 'safe-fix-clear-stale-request') {
+    await runSafeFixClearStale();
     return;
   }
 
@@ -1196,11 +1264,21 @@ figma.ui.onmessage = async (message: unknown) => {
   }
 };
 
+const selectionAuditScheduler = createSelectionAuditScheduler({
+  setTimer: (callback, delayMs) => setTimeout(callback, delayMs),
+  clearTimer: (handle) => clearTimeout(handle as ReturnType<typeof setTimeout>),
+  run: () => {
+    if (p5OperationInFlight === 'batch-run' || p7BatchState?.status === 'PAUSED') return;
+    if (figma.currentPage.selection.length !== 1) return;
+    void runAudit(++auditSequence, { automatic: true });
+  },
+});
+
 figma.on('selectionchange', () => {
   p14ReviewedActivation = null;
-  const sequence = ++auditSequence;
-  if (p5OperationInFlight === 'batch-run' || p7BatchState?.status === 'PAUSED') return;
-  if (figma.currentPage.selection.length === 1) void runAudit(sequence);
+  // Invalidate any in-flight audit immediately; the debounced audit runs for the final selection only.
+  auditSequence += 1;
+  selectionAuditScheduler.schedule();
 });
 
 if (figma.command === 'p5-runtime-self-test') {

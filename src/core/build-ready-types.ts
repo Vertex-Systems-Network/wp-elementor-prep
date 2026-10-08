@@ -94,6 +94,8 @@ export interface BuildReadySourceFingerprint {
   rootId: string;
   rootName: string;
   structuralHash: string;
+  /** Visual-content fingerprint; present for Figma plugin scans, absent for REST/CLI sources. */
+  contentHash?: string;
   configHash: string;
   analyzerVersion: string;
 }

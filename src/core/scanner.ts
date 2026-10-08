@@ -55,8 +55,100 @@ function readOpacity(node: SceneNode): number {
   return numeric((node as SceneNode & { opacity: unknown }).opacity, 1);
 }
 
+function fnv1a(value: string): string {
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < value.length; i += 1) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+const VISUAL_FACT_KEYS = [
+  'fills', 'strokes', 'strokeWeight', 'strokeAlign', 'strokeTopWeight', 'strokeRightWeight',
+  'strokeBottomWeight', 'strokeLeftWeight', 'effects', 'blendMode', 'cornerRadius', 'topLeftRadius',
+  'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius', 'rotation', 'isMask',
+] as const;
+
+const TEXT_FACT_KEYS = [
+  'characters', 'fontName', 'fontSize', 'fontWeight', 'lineHeight', 'letterSpacing', 'paragraphSpacing',
+  'textCase', 'textDecoration', 'textAlignHorizontal', 'textAlignVertical',
+] as const;
+
+const STYLED_SEGMENT_FIELDS = ['fontName', 'fontSize', 'fills', 'letterSpacing', 'lineHeight', 'textCase', 'textDecoration'] as const;
+
+function serializeVisual(value: unknown): string {
+  // figma.mixed is a symbol; keep it visible in the digest instead of letting JSON drop it.
+  return JSON.stringify(value, (_key, entry: unknown) => (typeof entry === 'symbol' ? 'MIXED' : entry)) ?? 'undefined';
+}
+
+function styledTextSegments(node: SceneNode): unknown {
+  if (node.type !== 'TEXT') return null;
+  const read = (node as SceneNode & { getStyledTextSegments?: unknown }).getStyledTextSegments;
+  if (typeof read !== 'function') return null;
+  try {
+    return (read as (fields: readonly string[]) => unknown).call(node, STYLED_SEGMENT_FIELDS);
+  } catch {
+    return 'UNAVAILABLE';
+  }
+}
+
+/** Deterministic digest of the visual facts that geometry/structure alone cannot see. */
+export function computeVisualFactsDigest(node: SceneNode): string {
+  const record = node as unknown as Record<string, unknown>;
+  const facts: Record<string, unknown> = {};
+  for (const key of VISUAL_FACT_KEYS) {
+    if (key in record) facts[key] = record[key];
+  }
+  if (node.type === 'TEXT') {
+    for (const key of TEXT_FACT_KEYS) {
+      if (key in record) facts[key] = record[key];
+    }
+    facts.segments = styledTextSegments(node);
+  }
+  return `v1-${fnv1a(serializeVisual(facts))}`;
+}
+
+/** Thrown while scanning, before the full tree is materialised, when a selection exceeds its node budget. */
+export class ScanBoundsExceededError extends Error {
+  readonly code = 'SCAN_NODE_LIMIT_EXCEEDED' as const;
+
+  constructor(readonly limit: number, readonly counted: 'visible' | 'total') {
+    super(counted === 'visible'
+      ? `The selection has more than ${limit} visible layers. Select a smaller Frame or section to audit.`
+      : `The selection has more than ${limit} layers in total. Select a smaller Frame or section to audit.`);
+    this.name = 'ScanBoundsExceededError';
+  }
+}
+
+export interface ScanBounds {
+  /** Same unit as Build-Ready `maxNodes`: nodes whose own `visible` flag is true. */
+  maxVisibleNodes: number;
+  /** Hard cap on all nodes (hidden included) to bound memory and time. */
+  maxTotalNodes: number;
+}
+
+/**
+ * Scan with node budgets enforced during traversal, so an oversized selection fails fast with a
+ * structured error instead of being fully scanned (and classified) before the limit is checked.
+ */
+export function scanSceneNodeWithinBounds(node: SceneNode, bounds: ScanBounds): AuditNode {
+  const counters = { visible: 0, total: 0 };
+  return scanNode(node, (current) => {
+    counters.total += 1;
+    if (current.visible !== false) counters.visible += 1;
+    if (counters.total > bounds.maxTotalNodes) throw new ScanBoundsExceededError(bounds.maxTotalNodes, 'total');
+    if (counters.visible > bounds.maxVisibleNodes) throw new ScanBoundsExceededError(bounds.maxVisibleNodes, 'visible');
+  });
+}
+
 export function scanSceneNode(node: SceneNode): AuditNode {
-  const children = childNodes(node).map(scanSceneNode);
+  return scanNode(node, () => undefined);
+}
+
+function scanNode(node: SceneNode, visit: (node: SceneNode) => void): AuditNode {
+  visit(node);
+  const children = childNodes(node).map((child) => scanNode(child, visit));
   const mode = readLayoutMode(node);
   const isContainer = children.length > 0 || 'children' in node;
   const isText = node.type === 'TEXT';
@@ -83,6 +175,7 @@ export function scanSceneNode(node: SceneNode): AuditNode {
     clipsContent: clipsContent(node),
     opacity: readOpacity(node),
     visible: node.visible,
+    visualDigest: computeVisualFactsDigest(node),
     childIds: children.map((child) => child.id),
     children,
   };

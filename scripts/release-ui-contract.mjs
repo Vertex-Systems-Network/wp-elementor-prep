@@ -1,5 +1,7 @@
 import { extendP15LocalTemplateDownloadUi } from './p15-local-template-download-ui.mjs';
 import { buildSecureUi } from './ui-security-contract.mjs';
+import { injectOptionBankRegistry } from './option-bank-ui.mjs';
+import { injectPixelDiffRuntime } from './ui-pixel-diff-runtime.mjs';
 
 function requireReplacement(source, from, to, label) {
   if (!source.includes(from)) {
@@ -27,7 +29,7 @@ const REQUIRED_PRODUCTION_TOKENS = [
   'id="validate"',
   'id="selftest"',
   'id="batch"',
-  "post('p15-elementor-preview-request')",
+  "post('p15-elementor-preview-request', { optionBankId: selectedOptionBankId })",
   "message.type === 'p15-elementor-preview-result'",
   'P15 ELEMENTOR LOCAL PREVIEW',
   'Target-Ready mapping readiness',
@@ -40,7 +42,7 @@ const REQUIRED_PRODUCTION_TOKENS = [
   'UNKNOWN',
   'targetCompatibilityClaim=false · productionAcceptance=false · downloadEnabled=false · importValidationStatus=NOT_RUN',
   'targetCompatibilityClaim=false · productionAcceptance=false · importValidationStatus=NOT_RUN · targetEnvironmentValidationStatus=NOT_RUN · downloadEnabled=false',
-  "post('p15-elementor-local-template-download-request')",
+  "post('p15-elementor-local-template-download-request', { optionBankId: selectedOptionBankId })",
   "message.type === 'p15-elementor-local-template-download-result'",
   "message.type === 'p15-elementor-local-template-download-unavailable'",
   'LOCAL ARTIFACT VALIDATED',
@@ -59,6 +61,7 @@ const REQUIRED_PRODUCTION_TOKENS = [
   "post('safe-fix-apply-request'",
   "post('safe-fix-restore-request')",
   "post('safe-fix-finalize-request')",
+  "post('safe-fix-clear-stale-request')",
   "post('runtime-calibration-request')",
   "post('batch-start-request')",
   "post('batch-cancel-request')",
@@ -97,7 +100,19 @@ const FORBIDDEN_DEVELOPER_TOKENS = [
   '>Runtime self-test<',
 ];
 
+const UNRESOLVED_BUILD_PLACEHOLDER = /__[A-Z][A-Z0-9_]*__/g;
+
+/** A publishable UI must not contain build-time placeholders; one unresolved token breaks the UI script. */
+export function assertNoUnresolvedBuildPlaceholders(source, label = 'publishable UI') {
+  const unresolved = [...new Set(source.match(UNRESOLVED_BUILD_PLACEHOLDER) ?? [])];
+  if (unresolved.length > 0) {
+    throw new Error(`Release UI contract drifted: unresolved build placeholder(s) in ${label}: ${unresolved.join(', ')}`);
+  }
+  return source;
+}
+
 export function assertReleaseUiCapabilities(source) {
+  assertNoUnresolvedBuildPlaceholders(source);
   for (const token of REQUIRED_PRODUCTION_TOKENS) {
     if (!source.includes(token)) {
       throw new Error(`Release UI contract drifted: required production token is missing: ${token}`);
@@ -111,8 +126,8 @@ export function assertReleaseUiCapabilities(source) {
   return source;
 }
 
-export function buildReleaseUi(developmentUi) {
-  const extendedDevelopmentUi = extendP15LocalTemplateDownloadUi(developmentUi);
+export function buildReleaseUi(developmentUi, optionBankRegistry) {
+  const extendedDevelopmentUi = extendP15LocalTemplateDownloadUi(injectPixelDiffRuntime(injectOptionBankRegistry(developmentUi, optionBankRegistry)));
   let releaseUi = buildSecureUi(extendedDevelopmentUi).replace(/\r\n/g, '\n');
 
   releaseUi = requireReplacement(

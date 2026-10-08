@@ -19,7 +19,26 @@ A full code audit at main `9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6` (see `docs/
 - **Dev-only:** the P14 target-ready duplicate. It lands on top of the source. The shipped P5 Safe Fix replaces the original in place.
 - **Unreachable:** about 37k LOC of `src/targets/elementor/*-resolution.ts` (manifest-driven, not bundled).
 
-The active priority is now recovery milestone **M0, next task M0.1** (D-047). Phase rows and authority boundaries below are unchanged.
+The active priority is the recovery program (D-047). Phase rows and authority boundaries below are unchanged.
+
+**M0 status (2026-10-08): implemented, exact-head CI pending.**
+
+Fixed:
+- the release UI placeholder crash;
+- the release build identity;
+- children of image-backed containers are kept;
+- visual facts that are not mapped yet are shown as explicit REVIEW instead of being dropped silently;
+- the P14 duplicate is placed beside its source with a "— Prepared" name;
+- the Safe Fix undo checkpoint is stored per document, and a stale checkpoint can be cleared;
+- pixel validation fails fast when a viewer is open;
+- the Build-Ready content freshness hash (`structuralHash` and P13 parity are unchanged);
+- the option-bank selection reaches the preview and the download receipt, and a Gutenberg bank is refused for Elementor output;
+- the UI uses one pixel-diff implementation, the bundled core one;
+- selection audits are debounced, open panels are kept, and scan limits are enforced during the scan.
+
+None of this claims target compatibility, import or render proof, or production authority.
+
+Next: **M1.1**.
 
 
 ## Product direction
