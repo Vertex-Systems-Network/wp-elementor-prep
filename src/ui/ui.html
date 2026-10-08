@@ -66,6 +66,7 @@
   <div class="app">
     <h1>WP Builders Prepare</h1>
     <div class="sub">Audit + P13 Build-Ready + internal confirmed P14 Guided Prepare + read-only P15 Elementor preview + P3 validator + P5 Safe Fix + P7 batch queue</div>
+    <div id="background-audit-notice" class="meta" hidden></div>
     <div id="root" class="empty">Select one Frame to audit/preview, two Frames to compare, or multiple Frames for P7 batch processing.</div>
     <div class="profilePanel">
       <div class="status">Declared TargetProfile compatibility</div>
@@ -111,6 +112,8 @@
 
   <script>
     const root = document.getElementById('root');
+    // True while the audit view (or the initial empty state) is shown; other panels are preserved.
+    let auditPanelActive = true;
     const optionBankRegistry = __OPTION_BANK_REGISTRY__;
     let selectedOptionBankId = optionBankRegistry.elementor[0]?.id || '';
     function fillOptionBanks() {
@@ -927,7 +930,25 @@
         return;
       }
 
+      const backgroundNotice = document.getElementById('background-audit-notice');
+      if (message.type === 'audit-background-notice') {
+        backgroundNotice.textContent = typeof message.message === 'string' ? message.message : 'Background audit skipped.';
+        backgroundNotice.hidden = false;
+        return;
+      }
+      // An automatic (selection-change) audit must not replace a P14/P15/Safe Fix/batch/validation panel.
+      if (message.type === 'audit-result' && message.automatic === true && !auditPanelActive) {
+        backgroundNotice.textContent = 'Selection changed: the audit was refreshed in the background. Click "Run audit" to view it.';
+        backgroundNotice.hidden = false;
+        return;
+      }
+      if (message.type !== 'audit-result' && message.type !== 'audit-error' && message.type !== 'validation-pixel-request' && !message.type.startsWith('option-bank-')) {
+        auditPanelActive = false;
+      }
+
       if (message.type === 'audit-result') {
+        auditPanelActive = true;
+        backgroundNotice.hidden = true;
         latestAuditJson = typeof message.auditJson === 'string' ? message.auditJson : '';
         latestAuditMarkdown = typeof message.auditMarkdown === 'string' ? message.auditMarkdown : '';
         latestBacklogJson = typeof message.backlogJson === 'string' ? message.backlogJson : '';

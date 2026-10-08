@@ -13,7 +13,8 @@ import {
 import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
 import type { SafeRecipeKind } from '../core/safe-recipe-types';
-import { scanSceneNode } from '../core/scanner';
+import { scanSceneNode, scanSceneNodeWithinBounds, type ScanBounds } from '../core/scanner';
+import { createSelectionAuditScheduler } from './selection-audit-scheduler';
 import { buildBuildReadyReport, serializeBuildReadyReportJson } from '../core/build-ready';
 import { buildP14PreparationConfirmation } from '../core/p14-preparation-confirmation';
 import { runP14RetainedDuplicateTransaction } from '../core/p14-retained-duplicate-transaction';
@@ -183,18 +184,23 @@ async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string |
   return { valid: true, passedAt: stored.passedAt, build: { ...stored.build } };
 }
 
-async function runAudit(sequence: number): Promise<void> {
+/** Matches the Build-Ready default `maxNodes`; enforced while scanning instead of after a full scan. */
+const AUDIT_SCAN_BOUNDS: ScanBounds = { maxVisibleNodes: 10_000, maxTotalNodes: 100_000 };
+
+async function runAudit(sequence: number, options: { automatic?: boolean } = {}): Promise<void> {
+  const automatic = options.automatic === true;
   const page = figma.currentPage;
   const selection = page.selection;
 
+  // Automatic (selection-change) audits never replace the panel with an error for an unsupported selection.
   if (selection.length !== 1) {
-    if (sequence === auditSequence) postError('Select exactly one desktop frame to audit.');
+    if (!automatic && sequence === auditSequence) postError('Select exactly one desktop frame to audit.');
     return;
   }
 
   const selected = selection[0];
   if (!selected || selected.type !== 'FRAME') {
-    if (sequence === auditSequence) postError('Audit currently supports one selected Figma Frame.');
+    if (!automatic && sequence === auditSequence) postError('Audit currently supports one selected Figma Frame.');
     return;
   }
 
@@ -204,7 +210,7 @@ async function runAudit(sequence: number): Promise<void> {
   const storageKey = backlogStorageKey(fileKey, pageId, selected.id);
 
   try {
-    const root = scanSceneNode(selected);
+    const root = scanSceneNodeWithinBounds(selected, AUDIT_SCAN_BOUNDS);
     const report = buildAuditReport(root, PLUGIN_VERSION);
     const buildReady = buildBuildReadyReport(root, {}, report.generatedAt);
     const stored = await figma.clientStorage.getAsync(storageKey) as unknown;
@@ -247,6 +253,7 @@ async function runAudit(sequence: number): Promise<void> {
 
     figma.ui.postMessage({
       type: 'audit-result',
+      automatic,
       report,
       backlog,
       buildReady,
@@ -261,6 +268,10 @@ async function runAudit(sequence: number): Promise<void> {
   } catch (error) {
     if (sequence !== auditSequence) return;
     const message = error instanceof Error ? error.message : String(error);
+    if (automatic) {
+      figma.ui.postMessage({ type: 'audit-background-notice', message: `Background audit skipped: ${message}` });
+      return;
+    }
     postError(`Audit failed: ${message}`);
   }
 }
@@ -1253,11 +1264,21 @@ figma.ui.onmessage = async (message: unknown) => {
   }
 };
 
+const selectionAuditScheduler = createSelectionAuditScheduler({
+  setTimer: (callback, delayMs) => setTimeout(callback, delayMs),
+  clearTimer: (handle) => clearTimeout(handle as ReturnType<typeof setTimeout>),
+  run: () => {
+    if (p5OperationInFlight === 'batch-run' || p7BatchState?.status === 'PAUSED') return;
+    if (figma.currentPage.selection.length !== 1) return;
+    void runAudit(++auditSequence, { automatic: true });
+  },
+});
+
 figma.on('selectionchange', () => {
   p14ReviewedActivation = null;
-  const sequence = ++auditSequence;
-  if (p5OperationInFlight === 'batch-run' || p7BatchState?.status === 'PAUSED') return;
-  if (figma.currentPage.selection.length === 1) void runAudit(sequence);
+  // Invalidate any in-flight audit immediately; the debounced audit runs for the final selection only.
+  auditSequence += 1;
+  selectionAuditScheduler.schedule();
 });
 
 if (figma.command === 'p5-runtime-self-test') {

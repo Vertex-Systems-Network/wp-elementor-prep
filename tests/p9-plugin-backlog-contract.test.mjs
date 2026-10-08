@@ -34,7 +34,7 @@ describe('P9 plugin backlog contract', () => {
   });
 
   it('keeps the P9 audit/backlog path non-mutating after P5 integration', () => {
-    const auditStart = pluginMain.indexOf('async function runAudit(sequence: number)');
+    const auditStart = pluginMain.indexOf('async function runAudit(sequence: number, options: { automatic?: boolean } = {})');
     const safeFixStart = pluginMain.indexOf('async function currentSafePlans');
     expect(auditStart).toBeGreaterThanOrEqual(0);
     expect(safeFixStart).toBeGreaterThan(auditStart);

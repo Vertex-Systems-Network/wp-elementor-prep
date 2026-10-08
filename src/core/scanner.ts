@@ -109,8 +109,46 @@ export function computeVisualFactsDigest(node: SceneNode): string {
   return `v1-${fnv1a(serializeVisual(facts))}`;
 }
 
+/** Thrown while scanning, before the full tree is materialised, when a selection exceeds its node budget. */
+export class ScanBoundsExceededError extends Error {
+  readonly code = 'SCAN_NODE_LIMIT_EXCEEDED' as const;
+
+  constructor(readonly limit: number, readonly counted: 'visible' | 'total') {
+    super(counted === 'visible'
+      ? `The selection has more than ${limit} visible layers. Select a smaller Frame or section to audit.`
+      : `The selection has more than ${limit} layers in total. Select a smaller Frame or section to audit.`);
+    this.name = 'ScanBoundsExceededError';
+  }
+}
+
+export interface ScanBounds {
+  /** Same unit as Build-Ready `maxNodes`: nodes whose own `visible` flag is true. */
+  maxVisibleNodes: number;
+  /** Hard cap on all nodes (hidden included) to bound memory and time. */
+  maxTotalNodes: number;
+}
+
+/**
+ * Scan with node budgets enforced during traversal, so an oversized selection fails fast with a
+ * structured error instead of being fully scanned (and classified) before the limit is checked.
+ */
+export function scanSceneNodeWithinBounds(node: SceneNode, bounds: ScanBounds): AuditNode {
+  const counters = { visible: 0, total: 0 };
+  return scanNode(node, (current) => {
+    counters.total += 1;
+    if (current.visible !== false) counters.visible += 1;
+    if (counters.total > bounds.maxTotalNodes) throw new ScanBoundsExceededError(bounds.maxTotalNodes, 'total');
+    if (counters.visible > bounds.maxVisibleNodes) throw new ScanBoundsExceededError(bounds.maxVisibleNodes, 'visible');
+  });
+}
+
 export function scanSceneNode(node: SceneNode): AuditNode {
-  const children = childNodes(node).map(scanSceneNode);
+  return scanNode(node, () => undefined);
+}
+
+function scanNode(node: SceneNode, visit: (node: SceneNode) => void): AuditNode {
+  visit(node);
+  const children = childNodes(node).map((child) => scanNode(child, visit));
   const mode = readLayoutMode(node);
   const isContainer = children.length > 0 || 'children' in node;
   const isText = node.type === 'TEXT';
