@@ -287,7 +287,11 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
 
     const candidate = runtime.nodes.get(result.candidate?.nodeId ?? '');
     expect(candidate).toBeInstanceOf(FakeFrame);
-    expect((candidate as FakeFrame).name).toBe('Approved Desktop');
+    // Recovery M0.5: the retained duplicate sits beside the source with a distinguishable name.
+    expect((candidate as FakeFrame).name).toBe('Approved Desktop — Prepared');
+    expect((candidate as FakeFrame).x).toBe(source.x + source.width + 100);
+    expect((candidate as FakeFrame).y).toBe(source.y);
+    expect(source.name).toBe('Approved Desktop');
     expect((candidate as FakeFrame).getPluginData('p14:preparedName')).toBe('Approved Desktop — Prepared');
     const candidateTarget = (candidate as FakeFrame).children[0];
     expect(candidateTarget).toBeInstanceOf(FakeFrame);
@@ -412,5 +416,55 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     expect(P14_VERTICAL_STACK_RECIPE_QUALIFICATION.targetCompatibilityClaim).toBe(false);
     expect(runtime.nodes.has(source.id)).toBe(true);
     expect(runtime.nodes.has(handle.candidateNodeId)).toBe(true);
+  });
+
+  it('places a retained duplicate of a nested source beside the source in page space (recovery M0.5)', async () => {
+    const { runtime, source } = fixture();
+    const section = new FakeFrame(runtime, 'page:section', 'Section', 300, 500, 2000, 2000);
+    runtime.page.appendChild(section);
+    section.appendChild(source);
+    source.x = 40;
+    source.y = 60;
+    const plan = planFor(source);
+    const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
+
+    const result = await runP14RetainedDuplicateTransaction({
+      plan,
+      registry,
+      confirmation: buildP14PreparationConfirmation(plan, fixedNow()),
+      transactionId: 'p14-m05-nested',
+      preparedName: 'Approved Desktop — Prepared',
+      allowPreparedWithReview: true,
+      now: fixedNow,
+    }, adapter);
+
+    expect(result.terminalState).toBe('COMPLETE');
+    const candidate = runtime.nodes.get(result.candidate?.nodeId ?? '') as FakeFrame;
+    expect(candidate.parent).toBe(runtime.page);
+    expect(candidate.x).toBe(300 + 40 + source.width + 100);
+    expect(candidate.y).toBe(500 + 60);
+    expect(candidate.name).toBe('Approved Desktop — Prepared');
+    expect(source.parent).toBe(section);
+    expect(source.x).toBe(40);
+  });
+
+  it('uses the Figma absolute transform for placement when it is available (recovery M0.5)', async () => {
+    const { runtime, source } = fixture();
+    Object.assign(source, { absoluteTransform: [[1, 0, 1234], [0, 1, 567]] });
+    const plan = planFor(source);
+    const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
+    const result = await runP14RetainedDuplicateTransaction({
+      plan,
+      registry,
+      confirmation: buildP14PreparationConfirmation(plan, fixedNow()),
+      transactionId: 'p14-m05-transform',
+      preparedName: 'Approved Desktop — Prepared',
+      allowPreparedWithReview: true,
+      now: fixedNow,
+    }, adapter);
+    expect(result.terminalState).toBe('COMPLETE');
+    const candidate = runtime.nodes.get(result.candidate?.nodeId ?? '') as FakeFrame;
+    expect(candidate.x).toBe(1234 + source.width + 100);
+    expect(candidate.y).toBe(567);
   });
 });

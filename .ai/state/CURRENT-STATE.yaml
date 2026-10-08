@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
 last_completed_milestone: product_recovery_plan_alignment_m_align
-exact_next_safe_action: execute_recovery_task_M0_5_p14_duplicate_placed_beside_source_with_deterministic_name
+exact_next_safe_action: execute_recovery_task_M0_6_per_file_undo_checkpoint_and_stale_checkpoint_clear
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
@@ -92,8 +92,8 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M0
-  next_task: M0.5
-  last_completed_task: M0.4
+  next_task: M0.6
+  last_completed_task: M0.5
   blocked_tasks: []
   branch: claude/youthful-ritchie-uch0qp
   open_pr: null
