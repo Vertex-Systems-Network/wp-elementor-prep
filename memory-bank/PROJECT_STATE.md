@@ -21,7 +21,7 @@ A full code audit at main `9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6` (see `docs/
 
 The active priority is the recovery program (D-047). Phase rows and authority boundaries below are unchanged.
 
-**M0 status (2026-10-08): implemented, exact-head CI pending.**
+**M0 status (2026-10-08): ACCEPTED.** PR #895, exact head `e8672b0`, passed 10/10 required checks and was merged as `f18240e`.
 
 Fixed:
 - the release UI placeholder crash;
@@ -38,7 +38,7 @@ Fixed:
 
 None of this claims target compatibility, import or render proof, or production authority.
 
-Next: **M1.1**.
+Active: **M1**, the table-driven mapping engine. Next: **M1.2**.
 
 
 ## Product direction

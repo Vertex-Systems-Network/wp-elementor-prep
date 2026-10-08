@@ -26,7 +26,7 @@ The single resumable build backlog is [`docs/PRODUCT_RECOVERY_PLAN.md`](docs/PRO
 | M8 | Gutenberg |
 | M9+ | Remaining phases |
 
-Current: **M0 implemented (12/12 tasks), exact-head CI pending; next M1.1**.
+Current: **M0 accepted (PR #895); M1 mapping engine in progress**.
 
 ## Current phase progress
 
@@ -53,7 +53,7 @@ The two Package 13/14 Website Template ZIPs still contain temporary Figma asset 
 | Module | Status | Progress | Progress Bar | Blocker / Next |
 |---|---|---:|---|---|
 | AI-native governance + repo tooling | ANPOS CHILD-ADOPTION FOUNDATION IMPLEMENTED / FULL ASSURANCE MAPPING IN PROGRESS | N/A | `──────────` | `.ai/manifest.json`, active-project identity, Requirements 1–96 applicability matrix, applicable policy contracts and deterministic validator added; PM/agent identity/consent/lease/commercial capabilities remain explicitly inactive; #287 admin branch/ruleset enforcement still required |
-| Product Recovery Program (M0–M9) | IN PROGRESS / M0 IMPLEMENTED, EXACT-HEAD CI PENDING | 10% impl | `█░░░░░░░░░` | M0 12/12 tasks implemented; M0 acceptance needs a green exact-head PR; next M1.1 table-driven mapping engine — see `docs/PRODUCT_RECOVERY_PLAN.md` |
+| Product Recovery Program (M0–M9) | IN PROGRESS / M0 ACCEPTED, M1 ACTIVE | 10% | `█░░░░░░░░░` | 1/10 milestones accepted (M0 via PR #895); M1 table-driven Elementor mapping engine in progress — see `docs/PRODUCT_RECOVERY_PLAN.md` |
 | P0–P4 historical core aggregate | COMPLETE | 100% | `██████████` | Compatibility summary only; individual P0-P4 rows below are canonical for phase visibility |
 | P0 AI-native foundation + audit-only scaffold | COMPLETE | 100% | `██████████` | Planning, memory-bank, deterministic audit-only scaffold and CI foundation established |
 | P1 Audit-Only MVP + golden-fixture calibration | COMPLETE | 100% | `██████████` | Read-only selected-frame audit, explainable scoring and fixture calibration complete |
