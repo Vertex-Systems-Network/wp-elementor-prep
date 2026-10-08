@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
 last_completed_milestone: product_recovery_m0_accepted_pr_895_merged_f18240e
-exact_next_safe_action: execute_recovery_task_M1_2_shared_container_family_engine
+exact_next_safe_action: execute_recovery_task_M1_3a_reexpress_gap_padding_margin_as_engine_families_with_golden_equality
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
@@ -92,8 +92,8 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M1
-  next_task: M1.2
-  last_completed_task: M1.1
+  next_task: M1.3a
+  last_completed_task: M1.2
   blocked_tasks: []
   branch: claude/youthful-ritchie-uch0qp
   open_pr: null

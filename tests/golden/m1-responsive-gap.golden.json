@@ -1,0 +1,1879 @@
+[
+ {
+  "name": "tablet-only",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "RESPONSIVE_GAPS_RESOLVED",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": "sha256:92ac6023706405cb8a8b15277cb7230d2d12e9c5fecb5396297650103049eb05",
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 1,
+   "resolvedGaps": [
+    {
+     "sourceNodeId": "root",
+     "tabletGapPx": 12,
+     "tabletRowGapPx": null,
+     "tabletColumnGapPx": null,
+     "mobileGapPx": null,
+     "mobileRowGapPx": null,
+     "mobileColumnGapPx": null
+    }
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden container family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "row",
+       "flex_gap": {
+        "column": "24",
+        "row": "24",
+        "isLinked": true,
+        "unit": "px"
+       },
+       "padding": {
+        "unit": "px",
+        "top": "10",
+        "right": "20",
+        "bottom": "10",
+        "left": "20",
+        "isLinked": false
+       },
+       "flex_gap_tablet": {
+        "unit": "px",
+        "column": "12",
+        "row": "12",
+        "isLinked": true
+       }
+      },
+      "elements": [
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         }
+        },
+        "elements": [
+         {
+          "id": "0e1611a7",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>GOLDEN COPY</p>",
+           "align": "start"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0].elements[0]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden container family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"row\",\n        \"flex_gap\": {\n          \"column\": \"24\",\n          \"row\": \"24\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        },\n        \"padding\": {\n          \"unit\": \"px\",\n          \"top\": \"10\",\n          \"right\": \"20\",\n          \"bottom\": \"10\",\n          \"left\": \"20\",\n          \"isLinked\": false\n        },\n        \"flex_gap_tablet\": {\n          \"unit\": \"px\",\n          \"column\": \"12\",\n          \"row\": \"12\",\n          \"isLinked\": true\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"column\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"0e1611a7\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>GOLDEN COPY</p>\",\n                \"align\": \"start\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"RESPONSIVE_GAPS_RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:92ac6023706405cb8a8b15277cb7230d2d12e9c5fecb5396297650103049eb05\",\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 1,\n  \"resolvedGaps\": [\n    {\n      \"sourceNodeId\": \"root\",\n      \"tabletGapPx\": 12,\n      \"tabletRowGapPx\": null,\n      \"tabletColumnGapPx\": null,\n      \"mobileGapPx\": null,\n      \"mobileRowGapPx\": null,\n      \"mobileColumnGapPx\": null\n    }\n  ],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "mobile-only",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "RESPONSIVE_GAPS_RESOLVED",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": "sha256:3f3c376c6769bf58a9fff344ca373c2824ecb19fdc434c2b304405598c4376d7",
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 1,
+   "resolvedGaps": [
+    {
+     "sourceNodeId": "nested",
+     "tabletGapPx": null,
+     "tabletRowGapPx": null,
+     "tabletColumnGapPx": null,
+     "mobileGapPx": null,
+     "mobileRowGapPx": 4,
+     "mobileColumnGapPx": 10
+    }
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden container family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "row",
+       "flex_gap": {
+        "column": "24",
+        "row": "24",
+        "isLinked": true,
+        "unit": "px"
+       },
+       "padding": {
+        "unit": "px",
+        "top": "10",
+        "right": "20",
+        "bottom": "10",
+        "left": "20",
+        "isLinked": false
+       }
+      },
+      "elements": [
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         },
+         "flex_gap_mobile": {
+          "unit": "px",
+          "column": "10",
+          "row": "4",
+          "isLinked": false
+         }
+        },
+        "elements": [
+         {
+          "id": "0e1611a7",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>GOLDEN COPY</p>",
+           "align": "start"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0].elements[0]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden container family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"row\",\n        \"flex_gap\": {\n          \"column\": \"24\",\n          \"row\": \"24\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        },\n        \"padding\": {\n          \"unit\": \"px\",\n          \"top\": \"10\",\n          \"right\": \"20\",\n          \"bottom\": \"10\",\n          \"left\": \"20\",\n          \"isLinked\": false\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"column\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            },\n            \"flex_gap_mobile\": {\n              \"unit\": \"px\",\n              \"column\": \"10\",\n              \"row\": \"4\",\n              \"isLinked\": false\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"0e1611a7\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>GOLDEN COPY</p>\",\n                \"align\": \"start\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"RESPONSIVE_GAPS_RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:3f3c376c6769bf58a9fff344ca373c2824ecb19fdc434c2b304405598c4376d7\",\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 1,\n  \"resolvedGaps\": [\n    {\n      \"sourceNodeId\": \"nested\",\n      \"tabletGapPx\": null,\n      \"tabletRowGapPx\": null,\n      \"tabletColumnGapPx\": null,\n      \"mobileGapPx\": null,\n      \"mobileRowGapPx\": 4,\n      \"mobileColumnGapPx\": 10\n    }\n  ],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "both-two-containers-unsorted",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "RESPONSIVE_GAPS_RESOLVED",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": "sha256:dde803aa7ad9262523c315f4f7e8bd0f6b739c264b99ab45ed70fddda4a72c18",
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 2,
+   "resolvedGaps": [
+    {
+     "sourceNodeId": "nested",
+     "tabletGapPx": null,
+     "tabletRowGapPx": null,
+     "tabletColumnGapPx": null,
+     "mobileGapPx": null,
+     "mobileRowGapPx": 4,
+     "mobileColumnGapPx": 10
+    },
+    {
+     "sourceNodeId": "root",
+     "tabletGapPx": 12,
+     "tabletRowGapPx": null,
+     "tabletColumnGapPx": null,
+     "mobileGapPx": null,
+     "mobileRowGapPx": 4,
+     "mobileColumnGapPx": 10
+    }
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden container family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "row",
+       "flex_gap": {
+        "column": "24",
+        "row": "24",
+        "isLinked": true,
+        "unit": "px"
+       },
+       "padding": {
+        "unit": "px",
+        "top": "10",
+        "right": "20",
+        "bottom": "10",
+        "left": "20",
+        "isLinked": false
+       },
+       "flex_gap_tablet": {
+        "unit": "px",
+        "column": "12",
+        "row": "12",
+        "isLinked": true
+       },
+       "flex_gap_mobile": {
+        "unit": "px",
+        "column": "10",
+        "row": "4",
+        "isLinked": false
+       }
+      },
+      "elements": [
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         },
+         "flex_gap_mobile": {
+          "unit": "px",
+          "column": "10",
+          "row": "4",
+          "isLinked": false
+         }
+        },
+        "elements": [
+         {
+          "id": "0e1611a7",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>GOLDEN COPY</p>",
+           "align": "start"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0].elements[0]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden container family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"row\",\n        \"flex_gap\": {\n          \"column\": \"24\",\n          \"row\": \"24\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        },\n        \"padding\": {\n          \"unit\": \"px\",\n          \"top\": \"10\",\n          \"right\": \"20\",\n          \"bottom\": \"10\",\n          \"left\": \"20\",\n          \"isLinked\": false\n        },\n        \"flex_gap_tablet\": {\n          \"unit\": \"px\",\n          \"column\": \"12\",\n          \"row\": \"12\",\n          \"isLinked\": true\n        },\n        \"flex_gap_mobile\": {\n          \"unit\": \"px\",\n          \"column\": \"10\",\n          \"row\": \"4\",\n          \"isLinked\": false\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"column\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            },\n            \"flex_gap_mobile\": {\n              \"unit\": \"px\",\n              \"column\": \"10\",\n              \"row\": \"4\",\n              \"isLinked\": false\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"0e1611a7\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>GOLDEN COPY</p>\",\n                \"align\": \"start\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"RESPONSIVE_GAPS_RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:dde803aa7ad9262523c315f4f7e8bd0f6b739c264b99ab45ed70fddda4a72c18\",\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 2,\n  \"resolvedGaps\": [\n    {\n      \"sourceNodeId\": \"nested\",\n      \"tabletGapPx\": null,\n      \"tabletRowGapPx\": null,\n      \"tabletColumnGapPx\": null,\n      \"mobileGapPx\": null,\n      \"mobileRowGapPx\": 4,\n      \"mobileColumnGapPx\": 10\n    },\n    {\n      \"sourceNodeId\": \"root\",\n      \"tabletGapPx\": 12,\n      \"tabletRowGapPx\": null,\n      \"tabletColumnGapPx\": null,\n      \"mobileGapPx\": null,\n      \"mobileRowGapPx\": 4,\n      \"mobileColumnGapPx\": 10\n    }\n  ],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "no-overrides",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "NO_RESPONSIVE_GAP_OVERRIDES",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [],
+   "template": {
+    "title": "Golden container family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "row",
+       "flex_gap": {
+        "column": "24",
+        "row": "24",
+        "isLinked": true,
+        "unit": "px"
+       },
+       "padding": {
+        "unit": "px",
+        "top": "10",
+        "right": "20",
+        "bottom": "10",
+        "left": "20",
+        "isLinked": false
+       }
+      },
+      "elements": [
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         }
+        },
+        "elements": [
+         {
+          "id": "0e1611a7",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>GOLDEN COPY</p>",
+           "align": "start"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0].elements[0]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden container family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"row\",\n        \"flex_gap\": {\n          \"column\": \"24\",\n          \"row\": \"24\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        },\n        \"padding\": {\n          \"unit\": \"px\",\n          \"top\": \"10\",\n          \"right\": \"20\",\n          \"bottom\": \"10\",\n          \"left\": \"20\",\n          \"isLinked\": false\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"column\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"0e1611a7\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>GOLDEN COPY</p>\",\n                \"align\": \"start\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"NO_RESPONSIVE_GAP_OVERRIDES\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "manifest-null",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_MANIFEST_NOT_OBJECT",
+     "path": "$manifest",
+     "message": "Responsive gap manifest must be an object."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_MANIFEST_NOT_OBJECT\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "manifest-array",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_MANIFEST_NOT_OBJECT",
+     "path": "$manifest",
+     "message": "Responsive gap manifest must be an object."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_MANIFEST_NOT_OBJECT\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "manifest-extra-key",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_MANIFEST_FIELDS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap manifest contains unknown or missing fields."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_MANIFEST_FIELDS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "manifest-missing-key",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_MANIFEST_FIELDS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap manifest contains unknown or missing fields."
+    },
+    {
+     "code": "P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_MANIFEST_FIELDS_INVALID\",\n      \"path\": \"$manifest\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "manifest-wrong-version",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID",
+     "path": "$manifest.manifestVersion",
+     "message": "Responsive gap manifest schema/version is unsupported."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID\",\n      \"path\": \"$manifest.manifestVersion\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "manifest-wrong-schema",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID",
+     "path": "$manifest.manifestVersion",
+     "message": "Responsive gap manifest schema/version is unsupported."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID\",\n      \"path\": \"$manifest.manifestVersion\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "fingerprint-malformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_INVALID",
+     "path": "$manifest.sourceIrFingerprint",
+     "message": "sourceIrFingerprint must be a SHA-256 fingerprint."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_INVALID\",\n      \"path\": \"$manifest.sourceIrFingerprint\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "fingerprint-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_MISMATCH",
+     "path": "$manifest.sourceIrFingerprint",
+     "message": "Manifest is not bound to the exact current neutral IR."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_MISMATCH\",\n      \"path\": \"$manifest.sourceIrFingerprint\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "base-digest-malformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_INVALID",
+     "path": "$manifest.baseCandidateIdentityDigest",
+     "message": "baseCandidateIdentityDigest must be a SHA-256 candidate identity digest."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_INVALID\",\n      \"path\": \"$manifest.baseCandidateIdentityDigest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "base-digest-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_MISMATCH",
+     "path": "$manifest.baseCandidateIdentityDigest",
+     "message": "Manifest is not bound to the exact current base candidate identity."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_MISMATCH\",\n      \"path\": \"$manifest.baseCandidateIdentityDigest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "authority-responsiveInferencePerformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "authority-figmaMutation",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "authority-networkAccess",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "authority-responsiveClosureClaim",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "authority-targetCompatibilityClaim",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "authority-productionAcceptance",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "authority-downloadEnabled",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive gap resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "containers-not-array",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_ENTRIES_INVALID",
+     "path": "$manifest.containers",
+     "message": "containers must be an array of at most 10000 entries."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_ENTRIES_INVALID\",\n      \"path\": \"$manifest.containers\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "containers-too-many",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_ENTRIES_INVALID",
+     "path": "$manifest.containers",
+     "message": "containers must be an array of at most 10000 entries."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_ENTRIES_INVALID\",\n      \"path\": \"$manifest.containers\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-not-record",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_ENTRY_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Each responsive gap entry may contain only sourceNodeId plus linked gaps or complete tablet/mobile row/column px pairs."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-unknown-key",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_ENTRY_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Each responsive gap entry may contain only sourceNodeId plus linked gaps or complete tablet/mobile row/column px pairs."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-bad-source-id",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_ENTRY_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Each responsive gap entry may contain only sourceNodeId plus linked gaps or complete tablet/mobile row/column px pairs."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-duplicate",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_DUPLICATE_SOURCE_ID",
+     "path": "$manifest.containers[1].sourceNodeId",
+     "message": "Responsive gap sourceNodeId must be unique."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_DUPLICATE_SOURCE_ID\",\n      \"path\": \"$manifest.containers[1].sourceNodeId\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-text-node",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER",
+     "path": "$manifest.containers[0].sourceNodeId",
+     "message": "Responsive gap sourceNodeId must identify an existing neutral container node."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER\",\n      \"path\": \"$manifest.containers[0].sourceNodeId\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-missing-node",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER",
+     "path": "$manifest.containers[0].sourceNodeId",
+     "message": "Responsive gap sourceNodeId must identify an existing neutral container node."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER\",\n      \"path\": \"$manifest.containers[0].sourceNodeId\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-no-override",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_OVERRIDE_REQUIRED",
+     "path": "$manifest.containers[0]",
+     "message": "Each responsive gap entry must provide linked gaps or explicit row/column px pairs."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_OVERRIDE_REQUIRED\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-invalid-value-0",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_VALUE_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Responsive gap px values must be finite and between 0 and 4096."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_VALUE_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-invalid-value-1",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_VALUE_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Responsive gap px values must be finite and between 0 and 4096."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_VALUE_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-invalid-value-2",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_VALUE_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Responsive gap px values must be finite and between 0 and 4096."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_VALUE_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-invalid-value-3",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_VALUE_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Responsive gap px values must be finite and between 0 and 4096."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_VALUE_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-extra-invalid-0",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_ENTRY_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Use either linked gap or an explicit row/column pair for each breakpoint, not both."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-extra-invalid-1",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_ENTRY_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Explicit responsive row and column gaps must be supplied together at each breakpoint."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "entry-extra-invalid-2",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_ENTRY_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Explicit responsive row and column gaps must be supplied together at each breakpoint."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "many-issues-accumulate",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID",
+     "path": "$manifest.manifestVersion",
+     "message": "Responsive gap manifest schema/version is unsupported."
+    },
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER",
+     "path": "$manifest.containers[0].sourceNodeId",
+     "message": "Responsive gap sourceNodeId must identify an existing neutral container node."
+    },
+    {
+     "code": "P15_RESPONSIVE_GAP_ENTRY_INVALID",
+     "path": "$manifest.containers[1]",
+     "message": "Each responsive gap entry may contain only sourceNodeId plus linked gaps or complete tablet/mobile row/column px pairs."
+    },
+    {
+     "code": "P15_RESPONSIVE_GAP_OVERRIDE_REQUIRED",
+     "path": "$manifest.containers[2]",
+     "message": "Each responsive gap entry must provide linked gaps or explicit row/column px pairs."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID\",\n      \"path\": \"$manifest.manifestVersion\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER\",\n      \"path\": \"$manifest.containers[0].sourceNodeId\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[1]\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_OVERRIDE_REQUIRED\",\n      \"path\": \"$manifest.containers[2]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "source-invalid",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "BLOCKED_INVALID_SOURCE_IR",
+   "sourceIrFingerprint": null,
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 0,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_IR_INVALID",
+     "path": "$.schemaVersion",
+     "message": "Neutral export schemaVersion must be 1."
+    },
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_IR_INVALID",
+     "path": "$.irVersion",
+     "message": "Neutral export irVersion must be p15-neutral-export-ir-v2."
+    },
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_IR_INVALID",
+     "path": "$.title",
+     "message": "Template title must be a non-empty string up to 512 characters."
+    },
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_IR_INVALID",
+     "path": "$.documentType",
+     "message": "V1 neutral export supports page and section documents only."
+    },
+    {
+     "code": "P15_RESPONSIVE_GAP_SOURCE_IR_INVALID",
+     "path": "$.nodes",
+     "message": "Neutral export document nodes must be an array."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"BLOCKED_INVALID_SOURCE_IR\",\n  \"sourceIrFingerprint\": null,\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 0,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_IR_INVALID\",\n      \"path\": \"$.schemaVersion\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_IR_INVALID\",\n      \"path\": \"$.irVersion\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_IR_INVALID\",\n      \"path\": \"$.title\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_IR_INVALID\",\n      \"path\": \"$.documentType\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_SOURCE_IR_INVALID\",\n      \"path\": \"$.nodes\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ },
+ {
+  "name": "source-review-upstream",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-gap-result-v1",
+   "status": "BLOCKED_UPSTREAM_GENERATION",
+   "sourceIrFingerprint": "sha256:1d083dec7e3f2d3fb8daa7014423e09c7fcb294942f2298c9202f8a92c228691",
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedGaps": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_GAP_UPSTREAM_GENERATION_NOT_READY",
+     "path": "$source",
+     "message": "Responsive gap resolution requires an existing review-free generated local candidate."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-gap-result-v1\",\n  \"status\": \"BLOCKED_UPSTREAM_GENERATION\",\n  \"sourceIrFingerprint\": \"sha256:1d083dec7e3f2d3fb8daa7014423e09c7fcb294942f2298c9202f8a92c228691\",\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedGaps\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_GAP_UPSTREAM_GENERATION_NOT_READY\",\n      \"path\": \"$source\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"flexContainerSourcePath\": \"includes/controls/groups/flex-container.php\",\n    \"flexContainerSourceBlobSha\": \"ce9e412e31b7710f33129ae35634ecb51e580d38\",\n    \"upgradeTestSourcePath\": \"tests/phpunit/elementor/core/upgrade/test-upgrades.php\",\n    \"upgradeTestSourceBlobSha\": \"ca26af25b0e35d24303a771eb3a85dc1fee21b89\",\n    \"groupName\": \"flex\",\n    \"controlName\": \"gap\",\n    \"desktopSettingKey\": \"flex_gap\",\n    \"tabletSettingKey\": \"flex_gap_tablet\",\n    \"mobileSettingKey\": \"flex_gap_mobile\"\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-gap result."
+ }
+]
