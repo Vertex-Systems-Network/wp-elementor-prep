@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.3b** (layout families)
-> - Last completed task: **M1.3a** (gap, padding and margin re-expressed as engine families; 118/118 golden cases identical).
+> - Next task: **M1.3c** (flex item and sizing families)
+> - Last completed task: **M1.3b** (direction, wrap and alignment re-expressed as engine families; 112/112 golden cases identical).
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -152,7 +152,11 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 - [x] **M1.2** _(done 2026-10-08: `mapping-engine/container-family-engine.ts` owns the full manifest/authority/binding/conflict/rebuild/summary/serializer contract (`resolveContainerPropertyFamily`, `serializeContainerPropertyFamilySummary`). The golden baseline `tests/golden/m1-responsive-{gap,padding,margin}.golden.json` (118 cases) was recorded from the original resolvers with `GOLDEN_WRITE=1`, and `tests/m1-container-family-golden.test.ts` replays it.)_ Create one shared module for the manifest envelope, authority flags, fingerprint/binding, conflict detection and result serialisation. This replaces the 48 copied helper sets.
 - [~] **M1.3** Migrate the container families. This is split into M1.3a–d, and each part ships its golden baseline before the switch:
   - [x] **M1.3a** spacing _(done 2026-10-08: gap, padding and margin are families in `mapping-engine/families/responsive-spacing.ts`; the resolver files are thin typed wrappers, about 2,120 lines down to 436; 118/118 golden cases are identical and the original resolver tests pass unchanged; the README verifier now checks the gap-axis family table)._
-  - [ ] **M1.3b** layout: direction, wrap, alignment, align-content, text-alignment, button-alignment.
+  - [x] **M1.3b** layout _(done 2026-10-08):_
+    - direction, wrap and alignment are `responsiveEnumFamily` definitions in `mapping-engine/families/responsive-layout.ts`; about 2,070 lines became 596.
+    - 112/112 golden cases recorded from the original resolvers (commit `baaa286`) are identical, and the original tests pass.
+    - The engine gained per-family issue-code and message overrides, binding-issue ordering and an all-conflicts mode.
+    - Scope moved: text-alignment and button-alignment bind widgets, so they move to M1.4. Align-content is chained on the wrap result (a wrapped-candidate base), so it moves to M1.5.
   - [ ] **M1.3c** flex item and sizing: align-self, basis, factors, order preset/custom, min-height, boxed/full width, z-index.
   - [ ] **M1.3d** container styles and compositions: border, hover border, radius, box-shadow, overflow, HTML tag, overlay, hover background, gradients, hover transition, style composition.
 - Original M1.3 wording, for reference: migrate the container families: gap, padding, margin, direction, alignment, wrap, align-content, boxed/full width, min-height, radius, border, shadow, overflow, z-index, html tag, background/overlay/gradient, and opacity. Each migration ships a golden equivalence test (old resolver output == engine output on every existing fixture). Then delete the old file.

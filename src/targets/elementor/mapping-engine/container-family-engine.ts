@@ -112,7 +112,7 @@ export type ContainerFamilyResult = {
 type AnyFamily = ContainerPropertyFamily<{ sourceNodeId: string }, { sourceNodeId: string }>;
 
 function code(family: AnyFamily, suffix: IssueSuffix): string {
-  return `${family.issuePrefix}_${suffix}`;
+  return family.issueCodes?.[suffix] ?? `${family.issuePrefix}_${suffix}`;
 }
 
 function baseResult(
@@ -227,11 +227,11 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
         }
         const sourceNodeId = raw.sourceNodeId;
         if (resolutions.has(sourceNodeId)) {
-          issues.push({ code: code(family, 'DUPLICATE_SOURCE_ID'), path: `${path}.sourceNodeId`, message: `${subject} sourceNodeId must be unique.` });
+          issues.push({ code: code(family, 'DUPLICATE_SOURCE_ID'), path: `${path}.sourceNodeId`, message: family.messages?.duplicate ?? `${subject} sourceNodeId must be unique.` });
           continue;
         }
         if (!sourceContainers.has(sourceNodeId)) {
-          issues.push({ code: code(family, 'SOURCE_NOT_CONTAINER'), path: `${path}.sourceNodeId`, message: `${subject} sourceNodeId must identify an existing neutral container node.` });
+          issues.push({ code: code(family, 'SOURCE_NOT_CONTAINER'), path: `${path}.sourceNodeId`, message: family.messages?.notContainer ?? `${subject} sourceNodeId must identify an existing neutral container node.` });
           continue;
         }
         const parsed = family.parseEntry(raw as Record<string, unknown> & { sourceNodeId: string });
@@ -260,27 +260,29 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
     })));
   }
 
+  const bindingIssues: ContainerFamilyIssue[] = [];
   for (const [sourceNodeId, entry] of resolutions) {
     const target = binding.containers.get(sourceNodeId);
     if (!target || !isRecord(target.settings)) {
-      issues.push({ code: code(family, 'GENERATOR_BINDING_MISMATCH'), path: '$.content', message: `Generated container binding missing for sourceNodeId ${sourceNodeId}.` });
+      (family.bindingIssuesLast ? bindingIssues : issues).push({ code: code(family, 'GENERATOR_BINDING_MISMATCH'), path: '$.content', message: `Generated container binding missing for sourceNodeId ${sourceNodeId}.` });
       continue;
     }
     const settings = target.settings as Record<string, unknown>;
     const writes = family.writes(entry);
-    const conflict = writes.find((write) => hasOwn(settings, write.settingKey));
-    if (conflict) {
+    const conflicts = writes.filter((write) => hasOwn(settings, write.settingKey));
+    const reported = family.conflictMode === 'all' ? conflicts : conflicts.slice(0, 1);
+    for (const conflict of reported) {
       issues.push({
         code: code(family, 'EXISTING_OVERRIDE_CONFLICT'),
         path: `$source.${sourceNodeId}`,
-        message: `Generated base candidate already contains a ${conflict.conflictSubject} override.`,
+        message: conflict.conflictMessage ?? `Generated base candidate already contains a ${conflict.conflictSubject} override.`,
       });
-      continue;
     }
+    if (conflicts.length > 0) continue;
     for (const write of writes) settings[write.settingKey] = write.value;
   }
 
-  if (issues.length > 0) return rejected(issues);
+  if (issues.length > 0 || bindingIssues.length > 0) return rejected([...issues, ...bindingIssues]);
 
   const candidate = buildElementorTemplateCandidateArtifact(template);
   if (candidate.status !== 'READY_FOR_TARGET_IMPORT_VALIDATION'
@@ -289,7 +291,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
     return rejected([{
       code: code(family, 'RESOLVED_CANDIDATE_INVALID'),
       path: '$resolvedCandidate',
-      message: `${subject} output did not rebuild into a canonical ready Elementor candidate.`,
+      message: family.messages?.resolvedInvalid ?? `${subject} output did not rebuild into a canonical ready Elementor candidate.`,
     }]);
   }
 
@@ -308,7 +310,7 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
   const family = typedFamily as unknown as AnyFamily;
   const summaries = result[family.summaryField];
   const list = Array.isArray(summaries) ? summaries as Array<{ sourceNodeId: string }> : null;
-  const issueCodes = new Set(ISSUE_SUFFIXES.map((suffix) => code(family, suffix)));
+  const issueCodes = new Set<string>(ISSUE_SUFFIXES.map((suffix) => code(family, suffix)));
   const validStatus = result.status === 'BLOCKED_INVALID_SOURCE_IR'
     || result.status === 'BLOCKED_UPSTREAM_GENERATION'
     || result.status === 'REJECTED_INVALID_MANIFEST'

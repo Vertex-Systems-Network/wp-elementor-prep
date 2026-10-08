@@ -31,6 +31,15 @@ export interface FamilySettingWrite {
   value: unknown;
   /** Device-qualified noun for the conflict message, e.g. "tablet gap". */
   conflictSubject: string;
+  /** Full conflict message, when the family's contract words it differently. */
+  conflictMessage?: string;
+}
+
+/** Engine message keys a family may word differently from the subject-derived defaults. */
+export interface FamilyMessageOverrides {
+  readonly duplicate?: string;
+  readonly notContainer?: string;
+  readonly resolvedInvalid?: string;
 }
 
 export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string }, Summary extends { sourceNodeId: string }> {
@@ -51,6 +60,13 @@ export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string },
   readonly entryKeys: readonly string[];
   /** Message for an entry that fails the shared record/keys/sourceNodeId envelope. */
   readonly entryEnvelopeMessage: string;
+  /** Per-suffix full issue codes that differ from `${issuePrefix}_${suffix}` (e.g. a value code). */
+  readonly issueCodes?: Readonly<Partial<Record<string, string>>>;
+  readonly messages?: FamilyMessageOverrides;
+  /** Report binding-missing issues after conflict issues (the order some resolvers used). */
+  readonly bindingIssuesLast?: boolean;
+  /** `first` (default): one conflict issue per entry; `all`: one issue per conflicting key. */
+  readonly conflictMode?: 'first' | 'all';
   /** Codecs this family encodes with, declared for inventory and capability reporting. */
   readonly codecs: readonly ValueCodec<unknown>[];
   parseEntry(raw: Record<string, unknown> & { sourceNodeId: string }): FamilyEntryParse<Entry>;
