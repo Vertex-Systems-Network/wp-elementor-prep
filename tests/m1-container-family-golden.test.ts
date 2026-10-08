@@ -15,6 +15,21 @@ import {
   resolveP15ElementorResponsiveContainerMargin,
   serializeP15ElementorResponsiveMarginSummary,
 } from '../src/targets/elementor/responsive-margin-resolution';
+import {
+  P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION,
+  resolveP15ElementorResponsiveContainerDirections,
+  serializeP15ElementorResponsiveDirectionSummary,
+} from '../src/targets/elementor/responsive-direction-resolution';
+import {
+  P15_ELEMENTOR_RESPONSIVE_WRAP_MANIFEST_VERSION,
+  resolveP15ElementorResponsiveContainerWraps,
+  serializeP15ElementorResponsiveWrapSummary,
+} from '../src/targets/elementor/responsive-wrap-resolution';
+import {
+  P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION,
+  resolveP15ElementorResponsiveContainerAlignments,
+  serializeP15ElementorResponsiveAlignmentSummary,
+} from '../src/targets/elementor/responsive-alignment-resolution';
 import { buildCorpus, goldenRecord, type FamilyCorpusSpec } from './golden/m1-container-family-corpus';
 
 const box = { top: 4, right: 8, bottom: 12, left: 16 };
@@ -62,6 +77,40 @@ const FAMILIES: Array<{ id: string; spec: FamilyCorpusSpec; resolve: (s: unknown
     },
     resolve: resolveP15ElementorResponsiveContainerMargin,
     serialize: serializeP15ElementorResponsiveMarginSummary as (r: never) => string,
+  },
+  {
+    id: 'responsive-direction',
+    spec: {
+      manifestVersion: P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION,
+      tabletValid: { tabletDirection: 'column' },
+      mobileValid: { mobileDirection: 'row-reverse' },
+      invalidValues: [{ tabletDirection: 'COLUMN' }, { mobileDirection: 'wrap' }, { tabletDirection: 1 }, { tabletDirection: 'row', mobileDirection: null }],
+    },
+    resolve: resolveP15ElementorResponsiveContainerDirections,
+    serialize: serializeP15ElementorResponsiveDirectionSummary as (r: never) => string,
+  },
+  {
+    id: 'responsive-wrap',
+    spec: {
+      manifestVersion: P15_ELEMENTOR_RESPONSIVE_WRAP_MANIFEST_VERSION,
+      tabletValid: { tabletWrap: 'wrap' },
+      mobileValid: { mobileWrap: 'nowrap' },
+      invalidValues: [{ tabletWrap: 'WRAP' }, { mobileWrap: 'wrap-reverse' }, { tabletWrap: true }],
+    },
+    resolve: resolveP15ElementorResponsiveContainerWraps,
+    serialize: serializeP15ElementorResponsiveWrapSummary as (r: never) => string,
+  },
+  {
+    id: 'responsive-alignment',
+    spec: {
+      manifestVersion: P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION,
+      tabletValid: { tabletAlignItems: 'start', tabletJustifyContent: 'space-between' },
+      mobileValid: { mobileAlignItems: 'stretch', mobileJustifyContent: 'end' },
+      invalidValues: [{ tabletAlignItems: 'flex-start' }, { mobileJustifyContent: 'stretch' }, { tabletJustifyContent: 'space-evenly', mobileAlignItems: 'baseline' }, { tabletAlignItems: 3 }],
+      extraInvalid: [{ tabletAlignItems: 'center' }, { mobileJustifyContent: 'space-around' }],
+    },
+    resolve: resolveP15ElementorResponsiveContainerAlignments,
+    serialize: serializeP15ElementorResponsiveAlignmentSummary as (r: never) => string,
   },
 ];
 
