@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M0 — Critical correctness fixes**
-> - Next task: **M0.1**
-> - Last completed task: _none_. The plan alignment (M-ALIGN) is complete.
+> - Next task: **M0.2**
+> - Last completed task: **M0.1** (release UI option-bank placeholder fix).
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -133,7 +133,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 
 ### M0 — Critical correctness fixes (shipped surfaces must work)
 
-- [ ] **M0.1** Make the release UI build substitute `__OPTION_BANK_REGISTRY__`. Add a release-package test that fails if any `__[A-Z0-9_]+__` placeholder remains in `dist-release/plugin/ui.html` or `code.js`. Files: `scripts/release-ui-contract.mjs`, `scripts/build-release.mjs`, `scripts/verify-release-package.mjs`, tests. *Accept:* the fixture release build has no placeholders, and the test is in CI.
+- [x] **M0.1** _(done 2026-10-08: shared `scripts/option-bank-ui.mjs` injector used by dev and release builds; `assertNoUnresolvedBuildPlaceholders` runs in `assertReleaseUiCapabilities` (build and release verifier); `tests/m0-release-ui-placeholders.test.mjs`; a Chromium smoke of the fixture release UI went from `__OPTION_BANK_REGISTRY__ is not defined` to 0 page errors. The `code.js` placeholder/identity check moves to M0.2.)_ Make the release UI build substitute `__OPTION_BANK_REGISTRY__`. Add a release-package test that fails if any `__[A-Z0-9_]+__` placeholder remains in `dist-release/plugin/ui.html` or `code.js`. Files: `scripts/release-ui-contract.mjs`, `scripts/build-release.mjs`, `scripts/verify-release-package.mjs`, tests. *Accept:* the fixture release build has no placeholders, and the test is in CI.
 - [ ] **M0.2** Pass the `__WPEP_BUILD_SOURCE_SHA__`, `__WPEP_BUILD_RUN_ID__` and `__WPEP_BUILD_RUN_NUMBER__` defines in `build-release.mjs` from `--source-sha` and the CI env. Add a test that the release bundle carries a traceable identity when inputs are present. *Accept:* the release identity is not `local` in CI.
 - [ ] **M0.3** Extractor: a frame with an image fill **and** children becomes a container plus a background-image REVIEW entry. The children are kept. A TEXT node with an image fill becomes a REVIEW reason on that node only. *Accept:* a regression test shows no subtree loss.
 - [ ] **M0.4** Extractor: visible strokes, effects, `opacity<1`, non-normal `blendMode`, `clipsContent`, rotation and masks produce explicit REVIEW entries. Each one is replaced by a real mapping in M2. *Accept:* a no-silent-drop test runs over a fixture with every property.

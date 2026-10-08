@@ -1,5 +1,6 @@
 import { extendP15LocalTemplateDownloadUi } from './p15-local-template-download-ui.mjs';
 import { buildSecureUi } from './ui-security-contract.mjs';
+import { injectOptionBankRegistry } from './option-bank-ui.mjs';
 
 function requireReplacement(source, from, to, label) {
   if (!source.includes(from)) {
@@ -97,7 +98,19 @@ const FORBIDDEN_DEVELOPER_TOKENS = [
   '>Runtime self-test<',
 ];
 
+const UNRESOLVED_BUILD_PLACEHOLDER = /__[A-Z][A-Z0-9_]*__/g;
+
+/** A publishable UI must not contain build-time placeholders; one unresolved token breaks the UI script. */
+export function assertNoUnresolvedBuildPlaceholders(source, label = 'publishable UI') {
+  const unresolved = [...new Set(source.match(UNRESOLVED_BUILD_PLACEHOLDER) ?? [])];
+  if (unresolved.length > 0) {
+    throw new Error(`Release UI contract drifted: unresolved build placeholder(s) in ${label}: ${unresolved.join(', ')}`);
+  }
+  return source;
+}
+
 export function assertReleaseUiCapabilities(source) {
+  assertNoUnresolvedBuildPlaceholders(source);
   for (const token of REQUIRED_PRODUCTION_TOKENS) {
     if (!source.includes(token)) {
       throw new Error(`Release UI contract drifted: required production token is missing: ${token}`);
@@ -111,8 +124,8 @@ export function assertReleaseUiCapabilities(source) {
   return source;
 }
 
-export function buildReleaseUi(developmentUi) {
-  const extendedDevelopmentUi = extendP15LocalTemplateDownloadUi(developmentUi);
+export function buildReleaseUi(developmentUi, optionBankRegistry) {
+  const extendedDevelopmentUi = extendP15LocalTemplateDownloadUi(injectOptionBankRegistry(developmentUi, optionBankRegistry));
   let releaseUi = buildSecureUi(extendedDevelopmentUi).replace(/\r\n/g, '\n');
 
   releaseUi = requireReplacement(
