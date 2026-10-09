@@ -1,0 +1,401 @@
+[
+ {
+  "name": "tablet-only",
+  "accepted": true,
+  "settings": {
+   "nested": {
+    "flex_direction": "column",
+    "flex_gap": {
+     "column": "8",
+     "row": "8",
+     "isLinked": true,
+     "unit": "px"
+    }
+   },
+   "root": {
+    "flex_direction": "row",
+    "flex_gap": {
+     "column": "24",
+     "row": "24",
+     "isLinked": true,
+     "unit": "px"
+    },
+    "padding": {
+     "unit": "px",
+     "top": "10",
+     "right": "20",
+     "bottom": "10",
+     "left": "20",
+     "isLinked": false
+    },
+    "box_shadow_box_shadow_type": "yes",
+    "box_shadow_box_shadow": {
+     "horizontal": -10,
+     "vertical": 10,
+     "blur": 20,
+     "spread": -5,
+     "color": "#123456"
+    },
+    "box_shadow_box_shadow_position": " "
+   }
+  },
+  "candidateMatchesTemplate": true
+ },
+ {
+  "name": "mobile-only",
+  "accepted": true,
+  "settings": {
+   "nested": {
+    "flex_direction": "column",
+    "flex_gap": {
+     "column": "8",
+     "row": "8",
+     "isLinked": true,
+     "unit": "px"
+    },
+    "box_shadow_hover_box_shadow_type": "yes",
+    "box_shadow_hover_box_shadow": {
+     "horizontal": -10,
+     "vertical": 10,
+     "blur": 0,
+     "spread": -5,
+     "color": "#123456"
+    },
+    "box_shadow_hover_box_shadow_position": "inset"
+   },
+   "root": {
+    "flex_direction": "row",
+    "flex_gap": {
+     "column": "24",
+     "row": "24",
+     "isLinked": true,
+     "unit": "px"
+    },
+    "padding": {
+     "unit": "px",
+     "top": "10",
+     "right": "20",
+     "bottom": "10",
+     "left": "20",
+     "isLinked": false
+    }
+   }
+  },
+  "candidateMatchesTemplate": true
+ },
+ {
+  "name": "both-two-containers-unsorted",
+  "accepted": true,
+  "settings": {
+   "nested": {
+    "flex_direction": "column",
+    "flex_gap": {
+     "column": "8",
+     "row": "8",
+     "isLinked": true,
+     "unit": "px"
+    },
+    "box_shadow_hover_box_shadow_type": "yes",
+    "box_shadow_hover_box_shadow": {
+     "horizontal": -10,
+     "vertical": 10,
+     "blur": 0,
+     "spread": -5,
+     "color": "#123456"
+    },
+    "box_shadow_hover_box_shadow_position": "inset"
+   },
+   "root": {
+    "flex_direction": "row",
+    "flex_gap": {
+     "column": "24",
+     "row": "24",
+     "isLinked": true,
+     "unit": "px"
+    },
+    "padding": {
+     "unit": "px",
+     "top": "10",
+     "right": "20",
+     "bottom": "10",
+     "left": "20",
+     "isLinked": false
+    },
+    "box_shadow_box_shadow_type": "yes",
+    "box_shadow_box_shadow": {
+     "horizontal": -10,
+     "vertical": 10,
+     "blur": 20,
+     "spread": -5,
+     "color": "#123456"
+    },
+    "box_shadow_box_shadow_position": " ",
+    "box_shadow_hover_box_shadow_type": "yes",
+    "box_shadow_hover_box_shadow": {
+     "horizontal": -10,
+     "vertical": 10,
+     "blur": 0,
+     "spread": -5,
+     "color": "#123456"
+    },
+    "box_shadow_hover_box_shadow_position": "inset"
+   }
+  },
+  "candidateMatchesTemplate": true
+ },
+ {
+  "name": "no-overrides",
+  "accepted": true,
+  "settings": {
+   "nested": {
+    "flex_direction": "column",
+    "flex_gap": {
+     "column": "8",
+     "row": "8",
+     "isLinked": true,
+     "unit": "px"
+    }
+   },
+   "root": {
+    "flex_direction": "row",
+    "flex_gap": {
+     "column": "24",
+     "row": "24",
+     "isLinked": true,
+     "unit": "px"
+    },
+    "padding": {
+     "unit": "px",
+     "top": "10",
+     "right": "20",
+     "bottom": "10",
+     "left": "20",
+     "isLinked": false
+    }
+   }
+  },
+  "candidateMatchesTemplate": true
+ },
+ {
+  "name": "manifest-null",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "manifest-array",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "manifest-extra-key",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "manifest-missing-key",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "manifest-wrong-version",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "manifest-wrong-schema",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "fingerprint-malformed",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "fingerprint-mismatch",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "base-digest-malformed",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "base-digest-mismatch",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "authority-styleInferencePerformed",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "authority-responsiveInferencePerformed",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "authority-figmaMutation",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "authority-networkAccess",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "authority-responsiveClosureClaim",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "authority-targetCompatibilityClaim",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "authority-productionAcceptance",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "authority-downloadEnabled",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "containers-not-array",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "containers-too-many",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-not-record",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-unknown-key",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-bad-source-id",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-duplicate",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-text-node",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-missing-node",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-no-override",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-invalid-value-0",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-invalid-value-1",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-invalid-value-2",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-invalid-value-3",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-invalid-value-4",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-invalid-value-5",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "entry-invalid-value-6",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "many-issues-accumulate",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "source-invalid",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ },
+ {
+  "name": "source-review-upstream",
+  "accepted": false,
+  "settings": null,
+  "candidateMatchesTemplate": false
+ }
+]
