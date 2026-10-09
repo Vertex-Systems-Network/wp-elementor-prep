@@ -1,9 +1,16 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
   resolveContainerPropertyFamily,
   serializeContainerPropertyFamilySummary,
   type ContainerFamilyResult,
 } from './mapping-engine/container-family-engine';
+import type {
+  FamilyAuthorityFlag,
+  FamilyIssueCode,
+  FamilyIssueV1,
+  FamilyManifestV1,
+  FamilyResultV1,
+  FamilyStatus,
+} from './mapping-engine/contract-types';
 import { enumCodec } from './mapping-engine/codecs';
 import { responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
 import type { FamilyEntryFailure } from './mapping-engine/property-family';
@@ -12,7 +19,6 @@ import {
   type P15ElementorResponsiveWrapSummaryEntryV1,
   type P15ElementorResponsiveWrapStatus,
 } from './responsive-wrap-resolution';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_RESPONSIVE_ALIGN_CONTENT_MANIFEST_VERSION =
   'p15-elementor-responsive-align-content-manifest-v1' as const;
@@ -57,85 +63,32 @@ export interface P15ElementorResponsiveAlignContentEntryV1 {
   mobileAlignContent?: P15ElementorResponsiveAlignContent;
 }
 
-export interface P15ElementorResponsiveAlignContentManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_ALIGN_CONTENT_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  wrappedCandidateIdentityDigest: string;
-  containers: P15ElementorResponsiveAlignContentEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorResponsiveAlignContentIssueCode =
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_WRAP_PREREQUISITE_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_WRAPPED_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_WRAPPED_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_SOURCE_NOT_CONTAINER'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_VALUE_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_WRAP_REQUIRED'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_ALIGN_CONTENT_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorResponsiveAlignContentIssueV1 {
-  code: P15ElementorResponsiveAlignContentIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorResponsiveAlignContentStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_WRAP_PREREQUISITE'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_ALIGN_CONTENT_OVERRIDES'
-  | 'RESPONSIVE_ALIGN_CONTENT_RESOLVED';
-
 export interface P15ElementorResponsiveAlignContentSummaryEntryV1 {
   sourceNodeId: string;
   tabletAlignContent: P15ElementorResponsiveAlignContent | null;
   mobileAlignContent: P15ElementorResponsiveAlignContent | null;
 }
 
-export interface P15ElementorResponsiveAlignContentResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_ALIGN_CONTENT_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_ALIGN_CONTENT_RESULT_VERSION;
   status: P15ElementorResponsiveAlignContentStatus;
-  wrapPrerequisiteStatus: P15ElementorResponsiveWrapStatus | null;
-  sourceIrFingerprint: string | null;
-  wrappedCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedAlignContents: P15ElementorResponsiveAlignContentSummaryEntryV1[];
-  issues: P15ElementorResponsiveAlignContentIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorResponsiveAlignContentEntryV1;
+  summaryField: 'resolvedAlignContents';
+  summary: P15ElementorResponsiveAlignContentSummaryEntryV1;
+  issueCode: P15ElementorResponsiveAlignContentIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag;
+  digestField: 'wrappedCandidateIdentityDigest';
+  extra: { wrapPrerequisiteStatus: P15ElementorResponsiveWrapStatus | null };
+};
+export type P15ElementorResponsiveAlignContentManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorResponsiveAlignContentIssueCode =
+  FamilyIssueCode<'P15_RESPONSIVE_ALIGN_CONTENT', 'WRAP_PREREQUISITE_INVALID' | 'WRAPPED_CANDIDATE_IDENTITY_INVALID' | 'WRAPPED_CANDIDATE_IDENTITY_MISMATCH' | 'WRAP_REQUIRED'>;
+export type P15ElementorResponsiveAlignContentIssueV1 = FamilyIssueV1<P15ElementorResponsiveAlignContentIssueCode>;
+export type P15ElementorResponsiveAlignContentStatus = FamilyStatus<'NO_RESPONSIVE_ALIGN_CONTENT_OVERRIDES', 'RESPONSIVE_ALIGN_CONTENT_RESOLVED', 'BLOCKED_WRAP_PREREQUISITE'>;
+export type P15ElementorResponsiveAlignContentResultV1 = FamilyResultV1<Contract>;
 
 const alignContentCodec = enumCodec(P15_ELEMENTOR_RESPONSIVE_ALIGN_CONTENT_EVIDENCE.supportedValues);
 

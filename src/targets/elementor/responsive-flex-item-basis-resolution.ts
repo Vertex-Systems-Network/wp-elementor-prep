@@ -1,12 +1,14 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { customSelectionCodec, elementorFlexBasisPx, flexBasisPxCodec, toElementorCustomSelection } from './mapping-engine/families/responsive-flex-item-sizing';
 import { responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_BASIS_MANIFEST_VERSION =
   'p15-elementor-responsive-flex-item-basis-manifest-v1' as const;
@@ -43,55 +45,6 @@ export interface P15ElementorResponsiveFlexItemBasisEntryV1 {
   mobileBasisPx?: P15ElementorFlexBasisPx;
 }
 
-export interface P15ElementorResponsiveFlexItemBasisManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_BASIS_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ElementorResponsiveFlexItemBasisEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorResponsiveFlexItemBasisIssueCode =
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_SOURCE_NOT_CONTAINER'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_VALUE_INVALID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_FLEX_ITEM_BASIS_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorResponsiveFlexItemBasisIssueV1 {
-  code: P15ElementorResponsiveFlexItemBasisIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorResponsiveFlexItemBasisStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_FLEX_ITEM_BASIS_OVERRIDES'
-  | 'RESPONSIVE_FLEX_ITEM_BASIS_RESOLVED';
-
 export interface P15ElementorResponsiveFlexItemBasisSummaryEntryV1 {
   sourceNodeId: string;
   tabletBasisCustom: P15ElementorFlexBasisCustom | null;
@@ -100,28 +53,24 @@ export interface P15ElementorResponsiveFlexItemBasisSummaryEntryV1 {
   mobileBasisPx: P15ElementorFlexBasisPx | null;
 }
 
-export interface P15ElementorResponsiveFlexItemBasisResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_BASIS_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_BASIS_RESULT_VERSION;
   status: P15ElementorResponsiveFlexItemBasisStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedBasis: P15ElementorResponsiveFlexItemBasisSummaryEntryV1[];
-  issues: P15ElementorResponsiveFlexItemBasisIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorResponsiveFlexItemBasisEntryV1;
+  summaryField: 'resolvedBasis';
+  summary: P15ElementorResponsiveFlexItemBasisSummaryEntryV1;
+  issueCode: P15ElementorResponsiveFlexItemBasisIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag;
+};
+export type P15ElementorResponsiveFlexItemBasisManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorResponsiveFlexItemBasisIssueCode =
+  FamilyIssueCode<'P15_RESPONSIVE_FLEX_ITEM_BASIS'>;
+export type P15ElementorResponsiveFlexItemBasisIssueV1 = FamilyIssueV1<P15ElementorResponsiveFlexItemBasisIssueCode>;
+export type P15ElementorResponsiveFlexItemBasisStatus = FamilyStatus<'NO_RESPONSIVE_FLEX_ITEM_BASIS_OVERRIDES', 'RESPONSIVE_FLEX_ITEM_BASIS_RESOLVED'>;
+export type P15ElementorResponsiveFlexItemBasisResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_BASIS_EVIDENCE;
 const conflictMessage = (settingKey: string): string =>
@@ -149,6 +98,8 @@ const FAMILY = responsiveEnumFamily({
   valueInvalidMessage: 'Responsive flex-item custom basis must use type custom and a finite integer px size from 0 through 1000.',
 });
 
+const API = familyApi<P15ElementorResponsiveFlexItemBasisResultV1>(FAMILY);
+
 /**
  * Apply explicit tablet/mobile flex-item-basis overrides to exact generated container bindings.
  *
@@ -156,16 +107,11 @@ const FAMILY = responsiveEnumFamily({
  * proven identical to the original hand-written resolver by `tests/m1-container-family-golden-sizing.test.ts`.
  * The contract never infers responsive values, never changes desktop settings and claims no closure.
  */
-export function resolveP15ElementorResponsiveContainerFlexItemBasis(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorResponsiveFlexItemBasisResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorResponsiveFlexItemBasisResultV1;
+export function resolveP15ElementorResponsiveContainerFlexItemBasis(sourceValue: unknown, manifestValue: unknown): P15ElementorResponsiveFlexItemBasisResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized flex-item-basis metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorResponsiveFlexItemBasisSummary(
-  result: P15ElementorResponsiveFlexItemBasisResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorResponsiveFlexItemBasisSummary(result: P15ElementorResponsiveFlexItemBasisResultV1): string {
+  return API.serialize(result);
 }
