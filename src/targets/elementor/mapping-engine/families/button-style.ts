@@ -92,3 +92,35 @@ export function responsiveRadiusCodec(maxPx: number): ValueCodec<ResponsiveRadiu
     encode: (value) => value,
   };
 }
+
+/** Conflict scan for a whole Elementor group: the first existing setting key with the group prefix. */
+export function groupPrefixConflict(prefix: string, describe: (settingKey: string) => string) {
+  return (settings: Record<string, unknown>): string | null => {
+    const key = Object.keys(settings).find((candidate) => candidate.startsWith(prefix));
+    return key === undefined ? null : describe(key);
+  };
+}
+
+/** Integer within an inclusive range, as `Number.isSafeInteger` (typography font size, line height, word spacing). */
+export function safeIntegerCodec(min: number, max: number): ValueCodec<number, number> {
+  return {
+    id: `safe-int:${min}..${max}`,
+    is: (value): value is number => typeof value === 'number' && Number.isSafeInteger(value) && value >= min && value <= max,
+    snapshot: (value) => value,
+    encode: (value) => value,
+  };
+}
+
+/** Finite number within a range on an exact step grid (letter spacing in 0.1 px increments). */
+export function steppedNumberCodec(min: number, max: number, step: number): ValueCodec<number, number> {
+  return {
+    id: `stepped:${min}..${max}/${step}`,
+    is: (value): value is number => {
+      if (typeof value !== 'number' || !Number.isFinite(value) || value < min || value > max) return false;
+      const scaled = value / step;
+      return Math.abs(scaled - Math.round(scaled)) < 1e-9;
+    },
+    snapshot: (value) => value,
+    encode: (value) => value,
+  };
+}

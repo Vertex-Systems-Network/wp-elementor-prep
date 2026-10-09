@@ -31,8 +31,12 @@ const p15ButtonResponsivePaddingSource = await readFile('src/targets/elementor/b
 const p15ButtonContentMetadataSource = await readFile('src/targets/elementor/button-content-metadata-resolution.ts', 'utf8');
 const p15ButtonStretchContentAlignmentSource = await readFile('src/targets/elementor/button-stretch-content-alignment-resolution.ts', 'utf8');
 const p15ButtonIconBasicsSource = await readFile('src/targets/elementor/button-icon-basics-resolution.ts', 'utf8');
-const p15ButtonLinearGradientSource = await readFile('src/targets/elementor/button-linear-gradient-resolution.ts', 'utf8');
-const p15ButtonRadialGradientSource = await readFile('src/targets/elementor/button-radial-gradient-resolution.ts', 'utf8');
+// Gradient contracts are the thin resolver plus the shared engine family it delegates to (recovery M1.4d).
+const p15ButtonLinearGradientSource = await readFile('src/targets/elementor/button-linear-gradient-resolution.ts', 'utf8')
+  + await readFile('src/targets/elementor/mapping-engine/families/button-gradient.ts', 'utf8');
+// Gradient contracts are the thin resolver plus the shared engine family it delegates to (recovery M1.4d).
+const p15ButtonRadialGradientSource = await readFile('src/targets/elementor/button-radial-gradient-resolution.ts', 'utf8')
+  + await readFile('src/targets/elementor/mapping-engine/families/button-gradient.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -766,8 +770,8 @@ const p15ButtonResponsiveLinearAngleRequiredFragments = [
   "gradientAngleMobileSuffix: 'gradient_angle_mobile'",
   "tabletAngleDeg?: number",
   "mobileAngleDeg?: number",
-  "settings[`${prefix}_gradient_angle_tablet`] = slider('deg', gradient.tabletAngleDeg)",
-  "settings[`${prefix}_gradient_angle_mobile`] = slider('deg', gradient.mobileAngleDeg)",
+  "write('gradient_angle_tablet', slider('deg', gradient.tabletAngleDeg))",
+  "write('gradient_angle_mobile', slider('deg', gradient.mobileAngleDeg))",
   "responsiveInferencePerformed: false",
   "responsiveClosureClaim: false",
   "targetCompatibilityClaim: false",
@@ -800,8 +804,8 @@ const p15ButtonResponsiveLinearStopRequiredFragments = [
   "tabletStopB?: number",
   "mobileStopA?: number",
   "mobileStopB?: number",
-  "settings[`${prefix}_color_stop_tablet`] = slider('%', gradient.tabletStopA)",
-  "settings[`${prefix}_color_b_stop_mobile`] = slider('%', gradient.mobileStopB)",
+  "write('color_stop_tablet', slider('%', gradient.tabletStopA))",
+  "write('color_b_stop_mobile', slider('%', gradient.mobileStopB))",
   "responsiveInferencePerformed: false",
   "responsiveClosureClaim: false",
   "targetCompatibilityClaim: false",
@@ -836,8 +840,8 @@ const p15ButtonResponsiveRadialStopRequiredFragments = [
   "tabletStopB?: number",
   "mobileStopA?: number",
   "mobileStopB?: number",
-  "settings[`${prefix}_color_stop_tablet`] = slider('%', gradient.tabletStopA)",
-  "settings[`${prefix}_color_b_stop_mobile`] = slider('%', gradient.mobileStopB)",
+  "write('color_stop_tablet', slider('%', gradient.tabletStopA))",
+  "write('color_b_stop_mobile', slider('%', gradient.mobileStopB))",
   "responsiveInferencePerformed: false",
   "responsiveClosureClaim: false",
   "targetCompatibilityClaim: false",
@@ -911,8 +915,8 @@ const p15ButtonResponsiveRadialPositionRequiredFragments = [
   "gradientPositionMobileSuffix: 'gradient_position_mobile'",
   "tabletPosition?: P15ElementorButtonRadialGradientPosition",
   "mobilePosition?: P15ElementorButtonRadialGradientPosition",
-  "settings[`${prefix}_gradient_position_tablet`] = gradient.tabletPosition",
-  "settings[`${prefix}_gradient_position_mobile`] = gradient.mobilePosition",
+  "write('gradient_position_tablet', gradient.tabletPosition)",
+  "write('gradient_position_mobile', gradient.mobilePosition)",
   "responsiveInferencePerformed: false",
   "responsiveClosureClaim: false",
   "targetCompatibilityClaim: false",

@@ -54,6 +54,7 @@ export interface ContainerStyleFamilyMeta {
   omittedAuthorityFlags?: readonly string[];
   authorityFlags?: readonly string[];
   conflictMode?: 'first' | 'all';
+  conflictScan?: (settings: Record<string, unknown>) => string | null;
   /** At least one optional field must be provided; checked before the field checks, at the entry path. */
   requireAny?: { code: string; message: string };
   extraIssueSuffixes?: readonly string[];
@@ -103,6 +104,7 @@ export function containerStyleFamily(meta: ContainerStyleFamilyMeta): ContainerP
     ...(meta.omittedAuthorityFlags ? { omittedAuthorityFlags: meta.omittedAuthorityFlags } : {}),
     ...(meta.authorityFlags ? { authorityFlags: meta.authorityFlags } : {}),
     ...(meta.conflictMode ? { conflictMode: meta.conflictMode } : {}),
+    ...(meta.conflictScan ? { conflictScan: meta.conflictScan } : {}),
     entryEnvelopeMessage: meta.entryEnvelopeMessage,
     ...(meta.messages ? { messages: meta.messages } : {}),
     ...(meta.extraIssueSuffixes ? { extraIssueSuffixes: meta.extraIssueSuffixes } : {}),

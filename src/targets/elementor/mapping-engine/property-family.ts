@@ -62,6 +62,8 @@ export interface FamilyMessageOverrides {
   readonly resolvedInvalid?: string;
   readonly upstream?: string;
   readonly entriesInvalid?: string;
+  /** Subject of the three manifest-shape messages, when it differs from the family subject. */
+  readonly manifestSubject?: string;
   readonly authority?: string;
 }
 
@@ -132,6 +134,11 @@ export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string },
   readonly conflictMode?: 'first' | 'all';
   /** Family-specific issue suffixes beyond the shared set (e.g. `CONDITION_MISMATCH`). */
   readonly extraIssueSuffixes?: readonly string[];
+  /**
+   * Replaces per-write conflict detection: returns the conflict message for a bound target's existing
+   * settings (e.g. any key of a whole Elementor group such as `typography_*`), or null when it is free.
+   */
+  conflictScan?(settings: Record<string, unknown>): string | null;
   /** Checked on each bound target before conflicts and writes. */
   precondition?(settings: Record<string, unknown>): FamilyPreconditionFailure | null;
   /** Codecs this family encodes with, declared for inventory and capability reporting. */

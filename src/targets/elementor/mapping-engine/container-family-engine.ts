@@ -174,6 +174,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
 ): ContainerFamilyResult {
   const family = typedFamily as unknown as AnyFamily;
   const subject = family.subject;
+  const manifestSubject = family.messages?.manifestSubject ?? subject;
   const validation = validateP15NeutralExportDocument(sourceValue);
   if (!validation.valid) {
     return baseResult(family, 'BLOCKED_INVALID_SOURCE_IR', null, null, null, 0, [], validation.issues.map((issue) => ({
@@ -206,13 +207,13 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   );
 
   if (!isRecord(manifestValue)) {
-    issues.push({ code: code(family, 'MANIFEST_NOT_OBJECT'), path: '$manifest', message: `${subject} manifest must be an object.` });
+    issues.push({ code: code(family, 'MANIFEST_NOT_OBJECT'), path: '$manifest', message: `${manifestSubject} manifest must be an object.` });
   } else {
     if (!exactKeys(manifestValue, [...MANIFEST_ENVELOPE_KEYS, target.entriesField, ...authorityFlags(family)])) {
-      issues.push({ code: code(family, 'MANIFEST_FIELDS_INVALID'), path: '$manifest', message: `${subject} manifest contains unknown or missing fields.` });
+      issues.push({ code: code(family, 'MANIFEST_FIELDS_INVALID'), path: '$manifest', message: `${manifestSubject} manifest contains unknown or missing fields.` });
     }
     if (manifestValue.schemaVersion !== 1 || manifestValue.manifestVersion !== family.manifestVersion) {
-      issues.push({ code: code(family, 'MANIFEST_VERSION_INVALID'), path: '$manifest.manifestVersion', message: `${subject} manifest schema/version is unsupported.` });
+      issues.push({ code: code(family, 'MANIFEST_VERSION_INVALID'), path: '$manifest.manifestVersion', message: `${manifestSubject} manifest schema/version is unsupported.` });
     }
     if (!validFingerprint(manifestValue.sourceIrFingerprint)) {
       issues.push({ code: code(family, 'SOURCE_FINGERPRINT_INVALID'), path: '$manifest.sourceIrFingerprint', message: 'sourceIrFingerprint must be a SHA-256 fingerprint.' });
@@ -296,6 +297,15 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
       continue;
     }
     const writes = family.writes(entry);
+    if (family.conflictScan) {
+      const scanned = family.conflictScan(settings);
+      if (scanned !== null) {
+        issues.push({ code: code(family, 'EXISTING_OVERRIDE_CONFLICT'), path: `$source.${sourceNodeId}`, message: scanned });
+        continue;
+      }
+      for (const write of writes) settings[write.settingKey] = write.value;
+      continue;
+    }
     const conflicts = writes
       .map((write, order) => ({ write, rank: write.conflictRank ?? order }))
       .filter(({ write }) => write.checkConflict !== false && hasOwn(settings, write.settingKey))
