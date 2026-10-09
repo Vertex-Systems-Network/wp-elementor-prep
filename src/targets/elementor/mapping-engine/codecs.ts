@@ -118,6 +118,14 @@ export const hexColorCodec: ValueCodec<string, string> = {
   encode: (value) => value,
 };
 
+/** Lowercase `#rrggbb`, the explicit manifest colour form of the container style contracts. */
+export const lowerHexColorCodec: ValueCodec<string, string> = {
+  id: 'hex-color-lower-rrggbb',
+  is: (value): value is string => typeof value === 'string' && /^#[0-9a-f]{6}$/.test(value),
+  snapshot: (value) => value,
+  encode: (value) => value,
+};
+
 export function enumCodec<T extends string>(values: readonly T[]): ValueCodec<T, T> {
   return {
     id: `enum:${values.join('|')}`,
@@ -133,4 +141,61 @@ export const switcherCodec: ValueCodec<boolean, 'yes' | ''> = {
   is: (value): value is boolean => typeof value === 'boolean',
   snapshot: (value) => value,
   encode: (value) => (value ? 'yes' : ''),
+};
+
+/** Finite integer within an inclusive range (z-index, min height, widths, flex order/basis). */
+export function intRangeCodec(range: PxRange): ValueCodec<number, number> {
+  return {
+    id: `int:${range.min}..${range.max}`,
+    is: (value): value is number => typeof value === 'number'
+      && Number.isFinite(value)
+      && Number.isInteger(value)
+      && value >= range.min
+      && value <= range.max,
+    snapshot: (value) => value,
+    encode: (value) => value,
+  };
+}
+
+/** Exactly one literal value (e.g. `true` for an explicit "custom" selection). */
+export function literalCodec<T extends string | number | boolean>(literal: T): ValueCodec<T, T> {
+  return {
+    id: `literal:${String(literal)}`,
+    is: (value): value is T => value === literal,
+    snapshot: (value) => value,
+    encode: (value) => value,
+  };
+}
+
+export function numberEnumCodec<T extends number>(values: readonly T[]): ValueCodec<T, T> {
+  return {
+    id: `number-enum:${values.join('|')}`,
+    is: (value): value is T => typeof value === 'number' && (values as readonly number[]).includes(value),
+    snapshot: (value) => value,
+    encode: (value) => value,
+  };
+}
+
+export interface ElementorSliderValue {
+  unit: 'px';
+  size: number;
+  sizes: [];
+}
+
+/** Elementor `slider` control px value as stored by the editor. */
+export function elementorPxSlider(size: number): ElementorSliderValue {
+  return { unit: 'px', size, sizes: [] };
+}
+
+/** Elementor `dimensions` control px value with all four sides equal (linked). */
+export function elementorLinkedDimensionsPx(value: number): ElementorDimensionsValue {
+  return { unit: 'px', top: String(value), right: String(value), bottom: String(value), left: String(value), isLinked: true };
+}
+
+/** Integer opacity in hundredths (0..100); encodes to an Elementor px slider of size value/100. */
+export const hundredthsOpacityCodec: ValueCodec<number, ElementorSliderValue> = {
+  id: 'opacity-hundredths:0..100',
+  is: (value): value is number => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 && value <= 100,
+  snapshot: (value) => value,
+  encode: (value) => elementorPxSlider(value / 100),
 };

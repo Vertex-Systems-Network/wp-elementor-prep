@@ -64,7 +64,7 @@ export function responsiveGapFamily(meta: {
   manifestVersion: string;
   resultVersion: string;
   maxEntries: number;
-  evidence: FamilyEvidence & { tabletSettingKey: string; mobileSettingKey: string };
+  evidence: FamilyEvidence & { readonly tabletSettingKey: string; readonly mobileSettingKey: string };
 }): ContainerPropertyFamily<ResponsiveGapEntry, ResponsiveGapSummary> {
   return {
     id: 'responsive-gap',
@@ -157,7 +157,7 @@ export function responsiveBoxSpacingFamily(meta: {
   manifestVersion: string;
   resultVersion: string;
   maxEntries: number;
-  evidence: FamilyEvidence & { tabletSettingKey: string; mobileSettingKey: string };
+  evidence: FamilyEvidence & { readonly tabletSettingKey: string; readonly mobileSettingKey: string };
   valueInvalidMessage: string;
 }): ContainerPropertyFamily<{ sourceNodeId: string } & Record<string, unknown>, { sourceNodeId: string } & Record<string, BoxPx | null | string>> {
   const Control = meta.control === 'padding' ? 'Padding' : 'Margin';

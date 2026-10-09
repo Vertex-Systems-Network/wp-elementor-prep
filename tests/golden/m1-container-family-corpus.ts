@@ -23,6 +23,12 @@ export interface FamilyCorpusSpec {
   invalidValues: Array<Record<string, unknown>>;
   /** Extra family-specific malformed field sets (e.g. gap linked+split). */
   extraInvalid?: Array<Record<string, unknown>>;
+  /** Fields every entry must carry (e.g. full width's contentWidthMode). */
+  entryBase?: Record<string, unknown>;
+  /** Cases dropping each listed base key entirely (required-key envelopes, e.g. border style). */
+  omitBaseKeys?: string[];
+  /** Family-specific authority flags the manifest must carry as false (e.g. styleInferencePerformed). */
+  extraFlags?: string[];
 }
 
 export function sourceDocument(): P15NeutralExportDocumentV1 {
@@ -73,21 +79,23 @@ const FLAGS = {
 
 export function buildCorpus(spec: FamilyCorpusSpec): GoldenCase[] {
   const source = sourceDocument();
+  const base = spec.entryBase ?? {};
+  const flags: Record<string, boolean> = { ...Object.fromEntries((spec.extraFlags ?? []).map((flag) => [flag, false])), ...FLAGS };
   const manifest = (containers: unknown, overrides: Record<string, unknown> = {}): Record<string, unknown> => ({
     schemaVersion: 1,
     manifestVersion: spec.manifestVersion,
     sourceIrFingerprint: fingerprintP15NeutralExportDocument(source),
     baseCandidateIdentityDigest: baseDigest(source),
     containers,
-    ...FLAGS,
+    ...flags,
     ...overrides,
   });
   const cases: GoldenCase[] = [
-    { name: 'tablet-only', source, manifest: manifest([{ sourceNodeId: 'root', ...spec.tabletValid }]) },
-    { name: 'mobile-only', source, manifest: manifest([{ sourceNodeId: 'nested', ...spec.mobileValid }]) },
+    { name: 'tablet-only', source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...spec.tabletValid }]) },
+    { name: 'mobile-only', source, manifest: manifest([{ sourceNodeId: 'nested', ...base, ...spec.mobileValid }]) },
     { name: 'both-two-containers-unsorted', source, manifest: manifest([
-      { sourceNodeId: 'root', ...spec.tabletValid, ...spec.mobileValid },
-      { sourceNodeId: 'nested', ...spec.mobileValid },
+      { sourceNodeId: 'root', ...base, ...spec.tabletValid, ...spec.mobileValid },
+      { sourceNodeId: 'nested', ...base, ...spec.mobileValid },
     ]) },
     { name: 'no-overrides', source, manifest: manifest([]) },
     { name: 'manifest-null', source, manifest: null },
@@ -100,19 +108,24 @@ export function buildCorpus(spec: FamilyCorpusSpec): GoldenCase[] {
     { name: 'fingerprint-mismatch', source, manifest: manifest([], { sourceIrFingerprint: `sha256:${'0'.repeat(64)}` }) },
     { name: 'base-digest-malformed', source, manifest: manifest([], { baseCandidateIdentityDigest: 7 }) },
     { name: 'base-digest-mismatch', source, manifest: manifest([], { baseCandidateIdentityDigest: `sha256:${'1'.repeat(64)}` }) },
-    ...Object.keys(FLAGS).map((flag) => ({ name: `authority-${flag}`, source, manifest: manifest([], { [flag]: true }) })),
+    ...Object.keys(flags).map((flag) => ({ name: `authority-${flag}`, source, manifest: manifest([], { [flag]: true }) })),
     { name: 'containers-not-array', source, manifest: manifest({}) },
     { name: 'containers-too-many', source, manifest: manifest(Array.from({ length: 10_001 }, () => ({}))) },
     { name: 'entry-not-record', source, manifest: manifest(['root']) },
-    { name: 'entry-unknown-key', source, manifest: manifest([{ sourceNodeId: 'root', ...spec.tabletValid, desktop: 1 }]) },
-    { name: 'entry-bad-source-id', source, manifest: manifest([{ sourceNodeId: ' root', ...spec.tabletValid }]) },
-    { name: 'entry-duplicate', source, manifest: manifest([{ sourceNodeId: 'root', ...spec.tabletValid }, { sourceNodeId: 'root', ...spec.mobileValid }]) },
-    { name: 'entry-text-node', source, manifest: manifest([{ sourceNodeId: 'copy', ...spec.tabletValid }]) },
-    { name: 'entry-missing-node', source, manifest: manifest([{ sourceNodeId: 'ghost', ...spec.tabletValid }]) },
-    { name: 'entry-no-override', source, manifest: manifest([{ sourceNodeId: 'root' }]) },
-    ...spec.invalidValues.map((fields, index) => ({ name: `entry-invalid-value-${index}`, source, manifest: manifest([{ sourceNodeId: 'root', ...fields }]) })),
-    ...(spec.extraInvalid ?? []).map((fields, index) => ({ name: `entry-extra-invalid-${index}`, source, manifest: manifest([{ sourceNodeId: 'root', ...fields }]) })),
-    { name: 'many-issues-accumulate', source, manifest: manifest([{ sourceNodeId: 'ghost', ...spec.tabletValid }, 'bad', { sourceNodeId: 'root' }], { manifestVersion: 'x' }) },
+    { name: 'entry-unknown-key', source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...spec.tabletValid, desktop: 1 }]) },
+    { name: 'entry-bad-source-id', source, manifest: manifest([{ sourceNodeId: ' root', ...base, ...spec.tabletValid }]) },
+    { name: 'entry-duplicate', source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...spec.tabletValid }, { sourceNodeId: 'root', ...base, ...spec.mobileValid }]) },
+    { name: 'entry-text-node', source, manifest: manifest([{ sourceNodeId: 'copy', ...base, ...spec.tabletValid }]) },
+    { name: 'entry-missing-node', source, manifest: manifest([{ sourceNodeId: 'ghost', ...base, ...spec.tabletValid }]) },
+    { name: 'entry-no-override', source, manifest: manifest([{ sourceNodeId: 'root', ...base }]) },
+    ...spec.invalidValues.map((fields, index) => ({ name: `entry-invalid-value-${index}`, source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...fields }]) })),
+    ...(spec.extraInvalid ?? []).map((fields, index) => ({ name: `entry-extra-invalid-${index}`, source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...fields }]) })),
+    ...(spec.omitBaseKeys ?? []).map((key) => {
+      const entry: Record<string, unknown> = { sourceNodeId: 'root', ...base, ...spec.tabletValid };
+      delete entry[key];
+      return { name: `entry-missing-base-${key}`, source, manifest: manifest([entry]) };
+    }),
+    { name: 'many-issues-accumulate', source, manifest: manifest([{ sourceNodeId: 'ghost', ...base, ...spec.tabletValid }, 'bad', { sourceNodeId: 'root', ...base }], { manifestVersion: 'x' }) },
     { name: 'source-invalid', source: { schemaVersion: 2 }, manifest: manifest([]) },
     { name: 'source-review-upstream', source: reviewSource(), manifest: manifest([]) },
   ];

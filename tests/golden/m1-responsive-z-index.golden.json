@@ -1,0 +1,1706 @@
+[
+ {
+  "name": "tablet-only",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "RESPONSIVE_Z_INDEX_RESOLVED",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": "sha256:d1507c0a448132d649a5442473cd8896b89da236e682b258351ab638358203ab",
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 1,
+   "resolvedZIndexes": [
+    {
+     "sourceNodeId": "root",
+     "tabletZIndex": 10,
+     "mobileZIndex": null
+    }
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden container family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "row",
+       "flex_gap": {
+        "column": "24",
+        "row": "24",
+        "isLinked": true,
+        "unit": "px"
+       },
+       "padding": {
+        "unit": "px",
+        "top": "10",
+        "right": "20",
+        "bottom": "10",
+        "left": "20",
+        "isLinked": false
+       },
+       "z_index_tablet": 10
+      },
+      "elements": [
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         }
+        },
+        "elements": [
+         {
+          "id": "0e1611a7",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>GOLDEN COPY</p>",
+           "align": "start"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0].elements[0]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden container family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"row\",\n        \"flex_gap\": {\n          \"column\": \"24\",\n          \"row\": \"24\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        },\n        \"padding\": {\n          \"unit\": \"px\",\n          \"top\": \"10\",\n          \"right\": \"20\",\n          \"bottom\": \"10\",\n          \"left\": \"20\",\n          \"isLinked\": false\n        },\n        \"z_index_tablet\": 10\n      },\n      \"elements\": [\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"column\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"0e1611a7\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>GOLDEN COPY</p>\",\n                \"align\": \"start\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"RESPONSIVE_Z_INDEX_RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:d1507c0a448132d649a5442473cd8896b89da236e682b258351ab638358203ab\",\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 1,\n  \"resolvedZIndexes\": [\n    {\n      \"sourceNodeId\": \"root\",\n      \"tabletZIndex\": 10,\n      \"mobileZIndex\": null\n    }\n  ],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "mobile-only",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "RESPONSIVE_Z_INDEX_RESOLVED",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": "sha256:da751f435ad9e2f70baa02c43c349584103dfdf51c73d266f957b33c68c298e5",
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 1,
+   "resolvedZIndexes": [
+    {
+     "sourceNodeId": "nested",
+     "tabletZIndex": null,
+     "mobileZIndex": 0
+    }
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden container family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "row",
+       "flex_gap": {
+        "column": "24",
+        "row": "24",
+        "isLinked": true,
+        "unit": "px"
+       },
+       "padding": {
+        "unit": "px",
+        "top": "10",
+        "right": "20",
+        "bottom": "10",
+        "left": "20",
+        "isLinked": false
+       }
+      },
+      "elements": [
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         },
+         "z_index_mobile": 0
+        },
+        "elements": [
+         {
+          "id": "0e1611a7",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>GOLDEN COPY</p>",
+           "align": "start"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0].elements[0]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden container family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"row\",\n        \"flex_gap\": {\n          \"column\": \"24\",\n          \"row\": \"24\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        },\n        \"padding\": {\n          \"unit\": \"px\",\n          \"top\": \"10\",\n          \"right\": \"20\",\n          \"bottom\": \"10\",\n          \"left\": \"20\",\n          \"isLinked\": false\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"column\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            },\n            \"z_index_mobile\": 0\n          },\n          \"elements\": [\n            {\n              \"id\": \"0e1611a7\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>GOLDEN COPY</p>\",\n                \"align\": \"start\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"RESPONSIVE_Z_INDEX_RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:da751f435ad9e2f70baa02c43c349584103dfdf51c73d266f957b33c68c298e5\",\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 1,\n  \"resolvedZIndexes\": [\n    {\n      \"sourceNodeId\": \"nested\",\n      \"tabletZIndex\": null,\n      \"mobileZIndex\": 0\n    }\n  ],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "both-two-containers-unsorted",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "RESPONSIVE_Z_INDEX_RESOLVED",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": "sha256:a2f260d2b2c83df0e2b74da367cf255a194139256e23abf6d115c75a474e3272",
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 2,
+   "resolvedZIndexes": [
+    {
+     "sourceNodeId": "nested",
+     "tabletZIndex": null,
+     "mobileZIndex": 0
+    },
+    {
+     "sourceNodeId": "root",
+     "tabletZIndex": 10,
+     "mobileZIndex": 0
+    }
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden container family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "row",
+       "flex_gap": {
+        "column": "24",
+        "row": "24",
+        "isLinked": true,
+        "unit": "px"
+       },
+       "padding": {
+        "unit": "px",
+        "top": "10",
+        "right": "20",
+        "bottom": "10",
+        "left": "20",
+        "isLinked": false
+       },
+       "z_index_tablet": 10,
+       "z_index_mobile": 0
+      },
+      "elements": [
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         },
+         "z_index_mobile": 0
+        },
+        "elements": [
+         {
+          "id": "0e1611a7",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>GOLDEN COPY</p>",
+           "align": "start"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0].elements[0]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden container family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"row\",\n        \"flex_gap\": {\n          \"column\": \"24\",\n          \"row\": \"24\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        },\n        \"padding\": {\n          \"unit\": \"px\",\n          \"top\": \"10\",\n          \"right\": \"20\",\n          \"bottom\": \"10\",\n          \"left\": \"20\",\n          \"isLinked\": false\n        },\n        \"z_index_tablet\": 10,\n        \"z_index_mobile\": 0\n      },\n      \"elements\": [\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"column\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            },\n            \"z_index_mobile\": 0\n          },\n          \"elements\": [\n            {\n              \"id\": \"0e1611a7\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>GOLDEN COPY</p>\",\n                \"align\": \"start\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"RESPONSIVE_Z_INDEX_RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:a2f260d2b2c83df0e2b74da367cf255a194139256e23abf6d115c75a474e3272\",\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 2,\n  \"resolvedZIndexes\": [\n    {\n      \"sourceNodeId\": \"nested\",\n      \"tabletZIndex\": null,\n      \"mobileZIndex\": 0\n    },\n    {\n      \"sourceNodeId\": \"root\",\n      \"tabletZIndex\": 10,\n      \"mobileZIndex\": 0\n    }\n  ],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "no-overrides",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "NO_RESPONSIVE_Z_INDEX_OVERRIDES",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [],
+   "template": {
+    "title": "Golden container family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "row",
+       "flex_gap": {
+        "column": "24",
+        "row": "24",
+        "isLinked": true,
+        "unit": "px"
+       },
+       "padding": {
+        "unit": "px",
+        "top": "10",
+        "right": "20",
+        "bottom": "10",
+        "left": "20",
+        "isLinked": false
+       }
+      },
+      "elements": [
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "column",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         }
+        },
+        "elements": [
+         {
+          "id": "0e1611a7",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>GOLDEN COPY</p>",
+           "align": "start"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0].elements[0]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden container family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"row\",\n        \"flex_gap\": {\n          \"column\": \"24\",\n          \"row\": \"24\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        },\n        \"padding\": {\n          \"unit\": \"px\",\n          \"top\": \"10\",\n          \"right\": \"20\",\n          \"bottom\": \"10\",\n          \"left\": \"20\",\n          \"isLinked\": false\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"column\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"0e1611a7\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>GOLDEN COPY</p>\",\n                \"align\": \"start\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"NO_RESPONSIVE_Z_INDEX_OVERRIDES\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "manifest-null",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_MANIFEST_NOT_OBJECT",
+     "path": "$manifest",
+     "message": "Responsive z-index manifest must be an object."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_MANIFEST_NOT_OBJECT\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "manifest-array",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_MANIFEST_NOT_OBJECT",
+     "path": "$manifest",
+     "message": "Responsive z-index manifest must be an object."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_MANIFEST_NOT_OBJECT\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "manifest-extra-key",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_MANIFEST_FIELDS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index manifest contains unknown or missing fields."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_MANIFEST_FIELDS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "manifest-missing-key",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_MANIFEST_FIELDS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index manifest contains unknown or missing fields."
+    },
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_MANIFEST_FIELDS_INVALID\",\n      \"path\": \"$manifest\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "manifest-wrong-version",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_MANIFEST_VERSION_INVALID",
+     "path": "$manifest.manifestVersion",
+     "message": "Responsive z-index manifest schema/version is unsupported."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_MANIFEST_VERSION_INVALID\",\n      \"path\": \"$manifest.manifestVersion\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "manifest-wrong-schema",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_MANIFEST_VERSION_INVALID",
+     "path": "$manifest.manifestVersion",
+     "message": "Responsive z-index manifest schema/version is unsupported."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_MANIFEST_VERSION_INVALID\",\n      \"path\": \"$manifest.manifestVersion\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "fingerprint-malformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_FINGERPRINT_INVALID",
+     "path": "$manifest.sourceIrFingerprint",
+     "message": "sourceIrFingerprint must be a SHA-256 fingerprint."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_FINGERPRINT_INVALID\",\n      \"path\": \"$manifest.sourceIrFingerprint\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "fingerprint-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_FINGERPRINT_MISMATCH",
+     "path": "$manifest.sourceIrFingerprint",
+     "message": "Manifest is not bound to the exact current neutral IR."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_FINGERPRINT_MISMATCH\",\n      \"path\": \"$manifest.sourceIrFingerprint\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "base-digest-malformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_BASE_CANDIDATE_IDENTITY_INVALID",
+     "path": "$manifest.baseCandidateIdentityDigest",
+     "message": "baseCandidateIdentityDigest must be a SHA-256 candidate identity digest."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_BASE_CANDIDATE_IDENTITY_INVALID\",\n      \"path\": \"$manifest.baseCandidateIdentityDigest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "base-digest-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_BASE_CANDIDATE_IDENTITY_MISMATCH",
+     "path": "$manifest.baseCandidateIdentityDigest",
+     "message": "Manifest is not bound to the exact current base candidate identity."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_BASE_CANDIDATE_IDENTITY_MISMATCH\",\n      \"path\": \"$manifest.baseCandidateIdentityDigest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "authority-responsiveInferencePerformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "authority-figmaMutation",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "authority-networkAccess",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "authority-responsiveClosureClaim",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "authority-targetCompatibilityClaim",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "authority-productionAcceptance",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "authority-downloadEnabled",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Responsive z-index resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "containers-not-array",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_ENTRIES_INVALID",
+     "path": "$manifest.containers",
+     "message": "containers must be an array of at most 10000 entries."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_ENTRIES_INVALID\",\n      \"path\": \"$manifest.containers\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "containers-too-many",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_ENTRIES_INVALID",
+     "path": "$manifest.containers",
+     "message": "containers must be an array of at most 10000 entries."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_ENTRIES_INVALID\",\n      \"path\": \"$manifest.containers\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-not-record",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_ENTRY_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Each responsive z-index entry may contain only sourceNodeId plus tablet/mobile min-height values."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-unknown-key",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_ENTRY_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Each responsive z-index entry may contain only sourceNodeId plus tablet/mobile min-height values."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-bad-source-id",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_ENTRY_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Each responsive z-index entry may contain only sourceNodeId plus tablet/mobile min-height values."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-duplicate",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_DUPLICATE_SOURCE_ID",
+     "path": "$manifest.containers[1].sourceNodeId",
+     "message": "Responsive z-index sourceNodeId must be unique."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_DUPLICATE_SOURCE_ID\",\n      \"path\": \"$manifest.containers[1].sourceNodeId\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-text-node",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_NOT_CONTAINER",
+     "path": "$manifest.containers[0].sourceNodeId",
+     "message": "Responsive z-index sourceNodeId must identify an existing neutral container node."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_NOT_CONTAINER\",\n      \"path\": \"$manifest.containers[0].sourceNodeId\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-missing-node",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_NOT_CONTAINER",
+     "path": "$manifest.containers[0].sourceNodeId",
+     "message": "Responsive z-index sourceNodeId must identify an existing neutral container node."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_NOT_CONTAINER\",\n      \"path\": \"$manifest.containers[0].sourceNodeId\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-no-override",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_OVERRIDE_REQUIRED",
+     "path": "$manifest.containers[0]",
+     "message": "Each responsive z-index entry must explicitly provide tabletZIndex and/or mobileZIndex."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_OVERRIDE_REQUIRED\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-invalid-value-0",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_VALUE_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Responsive z-index must be an integer value between 0 and 9999."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_VALUE_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-invalid-value-1",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_VALUE_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Responsive z-index must be an integer value between 0 and 9999."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_VALUE_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "entry-invalid-value-2",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_VALUE_INVALID",
+     "path": "$manifest.containers[0]",
+     "message": "Responsive z-index must be an integer value between 0 and 9999."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_VALUE_INVALID\",\n      \"path\": \"$manifest.containers[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "many-issues-accumulate",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35",
+   "baseCandidateIdentityDigest": "sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_MANIFEST_VERSION_INVALID",
+     "path": "$manifest.manifestVersion",
+     "message": "Responsive z-index manifest schema/version is unsupported."
+    },
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_NOT_CONTAINER",
+     "path": "$manifest.containers[0].sourceNodeId",
+     "message": "Responsive z-index sourceNodeId must identify an existing neutral container node."
+    },
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_ENTRY_INVALID",
+     "path": "$manifest.containers[1]",
+     "message": "Each responsive z-index entry may contain only sourceNodeId plus tablet/mobile min-height values."
+    },
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_OVERRIDE_REQUIRED",
+     "path": "$manifest.containers[2]",
+     "message": "Each responsive z-index entry must explicitly provide tabletZIndex and/or mobileZIndex."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:8d9f537715a460556faba7e5212b6c8bd3ceff65cf291ab6b413fd672a4fbf35\",\n  \"baseCandidateIdentityDigest\": \"sha256:cc693e808a7095ae69b72d49cb19e1878a9d13d81be506cc8f248bc2f7fc0c02\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_MANIFEST_VERSION_INVALID\",\n      \"path\": \"$manifest.manifestVersion\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_NOT_CONTAINER\",\n      \"path\": \"$manifest.containers[0].sourceNodeId\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_ENTRY_INVALID\",\n      \"path\": \"$manifest.containers[1]\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_OVERRIDE_REQUIRED\",\n      \"path\": \"$manifest.containers[2]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "source-invalid",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "BLOCKED_INVALID_SOURCE_IR",
+   "sourceIrFingerprint": null,
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 0,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID",
+     "path": "$.schemaVersion",
+     "message": "Neutral export schemaVersion must be 1."
+    },
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID",
+     "path": "$.irVersion",
+     "message": "Neutral export irVersion must be p15-neutral-export-ir-v2."
+    },
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID",
+     "path": "$.title",
+     "message": "Template title must be a non-empty string up to 512 characters."
+    },
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID",
+     "path": "$.documentType",
+     "message": "V1 neutral export supports page and section documents only."
+    },
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID",
+     "path": "$.nodes",
+     "message": "Neutral export document nodes must be an array."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"BLOCKED_INVALID_SOURCE_IR\",\n  \"sourceIrFingerprint\": null,\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 0,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID\",\n      \"path\": \"$.schemaVersion\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID\",\n      \"path\": \"$.irVersion\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID\",\n      \"path\": \"$.title\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID\",\n      \"path\": \"$.documentType\"\n    },\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_SOURCE_IR_INVALID\",\n      \"path\": \"$.nodes\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ },
+ {
+  "name": "source-review-upstream",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-responsive-z-index-result-v1",
+   "status": "BLOCKED_UPSTREAM_GENERATION",
+   "sourceIrFingerprint": "sha256:1d083dec7e3f2d3fb8daa7014423e09c7fcb294942f2298c9202f8a92c228691",
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "sourceContainerCount": 2,
+   "resolvedContainerCount": 0,
+   "resolvedZIndexes": [],
+   "issues": [
+    {
+     "code": "P15_RESPONSIVE_Z_INDEX_UPSTREAM_GENERATION_NOT_READY",
+     "path": "$source",
+     "message": "Responsive z-index resolution requires an existing review-free generated local candidate."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-responsive-z-index-result-v1\",\n  \"status\": \"BLOCKED_UPSTREAM_GENERATION\",\n  \"sourceIrFingerprint\": \"sha256:1d083dec7e3f2d3fb8daa7014423e09c7fcb294942f2298c9202f8a92c228691\",\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceContainerCount\": 2,\n  \"resolvedContainerCount\": 0,\n  \"resolvedZIndexes\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_RESPONSIVE_Z_INDEX_UPSTREAM_GENERATION_NOT_READY\",\n      \"path\": \"$source\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"containerSourcePath\": \"includes/elements/container.php\",\n    \"containerSourceBlobSha\": \"3486766b9565af99536ae205ed1936bb155daed0\",\n    \"controlsStackSourcePath\": \"includes/base/controls-stack.php\",\n    \"controlsStackSourceBlobSha\": \"00b280e518b89925c8f85a059b34136177ff3d4d\",\n    \"containerPlaywrightSourcePath\": \"tests/playwright/sanity/modules/container/container-1.test.ts\",\n    \"containerPlaywrightSourceBlobSha\": \"1cdbc387887abea49d4e8477b1b3a684c5149c9e\",\n    \"responsiveNumberFixtureSourcePath\": \"tests/qunit/mock/elments/video.json\",\n    \"responsiveNumberFixtureSourceBlobSha\": \"20f71a3e127ac3806446c95b313abff01e4b97c2\",\n    \"controlName\": \"z_index\",\n    \"desktopSettingKey\": \"z_index\",\n    \"tabletSettingKey\": \"z_index_tablet\",\n    \"mobileSettingKey\": \"z_index_mobile\",\n    \"minValue\": 0,\n    \"maxValue\": 9999\n  },\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 responsive-z-index result."
+ }
+]

@@ -111,8 +111,12 @@ export type ContainerFamilyResult = {
 
 type AnyFamily = ContainerPropertyFamily<{ sourceNodeId: string }, { sourceNodeId: string }>;
 
-function code(family: AnyFamily, suffix: IssueSuffix): string {
-  return `${family.issuePrefix}_${suffix}`;
+function code(family: AnyFamily, suffix: IssueSuffix | string): string {
+  return family.issueCodes?.[suffix] ?? `${family.issuePrefix}_${suffix}`;
+}
+
+function leadingFlags(family: AnyFamily): Record<string, false> {
+  return Object.fromEntries((family.leadingAuthorityFlags ?? []).map((flag) => [flag, false]));
 }
 
 function baseResult(
@@ -140,6 +144,7 @@ function baseResult(
     issues: issues.map((issue) => ({ ...issue })),
     template,
     candidate,
+    ...leadingFlags(family),
     responsiveInferencePerformed: false,
     figmaMutation: false,
     networkAccess: false,
@@ -191,7 +196,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   if (!isRecord(manifestValue)) {
     issues.push({ code: code(family, 'MANIFEST_NOT_OBJECT'), path: '$manifest', message: `${subject} manifest must be an object.` });
   } else {
-    if (!exactKeys(manifestValue, MANIFEST_KEYS)) {
+    if (!exactKeys(manifestValue, [...MANIFEST_KEYS, ...(family.leadingAuthorityFlags ?? [])])) {
       issues.push({ code: code(family, 'MANIFEST_FIELDS_INVALID'), path: '$manifest', message: `${subject} manifest contains unknown or missing fields.` });
     }
     if (manifestValue.schemaVersion !== 1 || manifestValue.manifestVersion !== family.manifestVersion) {
@@ -207,11 +212,11 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
     } else if (manifestValue.baseCandidateIdentityDigest !== baseIdentity.digest) {
       issues.push({ code: code(family, 'BASE_CANDIDATE_IDENTITY_MISMATCH'), path: '$manifest.baseCandidateIdentityDigest', message: 'Manifest is not bound to the exact current base candidate identity.' });
     }
-    if (MANIFEST_AUTHORITY_FLAGS.some((flag) => manifestValue[flag] !== false)) {
+    if ([...(family.leadingAuthorityFlags ?? []), ...MANIFEST_AUTHORITY_FLAGS].some((flag) => manifestValue[flag] !== false)) {
       issues.push({
         code: code(family, 'AUTHORITY_FLAGS_INVALID'),
         path: '$manifest',
-        message: `${subject} resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority.`,
+        message: family.messages?.authority ?? `${subject} resolution cannot grant inference/mutation/network/closure/compatibility/production/download authority.`,
       });
     }
 
@@ -221,22 +226,25 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
       for (let index = 0; index < manifestValue.containers.length; index += 1) {
         const raw: unknown = manifestValue.containers[index];
         const path = `$manifest.containers[${index}]`;
-        if (!isRecord(raw) || !onlyAllowedKeys(raw, family.entryKeys) || !validSourceNodeId(raw.sourceNodeId)) {
+        if (!isRecord(raw)
+          || !onlyAllowedKeys(raw, family.entryKeys)
+          || !(family.requiredEntryKeys ?? []).every((key) => hasOwn(raw, key))
+          || !validSourceNodeId(raw.sourceNodeId)) {
           issues.push({ code: code(family, 'ENTRY_INVALID'), path, message: family.entryEnvelopeMessage });
           continue;
         }
         const sourceNodeId = raw.sourceNodeId;
         if (resolutions.has(sourceNodeId)) {
-          issues.push({ code: code(family, 'DUPLICATE_SOURCE_ID'), path: `${path}.sourceNodeId`, message: `${subject} sourceNodeId must be unique.` });
+          issues.push({ code: code(family, 'DUPLICATE_SOURCE_ID'), path: `${path}.sourceNodeId`, message: family.messages?.duplicate ?? `${subject} sourceNodeId must be unique.` });
           continue;
         }
         if (!sourceContainers.has(sourceNodeId)) {
-          issues.push({ code: code(family, 'SOURCE_NOT_CONTAINER'), path: `${path}.sourceNodeId`, message: `${subject} sourceNodeId must identify an existing neutral container node.` });
+          issues.push({ code: code(family, 'SOURCE_NOT_CONTAINER'), path: `${path}.sourceNodeId`, message: family.messages?.notContainer ?? `${subject} sourceNodeId must identify an existing neutral container node.` });
           continue;
         }
         const parsed = family.parseEntry(raw as Record<string, unknown> & { sourceNodeId: string });
         if (!parsed.ok) {
-          issues.push({ code: code(family, parsed.code), path, message: parsed.message });
+          issues.push({ code: code(family, parsed.code), path: `${path}${parsed.pathSuffix ?? ''}`, message: parsed.message });
           continue;
         }
         resolutions.set(sourceNodeId, parsed.entry);
@@ -260,27 +268,38 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
     })));
   }
 
+  const bindingIssues: ContainerFamilyIssue[] = [];
   for (const [sourceNodeId, entry] of resolutions) {
     const target = binding.containers.get(sourceNodeId);
     if (!target || !isRecord(target.settings)) {
-      issues.push({ code: code(family, 'GENERATOR_BINDING_MISMATCH'), path: '$.content', message: `Generated container binding missing for sourceNodeId ${sourceNodeId}.` });
+      (family.bindingIssuesLast ? bindingIssues : issues).push({ code: code(family, 'GENERATOR_BINDING_MISMATCH'), path: '$.content', message: family.bindingMissingMessage?.(sourceNodeId) ?? `Generated container binding missing for sourceNodeId ${sourceNodeId}.` });
       continue;
     }
     const settings = target.settings as Record<string, unknown>;
+    const precondition = family.precondition?.(settings) ?? null;
+    if (precondition) {
+      issues.push({ code: code(family, precondition.code), path: `$source.${sourceNodeId}`, message: precondition.message });
+      continue;
+    }
     const writes = family.writes(entry);
-    const conflict = writes.find((write) => hasOwn(settings, write.settingKey));
-    if (conflict) {
+    const conflicts = writes
+      .map((write, order) => ({ write, rank: write.conflictRank ?? order }))
+      .filter(({ write }) => write.checkConflict !== false && hasOwn(settings, write.settingKey))
+      .sort((left, right) => left.rank - right.rank)
+      .map(({ write }) => write);
+    const reported = family.conflictMode === 'all' ? conflicts : conflicts.slice(0, 1);
+    for (const conflict of reported) {
       issues.push({
         code: code(family, 'EXISTING_OVERRIDE_CONFLICT'),
         path: `$source.${sourceNodeId}`,
-        message: `Generated base candidate already contains a ${conflict.conflictSubject} override.`,
+        message: conflict.conflictMessage ?? `Generated base candidate already contains a ${conflict.conflictSubject} override.`,
       });
-      continue;
     }
+    if (conflicts.length > 0) continue;
     for (const write of writes) settings[write.settingKey] = write.value;
   }
 
-  if (issues.length > 0) return rejected(issues);
+  if (issues.length > 0 || bindingIssues.length > 0) return rejected([...issues, ...bindingIssues]);
 
   const candidate = buildElementorTemplateCandidateArtifact(template);
   if (candidate.status !== 'READY_FOR_TARGET_IMPORT_VALIDATION'
@@ -289,7 +308,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
     return rejected([{
       code: code(family, 'RESOLVED_CANDIDATE_INVALID'),
       path: '$resolvedCandidate',
-      message: `${subject} output did not rebuild into a canonical ready Elementor candidate.`,
+      message: family.messages?.resolvedInvalid ?? `${subject} output did not rebuild into a canonical ready Elementor candidate.`,
     }]);
   }
 
@@ -308,7 +327,7 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
   const family = typedFamily as unknown as AnyFamily;
   const summaries = result[family.summaryField];
   const list = Array.isArray(summaries) ? summaries as Array<{ sourceNodeId: string }> : null;
-  const issueCodes = new Set(ISSUE_SUFFIXES.map((suffix) => code(family, suffix)));
+  const issueCodes = new Set<string>([...ISSUE_SUFFIXES, ...(family.extraIssueSuffixes ?? [])].map((suffix) => code(family, suffix)));
   const validStatus = result.status === 'BLOCKED_INVALID_SOURCE_IR'
     || result.status === 'BLOCKED_UPSTREAM_GENERATION'
     || result.status === 'REJECTED_INVALID_MANIFEST'
@@ -355,6 +374,7 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     || !statusShapeValid
     || !(list ?? []).every((entry) => family.validSummary(entry))
     || !validIssues
+    || (family.leadingAuthorityFlags ?? []).some((flag) => result[flag] !== false)
     || result.responsiveInferencePerformed !== false
     || result.figmaMutation !== false
     || result.networkAccess !== false
@@ -378,6 +398,7 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     [family.summaryField]: list ?? [],
     issues: result.issues.map((issue) => ({ code: issue.code, path: issue.path })),
     evidence: family.evidence,
+    ...leadingFlags(family),
     responsiveInferencePerformed: false,
     figmaMutation: false,
     networkAccess: false,

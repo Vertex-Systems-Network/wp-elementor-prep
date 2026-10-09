@@ -8,7 +8,7 @@ const p14Qualification = await readFile('src/core/p14-vertical-stack-qualificati
 const p14RegistrySource = await readFile('src/core/p14-safe-recipe-registry.ts', 'utf8');
 const p15ResponsiveFullWidthSource = await readFile('src/targets/elementor/responsive-full-width-resolution.ts', 'utf8');
 const p15ResponsiveGapSource = await readFile('src/targets/elementor/responsive-gap-resolution.ts', 'utf8');
-// Recovery M1.3a: gap/padding/margin are mapping-engine families; the gap-axis encoding lives in the family table.
+// Recovery M1.3: responsive container families are mapping-engine definitions; fragments below check the family tables.
 const p15ResponsiveSpacingFamilySource = await readFile('src/targets/elementor/mapping-engine/families/responsive-spacing.ts', 'utf8');
 const p15ResponsiveHoverBorderRadiusSource = await readFile('src/targets/elementor/responsive-hover-border-radius-resolution.ts', 'utf8');
 const p15ResponsiveFlexItemAlignSelfSource = await readFile('src/targets/elementor/responsive-flex-item-align-self-resolution.ts', 'utf8');
@@ -213,8 +213,8 @@ const p15FullWidthRequiredFragments = [
   "desktopSettingKey: 'width'",
   "tabletSettingKey: 'width_tablet'",
   "mobileSettingKey: 'width_mobile'",
-  "raw.contentWidthMode !== 'full'",
-  "target.settings[P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_EVIDENCE.conditionControlName] = 'full'",
+  "requiredEntryFields: [{ field: 'contentWidthMode', value: 'full'",
+  "leadingWrites: [{ settingKey: EVIDENCE.conditionControlName, value: EVIDENCE.conditionRequiredValue }]",
 ];
 for (const fragment of p15FullWidthRequiredFragments) {
   if (!p15ResponsiveFullWidthSource.includes(fragment)) {
@@ -238,8 +238,8 @@ const p15HoverBorderRadiusRequiredFragments = [
   "desktopSettingKey: 'border_radius_hover'",
   "tabletSettingKey: 'border_radius_hover_tablet'",
   "mobileSettingKey: 'border_radius_hover_mobile'",
-  "P15_ELEMENTOR_RESPONSIVE_HOVER_BORDER_RADIUS_EVIDENCE.tabletSettingKey",
-  "P15_ELEMENTOR_RESPONSIVE_HOVER_BORDER_RADIUS_EVIDENCE.mobileSettingKey",
+  "field: 'tabletCornerRadiusPx', settingKey: EVIDENCE.tabletSettingKey",
+  "field: 'mobileCornerRadiusPx', settingKey: EVIDENCE.mobileSettingKey",
 ];
 for (const fragment of p15HoverBorderRadiusRequiredFragments) {
   if (!p15ResponsiveHoverBorderRadiusSource.includes(fragment)) {
@@ -266,8 +266,8 @@ const p15FlexItemAlignSelfRequiredFragments = [
   "desktopSettingKey: '_flex_align_self'",
   "tabletSettingKey: '_flex_align_self_tablet'",
   "mobileSettingKey: '_flex_align_self_mobile'",
-  "mapAlignSelf(resolution.tabletAlignSelf)",
-  "mapAlignSelf(resolution.mobileAlignSelf)",
+  "toElementor: toElementorAlignSelf, conflictSubject: 'tablet flex-item align-self'",
+  "toElementor: toElementorAlignSelf, conflictSubject: 'mobile flex-item align-self'",
 ];
 for (const fragment of p15FlexItemAlignSelfRequiredFragments) {
   if (!p15ResponsiveFlexItemAlignSelfSource.includes(fragment)) {
@@ -296,7 +296,7 @@ const p15FlexItemFactorsRequiredFragments = [
   "tabletShrinkSettingKey: '_flex_shrink_tablet'",
   "mobileShrinkSettingKey: '_flex_shrink_mobile'",
   "acceptedFactors: [0, 1] as const",
-  "validBinaryFactor",
+  "codec: binaryFlexFactorCodec",
 ];
 for (const fragment of p15FlexItemFactorsRequiredFragments) {
   if (!p15ResponsiveFlexItemFactorsSource.includes(fragment)) {
@@ -325,8 +325,8 @@ const p15FlexItemOrderPresetRequiredFragments = [
   "mobileSettingKey: '_flex_order_mobile'",
   "startTargetValue: -99999",
   "endTargetValue: 99999",
-  "mapOrderPreset(resolution.tabletOrderPreset)",
-  "mapOrderPreset(resolution.mobileOrderPreset)",
+  "toElementor: mapOrderPreset, conflictSubject: 'tablet flex-item order preset'",
+  "toElementor: mapOrderPreset, conflictSubject: 'mobile flex-item order preset'",
 ];
 for (const fragment of p15FlexItemOrderPresetRequiredFragments) {
   if (!p15ResponsiveFlexItemOrderPresetSource.includes(fragment)) {
@@ -351,8 +351,8 @@ const p15ContainerOverflowRequiredFragments = [
   "settingKey: 'overflow'",
   "defaultCssVariableValue: 'visible'",
   "acceptedValues: ['hidden', 'auto'] as const",
-  "validOverflow",
-  "target.settings[P15_ELEMENTOR_CONTAINER_OVERFLOW_EVIDENCE.settingKey] = resolution.overflow",
+  "enumCodec(EVIDENCE.acceptedValues)",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.overflow",
 ];
 for (const fragment of p15ContainerOverflowRequiredFragments) {
   if (!p15ContainerOverflowSource.includes(fragment)) {
@@ -377,8 +377,8 @@ const p15ContainerSemanticHtmlTagRequiredFragments = [
   "defaultTag: 'div'",
   "linkedTag: 'a'",
   "acceptedTags: ['header', 'footer', 'main', 'article', 'section', 'aside', 'nav'] as const",
-  "validSemanticHtmlTag",
-  "target.settings[P15_ELEMENTOR_CONTAINER_SEMANTIC_HTML_TAG_EVIDENCE.settingKey] = resolution.htmlTag",
+  "enumCodec(EVIDENCE.acceptedTags)",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.htmlTag",
 ];
 for (const fragment of p15ContainerSemanticHtmlTagRequiredFragments) {
   if (!p15ContainerSemanticHtmlTagSource.includes(fragment)) {
