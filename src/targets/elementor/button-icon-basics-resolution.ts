@@ -1,14 +1,16 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { elementorPxSlider, enumCodec, pxNumberCodec } from './mapping-engine/codecs';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
 import { exactKeys, isRecord } from './mapping-engine/shared-validation';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_ICON_BASICS_MANIFEST_VERSION =
   'p15-elementor-button-icon-basics-manifest-v1' as const;
@@ -68,82 +70,24 @@ export interface P15ElementorButtonIconBasicsEntryV1 {
   iconIndentPx?: number;
 }
 
-export interface P15ElementorButtonIconBasicsManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_BUTTON_ICON_BASICS_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonIconBasicsEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  iconInferencePerformed: false;
-  svgImportPerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonIconBasicsIssueCode =
-  | 'P15_BUTTON_ICON_BASICS_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_ICON_BASICS_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_ICON_BASICS_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_ICON_BASICS_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_ICON_BASICS_ENTRIES_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_ENTRY_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_ICON_BASICS_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_ICON_BASICS_ICON_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_ICON_ALIGNMENT_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_ICON_INDENT_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_ICON_BASICS_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_ICON_BASICS_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_ICON_BASICS_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonIconBasicsIssueV1 {
-  code: P15ElementorButtonIconBasicsIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonIconBasicsStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_ICON_OVERRIDES'
-  | 'BUTTON_ICON_BASICS_RESOLVED';
-
-export interface P15ElementorButtonIconBasicsResultV1 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_ICON_BASICS_RESULT_VERSION;
   status: P15ElementorButtonIconBasicsStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedIcons: P15ElementorButtonIconBasicsEntryV1[];
-  issues: P15ElementorButtonIconBasicsIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  iconInferencePerformed: false;
-  svgImportPerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonIconBasicsEntryV1;
+  summaryField: 'resolvedIcons';
+  summary: P15ElementorButtonIconBasicsEntryV1;
+  issueCode: P15ElementorButtonIconBasicsIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed' | 'iconInferencePerformed' | 'svgImportPerformed', 'responsiveClosureClaim'>;
+};
+export type P15ElementorButtonIconBasicsManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonIconBasicsIssueCode =
+  FamilyIssueCode<'P15_BUTTON_ICON_BASICS', 'SOURCE_NOT_BUTTON' | 'ICON_INVALID' | 'ICON_ALIGNMENT_INVALID' | 'ICON_INDENT_INVALID'>;
+export type P15ElementorButtonIconBasicsIssueV1 = FamilyIssueV1<P15ElementorButtonIconBasicsIssueCode>;
+export type P15ElementorButtonIconBasicsStatus = FamilyStatus<'NO_BUTTON_ICON_OVERRIDES', 'BUTTON_ICON_BASICS_RESOLVED'>;
+export type P15ElementorButtonIconBasicsResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_BUTTON_ICON_BASICS_EVIDENCE;
 const LIBRARY_PREFIX: Readonly<Record<P15ElementorButtonIconLibrary, string>> = {
@@ -220,22 +164,19 @@ const FAMILY = containerStyleFamily({
   ],
 });
 
+const API = familyApi<P15ElementorButtonIconBasicsResultV1>(FAMILY);
+
 /**
  * Apply only one exact bounded Font Awesome icon, its alignment and indent to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4c); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-style-family-golden.test.ts`.
  */
-export function resolveP15ElementorButtonIconBasics(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonIconBasicsResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonIconBasicsResultV1;
+export function resolveP15ElementorButtonIconBasics(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonIconBasicsResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized icon metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonIconBasicsSummary(
-  result: P15ElementorButtonIconBasicsResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonIconBasicsSummary(result: P15ElementorButtonIconBasicsResultV1): string {
+  return API.serialize(result);
 }

@@ -1,11 +1,13 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { directionCodec, GENERIC_RESPONSIVE_MESSAGES, responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION =
   'p15-elementor-responsive-direction-manifest-v1' as const;
@@ -34,83 +36,29 @@ export interface P15ElementorResponsiveDirectionEntryV1 {
   mobileDirection?: P15ElementorResponsiveDirection;
 }
 
-export interface P15ElementorResponsiveDirectionManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ElementorResponsiveDirectionEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorResponsiveDirectionIssueCode =
-  | 'P15_RESPONSIVE_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_RESPONSIVE_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_SOURCE_NOT_CONTAINER'
-  | 'P15_RESPONSIVE_DIRECTION_INVALID'
-  | 'P15_RESPONSIVE_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorResponsiveDirectionIssueV1 {
-  code: P15ElementorResponsiveDirectionIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorResponsiveDirectionStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_OVERRIDES'
-  | 'RESPONSIVE_DIRECTIONS_RESOLVED';
-
 export interface P15ElementorResponsiveDirectionSummaryEntryV1 {
   sourceNodeId: string;
   tabletDirection: P15ElementorResponsiveDirection | null;
   mobileDirection: P15ElementorResponsiveDirection | null;
 }
 
-export interface P15ElementorResponsiveDirectionResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_DIRECTION_RESULT_VERSION;
   status: P15ElementorResponsiveDirectionStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedDirections: P15ElementorResponsiveDirectionSummaryEntryV1[];
-  issues: P15ElementorResponsiveDirectionIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorResponsiveDirectionEntryV1;
+  summaryField: 'resolvedDirections';
+  summary: P15ElementorResponsiveDirectionSummaryEntryV1;
+  issueCode: P15ElementorResponsiveDirectionIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag;
+};
+export type P15ElementorResponsiveDirectionManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorResponsiveDirectionIssueCode = FamilyIssueCode<'P15_RESPONSIVE', 'DIRECTION_INVALID'>;
+export type P15ElementorResponsiveDirectionIssueV1 = FamilyIssueV1<P15ElementorResponsiveDirectionIssueCode>;
+export type P15ElementorResponsiveDirectionStatus = FamilyStatus<'NO_RESPONSIVE_OVERRIDES', 'RESPONSIVE_DIRECTIONS_RESOLVED'>;
+export type P15ElementorResponsiveDirectionResultV1 = FamilyResultV1<Contract>;
 
 const P15_ELEMENTOR_RESPONSIVE_DIRECTION_FAMILY = responsiveEnumFamily({
   id: 'responsive-direction',
@@ -134,6 +82,8 @@ const P15_ELEMENTOR_RESPONSIVE_DIRECTION_FAMILY = responsiveEnumFamily({
   bindingIssuesLast: true,
 });
 
+const API = familyApi<P15ElementorResponsiveDirectionResultV1>(P15_ELEMENTOR_RESPONSIVE_DIRECTION_FAMILY);
+
 /**
  * Apply explicit tablet/mobile direction overrides to exact generated container bindings.
  *
@@ -141,16 +91,11 @@ const P15_ELEMENTOR_RESPONSIVE_DIRECTION_FAMILY = responsiveEnumFamily({
  * proven identical to the original hand-written resolver by `tests/m1-container-family-golden.test.ts`.
  * The contract never infers responsive values, never changes desktop settings and claims no closure.
  */
-export function resolveP15ElementorResponsiveContainerDirections(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorResponsiveDirectionResultV1 {
-  return resolveContainerPropertyFamily(P15_ELEMENTOR_RESPONSIVE_DIRECTION_FAMILY, sourceValue, manifestValue) as unknown as P15ElementorResponsiveDirectionResultV1;
+export function resolveP15ElementorResponsiveContainerDirections(sourceValue: unknown, manifestValue: unknown): P15ElementorResponsiveDirectionResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized direction metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorResponsiveDirectionSummary(
-  result: P15ElementorResponsiveDirectionResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(P15_ELEMENTOR_RESPONSIVE_DIRECTION_FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorResponsiveDirectionSummary(result: P15ElementorResponsiveDirectionResultV1): string {
+  return API.serialize(result);
 }

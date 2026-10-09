@@ -1,12 +1,14 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import type { P15NeutralCrossAlignment, P15NeutralJustification } from './neutral-export-ir';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { crossAlignmentCodec, justificationCodec, responsiveEnumFamily, toElementorFlexAlignment } from './mapping-engine/families/responsive-layout';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION =
   'p15-elementor-responsive-alignment-manifest-v1' as const;
@@ -37,55 +39,6 @@ export interface P15ElementorResponsiveAlignmentEntryV1 {
   mobileJustifyContent?: P15NeutralJustification;
 }
 
-export interface P15ElementorResponsiveAlignmentManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ElementorResponsiveAlignmentEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorResponsiveAlignmentIssueCode =
-  | 'P15_RESPONSIVE_ALIGNMENT_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_ALIGNMENT_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_RESPONSIVE_ALIGNMENT_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_ALIGNMENT_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_ALIGNMENT_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_ALIGNMENT_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_ALIGNMENT_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_ALIGNMENT_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_ALIGNMENT_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_ALIGNMENT_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_ALIGNMENT_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_ALIGNMENT_SOURCE_NOT_CONTAINER'
-  | 'P15_RESPONSIVE_ALIGNMENT_VALUE_INVALID'
-  | 'P15_RESPONSIVE_ALIGNMENT_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_ALIGNMENT_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_ALIGNMENT_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_ALIGNMENT_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_ALIGNMENT_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorResponsiveAlignmentIssueV1 {
-  code: P15ElementorResponsiveAlignmentIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorResponsiveAlignmentStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_ALIGNMENT_OVERRIDES'
-  | 'RESPONSIVE_ALIGNMENTS_RESOLVED';
-
 export interface P15ElementorResponsiveAlignmentSummaryEntryV1 {
   sourceNodeId: string;
   tabletAlignItems: P15NeutralCrossAlignment | null;
@@ -94,28 +47,23 @@ export interface P15ElementorResponsiveAlignmentSummaryEntryV1 {
   mobileJustifyContent: P15NeutralJustification | null;
 }
 
-export interface P15ElementorResponsiveAlignmentResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_RESULT_VERSION;
   status: P15ElementorResponsiveAlignmentStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedAlignments: P15ElementorResponsiveAlignmentSummaryEntryV1[];
-  issues: P15ElementorResponsiveAlignmentIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorResponsiveAlignmentEntryV1;
+  summaryField: 'resolvedAlignments';
+  summary: P15ElementorResponsiveAlignmentSummaryEntryV1;
+  issueCode: P15ElementorResponsiveAlignmentIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag;
+};
+export type P15ElementorResponsiveAlignmentManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorResponsiveAlignmentIssueCode = FamilyIssueCode<'P15_RESPONSIVE_ALIGNMENT'>;
+export type P15ElementorResponsiveAlignmentIssueV1 = FamilyIssueV1<P15ElementorResponsiveAlignmentIssueCode>;
+export type P15ElementorResponsiveAlignmentStatus = FamilyStatus<'NO_RESPONSIVE_ALIGNMENT_OVERRIDES', 'RESPONSIVE_ALIGNMENTS_RESOLVED'>;
+export type P15ElementorResponsiveAlignmentResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_EVIDENCE;
 const conflictMessage = (settingKey: string): string =>
@@ -143,6 +91,8 @@ const P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_FAMILY = responsiveEnumFamily({
   conflictMode: 'all',
 });
 
+const API = familyApi<P15ElementorResponsiveAlignmentResultV1>(P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_FAMILY);
+
 /**
  * Apply explicit tablet/mobile alignment overrides to exact generated container bindings.
  *
@@ -150,16 +100,11 @@ const P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_FAMILY = responsiveEnumFamily({
  * proven identical to the original hand-written resolver by `tests/m1-container-family-golden.test.ts`.
  * The contract never infers responsive values, never changes desktop settings and claims no closure.
  */
-export function resolveP15ElementorResponsiveContainerAlignments(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorResponsiveAlignmentResultV1 {
-  return resolveContainerPropertyFamily(P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_FAMILY, sourceValue, manifestValue) as unknown as P15ElementorResponsiveAlignmentResultV1;
+export function resolveP15ElementorResponsiveContainerAlignments(sourceValue: unknown, manifestValue: unknown): P15ElementorResponsiveAlignmentResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized alignment metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorResponsiveAlignmentSummary(
-  result: P15ElementorResponsiveAlignmentResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorResponsiveAlignmentSummary(result: P15ElementorResponsiveAlignmentResultV1): string {
+  return API.serialize(result);
 }
