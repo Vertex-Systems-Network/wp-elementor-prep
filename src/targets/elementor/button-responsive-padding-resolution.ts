@@ -1,14 +1,16 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { dimensionsBoxCodec } from './mapping-engine/codecs';
 import { responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
 import { P15_NEUTRAL_EXPORT_MAX_SPACING_PX, type P15NeutralPaddingPx } from './neutral-export-ir';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_RESPONSIVE_PADDING_MANIFEST_VERSION =
   'p15-elementor-button-responsive-padding-manifest-v1' as const;
@@ -42,56 +44,6 @@ export interface P15ElementorButtonResponsivePaddingEntryV1 {
   mobilePaddingPx?: P15NeutralPaddingPx;
 }
 
-export interface P15ElementorButtonResponsivePaddingManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_BUTTON_RESPONSIVE_PADDING_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonResponsivePaddingEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonResponsivePaddingIssueCode =
-  | 'P15_BUTTON_RESPONSIVE_PADDING_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_ENTRIES_INVALID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_ENTRY_INVALID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_VALUE_INVALID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_OVERRIDE_REQUIRED'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_RESPONSIVE_PADDING_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonResponsivePaddingIssueV1 {
-  code: P15ElementorButtonResponsivePaddingIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonResponsivePaddingStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_RESPONSIVE_PADDING_OVERRIDES'
-  | 'BUTTON_RESPONSIVE_PADDING_RESOLVED';
-
 export interface P15ElementorButtonResponsivePaddingSummaryEntryV1 {
   sourceNodeId: string;
   desktopPaddingPx: P15NeutralPaddingPx | null;
@@ -99,29 +51,24 @@ export interface P15ElementorButtonResponsivePaddingSummaryEntryV1 {
   mobilePaddingPx: P15NeutralPaddingPx | null;
 }
 
-export interface P15ElementorButtonResponsivePaddingResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_BUTTON_RESPONSIVE_PADDING_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_RESPONSIVE_PADDING_RESULT_VERSION;
   status: P15ElementorButtonResponsivePaddingStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedPaddings: P15ElementorButtonResponsivePaddingSummaryEntryV1[];
-  issues: P15ElementorButtonResponsivePaddingIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonResponsivePaddingEntryV1;
+  summaryField: 'resolvedPaddings';
+  summary: P15ElementorButtonResponsivePaddingSummaryEntryV1;
+  issueCode: P15ElementorButtonResponsivePaddingIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+};
+export type P15ElementorButtonResponsivePaddingManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonResponsivePaddingIssueCode =
+  FamilyIssueCode<'P15_BUTTON_RESPONSIVE_PADDING', 'SOURCE_NOT_BUTTON'>;
+export type P15ElementorButtonResponsivePaddingIssueV1 = FamilyIssueV1<P15ElementorButtonResponsivePaddingIssueCode>;
+export type P15ElementorButtonResponsivePaddingStatus = FamilyStatus<'NO_BUTTON_RESPONSIVE_PADDING_OVERRIDES', 'BUTTON_RESPONSIVE_PADDING_RESOLVED'>;
+export type P15ElementorButtonResponsivePaddingResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_BUTTON_RESPONSIVE_PADDING_EVIDENCE;
 const paddingCodec = dimensionsBoxCodec({ min: 0, max: P15_NEUTRAL_EXPORT_MAX_SPACING_PX });
@@ -163,22 +110,19 @@ const FAMILY = responsiveEnumFamily({
   },
 });
 
+const API = familyApi<P15ElementorButtonResponsivePaddingResultV1>(FAMILY);
+
 /**
  * Apply only explicit desktop/tablet/mobile Button text padding to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4c); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-style-family-golden.test.ts`.
  */
-export function resolveP15ElementorButtonResponsivePadding(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonResponsivePaddingResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonResponsivePaddingResultV1;
+export function resolveP15ElementorButtonResponsivePadding(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonResponsivePaddingResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized padding metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonResponsivePaddingSummary(
-  result: P15ElementorButtonResponsivePaddingResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonResponsivePaddingSummary(result: P15ElementorButtonResponsivePaddingResultV1): string {
+  return API.serialize(result);
 }

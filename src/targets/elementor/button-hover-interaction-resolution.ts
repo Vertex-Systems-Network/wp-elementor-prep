@@ -1,14 +1,16 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { enumCodec, pxNumberCodec } from './mapping-engine/codecs';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
 import { boxShadowValueCodec, elementorBoxShadowPosition, type BoxShadowValue } from './mapping-engine/families/button-style';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_HOVER_INTERACTION_MANIFEST_VERSION =
   'p15-elementor-button-hover-interaction-manifest-v1' as const;
@@ -97,80 +99,24 @@ export interface P15ElementorButtonHoverInteractionEntryV1 {
   animation?: P15ElementorButtonHoverCoreAnimation;
 }
 
-export interface P15ElementorButtonHoverInteractionManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_BUTTON_HOVER_INTERACTION_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonHoverInteractionEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonHoverInteractionIssueCode =
-  | 'P15_BUTTON_HOVER_INTERACTION_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_HOVER_INTERACTION_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_HOVER_INTERACTION_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_HOVER_INTERACTION_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_HOVER_INTERACTION_ENTRIES_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_ENTRY_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_HOVER_INTERACTION_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_HOVER_INTERACTION_BOX_SHADOW_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_TRANSITION_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_ANIMATION_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_HOVER_INTERACTION_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_HOVER_INTERACTION_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_HOVER_INTERACTION_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonHoverInteractionIssueV1 {
-  code: P15ElementorButtonHoverInteractionIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonHoverInteractionStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_HOVER_INTERACTION_OVERRIDES'
-  | 'BUTTON_HOVER_INTERACTIONS_RESOLVED';
-
-export interface P15ElementorButtonHoverInteractionResultV1 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_HOVER_INTERACTION_RESULT_VERSION;
   status: P15ElementorButtonHoverInteractionStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedInteractions: P15ElementorButtonHoverInteractionEntryV1[];
-  issues: P15ElementorButtonHoverInteractionIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonHoverInteractionEntryV1;
+  summaryField: 'resolvedInteractions';
+  summary: P15ElementorButtonHoverInteractionEntryV1;
+  issueCode: P15ElementorButtonHoverInteractionIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+};
+export type P15ElementorButtonHoverInteractionManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonHoverInteractionIssueCode =
+  FamilyIssueCode<'P15_BUTTON_HOVER_INTERACTION', 'SOURCE_NOT_BUTTON' | 'BOX_SHADOW_INVALID' | 'TRANSITION_INVALID' | 'ANIMATION_INVALID'>;
+export type P15ElementorButtonHoverInteractionIssueV1 = FamilyIssueV1<P15ElementorButtonHoverInteractionIssueCode>;
+export type P15ElementorButtonHoverInteractionStatus = FamilyStatus<'NO_BUTTON_HOVER_INTERACTION_OVERRIDES', 'BUTTON_HOVER_INTERACTIONS_RESOLVED'>;
+export type P15ElementorButtonHoverInteractionResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_BUTTON_HOVER_INTERACTION_EVIDENCE;
 const boxShadowCodec = boxShadowValueCodec();
@@ -223,22 +169,19 @@ const FAMILY = containerStyleFamily({
   ],
 });
 
+const API = familyApi<P15ElementorButtonHoverInteractionResultV1>(FAMILY);
+
 /**
  * Apply only an explicit bounded hover box shadow, transition duration and core hover animation to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4c); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-style-family-golden.test.ts`.
  */
-export function resolveP15ElementorButtonHoverInteractions(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonHoverInteractionResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonHoverInteractionResultV1;
+export function resolveP15ElementorButtonHoverInteractions(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonHoverInteractionResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized hover interaction metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonHoverInteractionSummary(
-  result: P15ElementorButtonHoverInteractionResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonHoverInteractionSummary(result: P15ElementorButtonHoverInteractionResultV1): string {
+  return API.serialize(result);
 }

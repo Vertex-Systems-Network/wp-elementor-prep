@@ -1,6 +1,34 @@
 import { readFile } from 'node:fs/promises';
 import { assertRegistrySchemaReferences } from './status-schema-contract.mjs';
 
+const SHARED_AUTHORITY_FLAGS = ['responsiveInferencePerformed', 'figmaMutation', 'networkAccess', 'responsiveClosureClaim',
+  'targetCompatibilityClaim', 'productionAcceptance', 'downloadEnabled'];
+const engineSource = await readFile('src/targets/elementor/mapping-engine/container-family-engine.ts', 'utf8');
+if (!engineSource.includes('authorityFlags(family).some((flag) => manifestValue[flag] !== false)')
+  || !engineSource.includes('authorityFlags(family).some((flag) => result[flag] !== false)')) {
+  throw new Error('Mapping engine no longer refuses authority-inflated manifests and results.');
+}
+
+/**
+ * Recovery M1.8: an engine family declares its authority flags once in its contract,
+ * `FamilyAuthorityFlag<Leading, Omitted>`, and the shared engine (checked above) refuses any manifest or
+ * result where a declared flag is not false. A `<flag>: false` fragment is satisfied by that declaration.
+ */
+function declaresAuthorityFlagFalse(source, flag) {
+  const match = /flags: FamilyAuthorityFlag(?:<([^>]*)>)?;/.exec(source);
+  if (!match) return false;
+  const [leading = '', omitted = ''] = (match[1] ?? '').split(',');
+  const quoted = (text) => [...text.matchAll(/'(\w+)'/g)].map((item) => item[1]);
+  if (quoted(leading).includes(flag)) return true;
+  return SHARED_AUTHORITY_FLAGS.includes(flag) && !quoted(omitted).includes(flag);
+}
+
+function hasSourceFragment(source, fragment) {
+  if (source.includes(fragment)) return true;
+  const flag = /^(\w+): false$/.exec(fragment)?.[1];
+  return flag !== undefined && declaresAuthorityFlagFalse(source, flag);
+}
+
 const readme = await readFile('README.md', 'utf8');
 const readmeHistory = await readFile('docs/README_PROGRESS_HISTORY_2026-09-28.md', 'utf8');
 const historicalEvidence = `${readme}\n${readmeHistory}`;
@@ -221,7 +249,7 @@ const p15FullWidthRequiredFragments = [
   "leadingWrites: [{ settingKey: EVIDENCE.conditionControlName, value: EVIDENCE.conditionRequiredValue }]",
 ];
 for (const fragment of p15FullWidthRequiredFragments) {
-  if (!p15ResponsiveFullWidthSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ResponsiveFullWidthSource, fragment)) {
     throw new Error(`P15 #659 merged responsive full-width contract is stale or missing: ${fragment}`);
   }
 }
@@ -246,7 +274,7 @@ const p15HoverBorderRadiusRequiredFragments = [
   "field: 'mobileCornerRadiusPx', settingKey: EVIDENCE.mobileSettingKey",
 ];
 for (const fragment of p15HoverBorderRadiusRequiredFragments) {
-  if (!p15ResponsiveHoverBorderRadiusSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ResponsiveHoverBorderRadiusSource, fragment)) {
     throw new Error(`P15 #663 responsive hover border-radius contract is stale or missing: ${fragment}`);
   }
 }
@@ -274,7 +302,7 @@ const p15FlexItemAlignSelfRequiredFragments = [
   "toElementor: toElementorAlignSelf, conflictSubject: 'mobile flex-item align-self'",
 ];
 for (const fragment of p15FlexItemAlignSelfRequiredFragments) {
-  if (!p15ResponsiveFlexItemAlignSelfSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ResponsiveFlexItemAlignSelfSource, fragment)) {
     throw new Error(`P15 #665 responsive flex-item align-self contract is stale or missing: ${fragment}`);
   }
 }
@@ -303,7 +331,7 @@ const p15FlexItemFactorsRequiredFragments = [
   "codec: binaryFlexFactorCodec",
 ];
 for (const fragment of p15FlexItemFactorsRequiredFragments) {
-  if (!p15ResponsiveFlexItemFactorsSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ResponsiveFlexItemFactorsSource, fragment)) {
     throw new Error(`P15 #667 responsive flex-item factor contract is stale or missing: ${fragment}`);
   }
 }
@@ -333,7 +361,7 @@ const p15FlexItemOrderPresetRequiredFragments = [
   "toElementor: mapOrderPreset, conflictSubject: 'mobile flex-item order preset'",
 ];
 for (const fragment of p15FlexItemOrderPresetRequiredFragments) {
-  if (!p15ResponsiveFlexItemOrderPresetSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ResponsiveFlexItemOrderPresetSource, fragment)) {
     throw new Error(`P15 #669 responsive flex-item order preset contract is stale or missing: ${fragment}`);
   }
 }
@@ -359,7 +387,7 @@ const p15ContainerOverflowRequiredFragments = [
   "{ settingKey: EVIDENCE.settingKey, value: entry.overflow",
 ];
 for (const fragment of p15ContainerOverflowRequiredFragments) {
-  if (!p15ContainerOverflowSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ContainerOverflowSource, fragment)) {
     throw new Error(`P15 #671 Container overflow contract is stale or missing: ${fragment}`);
   }
 }
@@ -385,7 +413,7 @@ const p15ContainerSemanticHtmlTagRequiredFragments = [
   "{ settingKey: EVIDENCE.settingKey, value: entry.htmlTag",
 ];
 for (const fragment of p15ContainerSemanticHtmlTagRequiredFragments) {
-  if (!p15ContainerSemanticHtmlTagSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ContainerSemanticHtmlTagSource, fragment)) {
     throw new Error(`P15 #673 Container semantic HTML tag contract is stale or missing: ${fragment}`);
   }
 }
@@ -411,7 +439,7 @@ const p15HeadingTextColorRequiredFragments = [
   "colorInferencePerformed: false",
 ];
 for (const fragment of p15HeadingTextColorRequiredFragments) {
-  if (!p15HeadingTextColorSource.includes(fragment)) {
+  if (!hasSourceFragment(p15HeadingTextColorSource, fragment)) {
     throw new Error(`P15 #675 Heading text color contract is stale or missing: ${fragment}`);
   }
 }
@@ -439,7 +467,7 @@ const p15TextEditorTextColorRequiredFragments = [
   "colorInferencePerformed: false",
 ];
 for (const fragment of p15TextEditorTextColorRequiredFragments) {
-  if (!p15TextEditorTextColorSource.includes(fragment)) {
+  if (!hasSourceFragment(p15TextEditorTextColorSource, fragment)) {
     throw new Error(`P15 #677 Text Editor text color contract is stale or missing: ${fragment}`);
   }
 }
@@ -466,7 +494,7 @@ const p15ButtonTextColorRequiredFragments = [
   "colorInferencePerformed: false",
 ];
 for (const fragment of p15ButtonTextColorRequiredFragments) {
-  if (!p15ButtonTextColorSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonTextColorSource, fragment)) {
     throw new Error(`P15 #679 Button text color contract is stale or missing: ${fragment}`);
   }
 }
@@ -493,7 +521,7 @@ const p15ButtonBackgroundColorRequiredFragments = [
   "{ settingKey: EVIDENCE.backgroundColorSettingKey, value: entry.color, ...CONFLICT }",
 ];
 for (const fragment of p15ButtonBackgroundColorRequiredFragments) {
-  if (!p15ButtonBackgroundColorSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonBackgroundColorSource, fragment)) {
     throw new Error(`P15 #701 Button normal classic background-color contract is stale or missing: ${fragment}`);
   }
 }
@@ -519,7 +547,7 @@ const p15ButtonHoverTextColorRequiredFragments = [
   "^#[0-9a-f]{6}$",
 ];
 for (const fragment of p15ButtonHoverTextColorRequiredFragments) {
-  if (!p15ButtonHoverTextColorSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonHoverTextColorSource, fragment)) {
     throw new Error(`P15 #703 Button hover text-color contract is stale or missing: ${fragment}`);
   }
 }
@@ -549,7 +577,7 @@ const p15ButtonHoverBackgroundColorRequiredFragments = [
   "{ settingKey: EVIDENCE.backgroundColorSettingKey, value: entry.color, ...CONFLICT }",
 ];
 for (const fragment of p15ButtonHoverBackgroundColorRequiredFragments) {
-  if (!p15ButtonHoverBackgroundColorSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonHoverBackgroundColorSource, fragment)) {
     throw new Error(`P15 #705 Button hover classic background-color contract is stale or missing: ${fragment}`);
   }
 }
@@ -581,7 +609,7 @@ const p15ButtonHoverBorderColorRequiredFragments = [
   "{ settingKey: EVIDENCE.settingKey, value: entry.color, ...CONFLICT }",
 ];
 for (const fragment of p15ButtonHoverBorderColorRequiredFragments) {
-  if (!p15ButtonHoverBorderColorSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonHoverBorderColorSource, fragment)) {
     throw new Error(`P15 #707 Button hover border-color contract is stale or missing: ${fragment}`);
   }
 }
@@ -607,7 +635,7 @@ const p15ButtonHoverInteractionRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonHoverInteractionRequiredFragments) {
-  if (!p15ButtonHoverInteractionSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonHoverInteractionSource, fragment)) {
     throw new Error(`P15 #709 Fast Batch hover interaction contract is stale or missing: ${fragment}`);
   }
 }
@@ -635,7 +663,7 @@ const p15ButtonBorderStyleRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonBorderStyleRequiredFragments) {
-  if (!p15ButtonBorderStyleSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonBorderStyleSource, fragment)) {
     throw new Error(`P15 #711 Fast Batch Button border contract is stale or missing: ${fragment}`);
   }
 }
@@ -666,7 +694,7 @@ const p15ButtonVisualDepthRadiusRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonVisualDepthRadiusRequiredFragments) {
-  if (!p15ButtonVisualDepthRadiusSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonVisualDepthRadiusSource, fragment)) {
     throw new Error(`P15 #713 Fast Batch Button visual-depth/radius contract is stale or missing: ${fragment}`);
   }
 }
@@ -697,7 +725,7 @@ const p15ButtonTypographyBasicsRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonTypographyBasicsRequiredFragments) {
-  if (!p15ButtonTypographyBasicsSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonTypographyBasicsSource, fragment)) {
     throw new Error(`P15 #717 Button typography basics contract is stale or missing: ${fragment}`);
   }
 }
@@ -717,7 +745,7 @@ const p15ButtonIconBasicsRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonIconBasicsRequiredFragments) {
-  if (!p15ButtonIconBasicsSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonIconBasicsSource, fragment)) {
     throw new Error(`P15 #743 Button icon basics contract is stale or missing: ${fragment}`);
   }
 }
@@ -750,7 +778,7 @@ const p15ButtonLinearGradientRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonLinearGradientRequiredFragments) {
-  if (!p15ButtonLinearGradientSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonLinearGradientSource, fragment)) {
     throw new Error(`P15 #747 Button linear gradient contract is stale or missing: ${fragment}`);
   }
 }
@@ -779,7 +807,7 @@ const p15ButtonResponsiveLinearAngleRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonResponsiveLinearAngleRequiredFragments) {
-  if (!p15ButtonLinearGradientSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonLinearGradientSource, fragment)) {
     throw new Error(`P15 #759 Button responsive linear-angle contract is stale or missing: ${fragment}`);
   }
 }
@@ -813,7 +841,7 @@ const p15ButtonResponsiveLinearStopRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonResponsiveLinearStopRequiredFragments) {
-  if (!p15ButtonLinearGradientSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonLinearGradientSource, fragment)) {
     throw new Error(`P15 #763 Button responsive linear-stop contract is stale or missing: ${fragment}`);
   }
 }
@@ -849,7 +877,7 @@ const p15ButtonResponsiveRadialStopRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonResponsiveRadialStopRequiredFragments) {
-  if (!p15ButtonRadialGradientSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonRadialGradientSource, fragment)) {
     throw new Error(`P15 #767 Button responsive radial-stop contract is stale or missing: ${fragment}`);
   }
 }
@@ -894,7 +922,7 @@ const p15ButtonRadialGradientRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonRadialGradientRequiredFragments) {
-  if (!p15ButtonRadialGradientSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonRadialGradientSource, fragment)) {
     throw new Error(`P15 #751 Button radial gradient contract is stale or missing: ${fragment}`);
   }
 }
@@ -924,7 +952,7 @@ const p15ButtonResponsiveRadialPositionRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonResponsiveRadialPositionRequiredFragments) {
-  if (!p15ButtonRadialGradientSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonRadialGradientSource, fragment)) {
     throw new Error(`P15 #755 Button responsive radial-position contract is stale or missing: ${fragment}`);
   }
 }
@@ -955,7 +983,7 @@ const p15ButtonStretchContentAlignmentRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonStretchContentAlignmentRequiredFragments) {
-  if (!p15ButtonStretchContentAlignmentSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonStretchContentAlignmentSource, fragment)) {
     throw new Error(`P15 #739 Button stretch content alignment contract is stale or missing: ${fragment}`);
   }
 }
@@ -984,7 +1012,7 @@ const p15ButtonContentMetadataRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonContentMetadataRequiredFragments) {
-  if (!p15ButtonContentMetadataSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonContentMetadataSource, fragment)) {
     throw new Error(`P15 #735 Button content metadata contract is stale or missing: ${fragment}`);
   }
 }
@@ -1014,7 +1042,7 @@ const p15ButtonResponsivePaddingRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ButtonResponsivePaddingRequiredFragments) {
-  if (!p15ButtonResponsivePaddingSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ButtonResponsivePaddingSource, fragment)) {
     throw new Error(`P15 #731 Button responsive padding contract is stale or missing: ${fragment}`);
   }
 }
@@ -1081,7 +1109,7 @@ const p15ResponsiveGapAxisRequiredFragments = [
   "downloadEnabled: false",
 ];
 for (const fragment of p15ResponsiveGapAxisRequiredFragments) {
-  if (!p15ResponsiveGapSource.includes(fragment)) {
+  if (!hasSourceFragment(p15ResponsiveGapSource, fragment)) {
     throw new Error(`P15 #821 responsive gap-axis contract is stale or missing: ${fragment}`);
   }
 }
@@ -1091,7 +1119,7 @@ const p15ResponsiveGapAxisFamilyFragments = [
   "Explicit responsive row and column gaps must be supplied together at each breakpoint.",
 ];
 for (const fragment of p15ResponsiveGapAxisFamilyFragments) {
-  if (!p15ResponsiveSpacingFamilySource.includes(fragment)) {
+  if (!hasSourceFragment(p15ResponsiveSpacingFamilySource, fragment)) {
     throw new Error(`P15 #821 responsive gap-axis family contract is stale or missing: ${fragment}`);
   }
 }
