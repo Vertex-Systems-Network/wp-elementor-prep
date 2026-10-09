@@ -1,0 +1,2261 @@
+[
+ {
+  "name": "tablet-only",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "BUTTON_TEXT_COLORS_RESOLVED",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": "sha256:d8a1d45a78f4d382092cd5c763ade94f55b55be71670fde6aaa2f7bdbb76bece",
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 1,
+   "resolvedColors": [
+    {
+     "sourceNodeId": "cta",
+     "color": "#123abc"
+    }
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden widget family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "16",
+        "row": "16",
+        "isLinked": true,
+        "unit": "px"
+       }
+      },
+      "elements": [
+       {
+        "id": "83bfd4a7",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden <Title> & co",
+         "header_size": "h2",
+         "align": "center"
+        },
+        "elements": []
+       },
+       {
+        "id": "0e1611a7",
+        "elType": "widget",
+        "widgetType": "text-editor",
+        "isInner": false,
+        "settings": {
+         "editor": "<p>Line one<br>Line &quot;two&quot;</p>",
+         "align": "start"
+        },
+        "elements": []
+       },
+       {
+        "id": "03d644c7",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "link": {
+          "url": "https://example.com/",
+          "is_external": "",
+          "nofollow": "",
+          "custom_attributes": ""
+         },
+         "button_text_color": "#123abc"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         }
+        },
+        "elements": [
+         {
+          "id": "29890c53",
+          "elType": "widget",
+          "widgetType": "heading",
+          "isInner": false,
+          "settings": {
+           "title": "Sub",
+           "header_size": "h3"
+          },
+          "elements": []
+         },
+         {
+          "id": "df4c25fe",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>Body copy</p>"
+          },
+          "elements": []
+         },
+         {
+          "id": "ff4e8daf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 8,
+     "containerCount": 2,
+     "widgetCount": 6,
+     "widgetTypes": [
+      "button",
+      "heading",
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 6,
+      "documentedCoreWidgets": 6,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "83bfd4a7",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2]",
+       "id": "03d644c7",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[0]",
+       "id": "29890c53",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[1]",
+       "id": "df4c25fe",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[2]",
+       "id": "ff4e8daf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden widget family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"flex_gap\": {\n          \"column\": \"16\",\n          \"row\": \"16\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"83bfd4a7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden <Title> & co\",\n            \"header_size\": \"h2\",\n            \"align\": \"center\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"0e1611a7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"text-editor\",\n          \"isInner\": false,\n          \"settings\": {\n            \"editor\": \"<p>Line one<br>Line &quot;two&quot;</p>\",\n            \"align\": \"start\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"03d644c7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"link\": {\n              \"url\": \"https://example.com/\",\n              \"is_external\": \"\",\n              \"nofollow\": \"\",\n              \"custom_attributes\": \"\"\n            },\n            \"button_text_color\": \"#123abc\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"29890c53\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"heading\",\n              \"isInner\": false,\n              \"settings\": {\n                \"title\": \"Sub\",\n                \"header_size\": \"h3\"\n              },\n              \"elements\": []\n            },\n            {\n              \"id\": \"df4c25fe\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>Body copy</p>\"\n              },\n              \"elements\": []\n            },\n            {\n              \"id\": \"ff4e8daf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"BUTTON_TEXT_COLORS_RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:d8a1d45a78f4d382092cd5c763ade94f55b55be71670fde6aaa2f7bdbb76bece\",\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 1,\n  \"resolvedColors\": [\n    {\n      \"sourceNodeId\": \"cta\",\n      \"color\": \"#123abc\"\n    }\n  ],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "mobile-only",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "BUTTON_TEXT_COLORS_RESOLVED",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": "sha256:4b39e16035c9f37da52c2a92b6dc49206f14499adbaf0ee1f1a26e361dc6c69c",
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 1,
+   "resolvedColors": [
+    {
+     "sourceNodeId": "cta2",
+     "color": "#ffffff"
+    }
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden widget family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "16",
+        "row": "16",
+        "isLinked": true,
+        "unit": "px"
+       }
+      },
+      "elements": [
+       {
+        "id": "83bfd4a7",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden <Title> & co",
+         "header_size": "h2",
+         "align": "center"
+        },
+        "elements": []
+       },
+       {
+        "id": "0e1611a7",
+        "elType": "widget",
+        "widgetType": "text-editor",
+        "isInner": false,
+        "settings": {
+         "editor": "<p>Line one<br>Line &quot;two&quot;</p>",
+         "align": "start"
+        },
+        "elements": []
+       },
+       {
+        "id": "03d644c7",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "link": {
+          "url": "https://example.com/",
+          "is_external": "",
+          "nofollow": "",
+          "custom_attributes": ""
+         }
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         }
+        },
+        "elements": [
+         {
+          "id": "29890c53",
+          "elType": "widget",
+          "widgetType": "heading",
+          "isInner": false,
+          "settings": {
+           "title": "Sub",
+           "header_size": "h3"
+          },
+          "elements": []
+         },
+         {
+          "id": "df4c25fe",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>Body copy</p>"
+          },
+          "elements": []
+         },
+         {
+          "id": "ff4e8daf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "button_text_color": "#ffffff"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 8,
+     "containerCount": 2,
+     "widgetCount": 6,
+     "widgetTypes": [
+      "button",
+      "heading",
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 6,
+      "documentedCoreWidgets": 6,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "83bfd4a7",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2]",
+       "id": "03d644c7",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[0]",
+       "id": "29890c53",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[1]",
+       "id": "df4c25fe",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[2]",
+       "id": "ff4e8daf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden widget family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"flex_gap\": {\n          \"column\": \"16\",\n          \"row\": \"16\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"83bfd4a7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden <Title> & co\",\n            \"header_size\": \"h2\",\n            \"align\": \"center\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"0e1611a7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"text-editor\",\n          \"isInner\": false,\n          \"settings\": {\n            \"editor\": \"<p>Line one<br>Line &quot;two&quot;</p>\",\n            \"align\": \"start\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"03d644c7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"link\": {\n              \"url\": \"https://example.com/\",\n              \"is_external\": \"\",\n              \"nofollow\": \"\",\n              \"custom_attributes\": \"\"\n            }\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"29890c53\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"heading\",\n              \"isInner\": false,\n              \"settings\": {\n                \"title\": \"Sub\",\n                \"header_size\": \"h3\"\n              },\n              \"elements\": []\n            },\n            {\n              \"id\": \"df4c25fe\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>Body copy</p>\"\n              },\n              \"elements\": []\n            },\n            {\n              \"id\": \"ff4e8daf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"button_text_color\": \"#ffffff\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"BUTTON_TEXT_COLORS_RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:4b39e16035c9f37da52c2a92b6dc49206f14499adbaf0ee1f1a26e361dc6c69c\",\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 1,\n  \"resolvedColors\": [\n    {\n      \"sourceNodeId\": \"cta2\",\n      \"color\": \"#ffffff\"\n    }\n  ],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "both-two-containers-unsorted",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "BUTTON_TEXT_COLORS_RESOLVED",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": "sha256:49e41e26139707d807f59723892c81aff3f3e7c187d43d301ea19ce4c7325ac6",
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 2,
+   "resolvedColors": [
+    {
+     "sourceNodeId": "cta",
+     "color": "#ffffff"
+    },
+    {
+     "sourceNodeId": "cta2",
+     "color": "#ffffff"
+    }
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden widget family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "16",
+        "row": "16",
+        "isLinked": true,
+        "unit": "px"
+       }
+      },
+      "elements": [
+       {
+        "id": "83bfd4a7",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden <Title> & co",
+         "header_size": "h2",
+         "align": "center"
+        },
+        "elements": []
+       },
+       {
+        "id": "0e1611a7",
+        "elType": "widget",
+        "widgetType": "text-editor",
+        "isInner": false,
+        "settings": {
+         "editor": "<p>Line one<br>Line &quot;two&quot;</p>",
+         "align": "start"
+        },
+        "elements": []
+       },
+       {
+        "id": "03d644c7",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "link": {
+          "url": "https://example.com/",
+          "is_external": "",
+          "nofollow": "",
+          "custom_attributes": ""
+         },
+         "button_text_color": "#ffffff"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         }
+        },
+        "elements": [
+         {
+          "id": "29890c53",
+          "elType": "widget",
+          "widgetType": "heading",
+          "isInner": false,
+          "settings": {
+           "title": "Sub",
+           "header_size": "h3"
+          },
+          "elements": []
+         },
+         {
+          "id": "df4c25fe",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>Body copy</p>"
+          },
+          "elements": []
+         },
+         {
+          "id": "ff4e8daf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "button_text_color": "#ffffff"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 8,
+     "containerCount": 2,
+     "widgetCount": 6,
+     "widgetTypes": [
+      "button",
+      "heading",
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 6,
+      "documentedCoreWidgets": 6,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "83bfd4a7",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2]",
+       "id": "03d644c7",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[0]",
+       "id": "29890c53",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[1]",
+       "id": "df4c25fe",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[2]",
+       "id": "ff4e8daf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden widget family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"flex_gap\": {\n          \"column\": \"16\",\n          \"row\": \"16\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"83bfd4a7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden <Title> & co\",\n            \"header_size\": \"h2\",\n            \"align\": \"center\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"0e1611a7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"text-editor\",\n          \"isInner\": false,\n          \"settings\": {\n            \"editor\": \"<p>Line one<br>Line &quot;two&quot;</p>\",\n            \"align\": \"start\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"03d644c7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"link\": {\n              \"url\": \"https://example.com/\",\n              \"is_external\": \"\",\n              \"nofollow\": \"\",\n              \"custom_attributes\": \"\"\n            },\n            \"button_text_color\": \"#ffffff\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"29890c53\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"heading\",\n              \"isInner\": false,\n              \"settings\": {\n                \"title\": \"Sub\",\n                \"header_size\": \"h3\"\n              },\n              \"elements\": []\n            },\n            {\n              \"id\": \"df4c25fe\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>Body copy</p>\"\n              },\n              \"elements\": []\n            },\n            {\n              \"id\": \"ff4e8daf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"button_text_color\": \"#ffffff\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"BUTTON_TEXT_COLORS_RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:49e41e26139707d807f59723892c81aff3f3e7c187d43d301ea19ce4c7325ac6\",\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 2,\n  \"resolvedColors\": [\n    {\n      \"sourceNodeId\": \"cta\",\n      \"color\": \"#ffffff\"\n    },\n    {\n      \"sourceNodeId\": \"cta2\",\n      \"color\": \"#ffffff\"\n    }\n  ],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "no-overrides",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "NO_BUTTON_TEXT_COLOR_OVERRIDES",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [],
+   "template": {
+    "title": "Golden widget family source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "flex_gap": {
+        "column": "16",
+        "row": "16",
+        "isLinked": true,
+        "unit": "px"
+       }
+      },
+      "elements": [
+       {
+        "id": "83bfd4a7",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden <Title> & co",
+         "header_size": "h2",
+         "align": "center"
+        },
+        "elements": []
+       },
+       {
+        "id": "0e1611a7",
+        "elType": "widget",
+        "widgetType": "text-editor",
+        "isInner": false,
+        "settings": {
+         "editor": "<p>Line one<br>Line &quot;two&quot;</p>",
+         "align": "start"
+        },
+        "elements": []
+       },
+       {
+        "id": "03d644c7",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "link": {
+          "url": "https://example.com/",
+          "is_external": "",
+          "nofollow": "",
+          "custom_attributes": ""
+         }
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row",
+         "flex_gap": {
+          "column": "8",
+          "row": "8",
+          "isLinked": true,
+          "unit": "px"
+         }
+        },
+        "elements": [
+         {
+          "id": "29890c53",
+          "elType": "widget",
+          "widgetType": "heading",
+          "isInner": false,
+          "settings": {
+           "title": "Sub",
+           "header_size": "h3"
+          },
+          "elements": []
+         },
+         {
+          "id": "df4c25fe",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "isInner": false,
+          "settings": {
+           "editor": "<p>Body copy</p>"
+          },
+          "elements": []
+         },
+         {
+          "id": "ff4e8daf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 8,
+     "containerCount": 2,
+     "widgetCount": 6,
+     "widgetTypes": [
+      "button",
+      "heading",
+      "text-editor"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 6,
+      "documentedCoreWidgets": 6,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "83bfd4a7",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "0e1611a7",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2]",
+       "id": "03d644c7",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[0]",
+       "id": "29890c53",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[1]",
+       "id": "df4c25fe",
+       "widgetType": "text-editor",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[3].elements[2]",
+       "id": "ff4e8daf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden widget family source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"flex_gap\": {\n          \"column\": \"16\",\n          \"row\": \"16\",\n          \"isLinked\": true,\n          \"unit\": \"px\"\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"83bfd4a7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden <Title> & co\",\n            \"header_size\": \"h2\",\n            \"align\": \"center\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"0e1611a7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"text-editor\",\n          \"isInner\": false,\n          \"settings\": {\n            \"editor\": \"<p>Line one<br>Line &quot;two&quot;</p>\",\n            \"align\": \"start\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"03d644c7\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"link\": {\n              \"url\": \"https://example.com/\",\n              \"is_external\": \"\",\n              \"nofollow\": \"\",\n              \"custom_attributes\": \"\"\n            }\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\",\n            \"flex_gap\": {\n              \"column\": \"8\",\n              \"row\": \"8\",\n              \"isLinked\": true,\n              \"unit\": \"px\"\n            }\n          },\n          \"elements\": [\n            {\n              \"id\": \"29890c53\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"heading\",\n              \"isInner\": false,\n              \"settings\": {\n                \"title\": \"Sub\",\n                \"header_size\": \"h3\"\n              },\n              \"elements\": []\n            },\n            {\n              \"id\": \"df4c25fe\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"text-editor\",\n              \"isInner\": false,\n              \"settings\": {\n                \"editor\": \"<p>Body copy</p>\"\n              },\n              \"elements\": []\n            },\n            {\n              \"id\": \"ff4e8daf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"NO_BUTTON_TEXT_COLOR_OVERRIDES\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "manifest-null",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_MANIFEST_NOT_OBJECT",
+     "path": "$manifest",
+     "message": "Button text color manifest must be an object."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_MANIFEST_NOT_OBJECT\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "manifest-array",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_MANIFEST_NOT_OBJECT",
+     "path": "$manifest",
+     "message": "Button text color manifest must be an object."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_MANIFEST_NOT_OBJECT\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "manifest-extra-key",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_MANIFEST_FIELDS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color manifest contains unknown or missing fields."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_MANIFEST_FIELDS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "manifest-missing-key",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_MANIFEST_FIELDS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color manifest contains unknown or missing fields."
+    },
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color resolution cannot grant color/responsive inference, mutation, network, closure, compatibility, production or download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_MANIFEST_FIELDS_INVALID\",\n      \"path\": \"$manifest\"\n    },\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "manifest-wrong-version",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_MANIFEST_VERSION_INVALID",
+     "path": "$manifest.manifestVersion",
+     "message": "Button text color manifest schema/version is unsupported."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_MANIFEST_VERSION_INVALID\",\n      \"path\": \"$manifest.manifestVersion\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "manifest-wrong-schema",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_MANIFEST_VERSION_INVALID",
+     "path": "$manifest.manifestVersion",
+     "message": "Button text color manifest schema/version is unsupported."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_MANIFEST_VERSION_INVALID\",\n      \"path\": \"$manifest.manifestVersion\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "fingerprint-malformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_FINGERPRINT_INVALID",
+     "path": "$manifest.sourceIrFingerprint",
+     "message": "sourceIrFingerprint must be a SHA-256 fingerprint."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_FINGERPRINT_INVALID\",\n      \"path\": \"$manifest.sourceIrFingerprint\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "fingerprint-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_FINGERPRINT_MISMATCH",
+     "path": "$manifest.sourceIrFingerprint",
+     "message": "Manifest is not bound to the exact current neutral IR."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_FINGERPRINT_MISMATCH\",\n      \"path\": \"$manifest.sourceIrFingerprint\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "base-digest-malformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_BASE_CANDIDATE_IDENTITY_INVALID",
+     "path": "$manifest.baseCandidateIdentityDigest",
+     "message": "baseCandidateIdentityDigest must be a SHA-256 candidate identity digest."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_BASE_CANDIDATE_IDENTITY_INVALID\",\n      \"path\": \"$manifest.baseCandidateIdentityDigest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "base-digest-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_BASE_CANDIDATE_IDENTITY_MISMATCH",
+     "path": "$manifest.baseCandidateIdentityDigest",
+     "message": "Manifest is not bound to the exact current base candidate identity."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_BASE_CANDIDATE_IDENTITY_MISMATCH\",\n      \"path\": \"$manifest.baseCandidateIdentityDigest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "authority-colorInferencePerformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color resolution cannot grant color/responsive inference, mutation, network, closure, compatibility, production or download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "authority-responsiveInferencePerformed",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color resolution cannot grant color/responsive inference, mutation, network, closure, compatibility, production or download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "authority-figmaMutation",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color resolution cannot grant color/responsive inference, mutation, network, closure, compatibility, production or download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "authority-networkAccess",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color resolution cannot grant color/responsive inference, mutation, network, closure, compatibility, production or download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "authority-responsiveClosureClaim",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color resolution cannot grant color/responsive inference, mutation, network, closure, compatibility, production or download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "authority-targetCompatibilityClaim",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color resolution cannot grant color/responsive inference, mutation, network, closure, compatibility, production or download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "authority-productionAcceptance",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color resolution cannot grant color/responsive inference, mutation, network, closure, compatibility, production or download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "authority-downloadEnabled",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID",
+     "path": "$manifest",
+     "message": "Button text color resolution cannot grant color/responsive inference, mutation, network, closure, compatibility, production or download authority."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_AUTHORITY_FLAGS_INVALID\",\n      \"path\": \"$manifest\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "containers-not-array",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_ENTRIES_INVALID",
+     "path": "$manifest.buttons",
+     "message": "buttons must be an array of at most 10000 entries."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_ENTRIES_INVALID\",\n      \"path\": \"$manifest.buttons\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "containers-too-many",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_ENTRIES_INVALID",
+     "path": "$manifest.buttons",
+     "message": "buttons must be an array of at most 10000 entries."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_ENTRIES_INVALID\",\n      \"path\": \"$manifest.buttons\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-not-record",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_ENTRY_INVALID",
+     "path": "$manifest.buttons[0]",
+     "message": "Each Button text color entry may contain only sourceNodeId and color."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_ENTRY_INVALID\",\n      \"path\": \"$manifest.buttons[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-unknown-key",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_ENTRY_INVALID",
+     "path": "$manifest.buttons[0]",
+     "message": "Each Button text color entry may contain only sourceNodeId and color."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_ENTRY_INVALID\",\n      \"path\": \"$manifest.buttons[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-bad-source-id",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_ENTRY_INVALID",
+     "path": "$manifest.buttons[0]",
+     "message": "Each Button text color entry may contain only sourceNodeId and color."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_ENTRY_INVALID\",\n      \"path\": \"$manifest.buttons[0]\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-duplicate",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_DUPLICATE_SOURCE_ID",
+     "path": "$manifest.buttons[1].sourceNodeId",
+     "message": "Button text color sourceNodeId must be unique."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_DUPLICATE_SOURCE_ID\",\n      \"path\": \"$manifest.buttons[1].sourceNodeId\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-text-node",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_NOT_BUTTON",
+     "path": "$manifest.buttons[0].sourceNodeId",
+     "message": "Button text color sourceNodeId must identify an existing neutral Button node."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_NOT_BUTTON\",\n      \"path\": \"$manifest.buttons[0].sourceNodeId\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-missing-node",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_NOT_BUTTON",
+     "path": "$manifest.buttons[0].sourceNodeId",
+     "message": "Button text color sourceNodeId must identify an existing neutral Button node."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_NOT_BUTTON\",\n      \"path\": \"$manifest.buttons[0].sourceNodeId\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-no-override",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_VALUE_INVALID",
+     "path": "$manifest.buttons[0].color",
+     "message": "Button text color must be a lowercase six-digit hex value such as #1a2b3c."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_VALUE_INVALID\",\n      \"path\": \"$manifest.buttons[0].color\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-invalid-value-0",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_VALUE_INVALID",
+     "path": "$manifest.buttons[0].color",
+     "message": "Button text color must be a lowercase six-digit hex value such as #1a2b3c."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_VALUE_INVALID\",\n      \"path\": \"$manifest.buttons[0].color\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-invalid-value-1",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_VALUE_INVALID",
+     "path": "$manifest.buttons[0].color",
+     "message": "Button text color must be a lowercase six-digit hex value such as #1a2b3c."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_VALUE_INVALID\",\n      \"path\": \"$manifest.buttons[0].color\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-invalid-value-2",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_VALUE_INVALID",
+     "path": "$manifest.buttons[0].color",
+     "message": "Button text color must be a lowercase six-digit hex value such as #1a2b3c."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_VALUE_INVALID\",\n      \"path\": \"$manifest.buttons[0].color\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "entry-invalid-value-3",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_VALUE_INVALID",
+     "path": "$manifest.buttons[0].color",
+     "message": "Button text color must be a lowercase six-digit hex value such as #1a2b3c."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_VALUE_INVALID\",\n      \"path\": \"$manifest.buttons[0].color\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "many-issues-accumulate",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "REJECTED_INVALID_MANIFEST",
+   "sourceIrFingerprint": "sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337",
+   "baseCandidateIdentityDigest": "sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e",
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_MANIFEST_VERSION_INVALID",
+     "path": "$manifest.manifestVersion",
+     "message": "Button text color manifest schema/version is unsupported."
+    },
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_NOT_BUTTON",
+     "path": "$manifest.buttons[0].sourceNodeId",
+     "message": "Button text color sourceNodeId must identify an existing neutral Button node."
+    },
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_ENTRY_INVALID",
+     "path": "$manifest.buttons[1]",
+     "message": "Each Button text color entry may contain only sourceNodeId and color."
+    },
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_VALUE_INVALID",
+     "path": "$manifest.buttons[2].color",
+     "message": "Button text color must be a lowercase six-digit hex value such as #1a2b3c."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"REJECTED_INVALID_MANIFEST\",\n  \"sourceIrFingerprint\": \"sha256:53441fb421cb0297740e1d7755c108dcd00b462002acd9435b904230d33ed337\",\n  \"baseCandidateIdentityDigest\": \"sha256:ff85f89b0a6db03d43c32d9c5c935cde367a0b0b5af5c254d44ecc538a70946e\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_MANIFEST_VERSION_INVALID\",\n      \"path\": \"$manifest.manifestVersion\"\n    },\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_NOT_BUTTON\",\n      \"path\": \"$manifest.buttons[0].sourceNodeId\"\n    },\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_ENTRY_INVALID\",\n      \"path\": \"$manifest.buttons[1]\"\n    },\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_VALUE_INVALID\",\n      \"path\": \"$manifest.buttons[2].color\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "source-invalid",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "BLOCKED_INVALID_SOURCE_IR",
+   "sourceIrFingerprint": null,
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 0,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID",
+     "path": "$.schemaVersion",
+     "message": "Neutral export schemaVersion must be 1."
+    },
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID",
+     "path": "$.irVersion",
+     "message": "Neutral export irVersion must be p15-neutral-export-ir-v2."
+    },
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID",
+     "path": "$.title",
+     "message": "Template title must be a non-empty string up to 512 characters."
+    },
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID",
+     "path": "$.documentType",
+     "message": "V1 neutral export supports page and section documents only."
+    },
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID",
+     "path": "$.nodes",
+     "message": "Neutral export document nodes must be an array."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"BLOCKED_INVALID_SOURCE_IR\",\n  \"sourceIrFingerprint\": null,\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 0,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID\",\n      \"path\": \"$.schemaVersion\"\n    },\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID\",\n      \"path\": \"$.irVersion\"\n    },\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID\",\n      \"path\": \"$.title\"\n    },\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID\",\n      \"path\": \"$.documentType\"\n    },\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_SOURCE_IR_INVALID\",\n      \"path\": \"$.nodes\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ },
+ {
+  "name": "source-review-upstream",
+  "result": {
+   "schemaVersion": 1,
+   "resultVersion": "p15-elementor-button-text-color-result-v1",
+   "status": "BLOCKED_UPSTREAM_GENERATION",
+   "sourceIrFingerprint": "sha256:7ce049fb88c7b59ad69eac9224ed0f565595945eb7edcbcecb908a7312987db0",
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "sourceButtonCount": 2,
+   "resolvedButtonCount": 0,
+   "resolvedColors": [],
+   "issues": [
+    {
+     "code": "P15_BUTTON_TEXT_COLOR_UPSTREAM_GENERATION_NOT_READY",
+     "path": "$source",
+     "message": "Button text color resolution requires an existing review-free generated local candidate."
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "colorInferencePerformed": false,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"resultVersion\": \"p15-elementor-button-text-color-result-v1\",\n  \"status\": \"BLOCKED_UPSTREAM_GENERATION\",\n  \"sourceIrFingerprint\": \"sha256:7ce049fb88c7b59ad69eac9224ed0f565595945eb7edcbcecb908a7312987db0\",\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"sourceButtonCount\": 2,\n  \"resolvedButtonCount\": 0,\n  \"resolvedColors\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_BUTTON_TEXT_COLOR_UPSTREAM_GENERATION_NOT_READY\",\n      \"path\": \"$source\"\n    }\n  ],\n  \"evidence\": {\n    \"elementorVersion\": \"4.2.4\",\n    \"elementorTagCommitSha\": \"0e292207b5b45f0e22603967ae41c0374211160d\",\n    \"buttonTraitSourcePath\": \"includes/widgets/traits/button-trait.php\",\n    \"buttonTraitSourceBlobSha\": \"31192aaee6851c445f79d1998499f6ce73ba7da5\",\n    \"controlName\": \"button_text_color\",\n    \"settingKey\": \"button_text_color\",\n    \"hoverControlName\": \"hover_color\",\n    \"backgroundGroupName\": \"background\",\n    \"selector\": \"{{WRAPPER}} .elementor-button\",\n    \"acceptedColorPattern\": \"^#[0-9a-f]{6}$\"\n  },\n  \"colorInferencePerformed\": false,\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated P15 button-text-color result."
+ }
+]

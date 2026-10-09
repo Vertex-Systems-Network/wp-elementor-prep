@@ -29,6 +29,8 @@ export interface FamilyCorpusSpec {
   omitBaseKeys?: string[];
   /** Family-specific authority flags the manifest must carry as false (e.g. styleInferencePerformed). */
   extraFlags?: string[];
+  /** Shared authority flags this family's contract does not carry (e.g. responsiveClosureClaim). */
+  omitFlags?: string[];
   /** Manifest array field (default `containers`; widget families use `headings`, `texts`, `widgets`). */
   entriesField?: string;
   /** Source document (default: the container corpus source). */
@@ -126,6 +128,7 @@ export function buildCorpus(spec: FamilyCorpusSpec): GoldenCase[] {
   const wrongKind = spec.wrongKindId ?? 'copy';
   const base = spec.entryBase ?? {};
   const flags: Record<string, boolean> = { ...Object.fromEntries((spec.extraFlags ?? []).map((flag) => [flag, false])), ...FLAGS };
+  for (const flag of spec.omitFlags ?? []) delete flags[flag];
   const manifest = (containers: unknown, overrides: Record<string, unknown> = {}): Record<string, unknown> => ({
     schemaVersion: 1,
     manifestVersion: spec.manifestVersion,
