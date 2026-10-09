@@ -5,6 +5,7 @@ import type {
   FamilyMessageOverrides,
   FamilyPreconditionFailure,
   FamilySettingWrite,
+  FamilyTarget,
 } from '../property-family';
 import { exactKeys, isRecord, validSourceNodeId } from '../shared-validation';
 
@@ -59,6 +60,8 @@ export interface ResponsiveEnumFamilyMeta {
   leadingWrites?: ReadonlyArray<{ settingKey: string; value: unknown }>;
   extraIssueSuffixes?: readonly string[];
   precondition?: (settings: Record<string, unknown>) => FamilyPreconditionFailure | null;
+  /** Bound target kind (default: generated containers). */
+  target?: FamilyTarget;
 }
 
 type EnumEntry = { sourceNodeId: string } & Record<string, unknown>;
@@ -70,6 +73,7 @@ export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerP
   const summaryKeys = ['sourceNodeId', ...required.map((spec) => spec.field), ...fieldNames];
   return {
     id: meta.id,
+    ...(meta.target ? { target: meta.target } : {}),
     issuePrefix: meta.issuePrefix,
     subject: meta.subject,
     manifestVersion: meta.manifestVersion,

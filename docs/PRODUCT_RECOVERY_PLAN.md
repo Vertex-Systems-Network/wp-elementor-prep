@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.4** (widget families: heading/text-editor colour, every `button-*` family, text and button alignment)
-> - Last completed task: **M1.3d** (9 container style families re-expressed as engine families; 371/371 golden cases identical). M1.3 is complete.
+> - Next task: **M1.4b** (button colour and content families)
+> - Last completed task: **M1.4a** (heading/text-editor colour and responsive text/button alignment on the engine's widget target; 150/150 golden cases identical).
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -178,7 +178,16 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - Resolver files shrank from 6,167 lines to 1,710.
     - Scope moved to M1.5: box-shadow, the linear and radial gradient compositions, the overlay-visual and hover-transition compositions, and `container-style-composition`. These are compact compositions with their own result shape (for example `BLOCKED | REJECTED | RESOLVED` with bare issue strings), not manifest-bound families, so they belong to the one ordered composer. They stay unchanged until then.
 - Original M1.3 wording, for reference: migrate the container families: gap, padding, margin, direction, alignment, wrap, align-content, boxed/full width, min-height, radius, border, shadow, overflow, z-index, html tag, background/overlay/gradient, and opacity. Each migration ships a golden equivalence test (old resolver output == engine output on every existing fixture). Then delete the old file.
-- [ ] **M1.4** Migrate the widget families: heading and text-editor colour, and every `button-*` family.
+- [~] **M1.4** Migrate the widget families: heading and text-editor colour, and every `button-*` family. This is split into M1.4a–d, and each part ships its golden baseline before the switch:
+  - [x] **M1.4a** text widgets and alignment _(done 2026-10-09):_
+    - The engine gained a bound-target abstraction (`FamilyTarget`): the manifest array field, result count fields, the not-target issue, source collection and generated-tree binding. Containers stay the default.
+    - `mapping-engine/widget-binding.ts` holds one lockstep widget binder (`widgetTarget`) that reproduces the four hand-written binders exactly, plus the Heading, Text Editor and Button base-setting matchers.
+    - Moved onto the engine: heading text colour and text-editor text colour (`containerStyleFamily`), responsive button alignment (`responsiveEnumFamily`) and responsive text alignment (a node-aware family that accepts `justify` only for text and reports `nodeKind`).
+    - Golden equivalence: 150/150 cases recorded from the original resolvers (commit `3054cff`) are identical. The golden corpus gained a widget source.
+    - Resolver files shrank from 3,151 lines to 772, plus the 164-line shared widget binder.
+  - [ ] **M1.4b** button colour and content: text, background, hover text, hover background and hover border colour, content metadata, stretch/content alignment.
+  - [ ] **M1.4c** button style: border style, visual depth/radius, responsive padding, icon basics, hover interaction.
+  - [ ] **M1.4d** button typography and gradients: typography basics, typography metrics, responsive typography metrics, linear and radial gradient. `button-color-composition` moves to M1.5 with the other compositions.
 - [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain. Also absorbs align-content (chained on wrap) and the container compositions moved from M1.3d: box-shadow, linear/radial gradient, overlay visual, hover transition and `container-style-composition`.
 - [ ] **M1.6** Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.
 - [ ] **M1.7** M1 sync. Update `verify-readme-progress.mjs` so it no longer reads deleted resolver files, and replace those checks with engine-table checks.

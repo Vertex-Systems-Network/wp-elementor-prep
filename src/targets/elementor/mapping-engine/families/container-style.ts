@@ -1,6 +1,7 @@
 import { dimensionsBoxCodec, type BoxPx, type PxRange, type ValueCodec } from '../codecs';
 import type {
   ContainerPropertyFamily,
+  FamilyTarget,
   FamilyEvidence,
   FamilyMessageOverrides,
   FamilySettingWrite,
@@ -50,6 +51,8 @@ export interface ContainerStyleFamilyMeta {
   extraIssueSuffixes?: readonly string[];
   messages?: FamilyMessageOverrides;
   bindingMissingMessage?: (sourceNodeId: string) => string;
+  /** Bound target kind (default: generated containers). */
+  target?: FamilyTarget;
   writes: (entry: StyleEntry) => FamilySettingWrite[];
 }
 
@@ -72,6 +75,7 @@ export function containerStyleFamily(meta: ContainerStyleFamilyMeta): ContainerP
   };
   return {
     id: meta.id,
+    ...(meta.target ? { target: meta.target } : {}),
     issuePrefix: meta.issuePrefix,
     subject: meta.subject,
     manifestVersion: meta.manifestVersion,

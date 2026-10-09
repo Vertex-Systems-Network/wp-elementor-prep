@@ -1,4 +1,6 @@
 import type { ValueCodec } from './codecs';
+import type { P15NeutralExportDocumentV1 } from '../neutral-export-ir';
+import type { ElementorTemplateV04 } from '../template-v04';
 
 /**
  * Declarative description of one Elementor property family (for example responsive container gap).
@@ -58,12 +60,41 @@ export interface FamilyMessageOverrides {
   readonly duplicate?: string;
   readonly notContainer?: string;
   readonly resolvedInvalid?: string;
+  readonly upstream?: string;
   readonly authority?: string;
+}
+
+/** A node binding the engine writes settings into. */
+export interface FamilyBoundTarget {
+  settings: unknown;
+}
+
+/**
+ * What a family binds to: generated containers (the default) or one widget kind. The target owns the
+ * manifest array field, the result count fields, source collection and generated-tree binding.
+ */
+export interface FamilyTarget {
+  /** Manifest array field, e.g. `containers`, `headings`, `widgets`. */
+  readonly entriesField: string;
+  /** Result count fields, e.g. `sourceContainerCount` / `resolvedContainerCount`. */
+  readonly sourceCountField: string;
+  readonly resolvedCountField: string;
+  /** Issue suffix for an entry whose node is not of this target kind, e.g. `SOURCE_NOT_HEADING`. */
+  readonly notTargetSuffix: string;
+  notTargetMessage(subject: string): string;
+  collect(source: P15NeutralExportDocumentV1): ReadonlyMap<string, unknown>;
+  bind(source: P15NeutralExportDocumentV1, template: ElementorTemplateV04): {
+    targets: ReadonlyMap<string, FamilyBoundTarget>;
+    issues: ReadonlyArray<{ path: string; message: string }>;
+  };
+  bindingMissingMessage(sourceNodeId: string): string;
 }
 
 export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string }, Summary extends { sourceNodeId: string }> {
   /** Stable family id, e.g. `responsive-gap`; also the slug in the serializer error. */
   readonly id: string;
+  /** Bound target kind; defaults to generated containers. */
+  readonly target?: FamilyTarget;
   /** Issue code prefix, e.g. `P15_RESPONSIVE_GAP`. */
   readonly issuePrefix: string;
   /** Sentence-case subject used in shared messages, e.g. `Responsive gap`. */
@@ -98,8 +129,9 @@ export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string },
   precondition?(settings: Record<string, unknown>): FamilyPreconditionFailure | null;
   /** Codecs this family encodes with, declared for inventory and capability reporting. */
   readonly codecs: readonly ValueCodec<unknown>[];
-  parseEntry(raw: Record<string, unknown> & { sourceNodeId: string }): FamilyEntryParse<Entry>;
+  /** `node` is the collected neutral source node the entry targets. */
+  parseEntry(raw: Record<string, unknown> & { sourceNodeId: string }, node: unknown): FamilyEntryParse<Entry>;
   writes(entry: Entry): FamilySettingWrite[];
-  summarize(entry: Entry): Summary;
+  summarize(entry: Entry, node?: unknown): Summary;
   validSummary(summary: Summary): boolean;
 }

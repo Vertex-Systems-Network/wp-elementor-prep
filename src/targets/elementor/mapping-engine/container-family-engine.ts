@@ -12,7 +12,7 @@ import {
 } from '../responsive-container-binding';
 import type { ElementorTemplateV04 } from '../template-v04';
 import { generateElementorV3TemplateCandidate } from '../v3-template-generator';
-import type { ContainerPropertyFamily } from './property-family';
+import type { ContainerPropertyFamily, FamilyTarget } from './property-family';
 import {
   exactKeys,
   hasOwn,
@@ -94,8 +94,7 @@ export type ContainerFamilyResult = {
   sourceIrFingerprint: string | null;
   baseCandidateIdentityDigest: string | null;
   resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
+  /** Target counts live under the target's count fields (e.g. `sourceContainerCount`). */
   issues: ContainerFamilyIssue[];
   template: ElementorTemplateV04 | null;
   candidate: ElementorTemplateCandidateArtifactV1 | null;
@@ -110,6 +109,25 @@ export type ContainerFamilyResult = {
 } & Record<string, unknown>;
 
 type AnyFamily = ContainerPropertyFamily<{ sourceNodeId: string }, { sourceNodeId: string }>;
+
+/** The default target: generated Elementor containers bound to neutral container nodes. */
+export const CONTAINER_TARGET: FamilyTarget = {
+  entriesField: 'containers',
+  sourceCountField: 'sourceContainerCount',
+  resolvedCountField: 'resolvedContainerCount',
+  notTargetSuffix: 'SOURCE_NOT_CONTAINER',
+  notTargetMessage: (subject) => `${subject} sourceNodeId must identify an existing neutral container node.`,
+  collect: (source) => collectP15NeutralContainerNodes(source),
+  bind(source, template) {
+    const binding = bindP15NeutralSourceToGeneratedContainers(source, template);
+    return { targets: binding.containers, issues: binding.issues };
+  },
+  bindingMissingMessage: (sourceNodeId) => `Generated container binding missing for sourceNodeId ${sourceNodeId}.`,
+};
+
+function targetOf(family: AnyFamily): FamilyTarget {
+  return family.target ?? CONTAINER_TARGET;
+}
 
 function code(family: AnyFamily, suffix: IssueSuffix | string): string {
   return family.issueCodes?.[suffix] ?? `${family.issuePrefix}_${suffix}`;
@@ -138,8 +156,8 @@ function baseResult(
     sourceIrFingerprint,
     baseCandidateIdentityDigest,
     resolvedCandidateIdentityDigest,
-    sourceContainerCount,
-    resolvedContainerCount: summaries.length,
+    [targetOf(family).sourceCountField]: sourceContainerCount,
+    [targetOf(family).resolvedCountField]: summaries.length,
     [family.summaryField]: summaries,
     issues: issues.map((issue) => ({ ...issue })),
     template,
@@ -174,7 +192,8 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
 
   const source = sourceValue as P15NeutralExportDocumentV1;
   const sourceIrFingerprint = fingerprintP15NeutralExportDocument(source);
-  const sourceContainers = collectP15NeutralContainerNodes(source);
+  const target = targetOf(family);
+  const sourceContainers = target.collect(source);
   const baseGeneration = generateElementorV3TemplateCandidate(source);
   if (baseGeneration.status !== 'GENERATED_LOCAL_CANDIDATE'
     || baseGeneration.template === null
@@ -182,7 +201,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
     return baseResult(family, 'BLOCKED_UPSTREAM_GENERATION', sourceIrFingerprint, null, null, sourceContainers.size, [], [{
       code: code(family, 'UPSTREAM_GENERATION_NOT_READY'),
       path: '$source',
-      message: `${subject} resolution requires an existing review-free generated local candidate.`,
+      message: family.messages?.upstream ?? `${subject} resolution requires an existing review-free generated local candidate.`,
     }], null, null);
   }
 
@@ -196,7 +215,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   if (!isRecord(manifestValue)) {
     issues.push({ code: code(family, 'MANIFEST_NOT_OBJECT'), path: '$manifest', message: `${subject} manifest must be an object.` });
   } else {
-    if (!exactKeys(manifestValue, [...MANIFEST_KEYS, ...(family.leadingAuthorityFlags ?? [])])) {
+    if (!exactKeys(manifestValue, [...MANIFEST_KEYS.filter((key) => key !== 'containers'), target.entriesField, ...(family.leadingAuthorityFlags ?? [])])) {
       issues.push({ code: code(family, 'MANIFEST_FIELDS_INVALID'), path: '$manifest', message: `${subject} manifest contains unknown or missing fields.` });
     }
     if (manifestValue.schemaVersion !== 1 || manifestValue.manifestVersion !== family.manifestVersion) {
@@ -220,12 +239,13 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
       });
     }
 
-    if (!Array.isArray(manifestValue.containers) || manifestValue.containers.length > family.maxEntries) {
-      issues.push({ code: code(family, 'ENTRIES_INVALID'), path: '$manifest.containers', message: `containers must be an array of at most ${family.maxEntries} entries.` });
+    const entries = manifestValue[target.entriesField];
+    if (!Array.isArray(entries) || entries.length > family.maxEntries) {
+      issues.push({ code: code(family, 'ENTRIES_INVALID'), path: `$manifest.${target.entriesField}`, message: `${target.entriesField} must be an array of at most ${family.maxEntries} entries.` });
     } else {
-      for (let index = 0; index < manifestValue.containers.length; index += 1) {
-        const raw: unknown = manifestValue.containers[index];
-        const path = `$manifest.containers[${index}]`;
+      for (let index = 0; index < entries.length; index += 1) {
+        const raw: unknown = entries[index];
+        const path = `$manifest.${target.entriesField}[${index}]`;
         if (!isRecord(raw)
           || !onlyAllowedKeys(raw, family.entryKeys)
           || !(family.requiredEntryKeys ?? []).every((key) => hasOwn(raw, key))
@@ -238,11 +258,12 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
           issues.push({ code: code(family, 'DUPLICATE_SOURCE_ID'), path: `${path}.sourceNodeId`, message: family.messages?.duplicate ?? `${subject} sourceNodeId must be unique.` });
           continue;
         }
-        if (!sourceContainers.has(sourceNodeId)) {
-          issues.push({ code: code(family, 'SOURCE_NOT_CONTAINER'), path: `${path}.sourceNodeId`, message: family.messages?.notContainer ?? `${subject} sourceNodeId must identify an existing neutral container node.` });
+        const node = sourceContainers.get(sourceNodeId);
+        if (node === undefined) {
+          issues.push({ code: code(family, target.notTargetSuffix), path: `${path}.sourceNodeId`, message: family.messages?.notContainer ?? target.notTargetMessage(subject) });
           continue;
         }
-        const parsed = family.parseEntry(raw as Record<string, unknown> & { sourceNodeId: string });
+        const parsed = family.parseEntry(raw as Record<string, unknown> & { sourceNodeId: string }, node);
         if (!parsed.ok) {
           issues.push({ code: code(family, parsed.code), path: `${path}${parsed.pathSuffix ?? ''}`, message: parsed.message });
           continue;
@@ -259,7 +280,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   }
 
   const template = cloneP15ReadyElementorTemplate(baseGeneration.candidate);
-  const binding = bindP15NeutralSourceToGeneratedContainers(source, template);
+  const binding = target.bind(source, template);
   if (binding.issues.length > 0) {
     return rejected(binding.issues.map((issue) => ({
       code: code(family, 'GENERATOR_BINDING_MISMATCH'),
@@ -270,12 +291,12 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
 
   const bindingIssues: ContainerFamilyIssue[] = [];
   for (const [sourceNodeId, entry] of resolutions) {
-    const target = binding.containers.get(sourceNodeId);
-    if (!target || !isRecord(target.settings)) {
-      (family.bindingIssuesLast ? bindingIssues : issues).push({ code: code(family, 'GENERATOR_BINDING_MISMATCH'), path: '$.content', message: family.bindingMissingMessage?.(sourceNodeId) ?? `Generated container binding missing for sourceNodeId ${sourceNodeId}.` });
+    const bound = binding.targets.get(sourceNodeId);
+    if (!bound || !isRecord(bound.settings)) {
+      (family.bindingIssuesLast ? bindingIssues : issues).push({ code: code(family, 'GENERATOR_BINDING_MISMATCH'), path: '$.content', message: family.bindingMissingMessage?.(sourceNodeId) ?? target.bindingMissingMessage(sourceNodeId) });
       continue;
     }
-    const settings = target.settings as Record<string, unknown>;
+    const settings = bound.settings as Record<string, unknown>;
     const precondition = family.precondition?.(settings) ?? null;
     if (precondition) {
       issues.push({ code: code(family, precondition.code), path: `$source.${sourceNodeId}`, message: precondition.message });
@@ -314,7 +335,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
 
   const resolvedIdentity = buildElementorTemplateCandidateIdentity(candidate);
   const summaries = [...resolutions.values()]
-    .map((entry) => family.summarize(entry))
+    .map((entry) => family.summarize(entry, sourceContainers.get(entry.sourceNodeId)))
     .sort((left, right) => left.sourceNodeId.localeCompare(right.sourceNodeId));
   return baseResult(family, family.statuses.resolved, sourceIrFingerprint, baseIdentity.digest, resolvedIdentity.digest, sourceContainers.size, summaries, [], template, candidate);
 }
@@ -325,21 +346,24 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
   result: ContainerFamilyResult,
 ): string {
   const family = typedFamily as unknown as AnyFamily;
+  const target = targetOf(family);
+  const sourceCount = result[target.sourceCountField] as number;
+  const resolvedCount = result[target.resolvedCountField] as number;
   const summaries = result[family.summaryField];
   const list = Array.isArray(summaries) ? summaries as Array<{ sourceNodeId: string }> : null;
-  const issueCodes = new Set<string>([...ISSUE_SUFFIXES, ...(family.extraIssueSuffixes ?? [])].map((suffix) => code(family, suffix)));
+  const issueCodes = new Set<string>([...ISSUE_SUFFIXES, target.notTargetSuffix, ...(family.extraIssueSuffixes ?? [])].map((suffix) => code(family, suffix)));
   const validStatus = result.status === 'BLOCKED_INVALID_SOURCE_IR'
     || result.status === 'BLOCKED_UPSTREAM_GENERATION'
     || result.status === 'REJECTED_INVALID_MANIFEST'
     || result.status === family.statuses.none
     || result.status === family.statuses.resolved;
   const validCounts = list !== null
-    && Number.isSafeInteger(result.sourceContainerCount)
-    && result.sourceContainerCount >= 0
-    && Number.isSafeInteger(result.resolvedContainerCount)
-    && result.resolvedContainerCount >= 0
-    && result.resolvedContainerCount <= result.sourceContainerCount
-    && result.resolvedContainerCount === list.length;
+    && Number.isSafeInteger(sourceCount)
+    && sourceCount >= 0
+    && Number.isSafeInteger(resolvedCount)
+    && resolvedCount >= 0
+    && resolvedCount <= sourceCount
+    && resolvedCount === list.length;
   const uniqueIds = list !== null && new Set(list.map((entry) => entry.sourceNodeId)).size === list.length;
   const validSourceFingerprint = result.status === 'BLOCKED_INVALID_SOURCE_IR'
     ? result.sourceIrFingerprint === null
@@ -354,10 +378,10 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     ? validFingerprint(result.resolvedCandidateIdentityDigest)
     : result.resolvedCandidateIdentityDigest === null;
   const statusShapeValid = result.status === family.statuses.resolved
-    ? result.resolvedContainerCount > 0 && result.baseCandidateIdentityDigest !== result.resolvedCandidateIdentityDigest
+    ? resolvedCount > 0 && result.baseCandidateIdentityDigest !== result.resolvedCandidateIdentityDigest
     : result.status === family.statuses.none
-      ? result.resolvedContainerCount === 0 && result.baseCandidateIdentityDigest === result.resolvedCandidateIdentityDigest
-      : result.resolvedContainerCount === 0;
+      ? resolvedCount === 0 && result.baseCandidateIdentityDigest === result.resolvedCandidateIdentityDigest
+      : resolvedCount === 0;
   const validIssues = result.issues.every((issue) => isRecord(issue)
     && typeof issue.code === 'string'
     && issueCodes.has(issue.code)
@@ -393,8 +417,8 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     sourceIrFingerprint: result.sourceIrFingerprint,
     baseCandidateIdentityDigest: result.baseCandidateIdentityDigest,
     resolvedCandidateIdentityDigest: result.resolvedCandidateIdentityDigest,
-    sourceContainerCount: result.sourceContainerCount,
-    resolvedContainerCount: result.resolvedContainerCount,
+    [target.sourceCountField]: sourceCount,
+    [target.resolvedCountField]: resolvedCount,
     [family.summaryField]: list ?? [],
     issues: result.issues.map((issue) => ({ code: issue.code, path: issue.path })),
     evidence: family.evidence,

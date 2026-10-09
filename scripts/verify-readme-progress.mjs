@@ -402,8 +402,8 @@ const p15HeadingTextColorRequiredFragments = [
   "settingKey: 'title_color'",
   "hoverControlName: 'title_hover_color'",
   "acceptedColorPattern: '^#[0-9a-f]{6}$'",
-  "validColor",
-  "target.settings[P15_ELEMENTOR_HEADING_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
+  "fields: [{ field: 'color', codec: lowerHexColorCodec }]",
+  "settingKey: EVIDENCE.settingKey,\n    value: entry.color,",
   "colorInferencePerformed: false",
 ];
 for (const fragment of p15HeadingTextColorRequiredFragments) {
@@ -429,9 +429,9 @@ const p15TextEditorTextColorRequiredFragments = [
   "linkControlName: 'link_color'",
   "acceptedColorPattern:",
   "^#[0-9a-f]{6}$",
-  "validColor",
-  "settings.editor !== expectedTextEditorHtml(node.text)",
-  "target.settings[P15_ELEMENTOR_TEXT_EDITOR_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
+  "fields: [{ field: 'color', codec: lowerHexColorCodec }]",
+  "matches: (node, settings) => textEditorBaseSettingsMatch(node as P15NeutralTextNode, settings)",
+  "settingKey: EVIDENCE.settingKey,\n    value: entry.color,",
   "colorInferencePerformed: false",
 ];
 for (const fragment of p15TextEditorTextColorRequiredFragments) {

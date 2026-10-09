@@ -2,8 +2,8 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: bfaa992daebb32554debffef21076a44c9aaa085
-observed_main_sha_semantics: exact_main_tip_observed_at_product_recovery_alignment_2026_10_08
+observed_main_sha: cd2ce1db02969b8d082aac4e40cecb8c257ed410
+observed_main_sha_semantics: exact_main_tip_observed_after_pr_897_merge_2026_10_09
 observed_main_branch: main
 active_issue: 846
 active_pr: null
@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
 last_completed_milestone: product_recovery_m0_accepted_pr_895_merged_f18240e
-exact_next_safe_action: open_pr_for_M1_3b_to_M1_3d_when_user_requests_else_execute_recovery_task_M1_4_widget_families_golden_baseline_then_engine_switch
+exact_next_safe_action: execute_recovery_task_M1_4b_button_colour_content_families_golden_baseline_then_engine_switch
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
@@ -92,8 +92,8 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M1
-  next_task: M1.4
-  last_completed_task: M1.3d
+  next_task: M1.4b
+  last_completed_task: M1.4a
   blocked_tasks: []
   branch: claude/youthful-ritchie-uch0qp
   open_pr: null
