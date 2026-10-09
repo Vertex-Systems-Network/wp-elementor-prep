@@ -111,7 +111,8 @@ export interface P15ElementorResponsiveWrapResultV1 {
   internalReviewRequired: true;
 }
 
-const P15_ELEMENTOR_RESPONSIVE_WRAP_FAMILY = responsiveEnumFamily({
+/** Responsive wrap as an engine family; also the chained prerequisite of align-content. */
+export const P15_ELEMENTOR_RESPONSIVE_WRAP_FAMILY = responsiveEnumFamily({
   id: 'responsive-wrap',
   issuePrefix: 'P15_RESPONSIVE_WRAP',
   subject: 'Responsive wrap',

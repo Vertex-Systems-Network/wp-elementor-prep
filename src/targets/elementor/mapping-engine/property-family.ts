@@ -23,17 +23,44 @@ export interface FamilyEvidence {
   readonly [key: string]: unknown;
 }
 
-/** Parsing outcome for one manifest entry, after the engine's shared envelope checks. */
+/** One refusal of a manifest entry, after the engine's shared envelope checks. */
+export interface FamilyEntryFailure {
+  /** Issue suffix: a shared one, or one listed in the family's `extraIssueSuffixes`. */
+  code: 'ENTRY_INVALID' | 'OVERRIDE_REQUIRED' | 'VALUE_INVALID' | string;
+  message: string;
+  /** Appended to the entry path, e.g. `.contentWidthMode`. */
+  pathSuffix?: string;
+}
+
+/** Parsing outcome for one manifest entry: accepted, or refused with one or several issues. */
 export type FamilyEntryParse<Entry> =
   | { ok: true; entry: Entry }
-  | {
-    ok: false;
-    /** Issue suffix: a shared one, or one listed in the family's `extraIssueSuffixes`. */
-    code: 'ENTRY_INVALID' | 'OVERRIDE_REQUIRED' | 'VALUE_INVALID' | string;
-    message: string;
-    /** Appended to the entry path, e.g. `.contentWidthMode`. */
-    pathSuffix?: string;
-  };
+  | ({ ok: false } & FamilyEntryFailure)
+  | { ok: false; failures: readonly FamilyEntryFailure[] };
+
+/**
+ * A chained family binds to another family's resolved candidate instead of the generated base, for
+ * example align-content on the exact responsive-wrap result. The engine resolves the prerequisite
+ * family first, blocks unless it is ready, binds the manifest to the prerequisite's resolved
+ * candidate digest, writes on top of that candidate and passes the prerequisite result to `parseEntry`.
+ */
+export interface FamilyChain {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly prerequisite: ContainerPropertyFamily<any, any>;
+  /** Result field reporting the prerequisite status, right after `status`. */
+  readonly statusField: string;
+  /** Manifest/result field that replaces `baseCandidateIdentityDigest`, e.g. `wrappedCandidateIdentityDigest`. */
+  readonly digestField: string;
+  /** Issue suffix stem for that digest, e.g. `WRAPPED_CANDIDATE_IDENTITY` (→ `_INVALID` / `_MISMATCH`). */
+  readonly digestIssueStem: string;
+  /** Noun in the digest mismatch message, e.g. `wrapped candidate`. */
+  readonly baseNoun: string;
+  /** Status, issue suffix, path and message when the prerequisite is not ready. */
+  readonly blockedStatus: string;
+  readonly blockedSuffix: string;
+  readonly blockedPath: string;
+  readonly blockedMessage: string;
+}
 
 /** One setting write for an accepted entry; the engine refuses it when the key already exists. */
 export interface FamilySettingWrite {
@@ -100,6 +127,8 @@ export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string },
   readonly serializerId?: string;
   /** Bound target kind; defaults to generated containers. */
   readonly target?: FamilyTarget;
+  /** Base on another family's resolved candidate instead of the generated base. */
+  readonly chain?: FamilyChain;
   /** Issue code prefix, e.g. `P15_RESPONSIVE_GAP`. */
   readonly issuePrefix: string;
   /** Sentence-case subject used in shared messages, e.g. `Responsive gap`. */
@@ -143,8 +172,9 @@ export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string },
   precondition?(settings: Record<string, unknown>): FamilyPreconditionFailure | null;
   /** Codecs this family encodes with, declared for inventory and capability reporting. */
   readonly codecs: readonly ValueCodec<unknown>[];
-  /** `node` is the collected neutral source node the entry targets. */
-  parseEntry(raw: Record<string, unknown> & { sourceNodeId: string }, node: unknown): FamilyEntryParse<Entry>;
+  /** `node` is the collected neutral source node; `prerequisite` is the chained prerequisite result, if any. */
+  parseEntry(raw: Record<string, unknown> & { sourceNodeId: string }, node: unknown,
+    prerequisite?: Readonly<Record<string, unknown>>): FamilyEntryParse<Entry>;
   writes(entry: Entry): FamilySettingWrite[];
   summarize(entry: Entry, node?: unknown): Summary;
   validSummary(summary: Summary): boolean;

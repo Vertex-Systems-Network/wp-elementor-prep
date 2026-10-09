@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
 last_completed_milestone: product_recovery_m0_accepted_pr_895_merged_f18240e_m1_4_merged_pr_898_832c254
-exact_next_safe_action: execute_recovery_task_M1_5b_responsive_chaining_then_M1_5c_M1_5d_dependabot_890_892_893_need_consolidated_pin_update_train
+exact_next_safe_action: execute_recovery_task_M1_5c_container_compositions_then_M1_5d_dependabot_890_892_893_need_consolidated_pin_update_train
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
@@ -92,8 +92,8 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M1
-  next_task: M1.5b
-  last_completed_task: M1.5a
+  next_task: M1.5c
+  last_completed_task: M1.5b
   blocked_tasks: []
   branch: claude/friendly-turing-acwu53
   open_pr: null

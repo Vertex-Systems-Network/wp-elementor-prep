@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.5b** (responsive chaining; align-content chained on wrap)
-> - Last completed task: **M1.5a** (one ordered composer; container-style and button-colour compositions on it; 111/111 golden cases identical)
+> - Next task: **M1.5c** (box-shadow, linear/radial gradient, overlay visual and hover transition onto the engine/composer)
+> - Last completed task: **M1.5b** (chained engine families; align-content chained on wrap; 148/148 golden cases identical)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -231,7 +231,10 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - `container-style-composition` (8 families) and `button-color-composition` (5 families) are now composer specs. They went from 438 lines to 157, plus the 282-line shared composer.
     - Hardening: each family's template must equal its own candidate, and its resolved status must be that family's own status, not any family's. Real resolvers already satisfy both, so outputs are unchanged.
     - Golden equivalence: 111/111 cases recorded from the original compositions (commit `ceec371`) are identical. `tests/m1-composer.test.ts` covers the ordering, ownership, drift and serializer refusals the public compositions cannot reach.
-  - [ ] **M1.5b** responsive chaining: a step may take the previous step's resolved candidate as its base. Move align-content onto it, chained on the wrap result.
+  - [x] **M1.5b** responsive chaining _(done 2026-10-09):_
+    - The engine now supports chained families (`FamilyChain` in `property-family.ts`). A chained family names a prerequisite family. The engine resolves that family first and blocks unless it is ready. It binds the manifest to the prerequisite's exact resolved candidate digest, writes on top of that candidate and gives the prerequisite result to `parseEntry`. An entry refusal may now carry several issues.
+    - Align-content is a chained family on responsive wrap (`BLOCKED_WRAP_PREREQUISITE`, `wrappedCandidateIdentityDigest`, `WRAP_REQUIRED` per breakpoint). The resolver went from 771 lines to 216.
+    - Golden equivalence: 148/148 cases recorded from the original resolver (commit `4b2ea19`), across four wrap prerequisites (wrap on both breakpoints, tablet only, none, invalid), are identical.
   - [ ] **M1.5c** container compositions: box-shadow, linear and radial gradient, overlay visual and hover transition, each on the engine or composer with its own golden baseline.
   - [ ] **M1.5d** cross-composition: one composer call can apply container-style, button-colour and the responsive layout families to one tree.
 - [ ] **M1.6** Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.

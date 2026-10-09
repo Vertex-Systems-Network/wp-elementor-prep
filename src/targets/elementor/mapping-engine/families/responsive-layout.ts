@@ -1,6 +1,8 @@
 import { enumCodec, type ValueCodec } from '../codecs';
 import type {
   ContainerPropertyFamily,
+  FamilyChain,
+  FamilyEntryFailure,
   FamilyEvidence,
   FamilyMessageOverrides,
   FamilyPreconditionFailure,
@@ -62,12 +64,16 @@ export interface ResponsiveEnumFamilyMeta {
   precondition?: (settings: Record<string, unknown>) => FamilyPreconditionFailure | null;
   /** Bound target kind (default: generated containers). */
   target?: FamilyTarget;
+  /** Base on a prerequisite family's resolved candidate (e.g. align-content on wrap). */
+  chain?: FamilyChain;
+  /** Checked after value validation against the chained prerequisite result; any failure refuses the entry. */
+  prerequisiteCheck?: (entry: EnumEntry, prerequisite: Readonly<Record<string, unknown>>) => FamilyEntryFailure[];
   leadingAuthorityFlags?: readonly string[];
   omittedAuthorityFlags?: readonly string[];
   serializerId?: string;
 }
 
-type EnumEntry = { sourceNodeId: string } & Record<string, unknown>;
+export type EnumEntry = { sourceNodeId: string } & Record<string, unknown>;
 
 /** Explicit per-breakpoint field family; the factory behind every scalar/enum responsive family. */
 export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerPropertyFamily<EnumEntry, EnumEntry> {
@@ -77,6 +83,7 @@ export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerP
   return {
     id: meta.id,
     ...(meta.target ? { target: meta.target } : {}),
+    ...(meta.chain ? { chain: meta.chain } : {}),
     ...(meta.leadingAuthorityFlags ? { leadingAuthorityFlags: meta.leadingAuthorityFlags } : {}),
     ...(meta.omittedAuthorityFlags ? { omittedAuthorityFlags: meta.omittedAuthorityFlags } : {}),
     ...(meta.serializerId ? { serializerId: meta.serializerId } : {}),
@@ -97,7 +104,7 @@ export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerP
     ...(meta.extraIssueSuffixes ? { extraIssueSuffixes: meta.extraIssueSuffixes } : {}),
     ...(meta.precondition ? { precondition: meta.precondition } : {}),
     codecs: [...new Set(meta.fields.map((spec) => spec.codec))],
-    parseEntry(raw) {
+    parseEntry(raw, _node, prerequisite) {
       for (const spec of required) {
         if (raw[spec.field] !== spec.value) return { ok: false, code: spec.code, message: spec.message, pathSuffix: `.${spec.field}` };
       }
@@ -110,6 +117,8 @@ export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerP
       const entry: EnumEntry = { sourceNodeId: raw.sourceNodeId };
       for (const spec of required) entry[spec.field] = spec.value;
       for (const spec of provided) entry[spec.field] = raw[spec.field];
+      const failures = meta.prerequisiteCheck && prerequisite ? meta.prerequisiteCheck(entry, prerequisite) : [];
+      if (failures.length > 0) return { ok: false, failures };
       return { ok: true, entry };
     },
     writes(entry) {
