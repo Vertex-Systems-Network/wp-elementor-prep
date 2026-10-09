@@ -446,7 +446,12 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     : result.status === family.statuses.none
       ? resolvedCount === 0 && baseDigest === result.resolvedCandidateIdentityDigest
       : resolvedCount === 0;
-  const validIssues = result.issues.every((issue) => isRecord(issue)
+  const accepted = result.status === family.statuses.none || result.status === family.statuses.resolved;
+  const validIssues = Array.isArray(result.issues)
+    && (accepted ? result.issues.length === 0 : result.issues.length > 0)
+    && result.issues.every((issue) => isRecord(issue)
+    && exactKeys(issue, ['code', 'message', 'path'])
+    && typeof issue.message === 'string'
     && typeof issue.code === 'string'
     && issueCodes.has(issue.code)
     && typeof issue.path === 'string'

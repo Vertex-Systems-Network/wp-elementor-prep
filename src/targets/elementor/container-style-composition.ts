@@ -76,7 +76,7 @@ export const P15_CONTAINER_STYLE_COMPOSITION: CompositionSpec<P15ContainerStyleF
       ['background_overlay_background', 'background_overlay_color', 'background_overlay_opacity', 'background_overlay_opacity_tablet', 'background_overlay_opacity_mobile']),
     hoverOverlay: step(resolveP15ElementorContainerHoverOverlayColor, 'CONTAINER_HOVER_OVERLAY_COLOR_RESOLVED',
       ['background_overlay_hover_background', 'background_overlay_hover_color', 'background_overlay_hover_opacity', 'background_overlay_hover_opacity_tablet', 'background_overlay_hover_opacity_mobile']),
-    boxShadows: step(resolveP15ContainerBoxShadows, 'RESOLVED',
+    boxShadows: step(resolveP15ContainerBoxShadows, 'CONTAINER_BOX_SHADOWS_RESOLVED',
       ['box_shadow_box_shadow_type', 'box_shadow_box_shadow', 'box_shadow_box_shadow_position',
         'box_shadow_hover_box_shadow_type', 'box_shadow_hover_box_shadow', 'box_shadow_hover_box_shadow_position']),
     hoverBackground: step(resolveP15ElementorContainerHoverBackgroundColor, 'CONTAINER_HOVER_BACKGROUND_COLOR_RESOLVED',

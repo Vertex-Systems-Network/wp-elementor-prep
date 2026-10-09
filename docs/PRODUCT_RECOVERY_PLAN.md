@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.5c** (box-shadow, linear/radial gradient, overlay visual and hover transition onto the engine/composer)
-> - Last completed task: **M1.5b** (chained engine families; align-content chained on wrap; 148/148 golden cases identical)
+> - Next task: **M1.5d** (cross-composition), then **M1.5e** container gradient and **M1.5f** overlay visual target repairs
+> - Last completed task: **M1.5c** (box-shadow and hover transition on the engine; identical writes)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -224,7 +224,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - `button-color-composition` moves to M1.5 with the other compositions.
   - M1.4 totals: 21 widget resolvers on the engine, with 821 golden cases identical.
   - Not property families, so outside M1: `image-asset-resolution.ts` and `semantic-resolution.ts` rewrite the neutral IR before generation; they do not write Elementor settings.
-- [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain. Also absorbs align-content (chained on wrap) and the container compositions moved from M1.3d: box-shadow, linear/radial gradient, overlay visual, hover transition and `container-style-composition`. This is split into M1.5a–d, and each part ships its golden baseline before the switch:
+- [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain. Also absorbs align-content (chained on wrap) and the container compositions moved from M1.3d: box-shadow, linear/radial gradient, overlay visual, hover transition and `container-style-composition`. This is split into M1.5a–f, and each part ships its golden baseline before the switch:
   - [x] **M1.5a** ordered composer _(done 2026-10-09):_
     - `mapping-engine/composer.ts` holds one ordered composer (`composeFamilies`, `serializeCompositionSummary`). Each family still runs its own exact resolver. The composer applies the families in spec order, whatever the manifest key order, and merges only allowlisted new keys. It has two merge strategies: through the container binding, or a whole-tree walk that only lets accepted widget kinds change.
     - Key ownership is single: a key belongs to the base candidate or to exactly one family. A second writer is a `KEY_CONFLICT`, never an overwrite.
@@ -235,8 +235,18 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - The engine now supports chained families (`FamilyChain` in `property-family.ts`). A chained family names a prerequisite family. The engine resolves that family first and blocks unless it is ready. It binds the manifest to the prerequisite's exact resolved candidate digest, writes on top of that candidate and gives the prerequisite result to `parseEntry`. An entry refusal may now carry several issues.
     - Align-content is a chained family on responsive wrap (`BLOCKED_WRAP_PREREQUISITE`, `wrappedCandidateIdentityDigest`, `WRAP_REQUIRED` per breakpoint). The resolver went from 771 lines to 216.
     - Golden equivalence: 148/148 cases recorded from the original resolver (commit `4b2ea19`), across four wrap prerequisites (wrap on both breakpoints, tablet only, none, invalid), are identical.
-  - [ ] **M1.5c** container compositions: box-shadow, linear and radial gradient, overlay visual and hover transition, each on the engine or composer with its own golden baseline.
+  - [x] **M1.5c** box-shadow and hover transition _(done 2026-10-09):_
+    - Both are engine families: box-shadow on the new normal/hover `statePairFamily` factory (`mapping-engine/families/state-pair.ts`), and hover transition on the enum factory with an exact seconds codec. They went from 282 lines to 245, and the old ad-hoc result shapes are gone.
+    - Contract: each publishes the standard engine result under a new result version (`p15-container-box-shadow-result-v2`, `p15-elementor-container-hover-transition-result-v2`). The v1 manifests are unchanged. `container-style-composition` now expects `CONTAINER_BOX_SHADOWS_RESOLVED`.
+    - Write equivalence: the baseline (commit `1670b0c`) records which corpus cases each original accepted and the exact settings it wrote. The engine versions accept the same cases and write identical settings, with a candidate that always matches the template. The one deliberate change: an empty transition entry list is a no-op (`NO_*_OVERRIDES`), not an invalid manifest. The 111 composition goldens are still identical.
+    - The shared engine serializer is stricter: issues must be exactly `code`/`path`/`message`, accepted results carry no issues and refusals at least one. Every existing golden still passes.
   - [ ] **M1.5d** cross-composition: one composer call can apply container-style, button-colour and the responsive layout families to one tree.
+  - [ ] **M1.5e** container gradient target repair. The R0 check of Elementor 4.2.4 `includes/controls/groups/background.php` (blob `ac8e1a5`, matching the recorded evidence) shows `color_stop`/`color_b_stop` are SLIDER controls (`{unit:'%', size}`), and the gradient CSS reads `{{color_stop.SIZE}}{{color_stop.UNIT}}`. The container linear/radial compositions write bare numbers, and the radial one returns a candidate that does not match its template, so a downloaded artifact would keep `linear`. Re-base both on the proven button gradient codec and writes (`families/button-gradient.ts`, prefixes `background`/`background_hover`), with integer stops, stopA ≤ stopB and paired responsive stops. The write baselines `tests/golden/m1-container-{linear,radial}-gradient-writes.golden.json` are the "before" record, and the diff must be exactly the documented encoding change.
+  - [ ] **M1.5f** overlay visual target repair. The R0 check of Elementor 4.2.4 (`includes/controls/groups/css-filter.php` blob `5ab0523`, `includes/controls/groups/base.php` blob `6117c06` line 324, `includes/elements/container.php` blob `3486766` lines 834–890 and 971–976) shows three problems:
+    1. Every CSS-filter field is conditioned on `<group>_css_filter` being non-empty, and the composition never writes `css_filters_css_filter` / `css_filters_hover_css_filter`.
+    2. The normal `css_filters` and `overlay_blend_mode` apply only with an overlay colour or image, which is never checked.
+    3. The filter sliders are declared in `px` only, but `%`/`deg` units are written.
+    It also skips the fingerprint, base-identity and authority-flag manifest checks and accepts unknown entry keys. Rebuild it as an engine family chained on the overlay-colour family (M1.5b chaining), with a new manifest version.
 - [ ] **M1.6** Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.
 - [ ] **M1.7** M1 sync. Update `verify-readme-progress.mjs` so it no longer reads deleted resolver files, and replace those checks with engine-table checks.
 

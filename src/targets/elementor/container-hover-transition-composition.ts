@@ -1,12 +1,17 @@
-import { buildElementorTemplateCandidateArtifact, type ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
-import { buildElementorTemplateCandidateIdentity } from './import-validation-contract';
-import { validateP15NeutralExportDocument, type P15NeutralExportDocumentV1 } from './neutral-export-ir';
-import { fingerprintP15NeutralExportDocument } from './neutral-export-ir-identity';
-import { bindP15NeutralSourceToGeneratedContainers, cloneP15ReadyElementorTemplate, collectP15NeutralContainerNodes } from './responsive-container-binding';
+import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
+import {
+  resolveContainerPropertyFamily,
+  serializeContainerPropertyFamilySummary,
+  type ContainerFamilyIssue,
+  type ContainerFamilyResult,
+} from './mapping-engine/container-family-engine';
+import type { ValueCodec } from './mapping-engine/codecs';
+import { responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
 import type { ElementorTemplateV04 } from './template-v04';
-import { generateElementorV3TemplateCandidate } from './v3-template-generator';
 
 export const P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION = 'p15-elementor-container-hover-transition-manifest-v1' as const;
+/** The standard engine result (recovery M1.5c); the v1 manifest and every write are unchanged. */
+export const P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_RESULT_VERSION = 'p15-elementor-container-hover-transition-result-v2' as const;
 export const P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_EVIDENCE = Object.freeze({
   elementorVersion: '4.2.4', elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d',
   containerSourcePath: 'includes/elements/container.php', containerSourceBlobSha: '3486766b9565af99536ae205ed1936bb155daed0',
@@ -17,21 +22,89 @@ export const P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_EVIDENCE = Object.freeze({
 export const P15_CONTAINER_HOVER_TRANSITION_FAMILIES = ['backgroundHover', 'overlayHover', 'borderHover'] as const;
 export type P15ContainerHoverTransitionFamily = typeof P15_CONTAINER_HOVER_TRANSITION_FAMILIES[number];
 export interface P15ContainerHoverTransitionEntryV1 { sourceNodeId: string; backgroundHover?: number; overlayHover?: number; borderHover?: number; }
-export interface P15ContainerHoverTransitionManifestV1 { schemaVersion: 1; manifestVersion: typeof P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION; sourceIrFingerprint: string; baseCandidateIdentityDigest: string; containers: P15ContainerHoverTransitionEntryV1[]; transitionInferencePerformed: false; responsiveInferencePerformed: false; figmaMutation: false; networkAccess: false; responsiveClosureClaim: false; targetCompatibilityClaim: false; productionAcceptance: false; downloadEnabled: false; }
-export interface P15ContainerHoverTransitionResultV1 { schemaVersion: 1; manifestVersion: typeof P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION; status: 'BLOCKED'|'REJECTED'|'RESOLVED'; sourceIrFingerprint: string|null; baseCandidateIdentityDigest: string|null; resolvedCandidateIdentityDigest: string|null; resolvedTransitions: P15ContainerHoverTransitionEntryV1[]; issues: string[]; template: ElementorTemplateV04|null; candidate: ElementorTemplateCandidateArtifactV1|null; transitionInferencePerformed: false; responsiveInferencePerformed: false; figmaMutation: false; networkAccess: false; responsiveClosureClaim: false; targetCompatibilityClaim: false; productionAcceptance: false; downloadEnabled: false; internalReviewRequired: true; }
-const rec = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
-const finiteDuration = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= 3 && Math.round(v * 10) === v * 10;
-const digest = (v: unknown): v is string => typeof v === 'string' && /^sha256:[0-9a-f]{64}$/.test(v);
-const entryKeys = ['sourceNodeId', 'backgroundHover', 'overlayHover', 'borderHover'] as const;
-function exactKeys(value: Record<string, unknown>, allowed: readonly string[]): boolean { return Object.keys(value).every(k => allowed.includes(k as never)); }
-function result(status: P15ContainerHoverTransitionResultV1['status'], source: string|null, base: string|null, issue: string, template: ElementorTemplateV04|null = null, candidate: ElementorTemplateCandidateArtifactV1|null = null, resolved: P15ContainerHoverTransitionEntryV1[] = []): P15ContainerHoverTransitionResultV1 { return { schemaVersion:1, manifestVersion:P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION, status, sourceIrFingerprint:source, baseCandidateIdentityDigest:base, resolvedCandidateIdentityDigest:candidate ? buildElementorTemplateCandidateIdentity(candidate).digest : null, resolvedTransitions:resolved.map(x=>({...x})), issues:issue?[issue]:[], template,candidate, transitionInferencePerformed:false,responsiveInferencePerformed:false,figmaMutation:false,networkAccess:false,responsiveClosureClaim:false,targetCompatibilityClaim:false,productionAcceptance:false,downloadEnabled:false,internalReviewRequired:true }; }
-export function resolveP15ElementorContainerHoverTransitions(sourceValue: unknown, manifestValue: unknown): P15ContainerHoverTransitionResultV1 {
-  const validation = validateP15NeutralExportDocument(sourceValue); if (!validation.valid) return result('BLOCKED',null,null,'SOURCE_IR_INVALID');
-  const source = sourceValue as P15NeutralExportDocumentV1; const fingerprint = fingerprintP15NeutralExportDocument(source); const generated = generateElementorV3TemplateCandidate(source); if (!generated.candidate || !generated.template) return result('BLOCKED',fingerprint,null,'BASE_NOT_READY'); const base = buildElementorTemplateCandidateIdentity(generated.candidate).digest;
-  const required = ['baseCandidateIdentityDigest','containers','downloadEnabled','figmaMutation','manifestVersion','networkAccess','productionAcceptance','responsiveClosureClaim','responsiveInferencePerformed','schemaVersion','sourceIrFingerprint','targetCompatibilityClaim','transitionInferencePerformed'];
-  if (!rec(manifestValue) || !exactKeys(manifestValue, required) || Object.keys(manifestValue).length !== required.length || manifestValue.schemaVersion!==1 || manifestValue.manifestVersion!==P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION || manifestValue.sourceIrFingerprint!==fingerprint || manifestValue.baseCandidateIdentityDigest!==base || manifestValue.transitionInferencePerformed!==false || manifestValue.responsiveInferencePerformed!==false || manifestValue.figmaMutation!==false || manifestValue.networkAccess!==false || manifestValue.responsiveClosureClaim!==false || manifestValue.targetCompatibilityClaim!==false || manifestValue.productionAcceptance!==false || manifestValue.downloadEnabled!==false || !Array.isArray(manifestValue.containers) || !manifestValue.containers.length) return result('REJECTED',fingerprint,base,'MANIFEST_INVALID');
-  const ids = new Set(collectP15NeutralContainerNodes(source).keys()); const binding = bindP15NeutralSourceToGeneratedContainers(source, cloneP15ReadyElementorTemplate(generated.candidate)); if (binding.issues.length) return result('REJECTED',fingerprint,base,'BINDING_MISMATCH'); const target = cloneP15ReadyElementorTemplate(generated.candidate); const targetBinding = bindP15NeutralSourceToGeneratedContainers(source,target); const seen = new Set<string>(); const resolved: P15ContainerHoverTransitionEntryV1[] = [];
-  for (const raw of manifestValue.containers) { if (!rec(raw) || !exactKeys(raw,entryKeys) || typeof raw.sourceNodeId!=='string' || !ids.has(raw.sourceNodeId) || seen.has(raw.sourceNodeId) || !Object.keys(raw).some(k=>k!=='sourceNodeId') || (raw.backgroundHover!==undefined&&!finiteDuration(raw.backgroundHover)) || (raw.overlayHover!==undefined&&!finiteDuration(raw.overlayHover)) || (raw.borderHover!==undefined&&!finiteDuration(raw.borderHover))) return result('REJECTED',fingerprint,base,'ENTRY_INVALID'); seen.add(raw.sourceNodeId); const node=targetBinding.containers.get(raw.sourceNodeId); if(!node||!rec(node.settings)) return result('REJECTED',fingerprint,base,'BINDING_MISMATCH'); const patches: Record<string, number|undefined>={background_hover_transition:raw.backgroundHover,background_overlay_hover_transition:raw.overlayHover,border_hover_transition:raw.borderHover}; for(const [key,value] of Object.entries(patches)){if(value===undefined)continue; if(Object.prototype.hasOwnProperty.call(node.settings,key)) return result('REJECTED',fingerprint,base,'EXISTING_OVERRIDE_CONFLICT'); node.settings[key]={size:value,unit:'s'};} resolved.push({sourceNodeId:raw.sourceNodeId,...(raw.backgroundHover!==undefined?{backgroundHover:raw.backgroundHover}:{}),...(raw.overlayHover!==undefined?{overlayHover:raw.overlayHover}:{}),...(raw.borderHover!==undefined?{borderHover:raw.borderHover}:{})}); }
-  const candidate=buildElementorTemplateCandidateArtifact(target); if(candidate.status!=='READY_FOR_TARGET_IMPORT_VALIDATION'||!candidate.validation.valid)return result('REJECTED',fingerprint,base,'TARGET_INVALID'); return result('RESOLVED',fingerprint,base,'',target,candidate,resolved);
+export interface P15ContainerHoverTransitionManifestV1 {
+  schemaVersion: 1;
+  manifestVersion: typeof P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION;
+  sourceIrFingerprint: string;
+  baseCandidateIdentityDigest: string;
+  containers: P15ContainerHoverTransitionEntryV1[];
+  transitionInferencePerformed: false;
+  responsiveInferencePerformed: false;
+  figmaMutation: false;
+  networkAccess: false;
+  responsiveClosureClaim: false;
+  targetCompatibilityClaim: false;
+  productionAcceptance: false;
+  downloadEnabled: false;
 }
-export function serializeP15ElementorContainerHoverTransitionSummary(value: P15ContainerHoverTransitionResultV1): string { if(value.schemaVersion!==1||value.manifestVersion!==P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION||!['BLOCKED','REJECTED','RESOLVED'].includes(value.status)||value.status==='RESOLVED'&&(!value.resolvedTransitions.length||value.issues.length)||value.transitionInferencePerformed!==false||value.targetCompatibilityClaim!==false||value.productionAcceptance!==false||value.downloadEnabled!==false)throw new Error('Invalid transition summary'); return JSON.stringify({schemaVersion:1,manifestVersion:value.manifestVersion,status:value.status,sourceIrFingerprint:value.sourceIrFingerprint,baseCandidateIdentityDigest:value.baseCandidateIdentityDigest,resolvedCandidateIdentityDigest:value.resolvedCandidateIdentityDigest,resolvedTransitions:value.resolvedTransitions,issues:value.issues,transitionInferencePerformed:false,responsiveInferencePerformed:false,figmaMutation:false,networkAccess:false,responsiveClosureClaim:false,targetCompatibilityClaim:false,productionAcceptance:false,downloadEnabled:false,internalReviewRequired:true},null,2)+'\n'; }
+export interface P15ContainerHoverTransitionSummaryEntryV2 {
+  sourceNodeId: string;
+  backgroundHover: number | null;
+  overlayHover: number | null;
+  borderHover: number | null;
+}
+export interface P15ContainerHoverTransitionResultV2 {
+  schemaVersion: 1;
+  resultVersion: typeof P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_RESULT_VERSION;
+  status: 'BLOCKED_INVALID_SOURCE_IR' | 'BLOCKED_UPSTREAM_GENERATION' | 'REJECTED_INVALID_MANIFEST'
+    | 'NO_CONTAINER_HOVER_TRANSITION_OVERRIDES' | 'CONTAINER_HOVER_TRANSITIONS_RESOLVED';
+  sourceIrFingerprint: string | null;
+  baseCandidateIdentityDigest: string | null;
+  resolvedCandidateIdentityDigest: string | null;
+  sourceContainerCount: number;
+  resolvedContainerCount: number;
+  resolvedTransitions: P15ContainerHoverTransitionSummaryEntryV2[];
+  issues: ContainerFamilyIssue[];
+  template: ElementorTemplateV04 | null;
+  candidate: ElementorTemplateCandidateArtifactV1 | null;
+  transitionInferencePerformed: false;
+  responsiveInferencePerformed: false;
+  figmaMutation: false;
+  networkAccess: false;
+  responsiveClosureClaim: false;
+  targetCompatibilityClaim: false;
+  productionAcceptance: false;
+  downloadEnabled: false;
+  internalReviewRequired: true;
+}
+
+/** Seconds 0..3 in exact 0.1 steps, the Elementor 4.2.4 slider range; written as `{ size, unit: 's' }`. */
+const secondsCodec: ValueCodec<number, { size: number; unit: 's' }> = {
+  id: 'seconds:0..3/0.1',
+  is: (value): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 3
+    && Math.round(value * 10) === value * 10,
+  snapshot: (value) => value,
+  encode: (value) => ({ size: value, unit: 's' }),
+};
+
+const [backgroundKey, overlayKey, borderKey] = P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_EVIDENCE.keys;
+const P15_CONTAINER_HOVER_TRANSITION_FAMILY = responsiveEnumFamily({
+  id: 'container-hover-transition',
+  issuePrefix: 'P15_CONTAINER_HOVER_TRANSITION',
+  subject: 'Container hover transition',
+  manifestVersion: P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION,
+  resultVersion: P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_RESULT_VERSION,
+  maxEntries: 10_000,
+  evidence: P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_EVIDENCE,
+  statuses: { none: 'NO_CONTAINER_HOVER_TRANSITION_OVERRIDES', resolved: 'CONTAINER_HOVER_TRANSITIONS_RESOLVED' },
+  summaryField: 'resolvedTransitions',
+  fields: [
+    { field: 'backgroundHover', settingKey: backgroundKey, codec: secondsCodec, toElementor: secondsCodec.encode as (value: never) => unknown, conflictSubject: 'background hover transition' },
+    { field: 'overlayHover', settingKey: overlayKey, codec: secondsCodec, toElementor: secondsCodec.encode as (value: never) => unknown, conflictSubject: 'overlay hover transition' },
+    { field: 'borderHover', settingKey: borderKey, codec: secondsCodec, toElementor: secondsCodec.encode as (value: never) => unknown, conflictSubject: 'border hover transition' },
+  ],
+  leadingAuthorityFlags: ['transitionInferencePerformed'],
+  entryEnvelopeMessage: 'Each Container hover transition entry may contain only sourceNodeId plus backgroundHover, overlayHover and borderHover seconds.',
+  overrideRequiredMessage: 'Each Container hover transition entry must explicitly provide backgroundHover, overlayHover and/or borderHover.',
+  valueInvalidMessage: 'Container hover transition seconds must be within 0..3 in exact 0.1 steps.',
+});
+
+/** Apply explicit hover transition seconds for Container background, overlay and border; no inference. */
+export function resolveP15ElementorContainerHoverTransitions(sourceValue: unknown, manifestValue: unknown): P15ContainerHoverTransitionResultV2 {
+  return resolveContainerPropertyFamily(P15_CONTAINER_HOVER_TRANSITION_FAMILY, sourceValue, manifestValue) as unknown as P15ContainerHoverTransitionResultV2;
+}
+
+/** Only bounded facts are emitted; private source text and candidate bytes stay out. */
+export function serializeP15ElementorContainerHoverTransitionSummary(value: P15ContainerHoverTransitionResultV2): string {
+  return serializeContainerPropertyFamilySummary(P15_CONTAINER_HOVER_TRANSITION_FAMILY, value as unknown as ContainerFamilyResult);
+}
