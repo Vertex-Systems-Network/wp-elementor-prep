@@ -29,6 +29,14 @@ export interface FamilyCorpusSpec {
   omitBaseKeys?: string[];
   /** Family-specific authority flags the manifest must carry as false (e.g. styleInferencePerformed). */
   extraFlags?: string[];
+  /** Manifest array field (default `containers`; widget families use `headings`, `texts`, `widgets`). */
+  entriesField?: string;
+  /** Source document (default: the container corpus source). */
+  source?: () => P15NeutralExportDocumentV1;
+  /** Target node ids (defaults: `root`, `nested`) and a node of the wrong kind (default `copy`). */
+  primaryId?: string;
+  secondaryId?: string;
+  wrongKindId?: string;
 }
 
 export function sourceDocument(): P15NeutralExportDocumentV1 {
@@ -54,8 +62,40 @@ export function sourceDocument(): P15NeutralExportDocumentV1 {
   };
 }
 
-function reviewSource(): P15NeutralExportDocumentV1 {
-  const source = sourceDocument();
+/** Widget corpus source: headings, texts and buttons at two depths, with and without desktop alignment. */
+export function widgetSourceDocument(): P15NeutralExportDocumentV1 {
+  return {
+    schemaVersion: 1,
+    irVersion: P15_NEUTRAL_EXPORT_IR_VERSION,
+    title: 'Golden widget family source',
+    documentType: 'section',
+    nodes: [{
+      kind: 'container',
+      sourceNodeId: 'root',
+      direction: 'column',
+      gapPx: 16,
+      children: [
+        { kind: 'heading', sourceNodeId: 'title', text: 'Golden <Title> & co', level: 'h2', align: 'center' },
+        { kind: 'text', sourceNodeId: 'copy', text: 'Line one\nLine "two"', align: 'start' },
+        { kind: 'button', sourceNodeId: 'cta', text: 'Go', url: 'https://example.com/', align: 'start' },
+        {
+          kind: 'container',
+          sourceNodeId: 'nested',
+          direction: 'row',
+          gapPx: 8,
+          children: [
+            { kind: 'heading', sourceNodeId: 'subtitle', text: 'Sub', level: 'h3' },
+            { kind: 'text', sourceNodeId: 'body', text: 'Body copy' },
+            { kind: 'button', sourceNodeId: 'cta2', text: 'More' },
+          ],
+        },
+      ],
+    }],
+  };
+}
+
+function reviewSource(makeSource: () => P15NeutralExportDocumentV1 = sourceDocument): P15NeutralExportDocumentV1 {
+  const source = makeSource();
   const root = source.nodes[0];
   if (root?.kind === 'container') root.children.push({ kind: 'review', sourceNodeId: 'needs-review', reasonCode: 'MANUAL_LAYOUT_REQUIRES_REVIEW', detail: 'Golden review node.' });
   return source;
@@ -78,7 +118,12 @@ const FLAGS = {
 };
 
 export function buildCorpus(spec: FamilyCorpusSpec): GoldenCase[] {
-  const source = sourceDocument();
+  const makeSource = spec.source ?? sourceDocument;
+  const source = makeSource();
+  const field = spec.entriesField ?? 'containers';
+  const primary = spec.primaryId ?? 'root';
+  const secondary = spec.secondaryId ?? 'nested';
+  const wrongKind = spec.wrongKindId ?? 'copy';
   const base = spec.entryBase ?? {};
   const flags: Record<string, boolean> = { ...Object.fromEntries((spec.extraFlags ?? []).map((flag) => [flag, false])), ...FLAGS };
   const manifest = (containers: unknown, overrides: Record<string, unknown> = {}): Record<string, unknown> => ({
@@ -86,16 +131,16 @@ export function buildCorpus(spec: FamilyCorpusSpec): GoldenCase[] {
     manifestVersion: spec.manifestVersion,
     sourceIrFingerprint: fingerprintP15NeutralExportDocument(source),
     baseCandidateIdentityDigest: baseDigest(source),
-    containers,
+    [field]: containers,
     ...flags,
     ...overrides,
   });
   const cases: GoldenCase[] = [
-    { name: 'tablet-only', source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...spec.tabletValid }]) },
-    { name: 'mobile-only', source, manifest: manifest([{ sourceNodeId: 'nested', ...base, ...spec.mobileValid }]) },
+    { name: 'tablet-only', source, manifest: manifest([{ sourceNodeId: primary, ...base, ...spec.tabletValid }]) },
+    { name: 'mobile-only', source, manifest: manifest([{ sourceNodeId: secondary, ...base, ...spec.mobileValid }]) },
     { name: 'both-two-containers-unsorted', source, manifest: manifest([
-      { sourceNodeId: 'root', ...base, ...spec.tabletValid, ...spec.mobileValid },
-      { sourceNodeId: 'nested', ...base, ...spec.mobileValid },
+      { sourceNodeId: primary, ...base, ...spec.tabletValid, ...spec.mobileValid },
+      { sourceNodeId: secondary, ...base, ...spec.mobileValid },
     ]) },
     { name: 'no-overrides', source, manifest: manifest([]) },
     { name: 'manifest-null', source, manifest: null },
@@ -111,23 +156,23 @@ export function buildCorpus(spec: FamilyCorpusSpec): GoldenCase[] {
     ...Object.keys(flags).map((flag) => ({ name: `authority-${flag}`, source, manifest: manifest([], { [flag]: true }) })),
     { name: 'containers-not-array', source, manifest: manifest({}) },
     { name: 'containers-too-many', source, manifest: manifest(Array.from({ length: 10_001 }, () => ({}))) },
-    { name: 'entry-not-record', source, manifest: manifest(['root']) },
-    { name: 'entry-unknown-key', source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...spec.tabletValid, desktop: 1 }]) },
-    { name: 'entry-bad-source-id', source, manifest: manifest([{ sourceNodeId: ' root', ...base, ...spec.tabletValid }]) },
-    { name: 'entry-duplicate', source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...spec.tabletValid }, { sourceNodeId: 'root', ...base, ...spec.mobileValid }]) },
-    { name: 'entry-text-node', source, manifest: manifest([{ sourceNodeId: 'copy', ...base, ...spec.tabletValid }]) },
+    { name: 'entry-not-record', source, manifest: manifest([primary]) },
+    { name: 'entry-unknown-key', source, manifest: manifest([{ sourceNodeId: primary, ...base, ...spec.tabletValid, desktop: 1 }]) },
+    { name: 'entry-bad-source-id', source, manifest: manifest([{ sourceNodeId: ` ${primary}`, ...base, ...spec.tabletValid }]) },
+    { name: 'entry-duplicate', source, manifest: manifest([{ sourceNodeId: primary, ...base, ...spec.tabletValid }, { sourceNodeId: primary, ...base, ...spec.mobileValid }]) },
+    { name: 'entry-text-node', source, manifest: manifest([{ sourceNodeId: wrongKind, ...base, ...spec.tabletValid }]) },
     { name: 'entry-missing-node', source, manifest: manifest([{ sourceNodeId: 'ghost', ...base, ...spec.tabletValid }]) },
-    { name: 'entry-no-override', source, manifest: manifest([{ sourceNodeId: 'root', ...base }]) },
-    ...spec.invalidValues.map((fields, index) => ({ name: `entry-invalid-value-${index}`, source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...fields }]) })),
-    ...(spec.extraInvalid ?? []).map((fields, index) => ({ name: `entry-extra-invalid-${index}`, source, manifest: manifest([{ sourceNodeId: 'root', ...base, ...fields }]) })),
+    { name: 'entry-no-override', source, manifest: manifest([{ sourceNodeId: primary, ...base }]) },
+    ...spec.invalidValues.map((fields, index) => ({ name: `entry-invalid-value-${index}`, source, manifest: manifest([{ sourceNodeId: primary, ...base, ...fields }]) })),
+    ...(spec.extraInvalid ?? []).map((fields, index) => ({ name: `entry-extra-invalid-${index}`, source, manifest: manifest([{ sourceNodeId: primary, ...base, ...fields }]) })),
     ...(spec.omitBaseKeys ?? []).map((key) => {
-      const entry: Record<string, unknown> = { sourceNodeId: 'root', ...base, ...spec.tabletValid };
+      const entry: Record<string, unknown> = { sourceNodeId: primary, ...base, ...spec.tabletValid };
       delete entry[key];
       return { name: `entry-missing-base-${key}`, source, manifest: manifest([entry]) };
     }),
-    { name: 'many-issues-accumulate', source, manifest: manifest([{ sourceNodeId: 'ghost', ...base, ...spec.tabletValid }, 'bad', { sourceNodeId: 'root', ...base }], { manifestVersion: 'x' }) },
+    { name: 'many-issues-accumulate', source, manifest: manifest([{ sourceNodeId: 'ghost', ...base, ...spec.tabletValid }, 'bad', { sourceNodeId: primary, ...base }], { manifestVersion: 'x' }) },
     { name: 'source-invalid', source: { schemaVersion: 2 }, manifest: manifest([]) },
-    { name: 'source-review-upstream', source: reviewSource(), manifest: manifest([]) },
+    { name: 'source-review-upstream', source: reviewSource(makeSource), manifest: manifest([]) },
   ];
   return cases;
 }
