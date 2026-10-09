@@ -4,8 +4,7 @@ import {
   serializeContainerPropertyFamilySummary,
   type ContainerFamilyResult,
 } from './mapping-engine/container-family-engine';
-import { enumCodec, lowerHexColorCodec, type BoxPx } from './mapping-engine/codecs';
-import { containerStyleFamily, intDimensionsBoxCodec } from './mapping-engine/families/container-style';
+import { borderStyleFamily } from './mapping-engine/families/border-style';
 import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_MANIFEST_VERSION =
@@ -148,81 +147,19 @@ export interface P15ElementorContainerHoverBorderStyleResultV1 {
   internalReviewRequired: true;
 }
 
-const EVIDENCE = P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_EVIDENCE;
-const widthCodec = intDimensionsBoxCodec({ min: EVIDENCE.borderWidthMinPx, max: EVIDENCE.borderWidthMaxPx });
-const conflict = (settingKey: string, conflictRank: number) => ({
-  conflictSubject: settingKey,
-  conflictMessage: `Generated base candidate already contains requested Container hover border setting ${settingKey}.`,
-  conflictRank,
-});
-const FAMILY = containerStyleFamily({
+const FAMILY = borderStyleFamily({
   id: 'container-hover-border-style',
   issuePrefix: 'P15_CONTAINER_HOVER_BORDER_STYLE',
   subject: 'Container hover border-style',
   manifestVersion: P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_MANIFEST_VERSION,
   resultVersion: P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_RESULT_VERSION,
   maxEntries: P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_MAX_ENTRIES,
-  evidence: EVIDENCE,
+  evidence: P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_EVIDENCE,
+  borderTypes: P15_ELEMENTOR_CONTAINER_BORDER_TYPES,
   statuses: { none: 'NO_CONTAINER_HOVER_BORDER_STYLE_OVERRIDES', resolved: 'CONTAINER_HOVER_BORDER_STYLES_RESOLVED' },
-  summaryField: 'resolvedBorderStyles',
-  fields: [
-    { field: 'borderType', codec: enumCodec(P15_ELEMENTOR_CONTAINER_BORDER_TYPES) },
-    { field: 'widthPx', codec: widthCodec },
-    { field: 'tabletWidthPx', codec: widthCodec, optional: true },
-    { field: 'mobileWidthPx', codec: widthCodec, optional: true },
-    { field: 'color', codec: lowerHexColorCodec },
-  ],
-  checks: [
-    {
-      fields: ['borderType'],
-      code: 'TYPE_INVALID',
-      pathSuffix: '.borderType',
-      message: 'borderType must be one visible Elementor 4.2.4 border style: solid, double, dotted, dashed or groove.',
-    },
-    {
-      fields: ['widthPx'],
-      code: 'WIDTH_INVALID',
-      pathSuffix: '.widthPx',
-      message: `widthPx must contain integer px sides from 0 through ${P15_ELEMENTOR_CONTAINER_BORDER_WIDTH_MAX_PX}.`,
-    },
-    {
-      fields: ['tabletWidthPx', 'mobileWidthPx'],
-      code: 'WIDTH_INVALID',
-      pathSuffix: '.responsiveWidthPx',
-      message: 'Each supplied responsive width must contain four integer px sides from 0 through 100.',
-    },
-    {
-      fields: ['color'],
-      code: 'COLOR_INVALID',
-      pathSuffix: '.color',
-      message: 'color must be a lowercase six-digit hex value such as #1a2b3c.',
-    },
-  ],
-  envelopeRequiresFields: true,
-  leadingAuthorityFlags: ['styleInferencePerformed'],
-  extraIssueSuffixes: ['TYPE_INVALID', 'WIDTH_INVALID', 'COLOR_INVALID'],
-  entryEnvelopeMessage: 'Each entry must contain exactly sourceNodeId, borderType, widthPx and color.',
-  messages: {
-    notContainer: 'sourceNodeId must identify an existing neutral Container node.',
-    authority: 'Container hover border-style resolution cannot grant inference, mutation, network, closure, compatibility, production or download authority.',
-  },
+  nodeNoun: 'Container',
+  conflictNoun: 'Container hover border',
   bindingMissingMessage: (sourceNodeId) => `Generated Container binding missing for sourceNodeId ${sourceNodeId}.`,
-  // Writes follow the original order; conflicts report the first requested key (type, width, color, tablet, mobile).
-  writes: (entry) => [
-    { settingKey: EVIDENCE.borderTypeSettingKey, value: entry.borderType, ...conflict(EVIDENCE.borderTypeSettingKey, 0) },
-    { settingKey: EVIDENCE.borderWidthSettingKey, value: widthCodec.encode(entry.widthPx as BoxPx), ...conflict(EVIDENCE.borderWidthSettingKey, 1) },
-    ...(entry.tabletWidthPx === undefined ? [] : [{
-      settingKey: EVIDENCE.borderWidthTabletSettingKey,
-      value: widthCodec.encode(entry.tabletWidthPx as BoxPx),
-      ...conflict(EVIDENCE.borderWidthTabletSettingKey, 3),
-    }]),
-    ...(entry.mobileWidthPx === undefined ? [] : [{
-      settingKey: EVIDENCE.borderWidthMobileSettingKey,
-      value: widthCodec.encode(entry.mobileWidthPx as BoxPx),
-      ...conflict(EVIDENCE.borderWidthMobileSettingKey, 4),
-    }]),
-    { settingKey: EVIDENCE.borderColorSettingKey, value: entry.color, ...conflict(EVIDENCE.borderColorSettingKey, 2) },
-  ],
 });
 
 /**

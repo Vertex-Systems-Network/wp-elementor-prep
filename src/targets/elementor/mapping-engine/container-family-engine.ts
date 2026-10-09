@@ -127,7 +127,8 @@ function code(family: AnyFamily, suffix: IssueSuffix | string): string {
 }
 
 /** The family's authority flags in contract order: its leading flags, then the shared ones it carries. */
-function authorityFlags(family: AnyFamily): string[] {
+function authorityFlags(family: AnyFamily): readonly string[] {
+  if (family.authorityFlags) return family.authorityFlags;
   const omitted = family.omittedAuthorityFlags ?? [];
   return [...(family.leadingAuthorityFlags ?? []), ...MANIFEST_AUTHORITY_FLAGS.filter((flag) => !omitted.includes(flag))];
 }

@@ -62,6 +62,9 @@ export interface ResponsiveEnumFamilyMeta {
   precondition?: (settings: Record<string, unknown>) => FamilyPreconditionFailure | null;
   /** Bound target kind (default: generated containers). */
   target?: FamilyTarget;
+  leadingAuthorityFlags?: readonly string[];
+  omittedAuthorityFlags?: readonly string[];
+  serializerId?: string;
 }
 
 type EnumEntry = { sourceNodeId: string } & Record<string, unknown>;
@@ -74,6 +77,9 @@ export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerP
   return {
     id: meta.id,
     ...(meta.target ? { target: meta.target } : {}),
+    ...(meta.leadingAuthorityFlags ? { leadingAuthorityFlags: meta.leadingAuthorityFlags } : {}),
+    ...(meta.omittedAuthorityFlags ? { omittedAuthorityFlags: meta.omittedAuthorityFlags } : {}),
+    ...(meta.serializerId ? { serializerId: meta.serializerId } : {}),
     issuePrefix: meta.issuePrefix,
     subject: meta.subject,
     manifestVersion: meta.manifestVersion,

@@ -18,8 +18,11 @@ export type StyleEntry = { sourceNodeId: string } & Record<string, unknown>;
 export interface StyleEntryField {
   field: string;
   codec: ValueCodec<unknown>;
-  /** Optional fields are validated only when present and copied only when defined. */
-  optional?: boolean;
+  /**
+   * Optional fields: `true` validates a field that is present as an own property (an explicit
+   * `undefined` is invalid); `'defined'` validates only a defined value (an explicit `undefined` is absent).
+   */
+  optional?: boolean | 'defined';
 }
 
 /** One ordered validation step; the first failing step rejects the entry with its issue. */
@@ -48,6 +51,11 @@ export interface ContainerStyleFamilyMeta {
   /** Required fields must also be present for the shared envelope (exact-entry contracts). */
   envelopeRequiresFields?: boolean;
   leadingAuthorityFlags?: readonly string[];
+  omittedAuthorityFlags?: readonly string[];
+  authorityFlags?: readonly string[];
+  conflictMode?: 'first' | 'all';
+  /** At least one optional field must be provided; checked before the field checks, at the entry path. */
+  requireAny?: { code: string; message: string };
   extraIssueSuffixes?: readonly string[];
   messages?: FamilyMessageOverrides;
   bindingMissingMessage?: (sourceNodeId: string) => string;
@@ -61,9 +69,12 @@ export function containerStyleFamily(meta: ContainerStyleFamilyMeta): ContainerP
   const byName = new Map(meta.fields.map((spec) => [spec.field, spec]));
   const entryKeys = ['sourceNodeId', ...meta.fields.map((spec) => spec.field)];
   const required = meta.fields.filter((spec) => !spec.optional);
+  const provided = (raw: Record<string, unknown>, spec: StyleEntryField): boolean =>
+    (spec.optional === 'defined' ? raw[spec.field] !== undefined : hasOwn(raw, spec.field));
   const invalid = (raw: Record<string, unknown>, field: string): boolean => {
     const spec = byName.get(field);
     if (!spec) throw new Error(`Unknown container style field ${field}.`);
+    if (spec.optional === 'defined') return raw[field] !== undefined && !spec.codec.is(raw[field]);
     return spec.optional ? hasOwn(raw, field) && !spec.codec.is(raw[field]) : !spec.codec.is(raw[field]);
   };
   const snapshot = (source: Record<string, unknown> & { sourceNodeId: string }): StyleEntry => {
@@ -89,12 +100,18 @@ export function containerStyleFamily(meta: ContainerStyleFamilyMeta): ContainerP
     entryKeys,
     ...(meta.envelopeRequiresFields ? { requiredEntryKeys: required.map((spec) => spec.field) } : {}),
     ...(meta.leadingAuthorityFlags ? { leadingAuthorityFlags: meta.leadingAuthorityFlags } : {}),
+    ...(meta.omittedAuthorityFlags ? { omittedAuthorityFlags: meta.omittedAuthorityFlags } : {}),
+    ...(meta.authorityFlags ? { authorityFlags: meta.authorityFlags } : {}),
+    ...(meta.conflictMode ? { conflictMode: meta.conflictMode } : {}),
     entryEnvelopeMessage: meta.entryEnvelopeMessage,
     ...(meta.messages ? { messages: meta.messages } : {}),
     ...(meta.extraIssueSuffixes ? { extraIssueSuffixes: meta.extraIssueSuffixes } : {}),
     ...(meta.bindingMissingMessage ? { bindingMissingMessage: meta.bindingMissingMessage } : {}),
     codecs: [...new Set(meta.fields.map((spec) => spec.codec))],
     parseEntry(raw) {
+      if (meta.requireAny && meta.fields.every((spec) => !spec.optional || !provided(raw, spec))) {
+        return { ok: false, code: meta.requireAny.code, message: meta.requireAny.message };
+      }
       for (const check of meta.checks) {
         if (check.fields.some((field) => invalid(raw, field))) {
           return { ok: false, code: check.code, message: check.message, pathSuffix: check.pathSuffix };
@@ -108,7 +125,8 @@ export function containerStyleFamily(meta: ContainerStyleFamilyMeta): ContainerP
       return isRecord(entry)
         && onlyAllowedKeys(entry, entryKeys)
         && validSourceNodeId(entry.sourceNodeId)
-        && meta.fields.every((spec) => !invalid(entry, spec.field));
+        && meta.fields.every((spec) => !invalid(entry, spec.field))
+        && (!meta.requireAny || meta.fields.some((spec) => spec.optional && provided(entry, spec)));
     },
   };
 }

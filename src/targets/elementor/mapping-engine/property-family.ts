@@ -117,6 +117,8 @@ export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string },
   readonly leadingAuthorityFlags?: readonly string[];
   /** Shared authority flags this family's contract does not carry (e.g. `responsiveClosureClaim`). */
   readonly omittedAuthorityFlags?: readonly string[];
+  /** The complete authority flag list in contract order, when it interleaves family flags with shared ones. */
+  readonly authorityFlags?: readonly string[];
   /** Binding-missing message, when the contract words it differently from the shared default. */
   bindingMissingMessage?(sourceNodeId: string): string;
   /** Message for an entry that fails the shared record/keys/sourceNodeId envelope. */

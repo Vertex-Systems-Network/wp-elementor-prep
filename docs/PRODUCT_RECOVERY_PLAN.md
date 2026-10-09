@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.4c** (button style families)
-> - Last completed task: **M1.4b** (7 button colour and content families on the engine's shared Button target; 270/270 golden cases identical).
+> - Next task: **M1.4d** (button typography and gradient families)
+> - Last completed task: **M1.4c** (5 button style families on the engine; 202/202 golden cases identical).
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -197,7 +197,17 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
       - a `serializerId` for refusals that name a copied slug. The background and hover text colour serializers keep the original `button-text-color` wording.
     - Golden equivalence: 270/270 cases recorded from the original resolvers (commit `242ae5b`) are identical.
     - Resolver files shrank from 5,656 lines to 1,327.
-  - [ ] **M1.4c** button style: border style, visual depth/radius, responsive padding, icon basics, hover interaction.
+  - [x] **M1.4c** button style _(done 2026-10-09):_
+    - `mapping-engine/families/border-style.ts` holds one `borderStyleFamily` for the Elementor border group. The container, container hover and Button border-style contracts now share it, since their wording differs only in subject and noun.
+    - `mapping-engine/families/button-style.ts` holds bounded text-shadow, box-shadow and responsive-radius codecs, plus the Elementor box-shadow position encoding.
+    - Moved onto the engine: Button border style, visual depth/radius, responsive padding (every conflict reported), icon basics (a Font Awesome class/library pair, alignment and indent) and hover interaction (box shadow, transition, core animation).
+    - The engine and factories gained:
+      - a complete authority-flag order (the icon contract interleaves `iconInferencePerformed` and `svgImportPerformed`);
+      - `requireAny` entry checks;
+      - `'defined'` optional fields (an explicit `undefined` counts as absent);
+      - flag and refusal-slug passthrough in `responsiveEnumFamily`.
+    - Golden equivalence: 202/202 cases recorded from the original resolvers (commit `a97a415`) are identical. The 9 M1.3d container style goldens still pass on the shared border factory.
+    - Resolver files shrank from 4,443 lines to 1,104.
   - [ ] **M1.4d** button typography and gradients: typography basics, typography metrics, responsive typography metrics, linear and radial gradient. `button-color-composition` moves to M1.5 with the other compositions.
 - [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain. Also absorbs align-content (chained on wrap) and the container compositions moved from M1.3d: box-shadow, linear/radial gradient, overlay visual, hover transition and `container-style-composition`.
 - [ ] **M1.6** Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.
