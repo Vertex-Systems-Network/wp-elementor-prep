@@ -6,7 +6,8 @@ import { hasOwn, isRecord, onlyAllowedKeys } from '../shared-validation';
  * Two-colour Button gradient profiles (recovery M1.4d) for the Elementor `background` group, normal or
  * hover. A linear profile carries optional angles; a radial profile carries a required position with
  * optional tablet/mobile positions. Stops are integer percentages in order, with optional tablet/mobile
- * stop pairs. The codec and writes reproduce the original linear/radial contracts exactly.
+ * stop pairs. The codec and writes reproduce the original linear/radial contracts exactly. The Container
+ * gradients (recovery M1.5e) reuse them with the `background` / `background_hover` prefixes.
  */
 export type GradientKind = 'linear' | 'radial';
 
@@ -90,7 +91,8 @@ const slider = (unit: '%' | 'deg', size: number) => ({ unit, size, sizes: [] });
  * Writes keep the original order (stops before `gradient_type`); `rankBase` plus the original
  * requested-key order (type keys before responsive stops) decides which conflict is reported first.
  */
-export function gradientWrites(kind: GradientKind, prefix: string, gradient: GradientProfile, rankBase: number): FamilySettingWrite[] {
+export function gradientWrites(kind: GradientKind, prefix: string, gradient: GradientProfile, rankBase: number,
+  subject = 'Button'): FamilySettingWrite[] {
   const requested = ['background', 'color', 'color_stop', 'color_b', 'color_b_stop', 'gradient_type'];
   if (kind === 'radial') requested.push('gradient_position');
   if (gradient.tabletStopA !== undefined) requested.push('color_stop_tablet', 'color_b_stop_tablet');
@@ -109,7 +111,7 @@ export function gradientWrites(kind: GradientKind, prefix: string, gradient: Gra
       settingKey,
       value,
       conflictSubject: settingKey,
-      conflictMessage: `Generated base candidate already contains requested Button gradient setting ${settingKey}.`,
+      conflictMessage: `Generated base candidate already contains requested ${subject} gradient setting ${settingKey}.`,
       conflictRank: rankBase + requested.indexOf(suffix),
     };
   };
