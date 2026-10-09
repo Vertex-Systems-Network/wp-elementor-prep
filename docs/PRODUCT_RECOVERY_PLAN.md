@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.5** (one ordered composer; also absorbs align-content and the container/button compositions)
-> - Last completed task: **M1.4d** (5 button typography and gradient families on the engine; 199/199 golden cases identical). M1.4 is complete.
+> - Next task: **M1.5b** (responsive chaining; align-content chained on wrap)
+> - Last completed task: **M1.5a** (one ordered composer; container-style and button-colour compositions on it; 111/111 golden cases identical)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -224,7 +224,16 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - `button-color-composition` moves to M1.5 with the other compositions.
   - M1.4 totals: 21 widget resolvers on the engine, with 821 golden cases identical.
   - Not property families, so outside M1: `image-asset-resolution.ts` and `semantic-resolution.ts` rewrite the neutral IR before generation; they do not write Elementor settings.
-- [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain. Also absorbs align-content (chained on wrap) and the container compositions moved from M1.3d: box-shadow, linear/radial gradient, overlay visual, hover transition and `container-style-composition`.
+- [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain. Also absorbs align-content (chained on wrap) and the container compositions moved from M1.3d: box-shadow, linear/radial gradient, overlay visual, hover transition and `container-style-composition`. This is split into M1.5a–d, and each part ships its golden baseline before the switch:
+  - [x] **M1.5a** ordered composer _(done 2026-10-09):_
+    - `mapping-engine/composer.ts` holds one ordered composer (`composeFamilies`, `serializeCompositionSummary`). Each family still runs its own exact resolver. The composer applies the families in spec order, whatever the manifest key order, and merges only allowlisted new keys. It has two merge strategies: through the container binding, or a whole-tree walk that only lets accepted widget kinds change.
+    - Key ownership is single: a key belongs to the base candidate or to exactly one family. A second writer is a `KEY_CONFLICT`, never an overwrite.
+    - `container-style-composition` (8 families) and `button-color-composition` (5 families) are now composer specs. They went from 438 lines to 157, plus the 282-line shared composer.
+    - Hardening: each family's template must equal its own candidate, and its resolved status must be that family's own status, not any family's. Real resolvers already satisfy both, so outputs are unchanged.
+    - Golden equivalence: 111/111 cases recorded from the original compositions (commit `ceec371`) are identical. `tests/m1-composer.test.ts` covers the ordering, ownership, drift and serializer refusals the public compositions cannot reach.
+  - [ ] **M1.5b** responsive chaining: a step may take the previous step's resolved candidate as its base. Move align-content onto it, chained on the wrap result.
+  - [ ] **M1.5c** container compositions: box-shadow, linear and radial gradient, overlay visual and hover transition, each on the engine or composer with its own golden baseline.
+  - [ ] **M1.5d** cross-composition: one composer call can apply container-style, button-colour and the responsive layout families to one tree.
 - [ ] **M1.6** Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.
 - [ ] **M1.7** M1 sync. Update `verify-readme-progress.mjs` so it no longer reads deleted resolver files, and replace those checks with engine-table checks.
 
