@@ -31,8 +31,12 @@ const p15ButtonResponsivePaddingSource = await readFile('src/targets/elementor/b
 const p15ButtonContentMetadataSource = await readFile('src/targets/elementor/button-content-metadata-resolution.ts', 'utf8');
 const p15ButtonStretchContentAlignmentSource = await readFile('src/targets/elementor/button-stretch-content-alignment-resolution.ts', 'utf8');
 const p15ButtonIconBasicsSource = await readFile('src/targets/elementor/button-icon-basics-resolution.ts', 'utf8');
-const p15ButtonLinearGradientSource = await readFile('src/targets/elementor/button-linear-gradient-resolution.ts', 'utf8');
-const p15ButtonRadialGradientSource = await readFile('src/targets/elementor/button-radial-gradient-resolution.ts', 'utf8');
+// Gradient contracts are the thin resolver plus the shared engine family it delegates to (recovery M1.4d).
+const p15ButtonLinearGradientSource = await readFile('src/targets/elementor/button-linear-gradient-resolution.ts', 'utf8')
+  + await readFile('src/targets/elementor/mapping-engine/families/button-gradient.ts', 'utf8');
+// Gradient contracts are the thin resolver plus the shared engine family it delegates to (recovery M1.4d).
+const p15ButtonRadialGradientSource = await readFile('src/targets/elementor/button-radial-gradient-resolution.ts', 'utf8')
+  + await readFile('src/targets/elementor/mapping-engine/families/button-gradient.ts', 'utf8');
 const registry = JSON.parse(await readFile('config/runtime-artifacts.json', 'utf8'));
 const statusDocuments = {
   'README.md': readme,
@@ -402,8 +406,8 @@ const p15HeadingTextColorRequiredFragments = [
   "settingKey: 'title_color'",
   "hoverControlName: 'title_hover_color'",
   "acceptedColorPattern: '^#[0-9a-f]{6}$'",
-  "validColor",
-  "target.settings[P15_ELEMENTOR_HEADING_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
+  "fields: [{ field: 'color', codec: lowerHexColorCodec }]",
+  "settingKey: EVIDENCE.settingKey,\n    value: entry.color,",
   "colorInferencePerformed: false",
 ];
 for (const fragment of p15HeadingTextColorRequiredFragments) {
@@ -429,9 +433,9 @@ const p15TextEditorTextColorRequiredFragments = [
   "linkControlName: 'link_color'",
   "acceptedColorPattern:",
   "^#[0-9a-f]{6}$",
-  "validColor",
-  "settings.editor !== expectedTextEditorHtml(node.text)",
-  "target.settings[P15_ELEMENTOR_TEXT_EDITOR_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
+  "fields: [{ field: 'color', codec: lowerHexColorCodec }]",
+  "matches: (node, settings) => textEditorBaseSettingsMatch(node as P15NeutralTextNode, settings)",
+  "settingKey: EVIDENCE.settingKey,\n    value: entry.color,",
   "colorInferencePerformed: false",
 ];
 for (const fragment of p15TextEditorTextColorRequiredFragments) {
@@ -457,9 +461,8 @@ const p15ButtonTextColorRequiredFragments = [
   "backgroundGroupName: 'background'",
   "acceptedColorPattern:",
   "^#[0-9a-f]{6}$",
-  "settings.text !== node.text",
-  "function expectedButtonLink",
-  "target.settings[P15_ELEMENTOR_BUTTON_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
+  "target: buttonWidgetTarget('Review nodes cannot participate in Button color binding.')",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.color, ...CONFLICT }",
   "colorInferencePerformed: false",
 ];
 for (const fragment of p15ButtonTextColorRequiredFragments) {
@@ -486,8 +489,8 @@ const p15ButtonBackgroundColorRequiredFragments = [
   "hoverGroupName: 'button_background_hover'",
   "acceptedBackgroundType: 'classic'",
   "^#[0-9a-f]{6}$",
-  "P15_ELEMENTOR_BUTTON_BACKGROUND_COLOR_EVIDENCE.backgroundTypeSettingKey",
-  "P15_ELEMENTOR_BUTTON_BACKGROUND_COLOR_EVIDENCE.backgroundColorSettingKey",
+  "{ settingKey: EVIDENCE.backgroundTypeSettingKey, value: EVIDENCE.acceptedBackgroundType, ...CONFLICT }",
+  "{ settingKey: EVIDENCE.backgroundColorSettingKey, value: entry.color, ...CONFLICT }",
 ];
 for (const fragment of p15ButtonBackgroundColorRequiredFragments) {
   if (!p15ButtonBackgroundColorSource.includes(fragment)) {
@@ -512,7 +515,7 @@ const p15ButtonHoverTextColorRequiredFragments = [
   "normalTextControlName: 'button_text_color'",
   "normalBackgroundGroupName: 'background'",
   "hoverBackgroundGroupName: 'button_background_hover'",
-  "P15_ELEMENTOR_BUTTON_HOVER_TEXT_COLOR_EVIDENCE.settingKey",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.color, ...CONFLICT }",
   "^#[0-9a-f]{6}$",
 ];
 for (const fragment of p15ButtonHoverTextColorRequiredFragments) {
@@ -542,8 +545,8 @@ const p15ButtonHoverBackgroundColorRequiredFragments = [
   "selector: '{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus'",
   "acceptedBackgroundType: 'classic'",
   "^#[0-9a-f]{6}$",
-  "P15_ELEMENTOR_BUTTON_HOVER_BACKGROUND_COLOR_EVIDENCE.backgroundTypeSettingKey",
-  "P15_ELEMENTOR_BUTTON_HOVER_BACKGROUND_COLOR_EVIDENCE.backgroundColorSettingKey",
+  "{ settingKey: EVIDENCE.backgroundTypeSettingKey, value: EVIDENCE.acceptedBackgroundType, ...CONFLICT }",
+  "{ settingKey: EVIDENCE.backgroundColorSettingKey, value: entry.color, ...CONFLICT }",
 ];
 for (const fragment of p15ButtonHoverBackgroundColorRequiredFragments) {
   if (!p15ButtonHoverBackgroundColorSource.includes(fragment)) {
@@ -575,7 +578,7 @@ const p15ButtonHoverBorderColorRequiredFragments = [
   "buttonSelector: '{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus'",
   "cssProperty: 'border-color'",
   "^#[0-9a-f]{6}$",
-  "P15_ELEMENTOR_BUTTON_HOVER_BORDER_COLOR_EVIDENCE.settingKey",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.color, ...CONFLICT }",
 ];
 for (const fragment of p15ButtonHoverBorderColorRequiredFragments) {
   if (!p15ButtonHoverBorderColorSource.includes(fragment)) {
@@ -767,8 +770,8 @@ const p15ButtonResponsiveLinearAngleRequiredFragments = [
   "gradientAngleMobileSuffix: 'gradient_angle_mobile'",
   "tabletAngleDeg?: number",
   "mobileAngleDeg?: number",
-  "settings[`${prefix}_gradient_angle_tablet`] = slider('deg', gradient.tabletAngleDeg)",
-  "settings[`${prefix}_gradient_angle_mobile`] = slider('deg', gradient.mobileAngleDeg)",
+  "write('gradient_angle_tablet', slider('deg', gradient.tabletAngleDeg))",
+  "write('gradient_angle_mobile', slider('deg', gradient.mobileAngleDeg))",
   "responsiveInferencePerformed: false",
   "responsiveClosureClaim: false",
   "targetCompatibilityClaim: false",
@@ -801,8 +804,8 @@ const p15ButtonResponsiveLinearStopRequiredFragments = [
   "tabletStopB?: number",
   "mobileStopA?: number",
   "mobileStopB?: number",
-  "settings[`${prefix}_color_stop_tablet`] = slider('%', gradient.tabletStopA)",
-  "settings[`${prefix}_color_b_stop_mobile`] = slider('%', gradient.mobileStopB)",
+  "write('color_stop_tablet', slider('%', gradient.tabletStopA))",
+  "write('color_b_stop_mobile', slider('%', gradient.mobileStopB))",
   "responsiveInferencePerformed: false",
   "responsiveClosureClaim: false",
   "targetCompatibilityClaim: false",
@@ -837,8 +840,8 @@ const p15ButtonResponsiveRadialStopRequiredFragments = [
   "tabletStopB?: number",
   "mobileStopA?: number",
   "mobileStopB?: number",
-  "settings[`${prefix}_color_stop_tablet`] = slider('%', gradient.tabletStopA)",
-  "settings[`${prefix}_color_b_stop_mobile`] = slider('%', gradient.mobileStopB)",
+  "write('color_stop_tablet', slider('%', gradient.tabletStopA))",
+  "write('color_b_stop_mobile', slider('%', gradient.mobileStopB))",
   "responsiveInferencePerformed: false",
   "responsiveClosureClaim: false",
   "targetCompatibilityClaim: false",
@@ -912,8 +915,8 @@ const p15ButtonResponsiveRadialPositionRequiredFragments = [
   "gradientPositionMobileSuffix: 'gradient_position_mobile'",
   "tabletPosition?: P15ElementorButtonRadialGradientPosition",
   "mobilePosition?: P15ElementorButtonRadialGradientPosition",
-  "settings[`${prefix}_gradient_position_tablet`] = gradient.tabletPosition",
-  "settings[`${prefix}_gradient_position_mobile`] = gradient.mobilePosition",
+  "write('gradient_position_tablet', gradient.tabletPosition)",
+  "write('gradient_position_mobile', gradient.mobilePosition)",
   "responsiveInferencePerformed: false",
   "responsiveClosureClaim: false",
   "targetCompatibilityClaim: false",
