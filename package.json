@@ -33,6 +33,7 @@
     "audit:figma": "node scripts/run-cli.mjs audit:figma",
     "audit:snapshot": "node scripts/run-cli.mjs audit:snapshot",
     "backlog:generate": "node scripts/run-cli.mjs backlog:generate",
+    "export:elementor": "node scripts/run-cli.mjs export:elementor",
     "prepare:figma-import": "node scripts/prepare-figma-import.mjs",
     "runtime:preflight": "node scripts/runtime-artifact-preflight.mjs",
     "runtime:closure-intake": "node scripts/runtime-closure-intake.mjs",

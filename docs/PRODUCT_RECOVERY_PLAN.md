@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.6** (bundle the engine into the plugin preview and download path)
-> - Last completed task: **M1.5f** (overlay visual target repair; chained on overlay colour). M1.5 is complete.
+> - Next task: **M1.7** (M1 sync and milestone acceptance)
+> - Last completed task: **M1.6** (one export pipeline shared by the plugin and the CLI `export:elementor`). M1.5 merged in PR #899 as `2623da1`.
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -259,7 +259,11 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - Diff proof: `tests/m1-container-overlay-visual-golden.test.ts` against the v1 write baseline (commit `41d0a21`). The v2 writes are exactly the v1 writes plus the starter keys, px sliders and the prerequisite's own overlay-colour keys. The 17 cases v1 wrongly accepted (stale bindings, authority inflation, unknown keys, empty filters) are all refused, each with its listed reason.
     - This is a local contract repair only. No real-target render is claimed.
   - M1.5 totals: one ordered composer with chained steps, a page composition, chained engine families, and 7 more resolvers/compositions on the engine (align-content, box-shadow, hover transition, linear and radial gradients, overlay visual, plus the 2 compositions). Three target defects were repaired with Elementor source evidence.
-- [ ] **M1.6** Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.
+- [x] **M1.6** _(done 2026-10-09):_ Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.
+  - `export-pipeline.ts` (`buildP15ElementorExport`, `p15-elementor-export-pipeline-v1`) is the one export path. The neutral source always goes through the v3 generator first. Without a page manifest the generated base candidate is the export, byte for byte. With one, the page composition applies the requested families, and only a RESOLVED composition yields a candidate.
+  - The plugin preview/download extractor now runs through it. The plugin has no manifest source yet (M2/M4 supply one), so its output is unchanged.
+  - The CLI gains `export:elementor --input <ir.json> [--page-manifest <m.json>]`. It writes `elementor-template.json` and `elementor-export-summary.json` atomically, only for a ready candidate; otherwise it exits 3 and writes nothing.
+  - `tests/m1-export-pipeline.test.ts` proves: the no-manifest output equals the generator's output; a manifest's output equals the page composition's; refusals give no candidate; the bundled CLI behaves end to end; and the bundled plugin contains the engine and the page composition. The release package builds and is byte-reproducible locally.
 - [ ] **M1.7** M1 sync. Update `verify-readme-progress.mjs` so it no longer reads deleted resolver files, and replace those checks with engine-table checks.
 
 *M1 acceptance:* all existing P15 behaviour tests pass through the engine. The resolution layer is under 5k LOC. The bundle contains the engine.
