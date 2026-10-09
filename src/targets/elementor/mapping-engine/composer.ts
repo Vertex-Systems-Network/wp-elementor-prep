@@ -45,11 +45,12 @@ const AUTHORITY_FLAGS = [
 const MANIFEST_KEYS = ['schemaVersion', 'compositionVersion', 'sourceIrFingerprint', 'baseCandidateIdentityDigest',
   'families', ...AUTHORITY_FLAGS] as const;
 
-/** The fields of a family resolver result the composer relies on. */
+/** The fields of a family resolver result the composer relies on (a chained result names its base digest differently). */
 export interface ComposedFamilyResult {
   status: string;
   sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
+  baseCandidateIdentityDigest?: string | null;
+  resolvedCandidateIdentityDigest: string | null;
   template: ElementorTemplateV04 | null;
   candidate: ElementorTemplateCandidateArtifactV1 | null;
   issues: readonly unknown[];
@@ -61,9 +62,18 @@ export interface ComposedFamilyResult {
 
 /** One composable family: its exact resolver, its resolved status and the only keys it may add. */
 export interface CompositionStep {
-  resolve(source: unknown, manifest: unknown): ComposedFamilyResult;
+  /** `manifests` is the whole `families` record, for a chained step that needs its prerequisite's manifest. */
+  resolve(source: unknown, manifest: unknown, manifests: Readonly<Record<string, unknown>>): ComposedFamilyResult;
   resolvedStatus: string;
   keys: readonly string[];
+  /** Widgets merge only: the nodes this step may change (default: the spec's `accepts`). */
+  accepts?(node: ElementorElementV04): boolean;
+  /**
+   * A chained step builds on an earlier step's result (e.g. align-content on wrap): it is diffed against
+   * that step's resolved template, and its `baseDigestField` must equal that step's resolved digest.
+   */
+  after?: string;
+  baseDigestField?: string;
 }
 
 /**
@@ -165,12 +175,13 @@ function mergeTree(base: readonly ElementorElementV04[], family: readonly Elemen
 
 /** Merge through the container binding, then require the family tree minus its additions to equal the base. */
 function mergeContainers(source: P15NeutralExportDocumentV1, baseTemplate: ElementorTemplateV04,
-  baseBinding: ReturnType<typeof bindP15NeutralSourceToGeneratedContainers>,
   targetBinding: ReturnType<typeof bindP15NeutralSourceToGeneratedContainers>,
   resolved: ComposedFamilyResult & { template: ElementorTemplateV04; candidate: ElementorTemplateCandidateArtifactV1 },
   allowed: readonly string[]): MergeOutcome {
+  const baseBinding = bindP15NeutralSourceToGeneratedContainers(source, baseTemplate);
   const familyBinding = bindP15NeutralSourceToGeneratedContainers(source, resolved.template);
-  if (familyBinding.issues.length || familyBinding.containers.size !== baseBinding.containers.size) return 'FAMILY_DRIFT';
+  if (baseBinding.issues.length || familyBinding.issues.length
+    || familyBinding.containers.size !== baseBinding.containers.size) return 'FAMILY_DRIFT';
   for (const [id, baseNode] of baseBinding.containers) {
     const familyNode = familyBinding.containers.get(id);
     const targetNode = targetBinding.containers.get(id);
@@ -219,12 +230,17 @@ export function composeFamilies<Family extends string>(spec: CompositionSpec<Fam
     : null;
   if (bindings && (bindings.base.issues.length || bindings.target.issues.length)) return refuse('BINDING_MISMATCH', fingerprint, base);
   const applied: Family[] = [];
+  const outputs = new Map<string, { template: ElementorTemplateV04; digest: string | null }>();
   for (const family of spec.families) {
     if (!own(families, family)) continue;
     const step = spec.steps[family];
-    const resolved = step.resolve(source, families[family]);
+    const prerequisite = step.after === undefined ? null : outputs.get(step.after);
+    if (prerequisite === undefined) return refuse('FAMILY_REJECTED', fingerprint, base, family);
+    const baseTemplate = prerequisite?.template ?? generation.template;
+    const expectedBase = prerequisite ? prerequisite.digest : base;
+    const resolved = step.resolve(source, families[family], families);
     if (resolved.status !== step.resolvedStatus || !resolved.candidate || !resolved.template || resolved.issues.length
-      || resolved.sourceIrFingerprint !== fingerprint || resolved.baseCandidateIdentityDigest !== base
+      || resolved.sourceIrFingerprint !== fingerprint || (resolved as unknown as Record<string, unknown>)[step.baseDigestField ?? 'baseCandidateIdentityDigest'] !== expectedBase
       || resolved.responsiveInferencePerformed !== false || resolved.targetCompatibilityClaim !== false
       || resolved.productionAcceptance !== false || resolved.downloadEnabled !== false) {
       return refuse('FAMILY_REJECTED', fingerprint, base, family);
@@ -233,11 +249,12 @@ export function composeFamilies<Family extends string>(spec: CompositionSpec<Fam
     if (resolved.candidate.status !== 'READY_FOR_TARGET_IMPORT_VALIDATION'
       || !same(cloneP15ReadyElementorTemplate(resolved.candidate), resolved.template)) return refuse('FAMILY_DRIFT', fingerprint, base, family);
     const outcome = bindings
-      ? mergeContainers(source, generation.template, bindings.base, bindings.target,
+      ? mergeContainers(source, baseTemplate, bindings.target,
         resolved as typeof resolved & { template: ElementorTemplateV04; candidate: ElementorTemplateCandidateArtifactV1 }, step.keys)
-      : mergeTree(generation.template.content, resolved.template.content, template.content, step.keys,
-        (merge as Extract<CompositionMerge, { kind: 'widgets' }>).accepts);
+      : mergeTree(baseTemplate.content, resolved.template.content, template.content, step.keys,
+        step.accepts ?? (merge as Extract<CompositionMerge, { kind: 'widgets' }>).accepts);
     if (outcome) return refuse(outcome, fingerprint, base, family);
+    outputs.set(family, { template: resolved.template, digest: resolved.resolvedCandidateIdentityDigest });
     applied.push(family);
   }
   const candidate = buildElementorTemplateCandidateArtifact(template);
