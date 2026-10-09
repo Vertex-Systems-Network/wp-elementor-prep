@@ -1,0 +1,2766 @@
+[
+ {
+  "name": "all-families",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": "sha256:97684c45e42d44e82c5011e7f3292a7469beb760139540945c03a9b96b27e745",
+   "appliedFamilies": [
+    "normalText",
+    "normalBackground",
+    "hoverText",
+    "hoverBackground",
+    "hoverBorder"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden button composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column"
+      },
+      "elements": [
+       {
+        "id": "25e99e8b",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "button_text_color": "#112233",
+         "background_background": "classic",
+         "background_color": "#223344",
+         "hover_color": "#334455",
+         "button_hover_border_color": "#556677"
+        },
+        "elements": []
+       },
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": [
+         {
+          "id": "dd8129cf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "align": "right",
+           "button_background_hover_background": "classic",
+           "button_background_hover_color": "#445566"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 5,
+     "containerCount": 2,
+     "widgetCount": 3,
+     "widgetTypes": [
+      "button",
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 3,
+      "documentedCoreWidgets": 3,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "25e99e8b",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2].elements[0]",
+       "id": "dd8129cf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden button composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"25e99e8b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"button_text_color\": \"#112233\",\n            \"background_background\": \"classic\",\n            \"background_color\": \"#223344\",\n            \"hover_color\": \"#334455\",\n            \"button_hover_border_color\": \"#556677\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": [\n            {\n              \"id\": \"dd8129cf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"align\": \"right\",\n                \"button_background_hover_background\": \"classic\",\n                \"button_background_hover_color\": \"#445566\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:97684c45e42d44e82c5011e7f3292a7469beb760139540945c03a9b96b27e745\",\n  \"appliedFamilies\": [\n    \"normalText\",\n    \"normalBackground\",\n    \"hoverText\",\n    \"hoverBackground\",\n    \"hoverBorder\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "all-families-reversed-keys",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": "sha256:97684c45e42d44e82c5011e7f3292a7469beb760139540945c03a9b96b27e745",
+   "appliedFamilies": [
+    "normalText",
+    "normalBackground",
+    "hoverText",
+    "hoverBackground",
+    "hoverBorder"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden button composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column"
+      },
+      "elements": [
+       {
+        "id": "25e99e8b",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "button_text_color": "#112233",
+         "background_background": "classic",
+         "background_color": "#223344",
+         "hover_color": "#334455",
+         "button_hover_border_color": "#556677"
+        },
+        "elements": []
+       },
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": [
+         {
+          "id": "dd8129cf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "align": "right",
+           "button_background_hover_background": "classic",
+           "button_background_hover_color": "#445566"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 5,
+     "containerCount": 2,
+     "widgetCount": 3,
+     "widgetTypes": [
+      "button",
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 3,
+      "documentedCoreWidgets": 3,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "25e99e8b",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2].elements[0]",
+       "id": "dd8129cf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden button composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"25e99e8b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"button_text_color\": \"#112233\",\n            \"background_background\": \"classic\",\n            \"background_color\": \"#223344\",\n            \"hover_color\": \"#334455\",\n            \"button_hover_border_color\": \"#556677\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": [\n            {\n              \"id\": \"dd8129cf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"align\": \"right\",\n                \"button_background_hover_background\": \"classic\",\n                \"button_background_hover_color\": \"#445566\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:97684c45e42d44e82c5011e7f3292a7469beb760139540945c03a9b96b27e745\",\n  \"appliedFamilies\": [\n    \"normalText\",\n    \"normalBackground\",\n    \"hoverText\",\n    \"hoverBackground\",\n    \"hoverBorder\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "only-normalText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": "sha256:c48d9a4426a8879112b1def5b33801c67c6cbc3d41efd2d73cedb074417553f1",
+   "appliedFamilies": [
+    "normalText"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden button composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column"
+      },
+      "elements": [
+       {
+        "id": "25e99e8b",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "button_text_color": "#112233"
+        },
+        "elements": []
+       },
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": [
+         {
+          "id": "dd8129cf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "align": "right"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 5,
+     "containerCount": 2,
+     "widgetCount": 3,
+     "widgetTypes": [
+      "button",
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 3,
+      "documentedCoreWidgets": 3,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "25e99e8b",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2].elements[0]",
+       "id": "dd8129cf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden button composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"25e99e8b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"button_text_color\": \"#112233\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": [\n            {\n              \"id\": \"dd8129cf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"align\": \"right\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:c48d9a4426a8879112b1def5b33801c67c6cbc3d41efd2d73cedb074417553f1\",\n  \"appliedFamilies\": [\n    \"normalText\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "only-normalBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": "sha256:693f6bcbe0d1633701ed36628aceb8dcea5ea6eeac4bc7ae1b4d0adf132e82a8",
+   "appliedFamilies": [
+    "normalBackground"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden button composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column"
+      },
+      "elements": [
+       {
+        "id": "25e99e8b",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "background_background": "classic",
+         "background_color": "#223344"
+        },
+        "elements": []
+       },
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": [
+         {
+          "id": "dd8129cf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "align": "right"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 5,
+     "containerCount": 2,
+     "widgetCount": 3,
+     "widgetTypes": [
+      "button",
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 3,
+      "documentedCoreWidgets": 3,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "25e99e8b",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2].elements[0]",
+       "id": "dd8129cf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden button composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"25e99e8b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"background_background\": \"classic\",\n            \"background_color\": \"#223344\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": [\n            {\n              \"id\": \"dd8129cf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"align\": \"right\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:693f6bcbe0d1633701ed36628aceb8dcea5ea6eeac4bc7ae1b4d0adf132e82a8\",\n  \"appliedFamilies\": [\n    \"normalBackground\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "only-hoverText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": "sha256:43bc7d397a93325961fe1331ed01c0eb36213681a24dec3afe3f11f9d435db17",
+   "appliedFamilies": [
+    "hoverText"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden button composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column"
+      },
+      "elements": [
+       {
+        "id": "25e99e8b",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "hover_color": "#334455"
+        },
+        "elements": []
+       },
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": [
+         {
+          "id": "dd8129cf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "align": "right"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 5,
+     "containerCount": 2,
+     "widgetCount": 3,
+     "widgetTypes": [
+      "button",
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 3,
+      "documentedCoreWidgets": 3,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "25e99e8b",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2].elements[0]",
+       "id": "dd8129cf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden button composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"25e99e8b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"hover_color\": \"#334455\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": [\n            {\n              \"id\": \"dd8129cf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"align\": \"right\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:43bc7d397a93325961fe1331ed01c0eb36213681a24dec3afe3f11f9d435db17\",\n  \"appliedFamilies\": [\n    \"hoverText\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "only-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": "sha256:2350dd3f0792636f13f2c346a6101255c9f2d041b4256d431a89cbeb44fb9ec1",
+   "appliedFamilies": [
+    "hoverBackground"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden button composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column"
+      },
+      "elements": [
+       {
+        "id": "25e99e8b",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left"
+        },
+        "elements": []
+       },
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": [
+         {
+          "id": "dd8129cf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "align": "right",
+           "button_background_hover_background": "classic",
+           "button_background_hover_color": "#445566"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 5,
+     "containerCount": 2,
+     "widgetCount": 3,
+     "widgetTypes": [
+      "button",
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 3,
+      "documentedCoreWidgets": 3,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "25e99e8b",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2].elements[0]",
+       "id": "dd8129cf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden button composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"25e99e8b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": [\n            {\n              \"id\": \"dd8129cf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"align\": \"right\",\n                \"button_background_hover_background\": \"classic\",\n                \"button_background_hover_color\": \"#445566\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:2350dd3f0792636f13f2c346a6101255c9f2d041b4256d431a89cbeb44fb9ec1\",\n  \"appliedFamilies\": [\n    \"hoverBackground\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "only-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": "sha256:6fa70ae276df27a97a4d5c5ea31f068e70d0ca319fb52d76d8da7821b3d842c6",
+   "appliedFamilies": [
+    "hoverBorder"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden button composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column"
+      },
+      "elements": [
+       {
+        "id": "25e99e8b",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "button_hover_border_color": "#556677"
+        },
+        "elements": []
+       },
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": [
+         {
+          "id": "dd8129cf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "align": "right"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 5,
+     "containerCount": 2,
+     "widgetCount": 3,
+     "widgetTypes": [
+      "button",
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 3,
+      "documentedCoreWidgets": 3,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "25e99e8b",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2].elements[0]",
+       "id": "dd8129cf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden button composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"25e99e8b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"button_hover_border_color\": \"#556677\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": [\n            {\n              \"id\": \"dd8129cf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"align\": \"right\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:6fa70ae276df27a97a4d5c5ea31f068e70d0ca319fb52d76d8da7821b3d842c6\",\n  \"appliedFamilies\": [\n    \"hoverBorder\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "pair-normalText-hoverText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": "sha256:cfad1cfbf9b29c79671828c7e6868471b53ab24181030f39eb3d270e7b08d2e8",
+   "appliedFamilies": [
+    "normalText",
+    "hoverText"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden button composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column"
+      },
+      "elements": [
+       {
+        "id": "25e99e8b",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "button_text_color": "#112233",
+         "hover_color": "#334455"
+        },
+        "elements": []
+       },
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": [
+         {
+          "id": "dd8129cf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "align": "right"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 5,
+     "containerCount": 2,
+     "widgetCount": 3,
+     "widgetTypes": [
+      "button",
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 3,
+      "documentedCoreWidgets": 3,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "25e99e8b",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2].elements[0]",
+       "id": "dd8129cf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden button composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"25e99e8b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"button_text_color\": \"#112233\",\n            \"hover_color\": \"#334455\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": [\n            {\n              \"id\": \"dd8129cf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"align\": \"right\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:cfad1cfbf9b29c79671828c7e6868471b53ab24181030f39eb3d270e7b08d2e8\",\n  \"appliedFamilies\": [\n    \"normalText\",\n    \"hoverText\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "pair-normalBackground-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": "sha256:37c2ac7417a45c745fdedee6c64339ee167b8b1617f40047c60c78b4f5a78b3e",
+   "appliedFamilies": [
+    "normalBackground",
+    "hoverBackground"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden button composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column"
+      },
+      "elements": [
+       {
+        "id": "25e99e8b",
+        "elType": "widget",
+        "widgetType": "button",
+        "isInner": false,
+        "settings": {
+         "text": "Go",
+         "align": "left",
+         "background_background": "classic",
+         "background_color": "#223344"
+        },
+        "elements": []
+       },
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": [
+         {
+          "id": "dd8129cf",
+          "elType": "widget",
+          "widgetType": "button",
+          "isInner": false,
+          "settings": {
+           "text": "More",
+           "align": "right",
+           "button_background_hover_background": "classic",
+           "button_background_hover_color": "#445566"
+          },
+          "elements": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 5,
+     "containerCount": 2,
+     "widgetCount": 3,
+     "widgetTypes": [
+      "button",
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 3,
+      "documentedCoreWidgets": 3,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "count": 2
+      },
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "25e99e8b",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[1]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      },
+      {
+       "path": "$.content[0].elements[2].elements[0]",
+       "id": "dd8129cf",
+       "widgetType": "button",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden button composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"25e99e8b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"button\",\n          \"isInner\": false,\n          \"settings\": {\n            \"text\": \"Go\",\n            \"align\": \"left\",\n            \"background_background\": \"classic\",\n            \"background_color\": \"#223344\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": [\n            {\n              \"id\": \"dd8129cf\",\n              \"elType\": \"widget\",\n              \"widgetType\": \"button\",\n              \"isInner\": false,\n              \"settings\": {\n                \"text\": \"More\",\n                \"align\": \"right\",\n                \"button_background_hover_background\": \"classic\",\n                \"button_background_hover_color\": \"#445566\"\n              },\n              \"elements\": []\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:37c2ac7417a45c745fdedee6c64339ee167b8b1617f40047c60c78b4f5a78b3e\",\n  \"appliedFamilies\": [\n    \"normalBackground\",\n    \"hoverBackground\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "families-empty",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "families-array",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "families-unknown",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "manifest-null",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "manifest-array",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "manifest-extra-key",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "manifest-missing-key",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "manifest-wrong-version",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "manifest-wrong-schema",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "fingerprint-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "base-digest-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "authority-responsiveInferencePerformed",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "authority-figmaMutation",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "authority-networkAccess",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "authority-responsiveClosureClaim",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "authority-targetCompatibilityClaim",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "authority-productionAcceptance",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "authority-downloadEnabled",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-normalText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "normalText"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"normalText\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-normalBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "normalBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"normalBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-hoverText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverText"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverText\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-authority-normalText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "normalText"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"normalText\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-authority-normalBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "normalBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"normalBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-authority-hoverText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverText"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverText\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-authority-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-authority-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-null-normalText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "normalText"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"normalText\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-null-normalBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "normalBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"normalBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-null-hoverText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverText"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverText\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-null-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-null-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-invalid-normalText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "normalText"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"normalText\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-invalid-normalBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "normalBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"normalBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-invalid-hoverText",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverText"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverText\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "nested-invalid-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a",
+   "baseCandidateIdentityDigest": "sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "FAMILY_REJECTED",
+     "family": "hoverBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:08fb702cf89aa173d0b19db8f951272b9472ddb495f47401893a50cf98dbce7a\",\n  \"baseCandidateIdentityDigest\": \"sha256:e5919a45730f3a7452849cc3153a3e3315c8dc32a8a1778e438d812b040fd7f1\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"FAMILY_REJECTED\",\n      \"family\": \"hoverBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "source-invalid",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "BLOCKED",
+   "sourceIrFingerprint": null,
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "SOURCE_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"BLOCKED\",\n  \"sourceIrFingerprint\": null,\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"SOURCE_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ },
+ {
+  "name": "source-review-upstream",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-button-color-composition-v1",
+   "status": "BLOCKED",
+   "sourceIrFingerprint": "sha256:8bf4329964f2bb32cbb168839e9fe04533f911bcdbf0c4bd6f7f2ac0474eaae2",
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "BASE_NOT_READY",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-button-color-composition-v1\",\n  \"status\": \"BLOCKED\",\n  \"sourceIrFingerprint\": \"sha256:8bf4329964f2bb32cbb168839e9fe04533f911bcdbf0c4bd6f7f2ac0474eaae2\",\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"BASE_NOT_READY\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Button color composition result."
+ }
+]
