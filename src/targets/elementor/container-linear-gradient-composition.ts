@@ -1,38 +1,121 @@
-import { buildElementorTemplateCandidateArtifact, type ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
-import { buildElementorTemplateCandidateIdentity } from './import-validation-contract';
-import { validateP15NeutralExportDocument, type P15NeutralExportDocumentV1 } from './neutral-export-ir';
-import { fingerprintP15NeutralExportDocument } from './neutral-export-ir-identity';
-import { bindP15NeutralSourceToGeneratedContainers, cloneP15ReadyElementorTemplate, collectP15NeutralContainerNodes } from './responsive-container-binding';
+import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
+import {
+  resolveContainerPropertyFamily,
+  serializeContainerPropertyFamilySummary,
+  type ContainerFamilyIssue,
+  type ContainerFamilyResult,
+} from './mapping-engine/container-family-engine';
+import { gradientProfileCodec, gradientWrites, type GradientKind, type GradientProfile } from './mapping-engine/families/button-gradient';
+import { statePairFamily, type PairEntry } from './mapping-engine/families/state-pair';
 import type { ElementorTemplateV04 } from './template-v04';
-import { generateElementorV3TemplateCandidate } from './v3-template-generator';
 
-export const P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION = 'p15-elementor-container-linear-gradient-manifest-v1' as const;
-export const P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_EVIDENCE = Object.freeze({
+/**
+ * Container normal/hover linear gradients (recovery M1.5e target repair).
+ *
+ * Elementor 4.2.4 declares `color_stop` / `color_b_stop` and `gradient_angle` as SLIDER controls, and
+ * the gradient CSS reads `{{color_stop.SIZE}}{{color_stop.UNIT}}`. v1 wrote bare stop numbers, which
+ * Elementor cannot render. v2 reuses the Button gradient codec and writes, which encode sliders
+ * (`{ unit, size, sizes: [] }`) and require integer stops in order with paired responsive stops.
+ */
+export const P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION = 'p15-elementor-container-linear-gradient-manifest-v2' as const;
+export const P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_RESULT_VERSION = 'p15-elementor-container-linear-gradient-result-v2' as const;
+export const P15_ELEMENTOR_CONTAINER_GRADIENT_SOURCE_EVIDENCE = Object.freeze({
   elementorVersion: '4.2.4', elementorTagCommitSha: '0e292207b5b45f0e22603967ae41c0374211160d',
   containerSourcePath: 'includes/elements/container.php', containerSourceBlobSha: '3486766b9565af99536ae205ed1936bb155daed0',
   backgroundGroupSourcePath: 'includes/controls/groups/background.php', backgroundGroupSourceBlobSha: 'ac8e1a510ec663f3f428c9f564dc2c5b727435e1',
-  normalGroupName: 'background', hoverGroupName: 'background_hover', acceptedBackgroundType: 'gradient', acceptedGradientType: 'linear',
-  colorPattern: '^#[0-9a-f]{6}$', stopUnit: '%', stopMin: 0, stopMax: 100, angleUnit: 'deg', angleMin: 0, angleMax: 360,
+  normalGroupName: 'background', hoverGroupName: 'background_hover', acceptedBackgroundType: 'gradient',
+  colorPattern: '^#[0-9a-f]{6}$', stopEncoding: 'slider { unit: "%", size, sizes: [] }', stopMin: 0, stopMax: 100,
+  stopOrder: 'stopA <= stopB', responsiveStops: 'tablet/mobile stop pairs, both or neither',
 });
-export interface P15ContainerLinearGradientV1 { colorA: string; colorB: string; stopA: number; stopB: number; angleDeg?: number; tabletStopA?: number; tabletStopB?: number; mobileStopA?: number; mobileStopB?: number; tabletAngleDeg?: number; mobileAngleDeg?: number; }
-export interface P15ContainerLinearGradientEntryV1 { sourceNodeId: string; normal?: P15ContainerLinearGradientV1; hover?: P15ContainerLinearGradientV1; }
-export interface P15ContainerLinearGradientManifestV1 { schemaVersion: 1; manifestVersion: typeof P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION; sourceIrFingerprint: string; baseCandidateIdentityDigest: string; containers: P15ContainerLinearGradientEntryV1[]; gradientInferencePerformed: false; responsiveInferencePerformed: false; figmaMutation: false; networkAccess: false; responsiveClosureClaim: false; targetCompatibilityClaim: false; productionAcceptance: false; downloadEnabled: false; }
-export interface P15ContainerLinearGradientResultV1 { schemaVersion: 1; manifestVersion: typeof P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION; status: 'BLOCKED'|'REJECTED'|'RESOLVED'; sourceIrFingerprint: string|null; baseCandidateIdentityDigest: string|null; resolvedCandidateIdentityDigest: string|null; resolvedGradients: P15ContainerLinearGradientEntryV1[]; issues: string[]; template: ElementorTemplateV04|null; candidate: ElementorTemplateCandidateArtifactV1|null; gradientInferencePerformed: false; responsiveInferencePerformed: false; figmaMutation: false; networkAccess: false; responsiveClosureClaim: false; targetCompatibilityClaim: false; productionAcceptance: false; downloadEnabled: false; internalReviewRequired: true; }
-const hex = (v: unknown): v is string => typeof v === 'string' && /^#[0-9a-f]{6}$/.test(v);
-const finite = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
-const angle = (v: unknown): v is number => finite(v) && v >= 0 && v <= 360;
-const stop = (v: unknown): v is number => finite(v) && v >= 0 && v <= 100;
-const rec = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
-const digest = (v: unknown): v is string => typeof v === 'string' && /^sha256:[0-9a-f]{64}$/.test(v);
-const keys = ['colorA','colorB','stopA','stopB','angleDeg','tabletStopA','tabletStopB','mobileStopA','mobileStopB','tabletAngleDeg','mobileAngleDeg'] as const;
-function validGradient(v: unknown): v is P15ContainerLinearGradientV1 { if (!rec(v) || !Object.keys(v).every(k => keys.includes(k as never))) return false; if (!hex(v.colorA)||!hex(v.colorB)||!stop(v.stopA)||!stop(v.stopB)) return false; for (const k of ['angleDeg','tabletAngleDeg','mobileAngleDeg'] as const) if (v[k] !== undefined && !angle(v[k])) return false; for (const k of ['tabletStopA','tabletStopB','mobileStopA','mobileStopB'] as const) if (v[k] !== undefined && !stop(v[k])) return false; return true; }
-function settings(g: P15ContainerLinearGradientV1, prefix: ''|'hover_'): Record<string, unknown> { const p = `background_${prefix}`; const out: Record<string, unknown> = { [`${p}background`]: 'gradient', [`${p}color`]: g.colorA, [`${p}color_stop`]: g.stopA, [`${p}color_b`]: g.colorB, [`${p}color_b_stop`]: g.stopB, [`${p}gradient_type`]: 'linear' }; if (g.angleDeg !== undefined) out[`${p}gradient_angle`] = { size: g.angleDeg, unit: 'deg' }; if (g.tabletStopA !== undefined) out[`${p}color_stop_tablet`] = g.tabletStopA; if (g.tabletStopB !== undefined) out[`${p}color_b_stop_tablet`] = g.tabletStopB; if (g.mobileStopA !== undefined) out[`${p}color_stop_mobile`] = g.mobileStopA; if (g.mobileStopB !== undefined) out[`${p}color_b_stop_mobile`] = g.mobileStopB; if (g.tabletAngleDeg !== undefined) out[`${p}gradient_angle_tablet`] = { size: g.tabletAngleDeg, unit: 'deg' }; if (g.mobileAngleDeg !== undefined) out[`${p}gradient_angle_mobile`] = { size: g.mobileAngleDeg, unit: 'deg' }; return out; }
-function result(status: P15ContainerLinearGradientResultV1['status'], source: string|null, base: string|null, issue: string, template: ElementorTemplateV04|null = null, candidate: ElementorTemplateCandidateArtifactV1|null = null, resolved: P15ContainerLinearGradientEntryV1[] = []): P15ContainerLinearGradientResultV1 { return { schemaVersion:1, manifestVersion:P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION, status, sourceIrFingerprint:source, baseCandidateIdentityDigest:base, resolvedCandidateIdentityDigest:candidate ? buildElementorTemplateCandidateIdentity(candidate).digest : null, resolvedGradients:resolved.map(x=>({...x})), issues: issue ? [issue] : [], template, candidate, gradientInferencePerformed:false, responsiveInferencePerformed:false, figmaMutation:false, networkAccess:false, responsiveClosureClaim:false, targetCompatibilityClaim:false, productionAcceptance:false, downloadEnabled:false, internalReviewRequired:true }; }
-export function resolveP15ElementorContainerLinearGradients(sourceValue: unknown, manifestValue: unknown): P15ContainerLinearGradientResultV1 {
-  const validation = validateP15NeutralExportDocument(sourceValue); if (!validation.valid) return result('BLOCKED',null,null,'SOURCE_IR_INVALID'); const source = sourceValue as P15NeutralExportDocumentV1; const fingerprint = fingerprintP15NeutralExportDocument(source); const gen = generateElementorV3TemplateCandidate(source); if (!gen.candidate||!gen.template) return result('BLOCKED',fingerprint,null,'BASE_NOT_READY'); const base = buildElementorTemplateCandidateIdentity(gen.candidate).digest;
-  if (!rec(manifestValue) || Object.keys(manifestValue).sort().join() !== ['baseCandidateIdentityDigest','containers','downloadEnabled','figmaMutation','gradientInferencePerformed','manifestVersion','networkAccess','productionAcceptance','responsiveClosureClaim','responsiveInferencePerformed','schemaVersion','sourceIrFingerprint','targetCompatibilityClaim'].sort().join() || manifestValue.schemaVersion!==1 || manifestValue.manifestVersion!==P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION || manifestValue.sourceIrFingerprint!==fingerprint || manifestValue.baseCandidateIdentityDigest!==base || manifestValue.gradientInferencePerformed!==false || manifestValue.responsiveInferencePerformed!==false || manifestValue.figmaMutation!==false || manifestValue.networkAccess!==false || manifestValue.responsiveClosureClaim!==false || manifestValue.targetCompatibilityClaim!==false || manifestValue.productionAcceptance!==false || manifestValue.downloadEnabled!==false || !Array.isArray(manifestValue.containers) || !manifestValue.containers.length) return result('REJECTED',fingerprint,base,'MANIFEST_INVALID');
-  const sourceContainers = collectP15NeutralContainerNodes(source); const sourceIds = new Set(sourceContainers.keys()); const seen = new Set<string>(); const entries: P15ContainerLinearGradientEntryV1[] = []; const target = cloneP15ReadyElementorTemplate(gen.candidate); const binding = bindP15NeutralSourceToGeneratedContainers(source,target); if (binding.issues.length) return result('REJECTED',fingerprint,base,'BINDING_MISMATCH');
-  for (const raw of manifestValue.containers) { if (!rec(raw) || !Object.keys(raw).every(k=>['sourceNodeId','normal','hover'].includes(k)) || typeof raw.sourceNodeId !== 'string' || !sourceIds.has(raw.sourceNodeId) || seen.has(raw.sourceNodeId) || (raw.normal===undefined && raw.hover===undefined) || (raw.normal!==undefined&&!validGradient(raw.normal)) || (raw.hover!==undefined&&!validGradient(raw.hover))) return result('REJECTED',fingerprint,base,'ENTRY_INVALID'); seen.add(raw.sourceNodeId); const node = binding.containers.get(raw.sourceNodeId); if (!node || !rec(node.settings)) return result('REJECTED',fingerprint,base,'BINDING_MISMATCH'); const applied: Record<string, unknown> = {}; for (const [mode,g] of [['normal',raw.normal],['hover',raw.hover]] as const) { if (!g) continue; const patch=settings(g, mode==='hover'?'hover_':''); for (const [k,v] of Object.entries(patch)) { if (Object.prototype.hasOwnProperty.call(node.settings,k)) return result('REJECTED',fingerprint,base,'EXISTING_OVERRIDE_CONFLICT'); applied[k]=v; node.settings[k]=v; } } entries.push({sourceNodeId:raw.sourceNodeId, ...(raw.normal?{normal:{...raw.normal}}:{}), ...(raw.hover?{hover:{...raw.hover}}:{})}); }
-  const candidate = buildElementorTemplateCandidateArtifact(target); if (candidate.status!=='READY_FOR_TARGET_IMPORT_VALIDATION'||!candidate.validation.valid) return result('REJECTED',fingerprint,base,'TARGET_INVALID'); return result('RESOLVED',fingerprint,base,'',target,candidate,entries);
+export const P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_EVIDENCE = Object.freeze({
+  ...P15_ELEMENTOR_CONTAINER_GRADIENT_SOURCE_EVIDENCE,
+  acceptedGradientType: 'linear', angleEncoding: 'slider { unit: "deg", size, sizes: [] }', angleMin: 0, angleMax: 360,
+});
+
+export interface P15ContainerLinearGradientV2 {
+  colorA: string; colorB: string; stopA: number; stopB: number;
+  tabletStopA?: number; tabletStopB?: number; mobileStopA?: number; mobileStopB?: number;
+  angleDeg?: number; tabletAngleDeg?: number; mobileAngleDeg?: number;
 }
-export function serializeP15ElementorContainerLinearGradientSummary(value: P15ContainerLinearGradientResultV1): string { if (value.schemaVersion!==1||value.manifestVersion!==P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION||!['BLOCKED','REJECTED','RESOLVED'].includes(value.status)||!Array.isArray(value.resolvedGradients)||value.issues.some(x=>x.includes('PRIVATE'))||value.status==='RESOLVED'&&(!value.resolvedGradients.length||value.issues.length)||value.responsiveInferencePerformed!==false||value.targetCompatibilityClaim!==false||value.productionAcceptance!==false||value.downloadEnabled!==false) throw new Error('Invalid gradient summary'); return JSON.stringify({schemaVersion:1,manifestVersion:value.manifestVersion,status:value.status,sourceIrFingerprint:value.sourceIrFingerprint,baseCandidateIdentityDigest:value.baseCandidateIdentityDigest,resolvedCandidateIdentityDigest:value.resolvedCandidateIdentityDigest,resolvedGradients:value.resolvedGradients,issues:value.issues,gradientInferencePerformed:false,responsiveInferencePerformed:false,figmaMutation:false,networkAccess:false,responsiveClosureClaim:false,targetCompatibilityClaim:false,productionAcceptance:false,downloadEnabled:false,internalReviewRequired:true},null,2)+'\n'; }
+export type P15ContainerLinearGradientEntryV2 = PairEntry<P15ContainerLinearGradientV2>;
+export interface P15ContainerLinearGradientManifestV2 {
+  schemaVersion: 1;
+  manifestVersion: typeof P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION;
+  sourceIrFingerprint: string;
+  baseCandidateIdentityDigest: string;
+  containers: P15ContainerLinearGradientEntryV2[];
+  gradientInferencePerformed: false;
+  responsiveInferencePerformed: false;
+  figmaMutation: false;
+  networkAccess: false;
+  responsiveClosureClaim: false;
+  targetCompatibilityClaim: false;
+  productionAcceptance: false;
+  downloadEnabled: false;
+}
+
+/** The standard engine result shared by the Container linear and radial gradient families. */
+export interface P15ContainerGradientResultV2<Entry, ResultVersion extends string = string> {
+  schemaVersion: 1;
+  resultVersion: ResultVersion;
+  status: string;
+  sourceIrFingerprint: string | null;
+  baseCandidateIdentityDigest: string | null;
+  resolvedCandidateIdentityDigest: string | null;
+  sourceContainerCount: number;
+  resolvedContainerCount: number;
+  resolvedGradients: Entry[];
+  issues: ContainerFamilyIssue[];
+  template: ElementorTemplateV04 | null;
+  candidate: ElementorTemplateCandidateArtifactV1 | null;
+  gradientInferencePerformed: false;
+  responsiveInferencePerformed: false;
+  figmaMutation: false;
+  networkAccess: false;
+  responsiveClosureClaim: false;
+  targetCompatibilityClaim: false;
+  productionAcceptance: false;
+  downloadEnabled: false;
+  internalReviewRequired: true;
+}
+export type P15ContainerLinearGradientResultV2 = P15ContainerGradientResultV2<P15ContainerLinearGradientEntryV2, typeof P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_RESULT_VERSION>;
+
+/** One Container gradient family over the shared Button gradient codec and writes. */
+export function containerGradientFamily<Value>(kind: GradientKind, meta: {
+  manifestVersion: string; resultVersion: string; evidence: Readonly<Record<string, unknown>> & { elementorVersion: string };
+  positions?: readonly string[];
+}) {
+  const upper = kind.toUpperCase();
+  return statePairFamily<Value>({
+    id: `container-${kind}-gradient`,
+    issuePrefix: `P15_CONTAINER_${upper}_GRADIENT`,
+    subject: `Container ${kind} gradient`,
+    manifestVersion: meta.manifestVersion,
+    resultVersion: meta.resultVersion,
+    maxEntries: 10_000,
+    evidence: meta.evidence,
+    statuses: { none: `NO_CONTAINER_${upper}_GRADIENT_OVERRIDES`, resolved: `CONTAINER_${upper}_GRADIENTS_RESOLVED` },
+    summaryField: 'resolvedGradients',
+    leadingAuthorityFlags: ['gradientInferencePerformed'],
+    codec: gradientProfileCodec(kind, meta.positions) as never,
+    settings: (value, state) => gradientWrites(kind, state === 'hover' ? 'background_hover' : 'background', value as GradientProfile, 0, 'Container')
+      .map((write) => [write.settingKey, write.value] as const),
+    entryEnvelopeMessage: `Each Container ${kind} gradient entry may contain only sourceNodeId plus normal and/or hover gradients.`,
+    overrideRequiredMessage: `Each Container ${kind} gradient entry must explicitly provide normal and/or hover.`,
+    valueInvalidMessage: `Container ${kind} gradient values must be lowercase hex colours with ordered integer stops 0..100${kind === 'linear' ? ' and integer angles 0..360' : ' and a documented position'}.`,
+  });
+}
+
+const P15_CONTAINER_LINEAR_GRADIENT_FAMILY = containerGradientFamily<P15ContainerLinearGradientV2>('linear', {
+  manifestVersion: P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION,
+  resultVersion: P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_RESULT_VERSION,
+  evidence: P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_EVIDENCE,
+});
+
+export function resolveP15ElementorContainerLinearGradients(sourceValue: unknown, manifestValue: unknown): P15ContainerLinearGradientResultV2 {
+  return resolveContainerPropertyFamily(P15_CONTAINER_LINEAR_GRADIENT_FAMILY, sourceValue, manifestValue) as unknown as P15ContainerLinearGradientResultV2;
+}
+
+export function serializeP15ElementorContainerLinearGradientSummary(value: P15ContainerLinearGradientResultV2): string {
+  return serializeContainerPropertyFamilySummary(P15_CONTAINER_LINEAR_GRADIENT_FAMILY, value as unknown as ContainerFamilyResult);
+}

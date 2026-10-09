@@ -136,7 +136,8 @@ const OPACITY_FIELDS = [
   ['tabletOpacityHundredths', EVIDENCE.opacityTabletSettingKey],
   ['mobileOpacityHundredths', EVIDENCE.opacityMobileSettingKey],
 ] as const;
-const FAMILY = containerStyleFamily({
+/** Container overlay colour as an engine family; also the chained prerequisite of overlay visuals. */
+export const P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_FAMILY = containerStyleFamily({
   id: 'container-overlay-color',
   issuePrefix: 'P15_CONTAINER_OVERLAY_COLOR',
   subject: 'Container overlay color',
@@ -192,12 +193,12 @@ export function resolveP15ElementorContainerOverlayColor(
   sourceValue: unknown,
   manifestValue: unknown,
 ): P15ElementorContainerOverlayColorResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorContainerOverlayColorResultV1;
+  return resolveContainerPropertyFamily(P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_FAMILY, sourceValue, manifestValue) as unknown as P15ElementorContainerOverlayColorResultV1;
 }
 
 /** Serialize only sanitized color metadata; source content, template JSON and candidate bytes are omitted. */
 export function serializeP15ElementorContainerOverlayColorSummary(
   result: P15ElementorContainerOverlayColorResultV1,
 ): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+  return serializeContainerPropertyFamilySummary(P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_FAMILY, result as unknown as ContainerFamilyResult);
 }

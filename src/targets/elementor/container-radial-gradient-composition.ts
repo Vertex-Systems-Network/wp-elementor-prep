@@ -1,22 +1,66 @@
-import { resolveP15ElementorContainerLinearGradients, type P15ContainerLinearGradientEntryV1 } from './container-linear-gradient-composition';
-import { bindP15NeutralSourceToGeneratedContainers } from './responsive-container-binding';
-import type { P15NeutralExportDocumentV1 } from './neutral-export-ir';
+import {
+  resolveContainerPropertyFamily,
+  serializeContainerPropertyFamilySummary,
+  type ContainerFamilyResult,
+} from './mapping-engine/container-family-engine';
+import type { PairEntry } from './mapping-engine/families/state-pair';
+import {
+  containerGradientFamily,
+  P15_ELEMENTOR_CONTAINER_GRADIENT_SOURCE_EVIDENCE,
+  type P15ContainerGradientResultV2,
+} from './container-linear-gradient-composition';
 
-export const P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION = 'p15-elementor-container-radial-gradient-manifest-v1' as const;
-export const P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_POSITIONS = ['center center','center left','center right','top center','top left','top right','bottom center','bottom left','bottom right'] as const;
+/**
+ * Container normal/hover radial gradients (recovery M1.5e target repair). v1 rewrote a linear
+ * template into radial but returned the unchanged linear candidate and digest, so the artifact still
+ * said `linear`. v2 is its own engine family: the candidate is always rebuilt from the exact writes,
+ * stops are sliders, and `gradient_position` (responsive in 4.2.4) accepts the nine documented values.
+ */
+export const P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION = 'p15-elementor-container-radial-gradient-manifest-v2' as const;
+export const P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_RESULT_VERSION = 'p15-elementor-container-radial-gradient-result-v2' as const;
+export const P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_POSITIONS = ['center center', 'center left', 'center right', 'top center', 'top left',
+  'top right', 'bottom center', 'bottom left', 'bottom right'] as const;
 export type P15ContainerRadialGradientPosition = typeof P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_POSITIONS[number];
-export interface P15ContainerRadialGradientV1 { colorA:string;colorB:string;stopA:number;stopB:number;position:P15ContainerRadialGradientPosition;tabletStopA?:number;tabletStopB?:number;mobileStopA?:number;mobileStopB?:number; }
-export interface P15ContainerRadialGradientEntryV1 { sourceNodeId:string;normal?:P15ContainerRadialGradientV1;hover?:P15ContainerRadialGradientV1; }
-export interface P15ContainerRadialGradientManifestV1 { schemaVersion:1;manifestVersion:typeof P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION;sourceIrFingerprint:string;baseCandidateIdentityDigest:string;containers:P15ContainerRadialGradientEntryV1[];gradientInferencePerformed:false;responsiveInferencePerformed:false;figmaMutation:false;networkAccess:false;responsiveClosureClaim:false;targetCompatibilityClaim:false;productionAcceptance:false;downloadEnabled:false; }
-const record=(v:unknown):v is Record<string,unknown>=>typeof v==='object'&&v!==null&&!Array.isArray(v);
-const validPosition=(v:unknown):v is P15ContainerRadialGradientPosition=>typeof v==='string'&&(P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_POSITIONS as readonly string[]).includes(v);
-const validGradient=(v:unknown):v is P15ContainerRadialGradientV1=>record(v)&&validPosition(v.position)&&Object.keys(v).every(k=>['colorA','colorB','stopA','stopB','position','tabletStopA','tabletStopB','mobileStopA','mobileStopB'].includes(k));
-export function resolveP15ElementorContainerRadialGradients(sourceValue:unknown,manifestValue:unknown): any {
-  if(!record(manifestValue)||manifestValue.manifestVersion!==P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION||!Array.isArray(manifestValue.containers)) return {status:'REJECTED',issues:['MANIFEST_INVALID']} as const;
-  for(const e of manifestValue.containers){if(!record(e)||typeof e.sourceNodeId!=='string'||(e.normal!==undefined&&!validGradient(e.normal))||(e.hover!==undefined&&!validGradient(e.hover))) return {status:'REJECTED',issues:['ENTRY_INVALID']} as const;}
-  const linear={...manifestValue,manifestVersion:'p15-elementor-container-linear-gradient-manifest-v1',containers:(manifestValue.containers as P15ContainerRadialGradientEntryV1[]).map(e=>({sourceNodeId:e.sourceNodeId,...(e.normal?{normal:{colorA:e.normal.colorA,colorB:e.normal.colorB,stopA:e.normal.stopA,stopB:e.normal.stopB,angleDeg:0,tabletStopA:e.normal.tabletStopA,tabletStopB:e.normal.tabletStopB,mobileStopA:e.normal.mobileStopA,mobileStopB:e.normal.mobileStopB}}:{}),...(e.hover?{hover:{colorA:e.hover.colorA,colorB:e.hover.colorB,stopA:e.hover.stopA,stopB:e.hover.stopB,angleDeg:0,tabletStopA:e.hover.tabletStopA,tabletStopB:e.hover.tabletStopB,mobileStopA:e.hover.mobileStopA,mobileStopB:e.hover.mobileStopB}}:{})}))} as unknown;
-  const result=resolveP15ElementorContainerLinearGradients(sourceValue,linear); if(result.status!=='RESOLVED'||!result.template) return {...result,manifestVersion:P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION};
-  const binding=bindP15NeutralSourceToGeneratedContainers(sourceValue as P15NeutralExportDocumentV1,result.template); for(const e of manifestValue.containers as P15ContainerRadialGradientEntryV1[]){const node=binding.containers.get(e.sourceNodeId);if(!node||!record(node.settings))return {...result,status:'REJECTED',issues:['BINDING_MISMATCH'],manifestVersion:P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION};for(const [mode,g] of [['normal',e.normal],['hover',e.hover]] as const){if(!g)continue;const p=mode==='normal'?'background_':'background_hover_';node.settings[`${p}gradient_type`]='radial';node.settings[`${p}gradient_position`]=g.position;delete node.settings[`${p}gradient_angle`];}}
-  return {...result,manifestVersion:P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION,resolvedGradients:manifestValue.containers};
+export const P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_EVIDENCE = Object.freeze({
+  ...P15_ELEMENTOR_CONTAINER_GRADIENT_SOURCE_EVIDENCE,
+  acceptedGradientType: 'radial', positionControl: 'gradient_position', positionResponsive: true,
+  acceptedPositions: P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_POSITIONS,
+});
+
+export interface P15ContainerRadialGradientV2 {
+  colorA: string; colorB: string; stopA: number; stopB: number; position: P15ContainerRadialGradientPosition;
+  tabletStopA?: number; tabletStopB?: number; mobileStopA?: number; mobileStopB?: number;
+  tabletPosition?: P15ContainerRadialGradientPosition; mobilePosition?: P15ContainerRadialGradientPosition;
 }
-export function serializeP15ElementorContainerRadialGradientSummary(value:unknown){if(!record(value)||value.status!=='RESOLVED')throw new Error('Invalid radial summary');return JSON.stringify({schemaVersion:1,manifestVersion:P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION,status:value.status,resolvedGradients:value.resolvedGradients,issues:value.issues,gradientInferencePerformed:false,responsiveInferencePerformed:false,figmaMutation:false,networkAccess:false,responsiveClosureClaim:false,targetCompatibilityClaim:false,productionAcceptance:false,downloadEnabled:false},null,2)+'\n';}
+export type P15ContainerRadialGradientEntryV2 = PairEntry<P15ContainerRadialGradientV2>;
+export interface P15ContainerRadialGradientManifestV2 {
+  schemaVersion: 1;
+  manifestVersion: typeof P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION;
+  sourceIrFingerprint: string;
+  baseCandidateIdentityDigest: string;
+  containers: P15ContainerRadialGradientEntryV2[];
+  gradientInferencePerformed: false;
+  responsiveInferencePerformed: false;
+  figmaMutation: false;
+  networkAccess: false;
+  responsiveClosureClaim: false;
+  targetCompatibilityClaim: false;
+  productionAcceptance: false;
+  downloadEnabled: false;
+}
+export type P15ContainerRadialGradientResultV2 = P15ContainerGradientResultV2<P15ContainerRadialGradientEntryV2, typeof P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_RESULT_VERSION>;
+
+const P15_CONTAINER_RADIAL_GRADIENT_FAMILY = containerGradientFamily<P15ContainerRadialGradientV2>('radial', {
+  manifestVersion: P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION,
+  resultVersion: P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_RESULT_VERSION,
+  evidence: P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_EVIDENCE,
+  positions: P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_POSITIONS,
+});
+
+export function resolveP15ElementorContainerRadialGradients(sourceValue: unknown, manifestValue: unknown): P15ContainerRadialGradientResultV2 {
+  return resolveContainerPropertyFamily(P15_CONTAINER_RADIAL_GRADIENT_FAMILY, sourceValue, manifestValue) as unknown as P15ContainerRadialGradientResultV2;
+}
+
+export function serializeP15ElementorContainerRadialGradientSummary(value: P15ContainerRadialGradientResultV2): string {
+  return serializeContainerPropertyFamilySummary(P15_CONTAINER_RADIAL_GRADIENT_FAMILY, value as unknown as ContainerFamilyResult);
+}

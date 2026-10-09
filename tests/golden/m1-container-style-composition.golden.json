@@ -1,0 +1,3558 @@
+[
+ {
+  "name": "all-families",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:46e79df09fb04de42fedcfe0f864632729c839995f5d939192ce532bed136e28",
+   "appliedFamilies": [
+    "normalBorder",
+    "hoverBorder",
+    "normalOverlay",
+    "hoverOverlay",
+    "boxShadows",
+    "hoverBackground",
+    "responsiveRadius",
+    "responsiveHoverRadius"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "border_border": "solid",
+       "border_width": {
+        "unit": "px",
+        "top": "1",
+        "right": "2",
+        "bottom": "3",
+        "left": "4",
+        "isLinked": false
+       },
+       "border_width_tablet": {
+        "unit": "px",
+        "top": "0",
+        "right": "0",
+        "bottom": "0",
+        "left": "0",
+        "isLinked": true
+       },
+       "border_color": "#123456",
+       "border_hover_border": "dashed",
+       "border_hover_width": {
+        "unit": "px",
+        "top": "1",
+        "right": "2",
+        "bottom": "3",
+        "left": "4",
+        "isLinked": false
+       },
+       "border_hover_color": "#abcdef",
+       "background_overlay_background": "classic",
+       "background_overlay_color": "#112233",
+       "background_overlay_opacity": {
+        "unit": "px",
+        "size": 0,
+        "sizes": []
+       },
+       "background_overlay_opacity_tablet": {
+        "unit": "px",
+        "size": 1,
+        "sizes": []
+       },
+       "box_shadow_box_shadow_type": "yes",
+       "box_shadow_box_shadow": {
+        "horizontal": -10,
+        "vertical": 10,
+        "blur": 20,
+        "spread": -5,
+        "color": "#123456"
+       },
+       "box_shadow_box_shadow_position": " ",
+       "box_shadow_hover_box_shadow_type": "yes",
+       "box_shadow_hover_box_shadow": {
+        "horizontal": 0,
+        "vertical": 8,
+        "blur": 0,
+        "spread": 5,
+        "color": "#abcdef"
+       },
+       "box_shadow_hover_box_shadow_position": "inset",
+       "border_radius_tablet": {
+        "unit": "px",
+        "top": "20",
+        "right": "20",
+        "bottom": "20",
+        "left": "20",
+        "isLinked": true
+       },
+       "border_radius_hover_mobile": {
+        "unit": "px",
+        "top": "6",
+        "right": "6",
+        "bottom": "6",
+        "left": "6",
+        "isLinked": true
+       }
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row",
+         "background_overlay_hover_background": "classic",
+         "background_overlay_hover_color": "#445566",
+         "background_overlay_hover_opacity_mobile": {
+          "unit": "px",
+          "size": 0.25,
+          "sizes": []
+         },
+         "background_hover_background": "classic",
+         "background_hover_color": "#abcdef"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"border_border\": \"solid\",\n        \"border_width\": {\n          \"unit\": \"px\",\n          \"top\": \"1\",\n          \"right\": \"2\",\n          \"bottom\": \"3\",\n          \"left\": \"4\",\n          \"isLinked\": false\n        },\n        \"border_width_tablet\": {\n          \"unit\": \"px\",\n          \"top\": \"0\",\n          \"right\": \"0\",\n          \"bottom\": \"0\",\n          \"left\": \"0\",\n          \"isLinked\": true\n        },\n        \"border_color\": \"#123456\",\n        \"border_hover_border\": \"dashed\",\n        \"border_hover_width\": {\n          \"unit\": \"px\",\n          \"top\": \"1\",\n          \"right\": \"2\",\n          \"bottom\": \"3\",\n          \"left\": \"4\",\n          \"isLinked\": false\n        },\n        \"border_hover_color\": \"#abcdef\",\n        \"background_overlay_background\": \"classic\",\n        \"background_overlay_color\": \"#112233\",\n        \"background_overlay_opacity\": {\n          \"unit\": \"px\",\n          \"size\": 0,\n          \"sizes\": []\n        },\n        \"background_overlay_opacity_tablet\": {\n          \"unit\": \"px\",\n          \"size\": 1,\n          \"sizes\": []\n        },\n        \"box_shadow_box_shadow_type\": \"yes\",\n        \"box_shadow_box_shadow\": {\n          \"horizontal\": -10,\n          \"vertical\": 10,\n          \"blur\": 20,\n          \"spread\": -5,\n          \"color\": \"#123456\"\n        },\n        \"box_shadow_box_shadow_position\": \" \",\n        \"box_shadow_hover_box_shadow_type\": \"yes\",\n        \"box_shadow_hover_box_shadow\": {\n          \"horizontal\": 0,\n          \"vertical\": 8,\n          \"blur\": 0,\n          \"spread\": 5,\n          \"color\": \"#abcdef\"\n        },\n        \"box_shadow_hover_box_shadow_position\": \"inset\",\n        \"border_radius_tablet\": {\n          \"unit\": \"px\",\n          \"top\": \"20\",\n          \"right\": \"20\",\n          \"bottom\": \"20\",\n          \"left\": \"20\",\n          \"isLinked\": true\n        },\n        \"border_radius_hover_mobile\": {\n          \"unit\": \"px\",\n          \"top\": \"6\",\n          \"right\": \"6\",\n          \"bottom\": \"6\",\n          \"left\": \"6\",\n          \"isLinked\": true\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\",\n            \"background_overlay_hover_background\": \"classic\",\n            \"background_overlay_hover_color\": \"#445566\",\n            \"background_overlay_hover_opacity_mobile\": {\n              \"unit\": \"px\",\n              \"size\": 0.25,\n              \"sizes\": []\n            },\n            \"background_hover_background\": \"classic\",\n            \"background_hover_color\": \"#abcdef\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:46e79df09fb04de42fedcfe0f864632729c839995f5d939192ce532bed136e28\",\n  \"appliedFamilies\": [\n    \"normalBorder\",\n    \"hoverBorder\",\n    \"normalOverlay\",\n    \"hoverOverlay\",\n    \"boxShadows\",\n    \"hoverBackground\",\n    \"responsiveRadius\",\n    \"responsiveHoverRadius\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "all-families-reversed-keys",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:46e79df09fb04de42fedcfe0f864632729c839995f5d939192ce532bed136e28",
+   "appliedFamilies": [
+    "normalBorder",
+    "hoverBorder",
+    "normalOverlay",
+    "hoverOverlay",
+    "boxShadows",
+    "hoverBackground",
+    "responsiveRadius",
+    "responsiveHoverRadius"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "border_border": "solid",
+       "border_width": {
+        "unit": "px",
+        "top": "1",
+        "right": "2",
+        "bottom": "3",
+        "left": "4",
+        "isLinked": false
+       },
+       "border_width_tablet": {
+        "unit": "px",
+        "top": "0",
+        "right": "0",
+        "bottom": "0",
+        "left": "0",
+        "isLinked": true
+       },
+       "border_color": "#123456",
+       "border_hover_border": "dashed",
+       "border_hover_width": {
+        "unit": "px",
+        "top": "1",
+        "right": "2",
+        "bottom": "3",
+        "left": "4",
+        "isLinked": false
+       },
+       "border_hover_color": "#abcdef",
+       "background_overlay_background": "classic",
+       "background_overlay_color": "#112233",
+       "background_overlay_opacity": {
+        "unit": "px",
+        "size": 0,
+        "sizes": []
+       },
+       "background_overlay_opacity_tablet": {
+        "unit": "px",
+        "size": 1,
+        "sizes": []
+       },
+       "box_shadow_box_shadow_type": "yes",
+       "box_shadow_box_shadow": {
+        "horizontal": -10,
+        "vertical": 10,
+        "blur": 20,
+        "spread": -5,
+        "color": "#123456"
+       },
+       "box_shadow_box_shadow_position": " ",
+       "box_shadow_hover_box_shadow_type": "yes",
+       "box_shadow_hover_box_shadow": {
+        "horizontal": 0,
+        "vertical": 8,
+        "blur": 0,
+        "spread": 5,
+        "color": "#abcdef"
+       },
+       "box_shadow_hover_box_shadow_position": "inset",
+       "border_radius_tablet": {
+        "unit": "px",
+        "top": "20",
+        "right": "20",
+        "bottom": "20",
+        "left": "20",
+        "isLinked": true
+       },
+       "border_radius_hover_mobile": {
+        "unit": "px",
+        "top": "6",
+        "right": "6",
+        "bottom": "6",
+        "left": "6",
+        "isLinked": true
+       }
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row",
+         "background_overlay_hover_background": "classic",
+         "background_overlay_hover_color": "#445566",
+         "background_overlay_hover_opacity_mobile": {
+          "unit": "px",
+          "size": 0.25,
+          "sizes": []
+         },
+         "background_hover_background": "classic",
+         "background_hover_color": "#abcdef"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"border_border\": \"solid\",\n        \"border_width\": {\n          \"unit\": \"px\",\n          \"top\": \"1\",\n          \"right\": \"2\",\n          \"bottom\": \"3\",\n          \"left\": \"4\",\n          \"isLinked\": false\n        },\n        \"border_width_tablet\": {\n          \"unit\": \"px\",\n          \"top\": \"0\",\n          \"right\": \"0\",\n          \"bottom\": \"0\",\n          \"left\": \"0\",\n          \"isLinked\": true\n        },\n        \"border_color\": \"#123456\",\n        \"border_hover_border\": \"dashed\",\n        \"border_hover_width\": {\n          \"unit\": \"px\",\n          \"top\": \"1\",\n          \"right\": \"2\",\n          \"bottom\": \"3\",\n          \"left\": \"4\",\n          \"isLinked\": false\n        },\n        \"border_hover_color\": \"#abcdef\",\n        \"background_overlay_background\": \"classic\",\n        \"background_overlay_color\": \"#112233\",\n        \"background_overlay_opacity\": {\n          \"unit\": \"px\",\n          \"size\": 0,\n          \"sizes\": []\n        },\n        \"background_overlay_opacity_tablet\": {\n          \"unit\": \"px\",\n          \"size\": 1,\n          \"sizes\": []\n        },\n        \"box_shadow_box_shadow_type\": \"yes\",\n        \"box_shadow_box_shadow\": {\n          \"horizontal\": -10,\n          \"vertical\": 10,\n          \"blur\": 20,\n          \"spread\": -5,\n          \"color\": \"#123456\"\n        },\n        \"box_shadow_box_shadow_position\": \" \",\n        \"box_shadow_hover_box_shadow_type\": \"yes\",\n        \"box_shadow_hover_box_shadow\": {\n          \"horizontal\": 0,\n          \"vertical\": 8,\n          \"blur\": 0,\n          \"spread\": 5,\n          \"color\": \"#abcdef\"\n        },\n        \"box_shadow_hover_box_shadow_position\": \"inset\",\n        \"border_radius_tablet\": {\n          \"unit\": \"px\",\n          \"top\": \"20\",\n          \"right\": \"20\",\n          \"bottom\": \"20\",\n          \"left\": \"20\",\n          \"isLinked\": true\n        },\n        \"border_radius_hover_mobile\": {\n          \"unit\": \"px\",\n          \"top\": \"6\",\n          \"right\": \"6\",\n          \"bottom\": \"6\",\n          \"left\": \"6\",\n          \"isLinked\": true\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\",\n            \"background_overlay_hover_background\": \"classic\",\n            \"background_overlay_hover_color\": \"#445566\",\n            \"background_overlay_hover_opacity_mobile\": {\n              \"unit\": \"px\",\n              \"size\": 0.25,\n              \"sizes\": []\n            },\n            \"background_hover_background\": \"classic\",\n            \"background_hover_color\": \"#abcdef\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:46e79df09fb04de42fedcfe0f864632729c839995f5d939192ce532bed136e28\",\n  \"appliedFamilies\": [\n    \"normalBorder\",\n    \"hoverBorder\",\n    \"normalOverlay\",\n    \"hoverOverlay\",\n    \"boxShadows\",\n    \"hoverBackground\",\n    \"responsiveRadius\",\n    \"responsiveHoverRadius\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "only-normalBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:3c44713cc3e479cb63762dc1077289b1d071d1e04a9cf5c6783545a9edea9da2",
+   "appliedFamilies": [
+    "normalBorder"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "border_border": "solid",
+       "border_width": {
+        "unit": "px",
+        "top": "1",
+        "right": "2",
+        "bottom": "3",
+        "left": "4",
+        "isLinked": false
+       },
+       "border_width_tablet": {
+        "unit": "px",
+        "top": "0",
+        "right": "0",
+        "bottom": "0",
+        "left": "0",
+        "isLinked": true
+       },
+       "border_color": "#123456"
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"border_border\": \"solid\",\n        \"border_width\": {\n          \"unit\": \"px\",\n          \"top\": \"1\",\n          \"right\": \"2\",\n          \"bottom\": \"3\",\n          \"left\": \"4\",\n          \"isLinked\": false\n        },\n        \"border_width_tablet\": {\n          \"unit\": \"px\",\n          \"top\": \"0\",\n          \"right\": \"0\",\n          \"bottom\": \"0\",\n          \"left\": \"0\",\n          \"isLinked\": true\n        },\n        \"border_color\": \"#123456\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:3c44713cc3e479cb63762dc1077289b1d071d1e04a9cf5c6783545a9edea9da2\",\n  \"appliedFamilies\": [\n    \"normalBorder\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "only-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:5e755224e4e9926233f5fbf54e759374a3b2fd33532316dd9b259e29ea25e983",
+   "appliedFamilies": [
+    "hoverBorder"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "border_hover_border": "dashed",
+       "border_hover_width": {
+        "unit": "px",
+        "top": "1",
+        "right": "2",
+        "bottom": "3",
+        "left": "4",
+        "isLinked": false
+       },
+       "border_hover_color": "#abcdef"
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"border_hover_border\": \"dashed\",\n        \"border_hover_width\": {\n          \"unit\": \"px\",\n          \"top\": \"1\",\n          \"right\": \"2\",\n          \"bottom\": \"3\",\n          \"left\": \"4\",\n          \"isLinked\": false\n        },\n        \"border_hover_color\": \"#abcdef\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:5e755224e4e9926233f5fbf54e759374a3b2fd33532316dd9b259e29ea25e983\",\n  \"appliedFamilies\": [\n    \"hoverBorder\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "only-normalOverlay",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:a31dac76aeff7dab29bf0409ef15c6228cd18c173b966e31886156ee8b63d813",
+   "appliedFamilies": [
+    "normalOverlay"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "background_overlay_background": "classic",
+       "background_overlay_color": "#112233",
+       "background_overlay_opacity": {
+        "unit": "px",
+        "size": 0,
+        "sizes": []
+       },
+       "background_overlay_opacity_tablet": {
+        "unit": "px",
+        "size": 1,
+        "sizes": []
+       }
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"background_overlay_background\": \"classic\",\n        \"background_overlay_color\": \"#112233\",\n        \"background_overlay_opacity\": {\n          \"unit\": \"px\",\n          \"size\": 0,\n          \"sizes\": []\n        },\n        \"background_overlay_opacity_tablet\": {\n          \"unit\": \"px\",\n          \"size\": 1,\n          \"sizes\": []\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:a31dac76aeff7dab29bf0409ef15c6228cd18c173b966e31886156ee8b63d813\",\n  \"appliedFamilies\": [\n    \"normalOverlay\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "only-hoverOverlay",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:0cd83a47ad22f0c0f4b0b1f387d873402eea0be87752ca1fffd5a1b27bc447c0",
+   "appliedFamilies": [
+    "hoverOverlay"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       }
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row",
+         "background_overlay_hover_background": "classic",
+         "background_overlay_hover_color": "#445566",
+         "background_overlay_hover_opacity_mobile": {
+          "unit": "px",
+          "size": 0.25,
+          "sizes": []
+         }
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\",\n            \"background_overlay_hover_background\": \"classic\",\n            \"background_overlay_hover_color\": \"#445566\",\n            \"background_overlay_hover_opacity_mobile\": {\n              \"unit\": \"px\",\n              \"size\": 0.25,\n              \"sizes\": []\n            }\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:0cd83a47ad22f0c0f4b0b1f387d873402eea0be87752ca1fffd5a1b27bc447c0\",\n  \"appliedFamilies\": [\n    \"hoverOverlay\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "only-boxShadows",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:8c0b45f118a37927021f9ada56b37038103875820fd8d8417a38c467e39c916e",
+   "appliedFamilies": [
+    "boxShadows"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "box_shadow_box_shadow_type": "yes",
+       "box_shadow_box_shadow": {
+        "horizontal": -10,
+        "vertical": 10,
+        "blur": 20,
+        "spread": -5,
+        "color": "#123456"
+       },
+       "box_shadow_box_shadow_position": " ",
+       "box_shadow_hover_box_shadow_type": "yes",
+       "box_shadow_hover_box_shadow": {
+        "horizontal": 0,
+        "vertical": 8,
+        "blur": 0,
+        "spread": 5,
+        "color": "#abcdef"
+       },
+       "box_shadow_hover_box_shadow_position": "inset"
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"box_shadow_box_shadow_type\": \"yes\",\n        \"box_shadow_box_shadow\": {\n          \"horizontal\": -10,\n          \"vertical\": 10,\n          \"blur\": 20,\n          \"spread\": -5,\n          \"color\": \"#123456\"\n        },\n        \"box_shadow_box_shadow_position\": \" \",\n        \"box_shadow_hover_box_shadow_type\": \"yes\",\n        \"box_shadow_hover_box_shadow\": {\n          \"horizontal\": 0,\n          \"vertical\": 8,\n          \"blur\": 0,\n          \"spread\": 5,\n          \"color\": \"#abcdef\"\n        },\n        \"box_shadow_hover_box_shadow_position\": \"inset\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:8c0b45f118a37927021f9ada56b37038103875820fd8d8417a38c467e39c916e\",\n  \"appliedFamilies\": [\n    \"boxShadows\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "only-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:aaaf6bcabee94b9a4d1bd18a1125279b907eb95862b98166c986de738d61b08f",
+   "appliedFamilies": [
+    "hoverBackground"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       }
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row",
+         "background_hover_background": "classic",
+         "background_hover_color": "#abcdef"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\",\n            \"background_hover_background\": \"classic\",\n            \"background_hover_color\": \"#abcdef\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:aaaf6bcabee94b9a4d1bd18a1125279b907eb95862b98166c986de738d61b08f\",\n  \"appliedFamilies\": [\n    \"hoverBackground\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "only-responsiveRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:8d9f06c21b925911e908f08c55f9b01bb934b5435e800feaa8843396d41f2812",
+   "appliedFamilies": [
+    "responsiveRadius"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "border_radius_tablet": {
+        "unit": "px",
+        "top": "20",
+        "right": "20",
+        "bottom": "20",
+        "left": "20",
+        "isLinked": true
+       }
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"border_radius_tablet\": {\n          \"unit\": \"px\",\n          \"top\": \"20\",\n          \"right\": \"20\",\n          \"bottom\": \"20\",\n          \"left\": \"20\",\n          \"isLinked\": true\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:8d9f06c21b925911e908f08c55f9b01bb934b5435e800feaa8843396d41f2812\",\n  \"appliedFamilies\": [\n    \"responsiveRadius\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "only-responsiveHoverRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:1f249098fa1683b0d929e551a4bc684a1f30222e63500ada4f81b2c55e2f1f2e",
+   "appliedFamilies": [
+    "responsiveHoverRadius"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "border_radius_hover_mobile": {
+        "unit": "px",
+        "top": "6",
+        "right": "6",
+        "bottom": "6",
+        "left": "6",
+        "isLinked": true
+       }
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"border_radius_hover_mobile\": {\n          \"unit\": \"px\",\n          \"top\": \"6\",\n          \"right\": \"6\",\n          \"bottom\": \"6\",\n          \"left\": \"6\",\n          \"isLinked\": true\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:1f249098fa1683b0d929e551a4bc684a1f30222e63500ada4f81b2c55e2f1f2e\",\n  \"appliedFamilies\": [\n    \"responsiveHoverRadius\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "pair-normalBorder-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:a6b28ac526169c51ff8390fd5f5e5d937dbd4d6a074f0e6a204027c89ed191eb",
+   "appliedFamilies": [
+    "normalBorder",
+    "hoverBorder"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "border_border": "solid",
+       "border_width": {
+        "unit": "px",
+        "top": "1",
+        "right": "2",
+        "bottom": "3",
+        "left": "4",
+        "isLinked": false
+       },
+       "border_width_tablet": {
+        "unit": "px",
+        "top": "0",
+        "right": "0",
+        "bottom": "0",
+        "left": "0",
+        "isLinked": true
+       },
+       "border_color": "#123456",
+       "border_hover_border": "dashed",
+       "border_hover_width": {
+        "unit": "px",
+        "top": "1",
+        "right": "2",
+        "bottom": "3",
+        "left": "4",
+        "isLinked": false
+       },
+       "border_hover_color": "#abcdef"
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"border_border\": \"solid\",\n        \"border_width\": {\n          \"unit\": \"px\",\n          \"top\": \"1\",\n          \"right\": \"2\",\n          \"bottom\": \"3\",\n          \"left\": \"4\",\n          \"isLinked\": false\n        },\n        \"border_width_tablet\": {\n          \"unit\": \"px\",\n          \"top\": \"0\",\n          \"right\": \"0\",\n          \"bottom\": \"0\",\n          \"left\": \"0\",\n          \"isLinked\": true\n        },\n        \"border_color\": \"#123456\",\n        \"border_hover_border\": \"dashed\",\n        \"border_hover_width\": {\n          \"unit\": \"px\",\n          \"top\": \"1\",\n          \"right\": \"2\",\n          \"bottom\": \"3\",\n          \"left\": \"4\",\n          \"isLinked\": false\n        },\n        \"border_hover_color\": \"#abcdef\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:a6b28ac526169c51ff8390fd5f5e5d937dbd4d6a074f0e6a204027c89ed191eb\",\n  \"appliedFamilies\": [\n    \"normalBorder\",\n    \"hoverBorder\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "pair-normalOverlay-boxShadows",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:2f78bc8c760863a66e20cae24580db4322ff8df0e0642185f98c54094eb1f6a1",
+   "appliedFamilies": [
+    "normalOverlay",
+    "boxShadows"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "background_overlay_background": "classic",
+       "background_overlay_color": "#112233",
+       "background_overlay_opacity": {
+        "unit": "px",
+        "size": 0,
+        "sizes": []
+       },
+       "background_overlay_opacity_tablet": {
+        "unit": "px",
+        "size": 1,
+        "sizes": []
+       },
+       "box_shadow_box_shadow_type": "yes",
+       "box_shadow_box_shadow": {
+        "horizontal": -10,
+        "vertical": 10,
+        "blur": 20,
+        "spread": -5,
+        "color": "#123456"
+       },
+       "box_shadow_box_shadow_position": " ",
+       "box_shadow_hover_box_shadow_type": "yes",
+       "box_shadow_hover_box_shadow": {
+        "horizontal": 0,
+        "vertical": 8,
+        "blur": 0,
+        "spread": 5,
+        "color": "#abcdef"
+       },
+       "box_shadow_hover_box_shadow_position": "inset"
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"background_overlay_background\": \"classic\",\n        \"background_overlay_color\": \"#112233\",\n        \"background_overlay_opacity\": {\n          \"unit\": \"px\",\n          \"size\": 0,\n          \"sizes\": []\n        },\n        \"background_overlay_opacity_tablet\": {\n          \"unit\": \"px\",\n          \"size\": 1,\n          \"sizes\": []\n        },\n        \"box_shadow_box_shadow_type\": \"yes\",\n        \"box_shadow_box_shadow\": {\n          \"horizontal\": -10,\n          \"vertical\": 10,\n          \"blur\": 20,\n          \"spread\": -5,\n          \"color\": \"#123456\"\n        },\n        \"box_shadow_box_shadow_position\": \" \",\n        \"box_shadow_hover_box_shadow_type\": \"yes\",\n        \"box_shadow_hover_box_shadow\": {\n          \"horizontal\": 0,\n          \"vertical\": 8,\n          \"blur\": 0,\n          \"spread\": 5,\n          \"color\": \"#abcdef\"\n        },\n        \"box_shadow_hover_box_shadow_position\": \"inset\"\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:2f78bc8c760863a66e20cae24580db4322ff8df0e0642185f98c54094eb1f6a1\",\n  \"appliedFamilies\": [\n    \"normalOverlay\",\n    \"boxShadows\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "pair-responsiveRadius-responsiveHoverRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "RESOLVED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": "sha256:d172190db37b3a51dafe529b5dc961a592db7a6118ca9b420d7c616fac56562e",
+   "appliedFamilies": [
+    "responsiveRadius",
+    "responsiveHoverRadius"
+   ],
+   "issues": [],
+   "template": {
+    "title": "Golden composition source",
+    "type": "section",
+    "version": "0.4",
+    "page_settings": [],
+    "content": [
+     {
+      "id": "7b93f040",
+      "elType": "container",
+      "isInner": false,
+      "settings": {
+       "flex_direction": "column",
+       "border_radius": {
+        "unit": "px",
+        "top": "12",
+        "right": "12",
+        "bottom": "12",
+        "left": "12",
+        "isLinked": true
+       },
+       "border_radius_tablet": {
+        "unit": "px",
+        "top": "20",
+        "right": "20",
+        "bottom": "20",
+        "left": "20",
+        "isLinked": true
+       },
+       "border_radius_hover_mobile": {
+        "unit": "px",
+        "top": "6",
+        "right": "6",
+        "bottom": "6",
+        "left": "6",
+        "isLinked": true
+       }
+      },
+      "elements": [
+       {
+        "id": "78f62f0b",
+        "elType": "widget",
+        "widgetType": "heading",
+        "isInner": false,
+        "settings": {
+         "title": "Golden heading",
+         "header_size": "h2"
+        },
+        "elements": []
+       },
+       {
+        "id": "5412b6c3",
+        "elType": "container",
+        "isInner": true,
+        "settings": {
+         "flex_direction": "row"
+        },
+        "elements": []
+       }
+      ]
+     }
+    ]
+   },
+   "candidate": {
+    "schemaVersion": 1,
+    "candidateVersion": "elementor-template-candidate-v1",
+    "targetContractVersion": "elementor-template-v0.4-container-v1",
+    "capabilityRegistryVersion": "elementor-core-widget-capabilities-v1",
+    "status": "READY_FOR_TARGET_IMPORT_VALIDATION",
+    "targetCompatibilityClaim": false,
+    "productionAcceptance": false,
+    "downloadEnabled": false,
+    "importValidationStatus": "NOT_RUN",
+    "validation": {
+     "contractVersion": "elementor-template-v0.4-container-v1",
+     "valid": true,
+     "documentVersion": "0.4",
+     "elementCount": 3,
+     "containerCount": 2,
+     "widgetCount": 1,
+     "widgetTypes": [
+      "heading"
+     ],
+     "issues": []
+    },
+    "capabilityReport": {
+     "schemaVersion": 1,
+     "registryVersion": "elementor-core-widget-capabilities-v1",
+     "targetContractVersion": "elementor-template-v0.4-container-v1",
+     "targetCompatibilityClaim": false,
+     "generationEnabled": false,
+     "status": "ASSESSED",
+     "templateValid": true,
+     "validationIssues": [],
+     "summary": {
+      "totalWidgets": 1,
+      "documentedCoreWidgets": 1,
+      "reviewRequiredWidgets": 0,
+      "widgetsWithResponsiveSettings": 0,
+      "widgetsWithGlobalReferences": 0
+     },
+     "widgetInventory": [
+      {
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "count": 1
+      }
+     ],
+     "entries": [
+      {
+       "path": "$.content[0].elements[0]",
+       "id": "78f62f0b",
+       "widgetType": "heading",
+       "classification": "DOCUMENTED_CORE",
+       "generationEnabled": false,
+       "availabilityClaim": false,
+       "responsiveSettingKeys": [],
+       "globalReferenceKeys": []
+      }
+     ]
+    },
+    "reviewWidgetTypes": [],
+    "templateJson": "{\n  \"title\": \"Golden composition source\",\n  \"type\": \"section\",\n  \"version\": \"0.4\",\n  \"page_settings\": [],\n  \"content\": [\n    {\n      \"id\": \"7b93f040\",\n      \"elType\": \"container\",\n      \"isInner\": false,\n      \"settings\": {\n        \"flex_direction\": \"column\",\n        \"border_radius\": {\n          \"unit\": \"px\",\n          \"top\": \"12\",\n          \"right\": \"12\",\n          \"bottom\": \"12\",\n          \"left\": \"12\",\n          \"isLinked\": true\n        },\n        \"border_radius_tablet\": {\n          \"unit\": \"px\",\n          \"top\": \"20\",\n          \"right\": \"20\",\n          \"bottom\": \"20\",\n          \"left\": \"20\",\n          \"isLinked\": true\n        },\n        \"border_radius_hover_mobile\": {\n          \"unit\": \"px\",\n          \"top\": \"6\",\n          \"right\": \"6\",\n          \"bottom\": \"6\",\n          \"left\": \"6\",\n          \"isLinked\": true\n        }\n      },\n      \"elements\": [\n        {\n          \"id\": \"78f62f0b\",\n          \"elType\": \"widget\",\n          \"widgetType\": \"heading\",\n          \"isInner\": false,\n          \"settings\": {\n            \"title\": \"Golden heading\",\n            \"header_size\": \"h2\"\n          },\n          \"elements\": []\n        },\n        {\n          \"id\": \"5412b6c3\",\n          \"elType\": \"container\",\n          \"isInner\": true,\n          \"settings\": {\n            \"flex_direction\": \"row\"\n          },\n          \"elements\": []\n        }\n      ]\n    }\n  ]\n}\n"
+   },
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"RESOLVED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": \"sha256:d172190db37b3a51dafe529b5dc961a592db7a6118ca9b420d7c616fac56562e\",\n  \"appliedFamilies\": [\n    \"responsiveRadius\",\n    \"responsiveHoverRadius\"\n  ],\n  \"issues\": [],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "families-empty",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "families-array",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "families-unknown",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "manifest-null",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "manifest-array",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "manifest-extra-key",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "manifest-missing-key",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "manifest-wrong-version",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "manifest-wrong-schema",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "fingerprint-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "base-digest-mismatch",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "authority-responsiveInferencePerformed",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "authority-figmaMutation",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "authority-networkAccess",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "authority-responsiveClosureClaim",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "authority-targetCompatibilityClaim",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "authority-productionAcceptance",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "authority-downloadEnabled",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_MANIFEST_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_MANIFEST_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-normalBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "normalBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"normalBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-normalOverlay",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "normalOverlay"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"normalOverlay\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-hoverOverlay",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverOverlay"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverOverlay\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-boxShadows",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "boxShadows"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"boxShadows\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-responsiveRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "responsiveRadius"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"responsiveRadius\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-stale-fingerprint-responsiveHoverRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "responsiveHoverRadius"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"responsiveHoverRadius\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-authority-normalBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "normalBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"normalBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-authority-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-authority-normalOverlay",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "normalOverlay"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"normalOverlay\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-authority-hoverOverlay",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverOverlay"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverOverlay\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-authority-boxShadows",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "boxShadows"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"boxShadows\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-authority-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-authority-responsiveRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "responsiveRadius"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"responsiveRadius\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-authority-responsiveHoverRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "responsiveHoverRadius"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"responsiveHoverRadius\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-null-normalBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "normalBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"normalBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-null-hoverBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-null-normalOverlay",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "normalOverlay"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"normalOverlay\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-null-hoverOverlay",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverOverlay"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverOverlay\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-null-boxShadows",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "boxShadows"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"boxShadows\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-null-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-null-responsiveRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "responsiveRadius"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"responsiveRadius\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-null-responsiveHoverRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "responsiveHoverRadius"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"responsiveHoverRadius\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-invalid-normalBorder",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "normalBorder"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"normalBorder\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-invalid-normalOverlay",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "normalOverlay"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"normalOverlay\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-invalid-boxShadows",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "boxShadows"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"boxShadows\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-invalid-hoverBackground",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "hoverBackground"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"hoverBackground\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-invalid-responsiveRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "responsiveRadius"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"responsiveRadius\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "nested-invalid-responsiveHoverRadius",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "REJECTED",
+   "sourceIrFingerprint": "sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072",
+   "baseCandidateIdentityDigest": "sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6",
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_FAMILY_REJECTED",
+     "family": "responsiveHoverRadius"
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"REJECTED\",\n  \"sourceIrFingerprint\": \"sha256:2a4f1f6832377750268b91bd7182ddd7218dbb2e4d05b109f79236c79dc19072\",\n  \"baseCandidateIdentityDigest\": \"sha256:355e0d45e29748e5602c06a9feb926a75fd07a22e0c166f999ead66ce6dc3ee6\",\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_FAMILY_REJECTED\",\n      \"family\": \"responsiveHoverRadius\"\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "source-invalid",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "BLOCKED",
+   "sourceIrFingerprint": null,
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_SOURCE_INVALID",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"BLOCKED\",\n  \"sourceIrFingerprint\": null,\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_SOURCE_INVALID\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ },
+ {
+  "name": "source-review-upstream",
+  "result": {
+   "schemaVersion": 1,
+   "compositionVersion": "p15-container-style-composition-v3",
+   "status": "BLOCKED",
+   "sourceIrFingerprint": "sha256:8ef3dff3128e088f5dfb31be0998cac71630dbd816daafd437d2bd54c2fa8c83",
+   "baseCandidateIdentityDigest": null,
+   "resolvedCandidateIdentityDigest": null,
+   "appliedFamilies": [],
+   "issues": [
+    {
+     "code": "P15_CONTAINER_COMPOSITION_BASE_NOT_READY",
+     "family": null
+    }
+   ],
+   "template": null,
+   "candidate": null,
+   "responsiveInferencePerformed": false,
+   "figmaMutation": false,
+   "networkAccess": false,
+   "responsiveClosureClaim": false,
+   "targetCompatibilityClaim": false,
+   "productionAcceptance": false,
+   "downloadEnabled": false,
+   "internalReviewRequired": true
+  },
+  "serialized": "{\n  \"schemaVersion\": 1,\n  \"compositionVersion\": \"p15-container-style-composition-v3\",\n  \"status\": \"BLOCKED\",\n  \"sourceIrFingerprint\": \"sha256:8ef3dff3128e088f5dfb31be0998cac71630dbd816daafd437d2bd54c2fa8c83\",\n  \"baseCandidateIdentityDigest\": null,\n  \"resolvedCandidateIdentityDigest\": null,\n  \"appliedFamilies\": [],\n  \"issues\": [\n    {\n      \"code\": \"P15_CONTAINER_COMPOSITION_BASE_NOT_READY\",\n      \"family\": null\n    }\n  ],\n  \"responsiveInferencePerformed\": false,\n  \"figmaMutation\": false,\n  \"networkAccess\": false,\n  \"responsiveClosureClaim\": false,\n  \"targetCompatibilityClaim\": false,\n  \"productionAcceptance\": false,\n  \"downloadEnabled\": false,\n  \"internalReviewRequired\": true\n}\n",
+  "inflatedSerialized": "THROWS: Invalid or authority-inflated Container style composition result."
+ }
+]

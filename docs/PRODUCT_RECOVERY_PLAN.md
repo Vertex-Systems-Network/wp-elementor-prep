@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.5** (one ordered composer; also absorbs align-content and the container/button compositions)
-> - Last completed task: **M1.4d** (5 button typography and gradient families on the engine; 199/199 golden cases identical). M1.4 is complete.
+> - Next task: **M1.6** (bundle the engine into the plugin preview and download path)
+> - Last completed task: **M1.5f** (overlay visual target repair; chained on overlay colour). M1.5 is complete.
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -224,7 +224,41 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - `button-color-composition` moves to M1.5 with the other compositions.
   - M1.4 totals: 21 widget resolvers on the engine, with 821 golden cases identical.
   - Not property families, so outside M1: `image-asset-resolution.ts` and `semantic-resolution.ts` rewrite the neutral IR before generation; they do not write Elementor settings.
-- [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain. Also absorbs align-content (chained on wrap) and the container compositions moved from M1.3d: box-shadow, linear/radial gradient, overlay visual, hover transition and `container-style-composition`.
+- [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain. Also absorbs align-content (chained on wrap) and the container compositions moved from M1.3d: box-shadow, linear/radial gradient, overlay visual, hover transition and `container-style-composition`. This is split into M1.5a–f, and each part ships its golden baseline before the switch:
+  - [x] **M1.5a** ordered composer _(done 2026-10-09):_
+    - `mapping-engine/composer.ts` holds one ordered composer (`composeFamilies`, `serializeCompositionSummary`). Each family still runs its own exact resolver. The composer applies the families in spec order, whatever the manifest key order, and merges only allowlisted new keys. It has two merge strategies: through the container binding, or a whole-tree walk that only lets accepted widget kinds change.
+    - Key ownership is single: a key belongs to the base candidate or to exactly one family. A second writer is a `KEY_CONFLICT`, never an overwrite.
+    - `container-style-composition` (8 families) and `button-color-composition` (5 families) are now composer specs. They went from 438 lines to 157, plus the 282-line shared composer.
+    - Hardening: each family's template must equal its own candidate, and its resolved status must be that family's own status, not any family's. Real resolvers already satisfy both, so outputs are unchanged.
+    - Golden equivalence: 111/111 cases recorded from the original compositions (commit `ceec371`) are identical. `tests/m1-composer.test.ts` covers the ordering, ownership, drift and serializer refusals the public compositions cannot reach.
+  - [x] **M1.5b** responsive chaining _(done 2026-10-09):_
+    - The engine now supports chained families (`FamilyChain` in `property-family.ts`). A chained family names a prerequisite family. The engine resolves that family first and blocks unless it is ready. It binds the manifest to the prerequisite's exact resolved candidate digest, writes on top of that candidate and gives the prerequisite result to `parseEntry`. An entry refusal may now carry several issues.
+    - Align-content is a chained family on responsive wrap (`BLOCKED_WRAP_PREREQUISITE`, `wrappedCandidateIdentityDigest`, `WRAP_REQUIRED` per breakpoint). The resolver went from 771 lines to 216.
+    - Golden equivalence: 148/148 cases recorded from the original resolver (commit `4b2ea19`), across four wrap prerequisites (wrap on both breakpoints, tablet only, none, invalid), are identical.
+  - [x] **M1.5c** box-shadow and hover transition _(done 2026-10-09):_
+    - Both are engine families: box-shadow on the new normal/hover `statePairFamily` factory (`mapping-engine/families/state-pair.ts`), and hover transition on the enum factory with an exact seconds codec. They went from 282 lines to 242, plus the 83-line shared factory, and the old ad-hoc result shapes are gone.
+    - Contract: each publishes the standard engine result under a new result version (`p15-container-box-shadow-result-v2`, `p15-elementor-container-hover-transition-result-v2`). The v1 manifests are unchanged. `container-style-composition` now expects `CONTAINER_BOX_SHADOWS_RESOLVED`.
+    - Write equivalence: the baseline (commit `1670b0c`) records which corpus cases each original accepted and the exact settings it wrote. The engine versions accept the same cases and write identical settings, with a candidate that always matches the template. The one deliberate change: an empty transition entry list is a no-op (`NO_*_OVERRIDES`), not an invalid manifest. The 111 composition goldens are still identical.
+    - The shared engine serializer is stricter: issues must be exactly `code`/`path`/`message`, accepted results carry no issues and refusals at least one. Every existing golden still passes.
+  - [x] **M1.5d** page composition _(done 2026-10-09):_
+    - `page-composition.ts` (`composeP15ElementorPage`, `p15-elementor-page-composition-v1`) applies, in one composer call, direction, wrap, align-content, alignment, gap, padding, margin, the Container style composition and the Button colour composition to one tree. Nested compositions are ordinary steps.
+    - The composer gained per-step node acceptance and chained steps: `after` names an earlier step, the chained step is diffed against that step's result, and its `baseDigestField` must equal that step's resolved digest. Align-content chains on wrap. Without its wrap step it is `FAMILY_REJECTED`.
+    - `tests/m1-page-composition.test.ts` proves three things: every single-family page equals that family resolved alone; the full page is exactly the base plus every family's own additions; and manifest key order never changes the result. Stale nested bindings, a wrong wrapped digest and authority inflation are refused.
+  - [x] **M1.5e** container gradient target repair _(done 2026-10-09):_
+    - R0 evidence: in Elementor 4.2.4 `includes/controls/groups/background.php` (blob `ac8e1a5`, matching the recorded evidence), `color_stop`, `color_b_stop` and `gradient_angle` are SLIDER controls, and the CSS reads `{{color_stop.SIZE}}{{color_stop.UNIT}}`. v1 wrote bare numbers. The v1 radial composition also returned the unchanged linear candidate.
+    - The linear and radial Container gradients are engine `statePairFamily` families on the proven Button gradient codec and writes (`families/button-gradient.ts`, prefixes `background`/`background_hover`). The Button goldens are unchanged. Contract: manifest and result v2. Inputs are integer stops 0..100 with stopA ≤ stopB, tablet/mobile stop pairs, integer angles, and the nine documented radial positions, plus responsive radial positions (`gradient_position` is responsive in 4.2.4).
+    - The two files went from 60 dense lines to 187 readable ones. The radial candidate is now always rebuilt from its exact writes.
+    - Diff proof: `tests/m1-container-composition-family-golden.test.ts` checks the v2 writes against the v1 write baseline. They are exactly the v1 writes with slider encoding. Exactly 7 corpus cases change acceptance, each listed with its reason: unpaired responsive stops are refused, an empty list is a no-op, and unknown radial entry keys are refused.
+    - This is a local contract repair only. No real-target render is claimed: real-target proof stays with the P15 harness and #846.
+  - [x] **M1.5f** overlay visual target repair _(done 2026-10-09):_
+    - R0 evidence (Elementor 4.2.4):
+      - `includes/controls/groups/base.php` (blob `6117c06`, line 324): every CSS-filter field needs its popover starter `<group>_css_filter` to be non-empty.
+      - `includes/controls/groups/css-filter.php` (blob `5ab0523`): the filter sliders are declared in `px` only.
+      - `includes/elements/container.php` (blob `3486766`, lines 834–890): the normal `css_filters` and `overlay_blend_mode` need an overlay colour or image.
+    - v2 (manifest and result) is an engine family chained on the Container overlay-colour family. It writes `css_filters[_hover]_css_filter: 'custom'` and `{ unit: 'px', size, sizes: [] }` sliders. It refuses normal filters or a blend mode on a container without an explicit overlay colour (`OVERLAY_COLOR_REQUIRED`), while hover filters need none. It binds the source fingerprint and the exact overlay-colour candidate digest, refuses authority inflation, unknown keys and empty filter objects, and blocks on an invalid overlay-colour prerequisite.
+    - Diff proof: `tests/m1-container-overlay-visual-golden.test.ts` against the v1 write baseline (commit `41d0a21`). The v2 writes are exactly the v1 writes plus the starter keys, px sliders and the prerequisite's own overlay-colour keys. The 17 cases v1 wrongly accepted (stale bindings, authority inflation, unknown keys, empty filters) are all refused, each with its listed reason.
+    - This is a local contract repair only. No real-target render is claimed.
+  - M1.5 totals: one ordered composer with chained steps, a page composition, chained engine families, and 7 more resolvers/compositions on the engine (align-content, box-shadow, hover transition, linear and radial gradients, overlay visual, plus the 2 compositions). Three target defects were repaired with Elementor source evidence.
 - [ ] **M1.6** Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.
 - [ ] **M1.7** M1 sync. Update `verify-readme-progress.mjs` so it no longer reads deleted resolver files, and replace those checks with engine-table checks.
 

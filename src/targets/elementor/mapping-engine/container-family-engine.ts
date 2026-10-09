@@ -42,9 +42,8 @@ export const MANIFEST_AUTHORITY_FLAGS = [
   'downloadEnabled',
 ] as const;
 
-/** Manifest keys every family carries besides its entries field and authority flags. */
+/** Manifest keys every family carries besides its base digest, entries field and authority flags. */
 const MANIFEST_ENVELOPE_KEYS = [
-  'baseCandidateIdentityDigest',
   'manifestVersion',
   'schemaVersion',
   'sourceIrFingerprint',
@@ -122,6 +121,27 @@ function targetOf(family: AnyFamily): FamilyTarget {
   return family.target ?? CONTAINER_TARGET;
 }
 
+/** Manifest/result field naming the candidate a family writes on top of. */
+function digestFieldOf(family: AnyFamily): string {
+  return family.chain?.digestField ?? 'baseCandidateIdentityDigest';
+}
+
+/** Issue suffixes this family can emit: the shared set, adjusted for a chained base, plus its own. */
+function issueSuffixesOf(family: AnyFamily): string[] {
+  const chain = family.chain;
+  const shared: string[] = chain
+    ? ISSUE_SUFFIXES.map((suffix) => suffix === 'UPSTREAM_GENERATION_NOT_READY' ? chain.blockedSuffix
+      : suffix.startsWith('BASE_CANDIDATE_IDENTITY_') ? suffix.replace('BASE_CANDIDATE_IDENTITY', chain.digestIssueStem) : suffix)
+    : [...ISSUE_SUFFIXES];
+  return [...shared, targetOf(family).notTargetSuffix, ...(family.extraIssueSuffixes ?? [])];
+}
+
+/** Every status a family result can carry, used to validate a chained prerequisite status. */
+function statusesOf(family: AnyFamily): string[] {
+  return ['BLOCKED_INVALID_SOURCE_IR', family.chain?.blockedStatus ?? 'BLOCKED_UPSTREAM_GENERATION',
+    'REJECTED_INVALID_MANIFEST', family.statuses.none, family.statuses.resolved];
+}
+
 function code(family: AnyFamily, suffix: IssueSuffix | string): string {
   return family.issueCodes?.[suffix] ?? `${family.issuePrefix}_${suffix}`;
 }
@@ -148,13 +168,15 @@ function baseResult(
   issues: ContainerFamilyIssue[],
   template: ElementorTemplateV04 | null,
   candidate: ElementorTemplateCandidateArtifactV1 | null,
+  prerequisiteStatus: string | null = null,
 ): ContainerFamilyResult {
   return {
     schemaVersion: 1,
     resultVersion: family.resultVersion,
     status,
+    ...(family.chain ? { [family.chain.statusField]: prerequisiteStatus } : {}),
     sourceIrFingerprint,
-    baseCandidateIdentityDigest,
+    [digestFieldOf(family)]: baseCandidateIdentityDigest,
     resolvedCandidateIdentityDigest,
     [targetOf(family).sourceCountField]: sourceContainerCount,
     [targetOf(family).resolvedCountField]: summaries.length,
@@ -167,10 +189,20 @@ function baseResult(
   } as ContainerFamilyResult;
 }
 
+/** The candidate a family writes on top of: the generated base, or a chained prerequisite's result. */
+type FamilyBase =
+  | { ready: true; template: ElementorTemplateV04; candidate: ElementorTemplateCandidateArtifactV1; digest: string; prerequisite: ContainerFamilyResult | null }
+  | { ready: false; blocked: ContainerFamilyResult };
+
+/**
+ * Resolve one family. A chained family (`family.chain`) takes the prerequisite family's manifest as
+ * `prerequisiteManifestValue` and binds to that family's exact resolved candidate.
+ */
 export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: string }, Summary extends { sourceNodeId: string }>(
   typedFamily: ContainerPropertyFamily<Entry, Summary>,
   sourceValue: unknown,
   manifestValue: unknown,
+  prerequisiteManifestValue?: unknown,
 ): ContainerFamilyResult {
   const family = typedFamily as unknown as AnyFamily;
   const subject = family.subject;
@@ -188,28 +220,25 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   const sourceIrFingerprint = fingerprintP15NeutralExportDocument(source);
   const target = targetOf(family);
   const sourceContainers = target.collect(source);
-  const baseGeneration = generateElementorV3TemplateCandidate(source);
-  if (baseGeneration.status !== 'GENERATED_LOCAL_CANDIDATE'
-    || baseGeneration.template === null
-    || baseGeneration.candidate === null) {
-    return baseResult(family, 'BLOCKED_UPSTREAM_GENERATION', sourceIrFingerprint, null, null, sourceContainers.size, [], [{
-      code: code(family, 'UPSTREAM_GENERATION_NOT_READY'),
-      path: '$source',
-      message: family.messages?.upstream ?? `${subject} resolution requires an existing review-free generated local candidate.`,
-    }], null, null);
-  }
+  const resolvedBase = resolveBase(family, source, sourceIrFingerprint, sourceContainers.size, prerequisiteManifestValue);
+  if (!resolvedBase.ready) return resolvedBase.blocked;
+  const baseDigest = resolvedBase.digest;
+  const prerequisite = resolvedBase.prerequisite;
+  const prerequisiteStatus = prerequisite?.status ?? null;
+  const digestField = digestFieldOf(family);
+  const digestStem = family.chain?.digestIssueStem ?? 'BASE_CANDIDATE_IDENTITY';
+  const baseNoun = family.chain?.baseNoun ?? 'base candidate';
 
-  const baseIdentity = buildElementorTemplateCandidateIdentity(baseGeneration.candidate);
   const issues: ContainerFamilyIssue[] = [];
   const resolutions = new Map<string, { sourceNodeId: string }>();
   const rejected = (list: ContainerFamilyIssue[]): ContainerFamilyResult => baseResult(
-    family, 'REJECTED_INVALID_MANIFEST', sourceIrFingerprint, baseIdentity.digest, null, sourceContainers.size, [], list, null, null,
+    family, 'REJECTED_INVALID_MANIFEST', sourceIrFingerprint, baseDigest, null, sourceContainers.size, [], list, null, null, prerequisiteStatus,
   );
 
   if (!isRecord(manifestValue)) {
     issues.push({ code: code(family, 'MANIFEST_NOT_OBJECT'), path: '$manifest', message: `${manifestSubject} manifest must be an object.` });
   } else {
-    if (!exactKeys(manifestValue, [...MANIFEST_ENVELOPE_KEYS, target.entriesField, ...authorityFlags(family)])) {
+    if (!exactKeys(manifestValue, [...MANIFEST_ENVELOPE_KEYS, digestField, target.entriesField, ...authorityFlags(family)])) {
       issues.push({ code: code(family, 'MANIFEST_FIELDS_INVALID'), path: '$manifest', message: `${manifestSubject} manifest contains unknown or missing fields.` });
     }
     if (manifestValue.schemaVersion !== 1 || manifestValue.manifestVersion !== family.manifestVersion) {
@@ -220,10 +249,10 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
     } else if (manifestValue.sourceIrFingerprint !== sourceIrFingerprint) {
       issues.push({ code: code(family, 'SOURCE_FINGERPRINT_MISMATCH'), path: '$manifest.sourceIrFingerprint', message: 'Manifest is not bound to the exact current neutral IR.' });
     }
-    if (!validFingerprint(manifestValue.baseCandidateIdentityDigest)) {
-      issues.push({ code: code(family, 'BASE_CANDIDATE_IDENTITY_INVALID'), path: '$manifest.baseCandidateIdentityDigest', message: 'baseCandidateIdentityDigest must be a SHA-256 candidate identity digest.' });
-    } else if (manifestValue.baseCandidateIdentityDigest !== baseIdentity.digest) {
-      issues.push({ code: code(family, 'BASE_CANDIDATE_IDENTITY_MISMATCH'), path: '$manifest.baseCandidateIdentityDigest', message: 'Manifest is not bound to the exact current base candidate identity.' });
+    if (!validFingerprint(manifestValue[digestField])) {
+      issues.push({ code: code(family, `${digestStem}_INVALID`), path: `$manifest.${digestField}`, message: `${digestField} must be a SHA-256 candidate identity digest.` });
+    } else if (manifestValue[digestField] !== baseDigest) {
+      issues.push({ code: code(family, `${digestStem}_MISMATCH`), path: `$manifest.${digestField}`, message: `Manifest is not bound to the exact current ${baseNoun} identity.` });
     }
     if (authorityFlags(family).some((flag) => manifestValue[flag] !== false)) {
       issues.push({
@@ -257,9 +286,11 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
           issues.push({ code: code(family, target.notTargetSuffix), path: `${path}.sourceNodeId`, message: family.messages?.notContainer ?? target.notTargetMessage(subject) });
           continue;
         }
-        const parsed = family.parseEntry(raw as Record<string, unknown> & { sourceNodeId: string }, node);
+        const parsed = family.parseEntry(raw as Record<string, unknown> & { sourceNodeId: string }, node, prerequisite ?? undefined);
         if (!parsed.ok) {
-          issues.push({ code: code(family, parsed.code), path: `${path}${parsed.pathSuffix ?? ''}`, message: parsed.message });
+          for (const failure of 'failures' in parsed ? parsed.failures : [parsed]) {
+            issues.push({ code: code(family, failure.code), path: `${path}${failure.pathSuffix ?? ''}`, message: failure.message });
+          }
           continue;
         }
         resolutions.set(sourceNodeId, parsed.entry);
@@ -270,10 +301,10 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   if (issues.length > 0) return rejected(issues);
 
   if (resolutions.size === 0) {
-    return baseResult(family, family.statuses.none, sourceIrFingerprint, baseIdentity.digest, baseIdentity.digest, sourceContainers.size, [], [], baseGeneration.template, baseGeneration.candidate);
+    return baseResult(family, family.statuses.none, sourceIrFingerprint, baseDigest, baseDigest, sourceContainers.size, [], [], resolvedBase.template, resolvedBase.candidate, prerequisiteStatus);
   }
 
-  const template = cloneP15ReadyElementorTemplate(baseGeneration.candidate);
+  const template = cloneP15ReadyElementorTemplate(resolvedBase.candidate);
   const binding = target.bind(source, template);
   if (binding.issues.length > 0) {
     return rejected(binding.issues.map((issue) => ({
@@ -340,7 +371,34 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   const summaries = [...resolutions.values()]
     .map((entry) => family.summarize(entry, sourceContainers.get(entry.sourceNodeId)))
     .sort((left, right) => left.sourceNodeId.localeCompare(right.sourceNodeId));
-  return baseResult(family, family.statuses.resolved, sourceIrFingerprint, baseIdentity.digest, resolvedIdentity.digest, sourceContainers.size, summaries, [], template, candidate);
+  return baseResult(family, family.statuses.resolved, sourceIrFingerprint, baseDigest, resolvedIdentity.digest, sourceContainers.size, summaries, [], template, candidate, prerequisiteStatus);
+}
+
+/** The generated review-free base, or the chained prerequisite's exact ready result. */
+function resolveBase(family: AnyFamily, source: P15NeutralExportDocumentV1, sourceIrFingerprint: string,
+  sourceCount: number, prerequisiteManifestValue: unknown): FamilyBase {
+  const chain = family.chain;
+  if (chain) {
+    const prerequisite = resolveContainerPropertyFamily(chain.prerequisite, source, prerequisiteManifestValue);
+    const digest = prerequisite.resolvedCandidateIdentityDigest;
+    if ((prerequisite.status !== chain.prerequisite.statuses.none && prerequisite.status !== chain.prerequisite.statuses.resolved)
+      || prerequisite.template === null || prerequisite.candidate === null || !validFingerprint(digest)) {
+      return { ready: false, blocked: baseResult(family, chain.blockedStatus, sourceIrFingerprint, null, null, sourceCount, [], [{
+        code: code(family, chain.blockedSuffix), path: chain.blockedPath, message: chain.blockedMessage,
+      }], null, null, prerequisite.status) };
+    }
+    return { ready: true, template: prerequisite.template, candidate: prerequisite.candidate, digest, prerequisite };
+  }
+  const generation = generateElementorV3TemplateCandidate(source);
+  if (generation.status !== 'GENERATED_LOCAL_CANDIDATE' || generation.template === null || generation.candidate === null) {
+    return { ready: false, blocked: baseResult(family, 'BLOCKED_UPSTREAM_GENERATION', sourceIrFingerprint, null, null, sourceCount, [], [{
+      code: code(family, 'UPSTREAM_GENERATION_NOT_READY'),
+      path: '$source',
+      message: family.messages?.upstream ?? `${family.subject} resolution requires an existing review-free generated local candidate.`,
+    }], null, null) };
+  }
+  return { ready: true, template: generation.template, candidate: generation.candidate,
+    digest: buildElementorTemplateCandidateIdentity(generation.candidate).digest, prerequisite: null };
 }
 
 /** Serialize only sanitized family metadata; source content, template JSON and candidate bytes are omitted. */
@@ -354,12 +412,15 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
   const resolvedCount = result[target.resolvedCountField] as number;
   const summaries = result[family.summaryField];
   const list = Array.isArray(summaries) ? summaries as Array<{ sourceNodeId: string }> : null;
-  const issueCodes = new Set<string>([...ISSUE_SUFFIXES, target.notTargetSuffix, ...(family.extraIssueSuffixes ?? [])].map((suffix) => code(family, suffix)));
-  const validStatus = result.status === 'BLOCKED_INVALID_SOURCE_IR'
-    || result.status === 'BLOCKED_UPSTREAM_GENERATION'
-    || result.status === 'REJECTED_INVALID_MANIFEST'
-    || result.status === family.statuses.none
-    || result.status === family.statuses.resolved;
+  const issueCodes = new Set<string>(issueSuffixesOf(family).map((suffix) => code(family, suffix)));
+  const chain = family.chain;
+  const blockedStatus = chain?.blockedStatus ?? 'BLOCKED_UPSTREAM_GENERATION';
+  const digestField = digestFieldOf(family);
+  const baseDigest = result[digestField];
+  const prerequisiteStatus = chain ? result[chain.statusField] : null;
+  const validStatus = statusesOf(family).includes(result.status);
+  const validPrerequisiteStatus = !chain || prerequisiteStatus === null
+    || statusesOf(chain.prerequisite as AnyFamily).includes(prerequisiteStatus as string);
   const validCounts = list !== null
     && Number.isSafeInteger(sourceCount)
     && sourceCount >= 0
@@ -372,20 +433,25 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     ? result.sourceIrFingerprint === null
     : validFingerprint(result.sourceIrFingerprint);
   const baseDigestRequired = result.status !== 'BLOCKED_INVALID_SOURCE_IR'
-    && result.status !== 'BLOCKED_UPSTREAM_GENERATION';
+    && result.status !== blockedStatus;
   const validBaseDigest = baseDigestRequired
-    ? validFingerprint(result.baseCandidateIdentityDigest)
-    : result.baseCandidateIdentityDigest === null;
+    ? validFingerprint(baseDigest)
+    : baseDigest === null;
   const resolvedDigestRequired = result.status === family.statuses.none || result.status === family.statuses.resolved;
   const validResolvedDigest = resolvedDigestRequired
     ? validFingerprint(result.resolvedCandidateIdentityDigest)
     : result.resolvedCandidateIdentityDigest === null;
   const statusShapeValid = result.status === family.statuses.resolved
-    ? resolvedCount > 0 && result.baseCandidateIdentityDigest !== result.resolvedCandidateIdentityDigest
+    ? resolvedCount > 0 && baseDigest !== result.resolvedCandidateIdentityDigest
     : result.status === family.statuses.none
-      ? resolvedCount === 0 && result.baseCandidateIdentityDigest === result.resolvedCandidateIdentityDigest
+      ? resolvedCount === 0 && baseDigest === result.resolvedCandidateIdentityDigest
       : resolvedCount === 0;
-  const validIssues = result.issues.every((issue) => isRecord(issue)
+  const accepted = result.status === family.statuses.none || result.status === family.statuses.resolved;
+  const validIssues = Array.isArray(result.issues)
+    && (accepted ? result.issues.length === 0 : result.issues.length > 0)
+    && result.issues.every((issue) => isRecord(issue)
+    && exactKeys(issue, ['code', 'message', 'path'])
+    && typeof issue.message === 'string'
     && typeof issue.code === 'string'
     && issueCodes.has(issue.code)
     && typeof issue.path === 'string'
@@ -393,6 +459,7 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     && issue.path.length <= 1024);
 
   if (!validStatus
+    || !validPrerequisiteStatus
     || !validCounts
     || !uniqueIds
     || !validSourceFingerprint
@@ -410,8 +477,9 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     schemaVersion: 1,
     resultVersion: family.resultVersion,
     status: result.status,
+    ...(chain ? { [chain.statusField]: prerequisiteStatus } : {}),
     sourceIrFingerprint: result.sourceIrFingerprint,
-    baseCandidateIdentityDigest: result.baseCandidateIdentityDigest,
+    [digestField]: baseDigest,
     resolvedCandidateIdentityDigest: result.resolvedCandidateIdentityDigest,
     [target.sourceCountField]: sourceCount,
     [target.resolvedCountField]: resolvedCount,

@@ -43,7 +43,7 @@ describe('P15 exact Container normal and hover box shadow groups', () => {
       controlSourceBlobSha: 'e55cf9af34db5cc3e73dc295cd9f35b437da6fa7',
       normalGroup: 'box_shadow', hoverGroup: 'box_shadow_hover',
     });
-    expect(result.status).toBe('RESOLVED');
+    expect(result.status).toBe('CONTAINER_BOX_SHADOWS_RESOLVED');
     expect(settings(result)).toMatchObject({
       box_shadow_box_shadow_type: 'yes',
       box_shadow_box_shadow: { horizontal: -10, vertical: 10, blur: 20, spread: -5, color: '#123456' },
@@ -61,12 +61,12 @@ describe('P15 exact Container normal and hover box shadow groups', () => {
   it('keeps normal/hover isolated and binds nested Container', () => {
     const document = source();
     const result = resolveP15ContainerBoxShadows(document, manifest(document, [{ sourceNodeId: 'nested', hover }]));
-    expect(result.status).toBe('RESOLVED');
+    expect(result.status).toBe('CONTAINER_BOX_SHADOWS_RESOLVED');
     expect(settings(result)).not.toHaveProperty('box_shadow_hover_box_shadow');
     expect(settings(result, true).box_shadow_hover_box_shadow_position).toBe('inset');
     expect(settings(result, true)).not.toHaveProperty('box_shadow_box_shadow');
     const noOp = resolveP15ContainerBoxShadows(document, manifest(document, []));
-    expect(noOp.status).toBe('NO_OVERRIDES');
+    expect(noOp.status).toBe('NO_CONTAINER_BOX_SHADOW_OVERRIDES');
     expect(noOp.baseCandidateIdentityDigest).toBe(noOp.resolvedCandidateIdentityDigest);
   });
 
@@ -83,7 +83,7 @@ describe('P15 exact Container normal and hover box shadow groups', () => {
       expect(result.template).toBeNull();
     }
     expect(resolveP15ContainerBoxShadows(document, manifest(document, [{ sourceNodeId: 'root', normal: undefined }] as never)).status)
-      .toBe('REJECTED');
+      .toBe('REJECTED_INVALID_MANIFEST');
   });
 
   it('rejects stale identities, duplicate IDs, wrong types, unknown fields and authority inflation', () => {
@@ -96,7 +96,7 @@ describe('P15 exact Container normal and hover box shadow groups', () => {
       { ...valid, containers: [{ sourceNodeId: 'heading', normal }] },
       { ...valid, containers: [{ sourceNodeId: 'root', normal, unknown: 'PRIVATE' }] },
     ]) {
-      expect(resolveP15ContainerBoxShadows(document, bad).status).toBe('REJECTED');
+      expect(resolveP15ContainerBoxShadows(document, bad).status).toBe('REJECTED_INVALID_MANIFEST');
     }
   });
 
@@ -109,7 +109,7 @@ describe('P15 exact Container normal and hover box shadow groups', () => {
     expect(summary).not.toContain('templateJson');
     expect(() => serializeP15ContainerBoxShadowSummary({ ...first, productionAcceptance: true } as never)).toThrow();
     expect(() => serializeP15ContainerBoxShadowSummary({ ...first,
-      issues: [{ code: 'P15_CONTAINER_SHADOW_ENTRY_INVALID', path: '$manifest', privateText: 'PRIVATE' }],
+      issues: [{ code: 'P15_CONTAINER_SHADOW_ENTRY_INVALID', path: '$manifest', message: 'x', privateText: 'PRIVATE' }],
     } as never)).toThrow();
   });
 });
