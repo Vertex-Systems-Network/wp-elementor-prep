@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.5f** (overlay visual target repair)
-> - Last completed task: **M1.5e** (container gradient target repair: slider encoding, rebuilt radial candidate)
+> - Next task: **M1.6** (bundle the engine into the plugin preview and download path)
+> - Last completed task: **M1.5f** (overlay visual target repair; chained on overlay colour). M1.5 is complete.
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -250,11 +250,15 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - The two files went from 60 dense lines to 187 readable ones. The radial candidate is now always rebuilt from its exact writes.
     - Diff proof: `tests/m1-container-composition-family-golden.test.ts` checks the v2 writes against the v1 write baseline. They are exactly the v1 writes with slider encoding. Exactly 7 corpus cases change acceptance, each listed with its reason: unpaired responsive stops are refused, an empty list is a no-op, and unknown radial entry keys are refused.
     - This is a local contract repair only. No real-target render is claimed: real-target proof stays with the P15 harness and #846.
-  - [ ] **M1.5f** overlay visual target repair. The R0 check of Elementor 4.2.4 (`includes/controls/groups/css-filter.php` blob `5ab0523`, `includes/controls/groups/base.php` blob `6117c06` line 324, `includes/elements/container.php` blob `3486766` lines 834–890 and 971–976) shows three problems:
-    1. Every CSS-filter field is conditioned on `<group>_css_filter` being non-empty, and the composition never writes `css_filters_css_filter` / `css_filters_hover_css_filter`.
-    2. The normal `css_filters` and `overlay_blend_mode` apply only with an overlay colour or image, which is never checked.
-    3. The filter sliders are declared in `px` only, but `%`/`deg` units are written.
-    It also skips the fingerprint, base-identity and authority-flag manifest checks and accepts unknown entry keys. Rebuild it as an engine family chained on the overlay-colour family (M1.5b chaining), with a new manifest version.
+  - [x] **M1.5f** overlay visual target repair _(done 2026-10-09):_
+    - R0 evidence (Elementor 4.2.4):
+      - `includes/controls/groups/base.php` (blob `6117c06`, line 324): every CSS-filter field needs its popover starter `<group>_css_filter` to be non-empty.
+      - `includes/controls/groups/css-filter.php` (blob `5ab0523`): the filter sliders are declared in `px` only.
+      - `includes/elements/container.php` (blob `3486766`, lines 834–890): the normal `css_filters` and `overlay_blend_mode` need an overlay colour or image.
+    - v2 (manifest and result) is an engine family chained on the Container overlay-colour family. It writes `css_filters[_hover]_css_filter: 'custom'` and `{ unit: 'px', size, sizes: [] }` sliders. It refuses normal filters or a blend mode on a container without an explicit overlay colour (`OVERLAY_COLOR_REQUIRED`), while hover filters need none. It binds the source fingerprint and the exact overlay-colour candidate digest, refuses authority inflation, unknown keys and empty filter objects, and blocks on an invalid overlay-colour prerequisite.
+    - Diff proof: `tests/m1-container-overlay-visual-golden.test.ts` against the v1 write baseline (commit `41d0a21`). The v2 writes are exactly the v1 writes plus the starter keys, px sliders and the prerequisite's own overlay-colour keys. The 17 cases v1 wrongly accepted (stale bindings, authority inflation, unknown keys, empty filters) are all refused, each with its listed reason.
+    - This is a local contract repair only. No real-target render is claimed.
+  - M1.5 totals: one ordered composer with chained steps, a page composition, chained engine families, and 7 more resolvers/compositions on the engine (align-content, box-shadow, hover transition, linear and radial gradients, overlay visual, plus the 2 compositions). Three target defects were repaired with Elementor source evidence.
 - [ ] **M1.6** Bundle the engine into the plugin preview and download path, so the plugin and CLI use the same code.
 - [ ] **M1.7** M1 sync. Update `verify-readme-progress.mjs` so it no longer reads deleted resolver files, and replace those checks with engine-table checks.
 
