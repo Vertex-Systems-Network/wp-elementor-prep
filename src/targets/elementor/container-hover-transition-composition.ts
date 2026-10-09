@@ -1,13 +1,12 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyIssue,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import type { ValueCodec } from './mapping-engine/codecs';
 import { responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION = 'p15-elementor-container-hover-transition-manifest-v1' as const;
 /** The standard engine result (recovery M1.5c); the v1 manifest and every write are unchanged. */
@@ -22,51 +21,26 @@ export const P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_EVIDENCE = Object.freeze({
 export const P15_CONTAINER_HOVER_TRANSITION_FAMILIES = ['backgroundHover', 'overlayHover', 'borderHover'] as const;
 export type P15ContainerHoverTransitionFamily = typeof P15_CONTAINER_HOVER_TRANSITION_FAMILIES[number];
 export interface P15ContainerHoverTransitionEntryV1 { sourceNodeId: string; backgroundHover?: number; overlayHover?: number; borderHover?: number; }
-export interface P15ContainerHoverTransitionManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ContainerHoverTransitionEntryV1[];
-  transitionInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
 export interface P15ContainerHoverTransitionSummaryEntryV2 {
   sourceNodeId: string;
   backgroundHover: number | null;
   overlayHover: number | null;
   borderHover: number | null;
 }
-export interface P15ContainerHoverTransitionResultV2 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_CONTAINER_HOVER_TRANSITION_RESULT_VERSION;
-  status: 'BLOCKED_INVALID_SOURCE_IR' | 'BLOCKED_UPSTREAM_GENERATION' | 'REJECTED_INVALID_MANIFEST'
-    | 'NO_CONTAINER_HOVER_TRANSITION_OVERRIDES' | 'CONTAINER_HOVER_TRANSITIONS_RESOLVED';
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedTransitions: P15ContainerHoverTransitionSummaryEntryV2[];
-  issues: ContainerFamilyIssue[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  transitionInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  status: FamilyStatus<'NO_CONTAINER_HOVER_TRANSITION_OVERRIDES', 'CONTAINER_HOVER_TRANSITIONS_RESOLVED'>;
+  entriesField: 'containers';
+  entry: P15ContainerHoverTransitionEntryV1;
+  summaryField: 'resolvedTransitions';
+  summary: P15ContainerHoverTransitionSummaryEntryV2;
+  issueCode: string;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag<'transitionInferencePerformed'>;
+};
+export type P15ContainerHoverTransitionManifestV1 = FamilyManifestV1<Contract>;
+export type P15ContainerHoverTransitionResultV2 = FamilyResultV1<Contract>;
 
 /** Seconds 0..3 in exact 0.1 steps, the Elementor 4.2.4 slider range; written as `{ size, unit: 's' }`. */
 const secondsCodec: ValueCodec<number, { size: number; unit: 's' }> = {
@@ -99,12 +73,14 @@ const P15_CONTAINER_HOVER_TRANSITION_FAMILY = responsiveEnumFamily({
   valueInvalidMessage: 'Container hover transition seconds must be within 0..3 in exact 0.1 steps.',
 });
 
+const API = familyApi<P15ContainerHoverTransitionResultV2>(P15_CONTAINER_HOVER_TRANSITION_FAMILY);
+
 /** Apply explicit hover transition seconds for Container background, overlay and border; no inference. */
 export function resolveP15ElementorContainerHoverTransitions(sourceValue: unknown, manifestValue: unknown): P15ContainerHoverTransitionResultV2 {
-  return resolveContainerPropertyFamily(P15_CONTAINER_HOVER_TRANSITION_FAMILY, sourceValue, manifestValue) as unknown as P15ContainerHoverTransitionResultV2;
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Only bounded facts are emitted; private source text and candidate bytes stay out. */
 export function serializeP15ElementorContainerHoverTransitionSummary(value: P15ContainerHoverTransitionResultV2): string {
-  return serializeContainerPropertyFamilySummary(P15_CONTAINER_HOVER_TRANSITION_FAMILY, value as unknown as ContainerFamilyResult);
+  return API.serialize(value);
 }

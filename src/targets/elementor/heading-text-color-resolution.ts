@@ -1,14 +1,16 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { lowerHexColorCodec } from './mapping-engine/codecs';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
 import { headingBaseSettingsMatch, widgetTarget } from './mapping-engine/widget-binding';
 import type { P15NeutralHeadingNode } from './neutral-export-ir';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_HEADING_TEXT_COLOR_MANIFEST_VERSION =
   'p15-elementor-heading-text-color-manifest-v1' as const;
@@ -35,83 +37,29 @@ export interface P15ElementorHeadingTextColorEntryV1 {
   color: P15ElementorHeadingTextColorValue;
 }
 
-export interface P15ElementorHeadingTextColorManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_HEADING_TEXT_COLOR_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  headings: P15ElementorHeadingTextColorEntryV1[];
-  colorInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorHeadingTextColorIssueCode =
-  | 'P15_HEADING_TEXT_COLOR_SOURCE_IR_INVALID'
-  | 'P15_HEADING_TEXT_COLOR_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_HEADING_TEXT_COLOR_MANIFEST_NOT_OBJECT'
-  | 'P15_HEADING_TEXT_COLOR_MANIFEST_FIELDS_INVALID'
-  | 'P15_HEADING_TEXT_COLOR_MANIFEST_VERSION_INVALID'
-  | 'P15_HEADING_TEXT_COLOR_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_HEADING_TEXT_COLOR_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_HEADING_TEXT_COLOR_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_HEADING_TEXT_COLOR_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_HEADING_TEXT_COLOR_ENTRIES_INVALID'
-  | 'P15_HEADING_TEXT_COLOR_ENTRY_INVALID'
-  | 'P15_HEADING_TEXT_COLOR_DUPLICATE_SOURCE_ID'
-  | 'P15_HEADING_TEXT_COLOR_SOURCE_NOT_HEADING'
-  | 'P15_HEADING_TEXT_COLOR_VALUE_INVALID'
-  | 'P15_HEADING_TEXT_COLOR_AUTHORITY_FLAGS_INVALID'
-  | 'P15_HEADING_TEXT_COLOR_GENERATOR_BINDING_MISMATCH'
-  | 'P15_HEADING_TEXT_COLOR_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_HEADING_TEXT_COLOR_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorHeadingTextColorIssueV1 {
-  code: P15ElementorHeadingTextColorIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorHeadingTextColorStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_HEADING_TEXT_COLOR_OVERRIDES'
-  | 'HEADING_TEXT_COLORS_RESOLVED';
-
 export interface P15ElementorHeadingTextColorSummaryEntryV1 {
   sourceNodeId: string;
   color: P15ElementorHeadingTextColorValue;
 }
 
-export interface P15ElementorHeadingTextColorResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_HEADING_TEXT_COLOR_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_HEADING_TEXT_COLOR_RESULT_VERSION;
   status: P15ElementorHeadingTextColorStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceHeadingCount: number;
-  resolvedHeadingCount: number;
-  resolvedColors: P15ElementorHeadingTextColorSummaryEntryV1[];
-  issues: P15ElementorHeadingTextColorIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  colorInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'headings';
+  entry: P15ElementorHeadingTextColorEntryV1;
+  summaryField: 'resolvedColors';
+  summary: P15ElementorHeadingTextColorSummaryEntryV1;
+  issueCode: P15ElementorHeadingTextColorIssueCode;
+  noun: 'Heading';
+  flags: FamilyAuthorityFlag<'colorInferencePerformed'>;
+};
+export type P15ElementorHeadingTextColorManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorHeadingTextColorIssueCode =
+  FamilyIssueCode<'P15_HEADING_TEXT_COLOR', 'SOURCE_NOT_HEADING'>;
+export type P15ElementorHeadingTextColorIssueV1 = FamilyIssueV1<P15ElementorHeadingTextColorIssueCode>;
+export type P15ElementorHeadingTextColorStatus = FamilyStatus<'NO_HEADING_TEXT_COLOR_OVERRIDES', 'HEADING_TEXT_COLORS_RESOLVED'>;
+export type P15ElementorHeadingTextColorResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_HEADING_TEXT_COLOR_EVIDENCE;
 const FAMILY = containerStyleFamily({
@@ -157,6 +105,8 @@ const FAMILY = containerStyleFamily({
   }],
 });
 
+const API = familyApi<P15ElementorHeadingTextColorResultV1>(FAMILY);
+
 /**
  * Apply only explicit lowercase six-digit hex normal text colors to exact generated Heading bindings.
  *
@@ -166,16 +116,11 @@ const FAMILY = containerStyleFamily({
  * Re-expressed over the shared mapping engine (recovery M1.4a); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-widget-family-golden.test.ts`.
  */
-export function resolveP15ElementorHeadingTextColors(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorHeadingTextColorResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorHeadingTextColorResultV1;
+export function resolveP15ElementorHeadingTextColors(sourceValue: unknown, manifestValue: unknown): P15ElementorHeadingTextColorResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized color metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorHeadingTextColorSummary(
-  result: P15ElementorHeadingTextColorResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorHeadingTextColorSummary(result: P15ElementorHeadingTextColorResultV1): string {
+  return API.serialize(result);
 }

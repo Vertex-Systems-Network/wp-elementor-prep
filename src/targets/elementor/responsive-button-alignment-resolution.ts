@@ -1,14 +1,16 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { enumCodec } from './mapping-engine/codecs';
 import { responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
 import { desktopAlignMatches, expectedDesktopButtonAlignment, widgetTarget } from './mapping-engine/widget-binding';
 import type { P15NeutralButtonNode } from './neutral-export-ir';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_VERSION =
   'p15-elementor-responsive-button-alignment-manifest-v1' as const;
@@ -38,83 +40,32 @@ export interface P15ElementorResponsiveButtonAlignmentEntryV1 {
   mobileAlign?: P15ElementorResponsiveButtonAlignment;
 }
 
-export interface P15ElementorResponsiveButtonAlignmentManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  widgets: P15ElementorResponsiveButtonAlignmentEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorResponsiveButtonAlignmentIssueCode =
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_SOURCE_NOT_BUTTON'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_VALUE_INVALID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_BUTTON_ALIGNMENT_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorResponsiveButtonAlignmentIssueV1 {
-  code: P15ElementorResponsiveButtonAlignmentIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorResponsiveButtonAlignmentStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_BUTTON_ALIGNMENT_OVERRIDES'
-  | 'RESPONSIVE_BUTTON_ALIGNMENTS_RESOLVED';
-
 export interface P15ElementorResponsiveButtonAlignmentSummaryEntryV1 {
   sourceNodeId: string;
   tabletAlign: P15ElementorResponsiveButtonAlignment | null;
   mobileAlign: P15ElementorResponsiveButtonAlignment | null;
 }
 
-export interface P15ElementorResponsiveButtonAlignmentResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_RESULT_VERSION;
   status: P15ElementorResponsiveButtonAlignmentStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonWidgetCount: number;
-  resolvedWidgetCount: number;
-  resolvedAlignments: P15ElementorResponsiveButtonAlignmentSummaryEntryV1[];
-  issues: P15ElementorResponsiveButtonAlignmentIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'widgets';
+  entry: P15ElementorResponsiveButtonAlignmentEntryV1;
+  summaryField: 'resolvedAlignments';
+  summary: P15ElementorResponsiveButtonAlignmentSummaryEntryV1;
+  issueCode: P15ElementorResponsiveButtonAlignmentIssueCode;
+  /** Count fields `sourceButtonWidgetCount` / `resolvedWidgetCount` do not share one noun; both are explicit extras. */
+  noun: never;
+  flags: FamilyAuthorityFlag;
+  extra: { sourceButtonWidgetCount: number; resolvedWidgetCount: number };
+};
+export type P15ElementorResponsiveButtonAlignmentManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorResponsiveButtonAlignmentIssueCode =
+  FamilyIssueCode<'P15_RESPONSIVE_BUTTON_ALIGNMENT', 'SOURCE_NOT_BUTTON'>;
+export type P15ElementorResponsiveButtonAlignmentIssueV1 = FamilyIssueV1<P15ElementorResponsiveButtonAlignmentIssueCode>;
+export type P15ElementorResponsiveButtonAlignmentStatus = FamilyStatus<'NO_RESPONSIVE_BUTTON_ALIGNMENT_OVERRIDES', 'RESPONSIVE_BUTTON_ALIGNMENTS_RESOLVED'>;
+export type P15ElementorResponsiveButtonAlignmentResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_EVIDENCE;
 const alignCodec = enumCodec(EVIDENCE.targetValues);
@@ -154,6 +105,8 @@ const FAMILY = responsiveEnumFamily({
   },
 });
 
+const API = familyApi<P15ElementorResponsiveButtonAlignmentResultV1>(FAMILY);
+
 /**
  * Apply only explicit default tablet/mobile alignment overrides to exact generated Button bindings.
  *
@@ -163,16 +116,11 @@ const FAMILY = responsiveEnumFamily({
  * Re-expressed over the shared mapping engine (recovery M1.4a); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-widget-family-golden.test.ts`.
  */
-export function resolveP15ElementorResponsiveButtonAlignments(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorResponsiveButtonAlignmentResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorResponsiveButtonAlignmentResultV1;
+export function resolveP15ElementorResponsiveButtonAlignments(sourceValue: unknown, manifestValue: unknown): P15ElementorResponsiveButtonAlignmentResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized alignment metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorResponsiveButtonAlignmentSummary(
-  result: P15ElementorResponsiveButtonAlignmentResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorResponsiveButtonAlignmentSummary(result: P15ElementorResponsiveButtonAlignmentResultV1): string {
+  return API.serialize(result);
 }

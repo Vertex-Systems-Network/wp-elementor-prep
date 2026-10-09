@@ -1,14 +1,13 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyIssue,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import type { ValueCodec } from './mapping-engine/codecs';
 import { statePairFamily } from './mapping-engine/families/state-pair';
 import { exactKeys, isRecord } from './mapping-engine/shared-validation';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_CONTAINER_BOX_SHADOW_MANIFEST_VERSION = 'p15-container-box-shadow-manifest-v1' as const;
 /** v2: the standard engine result (recovery M1.5c); the v1 manifest and every write are unchanged. */
@@ -36,52 +35,21 @@ export interface P15ContainerBoxShadowEntryV1 {
   normal?: P15ContainerBoxShadowValueV1;
   hover?: P15ContainerBoxShadowValueV1;
 }
-export interface P15ContainerBoxShadowManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_CONTAINER_BOX_SHADOW_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ContainerBoxShadowEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ContainerBoxShadowStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_CONTAINER_BOX_SHADOW_OVERRIDES'
-  | 'CONTAINER_BOX_SHADOWS_RESOLVED';
-
-export interface P15ContainerBoxShadowResultV2 {
-  schemaVersion: 1;
   resultVersion: typeof P15_CONTAINER_BOX_SHADOW_RESULT_VERSION;
   status: P15ContainerBoxShadowStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedShadows: P15ContainerBoxShadowEntryV1[];
-  issues: ContainerFamilyIssue[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ContainerBoxShadowEntryV1;
+  summaryField: 'resolvedShadows';
+  summary: P15ContainerBoxShadowEntryV1;
+  issueCode: string;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+};
+export type P15ContainerBoxShadowManifestV1 = FamilyManifestV1<Contract>;
+export type P15ContainerBoxShadowStatus = FamilyStatus<'NO_CONTAINER_BOX_SHADOW_OVERRIDES', 'CONTAINER_BOX_SHADOWS_RESOLVED'>;
+export type P15ContainerBoxShadowResultV2 = FamilyResultV1<Contract>;
 
 const SHADOW_KEYS = ['horizontal', 'vertical', 'blur', 'spread', 'color', 'position'] as const;
 const integer = (value: unknown, min: number, max: number): value is number =>
@@ -121,12 +89,14 @@ const P15_CONTAINER_BOX_SHADOW_FAMILY = statePairFamily<P15ContainerBoxShadowVal
   valueInvalidMessage: 'Container box shadow values must be exact integers in range with a lowercase hex colour and outline or inset position.',
 });
 
+const API = familyApi<P15ContainerBoxShadowResultV2>(P15_CONTAINER_BOX_SHADOW_FAMILY);
+
 /** Resolve only explicit Container normal/hover shadow groups from the exact 4.2.4 controls. */
 export function resolveP15ContainerBoxShadows(sourceValue: unknown, manifestValue: unknown): P15ContainerBoxShadowResultV2 {
-  return resolveContainerPropertyFamily(P15_CONTAINER_BOX_SHADOW_FAMILY, sourceValue, manifestValue) as unknown as P15ContainerBoxShadowResultV2;
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Only bounded facts are emitted; private source text and candidate bytes stay out. */
 export function serializeP15ContainerBoxShadowSummary(value: P15ContainerBoxShadowResultV2): string {
-  return serializeContainerPropertyFamilySummary(P15_CONTAINER_BOX_SHADOW_FAMILY, value as unknown as ContainerFamilyResult);
+  return API.serialize(value);
 }
