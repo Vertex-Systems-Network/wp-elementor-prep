@@ -457,9 +457,8 @@ const p15ButtonTextColorRequiredFragments = [
   "backgroundGroupName: 'background'",
   "acceptedColorPattern:",
   "^#[0-9a-f]{6}$",
-  "settings.text !== node.text",
-  "function expectedButtonLink",
-  "target.settings[P15_ELEMENTOR_BUTTON_TEXT_COLOR_EVIDENCE.settingKey] = resolution.color",
+  "target: buttonWidgetTarget('Review nodes cannot participate in Button color binding.')",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.color, ...CONFLICT }",
   "colorInferencePerformed: false",
 ];
 for (const fragment of p15ButtonTextColorRequiredFragments) {
@@ -486,8 +485,8 @@ const p15ButtonBackgroundColorRequiredFragments = [
   "hoverGroupName: 'button_background_hover'",
   "acceptedBackgroundType: 'classic'",
   "^#[0-9a-f]{6}$",
-  "P15_ELEMENTOR_BUTTON_BACKGROUND_COLOR_EVIDENCE.backgroundTypeSettingKey",
-  "P15_ELEMENTOR_BUTTON_BACKGROUND_COLOR_EVIDENCE.backgroundColorSettingKey",
+  "{ settingKey: EVIDENCE.backgroundTypeSettingKey, value: EVIDENCE.acceptedBackgroundType, ...CONFLICT }",
+  "{ settingKey: EVIDENCE.backgroundColorSettingKey, value: entry.color, ...CONFLICT }",
 ];
 for (const fragment of p15ButtonBackgroundColorRequiredFragments) {
   if (!p15ButtonBackgroundColorSource.includes(fragment)) {
@@ -512,7 +511,7 @@ const p15ButtonHoverTextColorRequiredFragments = [
   "normalTextControlName: 'button_text_color'",
   "normalBackgroundGroupName: 'background'",
   "hoverBackgroundGroupName: 'button_background_hover'",
-  "P15_ELEMENTOR_BUTTON_HOVER_TEXT_COLOR_EVIDENCE.settingKey",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.color, ...CONFLICT }",
   "^#[0-9a-f]{6}$",
 ];
 for (const fragment of p15ButtonHoverTextColorRequiredFragments) {
@@ -542,8 +541,8 @@ const p15ButtonHoverBackgroundColorRequiredFragments = [
   "selector: '{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus'",
   "acceptedBackgroundType: 'classic'",
   "^#[0-9a-f]{6}$",
-  "P15_ELEMENTOR_BUTTON_HOVER_BACKGROUND_COLOR_EVIDENCE.backgroundTypeSettingKey",
-  "P15_ELEMENTOR_BUTTON_HOVER_BACKGROUND_COLOR_EVIDENCE.backgroundColorSettingKey",
+  "{ settingKey: EVIDENCE.backgroundTypeSettingKey, value: EVIDENCE.acceptedBackgroundType, ...CONFLICT }",
+  "{ settingKey: EVIDENCE.backgroundColorSettingKey, value: entry.color, ...CONFLICT }",
 ];
 for (const fragment of p15ButtonHoverBackgroundColorRequiredFragments) {
   if (!p15ButtonHoverBackgroundColorSource.includes(fragment)) {
@@ -575,7 +574,7 @@ const p15ButtonHoverBorderColorRequiredFragments = [
   "buttonSelector: '{{WRAPPER}} .elementor-button:hover, {{WRAPPER}} .elementor-button:focus'",
   "cssProperty: 'border-color'",
   "^#[0-9a-f]{6}$",
-  "P15_ELEMENTOR_BUTTON_HOVER_BORDER_COLOR_EVIDENCE.settingKey",
+  "{ settingKey: EVIDENCE.settingKey, value: entry.color, ...CONFLICT }",
 ];
 for (const fragment of p15ButtonHoverBorderColorRequiredFragments) {
   if (!p15ButtonHoverBorderColorSource.includes(fragment)) {

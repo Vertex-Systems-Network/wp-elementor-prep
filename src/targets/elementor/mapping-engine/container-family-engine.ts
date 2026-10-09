@@ -42,13 +42,12 @@ export const MANIFEST_AUTHORITY_FLAGS = [
   'downloadEnabled',
 ] as const;
 
-const MANIFEST_KEYS = [
+/** Manifest keys every family carries besides its entries field and authority flags. */
+const MANIFEST_ENVELOPE_KEYS = [
   'baseCandidateIdentityDigest',
-  'containers',
   'manifestVersion',
   'schemaVersion',
   'sourceIrFingerprint',
-  ...MANIFEST_AUTHORITY_FLAGS,
 ] as const;
 
 export const ISSUE_SUFFIXES = [
@@ -98,13 +97,7 @@ export type ContainerFamilyResult = {
   issues: ContainerFamilyIssue[];
   template: ElementorTemplateV04 | null;
   candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
+  /** Authority flags (all `false`) follow, in the family's contract order. */
   internalReviewRequired: true;
 } & Record<string, unknown>;
 
@@ -133,8 +126,14 @@ function code(family: AnyFamily, suffix: IssueSuffix | string): string {
   return family.issueCodes?.[suffix] ?? `${family.issuePrefix}_${suffix}`;
 }
 
-function leadingFlags(family: AnyFamily): Record<string, false> {
-  return Object.fromEntries((family.leadingAuthorityFlags ?? []).map((flag) => [flag, false]));
+/** The family's authority flags in contract order: its leading flags, then the shared ones it carries. */
+function authorityFlags(family: AnyFamily): string[] {
+  const omitted = family.omittedAuthorityFlags ?? [];
+  return [...(family.leadingAuthorityFlags ?? []), ...MANIFEST_AUTHORITY_FLAGS.filter((flag) => !omitted.includes(flag))];
+}
+
+function authorityFlagValues(family: AnyFamily): Record<string, false> {
+  return Object.fromEntries(authorityFlags(family).map((flag) => [flag, false]));
 }
 
 function baseResult(
@@ -162,14 +161,7 @@ function baseResult(
     issues: issues.map((issue) => ({ ...issue })),
     template,
     candidate,
-    ...leadingFlags(family),
-    responsiveInferencePerformed: false,
-    figmaMutation: false,
-    networkAccess: false,
-    responsiveClosureClaim: false,
-    targetCompatibilityClaim: false,
-    productionAcceptance: false,
-    downloadEnabled: false,
+    ...authorityFlagValues(family),
     internalReviewRequired: true,
   } as ContainerFamilyResult;
 }
@@ -215,7 +207,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
   if (!isRecord(manifestValue)) {
     issues.push({ code: code(family, 'MANIFEST_NOT_OBJECT'), path: '$manifest', message: `${subject} manifest must be an object.` });
   } else {
-    if (!exactKeys(manifestValue, [...MANIFEST_KEYS.filter((key) => key !== 'containers'), target.entriesField, ...(family.leadingAuthorityFlags ?? [])])) {
+    if (!exactKeys(manifestValue, [...MANIFEST_ENVELOPE_KEYS, target.entriesField, ...authorityFlags(family)])) {
       issues.push({ code: code(family, 'MANIFEST_FIELDS_INVALID'), path: '$manifest', message: `${subject} manifest contains unknown or missing fields.` });
     }
     if (manifestValue.schemaVersion !== 1 || manifestValue.manifestVersion !== family.manifestVersion) {
@@ -231,7 +223,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
     } else if (manifestValue.baseCandidateIdentityDigest !== baseIdentity.digest) {
       issues.push({ code: code(family, 'BASE_CANDIDATE_IDENTITY_MISMATCH'), path: '$manifest.baseCandidateIdentityDigest', message: 'Manifest is not bound to the exact current base candidate identity.' });
     }
-    if ([...(family.leadingAuthorityFlags ?? []), ...MANIFEST_AUTHORITY_FLAGS].some((flag) => manifestValue[flag] !== false)) {
+    if (authorityFlags(family).some((flag) => manifestValue[flag] !== false)) {
       issues.push({
         code: code(family, 'AUTHORITY_FLAGS_INVALID'),
         path: '$manifest',
@@ -241,7 +233,7 @@ export function resolveContainerPropertyFamily<Entry extends { sourceNodeId: str
 
     const entries = manifestValue[target.entriesField];
     if (!Array.isArray(entries) || entries.length > family.maxEntries) {
-      issues.push({ code: code(family, 'ENTRIES_INVALID'), path: `$manifest.${target.entriesField}`, message: `${target.entriesField} must be an array of at most ${family.maxEntries} entries.` });
+      issues.push({ code: code(family, 'ENTRIES_INVALID'), path: `$manifest.${target.entriesField}`, message: family.messages?.entriesInvalid ?? `${target.entriesField} must be an array of at most ${family.maxEntries} entries.` });
     } else {
       for (let index = 0; index < entries.length; index += 1) {
         const raw: unknown = entries[index];
@@ -398,16 +390,9 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     || !statusShapeValid
     || !(list ?? []).every((entry) => family.validSummary(entry))
     || !validIssues
-    || (family.leadingAuthorityFlags ?? []).some((flag) => result[flag] !== false)
-    || result.responsiveInferencePerformed !== false
-    || result.figmaMutation !== false
-    || result.networkAccess !== false
-    || result.responsiveClosureClaim !== false
-    || result.targetCompatibilityClaim !== false
-    || result.productionAcceptance !== false
-    || result.downloadEnabled !== false
+    || authorityFlags(family).some((flag) => result[flag] !== false)
     || result.internalReviewRequired !== true) {
-    throw new Error(`Invalid or authority-inflated P15 ${family.id} result.`);
+    throw new Error(`Invalid or authority-inflated P15 ${family.serializerId ?? family.id} result.`);
   }
 
   return `${JSON.stringify({
@@ -422,14 +407,7 @@ export function serializeContainerPropertyFamilySummary<Entry extends { sourceNo
     [family.summaryField]: list ?? [],
     issues: result.issues.map((issue) => ({ code: issue.code, path: issue.path })),
     evidence: family.evidence,
-    ...leadingFlags(family),
-    responsiveInferencePerformed: false,
-    figmaMutation: false,
-    networkAccess: false,
-    responsiveClosureClaim: false,
-    targetCompatibilityClaim: false,
-    productionAcceptance: false,
-    downloadEnabled: false,
+    ...authorityFlagValues(family),
     internalReviewRequired: true,
   }, null, 2)}\n`;
 }

@@ -61,6 +61,7 @@ export interface FamilyMessageOverrides {
   readonly notContainer?: string;
   readonly resolvedInvalid?: string;
   readonly upstream?: string;
+  readonly entriesInvalid?: string;
   readonly authority?: string;
 }
 
@@ -93,6 +94,8 @@ export interface FamilyTarget {
 export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string }, Summary extends { sourceNodeId: string }> {
   /** Stable family id, e.g. `responsive-gap`; also the slug in the serializer error. */
   readonly id: string;
+  /** Slug in the serializer refusal when the contract names it differently from `id` (a copied name). */
+  readonly serializerId?: string;
   /** Bound target kind; defaults to generated containers. */
   readonly target?: FamilyTarget;
   /** Issue code prefix, e.g. `P15_RESPONSIVE_GAP`. */
@@ -112,6 +115,8 @@ export interface ContainerPropertyFamily<Entry extends { sourceNodeId: string },
   readonly requiredEntryKeys?: readonly string[];
   /** Family-specific authority flags placed before the shared ones (e.g. `styleInferencePerformed`). */
   readonly leadingAuthorityFlags?: readonly string[];
+  /** Shared authority flags this family's contract does not carry (e.g. `responsiveClosureClaim`). */
+  readonly omittedAuthorityFlags?: readonly string[];
   /** Binding-missing message, when the contract words it differently from the shared default. */
   bindingMissingMessage?(sourceNodeId: string): string;
   /** Message for an entry that fails the shared record/keys/sourceNodeId envelope. */

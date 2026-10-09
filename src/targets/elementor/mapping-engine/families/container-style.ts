@@ -53,6 +53,7 @@ export interface ContainerStyleFamilyMeta {
   bindingMissingMessage?: (sourceNodeId: string) => string;
   /** Bound target kind (default: generated containers). */
   target?: FamilyTarget;
+  serializerId?: string;
   writes: (entry: StyleEntry) => FamilySettingWrite[];
 }
 
@@ -76,6 +77,7 @@ export function containerStyleFamily(meta: ContainerStyleFamilyMeta): ContainerP
   return {
     id: meta.id,
     ...(meta.target ? { target: meta.target } : {}),
+    ...(meta.serializerId ? { serializerId: meta.serializerId } : {}),
     issuePrefix: meta.issuePrefix,
     subject: meta.subject,
     manifestVersion: meta.manifestVersion,

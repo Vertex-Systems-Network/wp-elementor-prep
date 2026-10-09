@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.4b** (button colour and content families)
-> - Last completed task: **M1.4a** (heading/text-editor colour and responsive text/button alignment on the engine's widget target; 150/150 golden cases identical).
+> - Next task: **M1.4c** (button style families)
+> - Last completed task: **M1.4b** (7 button colour and content families on the engine's shared Button target; 270/270 golden cases identical).
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -185,7 +185,18 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - Moved onto the engine: heading text colour and text-editor text colour (`containerStyleFamily`), responsive button alignment (`responsiveEnumFamily`) and responsive text alignment (a node-aware family that accepts `justify` only for text and reports `nodeKind`).
     - Golden equivalence: 150/150 cases recorded from the original resolvers (commit `3054cff`) are identical. The golden corpus gained a widget source.
     - Resolver files shrank from 3,151 lines to 772, plus the 164-line shared widget binder.
-  - [ ] **M1.4b** button colour and content: text, background, hover text, hover background and hover border colour, content metadata, stretch/content alignment.
+  - [x] **M1.4b** button colour and content _(done 2026-10-09):_
+    - `buttonWidgetTarget` in `mapping-engine/widget-binding.ts` is the one `buttons` target every `button-*` family binds through. Its `buttonBaseSettingsMatch` checks text, desktop alignment and link exactly as the copied per-resolver binders do.
+    - Moved onto the engine:
+      - text, background, hover text, hover background and hover border colour, through `containerStyleFamily`;
+      - content metadata (type, size, CSS id, with every conflict reported);
+      - stretch/content alignment, which rejects a source Button that already has an explicit alignment.
+    - The engine gained:
+      - omitted shared authority flags (content metadata carries no `responsiveClosureClaim`);
+      - an entries-invalid message override;
+      - a `serializerId` for refusals that name a copied slug. The background and hover text colour serializers keep the original `button-text-color` wording.
+    - Golden equivalence: 270/270 cases recorded from the original resolvers (commit `242ae5b`) are identical.
+    - Resolver files shrank from 5,656 lines to 1,327.
   - [ ] **M1.4c** button style: border style, visual depth/radius, responsive padding, icon basics, hover interaction.
   - [ ] **M1.4d** button typography and gradients: typography basics, typography metrics, responsive typography metrics, linear and radial gradient. `button-color-composition` moves to M1.5 with the other compositions.
 - [ ] **M1.5** Build one ordered composer that applies any set of families to one tree, with single key-ownership conflict handling. Responsive families must chain. Also absorbs align-content (chained on wrap) and the container compositions moved from M1.3d: box-shadow, linear/radial gradient, overlay visual, hover transition and `container-style-composition`.

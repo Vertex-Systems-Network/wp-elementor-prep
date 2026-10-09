@@ -7,7 +7,7 @@ import type {
 } from '../neutral-export-ir';
 import type { ElementorElementV04, ElementorTemplateV04, ElementorWidgetV04 } from '../template-v04';
 import type { FamilyTarget } from './property-family';
-import { hasOwn, isRecord } from './shared-validation';
+import { exactKeys, hasOwn, isRecord } from './shared-validation';
 
 /**
  * Widget targets for property families (recovery M1.4): bind exact generated Elementor core widgets to
@@ -161,4 +161,47 @@ export function expectedDesktopButtonAlignment(value: P15NeutralButtonNode['alig
   if (value === 'start') return 'left';
   if (value === 'end') return 'right';
   return value;
+}
+
+function expectedButtonLink(node: P15NeutralButtonNode): Record<string, unknown> | undefined {
+  if (node.url === undefined) return undefined;
+  return {
+    url: node.url,
+    is_external: node.openInNewTab ? 'on' : '',
+    nofollow: node.nofollow ? 'on' : '',
+    custom_attributes: '',
+  };
+}
+
+/** Button `text`, desktop `align` and `link` must still be exactly what the v3 generator emitted. */
+export function buttonBaseSettingsMatch(node: P15NeutralButtonNode, settings: Record<string, unknown>): boolean {
+  if (settings.text !== node.text) return false;
+  if (!desktopAlignMatches(expectedDesktopButtonAlignment(node.align), settings)) return false;
+  const expectedLink = expectedButtonLink(node);
+  const hasLink = hasOwn(settings, 'link');
+  if (expectedLink === undefined) return !hasLink;
+  if (!hasLink || !isRecord(settings.link) || !exactKeys(settings.link, ['custom_attributes', 'is_external', 'nofollow', 'url'])) {
+    return false;
+  }
+  return settings.link.url === expectedLink.url
+    && settings.link.is_external === expectedLink.is_external
+    && settings.link.nofollow === expectedLink.nofollow
+    && settings.link.custom_attributes === expectedLink.custom_attributes;
+}
+
+/** The `buttons` target shared by every `button-*` family; only the review-node wording differs. */
+export function buttonWidgetTarget(reviewMessage: string): FamilyTarget {
+  return widgetTarget({
+    kinds: ['button'],
+    entriesField: 'buttons',
+    sourceCountField: 'sourceButtonCount',
+    resolvedCountField: 'resolvedButtonCount',
+    notTargetSuffix: 'SOURCE_NOT_BUTTON',
+    notTargetMessage: (subject) => `${subject} sourceNodeId must identify an existing neutral Button node.`,
+    bindingMissingMessage: (sourceNodeId) => `Generated Button binding missing for sourceNodeId ${sourceNodeId}.`,
+    reviewMessage,
+    matches: (node, settings) => buttonBaseSettingsMatch(node as P15NeutralButtonNode, settings),
+    driftPathSuffix: '.settings',
+    driftMessage: 'Generated Button base settings drifted from the exact neutral source.',
+  });
 }
