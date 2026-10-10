@@ -26,6 +26,12 @@ import {
   typographyProblems,
 } from '../targets/elementor/typography';
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
+import {
+  deriveP15ContainerSizing,
+  fillDistributionReview,
+  type P15ContainerSizingFacts,
+  type P15FigmaSizingMode,
+} from '../targets/elementor/container-sizing';
 import { validP15LinkUrl } from '../targets/elementor/link-url';
 import { detectP15Buttons, detectP15Headings } from '../targets/elementor/semantic-detection';
 import type { P15ElementorV3GenerationResult } from '../targets/elementor/v3-template-generator';
@@ -525,10 +531,21 @@ function extractText(node: SceneNode): P15NeutralExportNode {
   };
 }
 
+type ParentLayout = P15ContainerSizingFacts['parent'];
+
+function sizingMode(value: unknown): P15FigmaSizingMode | undefined {
+  return value === 'FIXED' || value === 'HUG' || value === 'FILL' ? value : undefined;
+}
+
+function optionalNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
 function extractContainer(
   node: SceneNode,
   depth: number,
   state: ExtractionState,
+  parent: ParentLayout,
 ): P15NeutralExportNode {
   const record = recordOf(node);
   const mode = record.layoutMode;
@@ -567,24 +584,48 @@ function extractContainer(
     ...unmappedVisualFactReviews(node),
   ];
 
+  // Recovery M2.3a: exact sizing; constraints without an exact mapping stay REVIEW on this container.
+  const direction = mode === 'HORIZONTAL' ? 'row' : 'column';
+  const horizontal = sizingMode(record.layoutSizingHorizontal);
+  const vertical = sizingMode(record.layoutSizingVertical);
+  const sized = deriveP15ContainerSizing({
+    parent,
+    horizontal,
+    vertical,
+    width: typeof record.width === 'number' ? record.width : NaN,
+    height: typeof record.height === 'number' ? record.height : NaN,
+    minWidth: optionalNumber(record.minWidth),
+    maxWidth: optionalNumber(record.maxWidth),
+    minHeight: optionalNumber(record.minHeight),
+    maxHeight: optionalNumber(record.maxHeight),
+  });
+  styleReviews.push(...sized.reviews);
+
   const children: P15NeutralExportNode[] = [];
   for (const child of childNodes(node)) {
     if (!visible(child)) continue;
-    const extracted = extractNode(child, depth + 1, state, mode === 'VERTICAL' ? 'column' : 'row');
+    const extracted = extractNode(child, depth + 1, state, { direction, alignItems });
     if (state.boundsExceeded) break;
     if (extracted) children.push(extracted);
   }
+  const distribution = fillDistributionReview(
+    direction,
+    direction === 'row' ? horizontal : vertical,
+    children.map((child) => (child.kind === 'container' ? child.sizing : undefined)),
+  );
+  if (distribution) styleReviews.push(distribution);
 
   const container: P15NeutralContainerNode = {
     kind: 'container',
     sourceNodeId: node.id,
-    direction: mode === 'HORIZONTAL' ? 'row' : 'column',
+    direction,
     gapPx,
     paddingPx,
     alignItems,
     justifyContent,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
+    ...(sized.sizing ? { sizing: sized.sizing } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
     children,
   };
@@ -634,7 +675,7 @@ function extractNode(
   node: SceneNode,
   depth: number,
   state: ExtractionState,
-  parentDirection: 'row' | 'column' | null = null,
+  parent: ParentLayout = null,
 ): P15NeutralExportNode | null {
   if (!visible(node)) return null;
   if (depth > P15_NEUTRAL_EXPORT_MAX_DEPTH) {
@@ -653,10 +694,10 @@ function extractNode(
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
   if (node.type === 'TEXT') return extractText(node);
-  const rule = extractRule(node, parentDirection);
+  const rule = extractRule(node, parent?.direction ?? null);
   if (rule) return rule;
   if (isContainerLike(node)) {
-    return extractContainer(node, depth, state);
+    return extractContainer(node, depth, state, parent);
   }
   return review(node, 'UNSUPPORTED_NODE_TYPE', `Unsupported visible Figma node type: ${node.type}.`);
 }

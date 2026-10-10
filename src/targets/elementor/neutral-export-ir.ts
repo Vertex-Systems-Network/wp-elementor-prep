@@ -1,4 +1,5 @@
 import { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH, validP15AbsoluteUrl, validP15LinkUrl } from './link-url';
+import { containerSizingProblems, type P15NeutralContainerSizing } from './container-sizing';
 import {
   paragraphProblems,
   paragraphSpacingValid,
@@ -8,6 +9,7 @@ import {
 } from './typography';
 
 export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
+export type { P15NeutralContainerSizing } from './container-sizing';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
@@ -54,6 +56,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   justifyContent?: P15NeutralJustification;
   backgroundColorHex?: string;
   cornerRadiusPx?: number;
+  /** Exact width, minimum height and flex-item sizing (recovery M2.3a). */
+  sizing?: P15NeutralContainerSizing;
   styleReviews?: P15NeutralStyleReview[];
   children: P15NeutralExportNode[];
 }
@@ -162,6 +166,7 @@ export type P15NeutralExportValidationCode =
   | 'P15_IR_ALIGNMENT_INVALID'
   | 'P15_IR_TEXT_INVALID'
   | 'P15_IR_TYPOGRAPHY_INVALID'
+  | 'P15_IR_SIZING_INVALID'
   | 'P15_IR_HEADING_LEVEL_INVALID'
   | 'P15_IR_URL_INVALID'
   | 'P15_IR_BOOLEAN_INVALID'
@@ -323,7 +328,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'sizing', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -346,6 +351,9 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     }
     if (value.justifyContent !== undefined && !['start', 'center', 'end', 'space-between', 'space-around', 'space-evenly'].includes(String(value.justifyContent))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.justifyContent`, 'justifyContent is outside the bounded neutral justification vocabulary.');
+    }
+    if (value.sizing !== undefined) {
+      for (const issue of containerSizingProblems(value.sizing, `${path}.sizing`)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
     }
     if (value.styleReviews !== undefined) validateStyleReviews(value.styleReviews, `${path}.styleReviews`, state);
     if (!Array.isArray(value.children)) {

@@ -1,3 +1,4 @@
+import { containerSizingSettings } from './container-sizing';
 import { textEditorHtml, textEditorTypographySettings, typographyGroupSettings } from './typography';
 import {
   buildElementorTemplateCandidateArtifact,
@@ -155,6 +156,7 @@ function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 
       left: node.cornerRadiusPx,
     });
   }
+  Object.assign(settings, containerSizingSettings(node.sizing));
   return settings;
 }
 

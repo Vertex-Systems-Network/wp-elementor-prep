@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.3** (sizing)
-> - Last completed task: **M2.2c** (hyperlinks, dividers, spacers; registry v2 by lowest covering version). M2.2 is complete.
+> - Next task: **M2.3b** (HUG and widget sizing)
+> - Last completed task: **M2.3a** (exact container sizing: root width, FIXED width/height, FILL grow/stretch, min height; constraints REVIEW)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -304,6 +304,14 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - Identity coverage fix (commit `7e964af`): the neutral IR fingerprint now covers typography, paragraphs, links, button style, dividers, spacers and style reviews.
     - Tests: `tests/m2-rules-and-links.test.ts`, `tests/m2-identity-coverage.test.ts`.
 - [ ] **M2.3** Sizing. FIXED/HUG/FILL on both axes maps to Elementor width/height, `content_width`, flex grow/shrink and basis. Map min/max width and height. The root frame width becomes the page content width.
+  - [x] **M2.3a** Exact container sizing (`src/targets/elementor/container-sizing.ts`; R0: `container.php` blob `3486766`, `flex-item.php` blob `dc95ad4`, `_container.scss` blob `d6c65cb`). Only cases with an exact CSS equivalent are written:
+    - Root frame width → `content_width: full` + `width` px. Elementor centres a top-level container with `max-width: min(100%, var(--width))`, so the page is exactly the frame width and keeps the frame's own background bounds (chosen over `boxed`, whose outer box is full-bleed).
+    - FIXED width → `content_width: full` + `width`; FIXED height, or a minimum height on a non-fixed height → `min_height`; FIXED on the parent's main axis → `_flex_size: none`.
+    - FILL on a column's main axis → `_flex_size: grow`; FILL on a row's main axis keeps the default `width: 100%; flex: 0 1 auto`, which fills what fixed siblings leave; FILL across a row under a non-stretch parent → `_flex_align_self: stretch`.
+    - REVIEW: `SIZE_CONSTRAINT_REQUIRES_REVIEW` (minWidth, maxWidth, maxHeight), `SIZE_FILL_DISTRIBUTION_REQUIRES_REVIEW` (more than one FILL child in a column with free height), `SIZE_OUT_OF_RANGE`.
+    - IR: optional container `sizing` (validated, in the source identity). Tests: `tests/m2-sizing.test.ts`.
+  - [ ] **M2.3b** HUG on both axes (containers and widgets), widget FIXED/FILL width (`_element_width` / `_element_custom_width`, common-base), row FILL next to HUG siblings, after R0 on the widget sizing CSS (`--container-widget-width`, `--container-widget-flex-grow` from `flex-container.php` blob `ce9e412`).
+  - [ ] **M2.3c** Defect found in M2.3 R0: the M1 responsive flex-item factors family writes `_flex_grow_*`/`_flex_shrink_*` without `_flex_size_*: 'custom'`, but `flex-item.php` conditions `grow`/`shrink` on `size === 'custom'`, so Elementor ignores them. Write the custom size per device (fail closed on a conflicting base `_flex_size`), with tests.
 - [ ] **M2.4** Visual styles. Map uniform and individual strokes to border, drop/inner shadows to box-shadow, layer opacity, linear and radial gradients, non-uniform radius, and `clipsContent` to overflow hidden.
 - [ ] **M2.5** Absolutely positioned children map to `_position: absolute` with offsets relative to the parent, plus z-index from layer order.
 - [ ] **M2.6** Map wrap to `flex_wrap`. Map a strict grid to a v3 Grid container: columns, rows and gaps.
