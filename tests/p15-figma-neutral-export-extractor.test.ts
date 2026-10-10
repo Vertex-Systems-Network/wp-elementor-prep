@@ -306,11 +306,12 @@ describe('recovery M0.4 — no silent drop of unmapped visual facts', () => {
       'card:BLEND_MODE_REQUIRES_REVIEW',
       'card:ROTATION_REQUIRES_REVIEW',
       'card:MASK_REQUIRES_REVIEW',
-      'card:CLIPPED_OVERFLOW_REQUIRES_REVIEW',
     ]);
     const document = extractP15NeutralExportDocumentFromFigmaFrame(asFrame(autoFrame('page', [card])));
     const page = document.nodes[0];
     const extractedCard = page?.kind === 'container' ? page.children[0] : undefined;
+    // Recovery M2.4a: a visible clip now maps to overflow hidden instead of CLIPPED_OVERFLOW_REQUIRES_REVIEW.
+    expect(extractedCard).toMatchObject({ clipsContent: true });
     expect(extractedCard?.kind === 'container' ? extractedCard.children.map((child) => child.sourceNodeId) : []).toEqual(['card-title']);
   });
 

@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.4** (visual styles)
-> - Last completed task: **M2.3d** (button sizing; divider placement and gap repair). M2.3 is complete.
+> - Next task: **M2.4b** (drop/inner shadows → box-shadow)
+> - Last completed task: **M2.4a** (container borders, non-uniform radii, visible clip → overflow hidden)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -321,6 +321,15 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - Tests: `tests/m2-sizing-buttons-dividers.test.ts`.
   - [x] **M2.3c** Target repair of the M1 responsive flex-item factors family. `flex-item.php` conditions `grow`/`shrink` on `size === 'custom'`, and `controls-stack.php` `is_control_visible` (blob `00b280e`) reads the same-device `size` first, so the v1 `_flex_grow_*`/`_flex_shrink_*` writes were ignored by Elementor. The family (manifest/result `v2`) now also writes `_flex_size_tablet`/`_flex_size_mobile: 'custom'` for each device that sets a factor, with a base-conflict check; a desktop `_flex_size` from M2.3 sizing is kept. The engine gained entry-dependent `conditionWrites`. `tests/m1-container-family-golden-sizing.test.ts` proves v2 = the never-re-recorded v1 golden plus exactly those writes and evidence fields.
 - [ ] **M2.4** Visual styles. Map uniform and individual strokes to border, drop/inner shadows to box-shadow, layer opacity, linear and radial gradients, non-uniform radius, and `clipsContent` to overflow hidden.
+  - [x] **M2.4a** Container borders, non-uniform radii and clipping (`src/targets/elementor/container-visual-style.ts`; R0: `container.php` blob `3486766` Border group/`border_radius`/`overflow`, `_global.scss` blob `c844122` `box-sizing: border-box` inside `.elementor`).
+    - One visible, opaque, solid INSIDE stroke (uniform or per side, 0-100px) → `border_border: solid` + `border_width` + `border_color`. Figma draws an INSIDE stroke over the content while a CSS border moves it, so the padding is lowered by the border width per side (unless `strokesIncludedInLayout`); a stroke wider than its padding, CENTER/OUTSIDE, dashes, translucent/gradient/multiple paints stay `STROKE_REQUIRES_REVIEW`.
+    - Non-uniform corner radii → `border_radius` (TOP RIGHT BOTTOM LEFT = top-left, top-right, bottom-right, bottom-left) unless a corner exceeds half the shorter side (Figma clamps per corner, CSS scales all).
+    - `clipsContent` → `overflow: hidden` only where the clip is visible (a child extends past the frame, or a rounded frame with children); this replaces `CLIPPED_OVERFLOW_REQUIRES_REVIEW` on containers.
+    - A button-named frame with a border or non-uniform radius stays an exact container with `BUTTON_DETECTION_REQUIRES_REVIEW` (the Button widget border mapping is not built yet).
+    - Tests: `tests/m2-visual-borders.test.ts`.
+  - [ ] **M2.4b** Drop and inner shadows → Container `box_shadow` (one shadow; several, spread on text, or blur types → REVIEW).
+  - [ ] **M2.4c** Linear and radial gradient container backgrounds through the repaired M1.5e gradient encoding.
+  - [ ] **M2.4d** Layer opacity: R0 for a core Elementor control; without an exact control it stays `LAYER_OPACITY_REQUIRES_REVIEW`.
 - [ ] **M2.5** Absolutely positioned children map to `_position: absolute` with offsets relative to the parent, plus z-index from layer order.
 - [ ] **M2.6** Map wrap to `flex_wrap`. Map a strict grid to a v3 Grid container: columns, rows and gaps.
 - [ ] **M2.7** Map SPACE_BETWEEN, negative spacing (REVIEW where unsupported), baseline alignment, and child `layoutAlign`/`layoutGrow`.

@@ -1,5 +1,6 @@
 import { sha256Hex } from '../../core/sha256';
 import { canonicalButtonSizing, canonicalContainerSizing } from './container-sizing';
+import { canonicalBorder, canonicalCornerRadii } from './container-visual-style';
 import {
   P15_NEUTRAL_EXPORT_IR_VERSION,
   validateP15NeutralExportDocument,
@@ -62,6 +63,9 @@ function canonicalContainer(node: P15NeutralContainerNode): Record<string, unkno
   if (node.justifyContent !== undefined) value.justifyContent = node.justifyContent;
   if (node.backgroundColorHex !== undefined) value.backgroundColorHex = node.backgroundColorHex;
   if (node.cornerRadiusPx !== undefined) value.cornerRadiusPx = node.cornerRadiusPx;
+  if (node.cornerRadiiPx !== undefined) value.cornerRadiiPx = canonicalCornerRadii(node.cornerRadiiPx);
+  if (node.border !== undefined) value.border = canonicalBorder(node.border);
+  if (node.clipsContent !== undefined) value.clipsContent = node.clipsContent;
   if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
   canonicalStyleReviews(value, node.styleReviews);
   value.children = node.children.map(canonicalNode);

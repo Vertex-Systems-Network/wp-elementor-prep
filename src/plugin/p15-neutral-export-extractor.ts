@@ -27,6 +27,7 @@ import {
   typographyProblems,
 } from '../targets/elementor/typography';
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
+import { deriveP15ContainerBorder, deriveP15CornerRadii, type P15NeutralCornerRadii } from '../targets/elementor/container-visual-style';
 import {
   deriveP15ContainerSizing,
   deriveP15WidgetSizing,
@@ -153,12 +154,13 @@ function childOverflowsBounds(node: SceneNode): boolean {
  * Visual facts the bounded generator does not map yet. Each one becomes an explicit REVIEW on the
  * node instead of being dropped silently, so the output can never look complete while missing them.
  */
-function unmappedVisualFactReviews(node: SceneNode): P15NeutralStyleReview[] {
+function unmappedVisualFactReviews(node: SceneNode, container = false): P15NeutralStyleReview[] {
   const record = recordOf(node);
   const reviews: P15NeutralStyleReview[] = [];
 
+  // Containers map strokes and clipping themselves (recovery M2.4a); everything else keeps the review.
   const strokes = visiblePaintList(record.strokes);
-  if (strokes === 'MIXED' || (strokes.length > 0 && hasPositiveStrokeWeight(record))) {
+  if (!container && (strokes === 'MIXED' || (strokes.length > 0 && hasPositiveStrokeWeight(record)))) {
     reviews.push({ reasonCode: 'STROKE_REQUIRES_REVIEW', detail: 'Visible Figma strokes/borders are not mapped yet and would be lost.' });
   }
 
@@ -184,7 +186,7 @@ function unmappedVisualFactReviews(node: SceneNode): P15NeutralStyleReview[] {
     reviews.push({ reasonCode: 'MASK_REQUIRES_REVIEW', detail: 'Figma mask layers are not mapped yet.' });
   }
 
-  if (record.clipsContent === true && childOverflowsBounds(node)) {
+  if (!container && record.clipsContent === true && childOverflowsBounds(node)) {
     reviews.push({ reasonCode: 'CLIPPED_OVERFLOW_REQUIRES_REVIEW', detail: 'Container clips children that overflow its bounds; overflow clipping is not mapped yet.' });
   }
 
@@ -336,7 +338,7 @@ function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string>
   return { value: `#${byteHex(red)}${byteHex(green)}${byteHex(blue)}` };
 }
 
-function parseContainerRadius(node: SceneNode): ParsedContainerStyle<number> {
+function parseContainerRadius(node: SceneNode): ParsedContainerStyle<number> & { radii?: P15NeutralCornerRadii } {
   const record = recordOf(node);
   const keys = ['topLeftRadius', 'topRightRadius', 'bottomRightRadius', 'bottomLeftRadius'] as const;
   const provided = keys.map((key) => record[key] !== undefined);
@@ -361,12 +363,8 @@ function parseContainerRadius(node: SceneNode): ParsedContainerStyle<number> {
     }
     const [first, ...rest] = values as number[];
     if (rest.some((value) => value !== first)) {
-      return {
-        review: {
-          reasonCode: 'NONUNIFORM_CORNER_RADIUS_REQUIRES_REVIEW',
-          detail: 'Non-uniform container corner radii require an explicit fidelity mapping decision.',
-        },
-      };
+      const [topLeft, topRight, bottomRight, bottomLeft] = values as number[];
+      return { radii: { topLeft: topLeft!, topRight: topRight!, bottomRight: bottomRight!, bottomLeft: bottomLeft! } };
     }
     return first === 0 ? {} : { value: first };
   }
@@ -598,11 +596,27 @@ function extractContainer(
   // container's layout and children are still extracted instead of being dropped.
   const background = parseContainerBackground(node);
   const radius = parseContainerRadius(node);
+  // Recovery M2.4a: non-uniform radii, an INSIDE solid border (padding lowered by its width) and a visible clip.
+  const radii = radius.radii === undefined ? {} : deriveP15CornerRadii(radius.radii, Number(record.width), Number(record.height));
+  const strokes = visiblePaintList(record.strokes);
+  const bordered = deriveP15ContainerBorder({
+    paints: strokes === 'MIXED' ? 'MIXED' : strokes.map((paint) => solidOpaqueHex(paint)),
+    weight: record.strokeWeight,
+    topWeight: record.strokeTopWeight,
+    rightWeight: record.strokeRightWeight,
+    bottomWeight: record.strokeBottomWeight,
+    leftWeight: record.strokeLeftWeight,
+    align: record.strokeAlign,
+    dashPattern: record.dashPattern,
+    includedInLayout: record.strokesIncludedInLayout,
+  }, paddingPx);
+  const rounded = radius.value !== undefined || radii.radii !== undefined;
+  const clips = record.clipsContent === true && (childOverflowsBounds(node) || (rounded && childNodes(node).some(visible)));
   const styleReviews: P15NeutralStyleReview[] = [
-    ...[background.review, radius.review]
+    ...[background.review, radius.review, radii.review, bordered.review]
       .filter((entry): entry is NonNullable<typeof entry> => entry !== undefined)
       .map((entry) => ({ reasonCode: entry.reasonCode, detail: entry.detail })),
-    ...unmappedVisualFactReviews(node),
+    ...unmappedVisualFactReviews(node, true),
   ];
 
   // Recovery M2.3a: exact sizing; constraints without an exact mapping stay REVIEW on this container.
@@ -632,11 +646,14 @@ function extractContainer(
     sourceNodeId: node.id,
     direction,
     gapPx,
-    paddingPx,
+    paddingPx: bordered.paddingPx ?? paddingPx,
     alignItems,
     justifyContent,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
+    ...(radii.radii !== undefined ? { cornerRadiiPx: radii.radii } : {}),
+    ...(bordered.border !== undefined ? { border: bordered.border } : {}),
+    ...(clips ? { clipsContent: true as const } : {}),
     ...(sized.sizing ? { sizing: sized.sizing } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
     children,

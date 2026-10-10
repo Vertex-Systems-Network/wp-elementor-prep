@@ -146,6 +146,12 @@ export function detectP15Buttons(
       return { ...node, children: rewrite(node.children), styleReviews: [...(node.styleReviews ?? []), { reasonCode: 'BUTTON_DETECTION_REQUIRES_REVIEW',
         detail: 'The layer is named as a button but is not one solid, padded frame around a single short line of text.' }] };
     }
+    // Button borders and non-uniform radii are not mapped yet (M2.4a maps them on containers): the frame stays an
+    // exact container, and only the button semantics are flagged.
+    if (node.border !== undefined || node.cornerRadiiPx !== undefined) {
+      return { ...node, styleReviews: [...(node.styleReviews ?? []), { reasonCode: 'BUTTON_DETECTION_REQUIRES_REVIEW',
+        detail: 'The button frame has a border or non-uniform radius, which the Button widget mapping does not carry yet; it stays a container.' }] };
+    }
     return {
       kind: 'button',
       sourceNodeId: node.sourceNodeId,
