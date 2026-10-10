@@ -8,11 +8,38 @@ import {
   type P15NeutralExportNode,
   type P15NeutralHeadingNode,
   type P15NeutralImageNode,
+  type P15NeutralParagraph,
   type P15NeutralReviewNode,
+  type P15NeutralStyleReview,
   type P15NeutralTextNode,
+  type P15NeutralTypography,
 } from './neutral-export-ir';
 
 export const P15_NEUTRAL_EXPORT_IR_IDENTITY_VERSION = 'p15-neutral-export-ir-identity-v1' as const;
+
+/*
+ * Every optional fact that changes generation must be part of the identity, or a manifest bound to one
+ * document's fingerprint would also bind to a document that differs only in that fact. Optional facts are
+ * added only when present, in a fixed key order, so documents without them keep their exact fingerprint.
+ */
+const TYPOGRAPHY_ORDER = ['fontFamily', 'fontWeight', 'fontStyle', 'fontSizePx', 'lineHeightPx', 'letterSpacingPx',
+  'textTransform', 'textDecoration', 'colorHex'] as const;
+
+function canonicalTypography(value: P15NeutralTypography): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const key of TYPOGRAPHY_ORDER) if (value[key] !== undefined) out[key] = value[key];
+  return out;
+}
+
+function canonicalParagraphs(paragraphs: readonly P15NeutralParagraph[]): unknown[] {
+  return paragraphs.map((paragraph) => ({
+    spans: paragraph.spans.map((span) => ({ text: span.text, ...(span.style === undefined ? {} : { style: canonicalTypography(span.style) }) })),
+  }));
+}
+
+function canonicalStyleReviews(value: Record<string, unknown>, reviews: readonly P15NeutralStyleReview[] | undefined): void {
+  if (reviews !== undefined) value.styleReviews = reviews.map((review) => ({ reasonCode: review.reasonCode, detail: review.detail }));
+}
 
 function canonicalContainer(node: P15NeutralContainerNode): Record<string, unknown> {
   const value: Record<string, unknown> = {
@@ -33,6 +60,7 @@ function canonicalContainer(node: P15NeutralContainerNode): Record<string, unkno
   if (node.justifyContent !== undefined) value.justifyContent = node.justifyContent;
   if (node.backgroundColorHex !== undefined) value.backgroundColorHex = node.backgroundColorHex;
   if (node.cornerRadiusPx !== undefined) value.cornerRadiusPx = node.cornerRadiusPx;
+  canonicalStyleReviews(value, node.styleReviews);
   value.children = node.children.map(canonicalNode);
   return value;
 }
@@ -45,6 +73,7 @@ function canonicalHeading(node: P15NeutralHeadingNode): Record<string, unknown> 
     level: node.level,
   };
   if (node.align !== undefined) value.align = node.align;
+  if (node.typography !== undefined) value.typography = canonicalTypography(node.typography);
   return value;
 }
 
@@ -55,6 +84,10 @@ function canonicalText(node: P15NeutralTextNode): Record<string, unknown> {
     text: node.text,
   };
   if (node.align !== undefined) value.align = node.align;
+  if (node.typography !== undefined) value.typography = canonicalTypography(node.typography);
+  if (node.paragraphs !== undefined) value.paragraphs = canonicalParagraphs(node.paragraphs);
+  if (node.paragraphSpacingPx !== undefined) value.paragraphSpacingPx = node.paragraphSpacingPx;
+  canonicalStyleReviews(value, node.styleReviews);
   return value;
 }
 
@@ -68,6 +101,12 @@ function canonicalButton(node: P15NeutralButtonNode): Record<string, unknown> {
   if (node.openInNewTab !== undefined) value.openInNewTab = node.openInNewTab;
   if (node.nofollow !== undefined) value.nofollow = node.nofollow;
   if (node.align !== undefined) value.align = node.align;
+  if (node.typography !== undefined) value.typography = canonicalTypography(node.typography);
+  if (node.backgroundColorHex !== undefined) value.backgroundColorHex = node.backgroundColorHex;
+  if (node.paddingPx !== undefined) {
+    value.paddingPx = { top: node.paddingPx.top, right: node.paddingPx.right, bottom: node.paddingPx.bottom, left: node.paddingPx.left };
+  }
+  if (node.cornerRadiusPx !== undefined) value.cornerRadiusPx = node.cornerRadiusPx;
   return value;
 }
 
