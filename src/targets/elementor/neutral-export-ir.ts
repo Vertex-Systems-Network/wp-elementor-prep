@@ -1,5 +1,5 @@
 import { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH, validP15AbsoluteUrl, validP15LinkUrl } from './link-url';
-import { containerSizingProblems, type P15NeutralContainerSizing } from './container-sizing';
+import { containerSizingProblems, widgetSizingProblems, type P15NeutralContainerSizing, type P15NeutralWidgetSizing } from './container-sizing';
 import {
   paragraphProblems,
   paragraphSpacingValid,
@@ -9,7 +9,7 @@ import {
 } from './typography';
 
 export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
-export type { P15NeutralContainerSizing } from './container-sizing';
+export type { P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
@@ -71,6 +71,8 @@ export interface P15NeutralHeadingNode extends P15NeutralNodeBase {
   typography?: P15NeutralTypography;
   /** One link for the whole heading (recovery M2.2c). */
   href?: string;
+  /** Width and flex-item sizing (recovery M2.3b). */
+  sizing?: P15NeutralWidgetSizing;
 }
 
 export interface P15NeutralTextNode extends P15NeutralNodeBase {
@@ -84,6 +86,8 @@ export interface P15NeutralTextNode extends P15NeutralNodeBase {
   /** One link for the whole text (recovery M2.2c). */
   href?: string;
   paragraphSpacingPx?: number;
+  /** Width and flex-item sizing (recovery M2.3b). */
+  sizing?: P15NeutralWidgetSizing;
   styleReviews?: P15NeutralStyleReview[];
 }
 
@@ -284,6 +288,11 @@ function validReviewReasonCode(value: unknown): boolean {
   return boundedString(value, 128) && /^[A-Z0-9_:-]+$/.test(String(value));
 }
 
+function validateWidgetSizing(value: unknown, path: string, state: ValidationState): void {
+  if (value === undefined) return;
+  for (const issue of widgetSizingProblems(value, path)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
+}
+
 function validateStyleReviews(value: unknown, path: string, state: ValidationState): void {
   if (!Array.isArray(value) || value.length === 0 || value.length > P15_NEUTRAL_EXPORT_MAX_STYLE_REVIEWS) {
     pushIssue(state, 'P15_IR_REVIEW_REASON_INVALID', path, `styleReviews must be a non-empty array of at most ${P15_NEUTRAL_EXPORT_MAX_STYLE_REVIEWS} entries when provided.`);
@@ -368,7 +377,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'heading') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography', 'href'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography', 'href', 'sizing'], path, state);
+    validateWidgetSizing(value.sizing, `${path}.sizing`, state);
     if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Heading link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
     for (const issue of value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)) {
@@ -384,7 +394,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'text') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'href', 'styleReviews'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'href', 'sizing', 'styleReviews'], path, state);
+    validateWidgetSizing(value.sizing, `${path}.sizing`, state);
     if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Text link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
     const typographyIssues = [

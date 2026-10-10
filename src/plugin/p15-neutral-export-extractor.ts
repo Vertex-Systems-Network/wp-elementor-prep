@@ -28,6 +28,7 @@ import {
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
 import {
   deriveP15ContainerSizing,
+  deriveP15WidgetSizing,
   fillDistributionReview,
   type P15ContainerSizingFacts,
   type P15FigmaSizingMode,
@@ -507,7 +508,7 @@ function extractTextTypography(node: TextNode): TextTypographyExtraction {
   return result;
 }
 
-function extractText(node: SceneNode): P15NeutralExportNode {
+function extractText(node: SceneNode, parent: ParentLayout): P15NeutralExportNode {
   if (node.type !== 'TEXT') return review(node, 'UNSUPPORTED_NODE_TYPE', `Unsupported visible Figma node type: ${node.type}.`);
   if (node.characters.trim().length === 0) {
     return review(node, 'EMPTY_TEXT_REQUIRES_REVIEW', 'Empty visible text cannot be safely dropped because it may carry layout intent.');
@@ -517,7 +518,9 @@ function extractText(node: SceneNode): P15NeutralExportNode {
     return review(node, 'UNSUPPORTED_TEXT_ALIGNMENT', `Unsupported Figma text alignment: ${String(node.textAlignHorizontal)}.`);
   }
   const typography = extractTextTypography(node);
-  const styleReviews = [...unmappedVisualFactReviews(node), ...typography.reviews];
+  // Recovery M2.3b: heading/text width and flex-item sizing; a fixed text height is REVIEW.
+  const sized = deriveP15WidgetSizing(sizingFacts(recordOf(node), parent));
+  const styleReviews = [...unmappedVisualFactReviews(node), ...typography.reviews, ...sized.reviews];
   return {
     kind: 'text',
     sourceNodeId: node.id,
@@ -527,6 +530,7 @@ function extractText(node: SceneNode): P15NeutralExportNode {
     ...(typography.typography ? { typography: typography.typography } : {}),
     ...(typography.paragraphs ? { paragraphs: typography.paragraphs } : {}),
     ...(typography.paragraphSpacingPx !== undefined ? { paragraphSpacingPx: typography.paragraphSpacingPx } : {}),
+    ...(sized.sizing ? { sizing: sized.sizing } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
   };
 }
@@ -539,6 +543,20 @@ function sizingMode(value: unknown): P15FigmaSizingMode | undefined {
 
 function optionalNumber(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function sizingFacts(record: Record<string, unknown>, parent: ParentLayout): P15ContainerSizingFacts {
+  return {
+    parent,
+    horizontal: sizingMode(record.layoutSizingHorizontal),
+    vertical: sizingMode(record.layoutSizingVertical),
+    width: typeof record.width === 'number' ? record.width : NaN,
+    height: typeof record.height === 'number' ? record.height : NaN,
+    minWidth: optionalNumber(record.minWidth),
+    maxWidth: optionalNumber(record.maxWidth),
+    minHeight: optionalNumber(record.minHeight),
+    maxHeight: optionalNumber(record.maxHeight),
+  };
 }
 
 function extractContainer(
@@ -586,19 +604,9 @@ function extractContainer(
 
   // Recovery M2.3a: exact sizing; constraints without an exact mapping stay REVIEW on this container.
   const direction = mode === 'HORIZONTAL' ? 'row' : 'column';
-  const horizontal = sizingMode(record.layoutSizingHorizontal);
-  const vertical = sizingMode(record.layoutSizingVertical);
-  const sized = deriveP15ContainerSizing({
-    parent,
-    horizontal,
-    vertical,
-    width: typeof record.width === 'number' ? record.width : NaN,
-    height: typeof record.height === 'number' ? record.height : NaN,
-    minWidth: optionalNumber(record.minWidth),
-    maxWidth: optionalNumber(record.maxWidth),
-    minHeight: optionalNumber(record.minHeight),
-    maxHeight: optionalNumber(record.maxHeight),
-  });
+  const facts = sizingFacts(record, parent);
+  const { horizontal, vertical } = facts;
+  const sized = deriveP15ContainerSizing(facts);
   styleReviews.push(...sized.reviews);
 
   const children: P15NeutralExportNode[] = [];
@@ -611,7 +619,7 @@ function extractContainer(
   const distribution = fillDistributionReview(
     direction,
     direction === 'row' ? horizontal : vertical,
-    children.map((child) => (child.kind === 'container' ? child.sizing : undefined)),
+    children.map((child) => (child.kind === 'container' || child.kind === 'text' || child.kind === 'heading' ? child.sizing : undefined)),
   );
   if (distribution) styleReviews.push(distribution);
 
@@ -693,7 +701,7 @@ function extractNode(
   if (hasImageFill(node) && !isContainerLike(node)) {
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
-  if (node.type === 'TEXT') return extractText(node);
+  if (node.type === 'TEXT') return extractText(node, parent);
   const rule = extractRule(node, parent?.direction ?? null);
   if (rule) return rule;
   if (isContainerLike(node)) {

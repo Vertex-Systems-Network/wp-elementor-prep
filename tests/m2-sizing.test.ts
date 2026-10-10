@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { extractP15NeutralExportDocumentFromFigmaFrame } from '../src/plugin/p15-neutral-export-extractor';
-import { deriveP15ContainerSizing, fillDistributionReview } from '../src/targets/elementor/container-sizing';
+import { deriveP15ContainerSizing, deriveP15WidgetSizing, fillDistributionReview } from '../src/targets/elementor/container-sizing';
 import { fingerprintP15NeutralExportDocument } from '../src/targets/elementor/neutral-export-ir-identity';
 import { P15_NEUTRAL_EXPORT_IR_VERSION, validateP15NeutralExportDocument, type P15NeutralExportDocumentV1 } from '../src/targets/elementor/neutral-export-ir';
 import { generateElementorV3TemplateCandidate } from '../src/targets/elementor/v3-template-generator';
@@ -8,7 +8,7 @@ import { generateElementorV3TemplateCandidate } from '../src/targets/elementor/v
 const slider = (size: number) => ({ unit: 'px', size, sizes: [] });
 const facts = (extra: Partial<Parameters<typeof deriveP15ContainerSizing>[0]> = {}) => ({
   parent: { direction: 'row' as const, alignItems: 'start' },
-  horizontal: 'HUG' as const, vertical: 'HUG' as const, width: 300, height: 200, ...extra,
+  horizontal: undefined, vertical: undefined, width: 300, height: 200, ...extra,
 });
 
 describe('recovery M2.3a — sizing derivation', () => {
@@ -132,5 +132,84 @@ describe('recovery M2.3a — Figma extraction end to end', () => {
     const root = generation.template!.content[0]!;
     expect(root.settings).toMatchObject({ content_width: 'full', width: slider(1440) });
     expect(root.elements[0]!.settings).toMatchObject({ min_height: slider(600), _flex_size: 'none' });
+  });
+});
+
+describe('recovery M2.3b — HUG containers', () => {
+  it('a HUG width fits its content and HUG on the main axis never shrinks', () => {
+    expect(deriveP15ContainerSizing(facts({ horizontal: 'HUG', vertical: 'HUG' })).sizing).toEqual({ hugWidth: true, flex: 'fixed' });
+    const column = { direction: 'column' as const, alignItems: 'center' };
+    expect(deriveP15ContainerSizing(facts({ parent: column, horizontal: 'HUG', vertical: 'HUG' })).sizing).toEqual({ hugWidth: true, flex: 'fixed' });
+    expect(deriveP15ContainerSizing(facts({ parent: null, horizontal: 'HUG', width: 800 })).sizing).toEqual({ widthPx: 800 });
+  });
+
+  it('writes content_width full and a fit-content custom width', () => {
+    const generation = generateElementorV3TemplateCandidate(doc(undefined, { hugWidth: true, flex: 'fixed' }));
+    expect(generation.status).toBe('GENERATED_LOCAL_CANDIDATE');
+    expect(generation.template!.content[0]!.elements[0]!.settings).toEqual({ flex_direction: 'column', content_width: 'full',
+      width: { unit: 'custom', size: 'fit-content', sizes: [] }, _flex_size: 'none' });
+    expect(validateP15NeutralExportDocument(doc(undefined, { hugWidth: true, widthPx: 10 })).valid).toBe(false);
+  });
+});
+
+describe('recovery M2.3b — heading and text widget sizing', () => {
+  const row = { direction: 'row' as const, alignItems: 'start' };
+  const column = { direction: 'column' as const, alignItems: 'start' };
+
+  it('maps widths along a row: FIXED px, HUG keeps its size, FILL takes an equal share', () => {
+    expect(deriveP15WidgetSizing(facts({ parent: row, horizontal: 'FIXED', vertical: 'HUG', width: 180 })))
+      .toEqual({ sizing: { widthPx: 180, flex: 'fixed' }, reviews: [] });
+    expect(deriveP15WidgetSizing(facts({ parent: row, horizontal: 'HUG', vertical: 'HUG' })).sizing).toEqual({ flex: 'fixed' });
+    expect(deriveP15WidgetSizing(facts({ parent: row, horizontal: 'FILL', vertical: 'FILL' })).sizing).toEqual({ fillWidth: true, alignSelfStretch: true });
+  });
+
+  it('maps widths across a column: FIXED px, FILL stretches, HUG fits', () => {
+    expect(deriveP15WidgetSizing(facts({ parent: column, horizontal: 'FIXED', vertical: 'HUG', width: 320 })).sizing).toEqual({ widthPx: 320, flex: 'fixed' });
+    expect(deriveP15WidgetSizing(facts({ parent: column, horizontal: 'FILL', vertical: 'HUG' })).sizing).toEqual({ alignSelfStretch: true, flex: 'fixed' });
+    expect(deriveP15WidgetSizing(facts({ parent: { direction: 'column', alignItems: 'stretch' }, horizontal: 'FILL', vertical: 'HUG' })).sizing).toEqual({ flex: 'fixed' });
+    expect(deriveP15WidgetSizing(facts({ parent: column, horizontal: 'HUG', vertical: 'FILL' })).sizing).toEqual({ flex: 'grow' });
+  });
+
+  it('a fixed text height and any constraint are review', () => {
+    expect(deriveP15WidgetSizing(facts({ parent: column, horizontal: 'FILL', vertical: 'FIXED' })).reviews.map((review) => review.reasonCode))
+      .toEqual(['SIZE_WIDGET_HEIGHT_REQUIRES_REVIEW']);
+    expect(deriveP15WidgetSizing(facts({ parent: column, horizontal: 'HUG', vertical: 'HUG', minHeight: 10 })).reviews.map((review) => review.reasonCode))
+      .toEqual(['SIZE_CONSTRAINT_REQUIRES_REVIEW']);
+    expect(deriveP15WidgetSizing(facts({ parent: null }))).toEqual({ reviews: [] });
+  });
+
+  it('writes _element_width, _element_custom_width and the flex-item settings', () => {
+    const page = (child: Record<string, unknown>): P15NeutralExportDocumentV1 => ({ schemaVersion: 1, irVersion: P15_NEUTRAL_EXPORT_IR_VERSION,
+      title: 'w', documentType: 'section', nodes: [{ kind: 'container', sourceNodeId: 'root', direction: 'row', children: [child] }] } as unknown as P15NeutralExportDocumentV1);
+    const widget = (child: Record<string, unknown>) => {
+      const generation = generateElementorV3TemplateCandidate(page(child));
+      expect(generation.status).toBe('GENERATED_LOCAL_CANDIDATE');
+      return generation.template!.content[0]!.elements[0]!.settings;
+    };
+    expect(widget({ kind: 'text', sourceNodeId: 't', text: 'Hi', sizing: { widthPx: 180, flex: 'fixed' } }))
+      .toMatchObject({ _element_width: 'initial', _element_custom_width: slider(180), _flex_size: 'none' });
+    expect(widget({ kind: 'heading', sourceNodeId: 'h', text: 'Hi', level: 'h2', sizing: { fillWidth: true, alignSelfStretch: true } }))
+      .toMatchObject({ _element_width: 'initial', _element_custom_width: { unit: '%', size: 100, sizes: [] }, _flex_align_self: 'stretch' });
+    expect(widget({ kind: 'text', sourceNodeId: 't', text: 'Hi', sizing: { flex: 'grow' } })).toMatchObject({ _flex_size: 'grow' });
+    for (const bad of [{ fillWidth: true, widthPx: 10 }, { hugWidth: true }, { minHeightPx: 10 }]) {
+      expect(validateP15NeutralExportDocument(page({ kind: 'text', sourceNodeId: 't', text: 'Hi', sizing: bad })).valid, JSON.stringify(bad)).toBe(false);
+    }
+  });
+
+  it('sizing follows a text into its detected heading and stays in the identity', () => {
+    const segment = (size: number) => ({ characters: 'x', fontName: { family: 'Inter', style: 'Regular' }, fontWeight: 400, fontStyle: 'REGULAR', fontSize: size,
+      lineHeight: { unit: 'AUTO' }, letterSpacing: { unit: 'PIXELS', value: 0 }, textCase: 'ORIGINAL', textDecoration: 'NONE', fills: [], hyperlink: null });
+    const text = (id: string, size: number, sizing: Record<string, unknown>) => ({ id, name: id, type: 'TEXT', visible: true, characters: 'x',
+      textAlignHorizontal: 'LEFT', fills: [], width: 200, height: 20, getStyledTextSegments: () => [{ ...segment(size), characters: 'x' }], ...sizing });
+    const root = { id: 'page', name: 'page', type: 'FRAME', visible: true, layoutMode: 'VERTICAL', layoutWrap: 'NO_WRAP', layoutPositioning: 'AUTO', itemSpacing: 0,
+      paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, primaryAxisAlignItems: 'MIN', counterAxisAlignItems: 'MIN', fills: [], strokes: [], effects: [],
+      children: [text('title', 40, { layoutSizingHorizontal: 'FILL', layoutSizingVertical: 'HUG' }), text('body', 16, { layoutSizingHorizontal: 'FIXED', layoutSizingVertical: 'HUG' })] };
+    const document = extractP15NeutralExportDocumentFromFigmaFrame(root as unknown as FrameNode, 'section');
+    const [title, body] = (document.nodes[0] as { children: { kind: string; sizing?: unknown }[] }).children;
+    expect(title).toMatchObject({ kind: 'heading', sizing: { alignSelfStretch: true, flex: 'fixed' } });
+    expect(body).toMatchObject({ kind: 'text', sizing: { widthPx: 200, flex: 'fixed' } });
+    const other = JSON.parse(JSON.stringify(document)) as P15NeutralExportDocumentV1;
+    (other.nodes[0] as { children: { sizing?: unknown }[] }).children[1]!.sizing = { widthPx: 201, flex: 'fixed' };
+    expect(fingerprintP15NeutralExportDocument(other)).not.toBe(fingerprintP15NeutralExportDocument(document));
   });
 });

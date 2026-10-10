@@ -1,4 +1,4 @@
-import { containerSizingSettings } from './container-sizing';
+import { containerSizingSettings, widgetSizingSettings } from './container-sizing';
 import { textEditorHtml, textEditorTypographySettings, typographyGroupSettings } from './typography';
 import {
   buildElementorTemplateCandidateArtifact,
@@ -170,6 +170,7 @@ function headingWidget(node: P15NeutralHeadingNode, state: GenerationState): Ele
   Object.assign(settings, typographyGroupSettings(node.typography, 'title_color'));
   // heading.php `link` URL control (recovery M2.2c); the same link shape the Button widget writes.
   if (node.href !== undefined) settings.link = { url: node.href, is_external: '', nofollow: '', custom_attributes: '' };
+  Object.assign(settings, widgetSizingSettings(node.sizing));
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -187,6 +188,7 @@ function textEditorWidget(node: P15NeutralTextNode, state: GenerationState): Ele
   const align = mapTextAlignment(node.align);
   if (align !== undefined) settings.align = align;
   Object.assign(settings, textEditorTypographySettings(node.typography, node.paragraphSpacingPx));
+  Object.assign(settings, widgetSizingSettings(node.sizing));
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',

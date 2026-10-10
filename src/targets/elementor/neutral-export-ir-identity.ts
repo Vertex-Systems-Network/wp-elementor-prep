@@ -78,6 +78,7 @@ function canonicalHeading(node: P15NeutralHeadingNode): Record<string, unknown> 
   if (node.align !== undefined) value.align = node.align;
   if (node.typography !== undefined) value.typography = canonicalTypography(node.typography);
   if (node.href !== undefined) value.href = node.href;
+  if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
   return value;
 }
 
@@ -92,6 +93,7 @@ function canonicalText(node: P15NeutralTextNode): Record<string, unknown> {
   if (node.paragraphs !== undefined) value.paragraphs = canonicalParagraphs(node.paragraphs);
   if (node.paragraphSpacingPx !== undefined) value.paragraphSpacingPx = node.paragraphSpacingPx;
   if (node.href !== undefined) value.href = node.href;
+  if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
   canonicalStyleReviews(value, node.styleReviews);
   return value;
 }

@@ -87,6 +87,7 @@ export function detectP15Headings(document: P15NeutralExportDocumentV1, names: R
       ...(node.align === undefined ? {} : { align: node.align as 'start' | 'center' | 'end' }),
       ...(node.typography === undefined ? {} : { typography: node.typography }),
       ...(node.href === undefined ? {} : { href: node.href }),
+      ...(node.sizing === undefined ? {} : { sizing: node.sizing }),
     };
   });
   return { ...document, nodes: rewrite(document.nodes) };
