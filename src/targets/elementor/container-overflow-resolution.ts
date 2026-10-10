@@ -1,12 +1,14 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { enumCodec } from './mapping-engine/codecs';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_CONTAINER_OVERFLOW_MANIFEST_VERSION =
   'p15-elementor-container-overflow-manifest-v1' as const;
@@ -34,81 +36,29 @@ export interface P15ElementorContainerOverflowEntryV1 {
   overflow: P15ElementorContainerOverflowValue;
 }
 
-export interface P15ElementorContainerOverflowManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_CONTAINER_OVERFLOW_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ElementorContainerOverflowEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorContainerOverflowIssueCode =
-  | 'P15_CONTAINER_OVERFLOW_SOURCE_IR_INVALID'
-  | 'P15_CONTAINER_OVERFLOW_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_CONTAINER_OVERFLOW_MANIFEST_NOT_OBJECT'
-  | 'P15_CONTAINER_OVERFLOW_MANIFEST_FIELDS_INVALID'
-  | 'P15_CONTAINER_OVERFLOW_MANIFEST_VERSION_INVALID'
-  | 'P15_CONTAINER_OVERFLOW_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_CONTAINER_OVERFLOW_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_CONTAINER_OVERFLOW_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_CONTAINER_OVERFLOW_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_CONTAINER_OVERFLOW_ENTRIES_INVALID'
-  | 'P15_CONTAINER_OVERFLOW_ENTRY_INVALID'
-  | 'P15_CONTAINER_OVERFLOW_DUPLICATE_SOURCE_ID'
-  | 'P15_CONTAINER_OVERFLOW_SOURCE_NOT_CONTAINER'
-  | 'P15_CONTAINER_OVERFLOW_VALUE_INVALID'
-  | 'P15_CONTAINER_OVERFLOW_AUTHORITY_FLAGS_INVALID'
-  | 'P15_CONTAINER_OVERFLOW_GENERATOR_BINDING_MISMATCH'
-  | 'P15_CONTAINER_OVERFLOW_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_CONTAINER_OVERFLOW_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorContainerOverflowIssueV1 {
-  code: P15ElementorContainerOverflowIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorContainerOverflowStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_CONTAINER_OVERFLOW_OVERRIDES'
-  | 'CONTAINER_OVERFLOW_RESOLVED';
-
 export interface P15ElementorContainerOverflowSummaryEntryV1 {
   sourceNodeId: string;
   overflow: P15ElementorContainerOverflowValue;
 }
 
-export interface P15ElementorContainerOverflowResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_CONTAINER_OVERFLOW_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_CONTAINER_OVERFLOW_RESULT_VERSION;
   status: P15ElementorContainerOverflowStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedOverflows: P15ElementorContainerOverflowSummaryEntryV1[];
-  issues: P15ElementorContainerOverflowIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorContainerOverflowEntryV1;
+  summaryField: 'resolvedOverflows';
+  summary: P15ElementorContainerOverflowSummaryEntryV1;
+  issueCode: P15ElementorContainerOverflowIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag;
+};
+export type P15ElementorContainerOverflowManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorContainerOverflowIssueCode =
+  FamilyIssueCode<'P15_CONTAINER_OVERFLOW'>;
+export type P15ElementorContainerOverflowIssueV1 = FamilyIssueV1<P15ElementorContainerOverflowIssueCode>;
+export type P15ElementorContainerOverflowStatus = FamilyStatus<'NO_CONTAINER_OVERFLOW_OVERRIDES', 'CONTAINER_OVERFLOW_RESOLVED'>;
+export type P15ElementorContainerOverflowResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_CONTAINER_OVERFLOW_EVIDENCE;
 const FAMILY = containerStyleFamily({
@@ -138,6 +88,8 @@ const FAMILY = containerStyleFamily({
   ],
 });
 
+const API = familyApi<P15ElementorContainerOverflowResultV1>(FAMILY);
+
 /**
  * Apply only explicit Container overflow values to exact generated Container bindings.
  *
@@ -148,16 +100,11 @@ const FAMILY = containerStyleFamily({
  * Re-expressed over the shared mapping engine (recovery M1.3d); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-container-family-golden-style.test.ts`.
  */
-export function resolveP15ElementorContainerOverflow(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorContainerOverflowResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorContainerOverflowResultV1;
+export function resolveP15ElementorContainerOverflow(sourceValue: unknown, manifestValue: unknown): P15ElementorContainerOverflowResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized overflow metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorContainerOverflowSummary(
-  result: P15ElementorContainerOverflowResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorContainerOverflowSummary(result: P15ElementorContainerOverflowResultV1): string {
+  return API.serialize(result);
 }

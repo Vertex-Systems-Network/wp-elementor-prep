@@ -1,4 +1,3 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
   P15_ELEMENTOR_CONTAINER_OVERLAY_COLOR_FAMILY,
   type P15ElementorContainerOverlayColorResultV1,
@@ -6,13 +5,12 @@ import {
 import {
   resolveContainerPropertyFamily,
   serializeContainerPropertyFamilySummary,
-  type ContainerFamilyIssue,
   type ContainerFamilyResult,
 } from './mapping-engine/container-family-engine';
+import type { FamilyAuthorityFlag, FamilyManifestV1, FamilyResultV1, FamilyStatus } from './mapping-engine/contract-types';
 import type { ValueCodec } from './mapping-engine/codecs';
 import type { ContainerPropertyFamily, FamilyEntryFailure, FamilySettingWrite } from './mapping-engine/property-family';
 import { isRecord, onlyAllowedKeys, validSourceNodeId } from './mapping-engine/shared-validation';
-import type { ElementorTemplateV04 } from './template-v04';
 
 /**
  * Container overlay blend mode and CSS filters (recovery M1.5f target repair), from Elementor 4.2.4:
@@ -48,47 +46,23 @@ export interface P15ContainerOverlayVisualEntryV2 {
   normal?: P15ContainerCssFilterV2;
   hover?: P15ContainerCssFilterV2;
 }
-export interface P15ContainerOverlayVisualManifestV2 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_CONTAINER_OVERLAY_VISUAL_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  /** The exact overlay-colour result this manifest builds on. */
-  overlayColorCandidateIdentityDigest: string;
-  containers: P15ContainerOverlayVisualEntryV2[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-export interface P15ContainerOverlayVisualResultV2 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_CONTAINER_OVERLAY_VISUAL_RESULT_VERSION;
-  status: 'BLOCKED_INVALID_SOURCE_IR' | 'BLOCKED_OVERLAY_COLOR_PREREQUISITE' | 'REJECTED_INVALID_MANIFEST'
-    | 'NO_CONTAINER_OVERLAY_VISUAL_OVERRIDES' | 'CONTAINER_OVERLAY_VISUALS_RESOLVED';
-  overlayColorPrerequisiteStatus: string | null;
-  sourceIrFingerprint: string | null;
-  overlayColorCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedOverlayVisuals: P15ContainerOverlayVisualEntryV2[];
-  issues: ContainerFamilyIssue[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  status: FamilyStatus<'NO_CONTAINER_OVERLAY_VISUAL_OVERRIDES', 'CONTAINER_OVERLAY_VISUALS_RESOLVED', 'BLOCKED_OVERLAY_COLOR_PREREQUISITE'>;
+  entriesField: 'containers';
+  entry: P15ContainerOverlayVisualEntryV2;
+  summaryField: 'resolvedOverlayVisuals';
+  summary: P15ContainerOverlayVisualEntryV2;
+  issueCode: string;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+  /** The exact overlay-colour result this manifest builds on. */
+  digestField: 'overlayColorCandidateIdentityDigest';
+  extra: { overlayColorPrerequisiteStatus: string | null };
+};
+export type P15ContainerOverlayVisualManifestV2 = FamilyManifestV1<Contract>;
+export type P15ContainerOverlayVisualResultV2 = FamilyResultV1<Contract>;
 
 const RANGES = P15_ELEMENTOR_CONTAINER_OVERLAY_VISUAL_EVIDENCE.filterRanges;
 /** A non-empty set of CSS filters, each a finite number inside its Elementor slider range. */

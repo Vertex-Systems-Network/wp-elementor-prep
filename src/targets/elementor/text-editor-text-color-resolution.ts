@@ -1,14 +1,16 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { lowerHexColorCodec } from './mapping-engine/codecs';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
 import { textEditorBaseSettingsMatch, widgetTarget } from './mapping-engine/widget-binding';
 import type { P15NeutralTextNode } from './neutral-export-ir';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_TEXT_EDITOR_TEXT_COLOR_MANIFEST_VERSION =
   'p15-elementor-text-editor-text-color-manifest-v1' as const;
@@ -35,83 +37,29 @@ export interface P15ElementorTextEditorTextColorEntryV1 {
   color: P15ElementorTextEditorTextColorValue;
 }
 
-export interface P15ElementorTextEditorTextColorManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_TEXT_EDITOR_TEXT_COLOR_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  texts: P15ElementorTextEditorTextColorEntryV1[];
-  colorInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorTextEditorTextColorIssueCode =
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_SOURCE_IR_INVALID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_MANIFEST_NOT_OBJECT'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_MANIFEST_FIELDS_INVALID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_MANIFEST_VERSION_INVALID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_ENTRIES_INVALID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_ENTRY_INVALID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_DUPLICATE_SOURCE_ID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_SOURCE_NOT_TEXT'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_VALUE_INVALID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_AUTHORITY_FLAGS_INVALID'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_GENERATOR_BINDING_MISMATCH'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_TEXT_EDITOR_TEXT_COLOR_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorTextEditorTextColorIssueV1 {
-  code: P15ElementorTextEditorTextColorIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorTextEditorTextColorStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_TEXT_EDITOR_TEXT_COLOR_OVERRIDES'
-  | 'TEXT_EDITOR_TEXT_COLORS_RESOLVED';
-
 export interface P15ElementorTextEditorTextColorSummaryEntryV1 {
   sourceNodeId: string;
   color: P15ElementorTextEditorTextColorValue;
 }
 
-export interface P15ElementorTextEditorTextColorResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_TEXT_EDITOR_TEXT_COLOR_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_TEXT_EDITOR_TEXT_COLOR_RESULT_VERSION;
   status: P15ElementorTextEditorTextColorStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceTextCount: number;
-  resolvedTextCount: number;
-  resolvedColors: P15ElementorTextEditorTextColorSummaryEntryV1[];
-  issues: P15ElementorTextEditorTextColorIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  colorInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'texts';
+  entry: P15ElementorTextEditorTextColorEntryV1;
+  summaryField: 'resolvedColors';
+  summary: P15ElementorTextEditorTextColorSummaryEntryV1;
+  issueCode: P15ElementorTextEditorTextColorIssueCode;
+  noun: 'Text';
+  flags: FamilyAuthorityFlag<'colorInferencePerformed'>;
+};
+export type P15ElementorTextEditorTextColorManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorTextEditorTextColorIssueCode =
+  FamilyIssueCode<'P15_TEXT_EDITOR_TEXT_COLOR', 'SOURCE_NOT_TEXT'>;
+export type P15ElementorTextEditorTextColorIssueV1 = FamilyIssueV1<P15ElementorTextEditorTextColorIssueCode>;
+export type P15ElementorTextEditorTextColorStatus = FamilyStatus<'NO_TEXT_EDITOR_TEXT_COLOR_OVERRIDES', 'TEXT_EDITOR_TEXT_COLORS_RESOLVED'>;
+export type P15ElementorTextEditorTextColorResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_TEXT_EDITOR_TEXT_COLOR_EVIDENCE;
 const FAMILY = containerStyleFamily({
@@ -157,6 +105,8 @@ const FAMILY = containerStyleFamily({
   }],
 });
 
+const API = familyApi<P15ElementorTextEditorTextColorResultV1>(FAMILY);
+
 /**
  * Apply only explicit lowercase six-digit hex normal text colors to exact generated Text Editor bindings.
  *
@@ -166,16 +116,11 @@ const FAMILY = containerStyleFamily({
  * Re-expressed over the shared mapping engine (recovery M1.4a); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-widget-family-golden.test.ts`.
  */
-export function resolveP15ElementorTextEditorTextColors(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorTextEditorTextColorResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorTextEditorTextColorResultV1;
+export function resolveP15ElementorTextEditorTextColors(sourceValue: unknown, manifestValue: unknown): P15ElementorTextEditorTextColorResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized color metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorTextEditorTextColorSummary(
-  result: P15ElementorTextEditorTextColorResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorTextEditorTextColorSummary(result: P15ElementorTextEditorTextColorResultV1): string {
+  return API.serialize(result);
 }

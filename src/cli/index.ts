@@ -4,6 +4,7 @@ import { buildAuditReport } from '../core/scoring';
 import { generateBacklog, serializeBacklogJson, serializeBacklogMarkdown, type BacklogDocument } from '../core/backlog';
 import { serializeAuditReportJson, serializeAuditReportMarkdown } from '../core/report-serialization';
 import type { AuditReport } from '../core/types';
+import { buildP15ElementorExport, serializeP15ElementorExportSummary } from '../targets/elementor/export-pipeline';
 import { BoundedJsonReadError, readBoundedJsonFile } from './bounded-json';
 import { prepareSafeOutputDirectory, writeAtomicOutputFile } from './safe-output';
 import {
@@ -309,8 +310,34 @@ async function generateBacklogCommand(args: ParsedArgs): Promise<number> {
   return thresholdExit(backlog, parseFailOn(args));
 }
 
+/** Exit code when the export is refused and no template is written. */
+const EXPORT_BLOCKED_EXIT = 3;
+
+/**
+ * Elementor export through the same pipeline as the plugin preview/download (recovery M1.6): a neutral
+ * export IR plus an optional page-composition manifest. Only a ready candidate is ever written.
+ */
+async function exportElementor(args: ParsedArgs): Promise<number> {
+  assertNoUnexpectedPositionals(args);
+  const source = await readJsonFile(requiredOption(args, 'input'), 'NEUTRAL_SOURCE_READ_FAILED');
+  const manifestPath = option(args, 'page-manifest');
+  const manifest = manifestPath ? await readJsonFile(manifestPath, 'PAGE_MANIFEST_READ_FAILED') : null;
+  const result = buildP15ElementorExport(source, manifest);
+  const summary = serializeP15ElementorExportSummary(result);
+  const templateJson = result.candidate?.templateJson ?? null;
+  if (args.flags.has('summary-only') || templateJson === null) {
+    process.stdout.write(summary);
+  } else {
+    const outDir = await prepareSafeOutputDirectory(option(args, 'out') ?? DEFAULT_OUT_DIR);
+    await writeAtomicOutputFile(outDir, 'elementor-template.json', templateJson);
+    await writeAtomicOutputFile(outDir, 'elementor-export-summary.json', summary);
+    process.stdout.write(`${JSON.stringify({ outDir, summary: JSON.parse(summary) as unknown }, null, 2)}\n`);
+  }
+  return templateJson === null ? EXPORT_BLOCKED_EXIT : 0;
+}
+
 function usage(): string {
-  return `wp-elementor-prep CLI\n\nCommands:\n  audit:figma     --url <figma-url> | --file-key <key> [--node-id <id>]\n  audit:snapshot  --input <canonical-snapshot.json>\n  backlog:generate --input <audit-report.json>\n\nCommon options:\n  --out <dir>                 Output directory (default: ${DEFAULT_OUT_DIR})\n  --previous-backlog <file>   Previous schema-v1 backlog for delta calculation\n  --summary-only              Print machine-readable summary only; write no files\n  --fail-on <none|warning|error>  Return exit 10 when the threshold is met\n\nAudit commands retain audit-report/backlog outputs and also write build-ready-report.json (Build-Ready Score v2 / Responsive Risk v1).\n\nFigma auth options:\n  --auth <personal|oauth>     Personal token uses FIGMA_TOKEN; OAuth uses FIGMA_OAUTH_TOKEN\n  --token-env <ENV_NAME>      Override the credential environment variable name\n\nRaw .fig files are intentionally unsupported. Use official Figma URL/file-key input or canonical snapshot JSON.\n`;
+  return `wp-elementor-prep CLI\n\nCommands:\n  audit:figma     --url <figma-url> | --file-key <key> [--node-id <id>]\n  audit:snapshot  --input <canonical-snapshot.json>\n  backlog:generate --input <audit-report.json>\n  export:elementor --input <neutral-export-ir.json> [--page-manifest <page-composition.json>]\n\nCommon options:\n  --out <dir>                 Output directory (default: ${DEFAULT_OUT_DIR})\n  --previous-backlog <file>   Previous schema-v1 backlog for delta calculation\n  --summary-only              Print machine-readable summary only; write no files\n  --fail-on <none|warning|error>  Return exit 10 when the threshold is met\n\nAudit commands retain audit-report/backlog outputs and also write build-ready-report.json (Build-Ready Score v2 / Responsive Risk v1).\nexport:elementor writes elementor-template.json and elementor-export-summary.json only for a ready candidate (exit ${EXPORT_BLOCKED_EXIT} otherwise). A candidate is locally validated, not a target import or render proof.\n\nFigma auth options:\n  --auth <personal|oauth>     Personal token uses FIGMA_TOKEN; OAuth uses FIGMA_OAUTH_TOKEN\n  --token-env <ENV_NAME>      Override the credential environment variable name\n\nRaw .fig files are intentionally unsupported. Use official Figma URL/file-key input or canonical snapshot JSON.\n`;
 }
 
 async function main(): Promise<void> {
@@ -330,6 +357,7 @@ async function main(): Promise<void> {
   if (command === 'audit:figma') exitCode = await auditFigma(args);
   else if (command === 'audit:snapshot') exitCode = await auditSnapshot(args);
   else if (command === 'backlog:generate') exitCode = await generateBacklogCommand(args);
+  else if (command === 'export:elementor') exitCode = await exportElementor(args);
   else throw new CliError('UNKNOWN_COMMAND', `Unknown command: ${command}.`);
 
   process.exitCode = exitCode;

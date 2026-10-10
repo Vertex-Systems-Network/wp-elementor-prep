@@ -1,14 +1,16 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { elementorPxSlider, type ValueCodec } from './mapping-engine/codecs';
 import { groupPrefixConflict, safeIntegerCodec, steppedNumberCodec } from './mapping-engine/families/button-style';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_TYPOGRAPHY_METRICS_MANIFEST_VERSION =
   'p15-elementor-button-typography-metrics-manifest-v1' as const;
@@ -80,83 +82,24 @@ export interface P15ElementorButtonTypographyMetricsEntryV1 {
   wordSpacingPx?: number;
 }
 
-export interface P15ElementorButtonTypographyMetricsManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_BUTTON_TYPOGRAPHY_METRICS_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonTypographyMetricsEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonTypographyMetricsIssueCode =
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_ENTRIES_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_ENTRY_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_FONT_FAMILY_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_FONT_SIZE_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_LINE_HEIGHT_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_LETTER_SPACING_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_WORD_SPACING_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_OVERRIDE_REQUIRED'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_TYPOGRAPHY_METRICS_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonTypographyMetricsIssueV1 {
-  code: P15ElementorButtonTypographyMetricsIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonTypographyMetricsStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_TYPOGRAPHY_METRICS_OVERRIDES'
-  | 'BUTTON_TYPOGRAPHY_METRICS_RESOLVED';
-
-export interface P15ElementorButtonTypographyMetricsResultV1 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_TYPOGRAPHY_METRICS_RESULT_VERSION;
   status: P15ElementorButtonTypographyMetricsStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedTypographyMetrics: P15ElementorButtonTypographyMetricsEntryV1[];
-  issues: P15ElementorButtonTypographyMetricsIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonTypographyMetricsEntryV1;
+  summaryField: 'resolvedTypographyMetrics';
+  summary: P15ElementorButtonTypographyMetricsEntryV1;
+  issueCode: P15ElementorButtonTypographyMetricsIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+};
+export type P15ElementorButtonTypographyMetricsManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonTypographyMetricsIssueCode =
+  FamilyIssueCode<'P15_BUTTON_TYPOGRAPHY_METRICS', 'SOURCE_NOT_BUTTON' | 'FONT_FAMILY_INVALID' | 'FONT_SIZE_INVALID' | 'LINE_HEIGHT_INVALID' | 'LETTER_SPACING_INVALID' | 'WORD_SPACING_INVALID'>;
+export type P15ElementorButtonTypographyMetricsIssueV1 = FamilyIssueV1<P15ElementorButtonTypographyMetricsIssueCode>;
+export type P15ElementorButtonTypographyMetricsStatus = FamilyStatus<'NO_BUTTON_TYPOGRAPHY_METRICS_OVERRIDES', 'BUTTON_TYPOGRAPHY_METRICS_RESOLVED'>;
+export type P15ElementorButtonTypographyMetricsResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_BUTTON_TYPOGRAPHY_METRICS_EVIDENCE;
 const fontFamilyCodec = {
@@ -213,22 +156,19 @@ const FAMILY = containerStyleFamily({
   ],
 });
 
+const API = familyApi<P15ElementorButtonTypographyMetricsResultV1>(FAMILY);
+
 /**
  * Apply only explicit desktop Button font family, size, line height and letter/word spacing to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4d); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-typography-gradient-golden.test.ts`.
  */
-export function resolveP15ElementorButtonTypographyMetrics(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonTypographyMetricsResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonTypographyMetricsResultV1;
+export function resolveP15ElementorButtonTypographyMetrics(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonTypographyMetricsResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized typography metrics metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonTypographyMetricsSummary(
-  result: P15ElementorButtonTypographyMetricsResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonTypographyMetricsSummary(result: P15ElementorButtonTypographyMetricsResultV1): string {
+  return API.serialize(result);
 }

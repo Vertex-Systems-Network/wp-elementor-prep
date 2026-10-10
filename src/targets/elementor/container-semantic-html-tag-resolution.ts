@@ -1,12 +1,14 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { enumCodec } from './mapping-engine/codecs';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_CONTAINER_SEMANTIC_HTML_TAG_MANIFEST_VERSION =
   'p15-elementor-container-semantic-html-tag-manifest-v1' as const;
@@ -40,81 +42,29 @@ export interface P15ElementorContainerSemanticHtmlTagEntryV1 {
   htmlTag: P15ElementorContainerSemanticHtmlTagValue;
 }
 
-export interface P15ElementorContainerSemanticHtmlTagManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_CONTAINER_SEMANTIC_HTML_TAG_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ElementorContainerSemanticHtmlTagEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorContainerSemanticHtmlTagIssueCode =
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_SOURCE_IR_INVALID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_MANIFEST_NOT_OBJECT'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_MANIFEST_FIELDS_INVALID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_MANIFEST_VERSION_INVALID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_ENTRIES_INVALID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_ENTRY_INVALID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_DUPLICATE_SOURCE_ID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_SOURCE_NOT_CONTAINER'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_VALUE_INVALID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_AUTHORITY_FLAGS_INVALID'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_GENERATOR_BINDING_MISMATCH'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_CONTAINER_SEMANTIC_HTML_TAG_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorContainerSemanticHtmlTagIssueV1 {
-  code: P15ElementorContainerSemanticHtmlTagIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorContainerSemanticHtmlTagStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_CONTAINER_SEMANTIC_HTML_TAG_OVERRIDES'
-  | 'CONTAINER_SEMANTIC_HTML_TAG_RESOLVED';
-
 export interface P15ElementorContainerSemanticHtmlTagSummaryEntryV1 {
   sourceNodeId: string;
   htmlTag: P15ElementorContainerSemanticHtmlTagValue;
 }
 
-export interface P15ElementorContainerSemanticHtmlTagResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_CONTAINER_SEMANTIC_HTML_TAG_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_CONTAINER_SEMANTIC_HTML_TAG_RESULT_VERSION;
   status: P15ElementorContainerSemanticHtmlTagStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedHtmlTags: P15ElementorContainerSemanticHtmlTagSummaryEntryV1[];
-  issues: P15ElementorContainerSemanticHtmlTagIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorContainerSemanticHtmlTagEntryV1;
+  summaryField: 'resolvedHtmlTags';
+  summary: P15ElementorContainerSemanticHtmlTagSummaryEntryV1;
+  issueCode: P15ElementorContainerSemanticHtmlTagIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag;
+};
+export type P15ElementorContainerSemanticHtmlTagManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorContainerSemanticHtmlTagIssueCode =
+  FamilyIssueCode<'P15_CONTAINER_SEMANTIC_HTML_TAG'>;
+export type P15ElementorContainerSemanticHtmlTagIssueV1 = FamilyIssueV1<P15ElementorContainerSemanticHtmlTagIssueCode>;
+export type P15ElementorContainerSemanticHtmlTagStatus = FamilyStatus<'NO_CONTAINER_SEMANTIC_HTML_TAG_OVERRIDES', 'CONTAINER_SEMANTIC_HTML_TAG_RESOLVED'>;
+export type P15ElementorContainerSemanticHtmlTagResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_CONTAINER_SEMANTIC_HTML_TAG_EVIDENCE;
 const FAMILY = containerStyleFamily({
@@ -144,6 +94,8 @@ const FAMILY = containerStyleFamily({
   ],
 });
 
+const API = familyApi<P15ElementorContainerSemanticHtmlTagResultV1>(FAMILY);
+
 /**
  * Apply only explicit semantic non-link HTML tags to exact generated Container bindings.
  *
@@ -155,16 +107,11 @@ const FAMILY = containerStyleFamily({
  * Re-expressed over the shared mapping engine (recovery M1.3d); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-container-family-golden-style.test.ts`.
  */
-export function resolveP15ElementorContainerSemanticHtmlTag(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorContainerSemanticHtmlTagResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorContainerSemanticHtmlTagResultV1;
+export function resolveP15ElementorContainerSemanticHtmlTag(sourceValue: unknown, manifestValue: unknown): P15ElementorContainerSemanticHtmlTagResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized semantic HTML tag metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorContainerSemanticHtmlTagSummary(
-  result: P15ElementorContainerSemanticHtmlTagResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorContainerSemanticHtmlTagSummary(result: P15ElementorContainerSemanticHtmlTagResultV1): string {
+  return API.serialize(result);
 }

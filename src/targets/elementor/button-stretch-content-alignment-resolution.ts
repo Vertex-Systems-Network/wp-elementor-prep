@@ -1,15 +1,17 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { enumCodec } from './mapping-engine/codecs';
 import type { ContainerPropertyFamily, FamilySettingWrite } from './mapping-engine/property-family';
 import { isRecord, onlyAllowedKeys, validSourceNodeId } from './mapping-engine/shared-validation';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
 import type { P15NeutralButtonNode } from './neutral-export-ir';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_STRETCH_CONTENT_ALIGNMENT_MANIFEST_VERSION =
   'p15-elementor-button-stretch-content-alignment-manifest-v1' as const;
@@ -52,80 +54,24 @@ export interface P15ElementorButtonStretchContentAlignmentEntryV1 {
   mobileContentAlign?: P15ElementorButtonContentAlignment;
 }
 
-export interface P15ElementorButtonStretchContentAlignmentManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_BUTTON_STRETCH_CONTENT_ALIGNMENT_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonStretchContentAlignmentEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonStretchContentAlignmentIssueCode =
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_ENTRIES_INVALID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_ENTRY_INVALID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_SOURCE_ALIGNMENT_CONFLICT'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_STRETCH_REQUIRED'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_VALUE_INVALID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonStretchContentAlignmentIssueV1 {
-  code: P15ElementorButtonStretchContentAlignmentIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonStretchContentAlignmentStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_STRETCH_CONTENT_ALIGNMENT_OVERRIDES'
-  | 'BUTTON_STRETCH_CONTENT_ALIGNMENTS_RESOLVED';
-
-export interface P15ElementorButtonStretchContentAlignmentResultV1 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_STRETCH_CONTENT_ALIGNMENT_RESULT_VERSION;
   status: P15ElementorButtonStretchContentAlignmentStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedAlignments: P15ElementorButtonStretchContentAlignmentEntryV1[];
-  issues: P15ElementorButtonStretchContentAlignmentIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonStretchContentAlignmentEntryV1;
+  summaryField: 'resolvedAlignments';
+  summary: P15ElementorButtonStretchContentAlignmentEntryV1;
+  issueCode: P15ElementorButtonStretchContentAlignmentIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+};
+export type P15ElementorButtonStretchContentAlignmentManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonStretchContentAlignmentIssueCode =
+  FamilyIssueCode<'P15_BUTTON_STRETCH_CONTENT_ALIGNMENT', 'SOURCE_NOT_BUTTON' | 'SOURCE_ALIGNMENT_CONFLICT' | 'STRETCH_REQUIRED'>;
+export type P15ElementorButtonStretchContentAlignmentIssueV1 = FamilyIssueV1<P15ElementorButtonStretchContentAlignmentIssueCode>;
+export type P15ElementorButtonStretchContentAlignmentStatus = FamilyStatus<'NO_BUTTON_STRETCH_CONTENT_ALIGNMENT_OVERRIDES', 'BUTTON_STRETCH_CONTENT_ALIGNMENTS_RESOLVED'>;
+export type P15ElementorButtonStretchContentAlignmentResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_BUTTON_STRETCH_CONTENT_ALIGNMENT_EVIDENCE;
 const alignCodec = enumCodec(P15_ELEMENTOR_BUTTON_CONTENT_ALIGNMENTS);
@@ -203,22 +149,19 @@ const FAMILY: ContainerPropertyFamily<P15ElementorButtonStretchContentAlignmentE
   },
 };
 
+const API = familyApi<P15ElementorButtonStretchContentAlignmentResultV1>(FAMILY);
+
 /**
  * Apply only an explicit Button stretch plus bounded desktop/tablet/mobile content alignment to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4b); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-family-golden.test.ts`.
  */
-export function resolveP15ElementorButtonStretchContentAlignments(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonStretchContentAlignmentResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonStretchContentAlignmentResultV1;
+export function resolveP15ElementorButtonStretchContentAlignments(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonStretchContentAlignmentResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized stretch/content alignment metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonStretchContentAlignmentSummary(
-  result: P15ElementorButtonStretchContentAlignmentResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonStretchContentAlignmentSummary(result: P15ElementorButtonStretchContentAlignmentResultV1): string {
+  return API.serialize(result);
 }

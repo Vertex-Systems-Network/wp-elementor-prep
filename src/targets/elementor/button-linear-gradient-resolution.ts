@@ -1,13 +1,15 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { gradientProfileCodec, gradientWrites, type GradientProfile } from './mapping-engine/families/button-gradient';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_LINEAR_GRADIENT_MANIFEST_VERSION =
   'p15-elementor-button-linear-gradient-manifest-v1' as const;
@@ -68,84 +70,30 @@ export interface P15ElementorButtonLinearGradientEntryV1 {
   hover?: P15ElementorButtonLinearGradientV1;
 }
 
-export interface P15ElementorButtonLinearGradientManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_BUTTON_LINEAR_GRADIENT_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonLinearGradientEntryV1[];
-  gradientInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonLinearGradientIssueCode =
-  | 'P15_BUTTON_LINEAR_GRADIENT_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_LINEAR_GRADIENT_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_LINEAR_GRADIENT_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_LINEAR_GRADIENT_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_LINEAR_GRADIENT_ENTRIES_INVALID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_ENTRY_INVALID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_LINEAR_GRADIENT_VALUE_INVALID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_LINEAR_GRADIENT_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_LINEAR_GRADIENT_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_LINEAR_GRADIENT_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonLinearGradientIssueV1 {
-  code: P15ElementorButtonLinearGradientIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonLinearGradientStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_LINEAR_GRADIENT_OVERRIDES'
-  | 'BUTTON_LINEAR_GRADIENTS_RESOLVED';
-
 export interface P15ElementorButtonLinearGradientSummaryEntryV1 {
   sourceNodeId: string;
   normal?: P15ElementorButtonLinearGradientV1;
   hover?: P15ElementorButtonLinearGradientV1;
 }
 
-export interface P15ElementorButtonLinearGradientResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_BUTTON_LINEAR_GRADIENT_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_LINEAR_GRADIENT_RESULT_VERSION;
   status: P15ElementorButtonLinearGradientStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedGradients: P15ElementorButtonLinearGradientSummaryEntryV1[];
-  issues: P15ElementorButtonLinearGradientIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  gradientInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonLinearGradientEntryV1;
+  summaryField: 'resolvedGradients';
+  summary: P15ElementorButtonLinearGradientSummaryEntryV1;
+  issueCode: P15ElementorButtonLinearGradientIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'gradientInferencePerformed'>;
+};
+export type P15ElementorButtonLinearGradientManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonLinearGradientIssueCode =
+  FamilyIssueCode<'P15_BUTTON_LINEAR_GRADIENT', 'SOURCE_NOT_BUTTON'>;
+export type P15ElementorButtonLinearGradientIssueV1 = FamilyIssueV1<P15ElementorButtonLinearGradientIssueCode>;
+export type P15ElementorButtonLinearGradientStatus = FamilyStatus<'NO_BUTTON_LINEAR_GRADIENT_OVERRIDES', 'BUTTON_LINEAR_GRADIENTS_RESOLVED'>;
+export type P15ElementorButtonLinearGradientResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_BUTTON_LINEAR_GRADIENT_EVIDENCE;
 const gradientCodec = gradientProfileCodec('linear');
@@ -178,22 +126,19 @@ const FAMILY = containerStyleFamily({
   ],
 });
 
+const API = familyApi<P15ElementorButtonLinearGradientResultV1>(FAMILY);
+
 /**
  * Apply only explicit two-colour normal/hover linear gradients to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4d); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-typography-gradient-golden.test.ts`.
  */
-export function resolveP15ElementorButtonLinearGradients(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonLinearGradientResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonLinearGradientResultV1;
+export function resolveP15ElementorButtonLinearGradients(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonLinearGradientResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized gradient metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonLinearGradientSummary(
-  result: P15ElementorButtonLinearGradientResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonLinearGradientSummary(result: P15ElementorButtonLinearGradientResultV1): string {
+  return API.serialize(result);
 }

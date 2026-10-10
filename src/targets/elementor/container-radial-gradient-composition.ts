@@ -1,12 +1,12 @@
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyManifestV1,
+} from './mapping-engine/contract-types';
 import type { PairEntry } from './mapping-engine/families/state-pair';
 import {
   containerGradientFamily,
   P15_ELEMENTOR_CONTAINER_GRADIENT_SOURCE_EVIDENCE,
+  type P15ContainerGradientAuthorityFlag,
   type P15ContainerGradientResultV2,
 } from './container-linear-gradient-composition';
 
@@ -33,21 +33,18 @@ export interface P15ContainerRadialGradientV2 {
   tabletPosition?: P15ContainerRadialGradientPosition; mobilePosition?: P15ContainerRadialGradientPosition;
 }
 export type P15ContainerRadialGradientEntryV2 = PairEntry<P15ContainerRadialGradientV2>;
-export interface P15ContainerRadialGradientManifestV2 {
-  schemaVersion: 1;
+export type P15ContainerRadialGradientManifestV2 = FamilyManifestV1<{
   manifestVersion: typeof P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ContainerRadialGradientEntryV2[];
-  gradientInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
+  resultVersion: typeof P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_RESULT_VERSION;
+  status: string;
+  entriesField: 'containers';
+  entry: P15ContainerRadialGradientEntryV2;
+  summaryField: 'resolvedGradients';
+  summary: P15ContainerRadialGradientEntryV2;
+  issueCode: string;
+  noun: 'Container';
+  flags: P15ContainerGradientAuthorityFlag;
+}>;
 export type P15ContainerRadialGradientResultV2 = P15ContainerGradientResultV2<P15ContainerRadialGradientEntryV2, typeof P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_RESULT_VERSION>;
 
 const P15_CONTAINER_RADIAL_GRADIENT_FAMILY = containerGradientFamily<P15ContainerRadialGradientV2>('radial', {
@@ -57,10 +54,12 @@ const P15_CONTAINER_RADIAL_GRADIENT_FAMILY = containerGradientFamily<P15Containe
   positions: P15_ELEMENTOR_CONTAINER_RADIAL_GRADIENT_POSITIONS,
 });
 
+const API = familyApi<P15ContainerRadialGradientResultV2>(P15_CONTAINER_RADIAL_GRADIENT_FAMILY);
+
 export function resolveP15ElementorContainerRadialGradients(sourceValue: unknown, manifestValue: unknown): P15ContainerRadialGradientResultV2 {
-  return resolveContainerPropertyFamily(P15_CONTAINER_RADIAL_GRADIENT_FAMILY, sourceValue, manifestValue) as unknown as P15ContainerRadialGradientResultV2;
+  return API.resolve(sourceValue, manifestValue);
 }
 
 export function serializeP15ElementorContainerRadialGradientSummary(value: P15ContainerRadialGradientResultV2): string {
-  return serializeContainerPropertyFamilySummary(P15_CONTAINER_RADIAL_GRADIENT_FAMILY, value as unknown as ContainerFamilyResult);
+  return API.serialize(value);
 }

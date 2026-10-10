@@ -17,9 +17,11 @@ A full code audit at main `9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6` (see `docs/
   - version-driven adapter selection (the option-bank select is cosmetic);
   - a round-trip Figma-vs-render comparison.
 - **Dev-only:** the P14 target-ready duplicate. It lands on top of the source. The shipped P5 Safe Fix replaces the original in place.
-- **Unreachable:** about 37k LOC of `src/targets/elementor/*-resolution.ts` (manifest-driven, not bundled).
+- **Unreachable:** about 37k LOC of `src/targets/elementor/*-resolution.ts` (manifest-driven, not bundled). *(Superseded by M1: 9.3k lines on one engine, bundled through the export pipeline.)*
 
 The active priority is the recovery program (D-047). Phase rows and authority boundaries below are unchanged.
+
+**M1 status (2026-10-10): IMPLEMENTED.** M1 (table-driven Elementor mapping engine) is implemented: one engine for 54 families, chained families, one ordered composer, a page composition, one export pipeline shared by the plugin and the CLI `export:elementor`, and generic contract types. The resolution layer went from about 36.0k to 9.3k lines, and three container target defects (gradient stop encoding, the stale radial candidate, overlay CSS-filter popover/units/bindings) were repaired with Elementor 4.2.4 source evidence. PR #898 (M1.1–M1.4) and PR #899 (M1.5) are merged; M1.6–M1.8 acceptance waits on its PR's exact-head gates. No target import/render or compatibility claim.
 
 **M0 status (2026-10-08): ACCEPTED.** PR #895, exact head `e8672b0`, passed 10/10 required checks and was merged as `f18240e`.
 

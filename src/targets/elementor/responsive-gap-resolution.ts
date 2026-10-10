@@ -1,11 +1,13 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { responsiveGapFamily } from './mapping-engine/families/responsive-spacing';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION =
   'p15-elementor-responsive-gap-manifest-v1' as const;
@@ -35,55 +37,6 @@ export interface P15ElementorResponsiveGapEntryV1 {
   mobileColumnGapPx?: number;
 }
 
-export interface P15ElementorResponsiveGapManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ElementorResponsiveGapEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorResponsiveGapIssueCode =
-  | 'P15_RESPONSIVE_GAP_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_GAP_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_RESPONSIVE_GAP_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_GAP_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_GAP_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_GAP_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_GAP_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_GAP_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_GAP_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_GAP_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_GAP_SOURCE_NOT_CONTAINER'
-  | 'P15_RESPONSIVE_GAP_VALUE_INVALID'
-  | 'P15_RESPONSIVE_GAP_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_GAP_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_GAP_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_GAP_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_GAP_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorResponsiveGapIssueV1 {
-  code: P15ElementorResponsiveGapIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorResponsiveGapStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_GAP_OVERRIDES'
-  | 'RESPONSIVE_GAPS_RESOLVED';
-
 export interface P15ElementorResponsiveGapSummaryEntryV1 {
   sourceNodeId: string;
   tabletGapPx: number | null;
@@ -94,28 +47,23 @@ export interface P15ElementorResponsiveGapSummaryEntryV1 {
   mobileColumnGapPx: number | null;
 }
 
-export interface P15ElementorResponsiveGapResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_GAP_RESULT_VERSION;
   status: P15ElementorResponsiveGapStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedGaps: P15ElementorResponsiveGapSummaryEntryV1[];
-  issues: P15ElementorResponsiveGapIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorResponsiveGapEntryV1;
+  summaryField: 'resolvedGaps';
+  summary: P15ElementorResponsiveGapSummaryEntryV1;
+  issueCode: P15ElementorResponsiveGapIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag;
+};
+export type P15ElementorResponsiveGapManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorResponsiveGapIssueCode = FamilyIssueCode<'P15_RESPONSIVE_GAP'>;
+export type P15ElementorResponsiveGapIssueV1 = FamilyIssueV1<P15ElementorResponsiveGapIssueCode>;
+export type P15ElementorResponsiveGapStatus = FamilyStatus<'NO_RESPONSIVE_GAP_OVERRIDES', 'RESPONSIVE_GAPS_RESOLVED'>;
+export type P15ElementorResponsiveGapResultV1 = FamilyResultV1<Contract>;
 
 const P15_ELEMENTOR_RESPONSIVE_GAP_FAMILY = responsiveGapFamily({
   manifestVersion: P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION,
@@ -124,6 +72,8 @@ const P15_ELEMENTOR_RESPONSIVE_GAP_FAMILY = responsiveGapFamily({
   evidence: P15_ELEMENTOR_RESPONSIVE_GAP_EVIDENCE,
 });
 
+const API = familyApi<P15ElementorResponsiveGapResultV1>(P15_ELEMENTOR_RESPONSIVE_GAP_FAMILY);
+
 /**
  * Apply explicit tablet/mobile gap overrides to exact generated container bindings.
  *
@@ -131,16 +81,11 @@ const P15_ELEMENTOR_RESPONSIVE_GAP_FAMILY = responsiveGapFamily({
  * proven identical to the original hand-written resolver by `tests/m1-container-family-golden.test.ts`.
  * The contract never infers responsive values, never changes desktop settings and claims no closure.
  */
-export function resolveP15ElementorResponsiveContainerGaps(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorResponsiveGapResultV1 {
-  return resolveContainerPropertyFamily(P15_ELEMENTOR_RESPONSIVE_GAP_FAMILY, sourceValue, manifestValue) as unknown as P15ElementorResponsiveGapResultV1;
+export function resolveP15ElementorResponsiveContainerGaps(sourceValue: unknown, manifestValue: unknown): P15ElementorResponsiveGapResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized gap metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorResponsiveGapSummary(
-  result: P15ElementorResponsiveGapResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(P15_ELEMENTOR_RESPONSIVE_GAP_FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorResponsiveGapSummary(result: P15ElementorResponsiveGapResultV1): string {
+  return API.serialize(result);
 }

@@ -1,9 +1,12 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { enumCodec } from './mapping-engine/codecs';
 import type { ContainerPropertyFamily, FamilySettingWrite } from './mapping-engine/property-family';
 import { exactKeys, isRecord, validSourceNodeId } from './mapping-engine/shared-validation';
@@ -13,7 +16,6 @@ import type {
   P15NeutralTextAlignment,
   P15NeutralTextNode,
 } from './neutral-export-ir';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_VERSION =
   'p15-elementor-responsive-text-alignment-manifest-v1' as const;
@@ -46,55 +48,6 @@ export interface P15ElementorResponsiveTextAlignmentEntryV1 {
   mobileAlign?: P15NeutralTextAlignment;
 }
 
-export interface P15ElementorResponsiveTextAlignmentManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  widgets: P15ElementorResponsiveTextAlignmentEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorResponsiveTextAlignmentIssueCode =
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_SOURCE_NOT_TEXT_WIDGET'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_VALUE_INVALID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_TEXT_ALIGNMENT_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorResponsiveTextAlignmentIssueV1 {
-  code: P15ElementorResponsiveTextAlignmentIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorResponsiveTextAlignmentStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_TEXT_ALIGNMENT_OVERRIDES'
-  | 'RESPONSIVE_TEXT_ALIGNMENTS_RESOLVED';
-
 export interface P15ElementorResponsiveTextAlignmentSummaryEntryV1 {
   sourceNodeId: string;
   nodeKind: P15ElementorResponsiveTextNodeKind;
@@ -102,28 +55,26 @@ export interface P15ElementorResponsiveTextAlignmentSummaryEntryV1 {
   mobileAlign: P15NeutralTextAlignment | null;
 }
 
-export interface P15ElementorResponsiveTextAlignmentResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_RESULT_VERSION;
   status: P15ElementorResponsiveTextAlignmentStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceTextWidgetCount: number;
-  resolvedWidgetCount: number;
-  resolvedAlignments: P15ElementorResponsiveTextAlignmentSummaryEntryV1[];
-  issues: P15ElementorResponsiveTextAlignmentIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'widgets';
+  entry: P15ElementorResponsiveTextAlignmentEntryV1;
+  summaryField: 'resolvedAlignments';
+  summary: P15ElementorResponsiveTextAlignmentSummaryEntryV1;
+  issueCode: P15ElementorResponsiveTextAlignmentIssueCode;
+  noun: 'TextWidget';
+  flags: FamilyAuthorityFlag;
+  /** The resolved count keeps its historical `resolvedWidgetCount` name. */
+  extra: { resolvedWidgetCount: number };
+};
+export type P15ElementorResponsiveTextAlignmentManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorResponsiveTextAlignmentIssueCode =
+  FamilyIssueCode<'P15_RESPONSIVE_TEXT_ALIGNMENT', 'SOURCE_NOT_TEXT_WIDGET'>;
+export type P15ElementorResponsiveTextAlignmentIssueV1 = FamilyIssueV1<P15ElementorResponsiveTextAlignmentIssueCode>;
+export type P15ElementorResponsiveTextAlignmentStatus = FamilyStatus<'NO_RESPONSIVE_TEXT_ALIGNMENT_OVERRIDES', 'RESPONSIVE_TEXT_ALIGNMENTS_RESOLVED'>;
+export type P15ElementorResponsiveTextAlignmentResultV1 = Omit<FamilyResultV1<Contract>, 'resolvedTextWidgetCount'>;
 
 const EVIDENCE = P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_EVIDENCE;
 const textAlignCodec = enumCodec(EVIDENCE.textValues);
@@ -208,6 +159,8 @@ const FAMILY: ContainerPropertyFamily<P15ElementorResponsiveTextAlignmentEntryV1
   },
 };
 
+const API = familyApi<P15ElementorResponsiveTextAlignmentResultV1>(FAMILY);
+
 /**
  * Apply only explicit default tablet/mobile alignment overrides to exact generated Heading/Text Editor bindings.
  *
@@ -217,16 +170,11 @@ const FAMILY: ContainerPropertyFamily<P15ElementorResponsiveTextAlignmentEntryV1
  * Re-expressed over the shared mapping engine (recovery M1.4a); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-widget-family-golden.test.ts`.
  */
-export function resolveP15ElementorResponsiveTextAlignments(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorResponsiveTextAlignmentResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorResponsiveTextAlignmentResultV1;
+export function resolveP15ElementorResponsiveTextAlignments(sourceValue: unknown, manifestValue: unknown): P15ElementorResponsiveTextAlignmentResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized alignment metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorResponsiveTextAlignmentSummary(
-  result: P15ElementorResponsiveTextAlignmentResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorResponsiveTextAlignmentSummary(result: P15ElementorResponsiveTextAlignmentResultV1): string {
+  return API.serialize(result);
 }

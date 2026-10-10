@@ -1,12 +1,14 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { intRangeCodec, elementorPxSlider } from './mapping-engine/codecs';
 import { responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MANIFEST_VERSION =
   'p15-elementor-responsive-min-height-manifest-v1' as const;
@@ -39,83 +41,29 @@ export interface P15ElementorResponsiveMinHeightEntryV1 {
   mobileMinHeightPx?: number;
 }
 
-export interface P15ElementorResponsiveMinHeightManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ElementorResponsiveMinHeightEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorResponsiveMinHeightIssueCode =
-  | 'P15_RESPONSIVE_MIN_HEIGHT_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_SOURCE_NOT_CONTAINER'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_VALUE_INVALID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_MIN_HEIGHT_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorResponsiveMinHeightIssueV1 {
-  code: P15ElementorResponsiveMinHeightIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorResponsiveMinHeightStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_MIN_HEIGHT_OVERRIDES'
-  | 'RESPONSIVE_MIN_HEIGHT_RESOLVED';
-
 export interface P15ElementorResponsiveMinHeightSummaryEntryV1 {
   sourceNodeId: string;
   tabletMinHeightPx: number | null;
   mobileMinHeightPx: number | null;
 }
 
-export interface P15ElementorResponsiveMinHeightResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_RESULT_VERSION;
   status: P15ElementorResponsiveMinHeightStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedMinHeights: P15ElementorResponsiveMinHeightSummaryEntryV1[];
-  issues: P15ElementorResponsiveMinHeightIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorResponsiveMinHeightEntryV1;
+  summaryField: 'resolvedMinHeights';
+  summary: P15ElementorResponsiveMinHeightSummaryEntryV1;
+  issueCode: P15ElementorResponsiveMinHeightIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag;
+};
+export type P15ElementorResponsiveMinHeightManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorResponsiveMinHeightIssueCode = FamilyIssueCode<'P15_RESPONSIVE_MIN_HEIGHT'>;
+export type P15ElementorResponsiveMinHeightIssueV1 = FamilyIssueV1<P15ElementorResponsiveMinHeightIssueCode>;
+export type P15ElementorResponsiveMinHeightStatus = FamilyStatus<'NO_RESPONSIVE_MIN_HEIGHT_OVERRIDES', 'RESPONSIVE_MIN_HEIGHT_RESOLVED'>;
+export type P15ElementorResponsiveMinHeightResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_EVIDENCE;
 const valueCodec = intRangeCodec({ min: 0, max: P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MAX_PX });
@@ -138,6 +86,8 @@ const FAMILY = responsiveEnumFamily({
   valueInvalidMessage: `Responsive min height must be an integer px value between 0 and ${P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MAX_PX}.`,
 });
 
+const API = familyApi<P15ElementorResponsiveMinHeightResultV1>(FAMILY);
+
 /**
  * Apply explicit tablet/mobile min-height overrides to exact generated container bindings.
  *
@@ -145,16 +95,11 @@ const FAMILY = responsiveEnumFamily({
  * proven identical to the original hand-written resolver by `tests/m1-container-family-golden-sizing.test.ts`.
  * The contract never infers responsive values, never changes desktop settings and claims no closure.
  */
-export function resolveP15ElementorResponsiveContainerMinHeight(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorResponsiveMinHeightResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorResponsiveMinHeightResultV1;
+export function resolveP15ElementorResponsiveContainerMinHeight(sourceValue: unknown, manifestValue: unknown): P15ElementorResponsiveMinHeightResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized min-height metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorResponsiveMinHeightSummary(
-  result: P15ElementorResponsiveMinHeightResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorResponsiveMinHeightSummary(result: P15ElementorResponsiveMinHeightResultV1): string {
+  return API.serialize(result);
 }

@@ -15,7 +15,7 @@ await build({
 
 await writeFile(
   'dist-cli/README.txt',
-  'Run with: node elementor-prep.mjs <audit:figma|audit:snapshot|backlog:generate> [options]\n',
+  'Run with: node elementor-prep.mjs <audit:figma|audit:snapshot|backlog:generate|export:elementor> [options]\n',
   'utf8',
 );
 console.log('Built dist-cli/elementor-prep.mjs');

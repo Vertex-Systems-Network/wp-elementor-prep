@@ -1,14 +1,16 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { enumCodec } from './mapping-engine/codecs';
 import { groupPrefixConflict } from './mapping-engine/families/button-style';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_TYPOGRAPHY_BASICS_MANIFEST_VERSION =
   'p15-elementor-button-typography-basics-manifest-v1' as const;
@@ -65,81 +67,24 @@ export interface P15ElementorButtonTypographyBasicsEntryV1 {
   fontStyle?: P15ElementorButtonFontStyle;
 }
 
-export interface P15ElementorButtonTypographyBasicsManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_BUTTON_TYPOGRAPHY_BASICS_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonTypographyBasicsEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonTypographyBasicsIssueCode =
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_ENTRIES_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_ENTRY_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_FONT_WEIGHT_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_TEXT_TRANSFORM_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_FONT_STYLE_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_OVERRIDE_REQUIRED'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_TYPOGRAPHY_BASICS_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonTypographyBasicsIssueV1 {
-  code: P15ElementorButtonTypographyBasicsIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonTypographyBasicsStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_TYPOGRAPHY_BASICS_OVERRIDES'
-  | 'BUTTON_TYPOGRAPHY_BASICS_RESOLVED';
-
-export interface P15ElementorButtonTypographyBasicsResultV1 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_TYPOGRAPHY_BASICS_RESULT_VERSION;
   status: P15ElementorButtonTypographyBasicsStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedTypographyBasics: P15ElementorButtonTypographyBasicsEntryV1[];
-  issues: P15ElementorButtonTypographyBasicsIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonTypographyBasicsEntryV1;
+  summaryField: 'resolvedTypographyBasics';
+  summary: P15ElementorButtonTypographyBasicsEntryV1;
+  issueCode: P15ElementorButtonTypographyBasicsIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+};
+export type P15ElementorButtonTypographyBasicsManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonTypographyBasicsIssueCode =
+  FamilyIssueCode<'P15_BUTTON_TYPOGRAPHY_BASICS', 'SOURCE_NOT_BUTTON' | 'FONT_WEIGHT_INVALID' | 'TEXT_TRANSFORM_INVALID' | 'FONT_STYLE_INVALID'>;
+export type P15ElementorButtonTypographyBasicsIssueV1 = FamilyIssueV1<P15ElementorButtonTypographyBasicsIssueCode>;
+export type P15ElementorButtonTypographyBasicsStatus = FamilyStatus<'NO_BUTTON_TYPOGRAPHY_BASICS_OVERRIDES', 'BUTTON_TYPOGRAPHY_BASICS_RESOLVED'>;
+export type P15ElementorButtonTypographyBasicsResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_BUTTON_TYPOGRAPHY_BASICS_EVIDENCE;
 const FIELDS = [
@@ -188,22 +133,19 @@ const FAMILY = containerStyleFamily({
   ],
 });
 
+const API = familyApi<P15ElementorButtonTypographyBasicsResultV1>(FAMILY);
+
 /**
  * Apply only explicit Button font weight, text transform and font style to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4d); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-typography-gradient-golden.test.ts`.
  */
-export function resolveP15ElementorButtonTypographyBasics(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonTypographyBasicsResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonTypographyBasicsResultV1;
+export function resolveP15ElementorButtonTypographyBasics(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonTypographyBasicsResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized typography metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonTypographyBasicsSummary(
-  result: P15ElementorButtonTypographyBasicsResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonTypographyBasicsSummary(result: P15ElementorButtonTypographyBasicsResultV1): string {
+  return API.serialize(result);
 }

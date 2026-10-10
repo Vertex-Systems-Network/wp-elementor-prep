@@ -1,15 +1,17 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { enumCodec } from './mapping-engine/codecs';
 import type { ContainerPropertyFamily, FamilySettingWrite } from './mapping-engine/property-family';
 import { isRecord, onlyAllowedKeys, validSourceNodeId } from './mapping-engine/shared-validation';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
 
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_CONTENT_METADATA_MANIFEST_VERSION =
   'p15-elementor-button-content-metadata-manifest-v1' as const;
@@ -52,79 +54,24 @@ export interface P15ElementorButtonContentMetadataEntryV1 {
   buttonCssId?: string;
 }
 
-export interface P15ElementorButtonContentMetadataManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_BUTTON_CONTENT_METADATA_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonContentMetadataEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonContentMetadataIssueCode =
-  | 'P15_BUTTON_CONTENT_METADATA_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_CONTENT_METADATA_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_CONTENT_METADATA_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_CONTENT_METADATA_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_CONTENT_METADATA_ENTRIES_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_ENTRY_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_CONTENT_METADATA_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_CONTENT_METADATA_BUTTON_TYPE_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_BUTTON_SIZE_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_CSS_ID_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_OVERRIDE_REQUIRED'
-  | 'P15_BUTTON_CONTENT_METADATA_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_CONTENT_METADATA_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_CONTENT_METADATA_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_CONTENT_METADATA_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonContentMetadataIssueV1 {
-  code: P15ElementorButtonContentMetadataIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonContentMetadataStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_CONTENT_METADATA_OVERRIDES'
-  | 'BUTTON_CONTENT_METADATA_RESOLVED';
-
-export interface P15ElementorButtonContentMetadataResultV1 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_CONTENT_METADATA_RESULT_VERSION;
   status: P15ElementorButtonContentMetadataStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedMetadata: P15ElementorButtonContentMetadataEntryV1[];
-  issues: P15ElementorButtonContentMetadataIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonContentMetadataEntryV1;
+  summaryField: 'resolvedMetadata';
+  summary: P15ElementorButtonContentMetadataEntryV1;
+  issueCode: P15ElementorButtonContentMetadataIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed', 'responsiveClosureClaim'>;
+};
+export type P15ElementorButtonContentMetadataManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonContentMetadataIssueCode =
+  FamilyIssueCode<'P15_BUTTON_CONTENT_METADATA', 'SOURCE_NOT_BUTTON' | 'BUTTON_TYPE_INVALID' | 'BUTTON_SIZE_INVALID' | 'CSS_ID_INVALID'>;
+export type P15ElementorButtonContentMetadataIssueV1 = FamilyIssueV1<P15ElementorButtonContentMetadataIssueCode>;
+export type P15ElementorButtonContentMetadataStatus = FamilyStatus<'NO_BUTTON_CONTENT_METADATA_OVERRIDES', 'BUTTON_CONTENT_METADATA_RESOLVED'>;
+export type P15ElementorButtonContentMetadataResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_BUTTON_CONTENT_METADATA_EVIDENCE;
 const typeCodec = enumCodec(P15_ELEMENTOR_BUTTON_TYPES);
@@ -204,22 +151,19 @@ const FAMILY: ContainerPropertyFamily<P15ElementorButtonContentMetadataEntryV1, 
   },
 };
 
+const API = familyApi<P15ElementorButtonContentMetadataResultV1>(FAMILY);
+
 /**
  * Apply only explicit Button type, size and CSS id metadata to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4b); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-family-golden.test.ts`.
  */
-export function resolveP15ElementorButtonContentMetadata(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonContentMetadataResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonContentMetadataResultV1;
+export function resolveP15ElementorButtonContentMetadata(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonContentMetadataResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized content metadata metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonContentMetadataSummary(
-  result: P15ElementorButtonContentMetadataResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonContentMetadataSummary(result: P15ElementorButtonContentMetadataResultV1): string {
+  return API.serialize(result);
 }

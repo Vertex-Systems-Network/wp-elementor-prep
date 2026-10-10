@@ -1,12 +1,14 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { intRangeCodec, elementorPxSlider } from './mapping-engine/codecs';
 import { responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_MANIFEST_VERSION =
   'p15-elementor-responsive-full-width-manifest-v1' as const;
@@ -45,56 +47,6 @@ export interface P15ElementorResponsiveFullWidthEntryV1 {
   mobileWidthPx?: number;
 }
 
-export interface P15ElementorResponsiveFullWidthManifestV1 {
-  schemaVersion: 1;
-  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ElementorResponsiveFullWidthEntryV1[];
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorResponsiveFullWidthIssueCode =
-  | 'P15_RESPONSIVE_FULL_WIDTH_SOURCE_IR_INVALID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_RESPONSIVE_FULL_WIDTH_MANIFEST_NOT_OBJECT'
-  | 'P15_RESPONSIVE_FULL_WIDTH_MANIFEST_FIELDS_INVALID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_MANIFEST_VERSION_INVALID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_RESPONSIVE_FULL_WIDTH_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_RESPONSIVE_FULL_WIDTH_ENTRIES_INVALID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_ENTRY_INVALID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_DUPLICATE_SOURCE_ID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_SOURCE_NOT_CONTAINER'
-  | 'P15_RESPONSIVE_FULL_WIDTH_CONDITION_MISMATCH'
-  | 'P15_RESPONSIVE_FULL_WIDTH_VALUE_INVALID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_OVERRIDE_REQUIRED'
-  | 'P15_RESPONSIVE_FULL_WIDTH_AUTHORITY_FLAGS_INVALID'
-  | 'P15_RESPONSIVE_FULL_WIDTH_GENERATOR_BINDING_MISMATCH'
-  | 'P15_RESPONSIVE_FULL_WIDTH_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_RESPONSIVE_FULL_WIDTH_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorResponsiveFullWidthIssueV1 {
-  code: P15ElementorResponsiveFullWidthIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorResponsiveFullWidthStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_RESPONSIVE_FULL_WIDTH_OVERRIDES'
-  | 'RESPONSIVE_FULL_WIDTH_RESOLVED';
-
 export interface P15ElementorResponsiveFullWidthSummaryEntryV1 {
   sourceNodeId: string;
   contentWidthMode: 'full';
@@ -102,28 +54,24 @@ export interface P15ElementorResponsiveFullWidthSummaryEntryV1 {
   mobileWidthPx: number | null;
 }
 
-export interface P15ElementorResponsiveFullWidthResultV1 {
-  schemaVersion: 1;
+type Contract = {
+  manifestVersion: typeof P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_MANIFEST_VERSION;
   resultVersion: typeof P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_RESULT_VERSION;
   status: P15ElementorResponsiveFullWidthStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedWidths: P15ElementorResponsiveFullWidthSummaryEntryV1[];
-  issues: P15ElementorResponsiveFullWidthIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorResponsiveFullWidthEntryV1;
+  summaryField: 'resolvedWidths';
+  summary: P15ElementorResponsiveFullWidthSummaryEntryV1;
+  issueCode: P15ElementorResponsiveFullWidthIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag;
+};
+export type P15ElementorResponsiveFullWidthManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorResponsiveFullWidthIssueCode =
+  FamilyIssueCode<'P15_RESPONSIVE_FULL_WIDTH', 'CONDITION_MISMATCH'>;
+export type P15ElementorResponsiveFullWidthIssueV1 = FamilyIssueV1<P15ElementorResponsiveFullWidthIssueCode>;
+export type P15ElementorResponsiveFullWidthStatus = FamilyStatus<'NO_RESPONSIVE_FULL_WIDTH_OVERRIDES', 'RESPONSIVE_FULL_WIDTH_RESOLVED'>;
+export type P15ElementorResponsiveFullWidthResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_EVIDENCE;
 const valueCodec = intRangeCodec({ min: P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_MIN_PX, max: P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_MAX_PX });
@@ -154,6 +102,8 @@ const FAMILY = responsiveEnumFamily({
   valueInvalidMessage: `Responsive full width must be an integer px value between ${P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_MIN_PX} and ${P15_ELEMENTOR_RESPONSIVE_FULL_WIDTH_MAX_PX}.`,
 });
 
+const API = familyApi<P15ElementorResponsiveFullWidthResultV1>(FAMILY);
+
 /**
  * Apply explicit tablet/mobile full-width overrides to exact generated container bindings.
  *
@@ -161,16 +111,11 @@ const FAMILY = responsiveEnumFamily({
  * proven identical to the original hand-written resolver by `tests/m1-container-family-golden-sizing.test.ts`.
  * The contract never infers responsive values, never changes desktop settings and claims no closure.
  */
-export function resolveP15ElementorResponsiveContainerFullWidth(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorResponsiveFullWidthResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorResponsiveFullWidthResultV1;
+export function resolveP15ElementorResponsiveContainerFullWidth(sourceValue: unknown, manifestValue: unknown): P15ElementorResponsiveFullWidthResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized full-width metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorResponsiveFullWidthSummary(
-  result: P15ElementorResponsiveFullWidthResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorResponsiveFullWidthSummary(result: P15ElementorResponsiveFullWidthResultV1): string {
+  return API.serialize(result);
 }

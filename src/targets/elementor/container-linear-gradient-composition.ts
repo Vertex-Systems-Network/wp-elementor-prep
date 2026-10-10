@@ -1,13 +1,11 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyIssue,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+} from './mapping-engine/contract-types';
 import { gradientProfileCodec, gradientWrites, type GradientKind, type GradientProfile } from './mapping-engine/families/button-gradient';
 import { statePairFamily, type PairEntry } from './mapping-engine/families/state-pair';
-import type { ElementorTemplateV04 } from './template-v04';
 
 /**
  * Container normal/hover linear gradients (recovery M1.5e target repair).
@@ -38,46 +36,34 @@ export interface P15ContainerLinearGradientV2 {
   angleDeg?: number; tabletAngleDeg?: number; mobileAngleDeg?: number;
 }
 export type P15ContainerLinearGradientEntryV2 = PairEntry<P15ContainerLinearGradientV2>;
-export interface P15ContainerLinearGradientManifestV2 {
-  schemaVersion: 1;
+/** Authority flags shared by the Container linear and radial gradient families. */
+export type P15ContainerGradientAuthorityFlag = FamilyAuthorityFlag<'gradientInferencePerformed'>;
+export type P15ContainerLinearGradientManifestV2 = FamilyManifestV1<{
   manifestVersion: typeof P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ContainerLinearGradientEntryV2[];
-  gradientInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
+  resultVersion: typeof P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_RESULT_VERSION;
+  status: string;
+  entriesField: 'containers';
+  entry: P15ContainerLinearGradientEntryV2;
+  summaryField: 'resolvedGradients';
+  summary: P15ContainerLinearGradientEntryV2;
+  issueCode: string;
+  noun: 'Container';
+  flags: P15ContainerGradientAuthorityFlag;
+}>;
 
 /** The standard engine result shared by the Container linear and radial gradient families. */
-export interface P15ContainerGradientResultV2<Entry, ResultVersion extends string = string> {
-  schemaVersion: 1;
+export type P15ContainerGradientResultV2<Entry, ResultVersion extends string = string> = FamilyResultV1<{
+  manifestVersion: string;
   resultVersion: ResultVersion;
   status: string;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedGradients: Entry[];
-  issues: ContainerFamilyIssue[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  gradientInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: Entry;
+  summaryField: 'resolvedGradients';
+  summary: Entry;
+  issueCode: string;
+  noun: 'Container';
+  flags: P15ContainerGradientAuthorityFlag;
+}>;
 export type P15ContainerLinearGradientResultV2 = P15ContainerGradientResultV2<P15ContainerLinearGradientEntryV2, typeof P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_RESULT_VERSION>;
 
 /** One Container gradient family over the shared Button gradient codec and writes. */
@@ -112,10 +98,12 @@ const P15_CONTAINER_LINEAR_GRADIENT_FAMILY = containerGradientFamily<P15Containe
   evidence: P15_ELEMENTOR_CONTAINER_LINEAR_GRADIENT_EVIDENCE,
 });
 
+const API = familyApi<P15ContainerLinearGradientResultV2>(P15_CONTAINER_LINEAR_GRADIENT_FAMILY);
+
 export function resolveP15ElementorContainerLinearGradients(sourceValue: unknown, manifestValue: unknown): P15ContainerLinearGradientResultV2 {
-  return resolveContainerPropertyFamily(P15_CONTAINER_LINEAR_GRADIENT_FAMILY, sourceValue, manifestValue) as unknown as P15ContainerLinearGradientResultV2;
+  return API.resolve(sourceValue, manifestValue);
 }
 
 export function serializeP15ElementorContainerLinearGradientSummary(value: P15ContainerLinearGradientResultV2): string {
-  return serializeContainerPropertyFamilySummary(P15_CONTAINER_LINEAR_GRADIENT_FAMILY, value as unknown as ContainerFamilyResult);
+  return API.serialize(value);
 }

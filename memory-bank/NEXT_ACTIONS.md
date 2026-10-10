@@ -1,18 +1,18 @@
 # Next Actions
 
 Last updated: 2026-09-28  
-Recovery queue added: 2026-10-08
+Recovery queue added: 2026-10-08; M1 synced 2026-10-10
+
+Open dependency PRs: Dependabot #890/#892/#893 fail the pinned-toolchain contract (`verify`, `build-final-release`) and need one consolidated pin-update train like #835; #891 was green on its 2026-10-05 base.
 
 ## ACTIVE QUEUE — Product Recovery Program (since 2026-10-08)
 
 Canonical backlog: [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PLAN.md) (D-047). The resume pointer is also in `.ai/state/CURRENT-STATE.yaml` → `recovery_program`.
 
 1. **M0 — Critical correctness fixes: ACCEPTED.** PR #895, exact head `e8672b0`, passed 10/10 required checks and was merged as `f18240e`.
-2. **Active: M1 — table-driven Elementor mapping engine.**
-   - M1.1 is done: schema, codecs and shared validation.
-   - **Next task: M1.2**, the shared container-family engine.
-3. After M0, continue with:
-   - M1: table-driven mapping engine;
+2. **M1 — table-driven Elementor mapping engine: IMPLEMENTED.** PR #898 (M1.1–M1.4) and PR #899 (M1.5) are merged. M1.6–M1.8 are on branch `claude/friendly-turing-acwu53`; acceptance waits on that PR's exact-head gates.
+3. **Next: M2 — full single-frame Figma extraction, task M2.1 (typography).**
+4. Then continue with:
    - M2: full extraction;
    - M3: assets;
    - M4: responsive breakpoint engine;

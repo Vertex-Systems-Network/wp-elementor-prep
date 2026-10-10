@@ -1,11 +1,13 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { borderStyleFamily } from './mapping-engine/families/border-style';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_MANIFEST_VERSION =
   'p15-elementor-container-hover-border-style-manifest-v1' as const;
@@ -72,80 +74,24 @@ export interface P15ElementorContainerHoverBorderStyleEntryV1 {
   color: string;
 }
 
-export interface P15ElementorContainerHoverBorderStyleManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  containers: P15ElementorContainerHoverBorderStyleEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorContainerHoverBorderStyleIssueCode =
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_SOURCE_IR_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_MANIFEST_NOT_OBJECT'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_MANIFEST_FIELDS_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_MANIFEST_VERSION_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_ENTRIES_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_ENTRY_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_DUPLICATE_SOURCE_ID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_SOURCE_NOT_CONTAINER'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_TYPE_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_WIDTH_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_COLOR_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_AUTHORITY_FLAGS_INVALID'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_GENERATOR_BINDING_MISMATCH'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_CONTAINER_HOVER_BORDER_STYLE_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorContainerHoverBorderStyleIssueV1 {
-  code: P15ElementorContainerHoverBorderStyleIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorContainerHoverBorderStyleStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_CONTAINER_HOVER_BORDER_STYLE_OVERRIDES'
-  | 'CONTAINER_HOVER_BORDER_STYLES_RESOLVED';
-
-export interface P15ElementorContainerHoverBorderStyleResultV1 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_CONTAINER_HOVER_BORDER_STYLE_RESULT_VERSION;
   status: P15ElementorContainerHoverBorderStyleStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceContainerCount: number;
-  resolvedContainerCount: number;
-  resolvedBorderStyles: P15ElementorContainerHoverBorderStyleEntryV1[];
-  issues: P15ElementorContainerHoverBorderStyleIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'containers';
+  entry: P15ElementorContainerHoverBorderStyleEntryV1;
+  summaryField: 'resolvedBorderStyles';
+  summary: P15ElementorContainerHoverBorderStyleEntryV1;
+  issueCode: P15ElementorContainerHoverBorderStyleIssueCode;
+  noun: 'Container';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+};
+export type P15ElementorContainerHoverBorderStyleManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorContainerHoverBorderStyleIssueCode =
+  FamilyIssueCode<'P15_CONTAINER_HOVER_BORDER_STYLE', 'TYPE_INVALID' | 'WIDTH_INVALID' | 'COLOR_INVALID'>;
+export type P15ElementorContainerHoverBorderStyleIssueV1 = FamilyIssueV1<P15ElementorContainerHoverBorderStyleIssueCode>;
+export type P15ElementorContainerHoverBorderStyleStatus = FamilyStatus<'NO_CONTAINER_HOVER_BORDER_STYLE_OVERRIDES', 'CONTAINER_HOVER_BORDER_STYLES_RESOLVED'>;
+export type P15ElementorContainerHoverBorderStyleResultV1 = FamilyResultV1<Contract>;
 
 const FAMILY = borderStyleFamily({
   id: 'container-hover-border-style',
@@ -162,22 +108,19 @@ const FAMILY = borderStyleFamily({
   bindingMissingMessage: (sourceNodeId) => `Generated Container binding missing for sourceNodeId ${sourceNodeId}.`,
 });
 
+const API = familyApi<P15ElementorContainerHoverBorderStyleResultV1>(FAMILY);
+
 /**
  * Apply only explicit border-style settings to exact generated Container bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.3d); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-container-family-golden-style.test.ts`.
  */
-export function resolveP15ElementorContainerHoverBorderStyles(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorContainerHoverBorderStyleResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorContainerHoverBorderStyleResultV1;
+export function resolveP15ElementorContainerHoverBorderStyles(sourceValue: unknown, manifestValue: unknown): P15ElementorContainerHoverBorderStyleResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized border-style metadata; source content, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorContainerHoverBorderStyleSummary(
-  result: P15ElementorContainerHoverBorderStyleResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorContainerHoverBorderStyleSummary(result: P15ElementorContainerHoverBorderStyleResultV1): string {
+  return API.serialize(result);
 }

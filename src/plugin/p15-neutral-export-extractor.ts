@@ -17,10 +17,8 @@ import {
   type P15NeutralTextAlignment,
   type P15NeutralExportValidationResult,
 } from '../targets/elementor/neutral-export-ir';
-import {
-  generateElementorV3TemplateCandidate,
-  type P15ElementorV3GenerationResult,
-} from '../targets/elementor/v3-template-generator';
+import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
+import type { P15ElementorV3GenerationResult } from '../targets/elementor/v3-template-generator';
 
 export const P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION = 'p15-figma-neutral-export-extractor-v3' as const;
 
@@ -511,7 +509,8 @@ export function buildP15ElementorV1PreviewFromFigmaFrame(
 ): P15FigmaNeutralExtractionResult {
   const document = extractP15NeutralExportDocumentFromFigmaFrame(frame, documentType);
   const validation = validateP15NeutralExportDocument(document);
-  const generation = generateElementorV3TemplateCandidate(document);
+  // The shared export path (recovery M1.6). The plugin has no page manifest yet, so this is the generated base.
+  const generation = buildP15ElementorExport(document).generation;
   return {
     schemaVersion: 1,
     extractorVersion: P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION,

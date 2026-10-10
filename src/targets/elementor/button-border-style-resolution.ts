@@ -1,12 +1,14 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { borderStyleFamily } from './mapping-engine/families/border-style';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_BORDER_STYLE_MANIFEST_VERSION =
   'p15-elementor-button-border-style-manifest-v1' as const;
@@ -73,80 +75,24 @@ export interface P15ElementorButtonBorderStyleEntryV1 {
   color: string;
 }
 
-export interface P15ElementorButtonBorderStyleManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_BUTTON_BORDER_STYLE_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonBorderStyleEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonBorderStyleIssueCode =
-  | 'P15_BUTTON_BORDER_STYLE_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_BORDER_STYLE_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_BORDER_STYLE_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_BORDER_STYLE_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_BORDER_STYLE_ENTRIES_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_ENTRY_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_BORDER_STYLE_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_BORDER_STYLE_TYPE_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_WIDTH_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_COLOR_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_BORDER_STYLE_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_BORDER_STYLE_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_BORDER_STYLE_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonBorderStyleIssueV1 {
-  code: P15ElementorButtonBorderStyleIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonBorderStyleStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_BORDER_STYLE_OVERRIDES'
-  | 'BUTTON_BORDER_STYLES_RESOLVED';
-
-export interface P15ElementorButtonBorderStyleResultV1 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_BORDER_STYLE_RESULT_VERSION;
   status: P15ElementorButtonBorderStyleStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedBorderStyles: P15ElementorButtonBorderStyleEntryV1[];
-  issues: P15ElementorButtonBorderStyleIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonBorderStyleEntryV1;
+  summaryField: 'resolvedBorderStyles';
+  summary: P15ElementorButtonBorderStyleEntryV1;
+  issueCode: P15ElementorButtonBorderStyleIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+};
+export type P15ElementorButtonBorderStyleManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonBorderStyleIssueCode =
+  FamilyIssueCode<'P15_BUTTON_BORDER_STYLE', 'SOURCE_NOT_BUTTON' | 'TYPE_INVALID' | 'WIDTH_INVALID' | 'COLOR_INVALID'>;
+export type P15ElementorButtonBorderStyleIssueV1 = FamilyIssueV1<P15ElementorButtonBorderStyleIssueCode>;
+export type P15ElementorButtonBorderStyleStatus = FamilyStatus<'NO_BUTTON_BORDER_STYLE_OVERRIDES', 'BUTTON_BORDER_STYLES_RESOLVED'>;
+export type P15ElementorButtonBorderStyleResultV1 = FamilyResultV1<Contract>;
 
 const FAMILY = borderStyleFamily({
   id: 'button-border-style',
@@ -163,22 +109,19 @@ const FAMILY = borderStyleFamily({
   target: buttonWidgetTarget('Review nodes cannot participate in Button border-style binding.'),
 });
 
+const API = familyApi<P15ElementorButtonBorderStyleResultV1>(FAMILY);
+
 /**
  * Apply only an explicit visible border type, exact integer px widths and one lowercase hex colour to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4c); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-style-family-golden.test.ts`.
  */
-export function resolveP15ElementorButtonBorderStyles(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonBorderStyleResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonBorderStyleResultV1;
+export function resolveP15ElementorButtonBorderStyles(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonBorderStyleResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized border-style metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonBorderStyleSummary(
-  result: P15ElementorButtonBorderStyleResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonBorderStyleSummary(result: P15ElementorButtonBorderStyleResultV1): string {
+  return API.serialize(result);
 }

@@ -1,9 +1,12 @@
-import type { ElementorTemplateCandidateArtifactV1 } from './candidate-artifact';
 import {
-  resolveContainerPropertyFamily,
-  serializeContainerPropertyFamilySummary,
-  type ContainerFamilyResult,
-} from './mapping-engine/container-family-engine';
+  familyApi,
+  type FamilyAuthorityFlag,
+  type FamilyIssueCode,
+  type FamilyIssueV1,
+  type FamilyManifestV1,
+  type FamilyResultV1,
+  type FamilyStatus,
+} from './mapping-engine/contract-types';
 import { elementorLinkedDimensionsPx } from './mapping-engine/codecs';
 import { containerStyleFamily } from './mapping-engine/families/container-style';
 import {
@@ -17,7 +20,6 @@ import {
 } from './mapping-engine/families/button-style';
 import { buttonWidgetTarget } from './mapping-engine/widget-binding';
 import { P15_NEUTRAL_EXPORT_MAX_RADIUS_PX } from './neutral-export-ir';
-import type { ElementorTemplateV04 } from './template-v04';
 
 export const P15_ELEMENTOR_BUTTON_VISUAL_DEPTH_RADIUS_MANIFEST_VERSION =
   'p15-elementor-button-visual-depth-radius-manifest-v1' as const;
@@ -92,80 +94,24 @@ export interface P15ElementorButtonVisualDepthRadiusEntryV1 {
   borderRadiusPx?: P15ElementorButtonResponsiveRadiusPxV1;
 }
 
-export interface P15ElementorButtonVisualDepthRadiusManifestV1 {
-  schemaVersion: 1;
+type Contract = {
   manifestVersion: typeof P15_ELEMENTOR_BUTTON_VISUAL_DEPTH_RADIUS_MANIFEST_VERSION;
-  sourceIrFingerprint: string;
-  baseCandidateIdentityDigest: string;
-  buttons: P15ElementorButtonVisualDepthRadiusEntryV1[];
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-}
-
-export type P15ElementorButtonVisualDepthRadiusIssueCode =
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_SOURCE_IR_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_UPSTREAM_GENERATION_NOT_READY'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_MANIFEST_NOT_OBJECT'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_MANIFEST_FIELDS_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_MANIFEST_VERSION_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_SOURCE_FINGERPRINT_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_SOURCE_FINGERPRINT_MISMATCH'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_BASE_CANDIDATE_IDENTITY_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_BASE_CANDIDATE_IDENTITY_MISMATCH'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_ENTRIES_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_ENTRY_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_DUPLICATE_SOURCE_ID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_SOURCE_NOT_BUTTON'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_TEXT_SHADOW_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_BOX_SHADOW_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_RADIUS_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_AUTHORITY_FLAGS_INVALID'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_GENERATOR_BINDING_MISMATCH'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_EXISTING_OVERRIDE_CONFLICT'
-  | 'P15_BUTTON_VISUAL_DEPTH_RADIUS_RESOLVED_CANDIDATE_INVALID';
-
-export interface P15ElementorButtonVisualDepthRadiusIssueV1 {
-  code: P15ElementorButtonVisualDepthRadiusIssueCode;
-  path: string;
-  message: string;
-}
-
-export type P15ElementorButtonVisualDepthRadiusStatus =
-  | 'BLOCKED_INVALID_SOURCE_IR'
-  | 'BLOCKED_UPSTREAM_GENERATION'
-  | 'REJECTED_INVALID_MANIFEST'
-  | 'NO_BUTTON_VISUAL_DEPTH_RADIUS_OVERRIDES'
-  | 'BUTTON_VISUAL_DEPTH_RADIUS_RESOLVED';
-
-export interface P15ElementorButtonVisualDepthRadiusResultV1 {
-  schemaVersion: 1;
   resultVersion: typeof P15_ELEMENTOR_BUTTON_VISUAL_DEPTH_RADIUS_RESULT_VERSION;
   status: P15ElementorButtonVisualDepthRadiusStatus;
-  sourceIrFingerprint: string | null;
-  baseCandidateIdentityDigest: string | null;
-  resolvedCandidateIdentityDigest: string | null;
-  sourceButtonCount: number;
-  resolvedButtonCount: number;
-  resolvedStyles: P15ElementorButtonVisualDepthRadiusEntryV1[];
-  issues: P15ElementorButtonVisualDepthRadiusIssueV1[];
-  template: ElementorTemplateV04 | null;
-  candidate: ElementorTemplateCandidateArtifactV1 | null;
-  styleInferencePerformed: false;
-  responsiveInferencePerformed: false;
-  figmaMutation: false;
-  networkAccess: false;
-  responsiveClosureClaim: false;
-  targetCompatibilityClaim: false;
-  productionAcceptance: false;
-  downloadEnabled: false;
-  internalReviewRequired: true;
-}
+  entriesField: 'buttons';
+  entry: P15ElementorButtonVisualDepthRadiusEntryV1;
+  summaryField: 'resolvedStyles';
+  summary: P15ElementorButtonVisualDepthRadiusEntryV1;
+  issueCode: P15ElementorButtonVisualDepthRadiusIssueCode;
+  noun: 'Button';
+  flags: FamilyAuthorityFlag<'styleInferencePerformed'>;
+};
+export type P15ElementorButtonVisualDepthRadiusManifestV1 = FamilyManifestV1<Contract>;
+export type P15ElementorButtonVisualDepthRadiusIssueCode =
+  FamilyIssueCode<'P15_BUTTON_VISUAL_DEPTH_RADIUS', 'SOURCE_NOT_BUTTON' | 'TEXT_SHADOW_INVALID' | 'BOX_SHADOW_INVALID' | 'RADIUS_INVALID'>;
+export type P15ElementorButtonVisualDepthRadiusIssueV1 = FamilyIssueV1<P15ElementorButtonVisualDepthRadiusIssueCode>;
+export type P15ElementorButtonVisualDepthRadiusStatus = FamilyStatus<'NO_BUTTON_VISUAL_DEPTH_RADIUS_OVERRIDES', 'BUTTON_VISUAL_DEPTH_RADIUS_RESOLVED'>;
+export type P15ElementorButtonVisualDepthRadiusResultV1 = FamilyResultV1<Contract>;
 
 const EVIDENCE = P15_ELEMENTOR_BUTTON_VISUAL_DEPTH_RADIUS_EVIDENCE;
 const textShadowCodec = textShadowValueCodec();
@@ -230,22 +176,19 @@ const FAMILY = containerStyleFamily({
   ],
 });
 
+const API = familyApi<P15ElementorButtonVisualDepthRadiusResultV1>(FAMILY);
+
 /**
  * Apply only explicit bounded text shadow, box shadow and responsive radius to exact generated Button bindings.
  *
  * Re-expressed over the shared mapping engine (recovery M1.4c); behaviour and every output are
  * proven identical to the original hand-written resolver by `tests/m1-button-style-family-golden.test.ts`.
  */
-export function resolveP15ElementorButtonVisualDepthRadius(
-  sourceValue: unknown,
-  manifestValue: unknown,
-): P15ElementorButtonVisualDepthRadiusResultV1 {
-  return resolveContainerPropertyFamily(FAMILY, sourceValue, manifestValue) as unknown as P15ElementorButtonVisualDepthRadiusResultV1;
+export function resolveP15ElementorButtonVisualDepthRadius(sourceValue: unknown, manifestValue: unknown): P15ElementorButtonVisualDepthRadiusResultV1 {
+  return API.resolve(sourceValue, manifestValue);
 }
 
 /** Serialize only sanitized visual-depth/radius metadata; source copy, template JSON and candidate bytes are omitted. */
-export function serializeP15ElementorButtonVisualDepthRadiusSummary(
-  result: P15ElementorButtonVisualDepthRadiusResultV1,
-): string {
-  return serializeContainerPropertyFamilySummary(FAMILY, result as unknown as ContainerFamilyResult);
+export function serializeP15ElementorButtonVisualDepthRadiusSummary(result: P15ElementorButtonVisualDepthRadiusResultV1): string {
+  return API.serialize(result);
 }
