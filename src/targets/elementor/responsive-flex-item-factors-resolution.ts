@@ -11,9 +11,9 @@ import { binaryFlexFactorCodec } from './mapping-engine/families/responsive-flex
 import { responsiveEnumFamily } from './mapping-engine/families/responsive-layout';
 
 export const P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_FACTORS_MANIFEST_VERSION =
-  'p15-elementor-responsive-flex-item-factors-manifest-v1' as const;
+  'p15-elementor-responsive-flex-item-factors-manifest-v2' as const;
 export const P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_FACTORS_RESULT_VERSION =
-  'p15-elementor-responsive-flex-item-factors-result-v1' as const;
+  'p15-elementor-responsive-flex-item-factors-result-v2' as const;
 export const P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_FACTORS_MAX_ENTRIES = 10_000 as const;
 
 export const P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_FACTORS_EVIDENCE = Object.freeze({
@@ -34,6 +34,14 @@ export const P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_FACTORS_EVIDENCE = Object.freeze
   desktopShrinkSettingKey: '_flex_shrink',
   tabletShrinkSettingKey: '_flex_shrink_tablet',
   mobileShrinkSettingKey: '_flex_shrink_mobile',
+  // flex-item.php conditions `grow`/`shrink` on `size === 'custom'`; controls-stack.php `is_control_visible`
+  // (blob 00b280e518b89925c8f85a059b34136177ff3d4d) reads the same-device `size` value first (recovery M2.3c).
+  sizeControlName: 'size',
+  sizeRequiredValue: 'custom',
+  tabletSizeSettingKey: '_flex_size_tablet',
+  mobileSizeSettingKey: '_flex_size_mobile',
+  controlsStackSourcePath: 'includes/base/controls-stack.php',
+  controlsStackSourceBlobSha: '00b280e518b89925c8f85a059b34136177ff3d4d',
   acceptedFactors: [0, 1] as const,
 });
 
@@ -97,6 +105,15 @@ const FAMILY = responsiveEnumFamily({
     factor('mobileShrink', EVIDENCE.mobileShrinkSettingKey),
   ],
   conflictMode: 'all',
+  // Recovery M2.3c target repair: a device's grow/shrink only applies when that device's size is custom.
+  conditionWrites: (entry) => ([
+    ['tablet', EVIDENCE.tabletSizeSettingKey, entry.tabletGrow !== undefined || entry.tabletShrink !== undefined],
+    ['mobile', EVIDENCE.mobileSizeSettingKey, entry.mobileGrow !== undefined || entry.mobileShrink !== undefined],
+  ] as const).filter(([, , used]) => used).map(([, settingKey]) => ({
+    settingKey,
+    value: EVIDENCE.sizeRequiredValue,
+    conflictMessage: `Generated base candidate already contains flex-item size key ${settingKey}.`,
+  })),
   messages: { resolvedInvalid: 'Responsive flex-item factors output did not rebuild into a canonical ready Elementor candidate.' },
   entryEnvelopeMessage: 'Each responsive flex-item factor entry may contain only sourceNodeId plus tablet/mobile grow/shrink factors.',
   overrideRequiredMessage: 'Each responsive flex-item factor entry must explicitly provide at least one tablet/mobile grow/shrink factor.',

@@ -37,18 +37,6 @@ const FAMILIES: Family[] = [
     serialize: basis.serializeP15ElementorResponsiveFlexItemBasisSummary as (r: never) => string,
   },
   {
-    id: 'responsive-flex-item-factors',
-    spec: {
-      manifestVersion: factors.P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_FACTORS_MANIFEST_VERSION,
-      tabletValid: { tabletGrow: 1, tabletShrink: 0 },
-      mobileValid: { mobileGrow: 0, mobileShrink: 1 },
-      invalidValues: [{ tabletGrow: 2 }, { mobileShrink: -1 }, { tabletGrow: '1' }, { mobileGrow: 0.5 }],
-      extraInvalid: [{ mobileShrink: 0 }],
-    },
-    resolve: factors.resolveP15ElementorResponsiveContainerFlexItemFactors,
-    serialize: factors.serializeP15ElementorResponsiveFlexItemFactorsSummary as (r: never) => string,
-  },
-  {
     id: 'responsive-flex-item-order-preset',
     spec: {
       manifestVersion: orderPreset.P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_ORDER_PRESET_MANIFEST_VERSION,
@@ -130,4 +118,73 @@ describe('recovery M1.3c — flex item and sizing family golden equivalence', ()
       records.forEach((record, index) => expect(record).toEqual(golden[index]));
     });
   }
+});
+
+/**
+ * Flex-item factors target repair (recovery M2.3c): `flex-item.php` conditions `grow`/`shrink` on
+ * `size === 'custom'` and `controls-stack.php` reads the same-device `size` first, so the v1 writes were
+ * ignored by Elementor. The v1 golden stays as the "before" record (never re-recorded); the v2 output
+ * must be exactly the v1 output plus `_flex_size_<device>: 'custom'` for every device that sets a factor,
+ * under the v2 manifest/result versions and the extended evidence, with only the resolved candidate digest changing.
+ */
+const FACTORS: Family = {
+    id: 'responsive-flex-item-factors',
+    spec: {
+      manifestVersion: factors.P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_FACTORS_MANIFEST_VERSION,
+      tabletValid: { tabletGrow: 1, tabletShrink: 0 },
+      mobileValid: { mobileGrow: 0, mobileShrink: 1 },
+      invalidValues: [{ tabletGrow: 2 }, { mobileShrink: -1 }, { tabletGrow: '1' }, { mobileGrow: 0.5 }],
+      extraInvalid: [{ mobileShrink: 0 }],
+    },
+    resolve: factors.resolveP15ElementorResponsiveContainerFlexItemFactors,
+    serialize: factors.serializeP15ElementorResponsiveFlexItemFactorsSummary as (r: never) => string,
+};
+
+function normalized(value: unknown, repairWrites: boolean): unknown {
+  if (Array.isArray(value)) return value.map((entry) => normalized(entry, repairWrites));
+  if (value === null || typeof value !== 'object') return value;
+  const out: Record<string, unknown> = {};
+  for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
+    if (key === 'resolvedCandidateIdentityDigest') out[key] = typeof entry === 'string' ? 'DIGEST' : entry;
+    else if (key === 'templateJson' && typeof entry === 'string') out[key] = normalized(JSON.parse(entry), repairWrites);
+    else out[key] = normalized(entry, repairWrites);
+  }
+  // The repaired evidence adds the size-condition fields; every original evidence field is unchanged.
+  if (repairWrites && 'growControlName' in out) {
+    const evidence = factors.P15_ELEMENTOR_RESPONSIVE_FLEX_ITEM_FACTORS_EVIDENCE;
+    for (const key of ['sizeControlName', 'sizeRequiredValue', 'tabletSizeSettingKey', 'mobileSizeSettingKey', 'controlsStackSourcePath', 'controlsStackSourceBlobSha'] as const) {
+      out[key] = evidence[key];
+    }
+  }
+  const settings = out.settings;
+  if (repairWrites && settings && typeof settings === 'object' && !Array.isArray(settings)) {
+    const record = settings as Record<string, unknown>;
+    for (const device of ['tablet', 'mobile']) {
+      if (`_flex_grow_${device}` in record || `_flex_shrink_${device}` in record) record[`_flex_size_${device}`] = 'custom';
+    }
+  }
+  return out;
+}
+
+const parsedSerialized = (text: unknown, repairWrites: boolean) =>
+  typeof text === 'string' && !text.startsWith('THROWS') ? normalized(JSON.parse(text), repairWrites) : text;
+
+describe('recovery M2.3c — flex-item factors target repair against the v1 baseline', () => {
+  it('v2 output is exactly the v1 output plus the per-device custom size', () => {
+    const golden = JSON.parse(readFileSync('tests/golden/m1-responsive-flex-item-factors.golden.json', 'utf8')
+      .replaceAll('flex-item-factors-manifest-v1', 'flex-item-factors-manifest-v2')
+      .replaceAll('flex-item-factors-result-v1', 'flex-item-factors-result-v2')) as Array<Record<string, unknown>>;
+    const records = buildCorpus(FACTORS.spec).map((testCase) => goldenRecord(FACTORS.resolve, FACTORS.serialize, testCase) as Record<string, unknown>);
+    expect(records.map((record) => record.name)).toEqual(golden.map((record) => record.name));
+    let repaired = 0;
+    records.forEach((record, index) => {
+      const original = golden[index]!;
+      const name = String(record.name);
+      expect(normalized(record.result, false), name).toEqual(normalized(original.result, true));
+      expect(parsedSerialized(record.serialized, false), name).toEqual(parsedSerialized(original.serialized, true));
+      expect(record.inflatedSerialized, name).toEqual(original.inflatedSerialized);
+      if (JSON.stringify(record.result).includes('_flex_size_')) repaired += 1;
+    });
+    expect(repaired).toBeGreaterThan(0);
+  });
 });

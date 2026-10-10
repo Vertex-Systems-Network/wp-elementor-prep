@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.3c** (flex-factors `_flex_size` custom defect)
-> - Last completed task: **M2.3b** (HUG containers; heading/text widget width and flex-item sizing)
+> - Next task: **M2.3d** (button and image sizing)
+> - Last completed task: **M2.3c** (flex-item factors target repair: per-device `_flex_size_*: custom`)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -315,7 +315,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - FILL along a row (containers by default, widgets via `_element_custom_width: 100%`) gives every FILL item the same 100% basis and shrink, so they split the free width equally, as Figma does. Multi-FILL review therefore stays column-only and now counts widgets too.
     - Heading/text: FIXED width → `_element_width: initial` + `_element_custom_width` px; FILL across a non-stretch parent → `_flex_align_self: stretch`; FILL on a column's main axis → `_flex_size: grow`. A FIXED text height → `SIZE_WIDGET_HEIGHT_REQUIRES_REVIEW`; any min/max on a widget → `SIZE_CONSTRAINT_REQUIRES_REVIEW`. Sizing follows a text into its detected heading and is in the identity.
   - [ ] **M2.3d** Button and image widget sizing. Button frames are converted by M2.2b semantic detection without their frame sizing, images wait for M4 assets; dividers/spacers keep their own widths. Map or REVIEW each, so M2.9 finds no silent drop.
-  - [ ] **M2.3c** Defect found in M2.3 R0: the M1 responsive flex-item factors family writes `_flex_grow_*`/`_flex_shrink_*` without `_flex_size_*: 'custom'`, but `flex-item.php` conditions `grow`/`shrink` on `size === 'custom'`, so Elementor ignores them. Write the custom size per device (fail closed on a conflicting base `_flex_size`), with tests.
+  - [x] **M2.3c** Target repair of the M1 responsive flex-item factors family. `flex-item.php` conditions `grow`/`shrink` on `size === 'custom'`, and `controls-stack.php` `is_control_visible` (blob `00b280e`) reads the same-device `size` first, so the v1 `_flex_grow_*`/`_flex_shrink_*` writes were ignored by Elementor. The family (manifest/result `v2`) now also writes `_flex_size_tablet`/`_flex_size_mobile: 'custom'` for each device that sets a factor, with a base-conflict check; a desktop `_flex_size` from M2.3 sizing is kept. The engine gained entry-dependent `conditionWrites`. `tests/m1-container-family-golden-sizing.test.ts` proves v2 = the never-re-recorded v1 golden plus exactly those writes and evidence fields.
 - [ ] **M2.4** Visual styles. Map uniform and individual strokes to border, drop/inner shadows to box-shadow, layer opacity, linear and radial gradients, non-uniform radius, and `clipsContent` to overflow hidden.
 - [ ] **M2.5** Absolutely positioned children map to `_position: absolute` with offsets relative to the parent, plus z-index from layer order.
 - [ ] **M2.6** Map wrap to `flex_wrap`. Map a strict grid to a v3 Grid container: columns, rows and gaps.

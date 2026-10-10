@@ -92,8 +92,8 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M2
-  next_task: M2.3c
-  last_completed_task: M2.3b
+  next_task: M2.3d
+  last_completed_task: M2.3c
   blocked_tasks: []
   branch: claude/friendly-turing-acwu53
   open_pr: null
