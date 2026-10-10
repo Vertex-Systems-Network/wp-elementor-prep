@@ -203,6 +203,16 @@ function buttonWidget(node: P15NeutralButtonNode, state: GenerationState): Eleme
       custom_attributes: '',
     };
   }
+  // Button style (recovery M2.2b), with the exact keys the Button families already prove.
+  Object.assign(settings, typographyGroupSettings(node.typography, 'button_text_color'));
+  if (node.backgroundColorHex !== undefined) {
+    settings.background_background = 'classic';
+    settings.background_color = node.backgroundColorHex;
+  }
+  if (node.paddingPx !== undefined) settings.text_padding = pxDimensions(node.paddingPx);
+  if (node.cornerRadiusPx !== undefined) {
+    settings.border_radius = pxDimensions({ top: node.cornerRadiusPx, right: node.cornerRadiusPx, bottom: node.cornerRadiusPx, left: node.cornerRadiusPx });
+  }
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',

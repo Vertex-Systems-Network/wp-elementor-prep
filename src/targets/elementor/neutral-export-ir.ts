@@ -85,6 +85,11 @@ export interface P15NeutralButtonNode extends P15NeutralNodeBase {
   openInNewTab?: boolean;
   nofollow?: boolean;
   align?: P15NeutralAlignment;
+  /** Button style detected from its Figma frame (recovery M2.2b). */
+  typography?: P15NeutralTypography;
+  backgroundColorHex?: string;
+  paddingPx?: P15NeutralPaddingPx;
+  cornerRadiusPx?: number;
 }
 
 export interface P15NeutralImageNode extends P15NeutralNodeBase {
@@ -379,8 +384,20 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'button') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'url', 'openInNewTab', 'nofollow', 'align'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'url', 'openInNewTab', 'nofollow', 'align',
+      'typography', 'backgroundColorHex', 'paddingPx', 'cornerRadiusPx'], path, state);
     validateText(value.text, `${path}.text`, state, 2_000);
+    for (const issue of value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)) {
+      pushIssue(state, 'P15_IR_TYPOGRAPHY_INVALID', issue.path, issue.message);
+    }
+    if (value.paddingPx !== undefined) validatePadding(value.paddingPx, `${path}.paddingPx`, state);
+    if (value.backgroundColorHex !== undefined
+      && (typeof value.backgroundColorHex !== 'string' || !/^#[0-9A-F]{6}$/.test(value.backgroundColorHex))) {
+      pushIssue(state, 'P15_IR_COLOR_INVALID', `${path}.backgroundColorHex`, 'backgroundColorHex must be canonical uppercase #RRGGBB when provided.');
+    }
+    if (value.cornerRadiusPx !== undefined && !validRadius(value.cornerRadiusPx)) {
+      pushIssue(state, 'P15_IR_RADIUS_INVALID', `${path}.cornerRadiusPx`, `cornerRadiusPx must be between 0 and ${P15_NEUTRAL_EXPORT_MAX_RADIUS_PX}px.`);
+    }
     if (value.url !== undefined && (typeof value.url !== 'string' || !validButtonUrl(value.url))) {
       pushIssue(state, 'P15_IR_URL_INVALID', `${path}.url`, 'Button URL must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     }

@@ -162,9 +162,11 @@ export function textEditorTypographySettings(typography: P15NeutralTypography | 
 
 /**
  * The `typography` group (with the `custom` starter) plus the widget's colour control: `text_color` for the
- * text editor, `title_color` for the heading (heading.php blob 5b193f958ba34d8d4a24d165a9114f9bc3ef2561).
+ * text editor, `title_color` for the heading (heading.php blob 5b193f958ba34d8d4a24d165a9114f9bc3ef2561),
+ * `button_text_color` for the button (the Button colour families' evidence).
  */
-export function typographyGroupSettings(typography: P15NeutralTypography | undefined, colorSettingKey: 'text_color' | 'title_color'): Record<string, unknown> {
+export function typographyGroupSettings(typography: P15NeutralTypography | undefined,
+  colorSettingKey: 'text_color' | 'title_color' | 'button_text_color'): Record<string, unknown> {
   const settings: Record<string, unknown> = {};
   if (typography !== undefined) {
     const group: Array<[string, unknown]> = [

@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.2b** (buttons)
-> - Last completed task: **M2.2a** (deterministic heading detection with heading typography)
+> - Next task: **M2.2c** (hyperlinks, dividers, spacers)
+> - Last completed task: **M2.2b** (deterministic button detection with button style)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -290,7 +290,11 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - A layer named as a heading that the rule does not support gets `HEADING_DETECTION_REQUIRES_REVIEW`, unless the document has a single font size and so no rank. Text without typography is never touched.
     - Headings carry `typography`. The generator writes the heading `typography` group and `title_color` (heading.php blob `5b193f9`).
     - Tests: `tests/m2-semantic-headings.test.ts`.
-  - [ ] **M2.2b** buttons: a frame with exactly one text, a fill or stroke, and padding becomes a button, with style through the existing Button families' encodings.
+  - [x] **M2.2b** buttons _(done 2026-10-10)_:
+    - `detectP15Buttons` runs before heading detection. A container whose layer name says button/btn/cta, whose only child is a uniform single-line text of at most 80 characters, with a solid background, non-zero padding and no style reviews, becomes a native button carrying text, typography, background, padding and radius. Without the name hint the frame and text are left as they are: they already render the same visuals, so badges and chips are never guessed into buttons. A button-named frame that does not match gets `BUTTON_DETECTION_REQUIRES_REVIEW`.
+    - Generator: the button style uses the Button families' proven keys (`typography_*` + `button_text_color`, `background_background`/`background_color`, `text_padding`, `border_radius`).
+    - Outline-only buttons need stroke mapping (M2.4).
+    - Tests: `tests/m2-semantic-buttons.test.ts`.
   - [ ] **M2.2c** hyperlinks, dividers and spacers. Low confidence → text-editor + REVIEW.
 - [ ] **M2.3** Sizing. FIXED/HUG/FILL on both axes maps to Elementor width/height, `content_width`, flex grow/shrink and basis. Map min/max width and height. The root frame width becomes the page content width.
 - [ ] **M2.4** Visual styles. Map uniform and individual strokes to border, drop/inner shadows to box-shadow, layer opacity, linear and radial gradients, non-uniform radius, and `clipsContent` to overflow hidden.

@@ -90,3 +90,48 @@ export function detectP15Headings(document: P15NeutralExportDocumentV1, names: R
   });
   return { ...document, nodes: rewrite(document.nodes) };
 }
+
+/**
+ * Buttons (M2.2b). A container whose layer name says button/btn/cta (the explicit hint), whose only child
+ * is a uniform single-line text of at most {@link BUTTON_MAX_LENGTH} characters, with a solid background, some
+ * padding and no style reviews, becomes a native button carrying that text, typography, background,
+ * padding and radius. Without the hint the container and text stay as they are: they already render the
+ * same visuals, so nothing is lost and badges or chips are never guessed into buttons. A button-named
+ * container that does not match the shape gets an explicit review.
+ */
+export const BUTTON_MAX_LENGTH = 80;
+const namedAsButton = (name: string | undefined): boolean => /\b(button|btn|cta)\b/i.test(name ?? '');
+
+function buttonShape(container: Extract<P15NeutralExportNode, { kind: 'container' }>): P15NeutralTextNode | null {
+  const [only] = container.children;
+  if (container.children.length !== 1 || only?.kind !== 'text' || container.styleReviews !== undefined || only.styleReviews !== undefined
+    || container.backgroundColorHex === undefined || container.paddingPx === undefined
+    || Object.values(container.paddingPx).every((side) => side === 0)
+    || only.paragraphs !== undefined || /[\r\n]/.test(only.text) || only.text.length > BUTTON_MAX_LENGTH) return null;
+  return only;
+}
+
+export function detectP15Buttons(document: P15NeutralExportDocumentV1, names: ReadonlyMap<string, string>): P15NeutralExportDocumentV1 {
+  let changed = false;
+  const rewrite = (nodes: readonly P15NeutralExportNode[]): P15NeutralExportNode[] => nodes.map((node) => {
+    if (node.kind !== 'container') return node;
+    if (!namedAsButton(names.get(node.sourceNodeId))) return { ...node, children: rewrite(node.children) };
+    const label = buttonShape(node);
+    changed = true;
+    if (!label) {
+      return { ...node, children: rewrite(node.children), styleReviews: [...(node.styleReviews ?? []), { reasonCode: 'BUTTON_DETECTION_REQUIRES_REVIEW',
+        detail: 'The layer is named as a button but is not one solid, padded frame around a single short line of text.' }] };
+    }
+    return {
+      kind: 'button',
+      sourceNodeId: node.sourceNodeId,
+      text: label.text,
+      ...(label.typography === undefined ? {} : { typography: label.typography }),
+      backgroundColorHex: node.backgroundColorHex!,
+      paddingPx: node.paddingPx!,
+      ...(node.cornerRadiusPx === undefined ? {} : { cornerRadiusPx: node.cornerRadiusPx }),
+    };
+  });
+  const nodes = rewrite(document.nodes);
+  return changed ? { ...document, nodes } : document;
+}
