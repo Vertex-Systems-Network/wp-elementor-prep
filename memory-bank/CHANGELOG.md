@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-10 — Recovery M1 (table-driven Elementor mapping engine) implemented
+
+- **Engine:** one family engine for 54 container and widget families, chained families (`FamilyChain`), one ordered composer with single key ownership and chained steps, and a page composition (`composeP15ElementorPage`).
+- **One export path:** `export-pipeline.ts` is shared by the plugin preview/download and the new CLI `export:elementor`; the plugin bundle contains the engine.
+- **Contracts:** generic `contract-types.ts` replaces the hand-written envelope interfaces. The resolution layer went from about 36.0k to 9.3k lines; the M1 LOC bar was revised by user decision (D-050).
+- **Target repairs** with Elementor 4.2.4 source evidence: container gradient stops are sliders (result/manifest v2); the radial candidate matches its writes; overlay CSS filters write the popover starter and px sliders, chain on overlay colour and bind fingerprint/digest (v2).
+- **Proof:** every refactor ships a golden recorded from the original code (all identical); every repair ships a diff test against a v1 write baseline. The README verifier reads family contract flags. No target import/render or compatibility claim.
+
 ## 2026-10-08 — Recovery M0 (critical correctness fixes) implemented
 
 - **Release build:**
