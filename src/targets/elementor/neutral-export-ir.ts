@@ -1,5 +1,12 @@
 import { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH, validP15AbsoluteUrl, validP15LinkUrl } from './link-url';
-import { containerSizingProblems, widgetSizingProblems, type P15NeutralContainerSizing, type P15NeutralWidgetSizing } from './container-sizing';
+import {
+  buttonSizingProblems,
+  containerSizingProblems,
+  widgetSizingProblems,
+  type P15NeutralButtonSizing,
+  type P15NeutralContainerSizing,
+  type P15NeutralWidgetSizing,
+} from './container-sizing';
 import {
   paragraphProblems,
   paragraphSpacingValid,
@@ -9,7 +16,7 @@ import {
 } from './typography';
 
 export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
-export type { P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
+export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
@@ -103,6 +110,9 @@ export interface P15NeutralButtonNode extends P15NeutralNodeBase {
   backgroundColorHex?: string;
   paddingPx?: P15NeutralPaddingPx;
   cornerRadiusPx?: number;
+  /** Width and flex-item sizing of the Figma button frame (recovery M2.3d); exclusive with `align`. */
+  sizing?: P15NeutralButtonSizing;
+  styleReviews?: P15NeutralStyleReview[];
 }
 
 export interface P15NeutralImageNode extends P15NeutralNodeBase {
@@ -123,6 +133,8 @@ export interface P15NeutralDividerNode extends P15NeutralNodeBase {
   weightPx: number;
   colorHex: string;
   widthPx?: number;
+  /** Horizontal position of a divider narrower than its column (recovery M2.3d); start when absent. */
+  align?: 'center' | 'end';
 }
 
 /** Vertical empty space (recovery M2.2c), from an empty, unpainted Figma leaf frame or rectangle. */
@@ -414,7 +426,14 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
 
   if (kind === 'button') {
     validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'url', 'openInNewTab', 'nofollow', 'align',
-      'typography', 'backgroundColorHex', 'paddingPx', 'cornerRadiusPx'], path, state);
+      'typography', 'backgroundColorHex', 'paddingPx', 'cornerRadiusPx', 'sizing', 'styleReviews'], path, state);
+    if (value.sizing !== undefined) {
+      for (const issue of buttonSizingProblems(value.sizing, `${path}.sizing`)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
+      if (isRecord(value.sizing) && value.sizing.fullWidth === true && value.align !== undefined) {
+        pushIssue(state, 'P15_IR_SIZING_INVALID', `${path}.align`, 'A full-width button has no separate position; align and sizing.fullWidth are exclusive.');
+      }
+    }
+    if (value.styleReviews !== undefined) validateStyleReviews(value.styleReviews, `${path}.styleReviews`, state);
     validateText(value.text, `${path}.text`, state, 2_000);
     for (const issue of value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)) {
       pushIssue(state, 'P15_IR_TYPOGRAPHY_INVALID', issue.path, issue.message);
@@ -450,7 +469,10 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'divider') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'weightPx', 'colorHex', 'widthPx'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'weightPx', 'colorHex', 'widthPx', 'align'], path, state);
+    if (value.align !== undefined && value.align !== 'center' && value.align !== 'end') {
+      pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.align`, 'Divider alignment must be center or end when provided.');
+    }
     if (typeof value.weightPx !== 'number' || !Number.isFinite(value.weightPx) || value.weightPx < 0.1 || value.weightPx > 10) {
       pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.weightPx`, 'Divider weight must be 0.1..10 px (the Elementor 4.2.4 weight slider range).');
     }

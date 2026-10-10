@@ -1,3 +1,4 @@
+import { deriveP15ButtonSizing, type P15ContainerSizingFacts } from './container-sizing';
 import type {
   P15NeutralExportDocumentV1,
   P15NeutralExportNode,
@@ -106,20 +107,41 @@ const namedAsButton = (name: string | undefined): boolean => /\b(button|btn|cta)
 
 function buttonShape(container: Extract<P15NeutralExportNode, { kind: 'container' }>): P15NeutralTextNode | null {
   const [only] = container.children;
-  if (container.children.length !== 1 || only?.kind !== 'text' || container.styleReviews !== undefined || only.styleReviews !== undefined
+  // Container sizing reviews are re-derived for the button itself (M2.3d), so only other reviews block the shape.
+  // The label's own sizing is replaced by the button's padding and height check.
+  const blocking = (reviews: readonly { reasonCode: string }[] | undefined) => (reviews ?? []).some((review) => !review.reasonCode.startsWith('SIZE_'));
+  if (container.children.length !== 1 || only?.kind !== 'text' || blocking(container.styleReviews) || blocking(only.styleReviews)
     || container.backgroundColorHex === undefined || container.paddingPx === undefined
     || Object.values(container.paddingPx).every((side) => side === 0)
     || only.paragraphs !== undefined || /[\r\n]/.test(only.text) || only.text.length > BUTTON_MAX_LENGTH) return null;
   return only;
 }
 
-export function detectP15Buttons(document: P15NeutralExportDocumentV1, names: ReadonlyMap<string, string>): P15NeutralExportDocumentV1 {
+/**
+ * `sizingFacts` (recovery M2.3d) maps a container's source id to its Figma sizing facts; a detected button
+ * then carries its frame's width and flex-item sizing, and anything without an exact equivalent is REVIEW.
+ */
+export function detectP15Buttons(
+  document: P15NeutralExportDocumentV1,
+  names: ReadonlyMap<string, string>,
+  sizingFacts: ReadonlyMap<string, P15ContainerSizingFacts> = new Map(),
+): P15NeutralExportDocumentV1 {
   let changed = false;
   const rewrite = (nodes: readonly P15NeutralExportNode[]): P15NeutralExportNode[] => nodes.map((node) => {
     if (node.kind !== 'container') return node;
     if (!namedAsButton(names.get(node.sourceNodeId))) return { ...node, children: rewrite(node.children) };
     const label = buttonShape(node);
     changed = true;
+    const facts = sizingFacts.get(node.sourceNodeId);
+    const sized = facts === undefined || !label ? { reviews: [] } : deriveP15ButtonSizing(facts, {
+      direction: node.direction,
+      justifyContent: node.justifyContent,
+      alignItems: node.alignItems,
+      labelAlign: label.align,
+      paddingTopPx: node.paddingPx!.top,
+      paddingBottomPx: node.paddingPx!.bottom,
+      lineHeightPx: label.typography?.lineHeightPx,
+    });
     if (!label) {
       return { ...node, children: rewrite(node.children), styleReviews: [...(node.styleReviews ?? []), { reasonCode: 'BUTTON_DETECTION_REQUIRES_REVIEW',
         detail: 'The layer is named as a button but is not one solid, padded frame around a single short line of text.' }] };
@@ -133,6 +155,8 @@ export function detectP15Buttons(document: P15NeutralExportDocumentV1, names: Re
       backgroundColorHex: node.backgroundColorHex!,
       paddingPx: node.paddingPx!,
       ...(node.cornerRadiusPx === undefined ? {} : { cornerRadiusPx: node.cornerRadiusPx }),
+      ...(sized.sizing === undefined ? {} : { sizing: sized.sizing }),
+      ...(sized.reviews.length > 0 ? { styleReviews: sized.reviews } : {}),
     };
   });
   const nodes = rewrite(document.nodes);

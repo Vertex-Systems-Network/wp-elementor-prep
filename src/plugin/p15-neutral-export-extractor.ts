@@ -7,6 +7,7 @@ import {
   validateP15NeutralExportDocument,
   type P15NeutralContainerNode,
   type P15NeutralCrossAlignment,
+  type P15NeutralDividerNode,
   type P15NeutralDocumentType,
   type P15NeutralExportDocumentV1,
   type P15NeutralExportNode,
@@ -51,6 +52,8 @@ export interface P15FigmaNeutralExtractionResult {
 interface ExtractionState {
   visited: number;
   boundsExceeded: 'DEPTH_LIMIT_EXCEEDED' | 'NODE_LIMIT_EXCEEDED' | null;
+  /** Figma sizing facts per extracted container, for button sizing after semantic detection (M2.3d). */
+  sizingFacts: Map<string, P15ContainerSizingFacts>;
 }
 
 interface ParsedContainerStyle<T> {
@@ -605,6 +608,7 @@ function extractContainer(
   // Recovery M2.3a: exact sizing; constraints without an exact mapping stay REVIEW on this container.
   const direction = mode === 'HORIZONTAL' ? 'row' : 'column';
   const facts = sizingFacts(record, parent);
+  state.sizingFacts.set(node.id, facts);
   const { horizontal, vertical } = facts;
   const sized = deriveP15ContainerSizing(facts);
   styleReviews.push(...sized.reviews);
@@ -679,6 +683,22 @@ function extractRule(node: SceneNode, parentDirection: 'row' | 'column' | null):
   return null;
 }
 
+/**
+ * Divider placement (recovery M2.3d). In a row the divider widget grows (`divider.scss` blob
+ * 96c448b3b4f21c7f3dc4fac777c7a3be8ebc9eb8: `--flex-grow: var(--container-widget-flex-grow)`), so it is REVIEW.
+ * In a column a FILL line keeps the divider's default 100% width, and a narrower line takes its column's
+ * cross alignment through the divider `align` control.
+ */
+function placeDivider(divider: P15NeutralDividerNode, node: SceneNode, parent: ParentLayout): P15NeutralExportNode {
+  if (parent?.direction === 'row') {
+    return review(node, 'DIVIDER_IN_ROW_REQUIRES_REVIEW', 'A divider inside a horizontal Auto Layout grows with the row in Elementor; its length needs review.');
+  }
+  const { widthPx, ...rest } = divider;
+  const fill = recordOf(node).layoutSizingHorizontal === 'FILL';
+  const align = parent?.alignItems === 'center' ? 'center' : parent?.alignItems === 'end' ? 'end' : undefined;
+  return { ...rest, ...(fill || widthPx === undefined ? {} : { widthPx }), ...(fill || align === undefined ? {} : { align }) };
+}
+
 function extractNode(
   node: SceneNode,
   depth: number,
@@ -703,7 +723,7 @@ function extractNode(
   }
   if (node.type === 'TEXT') return extractText(node, parent);
   const rule = extractRule(node, parent?.direction ?? null);
-  if (rule) return rule;
+  if (rule) return rule.kind === 'divider' ? placeDivider(rule, node, parent) : rule;
   if (isContainerLike(node)) {
     return extractContainer(node, depth, state, parent);
   }
@@ -729,7 +749,7 @@ export function extractP15NeutralExportDocumentFromFigmaFrame(
   frame: FrameNode,
   documentType: P15NeutralDocumentType = 'page',
 ): P15NeutralExportDocumentV1 {
-  const state: ExtractionState = { visited: 0, boundsExceeded: null };
+  const state: ExtractionState = { visited: 0, boundsExceeded: null, sizingFacts: new Map() };
   const extracted = extractNode(frame, 1, state);
   const nodes: P15NeutralExportNode[] = state.boundsExceeded
     ? [boundsReview(frame, state.boundsExceeded)]
@@ -746,7 +766,7 @@ export function extractP15NeutralExportDocumentFromFigmaFrame(
     title: frame.name,
     documentType,
     nodes,
-  }, names), names);
+  }, names, state.sizingFacts), names);
 }
 
 function collectLayerNames(node: SceneNode, names: Map<string, string>): void {

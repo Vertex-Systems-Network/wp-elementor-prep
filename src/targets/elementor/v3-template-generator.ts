@@ -1,4 +1,4 @@
-import { containerSizingSettings, widgetSizingSettings } from './container-sizing';
+import { buttonSizingSettings, containerSizingSettings, widgetSizingSettings } from './container-sizing';
 import { textEditorHtml, textEditorTypographySettings, typographyGroupSettings } from './typography';
 import {
   buildElementorTemplateCandidateArtifact,
@@ -221,6 +221,7 @@ function buttonWidget(node: P15NeutralButtonNode, state: GenerationState): Eleme
   if (node.cornerRadiusPx !== undefined) {
     settings.border_radius = pxDimensions({ top: node.cornerRadiusPx, right: node.cornerRadiusPx, bottom: node.cornerRadiusPx, left: node.cornerRadiusPx });
   }
+  Object.assign(settings, buttonSizingSettings(node.sizing));
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -235,12 +236,16 @@ function buttonWidget(node: P15NeutralButtonNode, state: GenerationState): Eleme
  * Divider and spacer widgets (recovery M2.2c). Elementor 4.2.4 `includes/widgets/divider.php`
  * (blob 7dfbea27f5ed34d76780c3b0a520b1f7d0ac3cc1): `style` 'solid', `color`, `weight` px slider (1..10, step 0.1)
  * and `width` slider; `includes/widgets/spacer.php` (blob b1c14d71c8f5c941f9faea89eb99c0fc84ed8103): `space` px slider.
+ * Recovery M2.3d repair: the divider `gap` slider defaults to 15px of padding above and below the line
+ * (`{{WRAPPER}} .elementor-divider` padding-block), which the Figma line does not have, so `gap` is written as 0;
+ * the `align` control (left/center/right, separator margin) positions a divider narrower than its column.
  */
 function ruleWidget(node: P15NeutralDividerNode | P15NeutralSpacerNode, state: GenerationState): ElementorWidgetV04 {
   const slider = (size: number) => ({ unit: 'px', size, sizes: [] });
   const settings: Record<string, unknown> = node.kind === 'spacer'
     ? { space: slider(node.heightPx) }
-    : { style: 'solid', weight: slider(node.weightPx), color: node.colorHex, ...(node.widthPx === undefined ? {} : { width: slider(node.widthPx) }) };
+    : { style: 'solid', weight: slider(node.weightPx), color: node.colorHex, ...(node.widthPx === undefined ? {} : { width: slider(node.widthPx) }),
+      gap: slider(0), ...(node.align === undefined ? {} : { align: node.align === 'end' ? 'right' : 'center' }) };
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -295,7 +300,10 @@ function mapNode(
     pushStyleReviews(node.sourceNodeId, node.styleReviews, state);
     return textEditorWidget(node, state);
   }
-  if (node.kind === 'button') return buttonWidget(node, state);
+  if (node.kind === 'button') {
+    pushStyleReviews(node.sourceNodeId, node.styleReviews, state);
+    return buttonWidget(node, state);
+  }
   if (node.kind === 'image') return imageWidget(node, state);
   if (node.kind === 'divider' || node.kind === 'spacer') return ruleWidget(node, state);
 

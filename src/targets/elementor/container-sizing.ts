@@ -279,3 +279,101 @@ export function fillDistributionReview(
     ? { reasonCode: 'SIZE_FILL_DISTRIBUTION_REQUIRES_REVIEW', detail: `${fills} FILL children share free height; Elementor grows them from their content height, Figma divides it equally.` }
     : undefined;
 }
+
+/**
+ * Button sizing (recovery M2.3d). The Button widget's `<a>` is `inline-block` (`general/_button.scss`
+ * blob 2300e58d7ec5b891d6b2c91c7c07bf6df31bfd4e) and fills its widget only with `align: justify`
+ * (`.elementor-align-justify .elementor-button { width: 100% }`, `_global.scss`); its content wrapper is
+ * centred by default and `content_align` (button-trait.php blob 31192aaee6851c445f79d1998499f6ce73ba7da5,
+ * condition `align=justify`) moves it to start/end. So a FIXED or FILL button width becomes the widget width
+ * plus `align: justify` plus the label alignment of its Figma frame. Button height comes from padding and line
+ * height: a FIXED height must equal them exactly, and a FILL height has no equivalent (both REVIEW otherwise).
+ */
+export interface P15NeutralButtonSizing extends P15NeutralWidgetSizing {
+  /** The button fills its widget (`align: justify`). */
+  fullWidth?: true;
+  /** Label alignment inside a full-width button; centred when absent. */
+  contentAlign?: 'start' | 'end';
+}
+
+const BUTTON_KEYS = [...WIDGET_KEYS, 'fullWidth', 'contentAlign'] as const;
+
+export function buttonSizingProblems(value: unknown, path: string): P15ContainerSizingProblem[] {
+  const base = record(value) ? Object.fromEntries(Object.entries(value).filter(([key]) => key !== 'fullWidth' && key !== 'contentAlign')) : value;
+  if (!record(value) || Object.keys(value).length === 0 || Object.keys(value).some((key) => !(BUTTON_KEYS as readonly string[]).includes(key))) {
+    return [{ path, message: `Sizing must be a non-empty object with only ${BUTTON_KEYS.join(', ')}.` }];
+  }
+  const problems = record(base) && Object.keys(base).length > 0 ? sizingProblems(base, path, WIDGET_KEYS, 'fillWidth') : [];
+  if (value.fullWidth !== undefined && value.fullWidth !== true) problems.push({ path: `${path}.fullWidth`, message: 'fullWidth must be true when provided.' });
+  if (value.contentAlign !== undefined && (value.fullWidth !== true || (value.contentAlign !== 'start' && value.contentAlign !== 'end'))) {
+    problems.push({ path: `${path}.contentAlign`, message: 'contentAlign must be start or end, and only on a fullWidth button.' });
+  }
+  if ((value.widthPx !== undefined || value.fillWidth !== undefined) && value.fullWidth !== true) {
+    problems.push({ path: `${path}.fullWidth`, message: 'A sized button width requires fullWidth.' });
+  }
+  return problems;
+}
+
+export function canonicalButtonSizing(sizing: P15NeutralButtonSizing): Record<string, unknown> {
+  const value = canonicalContainerSizing(sizing);
+  if (sizing.fullWidth !== undefined) value.fullWidth = sizing.fullWidth;
+  if (sizing.contentAlign !== undefined) value.contentAlign = sizing.contentAlign;
+  return value;
+}
+
+export function buttonSizingSettings(sizing: P15NeutralButtonSizing | undefined): Record<string, unknown> {
+  const settings = widgetSizingSettings(sizing);
+  if (sizing?.fullWidth) settings.align = 'justify';
+  if (sizing?.contentAlign !== undefined) settings.content_align = sizing.contentAlign;
+  return settings;
+}
+
+/** The button frame's own facts that decide label alignment and height. */
+export interface P15ButtonFrameFacts {
+  direction: 'row' | 'column';
+  justifyContent: string | undefined;
+  alignItems: string | undefined;
+  labelAlign: string | undefined;
+  paddingTopPx: number;
+  paddingBottomPx: number;
+  lineHeightPx: number | undefined;
+}
+
+export function deriveP15ButtonSizing(facts: P15ContainerSizingFacts, frame: P15ButtonFrameFacts): P15SizingDerivation<P15NeutralButtonSizing> {
+  const reviews: P15SizingDerivation<P15NeutralButtonSizing>['reviews'] = [];
+  if (facts.parent === null) return { reviews };
+  const size = sizeReader(reviews);
+  const sizing: P15NeutralButtonSizing = {};
+  const { row, main, cross, parentStretches } = axes(facts);
+
+  if (facts.horizontal === 'FIXED') {
+    const width = size(facts.width, 'Width');
+    if (width !== undefined) sizing.widthPx = width;
+  }
+  if (row && main === 'FILL') sizing.fillWidth = true;
+  if (main === 'FIXED' || main === 'HUG') sizing.flex = 'fixed';
+  if (!row && cross === 'FILL' && !parentStretches) sizing.alignSelfStretch = true;
+  if (facts.horizontal === 'FIXED' || facts.horizontal === 'FILL') {
+    sizing.fullWidth = true;
+    const horizontal = frame.direction === 'row' ? frame.justifyContent : frame.alignItems;
+    const label = horizontal === 'stretch' ? frame.labelAlign : horizontal;
+    if (label === 'start' || label === 'space-between') sizing.contentAlign = 'start';
+    else if (label === 'end') sizing.contentAlign = 'end';
+    else if (label !== 'center' && label !== 'space-around' && label !== 'space-evenly') {
+      reviews.push({ reasonCode: 'BUTTON_LABEL_ALIGNMENT_REQUIRES_REVIEW', detail: `Button label alignment ${String(label)} has no exact Elementor content alignment.` });
+    }
+  }
+
+  if (facts.vertical === 'FILL') {
+    reviews.push({ reasonCode: 'SIZE_BUTTON_HEIGHT_REQUIRES_REVIEW', detail: 'A FILL button height has no Elementor equivalent; the button keeps its padding height.' });
+  } else if (facts.vertical === 'FIXED' && Number.isFinite(facts.height)) {
+    const natural = frame.lineHeightPx === undefined ? undefined : frame.paddingTopPx + frame.paddingBottomPx + frame.lineHeightPx;
+    if (natural === undefined || Math.abs(natural - facts.height) > 0.5) {
+      reviews.push({ reasonCode: 'SIZE_BUTTON_HEIGHT_REQUIRES_REVIEW',
+        detail: `The fixed button height ${String(facts.height)}px does not equal its padding plus a px line height (${natural === undefined ? 'unknown' : `${String(round(natural))}px`}).` });
+    }
+  }
+
+  reviews.push(...constraintReview(facts, ['minWidth', 'maxWidth', 'minHeight', 'maxHeight']));
+  return { ...(Object.keys(sizing).length > 0 ? { sizing } : {}), reviews };
+}
