@@ -1,4 +1,5 @@
 import { sha256Hex } from '../../core/sha256';
+import { canonicalButtonSizing, canonicalContainerSizing } from './container-sizing';
 import {
   P15_NEUTRAL_EXPORT_IR_VERSION,
   validateP15NeutralExportDocument,
@@ -61,6 +62,7 @@ function canonicalContainer(node: P15NeutralContainerNode): Record<string, unkno
   if (node.justifyContent !== undefined) value.justifyContent = node.justifyContent;
   if (node.backgroundColorHex !== undefined) value.backgroundColorHex = node.backgroundColorHex;
   if (node.cornerRadiusPx !== undefined) value.cornerRadiusPx = node.cornerRadiusPx;
+  if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
   canonicalStyleReviews(value, node.styleReviews);
   value.children = node.children.map(canonicalNode);
   return value;
@@ -76,6 +78,7 @@ function canonicalHeading(node: P15NeutralHeadingNode): Record<string, unknown> 
   if (node.align !== undefined) value.align = node.align;
   if (node.typography !== undefined) value.typography = canonicalTypography(node.typography);
   if (node.href !== undefined) value.href = node.href;
+  if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
   return value;
 }
 
@@ -90,6 +93,7 @@ function canonicalText(node: P15NeutralTextNode): Record<string, unknown> {
   if (node.paragraphs !== undefined) value.paragraphs = canonicalParagraphs(node.paragraphs);
   if (node.paragraphSpacingPx !== undefined) value.paragraphSpacingPx = node.paragraphSpacingPx;
   if (node.href !== undefined) value.href = node.href;
+  if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
   canonicalStyleReviews(value, node.styleReviews);
   return value;
 }
@@ -110,6 +114,8 @@ function canonicalButton(node: P15NeutralButtonNode): Record<string, unknown> {
     value.paddingPx = { top: node.paddingPx.top, right: node.paddingPx.right, bottom: node.paddingPx.bottom, left: node.paddingPx.left };
   }
   if (node.cornerRadiusPx !== undefined) value.cornerRadiusPx = node.cornerRadiusPx;
+  if (node.sizing !== undefined) value.sizing = canonicalButtonSizing(node.sizing);
+  canonicalStyleReviews(value, node.styleReviews);
   return value;
 }
 
@@ -140,7 +146,7 @@ function canonicalNode(node: P15NeutralExportNode): Record<string, unknown> {
   if (node.kind === 'image') return canonicalImage(node);
   if (node.kind === 'divider') {
     return { kind: 'divider', sourceNodeId: node.sourceNodeId, weightPx: node.weightPx, colorHex: node.colorHex,
-      ...(node.widthPx === undefined ? {} : { widthPx: node.widthPx }) };
+      ...(node.widthPx === undefined ? {} : { widthPx: node.widthPx }), ...(node.align === undefined ? {} : { align: node.align }) };
   }
   if (node.kind === 'spacer') return { kind: 'spacer', sourceNodeId: node.sourceNodeId, heightPx: node.heightPx };
   return canonicalReview(node);

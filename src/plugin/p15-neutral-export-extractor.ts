@@ -7,6 +7,7 @@ import {
   validateP15NeutralExportDocument,
   type P15NeutralContainerNode,
   type P15NeutralCrossAlignment,
+  type P15NeutralDividerNode,
   type P15NeutralDocumentType,
   type P15NeutralExportDocumentV1,
   type P15NeutralExportNode,
@@ -26,6 +27,13 @@ import {
   typographyProblems,
 } from '../targets/elementor/typography';
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
+import {
+  deriveP15ContainerSizing,
+  deriveP15WidgetSizing,
+  fillDistributionReview,
+  type P15ContainerSizingFacts,
+  type P15FigmaSizingMode,
+} from '../targets/elementor/container-sizing';
 import { validP15LinkUrl } from '../targets/elementor/link-url';
 import { detectP15Buttons, detectP15Headings } from '../targets/elementor/semantic-detection';
 import type { P15ElementorV3GenerationResult } from '../targets/elementor/v3-template-generator';
@@ -44,6 +52,8 @@ export interface P15FigmaNeutralExtractionResult {
 interface ExtractionState {
   visited: number;
   boundsExceeded: 'DEPTH_LIMIT_EXCEEDED' | 'NODE_LIMIT_EXCEEDED' | null;
+  /** Figma sizing facts per extracted container, for button sizing after semantic detection (M2.3d). */
+  sizingFacts: Map<string, P15ContainerSizingFacts>;
 }
 
 interface ParsedContainerStyle<T> {
@@ -501,7 +511,7 @@ function extractTextTypography(node: TextNode): TextTypographyExtraction {
   return result;
 }
 
-function extractText(node: SceneNode): P15NeutralExportNode {
+function extractText(node: SceneNode, parent: ParentLayout): P15NeutralExportNode {
   if (node.type !== 'TEXT') return review(node, 'UNSUPPORTED_NODE_TYPE', `Unsupported visible Figma node type: ${node.type}.`);
   if (node.characters.trim().length === 0) {
     return review(node, 'EMPTY_TEXT_REQUIRES_REVIEW', 'Empty visible text cannot be safely dropped because it may carry layout intent.');
@@ -511,7 +521,9 @@ function extractText(node: SceneNode): P15NeutralExportNode {
     return review(node, 'UNSUPPORTED_TEXT_ALIGNMENT', `Unsupported Figma text alignment: ${String(node.textAlignHorizontal)}.`);
   }
   const typography = extractTextTypography(node);
-  const styleReviews = [...unmappedVisualFactReviews(node), ...typography.reviews];
+  // Recovery M2.3b: heading/text width and flex-item sizing; a fixed text height is REVIEW.
+  const sized = deriveP15WidgetSizing(sizingFacts(recordOf(node), parent));
+  const styleReviews = [...unmappedVisualFactReviews(node), ...typography.reviews, ...sized.reviews];
   return {
     kind: 'text',
     sourceNodeId: node.id,
@@ -521,7 +533,32 @@ function extractText(node: SceneNode): P15NeutralExportNode {
     ...(typography.typography ? { typography: typography.typography } : {}),
     ...(typography.paragraphs ? { paragraphs: typography.paragraphs } : {}),
     ...(typography.paragraphSpacingPx !== undefined ? { paragraphSpacingPx: typography.paragraphSpacingPx } : {}),
+    ...(sized.sizing ? { sizing: sized.sizing } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
+  };
+}
+
+type ParentLayout = P15ContainerSizingFacts['parent'];
+
+function sizingMode(value: unknown): P15FigmaSizingMode | undefined {
+  return value === 'FIXED' || value === 'HUG' || value === 'FILL' ? value : undefined;
+}
+
+function optionalNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function sizingFacts(record: Record<string, unknown>, parent: ParentLayout): P15ContainerSizingFacts {
+  return {
+    parent,
+    horizontal: sizingMode(record.layoutSizingHorizontal),
+    vertical: sizingMode(record.layoutSizingVertical),
+    width: typeof record.width === 'number' ? record.width : NaN,
+    height: typeof record.height === 'number' ? record.height : NaN,
+    minWidth: optionalNumber(record.minWidth),
+    maxWidth: optionalNumber(record.maxWidth),
+    minHeight: optionalNumber(record.minHeight),
+    maxHeight: optionalNumber(record.maxHeight),
   };
 }
 
@@ -529,6 +566,7 @@ function extractContainer(
   node: SceneNode,
   depth: number,
   state: ExtractionState,
+  parent: ParentLayout,
 ): P15NeutralExportNode {
   const record = recordOf(node);
   const mode = record.layoutMode;
@@ -567,24 +605,39 @@ function extractContainer(
     ...unmappedVisualFactReviews(node),
   ];
 
+  // Recovery M2.3a: exact sizing; constraints without an exact mapping stay REVIEW on this container.
+  const direction = mode === 'HORIZONTAL' ? 'row' : 'column';
+  const facts = sizingFacts(record, parent);
+  state.sizingFacts.set(node.id, facts);
+  const { horizontal, vertical } = facts;
+  const sized = deriveP15ContainerSizing(facts);
+  styleReviews.push(...sized.reviews);
+
   const children: P15NeutralExportNode[] = [];
   for (const child of childNodes(node)) {
     if (!visible(child)) continue;
-    const extracted = extractNode(child, depth + 1, state, mode === 'VERTICAL' ? 'column' : 'row');
+    const extracted = extractNode(child, depth + 1, state, { direction, alignItems });
     if (state.boundsExceeded) break;
     if (extracted) children.push(extracted);
   }
+  const distribution = fillDistributionReview(
+    direction,
+    direction === 'row' ? horizontal : vertical,
+    children.map((child) => (child.kind === 'container' || child.kind === 'text' || child.kind === 'heading' ? child.sizing : undefined)),
+  );
+  if (distribution) styleReviews.push(distribution);
 
   const container: P15NeutralContainerNode = {
     kind: 'container',
     sourceNodeId: node.id,
-    direction: mode === 'HORIZONTAL' ? 'row' : 'column',
+    direction,
     gapPx,
     paddingPx,
     alignItems,
     justifyContent,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
+    ...(sized.sizing ? { sizing: sized.sizing } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
     children,
   };
@@ -630,11 +683,27 @@ function extractRule(node: SceneNode, parentDirection: 'row' | 'column' | null):
   return null;
 }
 
+/**
+ * Divider placement (recovery M2.3d). In a row the divider widget grows (`divider.scss` blob
+ * 96c448b3b4f21c7f3dc4fac777c7a3be8ebc9eb8: `--flex-grow: var(--container-widget-flex-grow)`), so it is REVIEW.
+ * In a column a FILL line keeps the divider's default 100% width, and a narrower line takes its column's
+ * cross alignment through the divider `align` control.
+ */
+function placeDivider(divider: P15NeutralDividerNode, node: SceneNode, parent: ParentLayout): P15NeutralExportNode {
+  if (parent?.direction === 'row') {
+    return review(node, 'DIVIDER_IN_ROW_REQUIRES_REVIEW', 'A divider inside a horizontal Auto Layout grows with the row in Elementor; its length needs review.');
+  }
+  const { widthPx, ...rest } = divider;
+  const fill = recordOf(node).layoutSizingHorizontal === 'FILL';
+  const align = parent?.alignItems === 'center' ? 'center' : parent?.alignItems === 'end' ? 'end' : undefined;
+  return { ...rest, ...(fill || widthPx === undefined ? {} : { widthPx }), ...(fill || align === undefined ? {} : { align }) };
+}
+
 function extractNode(
   node: SceneNode,
   depth: number,
   state: ExtractionState,
-  parentDirection: 'row' | 'column' | null = null,
+  parent: ParentLayout = null,
 ): P15NeutralExportNode | null {
   if (!visible(node)) return null;
   if (depth > P15_NEUTRAL_EXPORT_MAX_DEPTH) {
@@ -652,11 +721,11 @@ function extractNode(
   if (hasImageFill(node) && !isContainerLike(node)) {
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
-  if (node.type === 'TEXT') return extractText(node);
-  const rule = extractRule(node, parentDirection);
-  if (rule) return rule;
+  if (node.type === 'TEXT') return extractText(node, parent);
+  const rule = extractRule(node, parent?.direction ?? null);
+  if (rule) return rule.kind === 'divider' ? placeDivider(rule, node, parent) : rule;
   if (isContainerLike(node)) {
-    return extractContainer(node, depth, state);
+    return extractContainer(node, depth, state, parent);
   }
   return review(node, 'UNSUPPORTED_NODE_TYPE', `Unsupported visible Figma node type: ${node.type}.`);
 }
@@ -680,7 +749,7 @@ export function extractP15NeutralExportDocumentFromFigmaFrame(
   frame: FrameNode,
   documentType: P15NeutralDocumentType = 'page',
 ): P15NeutralExportDocumentV1 {
-  const state: ExtractionState = { visited: 0, boundsExceeded: null };
+  const state: ExtractionState = { visited: 0, boundsExceeded: null, sizingFacts: new Map() };
   const extracted = extractNode(frame, 1, state);
   const nodes: P15NeutralExportNode[] = state.boundsExceeded
     ? [boundsReview(frame, state.boundsExceeded)]
@@ -697,7 +766,7 @@ export function extractP15NeutralExportDocumentFromFigmaFrame(
     title: frame.name,
     documentType,
     nodes,
-  }, names), names);
+  }, names, state.sizingFacts), names);
 }
 
 function collectLayerNames(node: SceneNode, names: Map<string, string>): void {

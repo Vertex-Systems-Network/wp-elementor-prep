@@ -1,5 +1,13 @@
 import { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH, validP15AbsoluteUrl, validP15LinkUrl } from './link-url';
 import {
+  buttonSizingProblems,
+  containerSizingProblems,
+  widgetSizingProblems,
+  type P15NeutralButtonSizing,
+  type P15NeutralContainerSizing,
+  type P15NeutralWidgetSizing,
+} from './container-sizing';
+import {
   paragraphProblems,
   paragraphSpacingValid,
   typographyProblems,
@@ -8,6 +16,7 @@ import {
 } from './typography';
 
 export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
+export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
@@ -54,6 +63,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   justifyContent?: P15NeutralJustification;
   backgroundColorHex?: string;
   cornerRadiusPx?: number;
+  /** Exact width, minimum height and flex-item sizing (recovery M2.3a). */
+  sizing?: P15NeutralContainerSizing;
   styleReviews?: P15NeutralStyleReview[];
   children: P15NeutralExportNode[];
 }
@@ -67,6 +78,8 @@ export interface P15NeutralHeadingNode extends P15NeutralNodeBase {
   typography?: P15NeutralTypography;
   /** One link for the whole heading (recovery M2.2c). */
   href?: string;
+  /** Width and flex-item sizing (recovery M2.3b). */
+  sizing?: P15NeutralWidgetSizing;
 }
 
 export interface P15NeutralTextNode extends P15NeutralNodeBase {
@@ -80,6 +93,8 @@ export interface P15NeutralTextNode extends P15NeutralNodeBase {
   /** One link for the whole text (recovery M2.2c). */
   href?: string;
   paragraphSpacingPx?: number;
+  /** Width and flex-item sizing (recovery M2.3b). */
+  sizing?: P15NeutralWidgetSizing;
   styleReviews?: P15NeutralStyleReview[];
 }
 
@@ -95,6 +110,9 @@ export interface P15NeutralButtonNode extends P15NeutralNodeBase {
   backgroundColorHex?: string;
   paddingPx?: P15NeutralPaddingPx;
   cornerRadiusPx?: number;
+  /** Width and flex-item sizing of the Figma button frame (recovery M2.3d); exclusive with `align`. */
+  sizing?: P15NeutralButtonSizing;
+  styleReviews?: P15NeutralStyleReview[];
 }
 
 export interface P15NeutralImageNode extends P15NeutralNodeBase {
@@ -115,6 +133,8 @@ export interface P15NeutralDividerNode extends P15NeutralNodeBase {
   weightPx: number;
   colorHex: string;
   widthPx?: number;
+  /** Horizontal position of a divider narrower than its column (recovery M2.3d); start when absent. */
+  align?: 'center' | 'end';
 }
 
 /** Vertical empty space (recovery M2.2c), from an empty, unpainted Figma leaf frame or rectangle. */
@@ -162,6 +182,7 @@ export type P15NeutralExportValidationCode =
   | 'P15_IR_ALIGNMENT_INVALID'
   | 'P15_IR_TEXT_INVALID'
   | 'P15_IR_TYPOGRAPHY_INVALID'
+  | 'P15_IR_SIZING_INVALID'
   | 'P15_IR_HEADING_LEVEL_INVALID'
   | 'P15_IR_URL_INVALID'
   | 'P15_IR_BOOLEAN_INVALID'
@@ -279,6 +300,11 @@ function validReviewReasonCode(value: unknown): boolean {
   return boundedString(value, 128) && /^[A-Z0-9_:-]+$/.test(String(value));
 }
 
+function validateWidgetSizing(value: unknown, path: string, state: ValidationState): void {
+  if (value === undefined) return;
+  for (const issue of widgetSizingProblems(value, path)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
+}
+
 function validateStyleReviews(value: unknown, path: string, state: ValidationState): void {
   if (!Array.isArray(value) || value.length === 0 || value.length > P15_NEUTRAL_EXPORT_MAX_STYLE_REVIEWS) {
     pushIssue(state, 'P15_IR_REVIEW_REASON_INVALID', path, `styleReviews must be a non-empty array of at most ${P15_NEUTRAL_EXPORT_MAX_STYLE_REVIEWS} entries when provided.`);
@@ -323,7 +349,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'sizing', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -347,6 +373,9 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     if (value.justifyContent !== undefined && !['start', 'center', 'end', 'space-between', 'space-around', 'space-evenly'].includes(String(value.justifyContent))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.justifyContent`, 'justifyContent is outside the bounded neutral justification vocabulary.');
     }
+    if (value.sizing !== undefined) {
+      for (const issue of containerSizingProblems(value.sizing, `${path}.sizing`)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
+    }
     if (value.styleReviews !== undefined) validateStyleReviews(value.styleReviews, `${path}.styleReviews`, state);
     if (!Array.isArray(value.children)) {
       pushIssue(state, 'P15_IR_CONTAINER_CHILDREN_INVALID', `${path}.children`, 'Container children must be an array.');
@@ -360,7 +389,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'heading') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography', 'href'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography', 'href', 'sizing'], path, state);
+    validateWidgetSizing(value.sizing, `${path}.sizing`, state);
     if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Heading link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
     for (const issue of value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)) {
@@ -376,7 +406,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'text') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'href', 'styleReviews'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'href', 'sizing', 'styleReviews'], path, state);
+    validateWidgetSizing(value.sizing, `${path}.sizing`, state);
     if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Text link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
     const typographyIssues = [
@@ -395,7 +426,14 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
 
   if (kind === 'button') {
     validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'url', 'openInNewTab', 'nofollow', 'align',
-      'typography', 'backgroundColorHex', 'paddingPx', 'cornerRadiusPx'], path, state);
+      'typography', 'backgroundColorHex', 'paddingPx', 'cornerRadiusPx', 'sizing', 'styleReviews'], path, state);
+    if (value.sizing !== undefined) {
+      for (const issue of buttonSizingProblems(value.sizing, `${path}.sizing`)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
+      if (isRecord(value.sizing) && value.sizing.fullWidth === true && value.align !== undefined) {
+        pushIssue(state, 'P15_IR_SIZING_INVALID', `${path}.align`, 'A full-width button has no separate position; align and sizing.fullWidth are exclusive.');
+      }
+    }
+    if (value.styleReviews !== undefined) validateStyleReviews(value.styleReviews, `${path}.styleReviews`, state);
     validateText(value.text, `${path}.text`, state, 2_000);
     for (const issue of value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)) {
       pushIssue(state, 'P15_IR_TYPOGRAPHY_INVALID', issue.path, issue.message);
@@ -431,7 +469,10 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'divider') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'weightPx', 'colorHex', 'widthPx'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'weightPx', 'colorHex', 'widthPx', 'align'], path, state);
+    if (value.align !== undefined && value.align !== 'center' && value.align !== 'end') {
+      pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.align`, 'Divider alignment must be center or end when provided.');
+    }
     if (typeof value.weightPx !== 'number' || !Number.isFinite(value.weightPx) || value.weightPx < 0.1 || value.weightPx > 10) {
       pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.weightPx`, 'Divider weight must be 0.1..10 px (the Elementor 4.2.4 weight slider range).');
     }

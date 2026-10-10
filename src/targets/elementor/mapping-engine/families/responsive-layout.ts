@@ -60,6 +60,8 @@ export interface ResponsiveEnumFamilyMeta {
   requiredEntryFields?: readonly RequiredEntryField[];
   /** Enabling writes emitted before the field writes, without a conflict check. */
   leadingWrites?: ReadonlyArray<{ settingKey: string; value: unknown }>;
+  /** Entry-dependent enabling writes emitted before the field writes, with a conflict check. */
+  conditionWrites?: (entry: EnumEntry) => ReadonlyArray<{ settingKey: string; value: unknown; conflictMessage: string }>;
   extraIssueSuffixes?: readonly string[];
   precondition?: (settings: Record<string, unknown>) => FamilyPreconditionFailure | null;
   /** Bound target kind (default: generated containers). */
@@ -128,7 +130,13 @@ export function responsiveEnumFamily(meta: ResponsiveEnumFamilyMeta): ContainerP
         conflictSubject: write.settingKey,
         checkConflict: false,
       }));
-      return [...leading, ...meta.fields
+      const conditions = (meta.conditionWrites?.(entry) ?? []).map((write): FamilySettingWrite => ({
+        settingKey: write.settingKey,
+        value: write.value,
+        conflictSubject: write.settingKey,
+        conflictMessage: write.conflictMessage,
+      }));
+      return [...leading, ...conditions, ...meta.fields
         .filter((spec) => entry[spec.field] !== undefined)
         .map((spec): FamilySettingWrite => {
           const value = entry[spec.field] as never;

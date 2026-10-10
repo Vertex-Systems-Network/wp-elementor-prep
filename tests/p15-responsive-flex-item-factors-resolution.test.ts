@@ -118,6 +118,12 @@ describe('P15 exact source-bound responsive container flex-item factors', () => 
       desktopShrinkSettingKey: '_flex_shrink',
       tabletShrinkSettingKey: '_flex_shrink_tablet',
       mobileShrinkSettingKey: '_flex_shrink_mobile',
+      sizeControlName: 'size',
+      sizeRequiredValue: 'custom',
+      tabletSizeSettingKey: '_flex_size_tablet',
+      mobileSizeSettingKey: '_flex_size_mobile',
+      controlsStackSourcePath: 'includes/base/controls-stack.php',
+      controlsStackSourceBlobSha: '00b280e518b89925c8f85a059b34136177ff3d4d',
       acceptedFactors: [0, 1],
     });
     expect(result.status).toBe('RESPONSIVE_FLEX_ITEM_FACTORS_RESOLVED');
@@ -136,6 +142,10 @@ describe('P15 exact source-bound responsive container flex-item factors', () => 
     expect(settings._flex_grow_mobile).toBe(0);
     expect(settings._flex_shrink_tablet).toBe(0);
     expect(settings._flex_shrink_mobile).toBe(1);
+    // Recovery M2.3c: Elementor applies a device's grow/shrink only when that device's size is custom.
+    expect(settings._flex_size_tablet).toBe('custom');
+    expect(settings._flex_size_mobile).toBe('custom');
+    expect(settings).not.toHaveProperty('_flex_size');
     expect(settings.flex_align_items).toBe('flex-start');
 
     expect(result.resolvedFactors).toEqual([{
@@ -153,6 +163,15 @@ describe('P15 exact source-bound responsive container flex-item factors', () => 
     expect(result.targetCompatibilityClaim).toBe(false);
     expect(result.productionAcceptance).toBe(false);
     expect(result.downloadEnabled).toBe(false);
+  });
+
+  it('keeps a desktop flex size from M2.3 sizing and adds only the device custom size', () => {
+    const source = sourceDocument();
+    const nested = (source.nodes[0] as unknown as { children: Record<string, unknown>[] }).children[0]!;
+    nested.sizing = { widthPx: 240, flex: 'fixed' };
+    const result = resolveP15ElementorResponsiveContainerFlexItemFactors(source, manifest(source, [{ sourceNodeId: 'nested', tabletGrow: 1 }]));
+    expect(result.status).toBe('RESPONSIVE_FLEX_ITEM_FACTORS_RESOLVED');
+    expect(settingsOf(result.template?.content[0]?.elements[0])).toMatchObject({ _flex_size: 'none', _flex_size_tablet: 'custom', _flex_grow_tablet: 1 });
   });
 
   it('binds nested containers and omits unspecified control/breakpoint values', () => {
@@ -179,6 +198,9 @@ describe('P15 exact source-bound responsive container flex-item factors', () => 
     expect(nestedSettings).not.toHaveProperty('_flex_grow_mobile');
     expect(nestedSettings).not.toHaveProperty('_flex_shrink_tablet');
     expect(nestedSettings._flex_shrink_mobile).toBe(0);
+    expect(nestedSettings._flex_size_mobile).toBe('custom');
+    expect(nestedSettings).not.toHaveProperty('_flex_size_tablet');
+    expect(rootSettings).not.toHaveProperty('_flex_size_mobile');
     expect(result.resolvedFactors).toEqual([{
       sourceNodeId: 'nested',
       tabletGrow: null,

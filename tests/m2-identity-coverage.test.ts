@@ -23,6 +23,7 @@ describe('neutral IR identity covers every generation-affecting optional fact', 
     ['paragraph spacing', doc(text({ paragraphSpacingPx: 4 }))],
     ['text style review', doc(text({ styleReviews: [{ reasonCode: 'STROKE_REQUIRES_REVIEW', detail: 'x' }] }))],
     ['container style review', doc(text(), { styleReviews: [{ reasonCode: 'EFFECT_REQUIRES_REVIEW', detail: 'x' }] })],
+    ['container sizing', doc(text(), { sizing: { widthPx: 1440 } })],
   ];
   it.each(variants)('%s changes the fingerprint', (_name, variant) => {
     expect(fingerprintP15NeutralExportDocument(variant)).not.toBe(fingerprintP15NeutralExportDocument(base));
