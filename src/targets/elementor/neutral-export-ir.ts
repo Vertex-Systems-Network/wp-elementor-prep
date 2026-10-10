@@ -1,3 +1,12 @@
+import {
+  paragraphProblems,
+  paragraphSpacingValid,
+  typographyProblems,
+  type P15NeutralParagraph,
+  type P15NeutralTypography,
+} from './typography';
+
+export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
 export const P15_NEUTRAL_EXPORT_MAX_DEPTH = 64;
@@ -59,6 +68,11 @@ export interface P15NeutralTextNode extends P15NeutralNodeBase {
   kind: 'text';
   text: string;
   align?: P15NeutralTextAlignment;
+  /** The node's dominant typography (recovery M2.1). */
+  typography?: P15NeutralTypography;
+  /** Paragraphs of styled spans; when present they join to exactly `text`. */
+  paragraphs?: P15NeutralParagraph[];
+  paragraphSpacingPx?: number;
   styleReviews?: P15NeutralStyleReview[];
 }
 
@@ -119,6 +133,7 @@ export type P15NeutralExportValidationCode =
   | 'P15_IR_RADIUS_INVALID'
   | 'P15_IR_ALIGNMENT_INVALID'
   | 'P15_IR_TEXT_INVALID'
+  | 'P15_IR_TYPOGRAPHY_INVALID'
   | 'P15_IR_HEADING_LEVEL_INVALID'
   | 'P15_IR_URL_INVALID'
   | 'P15_IR_BOOLEAN_INVALID'
@@ -342,8 +357,15 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'text') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'styleReviews'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'styleReviews'], path, state);
     validateText(value.text, `${path}.text`, state);
+    const typographyIssues = [
+      ...(value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)),
+      ...(value.paragraphs === undefined ? [] : paragraphProblems(value.paragraphs, value.text, `${path}.paragraphs`)),
+      ...(value.paragraphSpacingPx === undefined || paragraphSpacingValid(value.paragraphSpacingPx) ? []
+        : [{ path: `${path}.paragraphSpacingPx`, message: 'Paragraph spacing must be 0..1000 px with at most two decimals.' }]),
+    ];
+    for (const issue of typographyIssues) pushIssue(state, 'P15_IR_TYPOGRAPHY_INVALID', issue.path, issue.message);
     if (value.styleReviews !== undefined) validateStyleReviews(value.styleReviews, `${path}.styleReviews`, state);
     if (value.align !== undefined && !['start', 'center', 'end', 'justify'].includes(String(value.align))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.align`, 'Text alignment must be start, center, end or justify.');

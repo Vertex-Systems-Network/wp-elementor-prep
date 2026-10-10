@@ -6,6 +6,7 @@ import type {
   P15NeutralTextNode,
 } from '../neutral-export-ir';
 import type { ElementorElementV04, ElementorTemplateV04, ElementorWidgetV04 } from '../template-v04';
+import { textEditorHtml } from '../typography';
 import type { FamilyTarget } from './property-family';
 import { exactKeys, hasOwn, isRecord } from './shared-validation';
 
@@ -136,23 +137,15 @@ export function headingBaseSettingsMatch(node: P15NeutralHeadingNode, settings: 
   return desktopAlignMatches(node.align, settings);
 }
 
-function escapeTextEditorHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
 /** The Text Editor `editor` HTML the v3 generator emits for a neutral text node. */
-export function expectedTextEditorHtml(value: string): string {
-  const normalized = value.replace(/\r\n?/g, '\n');
-  return `<p>${escapeTextEditorHtml(normalized).replaceAll('\n', '<br>')}</p>`;
+/** The generator's exact text-editor HTML for a node (shared with `v3-template-generator.ts`). */
+export function expectedTextEditorHtml(value: string, paragraphs?: P15NeutralTextNode['paragraphs']): string {
+  return textEditorHtml(value, paragraphs);
 }
 
 export function textEditorBaseSettingsMatch(node: P15NeutralTextNode, settings: Record<string, unknown>): boolean {
-  if (settings.editor !== expectedTextEditorHtml(node.text)) return false;
+  if (settings.editor !== expectedTextEditorHtml(node.text, node.paragraphs)) return false;
   return desktopAlignMatches(node.align, settings);
 }
 

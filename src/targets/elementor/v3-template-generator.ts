@@ -1,3 +1,4 @@
+import { textEditorHtml, textEditorTypographySettings } from './typography';
 import {
   buildElementorTemplateCandidateArtifact,
   type ElementorTemplateCandidateArtifactV1,
@@ -121,19 +122,7 @@ function mapButtonAlignment(value: P15NeutralAlignment | undefined): 'left' | 'c
   return value;
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
-function textEditorHtml(value: string): string {
-  const normalized = value.replace(/\r\n?/g, '\n');
-  return `<p>${escapeHtml(normalized).replaceAll('\n', '<br>')}</p>`;
-}
 
 function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 {
   const settings: Record<string, unknown> = {
@@ -186,10 +175,11 @@ function headingWidget(node: P15NeutralHeadingNode, state: GenerationState): Ele
 
 function textEditorWidget(node: P15NeutralTextNode, state: GenerationState): ElementorWidgetV04 {
   const settings: Record<string, unknown> = {
-    editor: textEditorHtml(node.text),
+    editor: textEditorHtml(node.text, node.paragraphs),
   };
   const align = mapTextAlignment(node.align);
   if (align !== undefined) settings.align = align;
+  Object.assign(settings, textEditorTypographySettings(node.typography, node.paragraphSpacingPx));
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
