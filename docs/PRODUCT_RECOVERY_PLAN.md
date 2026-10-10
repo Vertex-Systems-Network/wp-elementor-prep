@@ -8,7 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M1 — Table-driven Elementor mapping engine** (M0 accepted: PR #895, exact head `e8672b0` 10/10 checks green, merged as `f18240e`)
-> - Next task: **M1.8** (collapse the wrapper contracts), then **M1.7** (M1 sync and milestone acceptance)
+> - Next task: **M1.7** (M1 sync and milestone acceptance); the LOC bar needs a user decision (see the M1 acceptance notes)
+> - M1.8 is done (generic contract types; layer 9.3k lines).
 > - Last completed task: **M1.6** (one export pipeline shared by the plugin and the CLI `export:elementor`). M1.5 merged in PR #899 as `2623da1`.
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
@@ -266,7 +267,11 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - `tests/m1-export-pipeline.test.ts` proves: the no-manifest output equals the generator's output; a manifest's output equals the page composition's; refusals give no candidate; the bundled CLI behaves end to end; and the bundled plugin contains the engine and the page composition. The release package builds and is byte-reproducible locally.
 - [ ] **M1.7** M1 sync. Update `verify-readme-progress.mjs` so it no longer reads deleted resolver files, and replace those checks with engine-table checks.
 
-- [ ] **M1.8** Collapse the wrapper contracts. `mapping-engine/contract-types.ts` gives every engine family generic manifest, result, status and issue-code types (`FamilyManifestV1`, `FamilyResultV1`, `FamilyStatus`, `FamilyIssueCode`) and one typed `familyApi` resolve/serialize pair. Each wrapper keeps its exported names as aliases and drops its hand-written interfaces, with no runtime change and every golden identical.
+- [x] **M1.8** _(done 2026-10-09; commits `9604ce2`, `0b8065c`, `1c82a50`, `1783fe6`)_ Collapse the wrapper contracts. `mapping-engine/contract-types.ts` gives every engine family generic manifest, result, status and issue-code types (`FamilyManifestV1`, `FamilyResultV1`, `FamilyStatus`, `FamilyIssueCode`) and one typed `familyApi` resolve/serialize pair. Each wrapper keeps its exported names as aliases and drops its hand-written interfaces, with no runtime change and every golden identical.
+
+  - Result: all 50 engine wrappers plus button-icon-basics now declare one `Contract` and alias their exported Manifest, IssueCode, Issue, Status and Result names. No hand-written envelope interfaces remain. Issue-code unions only widen to the shared suffix set. Every golden is identical, and the full suite (335 files, 1979 tests), typecheck, `status:verify` and the builds pass.
+  - The README verifier now accepts a `<flag>: false` fragment when the family declares that flag in its `FamilyAuthorityFlag` contract. It separately checks that the shared engine refuses authority-inflated manifests and results. A negative check (removing a declared flag) fails the verifier as expected.
+  - Measured after M1.8: the wrappers are 6.8k lines (2.6k family tables/constants/codecs, 1.5k domain types and Contract blocks, 1.0k comments, 1.0k evidence, 0.7k imports) plus the 2.6k engine, so 9.3k total, down from 11.7k before M1.8 and about 36.0k at the audited baseline. **The revised under-7k bar is not met.** The remaining reduction is only available from evidence, comments or dense code. Acceptance is pending a user decision.
 
 *M1 acceptance:* all existing P15 behaviour tests pass through the engine. No family wrapper carries hand-written manifest/result/issue/status interfaces, and the resolution layer is under 7k LOC with every Elementor evidence block, message and comment kept. The bundle contains the engine.
   - Revised 2026-10-09 by user decision. The original bar was "under 5k LOC". Measured at M1.7, the layer was about 11.7k lines (from about 36.0k at the audited baseline): 2.5k engine, plus 9.5k of wrappers made of 2.9k duplicated types, 2.1k constants/codecs/messages, 1.2k comments, 1.2k family tables, 1.0k evidence, 0.6k functions and 0.6k imports. Under 5k could only be reached by stripping evidence, messages and comments or packing code into dense lines, which repeats the defect pattern M1.5 removed.
