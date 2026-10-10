@@ -137,8 +137,6 @@ export function headingBaseSettingsMatch(node: P15NeutralHeadingNode, settings: 
   return desktopAlignMatches(node.align, settings);
 }
 
-
-/** The Text Editor `editor` HTML the v3 generator emits for a neutral text node. */
 /** The generator's exact text-editor HTML for a node (shared with `v3-template-generator.ts`). */
 export function expectedTextEditorHtml(value: string, paragraphs?: P15NeutralTextNode['paragraphs']): string {
   return textEditorHtml(value, paragraphs);

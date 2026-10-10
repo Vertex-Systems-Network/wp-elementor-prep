@@ -62,6 +62,8 @@ export interface P15NeutralHeadingNode extends P15NeutralNodeBase {
   text: string;
   level: P15NeutralHeadingLevel;
   align?: P15NeutralAlignment;
+  /** Uniform heading typography (recovery M2.2a). */
+  typography?: P15NeutralTypography;
 }
 
 export interface P15NeutralTextNode extends P15NeutralNodeBase {
@@ -345,8 +347,11 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'heading') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography'], path, state);
     validateText(value.text, `${path}.text`, state);
+    for (const issue of value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)) {
+      pushIssue(state, 'P15_IR_TYPOGRAPHY_INVALID', issue.path, issue.message);
+    }
     if (!['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'].includes(String(value.level))) {
       pushIssue(state, 'P15_IR_HEADING_LEVEL_INVALID', `${path}.level`, 'Heading level is outside the bounded Elementor heading vocabulary.');
     }

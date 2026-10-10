@@ -1,4 +1,4 @@
-import { textEditorHtml, textEditorTypographySettings } from './typography';
+import { textEditorHtml, textEditorTypographySettings, typographyGroupSettings } from './typography';
 import {
   buildElementorTemplateCandidateArtifact,
   type ElementorTemplateCandidateArtifactV1,
@@ -163,6 +163,7 @@ function headingWidget(node: P15NeutralHeadingNode, state: GenerationState): Ele
   };
   const align = mapTextAlignment(node.align);
   if (align !== undefined) settings.align = align;
+  Object.assign(settings, typographyGroupSettings(node.typography, 'title_color'));
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',

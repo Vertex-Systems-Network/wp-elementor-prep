@@ -155,6 +155,16 @@ export function textEditorHtml(text: string, paragraphs?: readonly P15NeutralPar
 
 /** The text-editor settings a node's typography and paragraph spacing write. */
 export function textEditorTypographySettings(typography: P15NeutralTypography | undefined, paragraphSpacingPx: number | undefined): Record<string, unknown> {
+  const settings = typographyGroupSettings(typography, 'text_color');
+  if (paragraphSpacingPx !== undefined) settings.paragraph_spacing = elementorPxSlider(paragraphSpacingPx);
+  return settings;
+}
+
+/**
+ * The `typography` group (with the `custom` starter) plus the widget's colour control: `text_color` for the
+ * text editor, `title_color` for the heading (heading.php blob 5b193f958ba34d8d4a24d165a9114f9bc3ef2561).
+ */
+export function typographyGroupSettings(typography: P15NeutralTypography | undefined, colorSettingKey: 'text_color' | 'title_color'): Record<string, unknown> {
   const settings: Record<string, unknown> = {};
   if (typography !== undefined) {
     const group: Array<[string, unknown]> = [
@@ -172,8 +182,7 @@ export function textEditorTypographySettings(typography: P15NeutralTypography | 
       settings.typography_typography = 'custom';
       for (const [field, value] of written) settings[`typography_${field}`] = value;
     }
-    if (typography.colorHex !== undefined) settings.text_color = typography.colorHex;
+    if (typography.colorHex !== undefined) settings[colorSettingKey] = typography.colorHex;
   }
-  if (paragraphSpacingPx !== undefined) settings.paragraph_spacing = elementorPxSlider(paragraphSpacingPx);
   return settings;
 }

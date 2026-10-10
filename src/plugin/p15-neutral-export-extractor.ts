@@ -26,6 +26,7 @@ import {
   typographyProblems,
 } from '../targets/elementor/typography';
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
+import { detectP15Headings } from '../targets/elementor/semantic-detection';
 import type { P15ElementorV3GenerationResult } from '../targets/elementor/v3-template-generator';
 
 export const P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION = 'p15-figma-neutral-export-extractor-v3' as const;
@@ -623,13 +624,21 @@ export function extractP15NeutralExportDocumentFromFigmaFrame(
       ? [extracted]
       : [];
 
-  return {
+  // Recovery M2.2: deterministic semantic detection on the extracted IR, with layer names as secondary hints.
+  const names = new Map<string, string>();
+  collectLayerNames(frame, names);
+  return detectP15Headings({
     schemaVersion: 1,
     irVersion: P15_NEUTRAL_EXPORT_IR_VERSION,
     title: frame.name,
     documentType,
     nodes,
-  };
+  }, names);
+}
+
+function collectLayerNames(node: SceneNode, names: Map<string, string>): void {
+  if (typeof node.name === 'string') names.set(node.id, node.name);
+  for (const child of childNodes(node)) collectLayerNames(child, names);
 }
 
 export function buildP15ElementorV1PreviewFromFigmaFrame(
