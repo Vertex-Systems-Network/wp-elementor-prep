@@ -1,4 +1,12 @@
 import { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH, validP15AbsoluteUrl, validP15LinkUrl } from './link-url';
+import { gradientProblems, type P15NeutralGradient } from './container-gradient';
+import { boxShadowProblems, type P15NeutralBoxShadow } from './container-shadow';
+import {
+  borderProblems,
+  cornerRadiiProblems,
+  type P15NeutralBorder,
+  type P15NeutralCornerRadii,
+} from './container-visual-style';
 import {
   buttonSizingProblems,
   containerSizingProblems,
@@ -16,6 +24,9 @@ import {
 } from './typography';
 
 export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
+export type { P15NeutralGradient } from './container-gradient';
+export type { P15NeutralBoxShadow } from './container-shadow';
+export type { P15NeutralBorder, P15NeutralBoxPx, P15NeutralCornerRadii } from './container-visual-style';
 export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
@@ -63,6 +74,16 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   justifyContent?: P15NeutralJustification;
   backgroundColorHex?: string;
   cornerRadiusPx?: number;
+  /** Non-uniform corner radii (recovery M2.4a); exclusive with `cornerRadiusPx`. */
+  cornerRadiiPx?: P15NeutralCornerRadii;
+  /** One solid INSIDE border (recovery M2.4a); `paddingPx` is already the CSS padding inside it. */
+  border?: P15NeutralBorder;
+  /** The frame clips visible content (`overflow: hidden`, recovery M2.4a). */
+  clipsContent?: true;
+  /** Two-stop linear or radial gradient background (recovery M2.4c); exclusive with `backgroundColorHex`. */
+  gradient?: P15NeutralGradient;
+  /** One drop or inner shadow (recovery M2.4b). */
+  boxShadow?: P15NeutralBoxShadow;
   /** Exact width, minimum height and flex-item sizing (recovery M2.3a). */
   sizing?: P15NeutralContainerSizing;
   styleReviews?: P15NeutralStyleReview[];
@@ -183,6 +204,7 @@ export type P15NeutralExportValidationCode =
   | 'P15_IR_TEXT_INVALID'
   | 'P15_IR_TYPOGRAPHY_INVALID'
   | 'P15_IR_SIZING_INVALID'
+  | 'P15_IR_STYLE_INVALID'
   | 'P15_IR_HEADING_LEVEL_INVALID'
   | 'P15_IR_URL_INVALID'
   | 'P15_IR_BOOLEAN_INVALID'
@@ -349,7 +371,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'sizing', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -373,6 +395,18 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     if (value.justifyContent !== undefined && !['start', 'center', 'end', 'space-between', 'space-around', 'space-evenly'].includes(String(value.justifyContent))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.justifyContent`, 'justifyContent is outside the bounded neutral justification vocabulary.');
     }
+    const styleIssues = [
+      ...(value.border === undefined ? [] : borderProblems(value.border, `${path}.border`)),
+      ...(value.cornerRadiiPx === undefined ? [] : cornerRadiiProblems(value.cornerRadiiPx, `${path}.cornerRadiiPx`, P15_NEUTRAL_EXPORT_MAX_RADIUS_PX)),
+      ...(value.cornerRadiiPx !== undefined && value.cornerRadiusPx !== undefined
+        ? [{ path: `${path}.cornerRadiiPx`, message: 'cornerRadiiPx and cornerRadiusPx are exclusive.' }] : []),
+      ...(value.boxShadow === undefined ? [] : boxShadowProblems(value.boxShadow, `${path}.boxShadow`)),
+      ...(value.gradient === undefined ? [] : gradientProblems(value.gradient, `${path}.gradient`)),
+      ...(value.gradient !== undefined && value.backgroundColorHex !== undefined
+        ? [{ path: `${path}.gradient`, message: 'gradient and backgroundColorHex are exclusive.' }] : []),
+      ...(value.clipsContent !== undefined && value.clipsContent !== true ? [{ path: `${path}.clipsContent`, message: 'clipsContent must be true when provided.' }] : []),
+    ];
+    for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);
     if (value.sizing !== undefined) {
       for (const issue of containerSizingProblems(value.sizing, `${path}.sizing`)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
     }

@@ -150,6 +150,9 @@ describe('P15 bounded container visual fidelity', () => {
 
     expect(firstReason({
       fills: [{ type: 'GRADIENT_LINEAR', visible: true }],
+    })).toBe('GRADIENT_REQUIRES_REVIEW'); // recovery M2.4c maps exact gradients; a gradient without readable stops stays review
+    expect(firstReason({
+      fills: [{ type: 'GRADIENT_ANGULAR', visible: true }],
     })).toBe('UNSUPPORTED_CONTAINER_FILL_REQUIRES_REVIEW');
 
     expect(firstReason({
