@@ -2,12 +2,12 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: 3198acb5f6cc9ebc468a006b1bc739587013f75d
-observed_main_sha_semantics: exact_main_tip_observed_after_pr_902_merge_2026_10_10
+observed_main_sha: d1988bdec4788eba1c2e5dc9e4506a91aed26290
+observed_main_sha_semantics: exact_main_tip_observed_after_pr_903_merge_2026_10_10
 observed_main_branch: main
 active_issue: 846
-active_pr: null
-active_branch: claude/friendly-turing-acwu53
+active_pr: 904
+active_branch: claude/busy-ride-1vztlb
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
 current_milestone: product_recovery_m2_full_single_frame_extraction
@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
 last_completed_milestone: product_recovery_m1_accepted_pr_900_merged_47ada79
-exact_next_safe_action: execute_recovery_task_M2_3_sizing
+exact_next_safe_action: merge_toolchain_pr_904_then_push_recovery_M2_5_and_continue_M2_6
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
@@ -92,11 +92,11 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M2
-  next_task: M2.5
-  last_completed_task: M2.4d
+  next_task: M2.6
+  last_completed_task: M2.5
   blocked_tasks: []
-  branch: claude/friendly-turing-acwu53
-  open_pr: null
+  branch: claude/busy-ride-1vztlb
+  open_pr: 904
   resume_rule: take_first_unchecked_task_of_active_milestone_then_tick_advance_both_pointers_commit_push
   doc_sync_cadence: plan_and_current_state_per_task_canonical_docs_once_per_milestone
   milestone_order: [M0, M1, M2, M3, M4, M5, M6, M7, M8, M9]

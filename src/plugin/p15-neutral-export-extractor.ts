@@ -29,7 +29,7 @@ import {
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
 import { deriveP15Gradient, type P15NeutralGradient } from '../targets/elementor/container-gradient';
 import { deriveP15BoxShadow } from '../targets/elementor/container-shadow';
-import { deriveP15ContainerBorder, deriveP15CornerRadii, type P15NeutralCornerRadii } from '../targets/elementor/container-visual-style';
+import { deriveP15ContainerBorder, deriveP15CornerRadii, type P15NeutralBoxPx, type P15NeutralCornerRadii } from '../targets/elementor/container-visual-style';
 import {
   deriveP15ContainerSizing,
   deriveP15WidgetSizing,
@@ -37,6 +37,11 @@ import {
   type P15ContainerSizingFacts,
   type P15FigmaSizingMode,
 } from '../targets/elementor/container-sizing';
+import {
+  ABSOLUTE_POSITION_REVIEW,
+  assignP15StackOrder,
+  deriveP15AbsolutePosition,
+} from '../targets/elementor/absolute-position';
 import { validP15LinkUrl } from '../targets/elementor/link-url';
 import { detectP15Buttons, detectP15Headings } from '../targets/elementor/semantic-detection';
 import type { P15ElementorV3GenerationResult } from '../targets/elementor/v3-template-generator';
@@ -545,6 +550,13 @@ function extractText(node: SceneNode, parent: ParentLayout): P15NeutralExportNod
 
 type ParentLayout = P15ContainerSizingFacts['parent'];
 
+/** Parent geometry an absolute child is placed in (recovery M2.5). */
+interface AbsoluteParent {
+  width: unknown;
+  height: unknown;
+  borderPx?: P15NeutralBoxPx;
+}
+
 function sizingMode(value: unknown): P15FigmaSizingMode | undefined {
   return value === 'FIXED' || value === 'HUG' || value === 'FILL' ? value : undefined;
 }
@@ -638,7 +650,8 @@ function extractContainer(
   const children: P15NeutralExportNode[] = [];
   for (const child of childNodes(node)) {
     if (!visible(child)) continue;
-    const extracted = extractNode(child, depth + 1, state, { direction, alignItems });
+    const extracted = extractNode(child, depth + 1, state, { direction, alignItems },
+      { width: record.width, height: record.height, ...(bordered.border ? { borderPx: bordered.border.widthPx } : {}) });
     if (state.boundsExceeded) break;
     if (extracted) children.push(extracted);
   }
@@ -648,6 +661,9 @@ function extractContainer(
     children.map((child) => (child.kind === 'container' || child.kind === 'text' || child.kind === 'heading' ? child.sizing : undefined)),
   );
   if (distribution) styleReviews.push(distribution);
+  // Recovery M2.5: siblings from the first absolute child on carry their layer order; the stack stays inside this container.
+  const stack = assignP15StackOrder(children);
+  if (stack.review) styleReviews.push(stack.review);
 
   const container: P15NeutralContainerNode = {
     kind: 'container',
@@ -665,8 +681,9 @@ function extractContainer(
     ...(clips ? { clipsContent: true as const } : {}),
     ...(shadowed.shadow !== undefined ? { boxShadow: shadowed.shadow } : {}),
     ...(sized.sizing ? { sizing: sized.sizing } : {}),
+    ...(stack.stacked ? { zIndex: 0 } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
-    children,
+    children: stack.children,
   };
   return container;
 }
@@ -726,11 +743,53 @@ function placeDivider(divider: P15NeutralDividerNode, node: SceneNode, parent: P
   return { ...rest, ...(fill || widthPx === undefined ? {} : { widthPx }), ...(fill || align === undefined ? {} : { align }) };
 }
 
+/**
+ * An absolute child (recovery M2.5): a text or Auto Layout frame placed by MIN/MAX offsets from its parent.
+ * Anything without an exact placement, and any other node type, stays an explicit review.
+ */
+function extractAbsolute(
+  node: SceneNode,
+  depth: number,
+  state: ExtractionState,
+  parent: ParentLayout,
+  absoluteParent: AbsoluteParent | undefined,
+): P15NeutralExportNode {
+  if (absoluteParent === undefined || (node.type !== 'TEXT' && !isContainerLike(node))) {
+    return review(node, ABSOLUTE_POSITION_REVIEW, `An absolute ${node.type} has no exact Elementor placement; only text and Auto Layout frames map.`);
+  }
+  const record = recordOf(node);
+  const placed = deriveP15AbsolutePosition({
+    x: record.x,
+    y: record.y,
+    width: record.width,
+    height: record.height,
+    rotation: record.rotation,
+    constraints: record.constraints,
+    parentWidth: absoluteParent.width,
+    parentHeight: absoluteParent.height,
+    ...(absoluteParent.borderPx ? { parentBorderPx: absoluteParent.borderPx } : {}),
+  });
+  if (placed.review) return review(node, placed.review.reasonCode, placed.review.detail);
+  const position = placed.position!;
+  if (node.type === 'TEXT') {
+    const text = extractText(node, parent);
+    return text.kind === 'text' ? { ...text, position } : text;
+  }
+  const container = extractContainer(node, depth, state, parent);
+  if (container.kind !== 'container') return container;
+  // The default Container width is 100% of its parent; an absolute frame needs its own exact or hugging width.
+  if (container.sizing?.widthPx === undefined && container.sizing?.hugWidth === undefined) {
+    return review(node, ABSOLUTE_POSITION_REVIEW, 'An absolute frame needs a fixed or hugging width to keep its size outside the flow.');
+  }
+  return { ...container, position };
+}
+
 function extractNode(
   node: SceneNode,
   depth: number,
   state: ExtractionState,
   parent: ParentLayout = null,
+  absoluteParent?: AbsoluteParent,
 ): P15NeutralExportNode | null {
   if (!visible(node)) return null;
   if (depth > P15_NEUTRAL_EXPORT_MAX_DEPTH) {
@@ -742,12 +801,10 @@ function extractNode(
     state.boundsExceeded = 'NODE_LIMIT_EXCEEDED';
     return null;
   }
-  if (isAbsolute(node)) {
-    return review(node, 'ABSOLUTE_POSITION_REQUIRES_REVIEW', 'Absolute-positioned Figma content requires an explicit target mapping decision.');
-  }
   if (hasImageFill(node) && !isContainerLike(node)) {
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
+  if (isAbsolute(node)) return extractAbsolute(node, depth, state, parent, absoluteParent);
   if (node.type === 'TEXT') return extractText(node, parent);
   const rule = extractRule(node, parent?.direction ?? null);
   if (rule) return rule.kind === 'divider' ? placeDivider(rule, node, parent) : rule;

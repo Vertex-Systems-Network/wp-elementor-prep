@@ -1,5 +1,6 @@
 import { sha256Hex } from '../../core/sha256';
 import { canonicalButtonSizing, canonicalContainerSizing } from './container-sizing';
+import { canonicalAbsolutePosition, type P15NeutralAbsolutePosition } from './absolute-position';
 import { canonicalGradient } from './container-gradient';
 import { canonicalBoxShadow } from './container-shadow';
 import { canonicalBorder, canonicalCornerRadii } from './container-visual-style';
@@ -71,9 +72,16 @@ function canonicalContainer(node: P15NeutralContainerNode): Record<string, unkno
   if (node.boxShadow !== undefined) value.boxShadow = canonicalBoxShadow(node.boxShadow);
   if (node.gradient !== undefined) value.gradient = canonicalGradient(node.gradient);
   if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
+  canonicalPlacement(value, node);
   canonicalStyleReviews(value, node.styleReviews);
   value.children = node.children.map(canonicalNode);
   return value;
+}
+
+/** Absolute placement and layer order (recovery M2.5); absent fields leave the identity unchanged. */
+function canonicalPlacement(value: Record<string, unknown>, node: { position?: P15NeutralAbsolutePosition; zIndex?: number }): void {
+  if (node.position !== undefined) value.position = canonicalAbsolutePosition(node.position);
+  if (node.zIndex !== undefined) value.zIndex = node.zIndex;
 }
 
 function canonicalHeading(node: P15NeutralHeadingNode): Record<string, unknown> {
@@ -87,6 +95,7 @@ function canonicalHeading(node: P15NeutralHeadingNode): Record<string, unknown> 
   if (node.typography !== undefined) value.typography = canonicalTypography(node.typography);
   if (node.href !== undefined) value.href = node.href;
   if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
+  canonicalPlacement(value, node);
   return value;
 }
 
@@ -102,6 +111,7 @@ function canonicalText(node: P15NeutralTextNode): Record<string, unknown> {
   if (node.paragraphSpacingPx !== undefined) value.paragraphSpacingPx = node.paragraphSpacingPx;
   if (node.href !== undefined) value.href = node.href;
   if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
+  canonicalPlacement(value, node);
   canonicalStyleReviews(value, node.styleReviews);
   return value;
 }
@@ -123,6 +133,7 @@ function canonicalButton(node: P15NeutralButtonNode): Record<string, unknown> {
   }
   if (node.cornerRadiusPx !== undefined) value.cornerRadiusPx = node.cornerRadiusPx;
   if (node.sizing !== undefined) value.sizing = canonicalButtonSizing(node.sizing);
+  canonicalPlacement(value, node);
   canonicalStyleReviews(value, node.styleReviews);
   return value;
 }
@@ -154,7 +165,7 @@ function canonicalNode(node: P15NeutralExportNode): Record<string, unknown> {
   if (node.kind === 'image') return canonicalImage(node);
   if (node.kind === 'divider') {
     return { kind: 'divider', sourceNodeId: node.sourceNodeId, weightPx: node.weightPx, colorHex: node.colorHex,
-      ...(node.widthPx === undefined ? {} : { widthPx: node.widthPx }), ...(node.align === undefined ? {} : { align: node.align }) };
+      ...(node.widthPx === undefined ? {} : { widthPx: node.widthPx }), ...(node.align === undefined ? {} : { align: node.align }), ...(node.zIndex === undefined ? {} : { zIndex: node.zIndex }) };
   }
   if (node.kind === 'spacer') return { kind: 'spacer', sourceNodeId: node.sourceNodeId, heightPx: node.heightPx };
   return canonicalReview(node);
