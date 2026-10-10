@@ -125,8 +125,8 @@ describe('recovery M2.1 — Elementor text-editor typography', () => {
   });
 
   it('renders paragraphs as <p> and styled runs as escaped <span style>, matching the family binding helper', () => {
-    const document = source({ text: 'A <b> & bold\n\nEnd line', paragraphs: [
-      { spans: [{ text: 'A <b> & ' }, { text: 'bold', style: { fontWeight: '700', colorHex: '#ff0000' } }] }, { spans: [] }, { spans: [{ text: 'End line' }] },
+    const document = source({ text: 'A <b> & bold\n\nEnd\u2028line', paragraphs: [
+      { spans: [{ text: 'A <b> & ' }, { text: 'bold', style: { fontWeight: '700', colorHex: '#ff0000' } }] }, { spans: [] }, { spans: [{ text: 'End\u2028line' }] },
     ] });
     const settings = widgetSettings(document);
     expect(settings.editor).toBe('<p>A &lt;b&gt; &amp; <span style="font-weight: 700; color: #ff0000">bold</span></p><p></p><p>End<br>line</p>');

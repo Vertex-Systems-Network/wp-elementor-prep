@@ -7,9 +7,27 @@ import {
   type ElementorTemplateValidationIssue,
 } from './template-v04';
 
+/** The base registry: button, heading, image and text-editor. */
 export const ELEMENTOR_CAPABILITY_REGISTRY_VERSION = 'elementor-core-widget-capabilities-v1' as const;
+/** v1 plus the divider and spacer widgets (recovery M2.2c). */
+export const ELEMENTOR_CAPABILITY_REGISTRY_V2_VERSION = 'elementor-core-widget-capabilities-v2' as const;
+export type ElementorCapabilityRegistryVersion = typeof ELEMENTOR_CAPABILITY_REGISTRY_VERSION | typeof ELEMENTOR_CAPABILITY_REGISTRY_V2_VERSION;
+export const ELEMENTOR_CAPABILITY_REGISTRY_VERSIONS: readonly ElementorCapabilityRegistryVersion[] = [
+  ELEMENTOR_CAPABILITY_REGISTRY_VERSION,
+  ELEMENTOR_CAPABILITY_REGISTRY_V2_VERSION,
+];
+const V2_ONLY_WIDGETS: readonly string[] = ['divider', 'spacer'];
 
-export type ElementorDocumentedCoreWidgetV1 = 'button' | 'heading' | 'image' | 'text-editor';
+/**
+ * The lowest registry version that covers a template's widgets. A template using only the v1 widgets is
+ * stamped v1, so its candidate identity is byte-identical to before the v2 registry existed and every
+ * retained evidence bound to it stays valid; a template using divider or spacer is stamped v2.
+ */
+export function capabilityRegistryVersionFor(widgetTypes: readonly string[]): ElementorCapabilityRegistryVersion {
+  return widgetTypes.some((type) => V2_ONLY_WIDGETS.includes(type)) ? ELEMENTOR_CAPABILITY_REGISTRY_V2_VERSION : ELEMENTOR_CAPABILITY_REGISTRY_VERSION;
+}
+
+export type ElementorDocumentedCoreWidgetV1 = 'button' | 'divider' | 'heading' | 'image' | 'spacer' | 'text-editor';
 export type ElementorWidgetCompatibilityClass = 'DOCUMENTED_CORE' | 'REVIEW_REQUIRED';
 
 export interface ElementorCoreWidgetCapabilityV1 {
@@ -29,6 +47,13 @@ export const ELEMENTOR_CORE_WIDGET_CAPABILITIES_V1: readonly ElementorCoreWidget
     evidence: 'ELEMENTOR_WIDGET_ELEMENT_DOCUMENTATION',
   }),
   Object.freeze({
+    widgetType: 'divider',
+    classification: 'DOCUMENTED_CORE',
+    generationEnabled: false,
+    availabilityClaim: false,
+    evidence: 'ELEMENTOR_WIDGET_ELEMENT_DOCUMENTATION',
+  }),
+  Object.freeze({
     widgetType: 'heading',
     classification: 'DOCUMENTED_CORE',
     generationEnabled: false,
@@ -37,6 +62,13 @@ export const ELEMENTOR_CORE_WIDGET_CAPABILITIES_V1: readonly ElementorCoreWidget
   }),
   Object.freeze({
     widgetType: 'image',
+    classification: 'DOCUMENTED_CORE',
+    generationEnabled: false,
+    availabilityClaim: false,
+    evidence: 'ELEMENTOR_WIDGET_ELEMENT_DOCUMENTATION',
+  }),
+  Object.freeze({
+    widgetType: 'spacer',
     classification: 'DOCUMENTED_CORE',
     generationEnabled: false,
     availabilityClaim: false,
@@ -70,7 +102,7 @@ export interface ElementorWidgetInventoryEntry {
 
 export interface ElementorTemplateCapabilityReport {
   schemaVersion: 1;
-  registryVersion: typeof ELEMENTOR_CAPABILITY_REGISTRY_VERSION;
+  registryVersion: ElementorCapabilityRegistryVersion;
   targetContractVersion: typeof ELEMENTOR_TEMPLATE_CONTRACT_VERSION;
   targetCompatibilityClaim: false;
   generationEnabled: false;
@@ -197,7 +229,7 @@ export function assessElementorTemplateCapabilities(value: unknown): ElementorTe
 
   return {
     schemaVersion: 1,
-    registryVersion: ELEMENTOR_CAPABILITY_REGISTRY_VERSION,
+    registryVersion: capabilityRegistryVersionFor(entries.map((entry) => entry.widgetType)),
     targetContractVersion: ELEMENTOR_TEMPLATE_CONTRACT_VERSION,
     targetCompatibilityClaim: false,
     generationEnabled: false,

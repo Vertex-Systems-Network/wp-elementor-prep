@@ -1,3 +1,4 @@
+import { validP15LinkUrl } from './link-url';
 import { elementorPxSlider } from './mapping-engine/codecs';
 
 /**
@@ -43,6 +44,8 @@ export interface P15NeutralTypography {
 export interface P15NeutralTextSpan {
   text: string;
   style?: P15NeutralTypography;
+  /** A link on this run only (recovery M2.2c). */
+  href?: string;
 }
 
 export interface P15NeutralParagraph {
@@ -98,12 +101,13 @@ export function paragraphProblems(value: unknown, text: unknown, path: string): 
     }
     paragraph.spans.forEach((span: unknown, spanIndex: number) => {
       const spanAt = `${at}.spans[${spanIndex}]`;
-      if (!record(span) || Object.keys(span).some((key) => key !== 'text' && key !== 'style')
+      if (!record(span) || Object.keys(span).some((key) => key !== 'text' && key !== 'style' && key !== 'href')
         || typeof span.text !== 'string' || span.text.length === 0 || /[\r\n]/.test(span.text)) {
         problems.push({ path: spanAt, message: 'Each span must be { text, style? } with non-empty text and no hard line breaks.' });
         return;
       }
       if (span.style !== undefined) problems.push(...typographyProblems(span.style, `${spanAt}.style`));
+      if (span.href !== undefined && !validP15LinkUrl(span.href)) problems.push({ path: `${spanAt}.href`, message: 'Span link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.' });
     });
   });
   if (problems.length === 0 && typeof text === 'string' && paragraphText(value as P15NeutralParagraph[]) !== text.replace(/\r\n?/g, '\n')) {
@@ -143,14 +147,16 @@ export function spanCss(style: P15NeutralTypography): string {
  * Text-editor HTML. Without paragraphs this is the original single `<p>` with `<br>` line breaks; with
  * paragraphs each one is its own `<p>`, and only styled spans are wrapped in `<span style>`.
  */
-export function textEditorHtml(text: string, paragraphs?: readonly P15NeutralParagraph[]): string {
+export function textEditorHtml(text: string, paragraphs?: readonly P15NeutralParagraph[], href?: string): string {
+  const link = (content: string, url: string | undefined): string =>
+    (url === undefined || content === '' ? content : `<a href="${escapeHtml(url)}">${content}</a>`);
   if (paragraphs === undefined) {
-    return `<p>${escapeHtml(text.replace(/\r\n?/g, '\n')).replaceAll('\n', '<br>')}</p>`;
+    return `<p>${link(escapeHtml(text.replace(/\r\n?/g, '\n')).replaceAll('\n', '<br>'), href)}</p>`;
   }
-  return paragraphs.map((paragraph) => `<p>${paragraph.spans.map((span) => {
-    const content = escapeHtml(span.text).replaceAll(' ', '<br>');
-    return span.style === undefined ? content : `<span style="${spanCss(span.style)}">${content}</span>`;
-  }).join('')}</p>`).join('');
+  return paragraphs.map((paragraph) => `<p>${link(paragraph.spans.map((span) => {
+    const content = escapeHtml(span.text).replaceAll('\u2028', '<br>');
+    return link(span.style === undefined ? content : `<span style="${spanCss(span.style)}">${content}</span>`, span.href);
+  }).join(''), href)}</p>`).join('');
 }
 
 /** The text-editor settings a node's typography and paragraph spacing write. */

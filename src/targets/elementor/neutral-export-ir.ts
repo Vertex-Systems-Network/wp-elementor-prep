@@ -1,3 +1,4 @@
+import { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH, validP15AbsoluteUrl, validP15LinkUrl } from './link-url';
 import {
   paragraphProblems,
   paragraphSpacingValid,
@@ -7,11 +8,11 @@ import {
 } from './typography';
 
 export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
+export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
 export const P15_NEUTRAL_EXPORT_MAX_DEPTH = 64;
 export const P15_NEUTRAL_EXPORT_MAX_TEXT_LENGTH = 20_000;
-export const P15_NEUTRAL_EXPORT_MAX_URL_LENGTH = 4_096;
 export const P15_NEUTRAL_EXPORT_MAX_SPACING_PX = 4_096;
 export const P15_NEUTRAL_EXPORT_MAX_RADIUS_PX = 4_096;
 export const P15_NEUTRAL_EXPORT_MAX_STYLE_REVIEWS = 16;
@@ -64,6 +65,8 @@ export interface P15NeutralHeadingNode extends P15NeutralNodeBase {
   align?: P15NeutralAlignment;
   /** Uniform heading typography (recovery M2.2a). */
   typography?: P15NeutralTypography;
+  /** One link for the whole heading (recovery M2.2c). */
+  href?: string;
 }
 
 export interface P15NeutralTextNode extends P15NeutralNodeBase {
@@ -74,6 +77,8 @@ export interface P15NeutralTextNode extends P15NeutralNodeBase {
   typography?: P15NeutralTypography;
   /** Paragraphs of styled spans; when present they join to exactly `text`. */
   paragraphs?: P15NeutralParagraph[];
+  /** One link for the whole text (recovery M2.2c). */
+  href?: string;
   paragraphSpacingPx?: number;
   styleReviews?: P15NeutralStyleReview[];
 }
@@ -104,12 +109,28 @@ export interface P15NeutralReviewNode extends P15NeutralNodeBase {
   detail: string;
 }
 
+/** A solid horizontal rule (recovery M2.2c), from a Figma line or thin rectangle. */
+export interface P15NeutralDividerNode extends P15NeutralNodeBase {
+  kind: 'divider';
+  weightPx: number;
+  colorHex: string;
+  widthPx?: number;
+}
+
+/** Vertical empty space (recovery M2.2c), from an empty, unpainted Figma leaf frame or rectangle. */
+export interface P15NeutralSpacerNode extends P15NeutralNodeBase {
+  kind: 'spacer';
+  heightPx: number;
+}
+
 export type P15NeutralExportNode =
   | P15NeutralContainerNode
   | P15NeutralHeadingNode
   | P15NeutralTextNode
   | P15NeutralButtonNode
   | P15NeutralImageNode
+  | P15NeutralDividerNode
+  | P15NeutralSpacerNode
   | P15NeutralReviewNode;
 
 /** Schema version remains 1; irVersion v2 adds bounded optional container style facts. */
@@ -239,21 +260,8 @@ function validatePadding(value: unknown, path: string, state: ValidationState): 
   }
 }
 
-function validAbsoluteUrl(value: string, allowedProtocols: readonly string[]): boolean {
-  if (value.length === 0 || value.length > P15_NEUTRAL_EXPORT_MAX_URL_LENGTH) return false;
-  try {
-    const parsed = new URL(value);
-    return allowedProtocols.includes(parsed.protocol);
-  } catch {
-    return false;
-  }
-}
-
-function validButtonUrl(value: string): boolean {
-  if (value.length === 0 || value.length > P15_NEUTRAL_EXPORT_MAX_URL_LENGTH) return false;
-  if (value.startsWith('/') || value.startsWith('#')) return !/[\u0000-\u001f\u007f]/.test(value);
-  return validAbsoluteUrl(value, ['https:', 'http:', 'mailto:', 'tel:']);
-}
+const validAbsoluteUrl = validP15AbsoluteUrl;
+const validButtonUrl = validP15LinkUrl;
 
 function validateOptionalBoolean(record: Record<string, unknown>, key: string, path: string, state: ValidationState): void {
   if (record[key] !== undefined && typeof record[key] !== 'boolean') {
@@ -352,7 +360,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'heading') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography', 'href'], path, state);
+    if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Heading link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
     for (const issue of value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)) {
       pushIssue(state, 'P15_IR_TYPOGRAPHY_INVALID', issue.path, issue.message);
@@ -367,7 +376,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'text') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'styleReviews'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'href', 'styleReviews'], path, state);
+    if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Text link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
     const typographyIssues = [
       ...(value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)),
@@ -416,6 +426,28 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     }
     if (value.attachmentId !== undefined && (!Number.isSafeInteger(value.attachmentId) || Number(value.attachmentId) < 0)) {
       pushIssue(state, 'P15_IR_ATTACHMENT_ID_INVALID', `${path}.attachmentId`, 'attachmentId must be a safe non-negative integer when provided.');
+    }
+    return;
+  }
+
+  if (kind === 'divider') {
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'weightPx', 'colorHex', 'widthPx'], path, state);
+    if (typeof value.weightPx !== 'number' || !Number.isFinite(value.weightPx) || value.weightPx < 0.1 || value.weightPx > 10) {
+      pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.weightPx`, 'Divider weight must be 0.1..10 px (the Elementor 4.2.4 weight slider range).');
+    }
+    if (typeof value.colorHex !== 'string' || !/^#[0-9a-f]{6}$/.test(value.colorHex)) {
+      pushIssue(state, 'P15_IR_COLOR_INVALID', `${path}.colorHex`, 'Divider colour must be lowercase #rrggbb.');
+    }
+    if (value.widthPx !== undefined && !(validSpacing(value.widthPx) && value.widthPx > 0)) {
+      pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.widthPx`, `Divider width must be within 0-${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px.`);
+    }
+    return;
+  }
+
+  if (kind === 'spacer') {
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'heightPx'], path, state);
+    if (!validSpacing(value.heightPx) || value.heightPx === 0) {
+      pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.heightPx`, `Spacer height must be within 0-${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px and non-zero.`);
     }
     return;
   }

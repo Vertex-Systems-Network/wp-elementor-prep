@@ -86,6 +86,7 @@ export function detectP15Headings(document: P15NeutralExportDocumentV1, names: R
       level,
       ...(node.align === undefined ? {} : { align: node.align as 'start' | 'center' | 'end' }),
       ...(node.typography === undefined ? {} : { typography: node.typography }),
+      ...(node.href === undefined ? {} : { href: node.href }),
     };
   });
   return { ...document, nodes: rewrite(document.nodes) };
@@ -126,6 +127,7 @@ export function detectP15Buttons(document: P15NeutralExportDocumentV1, names: Re
       kind: 'button',
       sourceNodeId: node.sourceNodeId,
       text: label.text,
+      ...(label.href === undefined ? {} : { url: label.href }),
       ...(label.typography === undefined ? {} : { typography: label.typography }),
       backgroundColorHex: node.backgroundColorHex!,
       paddingPx: node.paddingPx!,

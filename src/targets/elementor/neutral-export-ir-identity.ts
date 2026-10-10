@@ -33,7 +33,8 @@ function canonicalTypography(value: P15NeutralTypography): Record<string, unknow
 
 function canonicalParagraphs(paragraphs: readonly P15NeutralParagraph[]): unknown[] {
   return paragraphs.map((paragraph) => ({
-    spans: paragraph.spans.map((span) => ({ text: span.text, ...(span.style === undefined ? {} : { style: canonicalTypography(span.style) }) })),
+    spans: paragraph.spans.map((span) => ({ text: span.text, ...(span.style === undefined ? {} : { style: canonicalTypography(span.style) }),
+      ...(span.href === undefined ? {} : { href: span.href }) })),
   }));
 }
 
@@ -74,6 +75,7 @@ function canonicalHeading(node: P15NeutralHeadingNode): Record<string, unknown> 
   };
   if (node.align !== undefined) value.align = node.align;
   if (node.typography !== undefined) value.typography = canonicalTypography(node.typography);
+  if (node.href !== undefined) value.href = node.href;
   return value;
 }
 
@@ -87,6 +89,7 @@ function canonicalText(node: P15NeutralTextNode): Record<string, unknown> {
   if (node.typography !== undefined) value.typography = canonicalTypography(node.typography);
   if (node.paragraphs !== undefined) value.paragraphs = canonicalParagraphs(node.paragraphs);
   if (node.paragraphSpacingPx !== undefined) value.paragraphSpacingPx = node.paragraphSpacingPx;
+  if (node.href !== undefined) value.href = node.href;
   canonicalStyleReviews(value, node.styleReviews);
   return value;
 }
@@ -135,6 +138,11 @@ function canonicalNode(node: P15NeutralExportNode): Record<string, unknown> {
   if (node.kind === 'text') return canonicalText(node);
   if (node.kind === 'button') return canonicalButton(node);
   if (node.kind === 'image') return canonicalImage(node);
+  if (node.kind === 'divider') {
+    return { kind: 'divider', sourceNodeId: node.sourceNodeId, weightPx: node.weightPx, colorHex: node.colorHex,
+      ...(node.widthPx === undefined ? {} : { widthPx: node.widthPx }) };
+  }
+  if (node.kind === 'spacer') return { kind: 'spacer', sourceNodeId: node.sourceNodeId, heightPx: node.heightPx };
   return canonicalReview(node);
 }
 

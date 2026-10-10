@@ -61,6 +61,8 @@ function nativeReason(node: Exclude<P15NeutralExportNode, P15NeutralReviewNode>)
   if (node.kind === 'heading') return 'P15_NATIVE_HEADING';
   if (node.kind === 'text') return 'P15_NATIVE_TEXT_EDITOR';
   if (node.kind === 'button') return 'P15_NATIVE_BUTTON';
+  if (node.kind === 'divider') return 'P15_NATIVE_DIVIDER';
+  if (node.kind === 'spacer') return 'P15_NATIVE_SPACER';
   return 'P15_NATIVE_IMAGE';
 }
 

@@ -26,6 +26,7 @@ import {
   typographyProblems,
 } from '../targets/elementor/typography';
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
+import { validP15LinkUrl } from '../targets/elementor/link-url';
 import { detectP15Buttons, detectP15Headings } from '../targets/elementor/semantic-detection';
 import type { P15ElementorV3GenerationResult } from '../targets/elementor/v3-template-generator';
 
@@ -375,17 +376,32 @@ function parseContainerRadius(node: SceneNode): ParsedContainerStyle<number> {
 
 
 const TEXT_SEGMENT_FIELDS = ['fontName', 'fontWeight', 'fontStyle', 'fontSize', 'lineHeight', 'letterSpacing',
-  'textCase', 'textDecoration', 'fills'] as const;
+  'textCase', 'textDecoration', 'fills', 'hyperlink'] as const;
 const TYPOGRAPHY_FIELDS = ['fontFamily', 'fontWeight', 'fontStyle', 'fontSizePx', 'lineHeightPx', 'letterSpacingPx',
   'textTransform', 'textDecoration', 'colorHex'] as const;
 type TextSegment = Pick<StyledTextSegment, typeof TEXT_SEGMENT_FIELDS[number] | 'characters'>;
 const round2 = (value: number): number => Math.round(value * 100) / 100;
 
 interface TextTypographyExtraction {
+  href?: string;
   typography?: P15NeutralTypography;
   paragraphs?: P15NeutralParagraph[];
   paragraphSpacingPx?: number;
   reviews: P15NeutralStyleReview[];
+}
+
+/** A segment's URL link; a link to a Figma node or an unsafe URL becomes a review, never a guess. */
+function segmentLink(segment: TextSegment, reviews: Map<string, P15NeutralStyleReview>): string | undefined {
+  const target = segment.hyperlink;
+  if (target === null || target === undefined) return undefined;
+  if (target.type === 'URL' && validP15LinkUrl(target.value)) return target.value;
+  const reasonCode = target.type === 'NODE' ? 'LINK_TO_NODE_REQUIRES_REVIEW' : 'LINK_URL_REQUIRES_REVIEW';
+  if (!reviews.has(reasonCode)) {
+    reviews.set(reasonCode, { reasonCode, detail: target.type === 'NODE'
+      ? 'A link to another Figma node has no page URL to export.'
+      : 'Only bounded http(s), mailto, tel, root-relative or fragment links are exported.' });
+  }
+  return undefined;
 }
 
 /** One Figma text segment as explicit neutral typography; unmappable facts become reviews, never guesses. */
@@ -431,7 +447,10 @@ function extractTextTypography(node: TextNode): TextTypographyExtraction {
   if (typeof node.getStyledTextSegments !== 'function') return { reviews: [] };
   const reviews = new Map<string, P15NeutralStyleReview>();
   const segments = (node.getStyledTextSegments([...TEXT_SEGMENT_FIELDS]) as TextSegment[])
-    .map((segment) => ({ text: segment.characters, style: segmentTypography(segment, reviews) }));
+    .map((segment) => ({ text: segment.characters, style: segmentTypography(segment, reviews), href: segmentLink(segment, reviews) }));
+  // One URL across the whole text is a node link; anything else keeps links on their own runs.
+  const links = new Set(segments.map((segment) => segment.href ?? null));
+  const nodeHref = links.size === 1 && !links.has(null) ? [...links][0]! : undefined;
   const weights = new Map<string, number>();
   for (const segment of segments) {
     const key = JSON.stringify(segment.style);
@@ -458,14 +477,16 @@ function extractTextTypography(node: TextNode): TextTypographyExtraction {
   const paragraphs: P15NeutralParagraph[] = [{ spans: [] }];
   for (const segment of segments) {
     const style = difference(segment.style);
+    const href = nodeHref === undefined ? segment.href : undefined;
     segment.text.replace(/\r\n?/g, '\n').split('\n').forEach((part, index) => {
       if (index > 0) paragraphs.push({ spans: [] });
-      if (part.length > 0) paragraphs[paragraphs.length - 1]!.spans.push({ text: part, ...(style ? { style } : {}) });
+      if (part.length > 0) paragraphs[paragraphs.length - 1]!.spans.push({ text: part, ...(style ? { style } : {}), ...(href ? { href } : {}) });
     });
   }
-  const mixed = paragraphs.some((paragraph) => paragraph.spans.some((span) => span.style !== undefined));
+  const mixed = paragraphs.some((paragraph) => paragraph.spans.some((span) => span.style !== undefined || span.href !== undefined));
   const spacing = typeof node.paragraphSpacing === 'number' && node.paragraphSpacing > 0 ? round2(node.paragraphSpacing) : undefined;
   const result: TextTypographyExtraction = { reviews: [...reviews.values()] };
+  if (nodeHref !== undefined) result.href = nodeHref;
   if (Object.keys(dominant).length > 0) result.typography = dominant;
   if (paragraphs.length > 1 || mixed) result.paragraphs = paragraphs;
   if (spacing !== undefined) result.paragraphSpacingPx = spacing;
@@ -496,6 +517,7 @@ function extractText(node: SceneNode): P15NeutralExportNode {
     sourceNodeId: node.id,
     text: node.characters,
     align,
+    ...(typography.href !== undefined ? { href: typography.href } : {}),
     ...(typography.typography ? { typography: typography.typography } : {}),
     ...(typography.paragraphs ? { paragraphs: typography.paragraphs } : {}),
     ...(typography.paragraphSpacingPx !== undefined ? { paragraphSpacingPx: typography.paragraphSpacingPx } : {}),
@@ -548,7 +570,7 @@ function extractContainer(
   const children: P15NeutralExportNode[] = [];
   for (const child of childNodes(node)) {
     if (!visible(child)) continue;
-    const extracted = extractNode(child, depth + 1, state);
+    const extracted = extractNode(child, depth + 1, state, mode === 'VERTICAL' ? 'column' : 'row');
     if (state.boundsExceeded) break;
     if (extracted) children.push(extracted);
   }
@@ -569,10 +591,50 @@ function extractContainer(
   return container;
 }
 
+/**
+ * Dividers and spacers (recovery M2.2c). A horizontal LINE with one solid opaque stroke, or a thin solid
+ * RECTANGLE (height <= 10px and width >= 4x height), becomes a divider. An empty leaf FRAME or RECTANGLE with
+ * no visible fills, strokes or effects inside a vertical Auto Layout becomes a spacer of its height (the
+ * Elementor spacer is vertical only, so in a row it stays whatever it was). Anything else returns null and
+ * keeps its previous handling; a line that cannot map exactly becomes an explicit review.
+ */
+function extractRule(node: SceneNode, parentDirection: 'row' | 'column' | null): P15NeutralExportNode | null {
+  const record = recordOf(node);
+  const hasChildren = childNodes(node).length > 0;
+  const fills = visiblePaintList(record.fills);
+  const strokes = visiblePaintList(record.strokes);
+  const effects = visiblePaintList(record.effects);
+  const width = typeof record.width === 'number' && Number.isFinite(record.width) ? record.width : null;
+  const height = typeof record.height === 'number' && Number.isFinite(record.height) ? record.height : null;
+  const plain = unmappedVisualFactReviews(node).length === 0;
+  if (node.type === 'LINE') {
+    const weight = typeof record.strokeWeight === 'number' ? Math.round(record.strokeWeight * 100) / 100 : null;
+    const color = strokes !== 'MIXED' && strokes.length === 1 ? solidOpaqueHex(strokes[0]) : null;
+    const rotated = record.rotation !== undefined && record.rotation !== 0;
+    if (rotated || color === null || weight === null || weight < 0.1 || weight > 10 || width === null || width <= 0
+      || width > P15_NEUTRAL_EXPORT_MAX_SPACING_PX || effects === 'MIXED' || effects.length > 0) {
+      return review(node, 'DIVIDER_REQUIRES_REVIEW', 'Only a horizontal line with one opaque solid stroke of 0.1-10px maps to a divider.');
+    }
+    return { kind: 'divider', sourceNodeId: node.id, weightPx: weight, colorHex: color, widthPx: Math.round(width * 100) / 100 };
+  }
+  if (hasChildren || (node.type !== 'RECTANGLE' && node.type !== 'FRAME') || width === null || height === null) return null;
+  if (fills !== 'MIXED' && fills.length === 0 && strokes !== 'MIXED' && strokes.length === 0 && effects !== 'MIXED' && effects.length === 0
+    && plain && parentDirection === 'column' && height > 0 && height <= P15_NEUTRAL_EXPORT_MAX_SPACING_PX) {
+    return { kind: 'spacer', sourceNodeId: node.id, heightPx: Math.round(height * 100) / 100 };
+  }
+  if (node.type === 'RECTANGLE' && fills !== 'MIXED' && fills.length === 1 && strokes !== 'MIXED' && strokes.length === 0 && plain
+    && height >= 0.1 && height <= 10 && width >= height * 4 && width <= P15_NEUTRAL_EXPORT_MAX_SPACING_PX) {
+    const color = solidOpaqueHex(fills[0]);
+    if (color !== null) return { kind: 'divider', sourceNodeId: node.id, weightPx: Math.round(height * 100) / 100, colorHex: color, widthPx: Math.round(width * 100) / 100 };
+  }
+  return null;
+}
+
 function extractNode(
   node: SceneNode,
   depth: number,
   state: ExtractionState,
+  parentDirection: 'row' | 'column' | null = null,
 ): P15NeutralExportNode | null {
   if (!visible(node)) return null;
   if (depth > P15_NEUTRAL_EXPORT_MAX_DEPTH) {
@@ -591,6 +653,8 @@ function extractNode(
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
   if (node.type === 'TEXT') return extractText(node);
+  const rule = extractRule(node, parentDirection);
+  if (rule) return rule;
   if (isContainerLike(node)) {
     return extractContainer(node, depth, state);
   }

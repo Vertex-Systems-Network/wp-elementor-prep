@@ -5,7 +5,7 @@ import {
   serializeElementorTemplateCandidateArtifact,
   type ElementorTemplateCandidateArtifactV1,
 } from './candidate-artifact';
-import { ELEMENTOR_CAPABILITY_REGISTRY_VERSION } from './capability-registry';
+import { ELEMENTOR_CAPABILITY_REGISTRY_VERSIONS, type ElementorCapabilityRegistryVersion } from './capability-registry';
 import { ELEMENTOR_TEMPLATE_CONTRACT_VERSION } from './template-v04';
 
 export const ELEMENTOR_CANDIDATE_IDENTITY_VERSION = 'elementor-template-candidate-identity-v1' as const;
@@ -16,7 +16,7 @@ export interface ElementorTemplateCandidateIdentityV1 {
   identityVersion: typeof ELEMENTOR_CANDIDATE_IDENTITY_VERSION;
   candidateVersion: typeof ELEMENTOR_TEMPLATE_CANDIDATE_VERSION;
   targetContractVersion: typeof ELEMENTOR_TEMPLATE_CONTRACT_VERSION;
-  capabilityRegistryVersion: typeof ELEMENTOR_CAPABILITY_REGISTRY_VERSION;
+  capabilityRegistryVersion: ElementorCapabilityRegistryVersion;
   algorithm: 'SHA-256';
   digest: string;
 }
@@ -103,7 +103,7 @@ function snapshotIdentity(value: unknown): ElementorTemplateCandidateIdentityV1 
     || value.identityVersion !== ELEMENTOR_CANDIDATE_IDENTITY_VERSION
     || value.candidateVersion !== ELEMENTOR_TEMPLATE_CANDIDATE_VERSION
     || value.targetContractVersion !== ELEMENTOR_TEMPLATE_CONTRACT_VERSION
-    || value.capabilityRegistryVersion !== ELEMENTOR_CAPABILITY_REGISTRY_VERSION
+    || !ELEMENTOR_CAPABILITY_REGISTRY_VERSIONS.includes(value.capabilityRegistryVersion as ElementorCapabilityRegistryVersion)
     || value.algorithm !== 'SHA-256'
     || typeof value.digest !== 'string'
     || !/^sha256:[0-9a-f]{64}$/.test(value.digest)) {
@@ -115,7 +115,7 @@ function snapshotIdentity(value: unknown): ElementorTemplateCandidateIdentityV1 
     identityVersion: ELEMENTOR_CANDIDATE_IDENTITY_VERSION,
     candidateVersion: ELEMENTOR_TEMPLATE_CANDIDATE_VERSION,
     targetContractVersion: ELEMENTOR_TEMPLATE_CONTRACT_VERSION,
-    capabilityRegistryVersion: ELEMENTOR_CAPABILITY_REGISTRY_VERSION,
+    capabilityRegistryVersion: value.capabilityRegistryVersion as ElementorCapabilityRegistryVersion,
     algorithm: 'SHA-256',
     digest: value.digest,
   };
@@ -169,7 +169,7 @@ export function buildElementorTemplateCandidateIdentity(
     identityVersion: ELEMENTOR_CANDIDATE_IDENTITY_VERSION,
     candidateVersion: ELEMENTOR_TEMPLATE_CANDIDATE_VERSION,
     targetContractVersion: ELEMENTOR_TEMPLATE_CONTRACT_VERSION,
-    capabilityRegistryVersion: ELEMENTOR_CAPABILITY_REGISTRY_VERSION,
+    capabilityRegistryVersion: candidate.capabilityRegistryVersion,
     algorithm: 'SHA-256',
     digest: `sha256:${sha256Hex(inspection.serialized)}`,
   };
@@ -208,7 +208,7 @@ export function validateElementorImportValidationReceipt(
       identityVersion: ELEMENTOR_CANDIDATE_IDENTITY_VERSION,
       candidateVersion: ELEMENTOR_TEMPLATE_CANDIDATE_VERSION,
       targetContractVersion: ELEMENTOR_TEMPLATE_CONTRACT_VERSION,
-      capabilityRegistryVersion: ELEMENTOR_CAPABILITY_REGISTRY_VERSION,
+      capabilityRegistryVersion: candidate.capabilityRegistryVersion,
       algorithm: 'SHA-256',
       digest: `sha256:${sha256Hex(inspection.serialized)}`,
     };
