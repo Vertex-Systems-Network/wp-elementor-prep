@@ -27,6 +27,7 @@ import {
   typographyProblems,
 } from '../targets/elementor/typography';
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
+import { deriveP15BoxShadow } from '../targets/elementor/container-shadow';
 import { deriveP15ContainerBorder, deriveP15CornerRadii, type P15NeutralCornerRadii } from '../targets/elementor/container-visual-style';
 import {
   deriveP15ContainerSizing,
@@ -165,7 +166,7 @@ function unmappedVisualFactReviews(node: SceneNode, container = false): P15Neutr
   }
 
   const effects = visiblePaintList(record.effects);
-  if (effects === 'MIXED' || effects.length > 0) {
+  if (!container && (effects === 'MIXED' || effects.length > 0)) {
     const types = effects === 'MIXED' ? 'MIXED' : [...new Set(effects.map((effect) => String(effect.type ?? 'UNKNOWN')))].sort().join(', ');
     reviews.push({ reasonCode: 'EFFECT_REQUIRES_REVIEW', detail: `Visible Figma effects are not mapped yet and would be lost: ${types}.` });
   }
@@ -610,10 +611,11 @@ function extractContainer(
     dashPattern: record.dashPattern,
     includedInLayout: record.strokesIncludedInLayout,
   }, paddingPx);
+  const shadowed = deriveP15BoxShadow(visiblePaintList(record.effects));
   const rounded = radius.value !== undefined || radii.radii !== undefined;
   const clips = record.clipsContent === true && (childOverflowsBounds(node) || (rounded && childNodes(node).some(visible)));
   const styleReviews: P15NeutralStyleReview[] = [
-    ...[background.review, radius.review, radii.review, bordered.review]
+    ...[background.review, radius.review, radii.review, bordered.review, shadowed.review]
       .filter((entry): entry is NonNullable<typeof entry> => entry !== undefined)
       .map((entry) => ({ reasonCode: entry.reasonCode, detail: entry.detail })),
     ...unmappedVisualFactReviews(node, true),
@@ -654,6 +656,7 @@ function extractContainer(
     ...(radii.radii !== undefined ? { cornerRadiiPx: radii.radii } : {}),
     ...(bordered.border !== undefined ? { border: bordered.border } : {}),
     ...(clips ? { clipsContent: true as const } : {}),
+    ...(shadowed.shadow !== undefined ? { boxShadow: shadowed.shadow } : {}),
     ...(sized.sizing ? { sizing: sized.sizing } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
     children,

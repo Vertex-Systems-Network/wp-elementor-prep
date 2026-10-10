@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.4b** (drop/inner shadows → box-shadow)
-> - Last completed task: **M2.4a** (container borders, non-uniform radii, visible clip → overflow hidden)
+> - Next task: **M2.4c** (linear and radial gradient container backgrounds)
+> - Last completed task: **M2.4b** (one drop/inner shadow → Container box shadow)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -327,7 +327,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - `clipsContent` → `overflow: hidden` only where the clip is visible (a child extends past the frame, or a rounded frame with children); this replaces `CLIPPED_OVERFLOW_REQUIRES_REVIEW` on containers.
     - A button-named frame with a border or non-uniform radius stays an exact container with `BUTTON_DETECTION_REQUIRES_REVIEW` (the Button widget border mapping is not built yet).
     - Tests: `tests/m2-visual-borders.test.ts`.
-  - [ ] **M2.4b** Drop and inner shadows → Container `box_shadow` (one shadow; several, spread on text, or blur types → REVIEW).
+  - [x] **M2.4b** Drop and inner shadows (`src/targets/elementor/container-shadow.ts`; R0: `groups/box-shadow.php` blob `1c068c9`, `controls/box-shadow.php` blob `e55cf9a` whose own default colour `rgba(0,0,0,0.5)` proves a CSS colour string is stored). Exactly one visible DROP_SHADOW/INNER_SHADOW with normal blending → `box_shadow_box_shadow_type: yes` + `box_shadow_box_shadow` {horizontal, vertical, blur, spread, color} + position `' '`/`inset`; a translucent colour is written `rgba(r,g,b,a)` (alpha to two decimals), an opaque one `#rrggbb`. Several shadows, blurs, other blend modes, `showShadowBehindNode` and values outside -100..100 (blur 0..100) stay `EFFECT_REQUIRES_REVIEW`; text shadows stay review. Tests: `tests/m2-visual-shadows.test.ts`.
   - [ ] **M2.4c** Linear and radial gradient container backgrounds through the repaired M1.5e gradient encoding.
   - [ ] **M2.4d** Layer opacity: R0 for a core Elementor control; without an exact control it stays `LAYER_OPACITY_REQUIRES_REVIEW`.
 - [ ] **M2.5** Absolutely positioned children map to `_position: absolute` with offsets relative to the parent, plus z-index from layer order.

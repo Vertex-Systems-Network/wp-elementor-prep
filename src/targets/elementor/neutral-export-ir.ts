@@ -1,4 +1,5 @@
 import { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH, validP15AbsoluteUrl, validP15LinkUrl } from './link-url';
+import { boxShadowProblems, type P15NeutralBoxShadow } from './container-shadow';
 import {
   borderProblems,
   cornerRadiiProblems,
@@ -22,6 +23,7 @@ import {
 } from './typography';
 
 export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
+export type { P15NeutralBoxShadow } from './container-shadow';
 export type { P15NeutralBorder, P15NeutralBoxPx, P15NeutralCornerRadii } from './container-visual-style';
 export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
@@ -76,6 +78,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   border?: P15NeutralBorder;
   /** The frame clips visible content (`overflow: hidden`, recovery M2.4a). */
   clipsContent?: true;
+  /** One drop or inner shadow (recovery M2.4b). */
+  boxShadow?: P15NeutralBoxShadow;
   /** Exact width, minimum height and flex-item sizing (recovery M2.3a). */
   sizing?: P15NeutralContainerSizing;
   styleReviews?: P15NeutralStyleReview[];
@@ -363,7 +367,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'sizing', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'sizing', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -392,6 +396,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
       ...(value.cornerRadiiPx === undefined ? [] : cornerRadiiProblems(value.cornerRadiiPx, `${path}.cornerRadiiPx`, P15_NEUTRAL_EXPORT_MAX_RADIUS_PX)),
       ...(value.cornerRadiiPx !== undefined && value.cornerRadiusPx !== undefined
         ? [{ path: `${path}.cornerRadiiPx`, message: 'cornerRadiiPx and cornerRadiusPx are exclusive.' }] : []),
+      ...(value.boxShadow === undefined ? [] : boxShadowProblems(value.boxShadow, `${path}.boxShadow`)),
       ...(value.clipsContent !== undefined && value.clipsContent !== true ? [{ path: `${path}.clipsContent`, message: 'clipsContent must be true when provided.' }] : []),
     ];
     for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);
