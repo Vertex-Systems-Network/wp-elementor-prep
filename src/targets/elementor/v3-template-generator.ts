@@ -1,3 +1,4 @@
+import { textEditorHtml, textEditorTypographySettings, typographyGroupSettings } from './typography';
 import {
   buildElementorTemplateCandidateArtifact,
   type ElementorTemplateCandidateArtifactV1,
@@ -8,6 +9,8 @@ import {
   type P15NeutralAlignment,
   type P15NeutralButtonNode,
   type P15NeutralContainerNode,
+  type P15NeutralDividerNode,
+  type P15NeutralSpacerNode,
   type P15NeutralExportDocumentV1,
   type P15NeutralExportNode,
   type P15NeutralExportValidationResult,
@@ -121,19 +124,7 @@ function mapButtonAlignment(value: P15NeutralAlignment | undefined): 'left' | 'c
   return value;
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
 
-function textEditorHtml(value: string): string {
-  const normalized = value.replace(/\r\n?/g, '\n');
-  return `<p>${escapeHtml(normalized).replaceAll('\n', '<br>')}</p>`;
-}
 
 function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 {
   const settings: Record<string, unknown> = {
@@ -174,6 +165,9 @@ function headingWidget(node: P15NeutralHeadingNode, state: GenerationState): Ele
   };
   const align = mapTextAlignment(node.align);
   if (align !== undefined) settings.align = align;
+  Object.assign(settings, typographyGroupSettings(node.typography, 'title_color'));
+  // heading.php `link` URL control (recovery M2.2c); the same link shape the Button widget writes.
+  if (node.href !== undefined) settings.link = { url: node.href, is_external: '', nofollow: '', custom_attributes: '' };
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -186,10 +180,11 @@ function headingWidget(node: P15NeutralHeadingNode, state: GenerationState): Ele
 
 function textEditorWidget(node: P15NeutralTextNode, state: GenerationState): ElementorWidgetV04 {
   const settings: Record<string, unknown> = {
-    editor: textEditorHtml(node.text),
+    editor: textEditorHtml(node.text, node.paragraphs, node.href),
   };
   const align = mapTextAlignment(node.align);
   if (align !== undefined) settings.align = align;
+  Object.assign(settings, textEditorTypographySettings(node.typography, node.paragraphSpacingPx));
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -212,10 +207,40 @@ function buttonWidget(node: P15NeutralButtonNode, state: GenerationState): Eleme
       custom_attributes: '',
     };
   }
+  // Button style (recovery M2.2b), with the exact keys the Button families already prove.
+  Object.assign(settings, typographyGroupSettings(node.typography, 'button_text_color'));
+  if (node.backgroundColorHex !== undefined) {
+    settings.background_background = 'classic';
+    settings.background_color = node.backgroundColorHex;
+  }
+  if (node.paddingPx !== undefined) settings.text_padding = pxDimensions(node.paddingPx);
+  if (node.cornerRadiusPx !== undefined) {
+    settings.border_radius = pxDimensions({ top: node.cornerRadiusPx, right: node.cornerRadiusPx, bottom: node.cornerRadiusPx, left: node.cornerRadiusPx });
+  }
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
     widgetType: 'button',
+    isInner: false,
+    settings,
+    elements: [],
+  };
+}
+
+/**
+ * Divider and spacer widgets (recovery M2.2c). Elementor 4.2.4 `includes/widgets/divider.php`
+ * (blob 7dfbea27f5ed34d76780c3b0a520b1f7d0ac3cc1): `style` 'solid', `color`, `weight` px slider (1..10, step 0.1)
+ * and `width` slider; `includes/widgets/spacer.php` (blob b1c14d71c8f5c941f9faea89eb99c0fc84ed8103): `space` px slider.
+ */
+function ruleWidget(node: P15NeutralDividerNode | P15NeutralSpacerNode, state: GenerationState): ElementorWidgetV04 {
+  const slider = (size: number) => ({ unit: 'px', size, sizes: [] });
+  const settings: Record<string, unknown> = node.kind === 'spacer'
+    ? { space: slider(node.heightPx) }
+    : { style: 'solid', weight: slider(node.weightPx), color: node.colorHex, ...(node.widthPx === undefined ? {} : { width: slider(node.widthPx) }) };
+  return {
+    id: stableElementorId(node.kind, node.sourceNodeId, state),
+    elType: 'widget',
+    widgetType: node.kind,
     isInner: false,
     settings,
     elements: [],
@@ -268,6 +293,7 @@ function mapNode(
   }
   if (node.kind === 'button') return buttonWidget(node, state);
   if (node.kind === 'image') return imageWidget(node, state);
+  if (node.kind === 'divider' || node.kind === 'spacer') return ruleWidget(node, state);
 
   pushStyleReviews(node.sourceNodeId, node.styleReviews, state);
   const container: ElementorContainerV04 = {

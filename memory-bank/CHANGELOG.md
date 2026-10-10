@@ -1,6 +1,6 @@
 # Changelog
 
-## 2026-10-10 — Recovery M1 (table-driven Elementor mapping engine) implemented
+## 2026-10-10 — Recovery M1 (table-driven Elementor mapping engine) accepted (PR #900, `47ada79`)
 
 - **Engine:** one family engine for 54 container and widget families, chained families (`FamilyChain`), one ordered composer with single key ownership and chained steps, and a page composition (`composeP15ElementorPage`).
 - **One export path:** `export-pipeline.ts` is shared by the plugin preview/download and the new CLI `export:elementor`; the plugin bundle contains the engine.

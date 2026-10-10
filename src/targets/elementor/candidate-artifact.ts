@@ -1,5 +1,6 @@
 import {
   ELEMENTOR_CAPABILITY_REGISTRY_VERSION,
+  type ElementorCapabilityRegistryVersion,
   assessElementorTemplateCapabilities,
   type ElementorTemplateCapabilityReport,
 } from './capability-registry';
@@ -22,7 +23,7 @@ export interface ElementorTemplateCandidateArtifactV1 {
   schemaVersion: 1;
   candidateVersion: typeof ELEMENTOR_TEMPLATE_CANDIDATE_VERSION;
   targetContractVersion: typeof ELEMENTOR_TEMPLATE_CONTRACT_VERSION;
-  capabilityRegistryVersion: typeof ELEMENTOR_CAPABILITY_REGISTRY_VERSION;
+  capabilityRegistryVersion: ElementorCapabilityRegistryVersion;
   status: ElementorTemplateCandidateStatus;
   targetCompatibilityClaim: false;
   productionAcceptance: false;
@@ -88,7 +89,7 @@ export function buildElementorTemplateCandidateArtifact(value: unknown): Element
     schemaVersion: 1,
     candidateVersion: ELEMENTOR_TEMPLATE_CANDIDATE_VERSION,
     targetContractVersion: ELEMENTOR_TEMPLATE_CONTRACT_VERSION,
-    capabilityRegistryVersion: ELEMENTOR_CAPABILITY_REGISTRY_VERSION,
+    capabilityRegistryVersion: capabilityReport.registryVersion,
     status,
     targetCompatibilityClaim: false,
     productionAcceptance: false,

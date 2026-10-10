@@ -1,8 +1,18 @@
+import { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH, validP15AbsoluteUrl, validP15LinkUrl } from './link-url';
+import {
+  paragraphProblems,
+  paragraphSpacingValid,
+  typographyProblems,
+  type P15NeutralParagraph,
+  type P15NeutralTypography,
+} from './typography';
+
+export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
+export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
 export const P15_NEUTRAL_EXPORT_MAX_DEPTH = 64;
 export const P15_NEUTRAL_EXPORT_MAX_TEXT_LENGTH = 20_000;
-export const P15_NEUTRAL_EXPORT_MAX_URL_LENGTH = 4_096;
 export const P15_NEUTRAL_EXPORT_MAX_SPACING_PX = 4_096;
 export const P15_NEUTRAL_EXPORT_MAX_RADIUS_PX = 4_096;
 export const P15_NEUTRAL_EXPORT_MAX_STYLE_REVIEWS = 16;
@@ -53,12 +63,23 @@ export interface P15NeutralHeadingNode extends P15NeutralNodeBase {
   text: string;
   level: P15NeutralHeadingLevel;
   align?: P15NeutralAlignment;
+  /** Uniform heading typography (recovery M2.2a). */
+  typography?: P15NeutralTypography;
+  /** One link for the whole heading (recovery M2.2c). */
+  href?: string;
 }
 
 export interface P15NeutralTextNode extends P15NeutralNodeBase {
   kind: 'text';
   text: string;
   align?: P15NeutralTextAlignment;
+  /** The node's dominant typography (recovery M2.1). */
+  typography?: P15NeutralTypography;
+  /** Paragraphs of styled spans; when present they join to exactly `text`. */
+  paragraphs?: P15NeutralParagraph[];
+  /** One link for the whole text (recovery M2.2c). */
+  href?: string;
+  paragraphSpacingPx?: number;
   styleReviews?: P15NeutralStyleReview[];
 }
 
@@ -69,6 +90,11 @@ export interface P15NeutralButtonNode extends P15NeutralNodeBase {
   openInNewTab?: boolean;
   nofollow?: boolean;
   align?: P15NeutralAlignment;
+  /** Button style detected from its Figma frame (recovery M2.2b). */
+  typography?: P15NeutralTypography;
+  backgroundColorHex?: string;
+  paddingPx?: P15NeutralPaddingPx;
+  cornerRadiusPx?: number;
 }
 
 export interface P15NeutralImageNode extends P15NeutralNodeBase {
@@ -83,12 +109,28 @@ export interface P15NeutralReviewNode extends P15NeutralNodeBase {
   detail: string;
 }
 
+/** A solid horizontal rule (recovery M2.2c), from a Figma line or thin rectangle. */
+export interface P15NeutralDividerNode extends P15NeutralNodeBase {
+  kind: 'divider';
+  weightPx: number;
+  colorHex: string;
+  widthPx?: number;
+}
+
+/** Vertical empty space (recovery M2.2c), from an empty, unpainted Figma leaf frame or rectangle. */
+export interface P15NeutralSpacerNode extends P15NeutralNodeBase {
+  kind: 'spacer';
+  heightPx: number;
+}
+
 export type P15NeutralExportNode =
   | P15NeutralContainerNode
   | P15NeutralHeadingNode
   | P15NeutralTextNode
   | P15NeutralButtonNode
   | P15NeutralImageNode
+  | P15NeutralDividerNode
+  | P15NeutralSpacerNode
   | P15NeutralReviewNode;
 
 /** Schema version remains 1; irVersion v2 adds bounded optional container style facts. */
@@ -119,6 +161,7 @@ export type P15NeutralExportValidationCode =
   | 'P15_IR_RADIUS_INVALID'
   | 'P15_IR_ALIGNMENT_INVALID'
   | 'P15_IR_TEXT_INVALID'
+  | 'P15_IR_TYPOGRAPHY_INVALID'
   | 'P15_IR_HEADING_LEVEL_INVALID'
   | 'P15_IR_URL_INVALID'
   | 'P15_IR_BOOLEAN_INVALID'
@@ -217,21 +260,8 @@ function validatePadding(value: unknown, path: string, state: ValidationState): 
   }
 }
 
-function validAbsoluteUrl(value: string, allowedProtocols: readonly string[]): boolean {
-  if (value.length === 0 || value.length > P15_NEUTRAL_EXPORT_MAX_URL_LENGTH) return false;
-  try {
-    const parsed = new URL(value);
-    return allowedProtocols.includes(parsed.protocol);
-  } catch {
-    return false;
-  }
-}
-
-function validButtonUrl(value: string): boolean {
-  if (value.length === 0 || value.length > P15_NEUTRAL_EXPORT_MAX_URL_LENGTH) return false;
-  if (value.startsWith('/') || value.startsWith('#')) return !/[\u0000-\u001f\u007f]/.test(value);
-  return validAbsoluteUrl(value, ['https:', 'http:', 'mailto:', 'tel:']);
-}
+const validAbsoluteUrl = validP15AbsoluteUrl;
+const validButtonUrl = validP15LinkUrl;
 
 function validateOptionalBoolean(record: Record<string, unknown>, key: string, path: string, state: ValidationState): void {
   if (record[key] !== undefined && typeof record[key] !== 'boolean') {
@@ -330,8 +360,12 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'heading') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography', 'href'], path, state);
+    if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Heading link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
+    for (const issue of value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)) {
+      pushIssue(state, 'P15_IR_TYPOGRAPHY_INVALID', issue.path, issue.message);
+    }
     if (!['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p'].includes(String(value.level))) {
       pushIssue(state, 'P15_IR_HEADING_LEVEL_INVALID', `${path}.level`, 'Heading level is outside the bounded Elementor heading vocabulary.');
     }
@@ -342,8 +376,16 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'text') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'styleReviews'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'href', 'styleReviews'], path, state);
+    if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Text link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
+    const typographyIssues = [
+      ...(value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)),
+      ...(value.paragraphs === undefined ? [] : paragraphProblems(value.paragraphs, value.text, `${path}.paragraphs`)),
+      ...(value.paragraphSpacingPx === undefined || paragraphSpacingValid(value.paragraphSpacingPx) ? []
+        : [{ path: `${path}.paragraphSpacingPx`, message: 'Paragraph spacing must be 0..1000 px with at most two decimals.' }]),
+    ];
+    for (const issue of typographyIssues) pushIssue(state, 'P15_IR_TYPOGRAPHY_INVALID', issue.path, issue.message);
     if (value.styleReviews !== undefined) validateStyleReviews(value.styleReviews, `${path}.styleReviews`, state);
     if (value.align !== undefined && !['start', 'center', 'end', 'justify'].includes(String(value.align))) {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.align`, 'Text alignment must be start, center, end or justify.');
@@ -352,8 +394,20 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'button') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'url', 'openInNewTab', 'nofollow', 'align'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'url', 'openInNewTab', 'nofollow', 'align',
+      'typography', 'backgroundColorHex', 'paddingPx', 'cornerRadiusPx'], path, state);
     validateText(value.text, `${path}.text`, state, 2_000);
+    for (const issue of value.typography === undefined ? [] : typographyProblems(value.typography, `${path}.typography`)) {
+      pushIssue(state, 'P15_IR_TYPOGRAPHY_INVALID', issue.path, issue.message);
+    }
+    if (value.paddingPx !== undefined) validatePadding(value.paddingPx, `${path}.paddingPx`, state);
+    if (value.backgroundColorHex !== undefined
+      && (typeof value.backgroundColorHex !== 'string' || !/^#[0-9A-F]{6}$/.test(value.backgroundColorHex))) {
+      pushIssue(state, 'P15_IR_COLOR_INVALID', `${path}.backgroundColorHex`, 'backgroundColorHex must be canonical uppercase #RRGGBB when provided.');
+    }
+    if (value.cornerRadiusPx !== undefined && !validRadius(value.cornerRadiusPx)) {
+      pushIssue(state, 'P15_IR_RADIUS_INVALID', `${path}.cornerRadiusPx`, `cornerRadiusPx must be between 0 and ${P15_NEUTRAL_EXPORT_MAX_RADIUS_PX}px.`);
+    }
     if (value.url !== undefined && (typeof value.url !== 'string' || !validButtonUrl(value.url))) {
       pushIssue(state, 'P15_IR_URL_INVALID', `${path}.url`, 'Button URL must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     }
@@ -372,6 +426,28 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     }
     if (value.attachmentId !== undefined && (!Number.isSafeInteger(value.attachmentId) || Number(value.attachmentId) < 0)) {
       pushIssue(state, 'P15_IR_ATTACHMENT_ID_INVALID', `${path}.attachmentId`, 'attachmentId must be a safe non-negative integer when provided.');
+    }
+    return;
+  }
+
+  if (kind === 'divider') {
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'weightPx', 'colorHex', 'widthPx'], path, state);
+    if (typeof value.weightPx !== 'number' || !Number.isFinite(value.weightPx) || value.weightPx < 0.1 || value.weightPx > 10) {
+      pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.weightPx`, 'Divider weight must be 0.1..10 px (the Elementor 4.2.4 weight slider range).');
+    }
+    if (typeof value.colorHex !== 'string' || !/^#[0-9a-f]{6}$/.test(value.colorHex)) {
+      pushIssue(state, 'P15_IR_COLOR_INVALID', `${path}.colorHex`, 'Divider colour must be lowercase #rrggbb.');
+    }
+    if (value.widthPx !== undefined && !(validSpacing(value.widthPx) && value.widthPx > 0)) {
+      pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.widthPx`, `Divider width must be within 0-${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px.`);
+    }
+    return;
+  }
+
+  if (kind === 'spacer') {
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'heightPx'], path, state);
+    if (!validSpacing(value.heightPx) || value.heightPx === 0) {
+      pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.heightPx`, `Spacer height must be within 0-${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px and non-zero.`);
     }
     return;
   }

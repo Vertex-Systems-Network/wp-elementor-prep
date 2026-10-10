@@ -16,8 +16,18 @@ import {
   type P15NeutralStyleReview,
   type P15NeutralTextAlignment,
   type P15NeutralExportValidationResult,
+  type P15NeutralParagraph,
+  type P15NeutralTypography,
 } from '../targets/elementor/neutral-export-ir';
+import {
+  P15_TEXT_FONT_WEIGHTS,
+  paragraphProblems,
+  paragraphSpacingValid,
+  typographyProblems,
+} from '../targets/elementor/typography';
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
+import { validP15LinkUrl } from '../targets/elementor/link-url';
+import { detectP15Buttons, detectP15Headings } from '../targets/elementor/semantic-detection';
 import type { P15ElementorV3GenerationResult } from '../targets/elementor/v3-template-generator';
 
 export const P15_FIGMA_NEUTRAL_EXTRACTOR_VERSION = 'p15-figma-neutral-export-extractor-v3' as const;
@@ -221,6 +231,16 @@ function byteHex(channel: number): string {
   return Math.round(channel * 255).toString(16).padStart(2, '0').toUpperCase();
 }
 
+/** A single fully opaque SOLID paint as lowercase `#rrggbb`, else null (no blending, no guessing). */
+function solidOpaqueHex(paint: Record<string, unknown> | undefined): string | null {
+  if (!paint || paint.type !== 'SOLID' || (paint.opacity !== undefined && paint.opacity !== 1)) return null;
+  const color = paint.color;
+  if (typeof color !== 'object' || color === null || Array.isArray(color)) return null;
+  const channels = ['r', 'g', 'b'].map((key) => colorChannel((color as Record<string, unknown>)[key]));
+  if (channels.some((channel) => channel === null)) return null;
+  return `#${channels.map((channel) => byteHex(channel as number).toLowerCase()).join('')}`;
+}
+
 function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string> {
   const fills = recordOf(node).fills;
   if (fills === undefined) return {};
@@ -354,6 +374,133 @@ function parseContainerRadius(node: SceneNode): ParsedContainerStyle<number> {
   return radius === 0 ? {} : { value: radius };
 }
 
+
+const TEXT_SEGMENT_FIELDS = ['fontName', 'fontWeight', 'fontStyle', 'fontSize', 'lineHeight', 'letterSpacing',
+  'textCase', 'textDecoration', 'fills', 'hyperlink'] as const;
+const TYPOGRAPHY_FIELDS = ['fontFamily', 'fontWeight', 'fontStyle', 'fontSizePx', 'lineHeightPx', 'letterSpacingPx',
+  'textTransform', 'textDecoration', 'colorHex'] as const;
+type TextSegment = Pick<StyledTextSegment, typeof TEXT_SEGMENT_FIELDS[number] | 'characters'>;
+const round2 = (value: number): number => Math.round(value * 100) / 100;
+
+interface TextTypographyExtraction {
+  href?: string;
+  typography?: P15NeutralTypography;
+  paragraphs?: P15NeutralParagraph[];
+  paragraphSpacingPx?: number;
+  reviews: P15NeutralStyleReview[];
+}
+
+/** A segment's URL link; a link to a Figma node or an unsafe URL becomes a review, never a guess. */
+function segmentLink(segment: TextSegment, reviews: Map<string, P15NeutralStyleReview>): string | undefined {
+  const target = segment.hyperlink;
+  if (target === null || target === undefined) return undefined;
+  if (target.type === 'URL' && validP15LinkUrl(target.value)) return target.value;
+  const reasonCode = target.type === 'NODE' ? 'LINK_TO_NODE_REQUIRES_REVIEW' : 'LINK_URL_REQUIRES_REVIEW';
+  if (!reviews.has(reasonCode)) {
+    reviews.set(reasonCode, { reasonCode, detail: target.type === 'NODE'
+      ? 'A link to another Figma node has no page URL to export.'
+      : 'Only bounded http(s), mailto, tel, root-relative or fragment links are exported.' });
+  }
+  return undefined;
+}
+
+/** One Figma text segment as explicit neutral typography; unmappable facts become reviews, never guesses. */
+function segmentTypography(segment: TextSegment, reviews: Map<string, P15NeutralStyleReview>): P15NeutralTypography {
+  const style: P15NeutralTypography = {};
+  const flag = (reasonCode: string, detail: string) => { if (!reviews.has(reasonCode)) reviews.set(reasonCode, { reasonCode, detail }); };
+  style.fontFamily = segment.fontName.family;
+  if (segment.fontStyle === 'ITALIC') style.fontStyle = 'italic';
+  const weight = String(segment.fontWeight);
+  if ((P15_TEXT_FONT_WEIGHTS as readonly string[]).includes(weight)) style.fontWeight = weight as NonNullable<P15NeutralTypography['fontWeight']>;
+  else flag('FONT_WEIGHT_REQUIRES_REVIEW', `Font weight ${weight} is not one of 100..900 in steps of 100.`);
+  style.fontSizePx = round2(segment.fontSize);
+  if (segment.lineHeight.unit === 'PIXELS') style.lineHeightPx = round2(segment.lineHeight.value);
+  else if (segment.lineHeight.unit === 'PERCENT') style.lineHeightPx = round2((segment.fontSize * segment.lineHeight.value) / 100);
+  const letterSpacing = segment.letterSpacing.unit === 'PIXELS' ? segment.letterSpacing.value : (segment.fontSize * segment.letterSpacing.value) / 100;
+  if (round2(letterSpacing) !== 0) style.letterSpacingPx = round2(letterSpacing);
+  if (segment.textCase === 'UPPER') style.textTransform = 'uppercase';
+  else if (segment.textCase === 'LOWER') style.textTransform = 'lowercase';
+  else if (segment.textCase === 'TITLE') style.textTransform = 'capitalize';
+  else if (segment.textCase !== 'ORIGINAL') flag('TEXT_CASE_REQUIRES_REVIEW', `Text case ${String(segment.textCase)} has no Elementor text-transform equivalent.`);
+  if (segment.textDecoration === 'UNDERLINE') style.textDecoration = 'underline';
+  else if (segment.textDecoration === 'STRIKETHROUGH') style.textDecoration = 'line-through';
+  const fills = visiblePaintList(segment.fills);
+  if (fills === 'MIXED' || fills.length > 1) {
+    flag('TEXT_FILL_REQUIRES_REVIEW', 'Text with several visible fills is not mapped.');
+  } else if (fills.length === 1) {
+    const color = solidOpaqueHex(fills[0]);
+    if (color === null) flag('TEXT_FILL_REQUIRES_REVIEW', 'Only a single fully opaque solid text fill is mapped.');
+    else style.colorHex = color;
+  }
+  const out: P15NeutralTypography = {};
+  for (const key of TYPOGRAPHY_FIELDS) if (style[key] !== undefined) (out as Record<string, unknown>)[key] = style[key];
+  return out;
+}
+
+/**
+ * Read the styled text segments (recovery M2.1). The style covering the most characters becomes the node
+ * typography; other runs keep only the properties that differ. Paragraphs are split on newlines and
+ * emitted only when the text has several paragraphs or mixed runs, so plain uniform text is unchanged.
+ * A run that would need to unset a node property (no neutral "none" value) is flagged, not guessed.
+ */
+function extractTextTypography(node: TextNode): TextTypographyExtraction {
+  if (typeof node.getStyledTextSegments !== 'function') return { reviews: [] };
+  const reviews = new Map<string, P15NeutralStyleReview>();
+  const segments = (node.getStyledTextSegments([...TEXT_SEGMENT_FIELDS]) as TextSegment[])
+    .map((segment) => ({ text: segment.characters, style: segmentTypography(segment, reviews), href: segmentLink(segment, reviews) }));
+  // One URL across the whole text is a node link; anything else keeps links on their own runs.
+  const links = new Set(segments.map((segment) => segment.href ?? null));
+  const nodeHref = links.size === 1 && !links.has(null) ? [...links][0]! : undefined;
+  const weights = new Map<string, number>();
+  for (const segment of segments) {
+    const key = JSON.stringify(segment.style);
+    weights.set(key, (weights.get(key) ?? 0) + segment.text.length);
+  }
+  let dominantKey = '';
+  let dominantWeight = -1;
+  for (const [key, weight] of weights) if (weight > dominantWeight) { dominantKey = key; dominantWeight = weight; }
+  const dominant = (dominantKey ? JSON.parse(dominantKey) : {}) as P15NeutralTypography;
+  const difference = (style: P15NeutralTypography): P15NeutralTypography | undefined => {
+    const diff: Record<string, unknown> = {};
+    for (const key of TYPOGRAPHY_FIELDS) {
+      if (style[key] === dominant[key]) continue;
+      if (style[key] === undefined) {
+        if (!reviews.has('MIXED_TYPOGRAPHY_REQUIRES_REVIEW')) {
+          reviews.set('MIXED_TYPOGRAPHY_REQUIRES_REVIEW', { reasonCode: 'MIXED_TYPOGRAPHY_REQUIRES_REVIEW', detail: `A text run removes ${key}, which inline styles cannot express.` });
+        }
+        continue;
+      }
+      diff[key] = style[key];
+    }
+    return Object.keys(diff).length > 0 ? diff as P15NeutralTypography : undefined;
+  };
+  const paragraphs: P15NeutralParagraph[] = [{ spans: [] }];
+  for (const segment of segments) {
+    const style = difference(segment.style);
+    const href = nodeHref === undefined ? segment.href : undefined;
+    segment.text.replace(/\r\n?/g, '\n').split('\n').forEach((part, index) => {
+      if (index > 0) paragraphs.push({ spans: [] });
+      if (part.length > 0) paragraphs[paragraphs.length - 1]!.spans.push({ text: part, ...(style ? { style } : {}), ...(href ? { href } : {}) });
+    });
+  }
+  const mixed = paragraphs.some((paragraph) => paragraph.spans.some((span) => span.style !== undefined || span.href !== undefined));
+  const spacing = typeof node.paragraphSpacing === 'number' && node.paragraphSpacing > 0 ? round2(node.paragraphSpacing) : undefined;
+  const result: TextTypographyExtraction = { reviews: [...reviews.values()] };
+  if (nodeHref !== undefined) result.href = nodeHref;
+  if (Object.keys(dominant).length > 0) result.typography = dominant;
+  if (paragraphs.length > 1 || mixed) result.paragraphs = paragraphs;
+  if (spacing !== undefined) result.paragraphSpacingPx = spacing;
+  const problems = [
+    ...(result.typography ? typographyProblems(result.typography, 'typography') : []),
+    ...(result.paragraphs ? paragraphProblems(result.paragraphs, node.characters, 'paragraphs') : []),
+    ...(spacing !== undefined && !paragraphSpacingValid(spacing) ? [{ path: 'paragraphSpacingPx', message: 'out of range' }] : []),
+  ];
+  if (problems.length > 0) {
+    return { reviews: [...result.reviews, { reasonCode: 'TYPOGRAPHY_OUT_OF_RANGE', detail: `Text typography is outside the supported bounds: ${problems.map((problem) => problem.path).join(', ')}.` }] };
+  }
+  return result;
+}
+
 function extractText(node: SceneNode): P15NeutralExportNode {
   if (node.type !== 'TEXT') return review(node, 'UNSUPPORTED_NODE_TYPE', `Unsupported visible Figma node type: ${node.type}.`);
   if (node.characters.trim().length === 0) {
@@ -363,12 +510,17 @@ function extractText(node: SceneNode): P15NeutralExportNode {
   if (align === null) {
     return review(node, 'UNSUPPORTED_TEXT_ALIGNMENT', `Unsupported Figma text alignment: ${String(node.textAlignHorizontal)}.`);
   }
-  const styleReviews = unmappedVisualFactReviews(node);
+  const typography = extractTextTypography(node);
+  const styleReviews = [...unmappedVisualFactReviews(node), ...typography.reviews];
   return {
     kind: 'text',
     sourceNodeId: node.id,
     text: node.characters,
     align,
+    ...(typography.href !== undefined ? { href: typography.href } : {}),
+    ...(typography.typography ? { typography: typography.typography } : {}),
+    ...(typography.paragraphs ? { paragraphs: typography.paragraphs } : {}),
+    ...(typography.paragraphSpacingPx !== undefined ? { paragraphSpacingPx: typography.paragraphSpacingPx } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
   };
 }
@@ -418,7 +570,7 @@ function extractContainer(
   const children: P15NeutralExportNode[] = [];
   for (const child of childNodes(node)) {
     if (!visible(child)) continue;
-    const extracted = extractNode(child, depth + 1, state);
+    const extracted = extractNode(child, depth + 1, state, mode === 'VERTICAL' ? 'column' : 'row');
     if (state.boundsExceeded) break;
     if (extracted) children.push(extracted);
   }
@@ -439,10 +591,50 @@ function extractContainer(
   return container;
 }
 
+/**
+ * Dividers and spacers (recovery M2.2c). A horizontal LINE with one solid opaque stroke, or a thin solid
+ * RECTANGLE (height <= 10px and width >= 4x height), becomes a divider. An empty leaf FRAME or RECTANGLE with
+ * no visible fills, strokes or effects inside a vertical Auto Layout becomes a spacer of its height (the
+ * Elementor spacer is vertical only, so in a row it stays whatever it was). Anything else returns null and
+ * keeps its previous handling; a line that cannot map exactly becomes an explicit review.
+ */
+function extractRule(node: SceneNode, parentDirection: 'row' | 'column' | null): P15NeutralExportNode | null {
+  const record = recordOf(node);
+  const hasChildren = childNodes(node).length > 0;
+  const fills = visiblePaintList(record.fills);
+  const strokes = visiblePaintList(record.strokes);
+  const effects = visiblePaintList(record.effects);
+  const width = typeof record.width === 'number' && Number.isFinite(record.width) ? record.width : null;
+  const height = typeof record.height === 'number' && Number.isFinite(record.height) ? record.height : null;
+  const plain = unmappedVisualFactReviews(node).length === 0;
+  if (node.type === 'LINE') {
+    const weight = typeof record.strokeWeight === 'number' ? Math.round(record.strokeWeight * 100) / 100 : null;
+    const color = strokes !== 'MIXED' && strokes.length === 1 ? solidOpaqueHex(strokes[0]) : null;
+    const rotated = record.rotation !== undefined && record.rotation !== 0;
+    if (rotated || color === null || weight === null || weight < 0.1 || weight > 10 || width === null || width <= 0
+      || width > P15_NEUTRAL_EXPORT_MAX_SPACING_PX || effects === 'MIXED' || effects.length > 0) {
+      return review(node, 'DIVIDER_REQUIRES_REVIEW', 'Only a horizontal line with one opaque solid stroke of 0.1-10px maps to a divider.');
+    }
+    return { kind: 'divider', sourceNodeId: node.id, weightPx: weight, colorHex: color, widthPx: Math.round(width * 100) / 100 };
+  }
+  if (hasChildren || (node.type !== 'RECTANGLE' && node.type !== 'FRAME') || width === null || height === null) return null;
+  if (fills !== 'MIXED' && fills.length === 0 && strokes !== 'MIXED' && strokes.length === 0 && effects !== 'MIXED' && effects.length === 0
+    && plain && parentDirection === 'column' && height > 0 && height <= P15_NEUTRAL_EXPORT_MAX_SPACING_PX) {
+    return { kind: 'spacer', sourceNodeId: node.id, heightPx: Math.round(height * 100) / 100 };
+  }
+  if (node.type === 'RECTANGLE' && fills !== 'MIXED' && fills.length === 1 && strokes !== 'MIXED' && strokes.length === 0 && plain
+    && height >= 0.1 && height <= 10 && width >= height * 4 && width <= P15_NEUTRAL_EXPORT_MAX_SPACING_PX) {
+    const color = solidOpaqueHex(fills[0]);
+    if (color !== null) return { kind: 'divider', sourceNodeId: node.id, weightPx: Math.round(height * 100) / 100, colorHex: color, widthPx: Math.round(width * 100) / 100 };
+  }
+  return null;
+}
+
 function extractNode(
   node: SceneNode,
   depth: number,
   state: ExtractionState,
+  parentDirection: 'row' | 'column' | null = null,
 ): P15NeutralExportNode | null {
   if (!visible(node)) return null;
   if (depth > P15_NEUTRAL_EXPORT_MAX_DEPTH) {
@@ -461,6 +653,8 @@ function extractNode(
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
   if (node.type === 'TEXT') return extractText(node);
+  const rule = extractRule(node, parentDirection);
+  if (rule) return rule;
   if (isContainerLike(node)) {
     return extractContainer(node, depth, state);
   }
@@ -494,13 +688,21 @@ export function extractP15NeutralExportDocumentFromFigmaFrame(
       ? [extracted]
       : [];
 
-  return {
+  // Recovery M2.2: deterministic semantic detection on the extracted IR, with layer names as secondary hints.
+  const names = new Map<string, string>();
+  collectLayerNames(frame, names);
+  return detectP15Headings(detectP15Buttons({
     schemaVersion: 1,
     irVersion: P15_NEUTRAL_EXPORT_IR_VERSION,
     title: frame.name,
     documentType,
     nodes,
-  };
+  }, names), names);
+}
+
+function collectLayerNames(node: SceneNode, names: Map<string, string>): void {
+  if (typeof node.name === 'string') names.set(node.id, node.name);
+  for (const child of childNodes(node)) collectLayerNames(child, names);
 }
 
 export function buildP15ElementorV1PreviewFromFigmaFrame(

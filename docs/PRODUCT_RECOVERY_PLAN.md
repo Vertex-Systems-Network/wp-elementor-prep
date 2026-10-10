@@ -7,9 +7,9 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M2 — Full single-frame Figma extraction** (M1 implemented; acceptance waits on the M1.6–M1.8 PR's exact-head gates)
-> - Next task: **M2.1** (typography)
-> - Last completed task: **M1.7** (M1 sync). M1.8 is done (generic contract types; layer 9.3k lines; D-050).
+> - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
+> - Next task: **M2.3** (sizing)
+> - Last completed task: **M2.2c** (hyperlinks, dividers, spacers; registry v2 by lowest covering version). M2.2 is complete.
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -273,13 +273,36 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - The README verifier now accepts a `<flag>: false` fragment when the family declares that flag in its `FamilyAuthorityFlag` contract. It separately checks that the shared engine refuses authority-inflated manifests and results. A negative check (removing a declared flag) fails the verifier as expected.
   - Measured after M1.8: the wrappers are 6.8k lines (2.6k family tables/constants/codecs, 1.5k domain types and Contract blocks, 1.0k comments, 1.0k evidence, 0.7k imports) plus the 2.6k engine, so 9.3k total, down from 11.7k before M1.8 and about 36.0k at the audited baseline. An interim under-7k bar was not met. The remaining reduction is only available from evidence, comments or dense code, so the user accepted 9.3k (D-050).
 
-*M1 acceptance (D-050):* all existing P15 behaviour tests pass through the engine. No family wrapper carries hand-written manifest/result/issue/status interfaces, and every Elementor evidence block, message and comment is kept (measured 9.3k lines, from about 36.0k). The bundle contains the engine. All three hold locally; M1 is accepted when the M1.6–M1.8 PR passes its exact-head gates (`RQ-REC-M1-ENGINE-TRAIN`).
+*M1 acceptance (D-050):* all existing P15 behaviour tests pass through the engine. No family wrapper carries hand-written manifest/result/issue/status interfaces, and every Elementor evidence block, message and comment is kept (measured 9.3k lines, from about 36.0k). The bundle contains the engine. **Accepted 2026-10-10:** PR #900 exact head `69ccfd1` passed 11/11 checks with zero review threads and was merged as `47ada79` (`RQ-REC-M1-ENGINE-TRAIN` DONE).
   - Revised 2026-10-09 and again 2026-10-10 by user decision (D-050). The original bar was "under 5k LOC". Measured at M1.7, the layer was about 11.7k lines (from about 36.0k at the audited baseline): 2.5k engine, plus 9.5k of wrappers made of 2.9k duplicated types, 2.1k constants/codecs/messages, 1.2k comments, 1.2k family tables, 1.0k evidence, 0.6k functions and 0.6k imports. Under 5k could only be reached by stripping evidence, messages and comments or packing code into dense lines, which repeats the defect pattern M1.5 removed.
 
 ### M2 — Full single-frame Figma extraction
 
-- [ ] **M2.1** Typography. Read the styled text segments: family, style/weight, size, line height, letter spacing, case, decoration and fill colour. Mixed spans become inline `<span style>`. Paragraphs become separate `<p>`, with `paragraphSpacing` mapped.
-- [ ] **M2.2** Semantic widgets. Detect headings by relative size/weight rank, with the name as a secondary hint. Detect buttons as a frame with one text, a fill or stroke, and padding. Detect hyperlinks, dividers and spacers. Low confidence → text-editor + REVIEW.
+- [x] **M2.1** _(done 2026-10-10)_ Typography. Read the styled text segments: family, style/weight, size, line height, letter spacing, case, decoration and fill colour. Mixed spans become inline `<span style>`. Paragraphs become separate `<p>`, with `paragraphSpacing` mapped.
+  - R0 evidence (Elementor 4.2.4, tag commit `0e29220`): `includes/widgets/text-editor.php` (blob `72ff868`) has the `typography` group, `text_color` and the responsive `paragraph_spacing` slider. `includes/controls/groups/typography.php` (blob `eea951b`) has the font_family/size/weight/transform/style/decoration/line_height/letter_spacing fields, using the same `typography_*` + `custom` starter encoding the Button families already use.
+  - Neutral IR (same IR version; additive optional fields, so existing fingerprints and every M1 golden are unchanged): a text node may carry `typography` (family, weight 100..900, italic, size, line height, letter spacing, case, decoration, lowercase hex colour), `paragraphs` of `spans` (each span holds only its differences, and the spans must join back to exactly `text`), and `paragraphSpacingPx`. It also gains a new issue code, `P15_IR_TYPOGRAPHY_INVALID`.
+  - Generator: writes the `typography_*` group with px sliders, `text_color` and `paragraph_spacing`. Each paragraph becomes its own `<p>` (empty lines become `<p></p>`, soft breaks `<br>`). Styled runs become `<span style>`, whose CSS is built only from validated values, so no caller text reaches a style attribute. The family binding helper builds the same HTML (`typography.ts`).
+  - Extractor: reads `getStyledTextSegments`. The style covering most characters becomes the node typography. Percentage line height and letter spacing convert to px. Small caps, gradient/translucent/multiple text fills, weights outside 100..900, out-of-bounds values and runs that would have to unset a property become explicit style reviews. Uniform single-paragraph text keeps its old HTML.
+  - Tests: `tests/m2-typography.test.ts` covers extraction, refusals, IR validation (including style-injection attempts) and generator output.
+- [x] **M2.2** Semantic widgets (split into M2.2a–c). Detect headings by relative size/weight rank, with the name as a secondary hint. Detect buttons as a frame with one text, a fill or stroke, and padding. Detect hyperlinks, dividers and spacers. Low confidence → text-editor + REVIEW.
+  - [x] **M2.2a** headings _(done 2026-10-10)_:
+    - `semantic-detection.ts` (`detectP15Headings`) runs on the extracted IR. The body size is the font size covering the most characters. A uniform, single-paragraph, non-justified text of at most 160 characters becomes a heading at ≥1.25× the body size, or ≥1.1× with weight ≥600. Levels rank distinct heading sizes, largest first (h1..h6). An `h1`..`h6` layer name sets the level.
+    - A layer named as a heading that the rule does not support gets `HEADING_DETECTION_REQUIRES_REVIEW`, unless the document has a single font size and so no rank. Text without typography is never touched.
+    - Headings carry `typography`. The generator writes the heading `typography` group and `title_color` (heading.php blob `5b193f9`).
+    - Tests: `tests/m2-semantic-headings.test.ts`.
+  - [x] **M2.2b** buttons _(done 2026-10-10)_:
+    - `detectP15Buttons` runs before heading detection. A container whose layer name says button/btn/cta, whose only child is a uniform single-line text of at most 80 characters, with a solid background, non-zero padding and no style reviews, becomes a native button carrying text, typography, background, padding and radius. Without the name hint the frame and text are left as they are: they already render the same visuals, so badges and chips are never guessed into buttons. A button-named frame that does not match gets `BUTTON_DETECTION_REQUIRES_REVIEW`.
+    - Generator: the button style uses the Button families' proven keys (`typography_*` + `button_text_color`, `background_background`/`background_color`, `text_padding`, `border_radius`).
+    - Outline-only buttons need stroke mapping (M2.4).
+    - Tests: `tests/m2-semantic-buttons.test.ts`.
+  - [x] **M2.2c** hyperlinks, dividers and spacers _(done 2026-10-10)_:
+    - R0 evidence (Elementor 4.2.4): `includes/widgets/divider.php` (blob `7dfbea2`) has `style` (solid), `color`, `weight` (px slider 1..10, step 0.1) and `width`. `includes/widgets/spacer.php` (blob `b1c14d7`) has `space` (px slider).
+    - Divider: a horizontal LINE with one opaque solid stroke of 0.1..10px, or a thin solid RECTANGLE (height ≤10px, width ≥4× height). A line that cannot map exactly gets `DIVIDER_REQUIRES_REVIEW`.
+    - Spacer: an empty, unpainted leaf FRAME/RECTANGLE inside a vertical Auto Layout becomes its height. In a row it keeps its previous handling, because the Elementor spacer is vertical only.
+    - Links: a URL link across the whole text becomes a node `href` (the text editor wraps it in `<a>`, a heading writes its `link` control, a button label becomes the button URL). Partial links become `<a>` runs. Links to Figma nodes and unsafe URLs become `LINK_TO_NODE_REQUIRES_REVIEW` / `LINK_URL_REQUIRES_REVIEW`. URL validation is now one shared rule (`link-url.ts`).
+    - Capability registry, by user decision: `v2` = `v1` + divider + spacer. Each candidate is stamped with the **lowest covering version**. A template using only the v1 widgets stays `v1` with byte-identical identity, so every golden and the retained real-target reference stay valid. Only templates using divider/spacer are `v2`. The 4.2.4 target profiles still declare `v1`, so a `v2` candidate is honestly reported as not covered by them until a profile is extended (M6).
+    - Identity coverage fix (commit `7e964af`): the neutral IR fingerprint now covers typography, paragraphs, links, button style, dividers, spacers and style reviews.
+    - Tests: `tests/m2-rules-and-links.test.ts`, `tests/m2-identity-coverage.test.ts`.
 - [ ] **M2.3** Sizing. FIXED/HUG/FILL on both axes maps to Elementor width/height, `content_width`, flex grow/shrink and basis. Map min/max width and height. The root frame width becomes the page content width.
 - [ ] **M2.4** Visual styles. Map uniform and individual strokes to border, drop/inner shadows to box-shadow, layer opacity, linear and radial gradients, non-uniform radius, and `clipsContent` to overflow hidden.
 - [ ] **M2.5** Absolutely positioned children map to `_position: absolute` with offsets relative to the parent, plus z-index from layer order.

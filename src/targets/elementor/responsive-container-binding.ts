@@ -29,6 +29,8 @@ function expectedWidgetType(node: Exclude<P15NeutralExportNode, P15NeutralContai
   if (node.kind === 'text') return 'text-editor';
   if (node.kind === 'button') return 'button';
   if (node.kind === 'image') return 'image';
+  if (node.kind === 'divider') return 'divider';
+  if (node.kind === 'spacer') return 'spacer';
   return null;
 }
 

@@ -86,8 +86,10 @@ describe('P15 Elementor capability registry and report', () => {
     expect(ELEMENTOR_CAPABILITY_REGISTRY_VERSION).toBe('elementor-core-widget-capabilities-v1');
     expect(ELEMENTOR_CORE_WIDGET_CAPABILITIES_V1.map((entry) => entry.widgetType)).toEqual([
       'button',
+      'divider',
       'heading',
       'image',
+      'spacer',
       'text-editor',
     ]);
     for (const entry of ELEMENTOR_CORE_WIDGET_CAPABILITIES_V1) {

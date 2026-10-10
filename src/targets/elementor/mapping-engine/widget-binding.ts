@@ -6,6 +6,7 @@ import type {
   P15NeutralTextNode,
 } from '../neutral-export-ir';
 import type { ElementorElementV04, ElementorTemplateV04, ElementorWidgetV04 } from '../template-v04';
+import { textEditorHtml } from '../typography';
 import type { FamilyTarget } from './property-family';
 import { exactKeys, hasOwn, isRecord } from './shared-validation';
 
@@ -35,10 +36,11 @@ export interface WidgetTargetSpec {
   driftMessage: string;
 }
 
-export function expectedWidgetType(node: WidgetNode): string {
+export function expectedWidgetType(node: Exclude<P15NeutralExportNode, { kind: 'container' | 'review' }>): string {
   if (node.kind === 'heading') return 'heading';
   if (node.kind === 'text') return 'text-editor';
   if (node.kind === 'button') return 'button';
+  if (node.kind === 'divider' || node.kind === 'spacer') return node.kind;
   return 'image';
 }
 
@@ -47,7 +49,7 @@ function collectWidgets(document: P15NeutralExportDocumentV1, kinds: readonly Wi
   function visit(nodes: readonly P15NeutralExportNode[]): void {
     for (const node of nodes) {
       if (node.kind === 'container') visit(node.children);
-      else if (node.kind !== 'review' && kinds.includes(node.kind)) result.set(node.sourceNodeId, node);
+      else if (node.kind !== 'review' && (kinds as readonly string[]).includes(node.kind)) result.set(node.sourceNodeId, node as WidgetNode);
     }
   }
   visit(document.nodes);
@@ -98,8 +100,8 @@ function bindWidgets(
         push(path, 'Neutral widget did not bind to the expected generated Elementor core widget.');
         continue;
       }
-      if (spec.kinds.includes(sourceNode.kind)) {
-        if (!isRecord(target.settings) || !spec.matches(sourceNode, target.settings)) {
+      if ((spec.kinds as readonly string[]).includes(sourceNode.kind)) {
+        if (!isRecord(target.settings) || !spec.matches(sourceNode as WidgetNode, target.settings)) {
           push(`${path}${spec.driftPathSuffix}`, spec.driftMessage);
           continue;
         }
@@ -136,23 +138,13 @@ export function headingBaseSettingsMatch(node: P15NeutralHeadingNode, settings: 
   return desktopAlignMatches(node.align, settings);
 }
 
-function escapeTextEditorHtml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-/** The Text Editor `editor` HTML the v3 generator emits for a neutral text node. */
-export function expectedTextEditorHtml(value: string): string {
-  const normalized = value.replace(/\r\n?/g, '\n');
-  return `<p>${escapeTextEditorHtml(normalized).replaceAll('\n', '<br>')}</p>`;
+/** The generator's exact text-editor HTML for a node (shared with `v3-template-generator.ts`). */
+export function expectedTextEditorHtml(value: string, paragraphs?: P15NeutralTextNode['paragraphs'], href?: string): string {
+  return textEditorHtml(value, paragraphs, href);
 }
 
 export function textEditorBaseSettingsMatch(node: P15NeutralTextNode, settings: Record<string, unknown>): boolean {
-  if (settings.editor !== expectedTextEditorHtml(node.text)) return false;
+  if (settings.editor !== expectedTextEditorHtml(node.text, node.paragraphs, node.href)) return false;
   return desktopAlignMatches(node.align, settings);
 }
 
