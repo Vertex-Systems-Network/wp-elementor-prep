@@ -23,17 +23,17 @@ describe('coordinated Node 22 toolchain contract', () => {
     expect(pkg.engines?.node).toBe(NODE_ENGINE);
     expect(root?.engines?.node).toBe(NODE_ENGINE);
 
-    expect(pkg.devDependencies?.vitest).toBe('5.0.1');
-    expect(pkg.devDependencies?.vite).toBe('8.3.1');
+    expect(pkg.devDependencies?.vitest).toBe('5.0.3');
+    expect(pkg.devDependencies?.vite).toBe('8.3.2');
     expect(pkg.devDependencies?.esbuild).toBe('0.28.2');
     expect(pkg.devDependencies?.['playwright-core']).toBe('1.63.0');
-    expect(pkg.devDependencies?.['@types/node']).toBe('^26.6.1');
+    expect(pkg.devDependencies?.['@types/node']).toBe('^26.6.4');
 
-    expect(lock.packages?.['node_modules/vitest']?.version).toBe('5.0.1');
-    expect(lock.packages?.['node_modules/vite']?.version).toBe('8.3.1');
+    expect(lock.packages?.['node_modules/vitest']?.version).toBe('5.0.3');
+    expect(lock.packages?.['node_modules/vite']?.version).toBe('8.3.2');
     expect(lock.packages?.['node_modules/esbuild']?.version).toBe('0.28.2');
     expect(lock.packages?.['node_modules/playwright-core']?.version).toBe('1.63.0');
-    expect(lock.packages?.['node_modules/@types/node']?.version).toBe('26.6.2');
+    expect(lock.packages?.['node_modules/@types/node']?.version).toBe('26.6.4');
   });
 
   it('runs every Node-backed acceptance workflow on the same exact Node floor', () => {
