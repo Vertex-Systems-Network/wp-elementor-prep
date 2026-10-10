@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-10 — Consolidated toolchain patch train
+
+- Vite `8.3.2`, Vitest `5.0.3`, `@types/node 26.6.4` and Figma typings `1.140.0` in one PR with the matching toolchain contract. Supersedes Dependabot #890–#893. No product or authority change.
+
 ## 2026-10-10 — Recovery M1 (table-driven Elementor mapping engine) accepted (PR #900, `47ada79`)
 
 - **Engine:** one family engine for 54 container and widget families, chained families (`FamilyChain`), one ordered composer with single key ownership and chained steps, and a page composition (`composeP15ElementorPage`).

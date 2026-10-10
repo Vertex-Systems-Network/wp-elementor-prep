@@ -34,7 +34,7 @@ Security audit train #579 hardens exact-loopback proof-token use/retention, atom
 
 ## Toolchain baseline
 
-Issue #634 establishes the coordinated repository baseline at Node.js `22.12.0+`, Vitest `5.0.1`, Vite `8.3.0`, esbuild `0.28.2`, Playwright Core `1.63.0` and `@types/node 26.6.1`. Do not reopen a standalone Vitest-major bump or downgrade individual members of this compatibility matrix without a new coordinated migration and exact-head Runner evidence.
+Issue #634 establishes the coordinated repository baseline at Node.js `22.12.0+`, Vitest `5.0.1`, Vite `8.3.0`, esbuild `0.28.2`, Playwright Core `1.63.0` and `@types/node 26.6.1`. Do not reopen a standalone Vitest-major bump or downgrade individual members of this compatibility matrix without a new coordinated migration and exact-head Runner evidence. The 2026-10-10 consolidated patch train moved the matrix to Vitest `5.0.3`, Vite `8.3.2`, `@types/node 26.6.4` and Figma typings `1.140.0`.
 
 ## Execution mode — focused Elementor V1 release train
 
