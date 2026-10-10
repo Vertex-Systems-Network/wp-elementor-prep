@@ -1,5 +1,6 @@
 import { sha256Hex } from '../../core/sha256';
 import { canonicalButtonSizing, canonicalContainerSizing } from './container-sizing';
+import { canonicalGradient } from './container-gradient';
 import { canonicalBoxShadow } from './container-shadow';
 import { canonicalBorder, canonicalCornerRadii } from './container-visual-style';
 import {
@@ -68,6 +69,7 @@ function canonicalContainer(node: P15NeutralContainerNode): Record<string, unkno
   if (node.border !== undefined) value.border = canonicalBorder(node.border);
   if (node.clipsContent !== undefined) value.clipsContent = node.clipsContent;
   if (node.boxShadow !== undefined) value.boxShadow = canonicalBoxShadow(node.boxShadow);
+  if (node.gradient !== undefined) value.gradient = canonicalGradient(node.gradient);
   if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
   canonicalStyleReviews(value, node.styleReviews);
   value.children = node.children.map(canonicalNode);

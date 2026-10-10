@@ -1,4 +1,5 @@
 import { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH, validP15AbsoluteUrl, validP15LinkUrl } from './link-url';
+import { gradientProblems, type P15NeutralGradient } from './container-gradient';
 import { boxShadowProblems, type P15NeutralBoxShadow } from './container-shadow';
 import {
   borderProblems,
@@ -23,6 +24,7 @@ import {
 } from './typography';
 
 export type { P15NeutralParagraph, P15NeutralTextSpan, P15NeutralTypography } from './typography';
+export type { P15NeutralGradient } from './container-gradient';
 export type { P15NeutralBoxShadow } from './container-shadow';
 export type { P15NeutralBorder, P15NeutralBoxPx, P15NeutralCornerRadii } from './container-visual-style';
 export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
@@ -78,6 +80,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   border?: P15NeutralBorder;
   /** The frame clips visible content (`overflow: hidden`, recovery M2.4a). */
   clipsContent?: true;
+  /** Two-stop linear or radial gradient background (recovery M2.4c); exclusive with `backgroundColorHex`. */
+  gradient?: P15NeutralGradient;
   /** One drop or inner shadow (recovery M2.4b). */
   boxShadow?: P15NeutralBoxShadow;
   /** Exact width, minimum height and flex-item sizing (recovery M2.3a). */
@@ -367,7 +371,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'sizing', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -397,6 +401,9 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
       ...(value.cornerRadiiPx !== undefined && value.cornerRadiusPx !== undefined
         ? [{ path: `${path}.cornerRadiiPx`, message: 'cornerRadiiPx and cornerRadiusPx are exclusive.' }] : []),
       ...(value.boxShadow === undefined ? [] : boxShadowProblems(value.boxShadow, `${path}.boxShadow`)),
+      ...(value.gradient === undefined ? [] : gradientProblems(value.gradient, `${path}.gradient`)),
+      ...(value.gradient !== undefined && value.backgroundColorHex !== undefined
+        ? [{ path: `${path}.gradient`, message: 'gradient and backgroundColorHex are exclusive.' }] : []),
       ...(value.clipsContent !== undefined && value.clipsContent !== true ? [{ path: `${path}.clipsContent`, message: 'clipsContent must be true when provided.' }] : []),
     ];
     for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);

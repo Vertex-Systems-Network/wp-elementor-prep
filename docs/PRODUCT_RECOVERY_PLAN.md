@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.4c** (linear and radial gradient container backgrounds)
-> - Last completed task: **M2.4b** (one drop/inner shadow → Container box shadow)
+> - Next task: **M2.4d** (layer opacity R0)
+> - Last completed task: **M2.4c** (two-stop axis-aligned linear and default radial gradient backgrounds)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -328,7 +328,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - A button-named frame with a border or non-uniform radius stays an exact container with `BUTTON_DETECTION_REQUIRES_REVIEW` (the Button widget border mapping is not built yet).
     - Tests: `tests/m2-visual-borders.test.ts`.
   - [x] **M2.4b** Drop and inner shadows (`src/targets/elementor/container-shadow.ts`; R0: `groups/box-shadow.php` blob `1c068c9`, `controls/box-shadow.php` blob `e55cf9a` whose own default colour `rgba(0,0,0,0.5)` proves a CSS colour string is stored). Exactly one visible DROP_SHADOW/INNER_SHADOW with normal blending → `box_shadow_box_shadow_type: yes` + `box_shadow_box_shadow` {horizontal, vertical, blur, spread, color} + position `' '`/`inset`; a translucent colour is written `rgba(r,g,b,a)` (alpha to two decimals), an opaque one `#rrggbb`. Several shadows, blurs, other blend modes, `showShadowBehindNode` and values outside -100..100 (blur 0..100) stay `EFFECT_REQUIRES_REVIEW`; text shadows stay review. Tests: `tests/m2-visual-shadows.test.ts`.
-  - [ ] **M2.4c** Linear and radial gradient container backgrounds through the repaired M1.5e gradient encoding.
+  - [x] **M2.4c** Gradient container backgrounds (`src/targets/elementor/container-gradient.ts`; R0: `groups/background.php` blob `ac8e1a5`), in the repaired M1.5e slider encoding (`background_background: gradient`, colours, `%` stop sliders, `deg` angle slider / `background_gradient_position`). Elementor holds two stops, so only two-stop opaque gradients map. Linear maps when the gradient runs along one axis (180/0deg vertical, 90/270deg horizontal; stop positions follow the handles linearly); diagonals depend on the aspect ratio in CSS → `GRADIENT_REQUIRES_REVIEW`. Radial maps for the default centred transform with stops divided by √2 (CSS farthest-corner ellipse vs Figma's edge-touching one). Translucent/blended paints, more stops and stops outside the box are review. Reading `gradientTransform` as the layer→gradient-space matrix is an assumption the M6 real-render proof must confirm. Tests: `tests/m2-visual-gradients.test.ts`.
   - [ ] **M2.4d** Layer opacity: R0 for a core Elementor control; without an exact control it stays `LAYER_OPACITY_REQUIRES_REVIEW`.
 - [ ] **M2.5** Absolutely positioned children map to `_position: absolute` with offsets relative to the parent, plus z-index from layer order.
 - [ ] **M2.6** Map wrap to `flex_wrap`. Map a strict grid to a v3 Grid container: columns, rows and gaps.

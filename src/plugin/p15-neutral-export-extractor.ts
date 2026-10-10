@@ -27,6 +27,7 @@ import {
   typographyProblems,
 } from '../targets/elementor/typography';
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
+import { deriveP15Gradient, type P15NeutralGradient } from '../targets/elementor/container-gradient';
 import { deriveP15BoxShadow } from '../targets/elementor/container-shadow';
 import { deriveP15ContainerBorder, deriveP15CornerRadii, type P15NeutralCornerRadii } from '../targets/elementor/container-visual-style';
 import {
@@ -254,7 +255,7 @@ function solidOpaqueHex(paint: Record<string, unknown> | undefined): string | nu
   return `#${channels.map((channel) => byteHex(channel as number).toLowerCase()).join('')}`;
 }
 
-function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string> {
+function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string> & { gradient?: P15NeutralGradient } {
   const fills = recordOf(node).fills;
   if (fills === undefined) return {};
   if (!Array.isArray(fills)) {
@@ -298,6 +299,11 @@ function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string>
         detail: 'Container background image requires a retained asset export/upload reference; the container and its children are preserved.',
       },
     };
+  }
+  if (paintRecord.type === 'GRADIENT_LINEAR' || paintRecord.type === 'GRADIENT_RADIAL') {
+    // Recovery M2.4c: two-stop axis-aligned linear and default radial gradients map exactly.
+    const derived = deriveP15Gradient(paintRecord);
+    return derived.gradient !== undefined ? { gradient: derived.gradient } : { review: derived.review! };
   }
   if (paintRecord.type !== 'SOLID') {
     return {
@@ -652,6 +658,7 @@ function extractContainer(
     alignItems,
     justifyContent,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
+    ...(background.gradient !== undefined ? { gradient: background.gradient } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
     ...(radii.radii !== undefined ? { cornerRadiiPx: radii.radii } : {}),
     ...(bordered.border !== undefined ? { border: bordered.border } : {}),
