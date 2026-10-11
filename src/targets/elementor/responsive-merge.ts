@@ -10,6 +10,10 @@ import { P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION } from './responsive-gap-
 import { P15_ELEMENTOR_RESPONSIVE_MARGIN_MANIFEST_VERSION } from './responsive-margin-resolution';
 import { P15_ELEMENTOR_RESPONSIVE_PADDING_MANIFEST_VERSION } from './responsive-padding-resolution';
 import { P15_ELEMENTOR_RESPONSIVE_VISIBILITY_MANIFEST_VERSION } from './responsive-visibility-resolution';
+import { P15_ELEMENTOR_RESPONSIVE_TEXT_TYPOGRAPHY_MANIFEST_VERSION } from './responsive-text-typography-resolution';
+import { P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_VERSION } from './responsive-text-alignment-resolution';
+import { P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_VERSION } from './responsive-button-alignment-resolution';
+import { expectedDesktopButtonAlignment } from './mapping-engine/widget-binding';
 import { generateElementorV3TemplateCandidate } from './v3-template-generator';
 
 /**
@@ -25,9 +29,13 @@ import { generateElementorV3TemplateCandidate } from './v3-template-generator';
  * - M4.3b, order: when a breakpoint reorders the visible children of a matched container, every child visible there
  *   gets that breakpoint's custom flex order, its position in the variant (element order family).
  *
+ * - M4.3c, widgets: differing font size, line height and letter spacing of Heading, Text Editor and Button widgets
+ *   (text typography family), and their alignment (text and Button alignment families).
+ *
  * What is not merged is an explicit review, never a silent drop: ambiguous matches, a variant-only node that cannot
  * be placed, wrap and grid layout changes, an unset variant value whose Elementor default would differ (padding,
- * alignment), and any other differing container or widget property (M4.3c).
+ * alignment, typography), other typography (family, weight, colour…), different text, and any other differing
+ * container or widget property (sizing, radius, min-height and the like: M4.3d).
  */
 export const P15_RESPONSIVE_MERGE_VERSION = 'p15-elementor-responsive-merge-v1' as const;
 
@@ -66,9 +74,11 @@ const VERSIONS: Record<string, string> = {
   direction: P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION, alignment: P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION,
   gap: P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION, padding: P15_ELEMENTOR_RESPONSIVE_PADDING_MANIFEST_VERSION,
   margin: P15_ELEMENTOR_RESPONSIVE_MARGIN_MANIFEST_VERSION, visibility: P15_ELEMENTOR_RESPONSIVE_VISIBILITY_MANIFEST_VERSION,
-  elementOrder: P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_MANIFEST_VERSION,
+  elementOrder: P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_MANIFEST_VERSION, textTypography: P15_ELEMENTOR_RESPONSIVE_TEXT_TYPOGRAPHY_MANIFEST_VERSION,
+  textAlignment: P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_VERSION, buttonAlignment: P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_VERSION,
 };
-const ENTRIES_FIELD: Record<string, string> = { visibility: 'elements', elementOrder: 'elements' };
+const ENTRIES_FIELD: Record<string, string> = { visibility: 'elements', elementOrder: 'elements', textTypography: 'widgets', textAlignment: 'widgets', buttonAlignment: 'widgets' };
+const TYPOGRAPHY_METRICS = [['fontSizePx', 'FontSizePx'], ['lineHeightPx', 'LineHeightPx'], ['letterSpacingPx', 'LetterSpacingPx']] as const;
 /** Container keys this step handles (or that carry no layout value). */
 const HANDLED_KEYS = new Set(['kind', 'sourceNodeId', 'children', 'styleReviews', 'direction', 'alignItems', 'justifyContent', 'gapPx', 'paddingPx', 'marginPx', 'wrap', 'grid']);
 const ZERO_BOX = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -180,8 +190,7 @@ export function buildP15ResponsiveMerge(desktop: P15NeutralExportDocumentV1, var
         continue;
       }
       if (d.kind !== 'container' || v.kind !== 'container') {
-        const differing = Object.keys({ ...d, ...v }).filter((key) => key !== 'sourceNodeId' && !same((d as unknown as Record<string, unknown>)[key], (v as unknown as Record<string, unknown>)[key]));
-        if (differing.length > 0) review(desktopId, 'RESPONSIVE_WIDGET_PROPERTY_NOT_MERGED', `${differing.sort().join(', ')} differ on ${device} (M4.3c).`);
+        mergeWidget(d, v, device, put, review);
         continue;
       }
       mergeContainerLayout(d, v, device, put, review);
@@ -226,6 +235,39 @@ export function buildP15ResponsiveMerge(desktop: P15NeutralExportDocumentV1, var
     entries: families, reviews, blockReason: null };
 }
 
+/** Typography metrics and alignment of Heading, Text Editor and Button widgets (M4.3c); anything else is a review. */
+function mergeWidget(
+  d: P15NeutralExportNode,
+  v: P15NeutralExportNode,
+  device: VariantDevice,
+  put: (family: string, sourceNodeId: string, fields: Record<string, unknown>) => void,
+  review: (sourceNodeId: string, reasonCode: string, detail: string) => void,
+): void {
+  const id = d.sourceNodeId;
+  const dr = d as unknown as Record<string, unknown>;
+  const vr = v as unknown as Record<string, unknown>;
+  const handled = new Set(['kind', 'sourceNodeId']);
+  if (d.kind === 'heading' || d.kind === 'text' || d.kind === 'button') {
+    handled.add('typography').add('align');
+    const dt = (dr.typography ?? {}) as Record<string, unknown>;
+    const vt = (vr.typography ?? {}) as Record<string, unknown>;
+    for (const [metric, key] of TYPOGRAPHY_METRICS) {
+      if (same(dt[metric], vt[metric])) continue;
+      if (vt[metric] === undefined) review(id, 'RESPONSIVE_VALUE_UNSET_ON_VARIANT', `typography.${metric} is unset on ${device}.`);
+      else put('textTypography', id, { [`${device}${key}`]: vt[metric] });
+    }
+    const otherTypography = Object.keys({ ...dt, ...vt }).filter((key) => !TYPOGRAPHY_METRICS.some(([metric]) => metric === key) && !same(dt[key], vt[key]));
+    if (otherTypography.length > 0) review(id, 'RESPONSIVE_WIDGET_PROPERTY_NOT_MERGED', `typography ${otherTypography.sort().join(', ')} differ on ${device}.`);
+    if (!same(dr.align, vr.align)) {
+      if (vr.align === undefined) review(id, 'RESPONSIVE_VALUE_UNSET_ON_VARIANT', `align is unset on ${device}.`);
+      else if (d.kind === 'button') put('buttonAlignment', id, { [`${device}Align`]: expectedDesktopButtonAlignment(vr.align as 'start' | 'center' | 'end') });
+      else put('textAlignment', id, { [`${device}Align`]: vr.align });
+    }
+  }
+  const differing = Object.keys({ ...dr, ...vr }).filter((key) => !handled.has(key) && !same(dr[key], vr[key]));
+  if (differing.length > 0) review(id, 'RESPONSIVE_WIDGET_PROPERTY_NOT_MERGED', `${differing.sort().join(', ')} differ on ${device}.`);
+}
+
 function mergeContainerLayout(
   d: P15NeutralContainerNode,
   v: P15NeutralContainerNode,
@@ -260,5 +302,5 @@ function mergeContainerLayout(
   if (!same(d.marginPx ?? ZERO_BOX, v.marginPx ?? ZERO_BOX)) put('margin', id, { [`${device}MarginPx`]: v.marginPx ?? ZERO_BOX });
   const differing = Object.keys({ ...d, ...v }).filter((key) => !HANDLED_KEYS.has(key)
     && !same((d as unknown as Record<string, unknown>)[key], (v as unknown as Record<string, unknown>)[key]));
-  if (differing.length > 0) review(id, 'RESPONSIVE_PROPERTY_NOT_MERGED', `${differing.sort().join(', ')} differ on ${device} (M4.3c).`);
+  if (differing.length > 0) review(id, 'RESPONSIVE_PROPERTY_NOT_MERGED', `${differing.sort().join(', ')} differ on ${device} (M4.3d).`);
 }

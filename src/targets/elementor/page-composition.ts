@@ -16,6 +16,9 @@ import { resolveP15ElementorResponsiveContainerPadding, P15_ELEMENTOR_RESPONSIVE
 import { resolveP15ElementorResponsiveContainerWraps, P15_ELEMENTOR_RESPONSIVE_WRAP_EVIDENCE } from './responsive-wrap-resolution';
 import { resolveP15ElementorResponsiveElementOrder, P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE } from './responsive-element-order-resolution';
 import { resolveP15ElementorResponsiveVisibility, P15_ELEMENTOR_RESPONSIVE_VISIBILITY_EVIDENCE } from './responsive-visibility-resolution';
+import { resolveP15ElementorResponsiveTextTypography, P15_ELEMENTOR_RESPONSIVE_TEXT_TYPOGRAPHY_EVIDENCE } from './responsive-text-typography-resolution';
+import { resolveP15ElementorResponsiveTextAlignments, P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_EVIDENCE } from './responsive-text-alignment-resolution';
+import { resolveP15ElementorResponsiveButtonAlignments, P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_EVIDENCE } from './responsive-button-alignment-resolution';
 import type { ElementorElementV04 } from './template-v04';
 
 /**
@@ -31,6 +34,8 @@ export const P15_PAGE_COMPOSITION_FAMILIES = [
   'direction', 'wrap', 'alignContent', 'alignment', 'gap', 'padding', 'margin', 'containerStyle', 'buttonColors',
   // Recovery M4.3b: responsive presence and order on any element (Container or core widget).
   'visibility', 'elementOrder',
+  // Recovery M4.3c: responsive widget typography metrics and alignment.
+  'textTypography', 'textAlignment', 'buttonAlignment',
 ] as const;
 export type P15PageCompositionFamily = typeof P15_PAGE_COMPOSITION_FAMILIES[number];
 export type P15PageCompositionResultV1 = CompositionResult<P15PageCompositionFamily>;
@@ -38,6 +43,8 @@ export type P15PageCompositionResultV1 = CompositionResult<P15PageCompositionFam
 const isContainer = (node: ElementorElementV04): boolean => node.elType === 'container';
 const isButton = (node: ElementorElementV04): boolean => node.elType === 'widget' && node.widgetType === 'button';
 const isElement = (node: ElementorElementV04): boolean => node.elType === 'container' || node.elType === 'widget';
+const isTextWidget = (node: ElementorElementV04): boolean => node.elType === 'widget' && (node.widgetType === 'heading' || node.widgetType === 'text-editor');
+const isTypographyWidget = (node: ElementorElementV04): boolean => isTextWidget(node) || isButton(node);
 const responsiveKeys = (evidence: { tabletSettingKey: string; mobileSettingKey: string }): string[] =>
   [evidence.tabletSettingKey, evidence.mobileSettingKey];
 /** Every key a nested composition may add: the union of its own steps' allowlists. */
@@ -80,6 +87,12 @@ export const P15_PAGE_COMPOSITION: CompositionSpec<P15PageCompositionFamily> = {
     elementOrder: { resolve: resolveP15ElementorResponsiveElementOrder, resolvedStatus: 'RESPONSIVE_ELEMENT_ORDER_RESOLVED', accepts: isElement,
       keys: [P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE.tabletOrderSettingKey, P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE.mobileOrderSettingKey,
         P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE.tabletCustomOrderSettingKey, P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE.mobileCustomOrderSettingKey] },
+    textTypography: { resolve: resolveP15ElementorResponsiveTextTypography, resolvedStatus: 'RESPONSIVE_TEXT_TYPOGRAPHY_RESOLVED', accepts: isTypographyWidget,
+      keys: [P15_ELEMENTOR_RESPONSIVE_TEXT_TYPOGRAPHY_EVIDENCE.starterSettingKey, ...Object.values(P15_ELEMENTOR_RESPONSIVE_TEXT_TYPOGRAPHY_EVIDENCE.settingKeys)] },
+    textAlignment: { resolve: resolveP15ElementorResponsiveTextAlignments, resolvedStatus: 'RESPONSIVE_TEXT_ALIGNMENTS_RESOLVED', accepts: isTextWidget,
+      keys: responsiveKeys(P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_EVIDENCE) },
+    buttonAlignment: { resolve: resolveP15ElementorResponsiveButtonAlignments, resolvedStatus: 'RESPONSIVE_BUTTON_ALIGNMENTS_RESOLVED', accepts: isButton,
+      keys: responsiveKeys(P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_EVIDENCE) },
   },
 };
 
