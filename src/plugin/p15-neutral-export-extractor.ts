@@ -21,6 +21,7 @@ import {
   type P15NeutralTypography,
 } from '../targets/elementor/neutral-export-ir';
 import {
+  P15_SPAN_RESETS,
   P15_TEXT_FONT_WEIGHTS,
   paragraphProblems,
   paragraphSpacingValid,
@@ -492,6 +493,11 @@ function extractTextTypography(node: TextNode): TextTypographyExtraction {
     const diff: Record<string, unknown> = {};
     for (const key of TYPOGRAPHY_FIELDS) {
       if (style[key] === dominant[key]) continue;
+      if (style[key] === undefined && key in P15_SPAN_RESETS) {
+        // Recovery M2.9c: dropping the node's italic or case is an exact inherited reset.
+        diff[key] = P15_SPAN_RESETS[key as keyof typeof P15_SPAN_RESETS];
+        continue;
+      }
       if (style[key] === undefined) {
         if (!reviews.has('MIXED_TYPOGRAPHY_REQUIRES_REVIEW')) {
           reviews.set('MIXED_TYPOGRAPHY_REQUIRES_REVIEW', { reasonCode: 'MIXED_TYPOGRAPHY_REQUIRES_REVIEW', detail: `A text run removes ${key}, which inline styles cannot express.` });
@@ -694,6 +700,7 @@ function extractContainer(
     align: record.strokeAlign,
     dashPattern: record.dashPattern,
     includedInLayout: record.strokesIncludedInLayout,
+    emptyFixedBox: !childNodes(node).some(visible) && record.layoutSizingHorizontal === 'FIXED' && record.layoutSizingVertical === 'FIXED',
   }, paddingPx);
   const shadowed = deriveP15BoxShadow(visiblePaintList(record.effects));
   const rounded = radius.value !== undefined || radii.radii !== undefined;

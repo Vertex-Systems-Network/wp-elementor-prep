@@ -18,6 +18,12 @@ import { elementorPxSlider } from './mapping-engine/codecs';
 export const P15_TEXT_FONT_WEIGHTS = ['100', '200', '300', '400', '500', '600', '700', '800', '900'] as const;
 export const P15_TEXT_TRANSFORMS = ['uppercase', 'lowercase', 'capitalize'] as const;
 export const P15_TEXT_DECORATIONS = ['underline', 'line-through'] as const;
+/**
+ * Span-only resets (recovery M2.9c): a run that drops the node's italic or case sets `font-style: normal` /
+ * `text-transform: none`, both inherited CSS properties. A dropped underline is not resettable: CSS text decorations
+ * propagate to inline descendants, so `text-decoration: none` on a span cannot remove its parent's.
+ */
+export const P15_SPAN_RESETS = { fontStyle: 'normal', textTransform: 'none' } as const;
 export const P15_TEXT_MAX_PARAGRAPHS = 1_000;
 export const P15_TEXT_MAX_SPANS_PER_PARAGRAPH = 500;
 export const P15_TEXT_LIMITS = Object.freeze({
@@ -31,11 +37,13 @@ export const P15_TEXT_LIMITS = Object.freeze({
 export interface P15NeutralTypography {
   fontFamily?: string;
   fontWeight?: typeof P15_TEXT_FONT_WEIGHTS[number];
-  fontStyle?: 'italic';
+  /** `normal` only inside a span, to reset an italic node (recovery M2.9c). */
+  fontStyle?: 'italic' | 'normal';
   fontSizePx?: number;
   lineHeightPx?: number;
   letterSpacingPx?: number;
-  textTransform?: typeof P15_TEXT_TRANSFORMS[number];
+  /** `none` only inside a span, to reset the node's case (recovery M2.9c). */
+  textTransform?: typeof P15_TEXT_TRANSFORMS[number] | 'none';
   textDecoration?: typeof P15_TEXT_DECORATIONS[number];
   colorHex?: string;
 }
@@ -65,7 +73,7 @@ export interface TypographyProblem {
 }
 
 /** Validate one typography object; an empty object is invalid (omit it instead). */
-export function typographyProblems(value: unknown, path: string): TypographyProblem[] {
+export function typographyProblems(value: unknown, path: string, span = false): TypographyProblem[] {
   if (!record(value) || Object.keys(value).length === 0 || Object.keys(value).some((key) => !(TYPOGRAPHY_KEYS as readonly string[]).includes(key))) {
     return [{ path, message: `Typography must be a non-empty object with only ${TYPOGRAPHY_KEYS.join(', ')}.` }];
   }
@@ -76,11 +84,16 @@ export function typographyProblems(value: unknown, path: string): TypographyProb
     bad('fontFamily', 'Font family must be a single bounded family name of letters, digits, spaces, dots, underscores or hyphens.');
   }
   if (value.fontWeight !== undefined && !(P15_TEXT_FONT_WEIGHTS as readonly unknown[]).includes(value.fontWeight)) bad('fontWeight', 'Font weight must be 100..900 in steps of 100.');
-  if (value.fontStyle !== undefined && value.fontStyle !== 'italic') bad('fontStyle', 'Font style must be italic when provided.');
+  if (value.fontStyle !== undefined && value.fontStyle !== 'italic' && !(span && value.fontStyle === P15_SPAN_RESETS.fontStyle)) {
+    bad('fontStyle', span ? 'Span font style must be italic or normal.' : 'Font style must be italic when provided.');
+  }
   if (value.fontSizePx !== undefined && !inRange(value.fontSizePx, P15_TEXT_LIMITS.fontSizePx)) bad('fontSizePx', 'Font size must be 1..400 px with at most two decimals.');
   if (value.lineHeightPx !== undefined && !inRange(value.lineHeightPx, P15_TEXT_LIMITS.lineHeightPx)) bad('lineHeightPx', 'Line height must be 0..1000 px with at most two decimals.');
   if (value.letterSpacingPx !== undefined && !inRange(value.letterSpacingPx, P15_TEXT_LIMITS.letterSpacingPx)) bad('letterSpacingPx', 'Letter spacing must be -100..100 px with at most two decimals.');
-  if (value.textTransform !== undefined && !(P15_TEXT_TRANSFORMS as readonly unknown[]).includes(value.textTransform)) bad('textTransform', 'Text transform must be uppercase, lowercase or capitalize.');
+  if (value.textTransform !== undefined && !(P15_TEXT_TRANSFORMS as readonly unknown[]).includes(value.textTransform)
+    && !(span && value.textTransform === P15_SPAN_RESETS.textTransform)) {
+    bad('textTransform', span ? 'Span text transform must be uppercase, lowercase, capitalize or none.' : 'Text transform must be uppercase, lowercase or capitalize.');
+  }
   if (value.textDecoration !== undefined && !(P15_TEXT_DECORATIONS as readonly unknown[]).includes(value.textDecoration)) bad('textDecoration', 'Text decoration must be underline or line-through.');
   if (value.colorHex !== undefined && (typeof value.colorHex !== 'string' || !/^#[0-9a-f]{6}$/.test(value.colorHex))) bad('colorHex', 'Text colour must be lowercase #rrggbb.');
   return problems;
@@ -106,7 +119,7 @@ export function paragraphProblems(value: unknown, text: unknown, path: string): 
         problems.push({ path: spanAt, message: 'Each span must be { text, style? } with non-empty text and no hard line breaks.' });
         return;
       }
-      if (span.style !== undefined) problems.push(...typographyProblems(span.style, `${spanAt}.style`));
+      if (span.style !== undefined) problems.push(...typographyProblems(span.style, `${spanAt}.style`, true));
       if (span.href !== undefined && !validP15LinkUrl(span.href)) problems.push({ path: `${spanAt}.href`, message: 'Span link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.' });
     });
   });
