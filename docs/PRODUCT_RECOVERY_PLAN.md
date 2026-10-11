@@ -7,8 +7,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
-> - Next task: **M3 acceptance** (exact-head real-target run with the SVG icon, then the canonical M3 sync; then M4.1)
+> - Active milestone: **M4 — Responsive breakpoint engine** (M3 accepted: PR #910, exact head `0b8663f`, 10/10 checks green, merged as `a4ee8dd`; images and SVG load in the real-target render, run 38103090238)
+> - Next task: **M4.1** (breakpoint set)
 > - Last completed task: **M3.7** (plugin UI asset-pack download)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
