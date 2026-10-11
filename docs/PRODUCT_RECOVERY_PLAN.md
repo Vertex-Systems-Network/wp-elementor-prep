@@ -7,8 +7,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M2 — Full single-frame Figma extraction**: every task done; acceptance (§5: golden landing page with zero silent drops) holds in `tests/m2-golden-landing-page.test.ts` and closes when the final M2 PR passes its exact-head gates. M1 accepted: PR #900 merged as `47ada79`.
-> - Next task: **M2 acceptance** (all M2 tasks done; run §5 acceptance and the once-per-milestone canonical sync), then **M3.2** (M3.1 done ahead of acceptance)
+> - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
+> - Next task: **M3.2** (atomic asset-pack ZIP)
 > - Last completed task: **M3.1** (asset collector)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
