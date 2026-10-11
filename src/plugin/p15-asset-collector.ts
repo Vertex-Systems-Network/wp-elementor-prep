@@ -1,4 +1,5 @@
 import { sha256BytesHex } from '../core/sha256';
+import { slugFragment } from '../core/slug';
 
 /**
  * Asset collection (recovery M3.1): read-only bytes for every image and vector a selected frame shows.
@@ -89,7 +90,7 @@ export function sniffP15ImageMime(bytes: Uint8Array): Exclude<P15AssetMimeType, 
 }
 
 /** Node ids such as `12:34` or `I1:2;3:4` become a safe id fragment. */
-const safeId = (value: string): string => value.replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'node';
+const safeId = (value: string): string => slugFragment(value) || 'node';
 
 class Collector {
   readonly assets: P15AssetRecord[] = [];

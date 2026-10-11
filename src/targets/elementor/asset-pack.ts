@@ -1,5 +1,6 @@
 import { sha256BytesHex } from '../../core/sha256';
 import { readP15Zip, writeP15Zip, type P15ZipEntry } from '../../core/zip';
+import { slugFragment } from '../../core/slug';
 
 /**
  * Atomic asset pack (recovery M3.2): one ZIP holding `template.json`, `assets/*` and `manifest.json`.
@@ -88,7 +89,7 @@ const utf8 = (value: string): Uint8Array => new TextEncoder().encode(value);
 const hash = (bytes: Uint8Array): string => `sha256:${sha256BytesHex(bytes)}`;
 
 function slug(title: string): string {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'design';
+  return slugFragment(title, { lowercase: true, maxLength: 60 }) || 'design';
 }
 
 function blocked(reason: string): P15AssetPackResultV1 {
