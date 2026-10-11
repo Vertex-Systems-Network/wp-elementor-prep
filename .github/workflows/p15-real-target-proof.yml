@@ -442,6 +442,27 @@ jobs:
         continue-on-error: true
         run: node scripts/p15-custom-order-render-probe.mjs
 
+      # Recovery M3.6b (D-051): an isolated asset-pack import on target A. It writes only to its own directory and
+      # never feeds the retained proof chain above; its own enforcement step runs after artifact upload.
+      - name: Build, upload, relink and import the recovery asset pack
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          P15_ASSET_PACK_OUT_DIR="$GITHUB_WORKSPACE/dist-p15/p15-asset-pack-proof"
+          echo "P15_ASSET_PACK_OUT_DIR=$P15_ASSET_PACK_OUT_DIR" >> "$GITHUB_ENV"
+          echo "P15_ASSET_PACK_UPLOADS=$P15_ASSET_PACK_OUT_DIR/uploads.json" >> "$GITHUB_ENV"
+          npm run -s p15:asset-pack-harness -- fixture --out-dir "$P15_ASSET_PACK_OUT_DIR"
+          P15_WP_ROOT="$RUNNER_TEMP/p15-wordpress" php scripts/p15-asset-pack-import-probe.php upload \
+            "$P15_ASSET_PACK_OUT_DIR/pack" "$P15_ASSET_PACK_OUT_DIR/harness-expectation.json" "$P15_ASSET_PACK_OUT_DIR/uploads.json"
+          npm run -s p15:asset-pack-harness -- relink --pack-dir "$P15_ASSET_PACK_OUT_DIR/pack" \
+            --uploads "$P15_ASSET_PACK_OUT_DIR/uploads.json" --out "$P15_ASSET_PACK_OUT_DIR/relinked-template.json"
+          P15_WP_ROOT="$RUNNER_TEMP/p15-wordpress" php scripts/p15-asset-pack-import-probe.php import \
+            "$P15_ASSET_PACK_OUT_DIR/relinked-template.json" "$P15_ASSET_PACK_OUT_DIR"
+
+      - name: Observe recovery asset-pack render
+        continue-on-error: true
+        run: node scripts/p15-asset-pack-render-probe.mjs
+
       - name: Run repository P15 evidence intakes
         id: p15-intakes
         if: always()
@@ -613,6 +634,7 @@ jobs:
             dist-p15/p15-elementor-first-proof-vector-v3/
             dist-p15/p15-elementor-asset-proof-vector-v1/
             dist-p15/p15-real-target-proof/
+            dist-p15/p15-asset-pack-proof/
           if-no-files-found: error
 
       - name: Enforce qualified exact-bound proof chain
@@ -682,3 +704,18 @@ jobs:
           jq -e '.internalDecisionStatus == "NOT_RUN" and .authenticationAuthority == false and .acceptanceAuthority == false and .referenceClosureClaim == false and .assetReferenceClosureClaim == false and .targetCompatibilityClaim == false and .productionAcceptance == false and .generationEnabled == false and .downloadEnabled == false and .internalReviewRequired == true' \
             "$P15_PROOF_OUT_DIR/cross-target-media-portability-intake.json"
           test ! -f "$P15_PROOF_OUT_DIR/p15-target-a-managed-media-export.json"
+
+      - name: Enforce recovery asset-pack import and render
+        if: always()
+        run: |
+          set -euo pipefail
+          OUT="$GITHUB_WORKSPACE/dist-p15/p15-asset-pack-proof"
+          for file in uploads.json asset-pack-import-observation.json asset-pack-render-observation.json; do
+            echo "::group::$file"; cat "$OUT/$file" 2>/dev/null || echo "(missing)"; echo "::endgroup::"
+          done
+          jq -e '.label == "REVIEW REQUIRED" and (.referencedAssetPaths | length) == 2' "$OUT/harness-expectation.json"
+          jq -e '(keys | length) == 2 and all(.[]; (.id > 0) and (.url | startswith("http://127.0.0.1:8080/wp-content/uploads/")))' "$OUT/uploads.json"
+          jq -e '.mediaPreserved == true and (.savedMedia | length) == 2 and .targetCompatibilityClaim == false and .productionAcceptance == false' \
+            "$OUT/asset-pack-import-observation.json"
+          jq -e '.pass == true and (.expectedUrls | length) == 2 and all(.observed[]; .status == 200 and (.contentType | startswith("image/")))
+            and .targetCompatibilityClaim == false and .productionAcceptance == false' "$OUT/asset-pack-render-observation.json"
