@@ -713,9 +713,12 @@ jobs:
           for file in uploads.json asset-pack-import-observation.json asset-pack-render-observation.json; do
             echo "::group::$file"; cat "$OUT/$file" 2>/dev/null || echo "(missing)"; echo "::endgroup::"
           done
-          jq -e '.label == "REVIEW REQUIRED" and (.referencedAssetPaths | length) == 2' "$OUT/harness-expectation.json"
-          jq -e '(keys | length) == 2 and all(.[]; (.id > 0) and (.url | startswith("http://127.0.0.1:8080/wp-content/uploads/")))' "$OUT/uploads.json"
-          jq -e '.mediaPreserved == true and (.savedMedia | length) == 2 and .targetCompatibilityClaim == false and .productionAcceptance == false' \
+          # Two PNGs (Image widget, Container background) and one SVG icon (recovery M3 acceptance: images and SVG).
+          jq -e '.label == "REVIEW REQUIRED" and (.referencedAssetPaths | length) == 3
+            and any(.referencedAssetPaths[]; endswith(".svg"))' "$OUT/harness-expectation.json"
+          jq -e '(keys | length) == 3 and all(.[]; (.id > 0) and (.url | startswith("http://127.0.0.1:8080/wp-content/uploads/")))' "$OUT/uploads.json"
+          jq -e '.mediaPreserved == true and (.savedMedia | length) == 3 and .targetCompatibilityClaim == false and .productionAcceptance == false' \
             "$OUT/asset-pack-import-observation.json"
-          jq -e '.pass == true and (.expectedUrls | length) == 2 and all(.observed[]; .status == 200 and (.contentType | startswith("image/")))
+          jq -e '.pass == true and (.expectedUrls | length) == 3 and all(.observed[]; .status == 200 and (.contentType | startswith("image/")))
+            and any(.observed[]; .kind == "img" and .contentType == "image/svg+xml" and .complete == true and .naturalWidth > 0)
             and .targetCompatibilityClaim == false and .productionAcceptance == false' "$OUT/asset-pack-render-observation.json"
