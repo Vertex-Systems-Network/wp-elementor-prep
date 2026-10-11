@@ -20,10 +20,15 @@ class Node {
   }
   remove() { this.removed = true; if (this.parent) this.parent.children = this.parent.children.filter((node) => node !== this); }
   setPluginData(key: string, value: string) { this.plugin[key] = value; }
-  clone(): Node {
+  private copy(): Node {
     const copy = new Node(`${this.id}~c`, this.type, this.name, this.x, this.y, this.width, this.height, this.characters);
     copy.layoutMode = this.layoutMode;
-    for (const child of this.children) copy.appendChild(child.clone());
+    for (const child of [...this.children]) copy.appendChild(child.copy());
+    return copy;
+  }
+  /** Like Figma: a deep copy appended to the same parent. */
+  clone(): Node {
+    const copy = this.copy();
     this.parent?.appendChild(copy);
     return copy;
   }
