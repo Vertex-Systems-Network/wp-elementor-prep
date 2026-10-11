@@ -70,7 +70,18 @@ function utf8Bytes(value: string): number[] {
  * authentication, authorization, secrecy, or proof that external evidence is true.
  */
 export function sha256Hex(value: string): string {
-  const bytes = utf8Bytes(value);
+  return digest(utf8Bytes(value));
+}
+
+/**
+ * Runtime-neutral synchronous SHA-256 over raw bytes (recovery M3: asset bytes). Same integrity-only limits as
+ * {@link sha256Hex}.
+ */
+export function sha256BytesHex(value: Uint8Array | readonly number[]): string {
+  return digest(Array.from(value));
+}
+
+function digest(bytes: number[]): string {
   const bitLength = BigInt(bytes.length) * 8n;
 
   bytes.push(0x80);

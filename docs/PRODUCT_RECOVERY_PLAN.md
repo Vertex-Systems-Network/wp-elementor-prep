@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction**: every task done; acceptance (§5: golden landing page with zero silent drops) holds in `tests/m2-golden-landing-page.test.ts` and closes when the final M2 PR passes its exact-head gates. M1 accepted: PR #900 merged as `47ada79`.
-> - Next task: **M2 acceptance** (all M2 tasks done; run §5 acceptance and the once-per-milestone canonical sync), then **M3.1**
-> - Last completed task: **M2.10** (content width of extracted Containers)
+> - Next task: **M2 acceptance** (all M2 tasks done; run §5 acceptance and the once-per-milestone canonical sync), then **M3.2** (M3.1 done ahead of acceptance)
+> - Last completed task: **M3.1** (asset collector)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -379,7 +379,10 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 
 ### M3 — Assets
 
-- [ ] **M3.1** Image bytes. Read original bytes through `figma.getImageByHash(hash).getBytesAsync()`. Produce the rendered appearance through `exportAsync` (PNG @1x/@2x). Export vectors and icons as SVG.
+- [x] **M3.1** Image bytes. Read original bytes through `figma.getImageByHash(hash).getBytesAsync()`. Produce the rendered appearance through `exportAsync` (PNG @1x/@2x). Export vectors and icons as SVG. _(done 2026-10-11)_
+  - `src/plugin/p15-asset-collector.ts` (`p15-asset-collector-v1`), with the Figma API injected (`getImageByHash` → `getBytesAsync`/`getSizeAsync`, `node.exportAsync`). **Stored Original**: one record per image hash (content-addressed `original-<hash>`, every using node listed, MIME sniffed from the PNG/JPEG/GIF/WebP signature, original pixel size). **Rendered Appearance**: every image layer as PNG @1x and @2x (`render-<node>@<scale>x`), capturing crop, scale mode, filters and effects. Vector layers and frames/groups made only of vectors (icons) → one SVG each (`svg-<node>`).
+  - Every record has a byte SHA-256 (new `sha256BytesHex` in `src/core/sha256.ts`, cross-checked against `node:crypto`), byte length and pixel size. Bounds: 500 assets, 20 MB per asset, 200 MB total. Missing hashes, unreadable or unsupported images, failed exports, empty or oversized assets and id collisions are explicit reviews. No Figma mutation, no network, no URL.
+  - Not yet wired into the plugin flow; the asset pack (M3.2) consumes it. Tests: `tests/m3-asset-collector.test.ts`, `tests/m3-sha256-bytes.test.ts`.
 - [ ] **M3.2** Atomic asset-pack ZIP: Template JSON + `/assets/*` + manifest (hash, dimensions, alt text, usage).
 - [ ] **M3.3** Elementor media references. The template references pack-relative asset ids, and an import guide plus an optional future WordPress companion handles media upload. The core stays network-free. Temporary Figma URLs are never emitted, which resolves the root cause of #856.
 - [ ] **M3.4** Image widget sizing: width, height, object-fit and crop. Container background image: size, position and repeat.
