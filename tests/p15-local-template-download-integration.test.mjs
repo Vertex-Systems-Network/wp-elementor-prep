@@ -37,7 +37,7 @@ describe('P15 local Template JSON integration boundaries', () => {
     const releaseBuild = readFileSync('scripts/build-release.mjs', 'utf8');
     const main = readFileSync('src/plugin/main.ts', 'utf8');
 
-    expect(entry).toBe("import './main';\nimport './p15-local-template-download-controller';\nimport './p15-asset-pack-download-controller';\n");
+    expect(entry).toBe("import './main';\nimport './p15-local-template-download-controller';\nimport './p15-asset-pack-download-controller';\nimport './p15-breakpoint-set-controller';\n");
     expect(build).toContain("entryPoints: ['src/plugin/entry.ts']");
     expect(releaseBuild).toContain("entryPoints: ['src/plugin/entry.ts']");
     expect(main).not.toContain('p15-elementor-local-template-download-request');

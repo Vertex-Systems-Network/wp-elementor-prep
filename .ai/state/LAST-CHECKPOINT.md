@@ -22,4 +22,4 @@ Disposable-target harness evidence only. Packs stay `REVIEW REQUIRED` (D-051 not
 
 ## Exact next safe action
 
-Recovery M4.1: breakpoint set (classify 2–3 selected frames by width into desktop/tablet/mobile; configurable per profile; UI confirms).
+Recovery M4.2: deterministic top-down node matcher across the confirmed breakpoint set (M4.1 done on this branch).
