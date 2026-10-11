@@ -22,4 +22,4 @@ Disposable-target harness evidence only. Packs stay `REVIEW REQUIRED` (D-051 not
 
 ## Exact next safe action
 
-Recovery M4.2: deterministic top-down node matcher across the confirmed breakpoint set (M4.1 done on this branch).
+Recovery M4.3b: presence (hide_*) and order (_flex_order_*) merge; M4.1 merged (PR #911), M4.2 + M4.3a on this branch.
