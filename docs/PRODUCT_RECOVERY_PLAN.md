@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.9b** (property-coverage auditor)
-> - Last completed task: **M2.9a** (D-049 review artifact)
+> - Next task: **M2.9c** (golden landing-page fixture)
+> - Last completed task: **M2.9b** (property-coverage auditor)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -364,7 +364,10 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - Unmapped content stays an explicit placeholder: an empty Container hidden on desktop/tablet/mobile (no size or gap on the page, visible in the editor) with classes `p15-review-placeholder p15-review-<reason>`. Depth/node-limit failures are BLOCKED: no artifact.
     - The export pipeline passes it through for `BLOCKED_GENERATION`; the CLI writes `elementor-review-artifact.json` (never `elementor-template.json`) and still exits 3. The plugin UI already lists every review entry with its reason and detail.
     - Tests: `tests/m2-review-artifact.test.ts`.
-  - [ ] **M2.9b** Property-coverage auditor: for every visible Figma node and visual property, prove it is mapped into the IR or listed as review.
+  - [x] **M2.9b** Property-coverage auditor: for every visible Figma node and visual property, prove it is mapped into the IR or listed as review _(done 2026-10-11)_.
+    - `src/plugin/p15-property-coverage-audit.ts` (`p15-property-coverage-audit-v1`) walks the Figma tree independently of the extractor. Every visible node must be an IR node, a review (which covers its subtree), or a button label folded into its button. Every non-default visual property must be carried by an IR field or named by a review on that node: fills, strokes, effects, corner radii, visible clipping, opacity, blend mode, rotation, masks, absolute placement, min/max sizes, wrap, grid, baseline, item spacing, padding and the text properties (colour, size, family, letter spacing, line height, case, decoration, text strokes/effects). A bounds review covers the whole tree.
+    - The plugin preview (`buildP15ElementorV1PreviewFromFigmaFrame`) returns the audit as `coverageAudit`. Each finding becomes a `SILENT_DROP_DETECTED` review node on the root (at most 100 plus a count), so no candidate ever loses content unannounced; the D-049 review artifact lists them.
+    - Tests: `tests/m2-property-coverage-audit.test.ts` (complete extraction, doctored IR with a dropped node / property / review, subtree and bounds coverage, button labels, preview gating).
   - [ ] **M2.9c** Golden landing-page fixture through the auditor, the generator and a recorded golden.
 - [ ] **M2.10** Content width of unsized Containers. Elementor 4.2.4 `container.php` (blob `3486766`) defaults `content_width` to `boxed`, and `_container.scss` (blob `d6c65cb`) caps a boxed inner at `--content-width: min(100%, var(--container-max-width, 1140px))`. A FILL or unsized frame wider than 1140px (for example a full-bleed section in a 1440px page) is therefore narrowed and centred. Write `content_width: full` on every generated Container (Figma has no boxed concept), re-record the affected goldens with a diff test, and re-bind the retained real-target reference/profile evidence that pins the candidate identity. Found during M2.6b.
 

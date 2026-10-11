@@ -46,6 +46,7 @@ import {
   deriveP15AbsolutePosition,
 } from '../targets/elementor/absolute-position';
 import { validP15LinkUrl } from '../targets/elementor/link-url';
+import { auditP15PropertyCoverage, type P15PropertyCoverageAuditV1 } from './p15-property-coverage-audit';
 import { detectP15Buttons, detectP15Headings } from '../targets/elementor/semantic-detection';
 import type { P15ElementorV3GenerationResult } from '../targets/elementor/v3-template-generator';
 
@@ -58,6 +59,8 @@ export interface P15FigmaNeutralExtractionResult {
   document: P15NeutralExportDocumentV1;
   validation: P15NeutralExportValidationResult;
   generation: P15ElementorV3GenerationResult;
+  /** Recovery M2.9b: proof that every visible property was mapped or reviewed. */
+  coverageAudit: P15PropertyCoverageAuditV1;
 }
 
 interface ExtractionState {
@@ -937,7 +940,10 @@ export function buildP15ElementorV1PreviewFromFigmaFrame(
   frame: FrameNode,
   documentType: P15NeutralDocumentType = 'page',
 ): P15FigmaNeutralExtractionResult {
-  const document = extractP15NeutralExportDocumentFromFigmaFrame(frame, documentType);
+  const extracted = extractP15NeutralExportDocumentFromFigmaFrame(frame, documentType);
+  const coverageAudit = auditP15PropertyCoverage(frame, extracted);
+  // A silent drop the audit finds becomes an explicit review, so no candidate ever loses content unannounced.
+  const document = withCoverageReviews(extracted, coverageAudit);
   const validation = validateP15NeutralExportDocument(document);
   // The shared export path (recovery M1.6). The plugin has no page manifest yet, so this is the generated base.
   const generation = buildP15ElementorExport(document).generation;
@@ -948,5 +954,22 @@ export function buildP15ElementorV1PreviewFromFigmaFrame(
     document,
     validation,
     generation,
+    coverageAudit,
   };
+}
+/**
+ * Append audit findings to the root container as `SILENT_DROP_DETECTED` review nodes (recovery M2.9b). Review nodes
+ * have no per-node cap and become placeholders in the D-049 review artifact; at most 100 are listed, plus a count.
+ */
+function withCoverageReviews(document: P15NeutralExportDocumentV1, audit: P15PropertyCoverageAuditV1): P15NeutralExportDocumentV1 {
+  const [root, ...rest] = document.nodes;
+  if (audit.status === 'COMPLETE' || root?.kind !== 'container') return document;
+  const listed = audit.findings.slice(0, 100);
+  const reviews: P15NeutralReviewNode[] = listed.map((finding, index) => ({ kind: 'review', sourceNodeId: `${root.sourceNodeId}:p15-coverage-${index}`,
+    reasonCode: 'SILENT_DROP_DETECTED', detail: `Node ${finding.sourceNodeId}, ${finding.property}: ${finding.detail}`.slice(0, 2_000) }));
+  if (listed.length < audit.findings.length) {
+    reviews.push({ kind: 'review', sourceNodeId: `${root.sourceNodeId}:p15-coverage-more`, reasonCode: 'SILENT_DROP_DETECTED',
+      detail: `${audit.findings.length - listed.length} more unmapped properties; see the coverage audit.` });
+  }
+  return { ...document, nodes: [{ ...root, children: [...root.children, ...reviews] }, ...rest] };
 }
