@@ -325,7 +325,14 @@ async function exportElementor(args: ParsedArgs): Promise<number> {
   const result = buildP15ElementorExport(source, manifest);
   const summary = serializeP15ElementorExportSummary(result);
   const templateJson = result.candidate?.templateJson ?? null;
-  if (args.flags.has('summary-only') || templateJson === null) {
+  if (!args.flags.has('summary-only') && templateJson === null && result.reviewArtifact !== null) {
+    // D-049: the partial template is written only as the labelled REVIEW artifact, never as elementor-template.json.
+    const outDir = await prepareSafeOutputDirectory(option(args, 'out') ?? DEFAULT_OUT_DIR);
+    await writeAtomicOutputFile(outDir, 'elementor-review-artifact.json', `${JSON.stringify(result.reviewArtifact, null, 2)}\n`);
+    await writeAtomicOutputFile(outDir, 'elementor-export-summary.json', summary);
+    process.stdout.write(`${JSON.stringify({ outDir, label: 'REVIEW REQUIRED', reviewItemCount: result.reviewArtifact.reviewItems.length,
+      summary: JSON.parse(summary) as unknown }, null, 2)}\n`);
+  } else if (args.flags.has('summary-only') || templateJson === null) {
     process.stdout.write(summary);
   } else {
     const outDir = await prepareSafeOutputDirectory(option(args, 'out') ?? DEFAULT_OUT_DIR);
@@ -337,7 +344,7 @@ async function exportElementor(args: ParsedArgs): Promise<number> {
 }
 
 function usage(): string {
-  return `wp-elementor-prep CLI\n\nCommands:\n  audit:figma     --url <figma-url> | --file-key <key> [--node-id <id>]\n  audit:snapshot  --input <canonical-snapshot.json>\n  backlog:generate --input <audit-report.json>\n  export:elementor --input <neutral-export-ir.json> [--page-manifest <page-composition.json>]\n\nCommon options:\n  --out <dir>                 Output directory (default: ${DEFAULT_OUT_DIR})\n  --previous-backlog <file>   Previous schema-v1 backlog for delta calculation\n  --summary-only              Print machine-readable summary only; write no files\n  --fail-on <none|warning|error>  Return exit 10 when the threshold is met\n\nAudit commands retain audit-report/backlog outputs and also write build-ready-report.json (Build-Ready Score v2 / Responsive Risk v1).\nexport:elementor writes elementor-template.json and elementor-export-summary.json only for a ready candidate (exit ${EXPORT_BLOCKED_EXIT} otherwise). A candidate is locally validated, not a target import or render proof.\n\nFigma auth options:\n  --auth <personal|oauth>     Personal token uses FIGMA_TOKEN; OAuth uses FIGMA_OAUTH_TOKEN\n  --token-env <ENV_NAME>      Override the credential environment variable name\n\nRaw .fig files are intentionally unsupported. Use official Figma URL/file-key input or canonical snapshot JSON.\n`;
+  return `wp-elementor-prep CLI\n\nCommands:\n  audit:figma     --url <figma-url> | --file-key <key> [--node-id <id>]\n  audit:snapshot  --input <canonical-snapshot.json>\n  backlog:generate --input <audit-report.json>\n  export:elementor --input <neutral-export-ir.json> [--page-manifest <page-composition.json>]\n\nCommon options:\n  --out <dir>                 Output directory (default: ${DEFAULT_OUT_DIR})\n  --previous-backlog <file>   Previous schema-v1 backlog for delta calculation\n  --summary-only              Print machine-readable summary only; write no files\n  --fail-on <none|warning|error>  Return exit 10 when the threshold is met\n\nAudit commands retain audit-report/backlog outputs and also write build-ready-report.json (Build-Ready Score v2 / Responsive Risk v1).\nexport:elementor writes elementor-template.json and elementor-export-summary.json only for a ready candidate (exit ${EXPORT_BLOCKED_EXIT} otherwise). When only review items remain, it writes elementor-review-artifact.json instead: the partial template labelled REVIEW REQUIRED with every unmapped item listed (still exit ${EXPORT_BLOCKED_EXIT}). A candidate is locally validated, not a target import or render proof.\n\nFigma auth options:\n  --auth <personal|oauth>     Personal token uses FIGMA_TOKEN; OAuth uses FIGMA_OAUTH_TOKEN\n  --token-env <ENV_NAME>      Override the credential environment variable name\n\nRaw .fig files are intentionally unsupported. Use official Figma URL/file-key input or canonical snapshot JSON.\n`;
 }
 
 async function main(): Promise<void> {

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-11 — Recovery M2.5–M2.9 (layout, fonts, review artifact, zero silent drops)
+
+- **Layout (PR #905):** absolute positioning with z-index from layer order, wrapped rows, strict grids, and spacing: distributed axes write gap 0, overlaps become Container margins, baseline is flagged.
+- **Fonts (M2.8):** an offline, digest-pinned copy of the Elementor 4.2.4 font registry. Unknown families need an upload, and Google families used only in styled runs are not loaded; both are explicit reviews.
+- **Review artifact (M2.9a, D-049):** a labelled `REVIEW REQUIRED` partial template with every unmapped item listed and hidden placeholders. The CLI writes `elementor-review-artifact.json` and never presents it as ready.
+- **Coverage audit (M2.9b):** an extractor-independent check that every visible node and property is mapped or reviewed. A finding becomes an explicit review.
+- **Golden landing page (M2.9c):** 51 nodes with zero silent drops; the only remaining reviews are the outline-button border and the image (M3).
+
 ## 2026-10-10 — Consolidated toolchain patch train
 
 - Vite `8.3.2`, Vitest `5.0.3`, `@types/node 26.6.4` and Figma typings `1.140.0` in one PR with the matching toolchain contract. Supersedes Dependabot #890–#893. No product or authority change.

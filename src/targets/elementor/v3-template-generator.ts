@@ -3,6 +3,13 @@ import { absolutePositionSettings, zIndexSettings } from './absolute-position';
 import { wrapSettings } from './container-wrap';
 import { gridSettings } from './container-grid';
 import { containerMarginSettings } from './container-spacing';
+import { buildP15FontManifest } from './font-manifest';
+import {
+  P15_BLOCKING_REVIEW_CODES,
+  P15_REVIEW_ARTIFACT_VERSION,
+  reviewPlaceholderSettings,
+  type P15ElementorReviewArtifactV1,
+} from './review-artifact';
 import { gradientSettings } from './container-gradient';
 import { boxShadowSettings } from './container-shadow';
 import { containerVisualStyleSettings } from './container-visual-style';
@@ -71,11 +78,16 @@ export interface P15ElementorV3GenerationResult {
   reviewEntries: P15ElementorV3ReviewEntry[];
   template: ElementorTemplateV04 | null;
   candidate: ElementorTemplateCandidateArtifactV1 | null;
+  /** D-049 partial export: only with status REVIEW_REQUIRED and no blocking review; never a ready artifact. */
+  reviewArtifact: P15ElementorReviewArtifactV1 | null;
 }
 
 interface GenerationState {
   usedElementIds: Set<string>;
   reviewEntries: P15ElementorV3ReviewEntry[];
+  /** First generated element id per source node, for the review artifact. */
+  elementIds: Map<string, string>;
+  placeholders: Set<string>;
 }
 
 function fnv1a32(value: string): number {
@@ -93,6 +105,7 @@ function stableElementorId(kind: string, sourceNodeId: string, state: Generation
     const id = fnv1a32(seed).toString(16).padStart(8, '0');
     if (!state.usedElementIds.has(id)) {
       state.usedElementIds.add(id);
+      if (!state.elementIds.has(sourceNodeId)) state.elementIds.set(sourceNodeId, id);
       return id;
     }
   }
@@ -307,7 +320,15 @@ function mapNode(
       reasonCode: node.reasonCode,
       detail: node.detail,
     });
-    return null;
+    // D-049: an explicit, hidden placeholder keeps the unmapped content's place in the review artifact.
+    state.placeholders.add(node.sourceNodeId);
+    return {
+      id: stableElementorId('review', node.sourceNodeId, state),
+      elType: 'container',
+      isInner: depth > 1,
+      settings: reviewPlaceholderSettings(node.reasonCode),
+      elements: [],
+    };
   }
   if (node.kind === 'heading') return headingWidget(node, state);
   if (node.kind === 'text') {
@@ -349,7 +370,7 @@ function baseResult(
   status: P15ElementorV3GenerationStatus,
   validation: P15NeutralExportValidationResult,
   reviewEntries: P15ElementorV3ReviewEntry[],
-): Omit<P15ElementorV3GenerationResult, 'template' | 'candidate'> {
+): Omit<P15ElementorV3GenerationResult, 'template' | 'candidate' | 'reviewArtifact'> {
   return {
     schemaVersion: 1,
     generatorVersion: P15_ELEMENTOR_V3_GENERATOR_VERSION,
@@ -377,24 +398,19 @@ export function generateElementorV3TemplateCandidate(value: unknown): P15Element
       ...baseResult('REJECTED_INVALID_IR', validation, []),
       template: null,
       candidate: null,
+      reviewArtifact: null,
     };
   }
 
   const document = value as P15NeutralExportDocumentV1;
-  const state: GenerationState = { usedElementIds: new Set<string>(), reviewEntries: [] };
+  const state: GenerationState = { usedElementIds: new Set<string>(), reviewEntries: [], elementIds: new Map(), placeholders: new Set() };
   const content: ElementorElementV04[] = [];
   for (const node of document.nodes) {
     const mapped = mapNode(node, 1, state);
     if (mapped) content.push(mapped);
   }
-
-  if (state.reviewEntries.length > 0) {
-    return {
-      ...baseResult('REVIEW_REQUIRED', validation, state.reviewEntries),
-      template: null,
-      candidate: null,
-    };
-  }
+  // Recovery M2.8: a font Elementor cannot load is REVIEW with an upload instruction, never a silent fallback.
+  state.reviewEntries.push(...buildP15FontManifest(document).reviews);
 
   const template: ElementorTemplateV04 = {
     title: document.title,
@@ -403,6 +419,29 @@ export function generateElementorV3TemplateCandidate(value: unknown): P15Element
     page_settings: [],
     content,
   };
+
+  if (state.reviewEntries.length > 0) {
+    const blocked = state.reviewEntries.some((entry) => P15_BLOCKING_REVIEW_CODES.includes(entry.reasonCode));
+    return {
+      ...baseResult('REVIEW_REQUIRED', validation, state.reviewEntries),
+      template: null,
+      candidate: null,
+      reviewArtifact: blocked ? null : {
+        schemaVersion: 1,
+        artifactVersion: P15_REVIEW_ARTIFACT_VERSION,
+        label: 'REVIEW REQUIRED',
+        readiness: 'REVIEW_REQUIRED',
+        targetImportReady: false,
+        template,
+        reviewItems: state.reviewEntries.map((entry) => ({
+          ...entry,
+          elementId: state.elementIds.get(entry.sourceNodeId) ?? null,
+          kind: state.placeholders.has(entry.sourceNodeId) ? 'placeholder' as const : 'unmapped-property' as const,
+        })),
+      },
+    };
+  }
+
   const candidate = buildElementorTemplateCandidateArtifact(template);
   if (candidate.status !== 'READY_FOR_TARGET_IMPORT_VALIDATION' || !candidate.validation.valid || candidate.templateJson === null) {
     throw new Error('Generated Elementor v3 candidate contradicted the bounded local generation contract.');
@@ -412,6 +451,7 @@ export function generateElementorV3TemplateCandidate(value: unknown): P15Element
     ...baseResult('GENERATED_LOCAL_CANDIDATE', validation, []),
     template,
     candidate,
+    reviewArtifact: null,
   };
 }
 

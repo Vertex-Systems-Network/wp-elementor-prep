@@ -134,6 +134,11 @@ export interface P15StrokeFacts {
   align: unknown;
   dashPattern: unknown;
   includedInLayout: unknown;
+  /**
+   * The frame has no visible children and a FIXED width and height (recovery M2.9c): with no content to move and a
+   * border-box of fixed size, a border wider than the padding renders exactly, so the padding is clamped at 0.
+   */
+  emptyFixedBox?: boolean;
 }
 
 export interface P15BorderDerivation {
@@ -177,6 +182,10 @@ export function deriveP15ContainerBorder(facts: P15StrokeFacts, padding: P15Neut
     left: Math.round((padding.left - widthPx.left) * 100) / 100,
   };
   if (Object.values(compensated).some((value) => value < 0)) {
+    if (facts.emptyFixedBox === true) {
+      return { border, paddingPx: { top: Math.max(0, compensated.top), right: Math.max(0, compensated.right),
+        bottom: Math.max(0, compensated.bottom), left: Math.max(0, compensated.left) } };
+    }
     return fail('The stroke is wider than the padding on one side, so the content overlaps it in Figma; a CSS border would move it.');
   }
   return { border, paddingPx: compensated };
