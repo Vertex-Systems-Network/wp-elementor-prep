@@ -3,6 +3,7 @@ import { absolutePositionSettings, zIndexSettings } from './absolute-position';
 import { wrapSettings } from './container-wrap';
 import { gridSettings } from './container-grid';
 import { containerMarginSettings } from './container-spacing';
+import { buildP15FontManifest } from './font-manifest';
 import { gradientSettings } from './container-gradient';
 import { boxShadowSettings } from './container-shadow';
 import { containerVisualStyleSettings } from './container-visual-style';
@@ -387,6 +388,8 @@ export function generateElementorV3TemplateCandidate(value: unknown): P15Element
     const mapped = mapNode(node, 1, state);
     if (mapped) content.push(mapped);
   }
+  // Recovery M2.8: a font Elementor cannot load is REVIEW with an upload instruction, never a silent fallback.
+  state.reviewEntries.push(...buildP15FontManifest(document).reviews);
 
   if (state.reviewEntries.length > 0) {
     return {
