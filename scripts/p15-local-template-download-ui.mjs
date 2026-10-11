@@ -11,6 +11,7 @@ const BUTTON_SOURCE = `      <button id="p15-preview">Preview Elementor</button>
 const BUTTON_EXTENDED = `      <button id="p15-preview">Preview Elementor</button>
       <button id="p15-download">Download Elementor JSON</button>
       <button id="p15-asset-pack">Download asset pack</button>
+      <button id="p15-breakpoints">Detect breakpoints</button>
       <button id="plan">Preview safe fixes</button>`;
 
 const CLICK_SOURCE = `    document.getElementById('p15-preview').addEventListener('click', () => {
@@ -38,6 +39,12 @@ const CLICK_EXTENDED = `    document.getElementById('p15-preview').addEventListe
       root.textContent = 'Re-reading the current selected Frame and building a fresh Elementor asset pack (template, assets, manifest, IMPORT.md)…';
       exportPanel.hidden = true;
       post('p15-elementor-asset-pack-request');
+    });
+    document.getElementById('p15-breakpoints').addEventListener('click', () => {
+      root.className = 'empty';
+      root.textContent = 'Classifying the selected Frames (or the selected Section) into desktop, tablet and mobile…';
+      exportPanel.hidden = true;
+      post('p15-breakpoint-set-request');
     });
     document.getElementById('p15-profile').addEventListener('click', () => {`;
 
@@ -160,6 +167,32 @@ const RENDERER_EXTENDED = `    function renderP15LocalTemplateDownload(message) 
         \${reviewCount > reviews.length ? \`<div class="meta">\${escapeHtml(String(reviewCount - reviews.length))} more in manifest.json.</div>\` : ''}\`;
     }
 
+    function renderP15BreakpointSet(message, confirmed) {
+      const set = message.set;
+      const members = set && Array.isArray(set.members) ? set.members : [];
+      const issues = set && Array.isArray(set.issues) ? set.issues : [];
+      const confirmable = !confirmed && set && set.status === 'BREAKPOINT_SET' && typeof set.fingerprint === 'string' && issues.length === 0;
+      const heading = confirmed ? 'BREAKPOINT SET CONFIRMED' : set && set.status === 'BREAKPOINT_SET' ? 'CONFIRM BREAKPOINT SET' : 'BREAKPOINT SET NEEDS REVIEW';
+      const thresholds = set && set.thresholds ? set.thresholds : {};
+      root.className = '';
+      root.innerHTML = \`
+        <div class="hero">
+          <div class="score">\${escapeHtml(heading)}</div>
+          <div class="status">Desktop &gt; \${escapeHtml(String(thresholds.tabletMaxPx))}px · tablet &gt; \${escapeHtml(String(thresholds.mobileMaxPx))}px · mobile</div>
+          <div class="meta">Each Frame is classified by width. Nothing in Figma is changed.</div>
+        </div>
+        <div class="sectionTitle">Frames</div>
+        \${members.map((member) => \`<div class="row"><div class="name">\${escapeHtml(member.device)}</div><div class="meta">\${escapeHtml(member.name)} · \${escapeHtml(String(member.widthPx))}px</div></div>\`).join('')}
+        \${issues.length ? \`<div class="sectionTitle">Review</div>\${issues.map((issue) => \`<div class="row"><div class="name">\${escapeHtml(issue.code)}</div><div class="meta">\${escapeHtml(issue.detail)}</div></div>\`).join('')}\` : ''}
+        \${confirmable ? '<div class="inlineActions one"><button id="p15-breakpoints-confirm">Confirm breakpoint set</button></div>' : ''}\`;
+      if (confirmable) {
+        const fingerprint = set.fingerprint;
+        document.getElementById('p15-breakpoints-confirm').addEventListener('click', () => {
+          post('p15-breakpoint-set-confirm', { fingerprint });
+        });
+      }
+    }
+
     function renderP15TargetProfilePreview(message) {`;
 
 const MESSAGE_SOURCE = `      if (message.type === 'p15-elementor-target-profile-result') {`;
@@ -187,6 +220,19 @@ const MESSAGE_EXTENDED = `      if (message.type === 'p15-elementor-local-templa
         exportPanel.hidden = true;
         root.className = 'empty';
         root.textContent = message.message || 'Elementor asset pack is unavailable for the current selection.';
+        return;
+      }
+
+      if (message.type === 'p15-breakpoint-set-result' || message.type === 'p15-breakpoint-set-confirmed') {
+        exportPanel.hidden = true;
+        renderP15BreakpointSet(message, message.type === 'p15-breakpoint-set-confirmed');
+        return;
+      }
+
+      if (message.type === 'p15-breakpoint-set-unavailable') {
+        exportPanel.hidden = true;
+        root.className = 'empty';
+        root.textContent = message.message || 'Breakpoint detection is unavailable for the current selection.';
         return;
       }
 

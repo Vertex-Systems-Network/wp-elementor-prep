@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-11 — Recovery M3 (assets) accepted (PR #910, `a4ee8dd`)
+
+- **Pack (PR #908):** asset collector (Stored Original vs Rendered Appearance per D-037, SVG icons), deterministic atomic STORE ZIP with manifest and IMPORT.md, pack-relative media with an upload review per asset (D-051), image and background-image sizing, SVG icons as sized Image widgets.
+- **Real target (PR #909):** pure relink step and an isolated harness in `p15-real-target-proof.yml`: upload, relink, import, render with HTTP 200 on WP 6.8 + Elementor 4.2.4.
+- **Plugin (PR #910, M3.7):** **Download asset pack**, labelled exactly as the manifest and never import-ready; the harness now proves an SVG icon as well (run 38103090238).
+- Packs stay `REVIEW REQUIRED` until an automated upload/relink path ships (D-051 note).
+
 ## 2026-10-11 — Recovery M2.5–M2.9 (layout, fonts, review artifact, zero silent drops)
 
 - **Layout (PR #905):** absolute positioning with z-index from layer order, wrapped rows, strict grids, and spacing: distributed axes write gap 0, overlaps become Container margins, baseline is flagged.

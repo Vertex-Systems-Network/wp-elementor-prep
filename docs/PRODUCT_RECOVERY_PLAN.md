@@ -7,9 +7,9 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
-> - Next task: **M3 acceptance** (exact-head real-target run with the SVG icon, then the canonical M3 sync; then M4.1)
-> - Last completed task: **M3.7** (plugin UI asset-pack download)
+> - Active milestone: **M4 — Responsive breakpoint engine** (M3 accepted: PR #910, exact head `0b8663f`, 10/10 checks green, merged as `a4ee8dd`; images and SVG load in the real-target render, run 38103090238)
+> - Next task: **M4.2** (deterministic node matcher)
+> - Last completed task: **M4.1** (breakpoint set)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -421,7 +421,11 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 
 ### M4 — Responsive breakpoint engine
 
-- [ ] **M4.1** Breakpoint set. The user selects 2–3 frames, or a Section containing them. Classify them by width into desktop, tablet and mobile, using Elementor defaults ≤1024 tablet and ≤767 mobile; the classification is configurable per profile. The UI confirms the set.
+- [x] **M4.1** Breakpoint set. The user selects 2–3 frames, or a Section containing them. Classify them by width into desktop, tablet and mobile, using Elementor defaults ≤1024 tablet and ≤767 mobile; the classification is configurable per profile. The UI confirms the set. _(done 2026-10-11)_.
+  - R0: Elementor 4.2.4 `core/breakpoints/manager.php` (blob `f30f5b4`) `get_default_config()`: `mobile` max 767 and `tablet` max 1024 (direction `max`); `mobile_extra`, `tablet_extra`, `laptop` and `widescreen` are inactive by default.
+  - `src/core/breakpoint-set.ts`: widest first; `BREAKPOINT_SET` only for 2–3 distinct devices including desktop (the M4.3 base). Two frames on one device or no desktop → `REVIEW` with the reason; a wrong count, invalid width, duplicate frame or invalid thresholds → `BLOCKED`. Thresholds are a parameter (per profile) and part of the set's fingerprint.
+  - Plugin: `p15-breakpoint-selection.ts` reads 2–3 selected frames or one Section's visible child frames; `p15-breakpoint-set-controller.ts` shows the set and records it only when the user confirms the exact fingerprint shown, re-checked against the current selection; any selection change clears it. UI: **Detect breakpoints**, the classified frames, review reasons and **Confirm breakpoint set**.
+  - Tests: `tests/m4-breakpoint-set.test.ts`, `tests/m4-breakpoint-set-ui.test.mjs`.
 - [ ] **M4.2** Deterministic node matcher. Go top-down per section and score candidate pairs on type, name, text digest, image hash, sibling order and normalised relative geometry. Use greedy matching with a confidence score. The output is a match map plus unmatched nodes.
 - [ ] **M4.3** Merge. Desktop values form the base. Tablet and mobile diffs are emitted through the M1 engine as `_tablet`/`_mobile` keys. Order changes map to `_order_*`. Elements present on some breakpoints only map to `hide_desktop`/`hide_tablet`/`hide_mobile`.
 - [ ] **M4.4** Mismatch policy. Nesting that differs in a way that cannot map → REVIEW with an explanation. The matcher never guesses.
