@@ -22,4 +22,12 @@ describe('recovery M4.1 — breakpoint set confirmation', () => {
     expect(ui).toContain('BREAKPOINT SET CONFIRMED');
     expect(ui).toContain('BREAKPOINT SET NEEDS REVIEW');
   });
+
+  it('M4.5: the confirmed set carries the responsive report and the UI renders it', () => {
+    expect(readFileSync('src/plugin/p15-breakpoint-set-controller.ts', 'utf8')).toContain("type: 'p15-breakpoint-set-confirmed', set, report: responsiveReportFor(set, selectedFramesById())");
+    const ui = extendP15LocalTemplateDownloadUi(readFileSync('src/ui/ui.html', 'utf8'));
+    expect(ui).toContain('function renderP15ResponsiveReport(report)');
+    expect(ui).toContain('Responsive report');
+    expect(ui).toContain("confirmed ? renderP15ResponsiveReport(message.report) : ''");
+  });
 });

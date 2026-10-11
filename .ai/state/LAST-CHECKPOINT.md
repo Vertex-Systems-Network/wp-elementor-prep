@@ -22,4 +22,4 @@ Disposable-target harness evidence only. Packs stay `REVIEW REQUIRED` (D-051 not
 
 ## Exact next safe action
 
-Recovery M4.5: UI responsive report; M4.1–M4.3c merged (PRs #911–#914), M4.3d + M4.4 on this branch.
+Recovery M4.6: three-breakpoint golden fixture rendered in the real-target harness; M4.1–M4.4 merged (PRs #911–#915), M4.5 on this branch.

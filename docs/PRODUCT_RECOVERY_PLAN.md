@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M4 — Responsive breakpoint engine** (M3 accepted: PR #910, exact head `0b8663f`, 10/10 checks green, merged as `a4ee8dd`; images and SVG load in the real-target render, run 38103090238)
-> - Next task: **M4.5** (UI responsive report)
-> - Last completed task: **M4.4** (mismatch policy)
+> - Next task: **M4.6** (three-breakpoint golden fixture rendered in the real-target harness)
+> - Last completed task: **M4.5** (UI responsive report)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -449,7 +449,10 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - The merge's reviews carry the explanation for every unmappable structure: `RESPONSIVE_MATCH_AMBIGUOUS` (matcher tie), `RESPONSIVE_KIND_DIFFERS`, `RESPONSIVE_NODE_NOT_PLACED` (variant-only node without a matched parent or with review content) and, new, `RESPONSIVE_NESTING_DIFFERS`: the same content (subtree identical apart from node ids) under a different parent on a breakpoint. That case still renders on every breakpoint (hidden original plus a breakpoint-only copy) but duplicates content, so it is a review.
   - Fix found on the way: a variant-only copy is now hidden on every other device whether or not that device has its own frame (a device without a frame shows the desktop design).
   - Tests: `tests/m4-responsive-merge.test.ts`.
-- [ ] **M4.5** UI responsive report: per-section match status and confidence.
+- [x] **M4.5** UI responsive report: per-section match status and confidence. _(done 2026-10-11)_.
+  - `src/core/breakpoint-report.ts`: per direct visible child of the desktop frame, each breakpoint's status (`MATCHED` with confidence, `UNMATCHED`, `AMBIGUOUS`), the matched layer, and the counts of unmatched/ambiguous layers inside; plus the variant-only layer count per breakpoint. Built from the M4.2 match results, so it reports what the merge uses.
+  - Plugin: the confirmed breakpoint set message carries the report (frames read from the current selection); the UI shows it under the confirmed set.
+  - Tests: `tests/m4-responsive-report.test.ts`, `tests/m4-breakpoint-set-ui.test.mjs`.
 - [ ] **M4.6** Three-breakpoint golden fixture: the export renders at 1440, 1024 and 390 in the real-target harness.
 
 ### M5 — Smart target-ready duplicate and structure alignment
