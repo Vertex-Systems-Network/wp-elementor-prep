@@ -19,6 +19,9 @@ import { resolveP15ElementorResponsiveVisibility, P15_ELEMENTOR_RESPONSIVE_VISIB
 import { resolveP15ElementorResponsiveTextTypography, P15_ELEMENTOR_RESPONSIVE_TEXT_TYPOGRAPHY_EVIDENCE } from './responsive-text-typography-resolution';
 import { resolveP15ElementorResponsiveTextAlignments, P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_EVIDENCE } from './responsive-text-alignment-resolution';
 import { resolveP15ElementorResponsiveButtonAlignments, P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_EVIDENCE } from './responsive-button-alignment-resolution';
+import { resolveP15ElementorResponsiveContainerMinHeight, P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_EVIDENCE } from './responsive-min-height-resolution';
+import { resolveP15ElementorResponsiveContainerBorderRadius, P15_ELEMENTOR_RESPONSIVE_BORDER_RADIUS_EVIDENCE } from './responsive-border-radius-resolution';
+import { resolveP15ElementorResponsiveContainerWidth, resolveP15ElementorResponsiveWidgetWidth, P15_ELEMENTOR_RESPONSIVE_SIZE_EVIDENCE } from './responsive-size-resolution';
 import type { ElementorElementV04 } from './template-v04';
 
 /**
@@ -36,6 +39,8 @@ export const P15_PAGE_COMPOSITION_FAMILIES = [
   'visibility', 'elementOrder',
   // Recovery M4.3c: responsive widget typography metrics and alignment.
   'textTypography', 'textAlignment', 'buttonAlignment',
+  // Recovery M4.3d: responsive sizes.
+  'minHeight', 'containerWidth', 'borderRadius', 'widgetWidth',
 ] as const;
 export type P15PageCompositionFamily = typeof P15_PAGE_COMPOSITION_FAMILIES[number];
 export type P15PageCompositionResultV1 = CompositionResult<P15PageCompositionFamily>;
@@ -93,6 +98,12 @@ export const P15_PAGE_COMPOSITION: CompositionSpec<P15PageCompositionFamily> = {
       keys: responsiveKeys(P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_EVIDENCE) },
     buttonAlignment: { resolve: resolveP15ElementorResponsiveButtonAlignments, resolvedStatus: 'RESPONSIVE_BUTTON_ALIGNMENTS_RESOLVED', accepts: isButton,
       keys: responsiveKeys(P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_EVIDENCE) },
+    minHeight: containerStep(resolveP15ElementorResponsiveContainerMinHeight, 'RESPONSIVE_MIN_HEIGHT_RESOLVED', responsiveKeys(P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_EVIDENCE)),
+    containerWidth: containerStep(resolveP15ElementorResponsiveContainerWidth, 'RESPONSIVE_CONTAINER_WIDTH_RESOLVED',
+      [P15_ELEMENTOR_RESPONSIVE_SIZE_EVIDENCE.containerTabletSettingKey, P15_ELEMENTOR_RESPONSIVE_SIZE_EVIDENCE.containerMobileSettingKey]),
+    borderRadius: containerStep(resolveP15ElementorResponsiveContainerBorderRadius, 'RESPONSIVE_BORDER_RADIUS_RESOLVED', responsiveKeys(P15_ELEMENTOR_RESPONSIVE_BORDER_RADIUS_EVIDENCE)),
+    widgetWidth: { resolve: resolveP15ElementorResponsiveWidgetWidth, resolvedStatus: 'RESPONSIVE_WIDGET_WIDTH_RESOLVED', accepts: isTypographyWidget,
+      keys: [P15_ELEMENTOR_RESPONSIVE_SIZE_EVIDENCE.widgetTabletSettingKey, P15_ELEMENTOR_RESPONSIVE_SIZE_EVIDENCE.widgetMobileSettingKey] },
   },
 };
 
