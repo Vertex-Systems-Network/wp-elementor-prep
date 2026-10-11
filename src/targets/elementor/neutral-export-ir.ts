@@ -5,6 +5,7 @@ import {
   borderProblems,
   cornerRadiiProblems,
   type P15NeutralBorder,
+  type P15NeutralBoxPx,
   type P15NeutralCornerRadii,
 } from './container-visual-style';
 import {
@@ -15,6 +16,14 @@ import {
   type P15NeutralContainerSizing,
   type P15NeutralWidgetSizing,
 } from './container-sizing';
+import { wrapProblems, type P15NeutralWrap } from './container-wrap';
+import { gridProblems, type P15NeutralGrid } from './container-grid';
+import { marginProblems } from './container-spacing';
+import {
+  absolutePositionProblems,
+  zIndexProblems,
+  type P15NeutralAbsolutePosition,
+} from './absolute-position';
 import {
   paragraphProblems,
   paragraphSpacingValid,
@@ -28,6 +37,9 @@ export type { P15NeutralGradient } from './container-gradient';
 export type { P15NeutralBoxShadow } from './container-shadow';
 export type { P15NeutralBorder, P15NeutralBoxPx, P15NeutralCornerRadii } from './container-visual-style';
 export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
+export type { P15NeutralAbsolutePosition, P15NeutralAxisOffset } from './absolute-position';
+export type { P15NeutralAlignContent, P15NeutralWrap } from './container-wrap';
+export type { P15NeutralGrid, P15NeutralGridTrack } from './container-grid';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
@@ -86,6 +98,16 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   boxShadow?: P15NeutralBoxShadow;
   /** Exact width, minimum height and flex-item sizing (recovery M2.3a). */
   sizing?: P15NeutralContainerSizing;
+  /** Wrapped row: `gapPx` is the column gap, `wrap.rowGapPx` the gap between lines (recovery M2.6a). */
+  wrap?: P15NeutralWrap;
+  /** Strict grid (recovery M2.6b): direction is `row` and the flex gap/alignment fields are absent. */
+  grid?: P15NeutralGrid;
+  /** Negative leading margin that reproduces an overlap with the previous sibling (recovery M2.7). */
+  marginPx?: P15NeutralBoxPx;
+  /** Absolute placement in the parent (recovery M2.5). */
+  position?: P15NeutralAbsolutePosition;
+  /** Layer order among siblings (recovery M2.5). */
+  zIndex?: number;
   styleReviews?: P15NeutralStyleReview[];
   children: P15NeutralExportNode[];
 }
@@ -101,6 +123,10 @@ export interface P15NeutralHeadingNode extends P15NeutralNodeBase {
   href?: string;
   /** Width and flex-item sizing (recovery M2.3b). */
   sizing?: P15NeutralWidgetSizing;
+  /** Absolute placement in the parent (recovery M2.5). */
+  position?: P15NeutralAbsolutePosition;
+  /** Layer order among siblings (recovery M2.5). */
+  zIndex?: number;
 }
 
 export interface P15NeutralTextNode extends P15NeutralNodeBase {
@@ -116,6 +142,10 @@ export interface P15NeutralTextNode extends P15NeutralNodeBase {
   paragraphSpacingPx?: number;
   /** Width and flex-item sizing (recovery M2.3b). */
   sizing?: P15NeutralWidgetSizing;
+  /** Absolute placement in the parent (recovery M2.5). */
+  position?: P15NeutralAbsolutePosition;
+  /** Layer order among siblings (recovery M2.5). */
+  zIndex?: number;
   styleReviews?: P15NeutralStyleReview[];
 }
 
@@ -133,6 +163,10 @@ export interface P15NeutralButtonNode extends P15NeutralNodeBase {
   cornerRadiusPx?: number;
   /** Width and flex-item sizing of the Figma button frame (recovery M2.3d); exclusive with `align`. */
   sizing?: P15NeutralButtonSizing;
+  /** Absolute placement in the parent (recovery M2.5). */
+  position?: P15NeutralAbsolutePosition;
+  /** Layer order among siblings (recovery M2.5). */
+  zIndex?: number;
   styleReviews?: P15NeutralStyleReview[];
 }
 
@@ -156,6 +190,8 @@ export interface P15NeutralDividerNode extends P15NeutralNodeBase {
   widthPx?: number;
   /** Horizontal position of a divider narrower than its column (recovery M2.3d); start when absent. */
   align?: 'center' | 'end';
+  /** Layer order among siblings (recovery M2.5). */
+  zIndex?: number;
 }
 
 /** Vertical empty space (recovery M2.2c), from an empty, unpainted Figma leaf frame or rectangle. */
@@ -204,6 +240,7 @@ export type P15NeutralExportValidationCode =
   | 'P15_IR_TEXT_INVALID'
   | 'P15_IR_TYPOGRAPHY_INVALID'
   | 'P15_IR_SIZING_INVALID'
+  | 'P15_IR_POSITION_INVALID'
   | 'P15_IR_STYLE_INVALID'
   | 'P15_IR_HEADING_LEVEL_INVALID'
   | 'P15_IR_URL_INVALID'
@@ -322,6 +359,16 @@ function validReviewReasonCode(value: unknown): boolean {
   return boundedString(value, 128) && /^[A-Z0-9_:-]+$/.test(String(value));
 }
 
+/** Absolute placement and layer order (recovery M2.5). */
+function validatePlacement(value: Record<string, unknown>, path: string, state: ValidationState): void {
+  if (value.position !== undefined) {
+    for (const issue of absolutePositionProblems(value.position, `${path}.position`)) pushIssue(state, 'P15_IR_POSITION_INVALID', issue.path, issue.message);
+  }
+  if (value.zIndex !== undefined) {
+    for (const issue of zIndexProblems(value.zIndex, `${path}.zIndex`)) pushIssue(state, 'P15_IR_POSITION_INVALID', issue.path, issue.message);
+  }
+}
+
 function validateWidgetSizing(value: unknown, path: string, state: ValidationState): void {
   if (value === undefined) return;
   for (const issue of widgetSizingProblems(value, path)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
@@ -371,7 +418,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'wrap', 'grid', 'marginPx', 'position', 'zIndex', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -407,6 +454,19 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
       ...(value.clipsContent !== undefined && value.clipsContent !== true ? [{ path: `${path}.clipsContent`, message: 'clipsContent must be true when provided.' }] : []),
     ];
     for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);
+    validatePlacement(value, path, state);
+    if (value.marginPx !== undefined) {
+      for (const issue of marginProblems(value.marginPx, `${path}.marginPx`)) pushIssue(state, 'P15_IR_SPACING_INVALID', issue.path, issue.message);
+    }
+    if (value.grid !== undefined) {
+      for (const issue of gridProblems(value.grid, `${path}.grid`)) pushIssue(state, 'P15_IR_SPACING_INVALID', issue.path, issue.message);
+      if (value.direction !== 'row' || ['gapPx', 'alignItems', 'justifyContent', 'wrap'].some((key) => value[key] !== undefined)) {
+        pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.grid`, 'A grid container has direction row and no flex gap, alignment or wrap.');
+      }
+    }
+    if (value.wrap !== undefined) {
+      for (const issue of wrapProblems(value.wrap, `${path}.wrap`, value.direction)) pushIssue(state, 'P15_IR_SPACING_INVALID', issue.path, issue.message);
+    }
     if (value.sizing !== undefined) {
       for (const issue of containerSizingProblems(value.sizing, `${path}.sizing`)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
     }
@@ -423,7 +483,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'heading') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography', 'href', 'sizing'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'level', 'align', 'typography', 'href', 'sizing', 'position', 'zIndex'], path, state);
+    validatePlacement(value, path, state);
     validateWidgetSizing(value.sizing, `${path}.sizing`, state);
     if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Heading link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
@@ -440,7 +501,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'text') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'href', 'sizing', 'styleReviews'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'align', 'typography', 'paragraphs', 'paragraphSpacingPx', 'href', 'sizing', 'position', 'zIndex', 'styleReviews'], path, state);
+    validatePlacement(value, path, state);
     validateWidgetSizing(value.sizing, `${path}.sizing`, state);
     if (value.href !== undefined && !validP15LinkUrl(value.href)) pushIssue(state, 'P15_IR_URL_INVALID', `${path}.href`, 'Text link must be a bounded safe http(s), mailto, tel, root-relative or fragment URL.');
     validateText(value.text, `${path}.text`, state);
@@ -460,7 +522,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
 
   if (kind === 'button') {
     validateExactKeys(value, ['kind', 'sourceNodeId', 'text', 'url', 'openInNewTab', 'nofollow', 'align',
-      'typography', 'backgroundColorHex', 'paddingPx', 'cornerRadiusPx', 'sizing', 'styleReviews'], path, state);
+      'typography', 'backgroundColorHex', 'paddingPx', 'cornerRadiusPx', 'sizing', 'position', 'zIndex', 'styleReviews'], path, state);
+    validatePlacement(value, path, state);
     if (value.sizing !== undefined) {
       for (const issue of buttonSizingProblems(value.sizing, `${path}.sizing`)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
       if (isRecord(value.sizing) && value.sizing.fullWidth === true && value.align !== undefined) {
@@ -503,7 +566,8 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'divider') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'weightPx', 'colorHex', 'widthPx', 'align'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'weightPx', 'colorHex', 'widthPx', 'align', 'zIndex'], path, state);
+    validatePlacement(value, path, state);
     if (value.align !== undefined && value.align !== 'center' && value.align !== 'end') {
       pushIssue(state, 'P15_IR_ALIGNMENT_INVALID', `${path}.align`, 'Divider alignment must be center or end when provided.');
     }

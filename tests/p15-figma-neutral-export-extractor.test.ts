@@ -99,7 +99,8 @@ describe('P15 read-only Figma neutral export extractor', () => {
       elType: 'container',
       settings: expect.objectContaining({
         flex_direction: 'row',
-        flex_gap: { column: '20', row: '20', isLinked: true, unit: 'px' },
+        // Recovery M2.7: SPACE_BETWEEN divides only the free space, so the gap is 0.
+        flex_gap: { column: '0', row: '0', isLinked: true, unit: 'px' },
         flex_align_items: 'center',
         flex_justify_content: 'space-between',
       }),
@@ -170,7 +171,8 @@ describe('P15 read-only Figma neutral export extractor', () => {
 
     expect(wrapped.generation.reviewEntries[0]?.reasonCode).toBe('WRAPPED_AUTO_LAYOUT_REQUIRES_REVIEW');
     expect(grid.generation.reviewEntries[0]?.reasonCode).toBe('GRID_LAYOUT_REQUIRES_REVIEW');
-    expect(baseline.generation.reviewEntries[0]?.reasonCode).toBe('UNSUPPORTED_AUTO_LAYOUT_ALIGNMENT');
+    // Recovery M2.7: baseline keeps the layout (as start) and is flagged instead of dropping the frame.
+    expect(baseline.generation.reviewEntries[0]?.reasonCode).toBe('BASELINE_ALIGNMENT_REQUIRES_REVIEW');
   });
 
   it('collapses over-depth source trees into one bounded review marker before recursive overflow', () => {

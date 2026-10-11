@@ -89,6 +89,8 @@ export function detectP15Headings(document: P15NeutralExportDocumentV1, names: R
       ...(node.typography === undefined ? {} : { typography: node.typography }),
       ...(node.href === undefined ? {} : { href: node.href }),
       ...(node.sizing === undefined ? {} : { sizing: node.sizing }),
+      ...(node.position === undefined ? {} : { position: node.position }),
+      ...(node.zIndex === undefined ? {} : { zIndex: node.zIndex }),
     };
   });
   return { ...document, nodes: rewrite(document.nodes) };
@@ -113,7 +115,7 @@ function buttonShape(container: Extract<P15NeutralExportNode, { kind: 'container
   if (container.children.length !== 1 || only?.kind !== 'text' || blocking(container.styleReviews) || blocking(only.styleReviews)
     || container.backgroundColorHex === undefined || container.paddingPx === undefined
     || Object.values(container.paddingPx).every((side) => side === 0)
-    || only.paragraphs !== undefined || /[\r\n]/.test(only.text) || only.text.length > BUTTON_MAX_LENGTH) return null;
+    || only.paragraphs !== undefined || only.position !== undefined || /[\r\n]/.test(only.text) || only.text.length > BUTTON_MAX_LENGTH) return null;
   return only;
 }
 
@@ -162,6 +164,8 @@ export function detectP15Buttons(
       paddingPx: node.paddingPx!,
       ...(node.cornerRadiusPx === undefined ? {} : { cornerRadiusPx: node.cornerRadiusPx }),
       ...(sized.sizing === undefined ? {} : { sizing: sized.sizing }),
+      ...(node.position === undefined ? {} : { position: node.position }),
+      ...(node.zIndex === undefined ? {} : { zIndex: node.zIndex }),
       ...(sized.reviews.length > 0 ? { styleReviews: sized.reviews } : {}),
     };
   });

@@ -1,4 +1,8 @@
 import { buttonSizingSettings, containerSizingSettings, widgetSizingSettings } from './container-sizing';
+import { absolutePositionSettings, zIndexSettings } from './absolute-position';
+import { wrapSettings } from './container-wrap';
+import { gridSettings } from './container-grid';
+import { containerMarginSettings } from './container-spacing';
 import { gradientSettings } from './container-gradient';
 import { boxShadowSettings } from './container-shadow';
 import { containerVisualStyleSettings } from './container-visual-style';
@@ -131,9 +135,8 @@ function mapButtonAlignment(value: P15NeutralAlignment | undefined): 'left' | 'c
 
 
 function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 {
-  const settings: Record<string, unknown> = {
-    flex_direction: node.direction,
-  };
+  // A grid (recovery M2.6b) replaces the flex group; its validated IR carries no flex gap or alignment.
+  const settings: Record<string, unknown> = node.grid === undefined ? { flex_direction: node.direction } : gridSettings(node.grid);
   if (node.gapPx !== undefined) {
     settings.flex_gap = {
       column: String(node.gapPx),
@@ -163,6 +166,8 @@ function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 
   Object.assign(settings, boxShadowSettings(node.boxShadow));
   Object.assign(settings, gradientSettings(node.gradient));
   Object.assign(settings, containerSizingSettings(node.sizing));
+  Object.assign(settings, wrapSettings(node.wrap, node.gapPx), containerMarginSettings(node.marginPx));
+  Object.assign(settings, absolutePositionSettings(node.position, 'container'), zIndexSettings(node.zIndex, 'container'));
   return settings;
 }
 
@@ -177,6 +182,7 @@ function headingWidget(node: P15NeutralHeadingNode, state: GenerationState): Ele
   // heading.php `link` URL control (recovery M2.2c); the same link shape the Button widget writes.
   if (node.href !== undefined) settings.link = { url: node.href, is_external: '', nofollow: '', custom_attributes: '' };
   Object.assign(settings, widgetSizingSettings(node.sizing));
+  Object.assign(settings, absolutePositionSettings(node.position, 'widget'), zIndexSettings(node.zIndex, 'widget'));
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -195,6 +201,7 @@ function textEditorWidget(node: P15NeutralTextNode, state: GenerationState): Ele
   if (align !== undefined) settings.align = align;
   Object.assign(settings, textEditorTypographySettings(node.typography, node.paragraphSpacingPx));
   Object.assign(settings, widgetSizingSettings(node.sizing));
+  Object.assign(settings, absolutePositionSettings(node.position, 'widget'), zIndexSettings(node.zIndex, 'widget'));
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -228,6 +235,7 @@ function buttonWidget(node: P15NeutralButtonNode, state: GenerationState): Eleme
     settings.border_radius = pxDimensions({ top: node.cornerRadiusPx, right: node.cornerRadiusPx, bottom: node.cornerRadiusPx, left: node.cornerRadiusPx });
   }
   Object.assign(settings, buttonSizingSettings(node.sizing));
+  Object.assign(settings, absolutePositionSettings(node.position, 'widget'), zIndexSettings(node.zIndex, 'widget'));
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -251,7 +259,7 @@ function ruleWidget(node: P15NeutralDividerNode | P15NeutralSpacerNode, state: G
   const settings: Record<string, unknown> = node.kind === 'spacer'
     ? { space: slider(node.heightPx) }
     : { style: 'solid', weight: slider(node.weightPx), color: node.colorHex, ...(node.widthPx === undefined ? {} : { width: slider(node.widthPx) }),
-      gap: slider(0), ...(node.align === undefined ? {} : { align: node.align === 'end' ? 'right' : 'center' }) };
+      gap: slider(0), ...(node.align === undefined ? {} : { align: node.align === 'end' ? 'right' : 'center' }), ...zIndexSettings(node.zIndex, 'widget') };
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',

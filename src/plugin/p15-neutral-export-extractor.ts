@@ -29,7 +29,7 @@ import {
 import { buildP15ElementorExport } from '../targets/elementor/export-pipeline';
 import { deriveP15Gradient, type P15NeutralGradient } from '../targets/elementor/container-gradient';
 import { deriveP15BoxShadow } from '../targets/elementor/container-shadow';
-import { deriveP15ContainerBorder, deriveP15CornerRadii, type P15NeutralCornerRadii } from '../targets/elementor/container-visual-style';
+import { deriveP15ContainerBorder, deriveP15CornerRadii, type P15NeutralBoxPx, type P15NeutralCornerRadii } from '../targets/elementor/container-visual-style';
 import {
   deriveP15ContainerSizing,
   deriveP15WidgetSizing,
@@ -37,6 +37,14 @@ import {
   type P15ContainerSizingFacts,
   type P15FigmaSizingMode,
 } from '../targets/elementor/container-sizing';
+import { deriveP15Wrap, type P15NeutralWrap } from '../targets/elementor/container-wrap';
+import { deriveP15Grid, type P15NeutralGrid } from '../targets/elementor/container-grid';
+import { assignP15Overlap, BASELINE_REVIEW, DISTRIBUTED_JUSTIFICATIONS } from '../targets/elementor/container-spacing';
+import {
+  ABSOLUTE_POSITION_REVIEW,
+  assignP15StackOrder,
+  deriveP15AbsolutePosition,
+} from '../targets/elementor/absolute-position';
 import { validP15LinkUrl } from '../targets/elementor/link-url';
 import { detectP15Buttons, detectP15Headings } from '../targets/elementor/semantic-detection';
 import type { P15ElementorV3GenerationResult } from '../targets/elementor/v3-template-generator';
@@ -209,6 +217,8 @@ function mapPrimaryAlignment(value: unknown): P15NeutralJustification | null {
   if (value === 'CENTER') return 'center';
   if (value === 'MAX') return 'end';
   if (value === 'SPACE_BETWEEN') return 'space-between';
+  if (value === 'SPACE_AROUND') return 'space-around';
+  if (value === 'SPACE_EVENLY') return 'space-evenly';
   return null;
 }
 
@@ -545,6 +555,13 @@ function extractText(node: SceneNode, parent: ParentLayout): P15NeutralExportNod
 
 type ParentLayout = P15ContainerSizingFacts['parent'];
 
+/** Parent geometry an absolute child is placed in (recovery M2.5). */
+interface AbsoluteParent {
+  width: unknown;
+  height: unknown;
+  borderPx?: P15NeutralBoxPx;
+}
+
 function sizingMode(value: unknown): P15FigmaSizingMode | undefined {
   return value === 'FIXED' || value === 'HUG' || value === 'FILL' ? value : undefined;
 }
@@ -553,11 +570,21 @@ function optionalNumber(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
+/**
+ * Recovery M2.7: without `layoutSizing*`, the older `layoutGrow: 1` (along the parent) and `layoutAlign: STRETCH`
+ * (across the parent) still mean FILL on that axis. Anything else stays unknown, as before.
+ */
+function legacyFill(record: Record<string, unknown>, parent: ParentLayout, axis: 'row' | 'column'): P15FigmaSizingMode | undefined {
+  if (!parent) return undefined;
+  if (parent.direction === axis) return record.layoutGrow === 1 ? 'FILL' : undefined;
+  return record.layoutAlign === 'STRETCH' ? 'FILL' : undefined;
+}
+
 function sizingFacts(record: Record<string, unknown>, parent: ParentLayout): P15ContainerSizingFacts {
   return {
     parent,
-    horizontal: sizingMode(record.layoutSizingHorizontal),
-    vertical: sizingMode(record.layoutSizingVertical),
+    horizontal: sizingMode(record.layoutSizingHorizontal) ?? legacyFill(record, parent, 'row'),
+    vertical: sizingMode(record.layoutSizingVertical) ?? legacyFill(record, parent, 'column'),
     width: typeof record.width === 'number' ? record.width : NaN,
     height: typeof record.height === 'number' ? record.height : NaN,
     minWidth: optionalNumber(record.minWidth),
@@ -575,28 +602,76 @@ function extractContainer(
 ): P15NeutralExportNode {
   const record = recordOf(node);
   const mode = record.layoutMode;
-  if (mode !== 'HORIZONTAL' && mode !== 'VERTICAL') {
-    const reason = mode === 'GRID' ? 'GRID_LAYOUT_REQUIRES_REVIEW' : 'MANUAL_LAYOUT_REQUIRES_REVIEW';
-    return review(node, reason, `V1 extraction requires HORIZONTAL or VERTICAL Auto Layout; observed ${String(mode ?? 'NONE')}.`);
-  }
-  if (record.layoutWrap === 'WRAP') {
-    return review(node, 'WRAPPED_AUTO_LAYOUT_REQUIRES_REVIEW', 'Wrapped Figma Auto Layout is not mapped by the bounded V1 Elementor generator.');
+  if (mode !== 'HORIZONTAL' && mode !== 'VERTICAL' && mode !== 'GRID') {
+    return review(node, 'MANUAL_LAYOUT_REQUIRES_REVIEW', `V1 extraction requires Auto Layout or a grid; observed ${String(mode ?? 'NONE')}.`);
   }
 
-  const gapPx = finiteSpacing(record.itemSpacing);
+  // Recovery M2.6b: a strict grid becomes a Grid Container; its children stretch in their cells.
+  let grid: P15NeutralGrid | undefined;
+  let gridChildReview: P15NeutralStyleReview | undefined;
+  if (mode === 'GRID') {
+    const gridded = deriveP15Grid({
+      rowCount: record.gridRowCount,
+      columnCount: record.gridColumnCount,
+      rowGap: record.gridRowGap,
+      columnGap: record.gridColumnGap,
+      rowSizes: record.gridRowSizes,
+      columnSizes: record.gridColumnSizes,
+      children: childNodes(node).filter((child) => visible(child) && !isAbsolute(child)).map((child) => {
+        const entry = recordOf(child);
+        return {
+          rowAnchor: entry.gridRowAnchorIndex,
+          columnAnchor: entry.gridColumnAnchorIndex,
+          rowSpan: entry.gridRowSpan,
+          columnSpan: entry.gridColumnSpan,
+          horizontalSizing: entry.layoutSizingHorizontal,
+          verticalSizing: entry.layoutSizingVertical,
+          horizontalAlign: entry.gridChildHorizontalAlign,
+          verticalAlign: entry.gridChildVerticalAlign,
+        };
+      }),
+    });
+    if (gridded.review) return review(node, gridded.review.reasonCode, gridded.review.detail);
+    grid = gridded.grid;
+    gridChildReview = gridded.childReview;
+  }
+
+  // Recovery M2.7: negative spacing (an overlap) is checked after the children are extracted.
+  const spacing = grid ? 0 : finiteSpacing(typeof record.itemSpacing === 'number' ? Math.abs(record.itemSpacing) : record.itemSpacing);
   const paddingPx = boundedPadding(node);
-  if (gapPx === null || paddingPx === null) {
-    return review(node, 'SPACING_OUT_OF_RANGE', `Auto Layout spacing must be finite and within 0-${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px.`);
+  if (spacing === null || paddingPx === null) {
+    return review(node, 'SPACING_OUT_OF_RANGE', `Auto Layout spacing must be finite and within ±${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px (padding 0-${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px).`);
   }
 
-  const justifyContent = mapPrimaryAlignment(record.primaryAxisAlignItems);
-  const alignItems = mapCounterAlignment(record.counterAxisAlignItems);
+  const justifyContent = grid ? 'start' : mapPrimaryAlignment(record.primaryAxisAlignItems);
+  // Recovery M2.7: BASELINE has no Elementor option; it is laid out as start and flagged.
+  const baseline = !grid && record.counterAxisAlignItems === 'BASELINE';
+  const alignItems = grid ? 'stretch' : baseline ? 'start' : mapCounterAlignment(record.counterAxisAlignItems);
+  // A distributed main axis divides only the free space, as CSS does with no gap.
+  const distributed = justifyContent !== null && DISTRIBUTED_JUSTIFICATIONS.includes(justifyContent);
+  const overlapPx = !grid && !distributed && typeof record.itemSpacing === 'number' && record.itemSpacing < 0 ? -spacing : 0;
+  const gapPx = distributed || overlapPx < 0 ? 0 : spacing;
   if (justifyContent === null || alignItems === null) {
     return review(
       node,
       'UNSUPPORTED_AUTO_LAYOUT_ALIGNMENT',
       `V1 cannot safely map primary=${String(record.primaryAxisAlignItems)} counter=${String(record.counterAxisAlignItems)}.`,
     );
+  }
+
+  // Recovery M2.6a: a wrapped row writes flex wrap, the line gap and align-content.
+  let wrap: P15NeutralWrap | undefined;
+  if (record.layoutWrap === 'WRAP') {
+    const inFlow = childNodes(node).filter((child) => visible(child) && !isAbsolute(child));
+    const wrapped = deriveP15Wrap({
+      layoutMode: mode,
+      counterAxisSpacing: record.counterAxisSpacing,
+      counterAxisAlignContent: record.counterAxisAlignContent,
+      alignItems,
+      childLayoutAligns: inFlow.map((child) => recordOf(child).layoutAlign),
+    });
+    if (wrapped.review) return review(node, wrapped.review.reasonCode, wrapped.review.detail);
+    wrap = wrapped.wrap;
   }
 
   // Style facts that cannot be mapped yet stay REVIEW on the container itself, so the
@@ -626,9 +701,12 @@ function extractContainer(
       .map((entry) => ({ reasonCode: entry.reasonCode, detail: entry.detail })),
     ...unmappedVisualFactReviews(node, true),
   ];
+  if (baseline) {
+    styleReviews.push({ reasonCode: BASELINE_REVIEW, detail: 'Baseline alignment has no Elementor align-items option; it is laid out as start.' });
+  }
 
   // Recovery M2.3a: exact sizing; constraints without an exact mapping stay REVIEW on this container.
-  const direction = mode === 'HORIZONTAL' ? 'row' : 'column';
+  const direction = mode === 'VERTICAL' ? 'column' : 'row';
   const facts = sizingFacts(record, parent);
   state.sizingFacts.set(node.id, facts);
   const { horizontal, vertical } = facts;
@@ -638,25 +716,37 @@ function extractContainer(
   const children: P15NeutralExportNode[] = [];
   for (const child of childNodes(node)) {
     if (!visible(child)) continue;
-    const extracted = extractNode(child, depth + 1, state, { direction, alignItems });
+    const extracted = extractNode(child, depth + 1, state, { direction, alignItems },
+      { width: record.width, height: record.height, ...(bordered.border ? { borderPx: bordered.border.widthPx } : {}) });
     if (state.boundsExceeded) break;
     if (extracted) children.push(extracted);
   }
-  const distribution = fillDistributionReview(
+  if (gridChildReview) styleReviews.push(gridChildReview);
+  const distribution = grid ? null : fillDistributionReview(
     direction,
     direction === 'row' ? horizontal : vertical,
     children.map((child) => (child.kind === 'container' || child.kind === 'text' || child.kind === 'heading' ? child.sizing : undefined)),
   );
   if (distribution) styleReviews.push(distribution);
+  if (wrap !== undefined && childNodes(node).some((child) => visible(child) && !isAbsolute(child) && recordOf(child).layoutSizingHorizontal === 'FILL')) {
+    styleReviews.push({ reasonCode: 'SIZE_FILL_IN_WRAP_REQUIRES_REVIEW', detail: 'A FILL-width child of a wrapped row would take a whole line in CSS.' });
+  }
+  let flowChildren = children;
+  if (overlapPx < 0) {
+    const overlap = assignP15Overlap(children, overlapPx, { direction, wrapped: wrap !== undefined, reverseZIndex: record.itemReverseZIndex === true });
+    if (overlap.review) styleReviews.push(overlap.review);
+    flowChildren = overlap.children;
+  }
+  // Recovery M2.5: siblings from the first absolute child on carry their layer order; the stack stays inside this container.
+  const stack = assignP15StackOrder(flowChildren);
+  if (stack.review) styleReviews.push(stack.review);
 
   const container: P15NeutralContainerNode = {
     kind: 'container',
     sourceNodeId: node.id,
     direction,
-    gapPx,
+    ...(grid ? { grid } : { gapPx, alignItems, justifyContent }),
     paddingPx: bordered.paddingPx ?? paddingPx,
-    alignItems,
-    justifyContent,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
     ...(background.gradient !== undefined ? { gradient: background.gradient } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
@@ -665,8 +755,10 @@ function extractContainer(
     ...(clips ? { clipsContent: true as const } : {}),
     ...(shadowed.shadow !== undefined ? { boxShadow: shadowed.shadow } : {}),
     ...(sized.sizing ? { sizing: sized.sizing } : {}),
+    ...(wrap !== undefined ? { wrap } : {}),
+    ...(stack.stacked ? { zIndex: 0 } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
-    children,
+    children: stack.children,
   };
   return container;
 }
@@ -726,11 +818,53 @@ function placeDivider(divider: P15NeutralDividerNode, node: SceneNode, parent: P
   return { ...rest, ...(fill || widthPx === undefined ? {} : { widthPx }), ...(fill || align === undefined ? {} : { align }) };
 }
 
+/**
+ * An absolute child (recovery M2.5): a text or Auto Layout frame placed by MIN/MAX offsets from its parent.
+ * Anything without an exact placement, and any other node type, stays an explicit review.
+ */
+function extractAbsolute(
+  node: SceneNode,
+  depth: number,
+  state: ExtractionState,
+  parent: ParentLayout,
+  absoluteParent: AbsoluteParent | undefined,
+): P15NeutralExportNode {
+  if (absoluteParent === undefined || (node.type !== 'TEXT' && !isContainerLike(node))) {
+    return review(node, ABSOLUTE_POSITION_REVIEW, `An absolute ${node.type} has no exact Elementor placement; only text and Auto Layout frames map.`);
+  }
+  const record = recordOf(node);
+  const placed = deriveP15AbsolutePosition({
+    x: record.x,
+    y: record.y,
+    width: record.width,
+    height: record.height,
+    rotation: record.rotation,
+    constraints: record.constraints,
+    parentWidth: absoluteParent.width,
+    parentHeight: absoluteParent.height,
+    ...(absoluteParent.borderPx ? { parentBorderPx: absoluteParent.borderPx } : {}),
+  });
+  if (placed.review) return review(node, placed.review.reasonCode, placed.review.detail);
+  const position = placed.position!;
+  if (node.type === 'TEXT') {
+    const text = extractText(node, parent);
+    return text.kind === 'text' ? { ...text, position } : text;
+  }
+  const container = extractContainer(node, depth, state, parent);
+  if (container.kind !== 'container') return container;
+  // The default Container width is 100% of its parent; an absolute frame needs its own exact or hugging width.
+  if (container.sizing?.widthPx === undefined && container.sizing?.hugWidth === undefined) {
+    return review(node, ABSOLUTE_POSITION_REVIEW, 'An absolute frame needs a fixed or hugging width to keep its size outside the flow.');
+  }
+  return { ...container, position };
+}
+
 function extractNode(
   node: SceneNode,
   depth: number,
   state: ExtractionState,
   parent: ParentLayout = null,
+  absoluteParent?: AbsoluteParent,
 ): P15NeutralExportNode | null {
   if (!visible(node)) return null;
   if (depth > P15_NEUTRAL_EXPORT_MAX_DEPTH) {
@@ -742,12 +876,10 @@ function extractNode(
     state.boundsExceeded = 'NODE_LIMIT_EXCEEDED';
     return null;
   }
-  if (isAbsolute(node)) {
-    return review(node, 'ABSOLUTE_POSITION_REQUIRES_REVIEW', 'Absolute-positioned Figma content requires an explicit target mapping decision.');
-  }
   if (hasImageFill(node) && !isContainerLike(node)) {
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
+  if (isAbsolute(node)) return extractAbsolute(node, depth, state, parent, absoluteParent);
   if (node.type === 'TEXT') return extractText(node, parent);
   const rule = extractRule(node, parent?.direction ?? null);
   if (rule) return rule.kind === 'divider' ? placeDivider(rule, node, parent) : rule;
