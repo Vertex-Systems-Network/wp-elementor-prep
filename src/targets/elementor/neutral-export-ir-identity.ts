@@ -75,6 +75,7 @@ function canonicalContainer(node: P15NeutralContainerNode): Record<string, unkno
   if (node.boxShadow !== undefined) value.boxShadow = canonicalBoxShadow(node.boxShadow);
   if (node.gradient !== undefined) value.gradient = canonicalGradient(node.gradient);
   if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
+  if (node.fullContentWidth !== undefined) value.fullContentWidth = true;
   if (node.wrap !== undefined) value.wrap = canonicalWrap(node.wrap);
   if (node.grid !== undefined) value.grid = canonicalGrid(node.grid);
   if (node.marginPx !== undefined) value.marginPx = canonicalMargin(node.marginPx);

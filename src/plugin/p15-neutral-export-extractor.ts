@@ -765,6 +765,8 @@ function extractContainer(
     ...(clips ? { clipsContent: true as const } : {}),
     ...(shadowed.shadow !== undefined ? { boxShadow: shadowed.shadow } : {}),
     ...(sized.sizing ? { sizing: sized.sizing } : {}),
+    // Recovery M2.10: a Figma frame is its own box, never Elementor's boxed (kit-width-capped) layout.
+    fullContentWidth: true as const,
     ...(wrap !== undefined ? { wrap } : {}),
     ...(stack.stacked ? { zIndex: 0 } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),

@@ -1,5 +1,5 @@
 {
-  "irFingerprint": "sha256:6e417b481bf84e7768505b4872925025fa9041e563edbb0a61cfef412649a3f3",
+  "irFingerprint": "sha256:c0ea46dc3f89827f5f64c45c496f19fc766183ac19e2e4c8b3ad96ba6d6495d7",
   "coverageAudit": {
     "auditVersion": "p15-property-coverage-audit-v1",
     "status": "COMPLETE",
@@ -96,7 +96,8 @@
                 },
                 "flex_align_items": "center",
                 "flex_justify_content": "space-between",
-                "_flex_size": "none"
+                "_flex_size": "none",
+                "content_width": "full"
               },
               "elements": [
                 {
@@ -324,6 +325,7 @@
                   "sizes": []
                 },
                 "_flex_size": "none",
+                "content_width": "full",
                 "z_index": 0
               },
               "elements": [
@@ -670,7 +672,8 @@
                   "left": "80",
                   "isLinked": true
                 },
-                "_flex_size": "none"
+                "_flex_size": "none",
+                "content_width": "full"
               },
               "elements": [
                 {
@@ -723,7 +726,8 @@
                       "spread": 0,
                       "color": "rgba(0,0,0,0.08)"
                     },
-                    "box_shadow_box_shadow_position": " "
+                    "box_shadow_box_shadow_position": " ",
+                    "content_width": "full"
                   },
                   "elements": [
                     {
@@ -833,7 +837,8 @@
                       "spread": 0,
                       "color": "rgba(0,0,0,0.08)"
                     },
-                    "box_shadow_box_shadow_position": " "
+                    "box_shadow_box_shadow_position": " ",
+                    "content_width": "full"
                   },
                   "elements": [
                     {
@@ -943,7 +948,8 @@
                       "spread": 0,
                       "color": "rgba(0,0,0,0.08)"
                     },
-                    "box_shadow_box_shadow_position": " "
+                    "box_shadow_box_shadow_position": " ",
+                    "content_width": "full"
                   },
                   "elements": [
                     {
@@ -1028,6 +1034,7 @@
                 "flex_align_items": "flex-start",
                 "flex_justify_content": "center",
                 "_flex_size": "none",
+                "content_width": "full",
                 "flex_wrap": "wrap",
                 "flex_align_content": "flex-start"
               },
@@ -1401,7 +1408,8 @@
                 },
                 "flex_align_items": "center",
                 "flex_justify_content": "flex-start",
-                "_flex_size": "none"
+                "_flex_size": "none",
+                "content_width": "full"
               },
               "elements": [
                 {
@@ -1710,7 +1718,8 @@
                 "flex_justify_content": "space-between",
                 "background_background": "classic",
                 "background_color": "#0F172A",
-                "_flex_size": "none"
+                "_flex_size": "none",
+                "content_width": "full"
               },
               "elements": [
                 {
@@ -1812,6 +1821,7 @@
         "sizing": {
           "widthPx": 1440
         },
+        "fullContentWidth": true,
         "children": [
           {
             "kind": "container",
@@ -1829,6 +1839,7 @@
             "sizing": {
               "flex": "fixed"
             },
+            "fullContentWidth": true,
             "children": [
               {
                 "kind": "heading",
@@ -1864,6 +1875,7 @@
                   "hugWidth": true,
                   "flex": "fixed"
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "text",
@@ -1964,6 +1976,7 @@
             "sizing": {
               "flex": "fixed"
             },
+            "fullContentWidth": true,
             "zIndex": 0,
             "children": [
               {
@@ -2019,6 +2032,7 @@
                   "hugWidth": true,
                   "flex": "fixed"
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "button",
@@ -2072,6 +2086,7 @@
                       "hugWidth": true,
                       "flex": "fixed"
                     },
+                    "fullContentWidth": true,
                     "children": [
                       {
                         "kind": "text",
@@ -2119,6 +2134,7 @@
                   "minHeightPx": 32,
                   "flex": "fixed"
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "text",
@@ -2189,6 +2205,7 @@
             "sizing": {
               "flex": "fixed"
             },
+            "fullContentWidth": true,
             "children": [
               {
                 "kind": "container",
@@ -2223,6 +2240,7 @@
                   "colorHex": "#000000",
                   "alpha": 0.08
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "heading",
@@ -2294,6 +2312,7 @@
                   "colorHex": "#000000",
                   "alpha": 0.08
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "heading",
@@ -2365,6 +2384,7 @@
                   "colorHex": "#000000",
                   "alpha": 0.08
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "heading",
@@ -2421,6 +2441,7 @@
             "sizing": {
               "flex": "fixed"
             },
+            "fullContentWidth": true,
             "wrap": {
               "rowGapPx": 16,
               "alignContent": "start"
@@ -2445,6 +2466,7 @@
                   "hugWidth": true,
                   "flex": "fixed"
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "text",
@@ -2483,6 +2505,7 @@
                   "hugWidth": true,
                   "flex": "fixed"
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "text",
@@ -2521,6 +2544,7 @@
                   "hugWidth": true,
                   "flex": "fixed"
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "text",
@@ -2559,6 +2583,7 @@
                   "hugWidth": true,
                   "flex": "fixed"
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "text",
@@ -2597,6 +2622,7 @@
                   "hugWidth": true,
                   "flex": "fixed"
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "text",
@@ -2634,6 +2660,7 @@
             "sizing": {
               "flex": "fixed"
             },
+            "fullContentWidth": true,
             "children": [
               {
                 "kind": "container",
@@ -2652,6 +2679,7 @@
                   "hugWidth": true,
                   "flex": "fixed"
                 },
+                "fullContentWidth": true,
                 "children": [
                   {
                     "kind": "container",
@@ -2683,6 +2711,7 @@
                       "minHeightPx": 48,
                       "flex": "fixed"
                     },
+                    "fullContentWidth": true,
                     "children": []
                   },
                   {
@@ -2715,6 +2744,7 @@
                       "minHeightPx": 48,
                       "flex": "fixed"
                     },
+                    "fullContentWidth": true,
                     "children": [],
                     "marginPx": {
                       "top": 0,
@@ -2753,6 +2783,7 @@
                       "minHeightPx": 48,
                       "flex": "fixed"
                     },
+                    "fullContentWidth": true,
                     "children": [],
                     "marginPx": {
                       "top": 0,
@@ -2827,6 +2858,7 @@
             "sizing": {
               "flex": "fixed"
             },
+            "fullContentWidth": true,
             "children": [
               {
                 "kind": "text",
