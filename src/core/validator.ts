@@ -1,3 +1,4 @@
+import type { TiledPixelDiffMetrics } from './pixel-diff';
 import type {
   IntegrityAnchor,
   IntegritySnapshot,
@@ -288,3 +289,22 @@ export function mergePixelValidation(report: ValidationReport, pixel: PixelDiffM
     metrics: { ...report.metrics, pixel },
   };
 }
+
+/**
+ * Recovery M5.4: merge a full-resolution tiled comparison — the whole-frame rule of `mergePixelValidation`, plus one
+ * finding per section over its own budget, so a local change in a large frame cannot pass on the global share.
+ */
+export function mergeTiledPixelValidation(report: ValidationReport, tiled: TiledPixelDiffMetrics): ValidationReport {
+  const merged = mergePixelValidation(report, tiled.metrics);
+  const findings = [...merged.findings];
+  for (const section of tiled.sections.filter((entry) => !entry.pass)) {
+    findings.push(finding(
+      'PIXEL_SECTION_BUDGET_EXCEEDED',
+      'A section exceeded its pixel budget',
+      `Section ${section.id} changed ${section.changedPct}% of its pixels at full resolution (budget ${section.maxChangedPct}%).`,
+      { sectionId: section.id, changedPct: section.changedPct, maxChangedPct: section.maxChangedPct, changedPixels: section.changedPixels },
+    ));
+  }
+  return { ...merged, passed: findings.length === 0, findings };
+}
+

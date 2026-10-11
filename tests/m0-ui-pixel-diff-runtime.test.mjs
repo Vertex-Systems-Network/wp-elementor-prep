@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
 import { describe, expect, it } from 'vitest';
-import { comparePixelBuffers } from '../src/core/pixel-diff';
+import { comparePixelBuffers, compareTiledPixelBuffers } from '../src/core/pixel-diff';
 import { buildReleaseUi } from '../scripts/release-ui-contract.mjs';
 import {
   PIXEL_DIFF_RUNTIME_END,
@@ -53,5 +53,13 @@ describe('recovery M0.10 — single pixel-diff implementation', () => {
     // esbuild escapes closing script tags; the compiler additionally refuses any that survive.
     expect(compilePixelDiffRuntime('export const x = "</script>"; export function comparePixelBuffers() {}')).not.toMatch(/<\/script/i);
     expect(() => runInNewContext(compilePixelDiffRuntime('export const other = 1;'))).toThrow(/unavailable/);
+  });
+
+  it('recovery M5.4: the compiled runtime carries the same full-resolution tiled comparison', async () => {
+    const runtimeCompare = runtimeFrom(buildReleaseUi(await readFile('src/ui/ui.html', 'utf8')));
+    const before = buffer(40, 30, 3);
+    const after = buffer(40, 30, 5);
+    const sections = [{ id: 'a', x: 0, y: 0, width: 20, height: 15, maxChangedPct: 1 }];
+    expect(JSON.parse(JSON.stringify(runtimeCompare.tiled(before, after, 8, 16, sections, 0.5)))).toEqual(compareTiledPixelBuffers(before, after, 8, 16, sections, 0.5));
   });
 });

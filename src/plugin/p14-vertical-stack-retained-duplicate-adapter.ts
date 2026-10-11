@@ -47,6 +47,12 @@ export interface FigmaP14VerticalStackAdapterOptions {
   runtime?: P14FigmaRetainedDuplicateRuntime;
   /** Deterministic test seam for P13 re-score report timestamps. */
   now?: () => string;
+  /**
+   * Recovery M5.4: full-resolution tiled pixel validation of the candidate against its source. When provided, a
+   * candidate passes validation only when this resolves `passed: true`; a failure (or an error) rejects the
+   * validation, so the transaction discards the candidate. The frozen R2 check list is unchanged.
+   */
+  pixelValidator?: (source: FrameNode, candidate: FrameNode) => Promise<{ passed: boolean; detail: string }>;
 }
 
 interface PreservationNode {
@@ -333,11 +339,13 @@ function check(id: string, passed: boolean): P14ValidationCheck {
 export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14RetainedDuplicateAdapter {
   private readonly runtime: P14FigmaRetainedDuplicateRuntime;
   private readonly now: () => string;
+  private readonly pixelValidator: FigmaP14VerticalStackAdapterOptions['pixelValidator'];
   private readonly candidates = new Map<string, CandidateMetadata>();
 
   constructor(options: FigmaP14VerticalStackAdapterOptions = {}) {
     this.runtime = options.runtime ?? productionRuntime();
     this.now = options.now ?? (() => new Date().toISOString());
+    this.pixelValidator = options.pixelValidator;
   }
 
   private owned(candidate: P14CandidateHandle): CandidateMetadata {
@@ -561,6 +569,11 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     const assessed = assessP14VerticalStackValidationProfileEvidence(summary);
     if (summary.passed && !assessed.valid) {
       throw new Error(`P14 vertical-stack validation profile evidence is internally inconsistent: ${assessed.failures.join(' | ')}`);
+    }
+    if (summary.passed && this.pixelValidator) {
+      const source = await frameById(this.runtime, metadata.sourceNodeId, 'Source');
+      const pixel = await this.pixelValidator(source, candidateRoot);
+      if (!pixel.passed) throw new Error(`P14 full-resolution pixel validation failed: ${pixel.detail}`);
     }
     return summary;
   }

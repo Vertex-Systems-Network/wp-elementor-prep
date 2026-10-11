@@ -12,6 +12,7 @@ import {
 } from '../core/p5-runtime-gate';
 import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
+import { stackRecipeV2SafePlans } from '../core/stack-recipe-v2-safe';
 import type { SafeRecipeKind } from '../core/safe-recipe-types';
 import { scanSceneNode, scanSceneNodeWithinBounds, type ScanBounds } from '../core/scanner';
 import { createSelectionAuditScheduler } from './selection-audit-scheduler';
@@ -96,6 +97,8 @@ declare const __P14_INTERNAL_ACTIVATION__: boolean;
 const PLUGIN_VERSION = __PLUGIN_VERSION__;
 const RUNTIME_BUILD = currentP5RuntimeBuildIdentity();
 const BACKLOG_STORAGE_PREFIX = 'p9-backlog-v1';
+/** Recovery M5.4: changed-pixel budget per top-level section in P14 full-resolution validation. */
+const P14_SECTION_PIXEL_BUDGET_PCT = 0.5;
 let auditSequence = 0;
 
 type P5ExclusiveOperation = 'runtime-self-test' | 'safe-fix-apply' | 'safe-fix-restore' | 'safe-fix-finalize' | 'safe-fix-clear-stale' | 'p6-page-flow-calibration' | 'batch-run' | 'batch-checkpoint' | 'p14-guided-prepare';
@@ -280,7 +283,9 @@ async function currentSafePlans(selected: FrameNode) {
   const root = scanSceneNode(selected);
   const detections = detectPatterns(root);
   const roles = detectSpecialRoles(root);
-  const plans = planSafeRecipes(root, detections, roles);
+  const v1Plans = planSafeRecipes(root, detections, roles);
+  // Recovery M5.2: recipes v2 add stacks v1 does not make eligible (alignment, distribution, FILL/HUG, nesting).
+  const plans = [...v1Plans, ...stackRecipeV2SafePlans(root, v1Plans)];
   return { root, roles, plans };
 }
 
@@ -591,7 +596,17 @@ async function runP14GuidedPrepareConfirmed(): Promise<void> {
       transactionId: `p14-ui-${Date.now().toString(36)}`,
       preparedName: 'P14 Prepared Duplicate',
       now: () => new Date().toISOString(),
-    }, new FigmaP14VerticalStackRetainedDuplicateAdapter());
+    }, new FigmaP14VerticalStackRetainedDuplicateAdapter({
+      // Recovery M5.4: full-resolution tiled pixel validation, one budget per top-level section of the source.
+      pixelValidator: async (source, candidate) => {
+        const sections = source.children.filter((child) => child.visible).map((child) => ({
+          id: child.id, x: child.x, y: child.y, width: child.width, height: child.height, maxChangedPct: P14_SECTION_PIXEL_BUDGET_PCT,
+        }));
+        const result = await fullFrameValidator.validateFullResolution(source, candidate, sections);
+        const failures = result.report.findings.map((finding) => finding.code);
+        return { passed: result.report.passed, detail: failures.length ? failures.join(', ') : `${result.tiled.tiles} tiles compared at full resolution` };
+      },
+    }));
 
     figma.ui.postMessage({
       type: 'p14-guided-prepare-result',

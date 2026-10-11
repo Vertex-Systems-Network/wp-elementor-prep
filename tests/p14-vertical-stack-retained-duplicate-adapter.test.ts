@@ -381,6 +381,26 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     expect(validation.checks.find((item) => item.id === 'vertical-stack-geometry-preserved')?.passed).toBe(false);
   });
 
+  it('recovery M5.4: a failing full-resolution pixel validation rejects an otherwise passing candidate', async () => {
+    const { runtime, source } = fixture();
+    const plan = planFor(source);
+    const action = plan.actions[0];
+    if (!action) throw new Error('Expected one R4 action.');
+    const calls: Array<[string, string]> = [];
+    const failing = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow,
+      pixelValidator: async (from, to) => { calls.push([from.id, to.id]); return { passed: false, detail: 'PIXEL_SECTION_BUDGET_EXCEEDED' }; } });
+    const handle = await failing.cloneSource(source.id, 'p14-m5-pixel-fail');
+    await failing.applyRecipe(handle, action);
+    await expect(failing.validateCandidate(handle, plan)).rejects.toThrow(/full-resolution pixel validation failed: PIXEL_SECTION_BUDGET_EXCEEDED/);
+    expect(calls).toEqual([[source.id, handle.candidateNodeId]]);
+
+    const passing = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow,
+      pixelValidator: async () => ({ passed: true, detail: 'ok' }) });
+    const other = await passing.cloneSource(source.id, 'p14-m5-pixel-pass');
+    await passing.applyRecipe(other, action);
+    expect((await passing.validateCandidate(other, plan)).passed).toBe(true);
+  });
+
   it('fails re-score on insufficient evidence and cleans up only the owned candidate', async () => {
     const { runtime, source } = fixture();
     const plan = planFor(source);

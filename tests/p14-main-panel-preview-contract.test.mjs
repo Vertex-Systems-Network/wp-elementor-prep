@@ -55,7 +55,9 @@ describe('P14 main-panel Guided Prepare preview contract', () => {
     expect(main).toContain('assessP14InternalActivationSession');
     expect(main).toContain('buildP14PreparationConfirmation');
     expect(main).toContain('runP14RetainedDuplicateTransaction');
-    expect(main).toContain('new FigmaP14VerticalStackRetainedDuplicateAdapter()');
+    expect(main).toContain('new FigmaP14VerticalStackRetainedDuplicateAdapter({');
+    // Recovery M5.4: full-resolution tiled pixel validation per top-level section gates the candidate.
+    expect(main).toContain('fullFrameValidator.validateFullResolution(source, candidate, sections)');
     expect(main).toContain("type === 'p14-guided-prepare-confirm-request'");
     expect(main).toContain('p14ReviewedActivation = null');
   });

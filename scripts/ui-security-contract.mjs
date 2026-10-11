@@ -21,6 +21,11 @@ const DECODE_PNG_SOURCE = `    async function decodePng(bytes) {
 
 const DECODE_PNG_SECURE = `    const MAX_PIXEL_PNG_BYTES = 32 * 1024 * 1024;
     const MAX_PIXEL_DIMENSION = 2048;
+    // Recovery M5.4: full-resolution tiled requests only (P14 validation at scale 1, never downscaled).
+    const MAX_FULL_RES_PNG_BYTES = 128 * 1024 * 1024;
+    const MAX_FULL_RES_DIMENSION = 16384;
+    const MAX_FULL_RES_PIXELS = 64 * 1024 * 1024;
+    const MAX_TILED_SECTIONS = 512;
 
     function isRecord(value) {
       return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -34,7 +39,17 @@ const DECODE_PNG_SECURE = `    const MAX_PIXEL_PNG_BYTES = 32 * 1024 * 1024;
       return Number.isSafeInteger(value) && value >= 0 && value <= 255;
     }
 
-    function boundedPngBytes(value) {
+    function isSafeTiledRequest(value) {
+      return isRecord(value)
+        && Number.isSafeInteger(value.tileSize) && value.tileSize >= 64 && value.tileSize <= 4096
+        && typeof value.maxChangedPct === 'number' && Number.isFinite(value.maxChangedPct) && value.maxChangedPct >= 0 && value.maxChangedPct <= 100
+        && Array.isArray(value.sections) && value.sections.length <= MAX_TILED_SECTIONS
+        && value.sections.every((section) => isRecord(section) && typeof section.id === 'string' && section.id.length > 0 && section.id.length <= 128
+          && ['x', 'y', 'width', 'height', 'maxChangedPct'].every((key) => typeof section[key] === 'number' && Number.isFinite(section[key]))
+          && section.maxChangedPct >= 0 && section.maxChangedPct <= 100);
+    }
+
+    function boundedPngBytes(value, maxBytes = MAX_PIXEL_PNG_BYTES) {
       let bytes;
       if (value instanceof Uint8Array) {
         bytes = value;
@@ -43,7 +58,7 @@ const DECODE_PNG_SECURE = `    const MAX_PIXEL_PNG_BYTES = 32 * 1024 * 1024;
       } else if (ArrayBuffer.isView(value)) {
         bytes = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
       } else if (Array.isArray(value)) {
-        if (value.length > MAX_PIXEL_PNG_BYTES) throw new Error('PNG payload exceeds the pixel broker byte limit.');
+        if (value.length > maxBytes) throw new Error('PNG payload exceeds the pixel broker byte limit.');
         if (!value.every((entry) => Number.isInteger(entry) && entry >= 0 && entry <= 255)) {
           throw new Error('PNG payload contains invalid byte values.');
         }
@@ -51,14 +66,15 @@ const DECODE_PNG_SECURE = `    const MAX_PIXEL_PNG_BYTES = 32 * 1024 * 1024;
       } else {
         throw new Error('PNG payload is not a supported byte sequence.');
       }
-      if (bytes.byteLength === 0 || bytes.byteLength > MAX_PIXEL_PNG_BYTES) {
+      if (bytes.byteLength === 0 || bytes.byteLength > maxBytes) {
         throw new Error('PNG payload size is outside the pixel broker byte limit.');
       }
       return bytes;
     }
 
-    async function decodePng(value) {
-      const bytes = boundedPngBytes(value);
+    async function decodePng(value, fullResolution = false) {
+      const bytes = boundedPngBytes(value, fullResolution ? MAX_FULL_RES_PNG_BYTES : MAX_PIXEL_PNG_BYTES);
+      const maxDimension = fullResolution ? MAX_FULL_RES_DIMENSION : MAX_PIXEL_DIMENSION;
       const blob = new Blob([bytes], { type: 'image/png' });
       const bitmap = await createImageBitmap(blob);
       try {
@@ -66,8 +82,9 @@ const DECODE_PNG_SECURE = `    const MAX_PIXEL_PNG_BYTES = 32 * 1024 * 1024;
           || !Number.isSafeInteger(bitmap.height)
           || bitmap.width <= 0
           || bitmap.height <= 0
-          || bitmap.width > MAX_PIXEL_DIMENSION
-          || bitmap.height > MAX_PIXEL_DIMENSION) {
+          || bitmap.width > maxDimension
+          || bitmap.height > maxDimension
+          || (fullResolution && bitmap.width * bitmap.height > MAX_FULL_RES_PIXELS)) {
           throw new Error('Decoded PNG dimensions exceed the pixel broker limit.');
         }
         const canvas = document.createElement('canvas');
@@ -98,7 +115,10 @@ const PIXEL_REQUEST_SOURCE = `      if (message.type === 'validation-pixel-reque
             decodePng(message.beforePng),
             decodePng(message.afterPng),
           ]);
-          const pixelMetrics = comparePixels(before, after, message.channelTolerance);
+          // Recovery M5.4: full-resolution requests are compared in tiles with per-section budgets.
+          const pixelMetrics = message.tiled
+            ? comparePixels.tiled(before, after, message.channelTolerance, message.tiled.tileSize, message.tiled.sections, message.tiled.maxChangedPct)
+            : comparePixels(before, after, message.channelTolerance);
           post('validation-pixel-result', {
             validationId: message.validationId,
             pixelMetrics,
@@ -122,11 +142,17 @@ const PIXEL_REQUEST_SECURE = `      if (message.type === 'validation-pixel-reque
           if (!isSafeChannelTolerance(message.channelTolerance)) {
             throw new Error('Pixel broker channel tolerance is invalid.');
           }
+          const tiled = message.tiled === undefined ? null : message.tiled;
+          if (tiled !== null && (!isSafeTiledRequest(tiled) || typeof comparePixels.tiled !== 'function')) {
+            throw new Error('Pixel broker tiled request is invalid.');
+          }
           const [before, after] = await Promise.all([
-            decodePng(message.beforePng),
-            decodePng(message.afterPng),
+            decodePng(message.beforePng, tiled !== null),
+            decodePng(message.afterPng, tiled !== null),
           ]);
-          const pixelMetrics = comparePixels(before, after, message.channelTolerance);
+          const pixelMetrics = tiled !== null
+            ? comparePixels.tiled(before, after, message.channelTolerance, tiled.tileSize, tiled.sections, tiled.maxChangedPct)
+            : comparePixels(before, after, message.channelTolerance);
           post('validation-pixel-result', {
             validationId,
             pixelMetrics,
