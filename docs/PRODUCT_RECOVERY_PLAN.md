@@ -8,7 +8,7 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
-> - Next task: **M3.2** (atomic asset-pack ZIP)
+> - Next task: **M3.3** (pack-relative Elementor media references)
 > - Last completed task: **M3.1** (asset collector)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
@@ -383,7 +383,11 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - `src/plugin/p15-asset-collector.ts` (`p15-asset-collector-v1`), with the Figma API injected (`getImageByHash` → `getBytesAsync`/`getSizeAsync`, `node.exportAsync`). **Stored Original**: one record per image hash (content-addressed `original-<hash>`, every using node listed, MIME sniffed from the PNG/JPEG/GIF/WebP signature, original pixel size). **Rendered Appearance**: every image layer as PNG @1x and @2x (`render-<node>@<scale>x`), capturing crop, scale mode, filters and effects. Vector layers and frames/groups made only of vectors (icons) → one SVG each (`svg-<node>`).
   - Every record has a byte SHA-256 (new `sha256BytesHex` in `src/core/sha256.ts`, cross-checked against `node:crypto`), byte length and pixel size. Bounds: 500 assets, 20 MB per asset, 200 MB total. Missing hashes, unreadable or unsupported images, failed exports, empty or oversized assets and id collisions are explicit reviews. No Figma mutation, no network, no URL.
   - Not yet wired into the plugin flow; the asset pack (M3.2) consumes it. Tests: `tests/m3-asset-collector.test.ts`, `tests/m3-sha256-bytes.test.ts`.
-- [ ] **M3.2** Atomic asset-pack ZIP: Template JSON + `/assets/*` + manifest (hash, dimensions, alt text, usage).
+- [x] **M3.2** Atomic asset-pack ZIP: Template JSON + `/assets/*` + manifest (hash, dimensions, alt text, usage). _(done 2026-10-11)_
+  - `src/core/zip.ts`: a minimal deterministic ZIP (STORE, fixed 1980-01-01 timestamp, UTF-8 names, CRC-32, safe relative paths only) and a reader that re-checks every CRC; cross-checked against Python `zipfile` in the tests. No dependency added.
+  - `src/targets/elementor/asset-pack.ts` (`p15-elementor-asset-pack-v1`): `manifest.json` + `template.json` + `assets/<assetId>.<ext>`. The manifest records the label (`LOCAL CANDIDATE` or `REVIEW REQUIRED`, always `targetImportReady: false`), the template SHA-256, and per asset its id, path, kind, MIME type, SHA-256, byte length, pixel size, alt text (the layer name unless it is a Figma default name; SVG icons are decorative) and usage (node ids). A picture without a descriptive name gets `ASSET_ALT_TEXT_MISSING`.
+  - Atomic: the pack is built in memory, read back and verified against its own manifest before any bytes are returned; an asset whose bytes do not match its recorded SHA-256, an unsafe id or a failed verification returns no bytes (`PACK_BLOCKED`). Identical input gives byte-identical packs. No URL.
+  - Tests: `tests/m3-asset-pack.test.ts`.
 - [ ] **M3.3** Elementor media references. The template references pack-relative asset ids, and an import guide plus an optional future WordPress companion handles media upload. The core stays network-free. Temporary Figma URLs are never emitted, which resolves the root cause of #856.
 - [ ] **M3.4** Image widget sizing: width, height, object-fit and crop. Container background image: size, position and repeat.
 - [ ] **M3.5** SVG icons → Icon or Image widget (SVG).
