@@ -1,10 +1,13 @@
+import type { P15MatchNode } from '../core/breakpoint-matcher';
+import { responsiveReportFor } from '../core/breakpoint-report';
 import { buildP15BreakpointSet, type P15BreakpointSetV1 } from '../core/breakpoint-set';
 import { breakpointFramesFromSelection } from './p15-breakpoint-selection';
 
 /**
  * Recovery M4.1: classify the selected frames into a breakpoint set, show it, and record it only when the user
  * confirms the exact set they saw. A confirmation is re-checked against the current selection (same fingerprint);
- * any selection change clears the confirmed set.
+ * any selection change clears the confirmed set. Recovery M4.5: a confirmed set comes with its responsive report
+ * (per desktop section: match status and confidence on each breakpoint).
  */
 let confirmedSet: P15BreakpointSetV1 | null = null;
 
@@ -16,6 +19,13 @@ export function confirmedP15BreakpointSet(): P15BreakpointSetV1 | null {
 function currentSet(): P15BreakpointSetV1 | string {
   const selection = breakpointFramesFromSelection(figma.currentPage.selection as unknown as Parameters<typeof breakpointFramesFromSelection>[0]);
   return selection.ok ? buildP15BreakpointSet(selection.frames) : selection.message;
+}
+
+/** The selected frames (or the selected Section's frames) by id, as matcher nodes. */
+function selectedFramesById(): Map<string, P15MatchNode> {
+  const selection = figma.currentPage.selection;
+  const frames = selection.length === 1 && selection[0]!.type === 'SECTION' ? selection[0]!.children : selection;
+  return new Map(frames.map((node) => [node.id, node as unknown as P15MatchNode]));
 }
 
 function runBreakpointSet(): void {
@@ -37,7 +47,7 @@ function confirmBreakpointSet(fingerprint: unknown): void {
     return;
   }
   confirmedSet = set;
-  figma.ui.postMessage({ type: 'p15-breakpoint-set-confirmed', set });
+  figma.ui.postMessage({ type: 'p15-breakpoint-set-confirmed', set, report: responsiveReportFor(set, selectedFramesById()) });
   figma.notify(`Breakpoint set confirmed: ${set.members.map((member) => member.device).join(', ')}.`);
 }
 

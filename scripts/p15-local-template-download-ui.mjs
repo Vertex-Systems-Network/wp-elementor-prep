@@ -167,6 +167,23 @@ const RENDERER_EXTENDED = `    function renderP15LocalTemplateDownload(message) 
         \${reviewCount > reviews.length ? \`<div class="meta">\${escapeHtml(String(reviewCount - reviews.length))} more in manifest.json.</div>\` : ''}\`;
     }
 
+    function renderP15ResponsiveReport(report) {
+      const sections = report && Array.isArray(report.sections) ? report.sections : [];
+      if (!sections.length) return '<div class="empty">No responsive report: the desktop frame has no visible sections.</div>';
+      const cell = (entry) => {
+        if (!entry) return '';
+        const label = entry.status === 'MATCHED' ? \`matched · \${Math.round(Number(entry.confidence) * 100)}%\` : entry.status.toLowerCase();
+        const extra = [entry.unmatchedInside ? \`\${entry.unmatchedInside} unmatched inside\` : '', entry.ambiguousInside ? \`\${entry.ambiguousInside} ambiguous\` : '']
+          .filter(Boolean).join(', ');
+        return \`\${escapeHtml(entry.device)}: \${escapeHtml(label)}\${extra ? \` (\${escapeHtml(extra)})\` : ''}\`;
+      };
+      const variantOnly = Array.isArray(report.variantOnly) ? report.variantOnly.filter((entry) => entry.count > 0) : [];
+      return \`
+        <div class="sectionTitle">Responsive report</div>
+        \${sections.map((section) => \`<div class="row"><div class="name">\${escapeHtml(section.name)}</div><div class="meta">\${(Array.isArray(section.devices) ? section.devices : []).map(cell).join(' · ')}</div></div>\`).join('')}
+        \${variantOnly.map((entry) => \`<div class="meta">\${escapeHtml(entry.device)}: \${escapeHtml(String(entry.count))} layer(s) only on this breakpoint.</div>\`).join('')}\`;
+    }
+
     function renderP15BreakpointSet(message, confirmed) {
       const set = message.set;
       const members = set && Array.isArray(set.members) ? set.members : [];
@@ -184,7 +201,8 @@ const RENDERER_EXTENDED = `    function renderP15LocalTemplateDownload(message) 
         <div class="sectionTitle">Frames</div>
         \${members.map((member) => \`<div class="row"><div class="name">\${escapeHtml(member.device)}</div><div class="meta">\${escapeHtml(member.name)} · \${escapeHtml(String(member.widthPx))}px</div></div>\`).join('')}
         \${issues.length ? \`<div class="sectionTitle">Review</div>\${issues.map((issue) => \`<div class="row"><div class="name">\${escapeHtml(issue.code)}</div><div class="meta">\${escapeHtml(issue.detail)}</div></div>\`).join('')}\` : ''}
-        \${confirmable ? '<div class="inlineActions one"><button id="p15-breakpoints-confirm">Confirm breakpoint set</button></div>' : ''}\`;
+        \${confirmable ? '<div class="inlineActions one"><button id="p15-breakpoints-confirm">Confirm breakpoint set</button></div>' : ''}
+        \${confirmed ? renderP15ResponsiveReport(message.report) : ''}\`;
       if (confirmable) {
         const fingerprint = set.fingerprint;
         document.getElementById('p15-breakpoints-confirm').addEventListener('click', () => {
