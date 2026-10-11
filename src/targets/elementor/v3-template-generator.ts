@@ -1,6 +1,7 @@
 import { buttonSizingSettings, containerSizingSettings, widgetSizingSettings } from './container-sizing';
 import { absolutePositionSettings, zIndexSettings } from './absolute-position';
 import { wrapSettings } from './container-wrap';
+import { gridSettings } from './container-grid';
 import { gradientSettings } from './container-gradient';
 import { boxShadowSettings } from './container-shadow';
 import { containerVisualStyleSettings } from './container-visual-style';
@@ -133,9 +134,8 @@ function mapButtonAlignment(value: P15NeutralAlignment | undefined): 'left' | 'c
 
 
 function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 {
-  const settings: Record<string, unknown> = {
-    flex_direction: node.direction,
-  };
+  // A grid (recovery M2.6b) replaces the flex group; its validated IR carries no flex gap or alignment.
+  const settings: Record<string, unknown> = node.grid === undefined ? { flex_direction: node.direction } : gridSettings(node.grid);
   if (node.gapPx !== undefined) {
     settings.flex_gap = {
       column: String(node.gapPx),

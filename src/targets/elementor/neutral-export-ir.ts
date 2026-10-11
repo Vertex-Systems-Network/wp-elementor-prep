@@ -16,6 +16,7 @@ import {
   type P15NeutralWidgetSizing,
 } from './container-sizing';
 import { wrapProblems, type P15NeutralWrap } from './container-wrap';
+import { gridProblems, type P15NeutralGrid } from './container-grid';
 import {
   absolutePositionProblems,
   zIndexProblems,
@@ -36,6 +37,7 @@ export type { P15NeutralBorder, P15NeutralBoxPx, P15NeutralCornerRadii } from '.
 export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
 export type { P15NeutralAbsolutePosition, P15NeutralAxisOffset } from './absolute-position';
 export type { P15NeutralAlignContent, P15NeutralWrap } from './container-wrap';
+export type { P15NeutralGrid, P15NeutralGridTrack } from './container-grid';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
@@ -96,6 +98,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   sizing?: P15NeutralContainerSizing;
   /** Wrapped row: `gapPx` is the column gap, `wrap.rowGapPx` the gap between lines (recovery M2.6a). */
   wrap?: P15NeutralWrap;
+  /** Strict grid (recovery M2.6b): direction is `row` and the flex gap/alignment fields are absent. */
+  grid?: P15NeutralGrid;
   /** Absolute placement in the parent (recovery M2.5). */
   position?: P15NeutralAbsolutePosition;
   /** Layer order among siblings (recovery M2.5). */
@@ -410,7 +414,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'wrap', 'position', 'zIndex', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'wrap', 'grid', 'position', 'zIndex', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -447,6 +451,12 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     ];
     for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);
     validatePlacement(value, path, state);
+    if (value.grid !== undefined) {
+      for (const issue of gridProblems(value.grid, `${path}.grid`)) pushIssue(state, 'P15_IR_SPACING_INVALID', issue.path, issue.message);
+      if (value.direction !== 'row' || ['gapPx', 'alignItems', 'justifyContent', 'wrap'].some((key) => value[key] !== undefined)) {
+        pushIssue(state, 'P15_IR_SPACING_INVALID', `${path}.grid`, 'A grid container has direction row and no flex gap, alignment or wrap.');
+      }
+    }
     if (value.wrap !== undefined) {
       for (const issue of wrapProblems(value.wrap, `${path}.wrap`, value.direction)) pushIssue(state, 'P15_IR_SPACING_INVALID', issue.path, issue.message);
     }

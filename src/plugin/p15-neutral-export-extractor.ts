@@ -38,6 +38,7 @@ import {
   type P15FigmaSizingMode,
 } from '../targets/elementor/container-sizing';
 import { deriveP15Wrap, type P15NeutralWrap } from '../targets/elementor/container-wrap';
+import { deriveP15Grid, type P15NeutralGrid } from '../targets/elementor/container-grid';
 import {
   ABSOLUTE_POSITION_REVIEW,
   assignP15StackOrder,
@@ -588,19 +589,48 @@ function extractContainer(
 ): P15NeutralExportNode {
   const record = recordOf(node);
   const mode = record.layoutMode;
-  if (mode !== 'HORIZONTAL' && mode !== 'VERTICAL') {
-    const reason = mode === 'GRID' ? 'GRID_LAYOUT_REQUIRES_REVIEW' : 'MANUAL_LAYOUT_REQUIRES_REVIEW';
-    return review(node, reason, `V1 extraction requires HORIZONTAL or VERTICAL Auto Layout; observed ${String(mode ?? 'NONE')}.`);
+  if (mode !== 'HORIZONTAL' && mode !== 'VERTICAL' && mode !== 'GRID') {
+    return review(node, 'MANUAL_LAYOUT_REQUIRES_REVIEW', `V1 extraction requires Auto Layout or a grid; observed ${String(mode ?? 'NONE')}.`);
   }
 
-  const gapPx = finiteSpacing(record.itemSpacing);
+  // Recovery M2.6b: a strict grid becomes a Grid Container; its children stretch in their cells.
+  let grid: P15NeutralGrid | undefined;
+  let gridChildReview: P15NeutralStyleReview | undefined;
+  if (mode === 'GRID') {
+    const gridded = deriveP15Grid({
+      rowCount: record.gridRowCount,
+      columnCount: record.gridColumnCount,
+      rowGap: record.gridRowGap,
+      columnGap: record.gridColumnGap,
+      rowSizes: record.gridRowSizes,
+      columnSizes: record.gridColumnSizes,
+      children: childNodes(node).filter((child) => visible(child) && !isAbsolute(child)).map((child) => {
+        const entry = recordOf(child);
+        return {
+          rowAnchor: entry.gridRowAnchorIndex,
+          columnAnchor: entry.gridColumnAnchorIndex,
+          rowSpan: entry.gridRowSpan,
+          columnSpan: entry.gridColumnSpan,
+          horizontalSizing: entry.layoutSizingHorizontal,
+          verticalSizing: entry.layoutSizingVertical,
+          horizontalAlign: entry.gridChildHorizontalAlign,
+          verticalAlign: entry.gridChildVerticalAlign,
+        };
+      }),
+    });
+    if (gridded.review) return review(node, gridded.review.reasonCode, gridded.review.detail);
+    grid = gridded.grid;
+    gridChildReview = gridded.childReview;
+  }
+
+  const gapPx = grid ? 0 : finiteSpacing(record.itemSpacing);
   const paddingPx = boundedPadding(node);
   if (gapPx === null || paddingPx === null) {
     return review(node, 'SPACING_OUT_OF_RANGE', `Auto Layout spacing must be finite and within 0-${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px.`);
   }
 
-  const justifyContent = mapPrimaryAlignment(record.primaryAxisAlignItems);
-  const alignItems = mapCounterAlignment(record.counterAxisAlignItems);
+  const justifyContent = grid ? 'start' : mapPrimaryAlignment(record.primaryAxisAlignItems);
+  const alignItems = grid ? 'stretch' : mapCounterAlignment(record.counterAxisAlignItems);
   if (justifyContent === null || alignItems === null) {
     return review(
       node,
@@ -653,7 +683,7 @@ function extractContainer(
   ];
 
   // Recovery M2.3a: exact sizing; constraints without an exact mapping stay REVIEW on this container.
-  const direction = mode === 'HORIZONTAL' ? 'row' : 'column';
+  const direction = mode === 'VERTICAL' ? 'column' : 'row';
   const facts = sizingFacts(record, parent);
   state.sizingFacts.set(node.id, facts);
   const { horizontal, vertical } = facts;
@@ -668,7 +698,8 @@ function extractContainer(
     if (state.boundsExceeded) break;
     if (extracted) children.push(extracted);
   }
-  const distribution = fillDistributionReview(
+  if (gridChildReview) styleReviews.push(gridChildReview);
+  const distribution = grid ? null : fillDistributionReview(
     direction,
     direction === 'row' ? horizontal : vertical,
     children.map((child) => (child.kind === 'container' || child.kind === 'text' || child.kind === 'heading' ? child.sizing : undefined)),
@@ -685,10 +716,8 @@ function extractContainer(
     kind: 'container',
     sourceNodeId: node.id,
     direction,
-    gapPx,
+    ...(grid ? { grid } : { gapPx, alignItems, justifyContent }),
     paddingPx: bordered.paddingPx ?? paddingPx,
-    alignItems,
-    justifyContent,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
     ...(background.gradient !== undefined ? { gradient: background.gradient } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
