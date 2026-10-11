@@ -13,8 +13,8 @@ Canonical backlog: [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PL
 2. **M1 — table-driven Elementor mapping engine: ACCEPTED.** PRs #898, #899 and #900 are merged (`47ada79`).
 3. **M2 — full single-frame Figma extraction: ACCEPTED.** PRs #905, #906 and #907 are merged (`850c517`; #907 exact head `ff86754`, 10/10 checks). Acceptance evidence: the golden landing page exports with zero silent drops (`tests/m2-golden-landing-page.test.ts`).
 4. **M3 — assets: ACCEPTED.** PRs #908, #909 and #910 are merged (PR #910, exact head `0b8663f`, 10/10 checks, merged `a4ee8dd`). Acceptance evidence: images and SVG load in the real-target render (run 38103090238).
-5. **Active: M4 — responsive breakpoint engine.** M4.1 (breakpoint set), M4.2 (node matcher) M4.3a (container layout merge) and M4.3b (presence and order) M4.3c (widget typography and alignment) and M4.3d (sizes) and M4.4 (mismatch policy) and M4.5 (responsive report) are done; **next task: M4.6** (three-breakpoint golden fixture rendered at 1440/1024/390 in the real-target harness). Then continue with:
-   - M4: responsive breakpoint engine;
+5. **M4 — responsive breakpoint engine: ACCEPTED.** PRs #911–#917 are merged (`ccf81f0`; #917 exact head `0a0ab3b`, 11/11 checks). Acceptance evidence: real-target run 38105960139 — 15/15 viewport checks at 1440/1024/390.
+6. **M5 — smart duplicate and structure alignment: M5.1–M5.6 IMPLEMENTED** (one release train); **M5.7 needs manual Figma Desktop evidence from the operator** before M5 acceptance and P14 release activation. Then continue with:
    - M5: smart duplicate and breakpoint alignment;
    - M6: target profiles and v4 Atomic;
    - M7: round-trip proof;

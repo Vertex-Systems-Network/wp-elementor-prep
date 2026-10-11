@@ -1,10 +1,16 @@
 import { captureIntegritySnapshot } from './integrity-snapshot';
-import { DEFAULT_VALIDATION_THRESHOLDS, mergePixelValidation, validateIntegrity } from '../core/validator';
+import { DEFAULT_VALIDATION_THRESHOLDS, mergePixelValidation, mergeTiledPixelValidation, validateIntegrity } from '../core/validator';
+import type { PixelSectionBudget, TiledPixelDiffMetrics } from '../core/pixel-diff';
 import type { PixelDiffMetrics, ValidationReport } from '../core/validation-types';
 
 const MAX_VALIDATION_RENDER_DIMENSION = 2048;
 const MAX_VALIDATION_PIXELS = MAX_VALIDATION_RENDER_DIMENSION * MAX_VALIDATION_RENDER_DIMENSION;
 export const DEFAULT_PIXEL_BROKER_TIMEOUT_MS = 30_000;
+/** Recovery M5.4: full-resolution limits (scale 1, never downscaled). Larger frames fail closed. */
+export const MAX_FULL_RESOLUTION_DIMENSION = 16_384;
+export const MAX_FULL_RESOLUTION_PIXELS = 64 * 1024 * 1024;
+export const FULL_RESOLUTION_TILE_SIZE = 512;
+export const FULL_RESOLUTION_TOO_LARGE_CODE = 'P3_FULL_RESOLUTION_TOO_LARGE' as const;
 export const PIXEL_BROKER_UNAVAILABLE_CODE = 'P3_PIXEL_BROKER_UNAVAILABLE' as const;
 
 /** Structured fail-fast error: the plugin UI that decodes pixels is not the active UI surface. */
@@ -26,6 +32,8 @@ export interface FullFrameValidationResult {
 }
 
 interface PendingValidation {
+  /** Full-resolution tiled request (M5.4): the answer must be tiled metrics for these sections. */
+  tiled?: { sections: PixelSectionBudget[] };
   report: ValidationReport;
   labels: { before: string; after: string };
   renderScale: number;
@@ -40,6 +48,11 @@ interface PixelRequestMessage {
   beforePng: Uint8Array;
   afterPng: Uint8Array;
   channelTolerance: number;
+  tiled?: { tileSize: number; sections: PixelSectionBudget[]; maxChangedPct: number };
+}
+
+export interface FullResolutionValidationResult extends FullFrameValidationResult {
+  tiled: TiledPixelDiffMetrics;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -98,6 +111,20 @@ export function isValidPixelDiffMetrics(
     && changedPixelPct === 100
     && value.meanChannelDelta === 255
     && value.maxChannelDelta === 255;
+}
+
+function validTiledMetrics(value: unknown, sections: readonly PixelSectionBudget[], channelTolerance: number): value is TiledPixelDiffMetrics {
+  if (!isRecord(value) || !isRecord(value.metrics) || typeof value.pass !== 'boolean' || !Array.isArray(value.sections)) return false;
+  const metrics = value.metrics;
+  const dims = [metrics.widthBefore, metrics.heightBefore, metrics.widthAfter, metrics.heightAfter];
+  if (!dims.every((entry) => isIntegerInRange(entry, 0, MAX_FULL_RESOLUTION_DIMENSION))) return false;
+  if (!isIntegerInRange(metrics.totalPixels, 0, MAX_FULL_RESOLUTION_PIXELS) || !isIntegerInRange(metrics.changedPixels, 0, MAX_FULL_RESOLUTION_PIXELS)) return false;
+  if (metrics.channelTolerance !== channelTolerance || typeof metrics.sameDimensions !== 'boolean') return false;
+  if (!isFiniteNumberInRange(metrics.changedPixelPct, 0, 100) || !isFiniteNumberInRange(metrics.meanChannelDelta, 0, 255)) return false;
+  if ((metrics.changedPixels as number) > (metrics.totalPixels as number) && metrics.sameDimensions) return false;
+  return value.sections.length === sections.length && value.sections.every((entry, index) => isRecord(entry)
+    && entry.id === sections[index]!.id && typeof entry.pass === 'boolean' && isFiniteNumberInRange(entry.changedPct, 0, 100)
+    && entry.maxChangedPct === sections[index]!.maxChangedPct);
 }
 
 /**
@@ -181,11 +208,59 @@ export class FullFrameValidator {
     });
   }
 
+  /**
+   * Recovery M5.4: full-resolution validation — both frames rendered at scale 1 (never downscaled) and compared in
+   * 512 px tiles with a budget per section (e.g. each top-level child). A frame beyond the full-resolution limits
+   * fails closed instead of being downscaled.
+   */
+  async validateFullResolution(before: FrameNode, after: FrameNode, sections: PixelSectionBudget[]): Promise<FullResolutionValidationResult> {
+    if (!this.isBrokerAvailable()) throw new PixelBrokerUnavailableError(BROKER_UNAVAILABLE_DETAIL);
+    const largest = Math.max(before.width, before.height, after.width, after.height);
+    const area = Math.max(before.width * before.height, after.width * after.height);
+    if (largest > MAX_FULL_RESOLUTION_DIMENSION || area > MAX_FULL_RESOLUTION_PIXELS) {
+      throw new Error(`${FULL_RESOLUTION_TOO_LARGE_CODE}: ${Math.ceil(before.width)}x${Math.ceil(before.height)} exceeds the full-resolution validation limit; nothing was committed.`);
+    }
+    const report = validateIntegrity(captureIntegritySnapshot(before), captureIntegritySnapshot(after), DEFAULT_VALIDATION_THRESHOLDS);
+    const exportSettings: ExportSettingsImage = { format: 'PNG', constraint: { type: 'SCALE', value: 1 } };
+    const [beforePng, afterPng] = await Promise.all([before.exportAsync(exportSettings), after.exportAsync(exportSettings)]);
+    if (!this.isBrokerAvailable()) throw new PixelBrokerUnavailableError(BROKER_UNAVAILABLE_DETAIL);
+    this.sequence += 1;
+    const validationId = this.sequence;
+    const labels = { before: before.name, after: after.name };
+    return new Promise<FullResolutionValidationResult>((resolve, reject) => {
+      const timeoutHandle = setTimeout(() => {
+        if (!this.pending.delete(validationId)) return;
+        reject(new Error(`Pixel comparison timed out after ${this.pixelBrokerTimeoutMs} ms.`));
+      }, this.pixelBrokerTimeoutMs);
+      this.pending.set(validationId, { tiled: { sections }, report, labels, renderScale: 1,
+        resolve: resolve as (result: FullFrameValidationResult) => void, reject, timeoutHandle });
+      try {
+        this.postMessage({ type: 'validation-pixel-request', validationId, beforePng, afterPng,
+          channelTolerance: DEFAULT_VALIDATION_THRESHOLDS.pixelChannelDelta,
+          tiled: { tileSize: FULL_RESOLUTION_TILE_SIZE, sections, maxChangedPct: DEFAULT_VALIDATION_THRESHOLDS.maxChangedPixelPct } });
+      } catch (error) {
+        clearTimeout(timeoutHandle);
+        this.pending.delete(validationId);
+        reject(error instanceof Error ? error : new Error(String(error)));
+      }
+    });
+  }
+
   finish(validationId: number, pixelMetrics: unknown): boolean {
     const pending = this.pending.get(validationId);
     if (!pending) return false;
     this.pending.delete(validationId);
     clearTimeout(pending.timeoutHandle);
+
+    if (pending.tiled) {
+      if (!validTiledMetrics(pixelMetrics, pending.tiled.sections, pending.report.thresholds.pixelChannelDelta)) {
+        pending.reject(new Error('Full-resolution tiled comparison returned invalid or inconsistent metrics.'));
+        return true;
+      }
+      const report = mergeTiledPixelValidation(pending.report, pixelMetrics);
+      (pending.resolve as (result: FullResolutionValidationResult) => void)({ report, labels: pending.labels, renderScale: 1, tiled: pixelMetrics });
+      return true;
+    }
 
     if (!isValidPixelDiffMetrics(pixelMetrics, pending.report.thresholds.pixelChannelDelta)) {
       pending.reject(new Error('Pixel comparison returned invalid or inconsistent metrics.'));

@@ -62,7 +62,9 @@ export type ValidationFailureCode =
   | 'TEXT_GEOMETRY_DRIFT'
   | 'IMAGE_GEOMETRY_DRIFT'
   | 'PIXEL_DIMENSION_MISMATCH'
-  | 'PIXEL_DIFF_EXCEEDED';
+  | 'PIXEL_DIFF_EXCEEDED'
+  /** Recovery M5.4: a section exceeded its own changed-pixel budget in the full-resolution tiled comparison. */
+  | 'PIXEL_SECTION_BUDGET_EXCEEDED';
 
 export interface ValidationFinding {
   code: ValidationFailureCode;

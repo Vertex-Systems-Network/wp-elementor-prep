@@ -2,6 +2,7 @@ import type { P15MatchNode } from '../core/breakpoint-matcher';
 import { responsiveReportFor } from '../core/breakpoint-report';
 import { buildP15BreakpointSet, type P15BreakpointSetV1 } from '../core/breakpoint-set';
 import { breakpointFramesFromSelection } from './p15-breakpoint-selection';
+import { alignP15BreakpointDuplicate } from './p15-structure-alignment';
 
 /**
  * Recovery M4.1: classify the selected frames into a breakpoint set, show it, and record it only when the user
@@ -51,6 +52,25 @@ function confirmBreakpointSet(fingerprint: unknown): void {
   figma.notify(`Breakpoint set confirmed: ${set.members.map((member) => member.device).join(', ')}.`);
 }
 
+/** Recovery M5.5: align the confirmed tablet/mobile frames with the desktop hierarchy, each on a validated duplicate. */
+async function runStructureAlignment(): Promise<void> {
+  const set = confirmedSet;
+  const frames = selectedFramesById();
+  const desktop = set?.members.find((member) => member.device === 'desktop');
+  const desktopFrame = desktop ? frames.get(desktop.frameId) : undefined;
+  if (!set || !desktopFrame) {
+    figma.ui.postMessage({ type: 'p15-structure-alignment-unavailable', message: 'Confirm a breakpoint set for the current selection first.' });
+    return;
+  }
+  const results = [];
+  for (const member of set.members.filter((entry) => entry.device !== 'desktop')) {
+    const frame = frames.get(member.frameId);
+    if (frame) results.push(await alignP15BreakpointDuplicate(desktopFrame as unknown as FrameNode, frame as unknown as FrameNode, member.device as 'tablet' | 'mobile'));
+  }
+  figma.ui.postMessage({ type: 'p15-structure-alignment-result', results });
+  figma.notify(`Structure alignment: ${results.map((result) => `${result.device} ${result.status.toLowerCase()}`).join(', ') || 'nothing to align'}.`);
+}
+
 figma.on('selectionchange', () => {
   confirmedSet = null;
 });
@@ -60,6 +80,10 @@ figma.ui.onmessage = (message, props) => {
   const type = typeof message === 'object' && message !== null && 'type' in message ? (message as { type?: unknown }).type : undefined;
   if (type === 'p15-breakpoint-set-request') {
     runBreakpointSet();
+    return;
+  }
+  if (type === 'p15-structure-alignment-request') {
+    void runStructureAlignment();
     return;
   }
   if (type === 'p15-breakpoint-set-confirm') {

@@ -4,6 +4,7 @@ import {
   type LinearLayoutDirection,
 } from '../core/linear-layout-analysis';
 import { analyzeGridLayoutGeometry } from '../core/grid-layout-analysis';
+import { applyStackRecipeV2ToCandidate } from './stack-recipe-v2-transform';
 
 export interface SafeRecipeTransformResult {
   applied: boolean;
@@ -230,6 +231,9 @@ export function applySafeRecipeToCandidate(candidateRoot: FrameNode, plan: SafeR
 
   const target = resolveFrameByPath(candidateRoot, plan.targetPath);
   if (!target) return { applied: false, reason: 'Candidate target path no longer resolves to a Frame.' };
+
+  // Recovery M5.2: recipes v2 re-plan on the candidate and must reproduce the approved signature.
+  if (plan.recipe === 'stack-v2') return applyStackRecipeV2ToCandidate(target, plan);
 
   const linearDirection = linearDirectionForSafeRecipe(plan);
   if (linearDirection) return applyLinearAutoLayout(target, linearDirection);

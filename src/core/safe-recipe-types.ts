@@ -8,7 +8,9 @@ export type SafeRecipeKind =
   | 'footer-columns'
   | 'simple-card-grid'
   | 'metric-grid'
-  | 'social-link-strip';
+  | 'social-link-strip'
+  /** Recipes v2 (recovery M5.2): any linear stack, with alignment, distribution, FILL/HUG and nested sub-stacks. */
+  | 'stack-v2';
 
 export type SafeRecipeDecision = 'ELIGIBLE' | 'REVIEW' | 'NOOP' | 'UNSUPPORTED';
 

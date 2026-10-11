@@ -1077,7 +1077,10 @@
             decodePng(message.beforePng),
             decodePng(message.afterPng),
           ]);
-          const pixelMetrics = comparePixels(before, after, message.channelTolerance);
+          // Recovery M5.4: full-resolution requests are compared in tiles with per-section budgets.
+          const pixelMetrics = message.tiled
+            ? comparePixels.tiled(before, after, message.channelTolerance, message.tiled.tileSize, message.tiled.sections, message.tiled.maxChangedPct)
+            : comparePixels(before, after, message.channelTolerance);
           post('validation-pixel-result', {
             validationId: message.validationId,
             pixelMetrics,

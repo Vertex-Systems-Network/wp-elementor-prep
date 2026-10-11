@@ -8,7 +8,8 @@ const PIXEL_DIFF_SOURCE_PATH = 'src/core/pixel-diff.ts';
 
 /**
  * Compile the unit-tested `src/core/pixel-diff.ts` into a self-contained expression that evaluates
- * to `comparePixelBuffers`, so the plugin UI runs exactly the implementation the tests cover.
+ * to `comparePixelBuffers` (with `compareTiledPixelBuffers` attached as `.tiled`), so the plugin UI runs exactly the
+ * implementation the tests cover.
  */
 export function compilePixelDiffRuntime(source = readFileSync(PIXEL_DIFF_SOURCE_PATH, 'utf8')) {
   const { code } = transformSync(source, {
@@ -19,7 +20,7 @@ export function compilePixelDiffRuntime(source = readFileSync(PIXEL_DIFF_SOURCE_
     legalComments: 'none',
   });
   if (/<\/script/i.test(code)) throw new Error('Compiled pixel-diff runtime must not contain a closing script tag.');
-  return `${PIXEL_DIFF_RUNTIME_START}(() => {\n${code}\nif (typeof wpepPixelDiffModule.comparePixelBuffers !== 'function') throw new Error('Pixel-diff runtime is unavailable.');\nreturn wpepPixelDiffModule.comparePixelBuffers;\n})()${PIXEL_DIFF_RUNTIME_END}`;
+  return `${PIXEL_DIFF_RUNTIME_START}(() => {\n${code}\nif (typeof wpepPixelDiffModule.comparePixelBuffers !== 'function') throw new Error('Pixel-diff runtime is unavailable.');\nconst compare = wpepPixelDiffModule.comparePixelBuffers;\n// Recovery M5.4: the full-resolution tiled comparison travels with the same compiled module.\nif (typeof wpepPixelDiffModule.compareTiledPixelBuffers === 'function') compare.tiled = wpepPixelDiffModule.compareTiledPixelBuffers;\nreturn compare;\n})()${PIXEL_DIFF_RUNTIME_END}`;
 }
 
 /** Substitute the pixel-diff placeholder in the plugin UI; shared by development and release builds. */

@@ -1,3 +1,4 @@
+import type { AuditNode } from '../core/types';
 import { buildBuildReadyReport, computeBuildReadyStructuralHash } from '../core/build-ready';
 import { analyzeLinearLayoutGeometry } from '../core/linear-layout-analysis';
 import {
@@ -47,6 +48,12 @@ export interface FigmaP14VerticalStackAdapterOptions {
   runtime?: P14FigmaRetainedDuplicateRuntime;
   /** Deterministic test seam for P13 re-score report timestamps. */
   now?: () => string;
+  /**
+   * Recovery M5.4: full-resolution tiled pixel validation of the candidate against its source. When provided, a
+   * candidate passes validation only when this resolves `passed: true`; a failure (or an error) rejects the
+   * validation, so the transaction discards the candidate. The frozen R2 check list is unchanged.
+   */
+  pixelValidator?: (source: FrameNode, candidate: FrameNode) => Promise<{ passed: boolean; detail: string }>;
 }
 
 interface PreservationNode {
@@ -82,6 +89,25 @@ interface AppliedTargetEvidence {
   path: number[];
   before: PreservationSnapshot;
   expected: ExpectedVerticalLayout;
+  /** Recovery M5.3: the audited layout fields this action changed, to compare later actions against the reviewed source. */
+  originalLayout: { layoutMode: AuditNode['layoutMode']; isAutoLayout: boolean };
+}
+
+/**
+ * Recovery M5.3: the candidate audit with the targets this adapter already transformed shown in their reviewed state
+ * (only `layoutMode` / `isAutoLayout`, the audited fields the vertical-stack recipe changes). Every other drift still
+ * fails the clone-stable comparison of the next action.
+ */
+function reviewedViewOfCandidate(candidateAudit: AuditNode, applied: readonly AppliedTargetEvidence[]): AuditNode {
+  const restore = (node: AuditNode, path: number[]): AuditNode => {
+    const own = applied.find((entry) => sameJson(entry.path, path));
+    return {
+      ...node,
+      ...(own ? { layoutMode: own.originalLayout.layoutMode, isAutoLayout: own.originalLayout.isAutoLayout } : {}),
+      children: node.children.map((child, index) => restore(child, [...path, index])),
+    };
+  };
+  return restore(candidateAudit, []);
 }
 
 interface CandidateMetadata {
@@ -323,21 +349,49 @@ function check(id: string, passed: boolean): P14ValidationCheck {
   return { id, passed, required: true };
 }
 
+/** The frozen R2 vertical-stack checks for one applied target. */
+function targetChecks(target: FrameNode, applied: AppliedTargetEvidence): P14ValidationCheck[] {
+  const after = preservationSnapshot(target);
+  const expected = applied.expected;
+  return [
+    check('vertical-stack-layout-mode', target.layoutMode === 'VERTICAL'),
+    check('vertical-stack-primary-axis-sizing', target.primaryAxisSizingMode === 'FIXED'),
+    check('vertical-stack-counter-axis-sizing', target.counterAxisSizingMode === 'FIXED'),
+    check('vertical-stack-primary-axis-alignment', target.primaryAxisAlignItems === 'MIN'),
+    check('vertical-stack-counter-axis-alignment', target.counterAxisAlignItems === 'MIN'),
+    check('vertical-stack-item-spacing', sameNumber(target.itemSpacing, expected.gap)),
+    check(
+      'vertical-stack-padding',
+      sameNumber(target.paddingTop, expected.paddingTop)
+        && sameNumber(target.paddingRight, expected.paddingRight)
+        && sameNumber(target.paddingBottom, expected.paddingBottom)
+        && sameNumber(target.paddingLeft, expected.paddingLeft),
+    ),
+    check('vertical-stack-child-structure-preserved', sameJson(applied.before.structure, after.structure)),
+    check('vertical-stack-content-preserved', applied.before.contentSignature === after.contentSignature),
+    check('vertical-stack-visibility-preserved', sameJson(applied.before.visibility, after.visibility)),
+    check('vertical-stack-geometry-preserved', sameGeometry(applied.before.geometry, after.geometry)),
+  ];
+}
+
 /**
  * First concrete P14 Figma retained-duplicate runtime adapter.
  *
- * It is intentionally narrow: one accepted vertical-stack action, one addressed target and a
- * separate candidate duplicate. The adapter itself grants no production authority; the production
+ * It is intentionally narrow: accepted vertical-stack actions only, each with one addressed target, on a
+ * separate candidate duplicate. Recovery M5.3: a plan may carry several ordered actions on distinct targets;
+ * each is validated right after its transform and any failure discards the whole candidate. The adapter itself grants no production authority; the production
  * safe-recipe registry remains the execution authorization gate.
  */
 export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14RetainedDuplicateAdapter {
   private readonly runtime: P14FigmaRetainedDuplicateRuntime;
   private readonly now: () => string;
+  private readonly pixelValidator: FigmaP14VerticalStackAdapterOptions['pixelValidator'];
   private readonly candidates = new Map<string, CandidateMetadata>();
 
   constructor(options: FigmaP14VerticalStackAdapterOptions = {}) {
     this.runtime = options.runtime ?? productionRuntime();
     this.now = options.now ?? (() => new Date().toISOString());
+    this.pixelValidator = options.pixelValidator;
   }
 
   private owned(candidate: P14CandidateHandle): CandidateMetadata {
@@ -363,7 +417,7 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
       failures.push('P14 vertical-stack adapter refused the approved source identity as candidate root.');
     }
 
-    const candidateAudit = scanSceneNode(candidateRoot);
+    const candidateAudit = reviewedViewOfCandidate(scanSceneNode(candidateRoot), metadata.appliedTargets);
     const addresses = action.targetAddresses ?? [];
     if (addresses.length === 1) {
       const resolution = resolveP14CandidateTargetAddresses({
@@ -461,8 +515,10 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     if (assessed.failures.length > 0) {
       throw new Error(`P14 vertical-stack runtime action refused: ${assessed.failures.join(' | ')}`);
     }
-    if (assessed.metadata.appliedTargets.length > 0) {
-      throw new Error('P14 R4 vertical-stack adapter refuses a second mutating action on the same candidate.');
+    // Recovery M5.3: ordered multi-action plans — each action addresses its own target; a target is mutated once.
+    if (assessed.metadata.appliedTargets.some((applied) => applied.actionId === action.actionId
+      || sameJson(applied.path, action.targetAddresses?.[0]?.childIndexPath ?? null))) {
+      throw new Error('P14 vertical-stack adapter refuses a repeated action or a second mutation of the same target.');
     }
 
     const address = action.targetAddresses?.[0];
@@ -475,6 +531,7 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
 
     const before = preservationSnapshot(target);
     const expected = verticalExpectedLayout(target);
+    const reviewed = scanSceneNode(target);
     const result = applySafeRecipeToCandidate(assessed.candidateRoot, {
       schemaVersion: 1,
       decision: 'ELIGIBLE',
@@ -493,13 +550,19 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
       throw new Error(`P14 vertical-stack P5 transform refused candidate: ${result.reason}`);
     }
 
-    assessed.metadata.appliedTargets.push({
+    const applied: AppliedTargetEvidence = {
       actionId: action.actionId,
       candidateTargetNodeId: target.id,
       path: [...address.childIndexPath],
       before,
       expected,
-    });
+      originalLayout: { layoutMode: reviewed.layoutMode, isAutoLayout: reviewed.isAutoLayout },
+    };
+    // Recovery M5.3: each action is validated right after its own transform; a failure aborts the whole run
+    // (the transaction discards the candidate, so earlier actions are rolled back with it).
+    const failed = targetChecks(target, applied).filter((item) => !item.passed).map((item) => item.id);
+    if (failed.length > 0) throw new Error(`P14 per-action validation failed for ${action.actionId}: ${failed.join(', ')}`);
+    assessed.metadata.appliedTargets.push(applied);
 
     return {
       actionId: action.actionId,
@@ -516,42 +579,22 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     const metadata = this.owned(candidate);
     const candidateRoot = await frameById(this.runtime, candidate.candidateNodeId, 'Candidate');
     const eligibleActions = plan.actions.filter((action) => action.decision === 'ELIGIBLE');
-    if (eligibleActions.length !== 1 || metadata.appliedTargets.length !== 1) {
-      throw new Error('P14 R4 validation requires exactly one applied vertical-stack action.');
+    // Recovery M5.3: every eligible action must be applied exactly once; the R2 checks hold for every target.
+    if (eligibleActions.length === 0 || eligibleActions.length !== metadata.appliedTargets.length
+      || !sameJson(eligibleActions.map((action) => action.actionId).sort(), metadata.appliedTargets.map((applied) => applied.actionId).sort())) {
+      throw new Error('P14 validation requires every eligible action to be applied exactly once.');
     }
 
-    const action = eligibleActions[0];
-    const applied = metadata.appliedTargets[0];
-    if (!action || !applied || action.actionId !== applied.actionId) {
-      throw new Error('P14 R4 validation action binding does not match the applied candidate mutation.');
-    }
-
-    const target = resolveFrameByPath(candidateRoot, applied.path);
-    if (!target || target.id !== applied.candidateTargetNodeId) {
-      throw new Error('P14 R4 validation target moved or no longer resolves to the applied candidate Frame.');
-    }
-
-    const after = preservationSnapshot(target);
-    const expected = applied.expected;
-    const checks: P14ValidationCheck[] = [
-      check('vertical-stack-layout-mode', target.layoutMode === 'VERTICAL'),
-      check('vertical-stack-primary-axis-sizing', target.primaryAxisSizingMode === 'FIXED'),
-      check('vertical-stack-counter-axis-sizing', target.counterAxisSizingMode === 'FIXED'),
-      check('vertical-stack-primary-axis-alignment', target.primaryAxisAlignItems === 'MIN'),
-      check('vertical-stack-counter-axis-alignment', target.counterAxisAlignItems === 'MIN'),
-      check('vertical-stack-item-spacing', sameNumber(target.itemSpacing, expected.gap)),
-      check(
-        'vertical-stack-padding',
-        sameNumber(target.paddingTop, expected.paddingTop)
-          && sameNumber(target.paddingRight, expected.paddingRight)
-          && sameNumber(target.paddingBottom, expected.paddingBottom)
-          && sameNumber(target.paddingLeft, expected.paddingLeft),
-      ),
-      check('vertical-stack-child-structure-preserved', sameJson(applied.before.structure, after.structure)),
-      check('vertical-stack-content-preserved', applied.before.contentSignature === after.contentSignature),
-      check('vertical-stack-visibility-preserved', sameJson(applied.before.visibility, after.visibility)),
-      check('vertical-stack-geometry-preserved', sameGeometry(applied.before.geometry, after.geometry)),
-    ];
+    const perTarget = metadata.appliedTargets.map((applied) => {
+      const target = resolveFrameByPath(candidateRoot, applied.path);
+      if (!target || target.id !== applied.candidateTargetNodeId) {
+        throw new Error('P14 validation target moved or no longer resolves to the applied candidate Frame.');
+      }
+      return targetChecks(target, applied);
+    });
+    // The frozen R2 profile has one check per id: each passes only when it passes for every applied target.
+    const checks: P14ValidationCheck[] = perTarget[0]!.map((first, index) =>
+      check(first.id, perTarget.every((list) => list[index]!.passed)));
 
     const summary: P14ValidationSummary = {
       passed: checks.every((item) => item.passed),
@@ -561,6 +604,11 @@ export class FigmaP14VerticalStackRetainedDuplicateAdapter implements P14Retaine
     const assessed = assessP14VerticalStackValidationProfileEvidence(summary);
     if (summary.passed && !assessed.valid) {
       throw new Error(`P14 vertical-stack validation profile evidence is internally inconsistent: ${assessed.failures.join(' | ')}`);
+    }
+    if (summary.passed && this.pixelValidator) {
+      const source = await frameById(this.runtime, metadata.sourceNodeId, 'Source');
+      const pixel = await this.pixelValidator(source, candidateRoot);
+      if (!pixel.passed) throw new Error(`P14 full-resolution pixel validation failed: ${pixel.detail}`);
     }
     return summary;
   }
