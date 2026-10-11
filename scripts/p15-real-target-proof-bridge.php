@@ -705,6 +705,32 @@ function p15_proof_template_redirect() {
         exit;
     }
 
+    // Recovery M4.6: render the merged three-breakpoint template imported by scripts/p15-responsive-import-probe.php.
+    if ( 'A' === p15_target_role() && p15_proof_token_ok( 'p15_responsive_render' ) ) {
+        $responsive_id = (int) get_option( 'p15_responsive_template_id', 0 );
+        if ( ! $responsive_id || 'elementor_library' !== get_post_type( $responsive_id ) ) {
+            status_header( 409 );
+            exit( 'P15 responsive template unavailable.' );
+        }
+
+        $content = \Elementor\Plugin::$instance->frontend->get_builder_content_for_display( $responsive_id, true );
+        nocache_headers();
+        ?><!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P15 Responsive Target Render</title>
+<?php wp_head(); ?>
+</head>
+<body>
+<main id="p15-responsive-root"><?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></main>
+<?php wp_footer(); ?>
+</body>
+</html><?php
+        exit;
+    }
+
     if ( p15_proof_token_ok( 'p15_asset_proof_observe' ) ) {
         nocache_headers();
         header( 'Content-Type: application/json; charset=utf-8' );

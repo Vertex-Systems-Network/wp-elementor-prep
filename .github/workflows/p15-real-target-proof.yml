@@ -463,6 +463,21 @@ jobs:
         continue-on-error: true
         run: node scripts/p15-asset-pack-render-probe.mjs
 
+      # Recovery M4.6: an isolated three-breakpoint responsive import on target A (own directory, own enforcement).
+      - name: Build and import the recovery responsive template
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          P15_RESPONSIVE_OUT_DIR="$GITHUB_WORKSPACE/dist-p15/p15-responsive-proof"
+          echo "P15_RESPONSIVE_OUT_DIR=$P15_RESPONSIVE_OUT_DIR" >> "$GITHUB_ENV"
+          npm run -s p15:responsive-harness -- fixture --out-dir "$P15_RESPONSIVE_OUT_DIR"
+          P15_WP_ROOT="$RUNNER_TEMP/p15-wordpress" php scripts/p15-responsive-import-probe.php \
+            "$P15_RESPONSIVE_OUT_DIR/responsive-template.json" "$P15_RESPONSIVE_OUT_DIR"
+
+      - name: Observe recovery responsive render at 1440, 1024 and 390
+        continue-on-error: true
+        run: node scripts/p15-responsive-render-probe.mjs
+
       - name: Run repository P15 evidence intakes
         id: p15-intakes
         if: always()
@@ -635,6 +650,7 @@ jobs:
             dist-p15/p15-elementor-asset-proof-vector-v1/
             dist-p15/p15-real-target-proof/
             dist-p15/p15-asset-pack-proof/
+            dist-p15/p15-responsive-proof/
           if-no-files-found: error
 
       - name: Enforce qualified exact-bound proof chain
@@ -722,3 +738,18 @@ jobs:
           jq -e '.pass == true and (.expectedUrls | length) == 3 and all(.observed[]; .status == 200 and (.contentType | startswith("image/")))
             and any(.observed[]; .kind == "img" and .contentType == "image/svg+xml" and .complete == true and .naturalWidth > 0)
             and .targetCompatibilityClaim == false and .productionAcceptance == false' "$OUT/asset-pack-render-observation.json"
+
+      - name: Enforce recovery responsive import and render
+        if: always()
+        run: |
+          set -euo pipefail
+          OUT="$GITHUB_WORKSPACE/dist-p15/p15-responsive-proof"
+          for file in responsive-import-observation.json responsive-render-observation.json; do
+            echo "::group::$file"; cat "$OUT/$file" 2>/dev/null || echo "(missing)"; echo "::endgroup::"
+          done
+          # Direction, title size, hide-on-device and order, each checked at desktop 1440, tablet 1024 and mobile 390.
+          jq -e '(.checks | length) == 15 and ([.checks[].width] | unique) == [390, 1024, 1440]' "$OUT/responsive-expectation.json"
+          jq -e '.responsivePreserved == true and .missing == [] and .changed == [] and .targetCompatibilityClaim == false
+            and .productionAcceptance == false' "$OUT/responsive-import-observation.json"
+          jq -e '.pass == true and (.observed | length) == 15 and all(.observed[]; .pass == true)
+            and .targetCompatibilityClaim == false and .productionAcceptance == false' "$OUT/responsive-render-observation.json"
