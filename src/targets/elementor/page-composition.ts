@@ -14,6 +14,8 @@ import { resolveP15ElementorResponsiveContainerGaps, P15_ELEMENTOR_RESPONSIVE_GA
 import { resolveP15ElementorResponsiveContainerMargin, P15_ELEMENTOR_RESPONSIVE_MARGIN_EVIDENCE } from './responsive-margin-resolution';
 import { resolveP15ElementorResponsiveContainerPadding, P15_ELEMENTOR_RESPONSIVE_PADDING_EVIDENCE } from './responsive-padding-resolution';
 import { resolveP15ElementorResponsiveContainerWraps, P15_ELEMENTOR_RESPONSIVE_WRAP_EVIDENCE } from './responsive-wrap-resolution';
+import { resolveP15ElementorResponsiveElementOrder, P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE } from './responsive-element-order-resolution';
+import { resolveP15ElementorResponsiveVisibility, P15_ELEMENTOR_RESPONSIVE_VISIBILITY_EVIDENCE } from './responsive-visibility-resolution';
 import type { ElementorElementV04 } from './template-v04';
 
 /**
@@ -27,12 +29,15 @@ import type { ElementorElementV04 } from './template-v04';
 export const P15_PAGE_COMPOSITION_VERSION = 'p15-elementor-page-composition-v1' as const;
 export const P15_PAGE_COMPOSITION_FAMILIES = [
   'direction', 'wrap', 'alignContent', 'alignment', 'gap', 'padding', 'margin', 'containerStyle', 'buttonColors',
+  // Recovery M4.3b: responsive presence and order on any element (Container or core widget).
+  'visibility', 'elementOrder',
 ] as const;
 export type P15PageCompositionFamily = typeof P15_PAGE_COMPOSITION_FAMILIES[number];
 export type P15PageCompositionResultV1 = CompositionResult<P15PageCompositionFamily>;
 
 const isContainer = (node: ElementorElementV04): boolean => node.elType === 'container';
 const isButton = (node: ElementorElementV04): boolean => node.elType === 'widget' && node.widgetType === 'button';
+const isElement = (node: ElementorElementV04): boolean => node.elType === 'container' || node.elType === 'widget';
 const responsiveKeys = (evidence: { tabletSettingKey: string; mobileSettingKey: string }): string[] =>
   [evidence.tabletSettingKey, evidence.mobileSettingKey];
 /** Every key a nested composition may add: the union of its own steps' allowlists. */
@@ -69,6 +74,12 @@ export const P15_PAGE_COMPOSITION: CompositionSpec<P15PageCompositionFamily> = {
       compositionKeys(P15_CONTAINER_STYLE_COMPOSITION as CompositionSpec<string>)),
     buttonColors: { resolve: composeP15ButtonColors as CompositionStep['resolve'], resolvedStatus: 'RESOLVED',
       keys: compositionKeys(P15_BUTTON_COLOR_COMPOSITION as CompositionSpec<string>), accepts: isButton },
+    visibility: { resolve: resolveP15ElementorResponsiveVisibility, resolvedStatus: 'RESPONSIVE_VISIBILITY_RESOLVED', accepts: isElement,
+      keys: [P15_ELEMENTOR_RESPONSIVE_VISIBILITY_EVIDENCE.desktopSettingKey, P15_ELEMENTOR_RESPONSIVE_VISIBILITY_EVIDENCE.tabletSettingKey,
+        P15_ELEMENTOR_RESPONSIVE_VISIBILITY_EVIDENCE.mobileSettingKey] },
+    elementOrder: { resolve: resolveP15ElementorResponsiveElementOrder, resolvedStatus: 'RESPONSIVE_ELEMENT_ORDER_RESOLVED', accepts: isElement,
+      keys: [P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE.tabletOrderSettingKey, P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE.mobileOrderSettingKey,
+        P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE.tabletCustomOrderSettingKey, P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_EVIDENCE.mobileCustomOrderSettingKey] },
   },
 };
 

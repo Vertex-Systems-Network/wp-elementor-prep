@@ -12,7 +12,7 @@ The phase table below is unchanged. Execution order now follows [`docs/PRODUCT_R
 | M1 Table-driven Elementor mapping engine | P15 | ACCEPTED — PR #900 merged `47ada79` |
 | M2 Full single-frame extraction | P15 (and P17/P18 IR feed) | ACCEPTED — PRs #905, #906, #907 merged `850c517`; golden landing page with zero silent drops |
 | M3 Assets | P15, P19 | ACCEPTED — PRs #908, #909, #910 merged `a4ee8dd`; images and SVG load in the real-target render |
-| M4 Responsive breakpoint engine | P13, P15 | ACTIVE — M4.1–M4.2 and M4.3a done (breakpoint set, matcher, layout merge), next M4.3b |
+| M4 Responsive breakpoint engine | P13, P15 | ACTIVE — M4.1–M4.2 and M4.3a–b done (breakpoint set, matcher, layout, presence and order merge), next M4.3c |
 | M5 Smart duplicate + structure alignment | P5, P6, P14 | QUEUED |
 | M6 Version-driven target profiles + v4 Atomic | R0/R1, P15 | QUEUED |
 | M7 Round-trip visual proof | P15, P20 | QUEUED |

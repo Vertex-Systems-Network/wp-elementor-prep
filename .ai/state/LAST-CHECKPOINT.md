@@ -22,4 +22,4 @@ Disposable-target harness evidence only. Packs stay `REVIEW REQUIRED` (D-051 not
 
 ## Exact next safe action
 
-Recovery M4.3b: presence (hide_*) and order (_flex_order_*) merge; M4.1 merged (PR #911), M4.2 + M4.3a on this branch.
+Recovery M4.3c: widget and remaining container properties per breakpoint; M4.1–M4.3a merged (PRs #911, #912), M4.3b on this branch.

@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M4 — Responsive breakpoint engine** (M3 accepted: PR #910, exact head `0b8663f`, 10/10 checks green, merged as `a4ee8dd`; images and SVG load in the real-target render, run 38103090238)
-> - Next task: **M4.3b** (presence and order)
-> - Last completed task: **M4.3a** (container layout merge)
+> - Next task: **M4.3c** (widget and remaining properties per breakpoint)
+> - Last completed task: **M4.3b** (presence and order)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -432,7 +432,10 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - Tests: `tests/m4-breakpoint-matcher.test.ts` (reflowed landing page with repeated cards, one-breakpoint-only nodes, ties, hidden layers).
 - [ ] **M4.3** Merge. Desktop values form the base. Tablet and mobile diffs are emitted through the M1 engine as `_tablet`/`_mobile` keys. Order changes map to `_order_*`. Elements present on some breakpoints only map to `hide_desktop`/`hide_tablet`/`hide_mobile`. (split into M4.3a–c).
   - [x] **M4.3a** Container layout merge _(done 2026-10-11)_: `src/targets/elementor/responsive-merge.ts` compares every matched desktop/variant container and writes the differing direction, alignment, gap, padding and margin as explicit tablet/mobile values through one M1 page composition (`_tablet`/`_mobile` keys; the desktop base must be review-free). R0: `assets/dev/scss/frontend/_container.scss` (blob `d6c65cb`) `--margin-*: 0px` (absent margin = zero box) and `--padding-*: var(--container-default-padding-*, 10px)` (an unset variant padding is a review, not a value). Everything else is an explicit review: unmatched/ambiguous nodes and reordered children (→ M4.3b), wrap/grid changes, unset variant values and other differing container or widget properties (→ M4.3c). Tests: `tests/m4-responsive-merge.test.ts`.
-  - [ ] **M4.3b** Presence and order: desktop-only / variant-only elements → `hide_*`; reordered children → `_flex_order_*` (new composable steps for the flex-item order families).
+  - [x] **M4.3b** Presence and order _(done 2026-10-11)_.
+    - Two new engine families on a new element target (`mapping-engine/element-target.ts`, every generated Container and core widget, lockstep-bound): `responsive-visibility` writes `hide_desktop/tablet/mobile` = `hidden-<device>` (R0: `element-base.php` blob `733769f` `add_hidden_device_controls()`); `responsive-element-order` writes `_flex_order_<device>` = `custom` + `_flex_order_custom_<device>` (R0: `flex-item.php` blob `dc95ad4`; widgets include `order`/`order_custom` in `common-base.php` blob `77c497b`). Both are new page-composition steps (`visibility`, `elementOrder`).
+    - Merge: a desktop-only element is hidden on the breakpoint that lacks it; a variant-only element (with its subtree) is inserted under its matched parent right after its nearest preceding matched sibling and hidden on every other device; a reordered container gives every child visible on that breakpoint its variant position as custom order. A variant-only element that cannot be placed (no matched parent, review content) is `RESPONSIVE_NODE_NOT_PLACED`. The result returns the merged desktop IR the composition was bound to.
+    - Tests: `tests/m4-responsive-merge.test.ts`, `tests/m4-responsive-presence-families.test.ts`.
   - [ ] **M4.3c** Widget and remaining container properties per breakpoint (typography metrics, text/button alignment, sizing, min-height, width, radius) through their responsive families.
 - [ ] **M4.4** Mismatch policy. Nesting that differs in a way that cannot map → REVIEW with an explanation. The matcher never guesses.
 - [ ] **M4.5** UI responsive report: per-section match status and confidence.
