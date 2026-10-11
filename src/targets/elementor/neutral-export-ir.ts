@@ -100,6 +100,11 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   sizing?: P15NeutralContainerSizing;
   /** Wrapped row: `gapPx` is the column gap, `wrap.rowGapPx` the gap between lines (recovery M2.6a). */
   wrap?: P15NeutralWrap;
+  /**
+   * The Figma frame is its own box (recovery M2.10): write `content_width: full` so Elementor's boxed default never caps
+   * the content at the kit container width. Set by the Figma extractor; hand-authored IR keeps its exact output.
+   */
+  fullContentWidth?: true;
   /** Strict grid (recovery M2.6b): direction is `row` and the flex gap/alignment fields are absent. */
   grid?: P15NeutralGrid;
   /** Negative leading margin that reproduces an overlap with the previous sibling (recovery M2.7). */
@@ -418,7 +423,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'wrap', 'grid', 'marginPx', 'position', 'zIndex', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'fullContentWidth', 'wrap', 'grid', 'marginPx', 'position', 'zIndex', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -455,6 +460,9 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     ];
     for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);
     validatePlacement(value, path, state);
+    if (value.fullContentWidth !== undefined && value.fullContentWidth !== true) {
+      pushIssue(state, 'P15_IR_SIZING_INVALID', `${path}.fullContentWidth`, 'fullContentWidth must be true when provided.');
+    }
     if (value.marginPx !== undefined) {
       for (const issue of marginProblems(value.marginPx, `${path}.marginPx`)) pushIssue(state, 'P15_IR_SPACING_INVALID', issue.path, issue.message);
     }

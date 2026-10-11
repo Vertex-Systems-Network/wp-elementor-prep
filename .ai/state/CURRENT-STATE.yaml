@@ -92,8 +92,8 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M2
-  next_task: M2.10
-  last_completed_task: M2.9c
+  next_task: M2_ACCEPTANCE_THEN_M3.1
+  last_completed_task: M2.10
   blocked_tasks: []
   branch: claude/busy-ride-1vztlb
   open_pr: null

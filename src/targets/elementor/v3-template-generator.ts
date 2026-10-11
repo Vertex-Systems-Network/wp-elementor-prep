@@ -179,6 +179,9 @@ function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 
   Object.assign(settings, boxShadowSettings(node.boxShadow));
   Object.assign(settings, gradientSettings(node.gradient));
   Object.assign(settings, containerSizingSettings(node.sizing));
+  // Recovery M2.10: Elementor 4.2.4 defaults `content_width` to boxed (container.php blob 3486766), which caps the
+  // inner box at `--content-width: min(100%, var(--container-max-width, 1140px))` (_container.scss blob d6c65cb).
+  if (node.fullContentWidth === true && settings.content_width === undefined) settings.content_width = 'full';
   Object.assign(settings, wrapSettings(node.wrap, node.gapPx), containerMarginSettings(node.marginPx));
   Object.assign(settings, absolutePositionSettings(node.position, 'container'), zIndexSettings(node.zIndex, 'container'));
   return settings;
