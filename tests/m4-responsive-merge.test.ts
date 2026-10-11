@@ -131,6 +131,37 @@ describe('recovery M4.3a — responsive container layout merge', () => {
     expect(result.reviews.map((review) => [review.sourceNodeId, review.reasonCode])).toContainEqual(['m-floating', 'RESPONSIVE_NODE_NOT_PLACED']);
   });
 
+  it('M4.3c: heading/text typography metrics and alignment per breakpoint', () => {
+    const d = desktopDoc();
+    const dHero = d.nodes[0]!.kind === 'container' ? d.nodes[0]!.children[0]! : null;
+    if (dHero?.kind === 'container') {
+      dHero.children[0] = { kind: 'heading', sourceNodeId: 'd-title', text: 'Build faster', level: 'h1', align: 'start', typography: { fontSizePx: 64, lineHeightPx: 72, fontWeight: '700' } };
+    }
+    const m = mobileDoc();
+    const mHero = m.nodes[0]!.kind === 'container' ? m.nodes[0]!.children[0]! : null;
+    if (mHero?.kind === 'container') {
+      mHero.children[0] = { kind: 'heading', sourceNodeId: 'm-title', text: 'Build faster', level: 'h1', align: 'center', typography: { fontSizePx: 36.5, lineHeightPx: 40, fontWeight: '700' } };
+    }
+    const result = buildP15ResponsiveMerge(d, [{ device: 'mobile', document: m, match: matchP15Breakpoint(tree('d', 1440), tree('m', 390), 'mobile') }]);
+    expect(result.status).toBe('MERGED');
+    expect(result.entries.textTypography).toEqual([{ sourceNodeId: 'd-title', mobileFontSizePx: 36.5, mobileLineHeightPx: 40 }]);
+    expect(result.entries.textAlignment).toEqual([{ sourceNodeId: 'd-title', mobileAlign: 'center' }]);
+    const title = result.composition!.template!.content[0]!.elements[0]!.elements[0]!.settings;
+    expect(title).toMatchObject({ typography_typography: 'custom', typography_font_size: { unit: 'px', size: 64, sizes: [] },
+      typography_font_size_mobile: { unit: 'px', size: 36.5, sizes: [] }, typography_line_height_mobile: { unit: 'px', size: 40, sizes: [] },
+      align: 'start', align_mobile: 'center' });
+  });
+
+  it('M4.3c: a different text or font family per breakpoint is a review, not a merge', () => {
+    const m = mobileDoc();
+    const mHero = m.nodes[0]!.kind === 'container' ? m.nodes[0]!.children[0]! : null;
+    if (mHero?.kind === 'container') mHero.children[1] = { kind: 'text', sourceNodeId: 'm-copy', text: 'Ship it today', typography: { fontFamily: 'Inter' } };
+    const result = buildP15ResponsiveMerge(desktopDoc(), [{ device: 'mobile', document: m, match: matchP15Breakpoint(tree('d', 1440), tree('m', 390), 'mobile') }]);
+    expect(result.status).toBe('REVIEW');
+    expect(result.reviews.map((review) => [review.sourceNodeId, review.reasonCode, review.detail])).toContainEqual(
+      ['d-copy', 'RESPONSIVE_WIDGET_PROPERTY_NOT_MERGED', 'typography fontFamily differ on mobile.']);
+  });
+
   it('blocks without a variant, with a duplicate device, or on a desktop base that needs review', () => {
     expect(buildP15ResponsiveMerge(desktopDoc(), []).status).toBe('BLOCKED');
     const match = matchP15Breakpoint(tree('d', 1440), tree('m', 390), 'mobile');

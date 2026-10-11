@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M4 — Responsive breakpoint engine** (M3 accepted: PR #910, exact head `0b8663f`, 10/10 checks green, merged as `a4ee8dd`; images and SVG load in the real-target render, run 38103090238)
-> - Next task: **M4.3c** (widget and remaining properties per breakpoint)
-> - Last completed task: **M4.3b** (presence and order)
+> - Next task: **M4.3d** (remaining sizing per breakpoint)
+> - Last completed task: **M4.3c** (widget typography and alignment)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -436,7 +436,12 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - Two new engine families on a new element target (`mapping-engine/element-target.ts`, every generated Container and core widget, lockstep-bound): `responsive-visibility` writes `hide_desktop/tablet/mobile` = `hidden-<device>` (R0: `element-base.php` blob `733769f` `add_hidden_device_controls()`); `responsive-element-order` writes `_flex_order_<device>` = `custom` + `_flex_order_custom_<device>` (R0: `flex-item.php` blob `dc95ad4`; widgets include `order`/`order_custom` in `common-base.php` blob `77c497b`). Both are new page-composition steps (`visibility`, `elementOrder`).
     - Merge: a desktop-only element is hidden on the breakpoint that lacks it; a variant-only element (with its subtree) is inserted under its matched parent right after its nearest preceding matched sibling and hidden on every other device; a reordered container gives every child visible on that breakpoint its variant position as custom order. A variant-only element that cannot be placed (no matched parent, review content) is `RESPONSIVE_NODE_NOT_PLACED`. The result returns the merged desktop IR the composition was bound to.
     - Tests: `tests/m4-responsive-merge.test.ts`, `tests/m4-responsive-presence-families.test.ts`.
-  - [ ] **M4.3c** Widget and remaining container properties per breakpoint (typography metrics, text/button alignment, sizing, min-height, width, radius) through their responsive families.
+  - [x] **M4.3c** Widget typography and alignment per breakpoint _(done 2026-10-11)_.
+    - New `responsive-text-typography` family (Heading, Text Editor, Button; widget target): tablet/mobile `typography_font_size/line_height/letter_spacing_<device>` px sliders with the `custom` starter, values within the neutral typography limits (two decimals). R0: `includes/controls/groups/typography.php` (blob `eea951b`) declares the three as `responsive`; heading.php and text-editor.php register the group as `typography`.
+    - Page composition gains `textTypography`, `textAlignment` (existing heading/text family) and `buttonAlignment` (existing Button family, neutral start/end → left/right).
+    - Merge: differing metrics and alignment become entries; an unset variant value, other typography (family, weight, colour…), different text or any other widget property stays an explicit review.
+    - Tests: `tests/m4-responsive-merge.test.ts`, `tests/m4-responsive-presence-families.test.ts`.
+  - [ ] **M4.3d** Remaining sizing per breakpoint: container min-height, boxed/full width and radius; widget width and flex sizing (existing standalone responsive families → composition steps).
 - [ ] **M4.4** Mismatch policy. Nesting that differs in a way that cannot map → REVIEW with an explanation. The matcher never guesses.
 - [ ] **M4.5** UI responsive report: per-section match status and confidence.
 - [ ] **M4.6** Three-breakpoint golden fixture: the export renders at 1440, 1024 and 390 in the real-target harness.

@@ -22,4 +22,4 @@ Disposable-target harness evidence only. Packs stay `REVIEW REQUIRED` (D-051 not
 
 ## Exact next safe action
 
-Recovery M4.3c: widget and remaining container properties per breakpoint; M4.1–M4.3a merged (PRs #911, #912), M4.3b on this branch.
+Recovery M4.3d: remaining sizing per breakpoint; M4.1–M4.3b merged (PRs #911–#913), M4.3c on this branch.

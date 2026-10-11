@@ -17,6 +17,11 @@ const manifest = (manifestVersion: string, elements: unknown[]) => ({ schemaVers
   sourceIrFingerprint: fingerprintP15NeutralExportDocument(doc),
   baseCandidateIdentityDigest: buildElementorTemplateCandidateIdentity(generateElementorV3TemplateCandidate(doc).candidate!).digest, ...FLAGS, elements });
 
+const withWidgets = (manifestVersion: string, widgets: unknown[]) => {
+  const { elements: _elements, ...rest } = manifest(manifestVersion, []);
+  return { ...rest, widgets };
+};
+
 describe('recovery M4.3b — visibility and element order families', () => {
   it('writes hide_<device> switchers on widgets and containers', () => {
     const result = resolveP15ElementorResponsiveVisibility(doc, manifest(P15_ELEMENTOR_RESPONSIVE_VISIBILITY_MANIFEST_VERSION, [
@@ -44,5 +49,22 @@ describe('recovery M4.3b — visibility and element order families', () => {
     const unpaired = resolveP15ElementorResponsiveElementOrder(doc, manifest(P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_MANIFEST_VERSION, [
       { sourceNodeId: 'h', mobileOrderValue: 1 }]));
     expect(unpaired.template).toBeNull();
+  });
+});
+
+describe('recovery M4.3c — responsive text typography family', () => {
+  it('writes tablet/mobile metrics on headings and buttons and refuses values outside the neutral precision', async () => {
+    const { P15_ELEMENTOR_RESPONSIVE_TEXT_TYPOGRAPHY_MANIFEST_VERSION: version, resolveP15ElementorResponsiveTextTypography: resolve } =
+      await import('../src/targets/elementor/responsive-text-typography-resolution');
+    const ok = resolve(doc, withWidgets(version, [
+      { sourceNodeId: 'h', tabletFontSizePx: 28, mobileLineHeightPx: 30.25 }, { sourceNodeId: 'b', mobileLetterSpacingPx: -0.5 }]));
+    expect(ok.status).toBe('RESPONSIVE_TEXT_TYPOGRAPHY_RESOLVED');
+    expect(ok.template!.content[0]!.elements[0]!.settings).toMatchObject({ typography_typography: 'custom',
+      typography_font_size_tablet: { unit: 'px', size: 28, sizes: [] }, typography_line_height_mobile: { unit: 'px', size: 30.25, sizes: [] } });
+    expect(ok.template!.content[0]!.elements[1]!.elements[0]!.settings).toMatchObject({ typography_letter_spacing_mobile: { unit: 'px', size: -0.5, sizes: [] } });
+    for (const widgets of [[{ sourceNodeId: 'h', mobileFontSizePx: 12.345 }], [{ sourceNodeId: 'h', mobileFontSizePx: 0 }], [{ sourceNodeId: 'box', mobileFontSizePx: 12 }]]) {
+      const refused = resolve(doc, withWidgets(version, widgets));
+      expect(refused.template).toBeNull();
+    }
   });
 });
