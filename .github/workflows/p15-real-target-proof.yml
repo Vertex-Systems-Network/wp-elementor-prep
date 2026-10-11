@@ -710,6 +710,9 @@ jobs:
         run: |
           set -euo pipefail
           OUT="$GITHUB_WORKSPACE/dist-p15/p15-asset-pack-proof"
+          for file in uploads.json asset-pack-import-observation.json asset-pack-render-observation.json; do
+            echo "::group::$file"; cat "$OUT/$file" 2>/dev/null || echo "(missing)"; echo "::endgroup::"
+          done
           jq -e '.label == "REVIEW REQUIRED" and (.referencedAssetPaths | length) == 2' "$OUT/harness-expectation.json"
           jq -e '(keys | length) == 2 and all(.[]; (.id > 0) and (.url | startswith("http://127.0.0.1:8080/wp-content/uploads/")))' "$OUT/uploads.json"
           jq -e '.mediaPreserved == true and (.savedMedia | length) == 2 and .targetCompatibilityClaim == false and .productionAcceptance == false' \
