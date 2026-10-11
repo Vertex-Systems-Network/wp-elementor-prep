@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
 last_completed_milestone: product_recovery_m2_accepted_pr_907_merged_850c517
-exact_next_safe_action: execute_recovery_task_M3_6b_real_target_asset_import_step
+exact_next_safe_action: pass_exact_head_real_target_asset_pack_run_RQ_REC_M3_ASSET_IMPORT_then_tick_M3_6b_merge_and_execute_M3_7
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
