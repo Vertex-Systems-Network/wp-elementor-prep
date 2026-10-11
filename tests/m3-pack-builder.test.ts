@@ -39,7 +39,8 @@ describe('recovery M3.3/M3.4 — frame to asset pack (D-051)', () => {
       width: { unit: 'px', size: 1280, sizes: [] }, height: { unit: 'px', size: 640, sizes: [] },
       _element_width: 'initial', _element_custom_width: { unit: 'px', size: 1280, sizes: [] }, _flex_size: 'none' });
     // No temporary Figma URL, and no URL at all, anywhere in the pack (root cause of #856).
-    expect(new TextDecoder().decode(pack.bytes!)).not.toMatch(/https?:\/\/(?!example\.com\/privacy)/);
+    const urls = new TextDecoder().decode(pack.bytes!).match(/https?:\/\/[^\s"'<>)\\]+/g) ?? [];
+    expect([...new Set(urls)]).toEqual(['https://example.com/privacy']); // only the design's own footer link
     expect(files.get('IMPORT.md')).toContain('ASSET_UPLOAD_REQUIRED (product-shot)');
   });
 
