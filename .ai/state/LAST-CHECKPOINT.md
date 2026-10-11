@@ -2,7 +2,7 @@
 
 Status: IN_PROGRESS
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `a4ee8ddb7dad6b1d36e138002e353177b872d36f` (PR #910, M3.7, merged; M3 accepted)
+Observed main: `ccf81f0ce0c751a3fd0195aeb319a50f292601a3` (PR #917 merged; M4 accepted)
 Canonical active program: Product Recovery Program (`docs/PRODUCT_RECOVERY_PLAN.md`, D-047…D-051)
 Branch: `claude/busy-ride-1vztlb`, restarted from `a4ee8dd`, carrying the M3 acceptance sync.
 
@@ -22,4 +22,4 @@ Disposable-target harness evidence only. Packs stay `REVIEW REQUIRED` (D-051 not
 
 ## Exact next safe action
 
-Recovery M4.6: three-breakpoint golden fixture rendered in the real-target harness; M4.1–M4.4 merged (PRs #911–#915), M4.5 on this branch.
+Recovery M5 as one release train (classifier v2, recipes v2, multi-action P14, tiled pixel validation, cross-breakpoint duplicate alignment, golden acceptance); M5.7 stays manual.

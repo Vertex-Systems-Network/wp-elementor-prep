@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-11 — Recovery M4 (responsive breakpoint engine) accepted (PR #917, `ccf81f0`)
+
+- **Breakpoints and matching (PRs #911, #912):** breakpoint set by width with Elementor 4.2.4 defaults and user confirmation; deterministic top-down matcher with explainable scores; near-ties stay unmatched.
+- **Responsive merge (PRs #912–#915):** container layout, presence (`hide_*`), order (custom flex order), widget typography and alignment, widths, min height and radius as `_tablet`/`_mobile` keys through new and existing engine families; mismatches are explicit reviews.
+- **Report and proof (PRs #916, #917):** per-section responsive report in the plugin; three-breakpoint export proven on the real target at 1440/1024/390 (15/15 checks).
+
 ## 2026-10-11 — Recovery M3 (assets) accepted (PR #910, `a4ee8dd`)
 
 - **Pack (PR #908):** asset collector (Stored Original vs Rendered Appearance per D-037, SVG icons), deterministic atomic STORE ZIP with manifest and IMPORT.md, pack-relative media with an upload review per asset (D-051), image and background-image sizing, SVG icons as sized Image widgets.

@@ -7,9 +7,9 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M4 — Responsive breakpoint engine** (M3 accepted: PR #910, exact head `0b8663f`, 10/10 checks green, merged as `a4ee8dd`; images and SVG load in the real-target render, run 38103090238)
-> - Next task: **M4.6** (three-breakpoint golden fixture rendered in the real-target harness)
-> - Last completed task: **M4.5** (UI responsive report)
+> - Active milestone: **M5 — Smart target-ready duplicate and structure alignment** (M4 accepted: PR #917 exact head `0a0ab3b`, 11/11 checks, real-target-proof run 38105960139, merged `ccf81f0`; three-breakpoint export renders correctly at 1440/1024/390)
+> - Next task: **M5.1** (classifier v2)
+> - Last completed task: **M4.6** (three-breakpoint real-target render)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -453,7 +453,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - `src/core/breakpoint-report.ts`: per direct visible child of the desktop frame, each breakpoint's status (`MATCHED` with confidence, `UNMATCHED`, `AMBIGUOUS`), the matched layer, and the counts of unmatched/ambiguous layers inside; plus the variant-only layer count per breakpoint. Built from the M4.2 match results, so it reports what the merge uses.
   - Plugin: the confirmed breakpoint set message carries the report (frames read from the current selection); the UI shows it under the confirmed set.
   - Tests: `tests/m4-responsive-report.test.ts`, `tests/m4-breakpoint-set-ui.test.mjs`.
-- [ ] **M4.6** Three-breakpoint golden fixture: the export renders at 1440, 1024 and 390 in the real-target harness.
+- [x] **M4.6** Three-breakpoint golden fixture: the export renders at 1440, 1024 and 390 in the real-target harness _(done 2026-10-11: PR #917 exact head `0a0ab3b`, 11/11 checks, real-target-proof run 38105960139, merged `ccf81f0`: all responsive settings survived the import (compared by tree position: Elementor regenerates element ids), and 15/15 computed-style/position checks passed — hero row/row/column, title 64/48/32px, note hidden on mobile, menu hidden on desktop and tablet, copy before title on mobile)_. `src/cli/p15-responsive-harness-lib.ts`, `scripts/p15-responsive-import-probe.php`, `scripts/p15-responsive-render-probe.mjs`, bridge route `p15_responsive_render`. Tests: `tests/m4-responsive-harness.test.ts`.
 
 ### M5 — Smart target-ready duplicate and structure alignment
 
