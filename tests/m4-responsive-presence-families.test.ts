@@ -68,3 +68,23 @@ describe('recovery M4.3c — responsive text typography family', () => {
     }
   });
 });
+
+describe('recovery M4.3d — responsive size families', () => {
+  it('requires the base width mode and the neutral precision', async () => {
+    const sized: P15NeutralExportDocumentV1 = { ...doc, nodes: [{ kind: 'container', sourceNodeId: 'root', direction: 'column', sizing: { widthPx: 1200 }, children: [
+      { kind: 'heading', sourceNodeId: 'h', text: 'Hi', level: 'h2', sizing: { widthPx: 400 } },
+      { kind: 'text', sourceNodeId: 't', text: 'Free width' },
+    ] }] };
+    const size = await import('../src/targets/elementor/responsive-size-resolution');
+    const base = { schemaVersion: 1, sourceIrFingerprint: fingerprintP15NeutralExportDocument(sized),
+      baseCandidateIdentityDigest: buildElementorTemplateCandidateIdentity(generateElementorV3TemplateCandidate(sized).candidate!).digest, ...FLAGS };
+    const containers = size.resolveP15ElementorResponsiveContainerWidth(sized, { ...base, manifestVersion: size.P15_ELEMENTOR_RESPONSIVE_CONTAINER_WIDTH_MANIFEST_VERSION,
+      containers: [{ sourceNodeId: 'root', mobileWidthPx: 342.25 }] });
+    expect(containers.status).toBe('RESPONSIVE_CONTAINER_WIDTH_RESOLVED');
+    expect(containers.template!.content[0]!.settings).toMatchObject({ width_mobile: { unit: 'px', size: 342.25, sizes: [] } });
+    const widget = (widgets: unknown[]) => size.resolveP15ElementorResponsiveWidgetWidth(sized, { ...base, manifestVersion: size.P15_ELEMENTOR_RESPONSIVE_WIDGET_WIDTH_MANIFEST_VERSION, widgets });
+    expect(widget([{ sourceNodeId: 'h', tabletWidthPx: 320 }]).template!.content[0]!.elements[0]!.settings).toMatchObject({ _element_custom_width_tablet: { unit: 'px', size: 320, sizes: [] } });
+    expect(widget([{ sourceNodeId: 't', tabletWidthPx: 320 }]).template).toBeNull();
+    expect(widget([{ sourceNodeId: 'h', tabletWidthPx: 0 }]).template).toBeNull();
+  });
+});

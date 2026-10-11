@@ -22,4 +22,4 @@ Disposable-target harness evidence only. Packs stay `REVIEW REQUIRED` (D-051 not
 
 ## Exact next safe action
 
-Recovery M4.3d: remaining sizing per breakpoint; M4.1–M4.3b merged (PRs #911–#913), M4.3c on this branch.
+Recovery M4.4: mismatch policy; M4.1–M4.3c merged (PRs #911–#914), M4.3d on this branch.

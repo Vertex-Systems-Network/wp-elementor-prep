@@ -162,6 +162,42 @@ describe('recovery M4.3a — responsive container layout merge', () => {
       ['d-copy', 'RESPONSIVE_WIDGET_PROPERTY_NOT_MERGED', 'typography fontFamily differ on mobile.']);
   });
 
+  it('M4.3d: container width, min height, radius and widget width per breakpoint', () => {
+    const d = desktopDoc();
+    const dHero = d.nodes[0]!.kind === 'container' ? d.nodes[0]!.children[0]! : null;
+    if (dHero?.kind === 'container') {
+      Object.assign(dHero, { sizing: { widthPx: 1280, minHeightPx: 600 }, cornerRadiusPx: 24 });
+      dHero.children[1] = { kind: 'text', sourceNodeId: 'd-copy', text: 'Ship it today', sizing: { widthPx: 560 } };
+    }
+    const m = mobileDoc({ sizing: { widthPx: 342.5, minHeightPx: 420 } });
+    const mHero = m.nodes[0]!.kind === 'container' ? m.nodes[0]!.children[0]! : null;
+    if (mHero?.kind === 'container') mHero.children[1] = { kind: 'text', sourceNodeId: 'm-copy', text: 'Ship it today', sizing: { widthPx: 300 } };
+    const result = buildP15ResponsiveMerge(d, [{ device: 'mobile', document: m, match: matchP15Breakpoint(tree('d', 1440), tree('m', 390), 'mobile') }]);
+    expect(result.reviews).toEqual([]);
+    expect(result.entries.containerWidth).toEqual([{ sourceNodeId: 'd-hero', mobileWidthPx: 342.5 }]);
+    expect(result.entries.minHeight).toEqual([{ sourceNodeId: 'd-hero', mobileMinHeightPx: 420 }]);
+    expect(result.entries.borderRadius).toEqual([{ sourceNodeId: 'd-hero', mobileCornerRadiusPx: 0 }]);
+    expect(result.entries.widgetWidth).toEqual([{ sourceNodeId: 'd-copy', mobileWidthPx: 300 }]);
+    const hero = result.composition!.template!.content[0]!.elements[0]!;
+    expect(hero.settings).toMatchObject({ content_width: 'full', width: { unit: 'px', size: 1280, sizes: [] }, width_mobile: { unit: 'px', size: 342.5, sizes: [] },
+      min_height_mobile: { unit: 'px', size: 420, sizes: [] } });
+    expect(hero.elements[1]!.settings).toMatchObject({ _element_width: 'initial', _element_custom_width_mobile: { unit: 'px', size: 300, sizes: [] } });
+  });
+
+  it('M4.3d: a width mode change or an out-of-family value is a review', () => {
+    const d = desktopDoc();
+    const dHero = d.nodes[0]!.kind === 'container' ? d.nodes[0]!.children[0]! : null;
+    if (dHero?.kind === 'container') Object.assign(dHero, { sizing: { widthPx: 1280, minHeightPx: 600 } });
+    const m = mobileDoc({ sizing: { hugWidth: true, minHeightPx: 420.5 } });
+    const result = buildP15ResponsiveMerge(d, [{ device: 'mobile', document: m, match: matchP15Breakpoint(tree('d', 1440), tree('m', 390), 'mobile') }]);
+    expect(result.status).toBe('REVIEW');
+    expect(result.reviews.filter((review) => review.reasonCode === 'RESPONSIVE_SIZING_NOT_MERGED').map((review) => review.detail)).toEqual([
+      'Width mode differs on mobile (exact width on one side only).',
+      'minHeightPx 420.5 on mobile is unset or outside the min-height family (integer 0–1440).',
+      'sizing hugWidth differ on mobile.',
+    ]);
+  });
+
   it('blocks without a variant, with a duplicate device, or on a desktop base that needs review', () => {
     expect(buildP15ResponsiveMerge(desktopDoc(), []).status).toBe('BLOCKED');
     const match = matchP15Breakpoint(tree('d', 1440), tree('m', 390), 'mobile');

@@ -14,6 +14,10 @@ import { P15_ELEMENTOR_RESPONSIVE_TEXT_TYPOGRAPHY_MANIFEST_VERSION } from './res
 import { P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_VERSION } from './responsive-text-alignment-resolution';
 import { P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_VERSION } from './responsive-button-alignment-resolution';
 import { expectedDesktopButtonAlignment } from './mapping-engine/widget-binding';
+import { P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MANIFEST_VERSION, P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MAX_PX } from './responsive-min-height-resolution';
+import { P15_ELEMENTOR_RESPONSIVE_BORDER_RADIUS_MANIFEST_VERSION } from './responsive-border-radius-resolution';
+import { P15_ELEMENTOR_RESPONSIVE_CONTAINER_WIDTH_MANIFEST_VERSION, P15_ELEMENTOR_RESPONSIVE_WIDGET_WIDTH_MANIFEST_VERSION } from './responsive-size-resolution';
+import { P15_NEUTRAL_EXPORT_MAX_RADIUS_PX } from './neutral-export-ir';
 import { generateElementorV3TemplateCandidate } from './v3-template-generator';
 
 /**
@@ -31,11 +35,14 @@ import { generateElementorV3TemplateCandidate } from './v3-template-generator';
  *
  * - M4.3c, widgets: differing font size, line height and letter spacing of Heading, Text Editor and Button widgets
  *   (text typography family), and their alignment (text and Button alignment families).
+ * - M4.3d, sizes: an exact container or Heading/Text/Button width on both sides (container and widget width
+ *   families), container min height and uniform corner radius (existing integer families; values outside them are a
+ *   review).
  *
  * What is not merged is an explicit review, never a silent drop: ambiguous matches, a variant-only node that cannot
  * be placed, wrap and grid layout changes, an unset variant value whose Elementor default would differ (padding,
  * alignment, typography), other typography (family, weight, colour…), different text, and any other differing
- * container or widget property (sizing, radius, min-height and the like: M4.3d).
+ * container or widget property (a width mode change, hug/fill/flex sizing, image sizing, colours, borders…).
  */
 export const P15_RESPONSIVE_MERGE_VERSION = 'p15-elementor-responsive-merge-v1' as const;
 
@@ -76,11 +83,16 @@ const VERSIONS: Record<string, string> = {
   margin: P15_ELEMENTOR_RESPONSIVE_MARGIN_MANIFEST_VERSION, visibility: P15_ELEMENTOR_RESPONSIVE_VISIBILITY_MANIFEST_VERSION,
   elementOrder: P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_MANIFEST_VERSION, textTypography: P15_ELEMENTOR_RESPONSIVE_TEXT_TYPOGRAPHY_MANIFEST_VERSION,
   textAlignment: P15_ELEMENTOR_RESPONSIVE_TEXT_ALIGNMENT_MANIFEST_VERSION, buttonAlignment: P15_ELEMENTOR_RESPONSIVE_BUTTON_ALIGNMENT_MANIFEST_VERSION,
+  minHeight: P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MANIFEST_VERSION, containerWidth: P15_ELEMENTOR_RESPONSIVE_CONTAINER_WIDTH_MANIFEST_VERSION,
+  borderRadius: P15_ELEMENTOR_RESPONSIVE_BORDER_RADIUS_MANIFEST_VERSION, widgetWidth: P15_ELEMENTOR_RESPONSIVE_WIDGET_WIDTH_MANIFEST_VERSION,
 };
-const ENTRIES_FIELD: Record<string, string> = { visibility: 'elements', elementOrder: 'elements', textTypography: 'widgets', textAlignment: 'widgets', buttonAlignment: 'widgets' };
+const ENTRIES_FIELD: Record<string, string> = { visibility: 'elements', elementOrder: 'elements', textTypography: 'widgets', textAlignment: 'widgets',
+  buttonAlignment: 'widgets', widgetWidth: 'widgets' };
+const isIntIn = (value: number, max: number): boolean => Number.isSafeInteger(value) && value >= 0 && value <= max;
 const TYPOGRAPHY_METRICS = [['fontSizePx', 'FontSizePx'], ['lineHeightPx', 'LineHeightPx'], ['letterSpacingPx', 'LetterSpacingPx']] as const;
 /** Container keys this step handles (or that carry no layout value). */
-const HANDLED_KEYS = new Set(['kind', 'sourceNodeId', 'children', 'styleReviews', 'direction', 'alignItems', 'justifyContent', 'gapPx', 'paddingPx', 'marginPx', 'wrap', 'grid']);
+const HANDLED_KEYS = new Set(['kind', 'sourceNodeId', 'children', 'styleReviews', 'direction', 'alignItems', 'justifyContent', 'gapPx', 'paddingPx', 'marginPx', 'wrap', 'grid',
+  'sizing', 'cornerRadiusPx']);
 const ZERO_BOX = { top: 0, right: 0, bottom: 0, left: 0 };
 const HIDE_FIELD: Record<Device, string> = { desktop: 'hideDesktop', tablet: 'hideTablet', mobile: 'hideMobile' };
 
@@ -264,6 +276,18 @@ function mergeWidget(
       else put('textAlignment', id, { [`${device}Align`]: vr.align });
     }
   }
+  if (d.kind === 'heading' || d.kind === 'text' || d.kind === 'button') {
+    // M4.3d: an exact width on both sides (the base writes `_element_width: initial` with it).
+    handled.add('sizing');
+    const ds = (dr.sizing ?? {}) as Record<string, unknown>;
+    const vs = (vr.sizing ?? {}) as Record<string, unknown>;
+    if (!same(ds.widthPx, vs.widthPx)) {
+      if (typeof ds.widthPx === 'number' && typeof vs.widthPx === 'number') put('widgetWidth', id, { [`${device}WidthPx`]: vs.widthPx });
+      else review(id, 'RESPONSIVE_SIZING_NOT_MERGED', `Width mode differs on ${device} (exact width on one side only).`);
+    }
+    const otherSizing = Object.keys({ ...ds, ...vs }).filter((key) => key !== 'widthPx' && !same(ds[key], vs[key]));
+    if (otherSizing.length > 0) review(id, 'RESPONSIVE_SIZING_NOT_MERGED', `sizing ${otherSizing.sort().join(', ')} differ on ${device}.`);
+  }
   const differing = Object.keys({ ...dr, ...vr }).filter((key) => !handled.has(key) && !same(dr[key], vr[key]));
   if (differing.length > 0) review(id, 'RESPONSIVE_WIDGET_PROPERTY_NOT_MERGED', `${differing.sort().join(', ')} differ on ${device}.`);
 }
@@ -300,7 +324,27 @@ function mergeContainerLayout(
   }
   // `_container.scss` (blob d6c65cb): `--margin-*: 0px`, so no margin is the zero box on either side.
   if (!same(d.marginPx ?? ZERO_BOX, v.marginPx ?? ZERO_BOX)) put('margin', id, { [`${device}MarginPx`]: v.marginPx ?? ZERO_BOX });
+  // M4.3d sizes. Exact width on both sides → container width; min height and radius → the existing integer families.
+  const ds = (d.sizing ?? {}) as Record<string, unknown>;
+  const vs = (v.sizing ?? {}) as Record<string, unknown>;
+  if (!same(ds.widthPx, vs.widthPx)) {
+    if (typeof ds.widthPx === 'number' && typeof vs.widthPx === 'number') put('containerWidth', id, { [`${device}WidthPx`]: vs.widthPx });
+    else review(id, 'RESPONSIVE_SIZING_NOT_MERGED', `Width mode differs on ${device} (exact width on one side only).`);
+  }
+  if (!same(ds.minHeightPx, vs.minHeightPx)) {
+    const value = vs.minHeightPx;
+    if (typeof value === 'number' && isIntIn(value, P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MAX_PX)) put('minHeight', id, { [`${device}MinHeightPx`]: value });
+    else review(id, 'RESPONSIVE_SIZING_NOT_MERGED', `minHeightPx ${String(value)} on ${device} is unset or outside the min-height family (integer 0–${P15_ELEMENTOR_RESPONSIVE_MIN_HEIGHT_MAX_PX}).`);
+  }
+  const otherSizing = Object.keys({ ...ds, ...vs }).filter((key) => key !== 'widthPx' && key !== 'minHeightPx' && !same(ds[key], vs[key]));
+  if (otherSizing.length > 0) review(id, 'RESPONSIVE_SIZING_NOT_MERGED', `sizing ${otherSizing.sort().join(', ')} differ on ${device}.`);
+  if (!same(d.cornerRadiusPx, v.cornerRadiusPx)) {
+    // No radius is radius 0 (Elementor writes no border-radius by default).
+    const value = v.cornerRadiusPx ?? 0;
+    if (isIntIn(value, P15_NEUTRAL_EXPORT_MAX_RADIUS_PX)) put('borderRadius', id, { [`${device}CornerRadiusPx`]: value });
+    else review(id, 'RESPONSIVE_SIZING_NOT_MERGED', `cornerRadiusPx ${value} on ${device} is outside the radius family (integer px).`);
+  }
   const differing = Object.keys({ ...d, ...v }).filter((key) => !HANDLED_KEYS.has(key)
     && !same((d as unknown as Record<string, unknown>)[key], (v as unknown as Record<string, unknown>)[key]));
-  if (differing.length > 0) review(id, 'RESPONSIVE_PROPERTY_NOT_MERGED', `${differing.sort().join(', ')} differ on ${device} (M4.3d).`);
+  if (differing.length > 0) review(id, 'RESPONSIVE_PROPERTY_NOT_MERGED', `${differing.sort().join(', ')} differ on ${device}.`);
 }
