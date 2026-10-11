@@ -13,6 +13,7 @@ import {
 import { detectSpecialRoles } from '../core/roles';
 import { planSafeRecipes } from '../core/safe-recipe-planner';
 import { stackRecipeV2SafePlans } from '../core/stack-recipe-v2-safe';
+import { setP15AlignmentPixelValidator } from './p15-structure-alignment';
 import type { SafeRecipeKind } from '../core/safe-recipe-types';
 import { scanSceneNode, scanSceneNodeWithinBounds, type ScanBounds } from '../core/scanner';
 import { createSelectionAuditScheduler } from './selection-audit-scheduler';
@@ -188,6 +189,16 @@ async function runtimeProofState(): Promise<{ valid: boolean; passedAt: string |
 }
 
 /** Matches the Build-Ready default `maxNodes`; enforced while scanning instead of after a full scan. */
+// Recovery M5.5: aligned breakpoint duplicates are kept only when they render identically at full resolution.
+setP15AlignmentPixelValidator(async (original, candidate) => {
+  const sections = original.children.filter((child) => child.visible).map((child) => ({
+    id: child.id, x: child.x, y: child.y, width: child.width, height: child.height, maxChangedPct: P14_SECTION_PIXEL_BUDGET_PCT,
+  }));
+  const result = await fullFrameValidator.validateFullResolution(original, candidate, sections);
+  const failures = result.report.findings.map((finding) => finding.code);
+  return { passed: result.report.passed, detail: failures.length ? failures.join(', ') : `${result.tiled.tiles} tiles identical at full resolution` };
+});
+
 const AUDIT_SCAN_BOUNDS: ScanBounds = { maxVisibleNodes: 10_000, maxTotalNodes: 100_000 };
 
 async function runAudit(sequence: number, options: { automatic?: boolean } = {}): Promise<void> {

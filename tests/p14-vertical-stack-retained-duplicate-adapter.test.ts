@@ -401,6 +401,52 @@ describe('P14 R4 vertical-stack retained-duplicate Figma adapter', () => {
     expect((await passing.validateCandidate(other, plan)).passed).toBe(true);
   });
 
+  it('recovery M5.3: runs an ordered two-action plan on distinct targets, validating each action', async () => {
+    const runtime = new FakeRuntime();
+    const source = new FakeFrame(runtime, 'source:root', 'Approved Desktop', 0, 0, 1200, 900);
+    const first = new FakeFrame(runtime, 'source:target', 'Hero Stack', 40, 80, 600, 220);
+    first.appendChild(new FakeRect('source:a', 'Heading Block', 0, 0, 600, 90));
+    first.appendChild(new FakeRect('source:b', 'CTA Block', 0, 130, 600, 90));
+    const second = new FakeFrame(runtime, 'source:target-2', 'Footer Stack', 40, 400, 600, 200);
+    second.appendChild(new FakeRect('source:c', 'Links', 0, 0, 600, 80));
+    second.appendChild(new FakeRect('source:d', 'Legal', 0, 120, 600, 80));
+    source.appendChild(first);
+    source.appendChild(second);
+    runtime.page.appendChild(source);
+    const audit = scanSceneNode(source as unknown as SceneNode);
+    const fingerprint = computeBuildReadyStructuralHash(audit);
+    const findings = ['source:target', 'source:target-2'].map((targetId, index) => {
+      const addresses = deriveP14CandidateTargetAddresses({ sourceRoot: audit, expectedSourceRootNodeId: source.id,
+        expectedSourceRootFingerprint: fingerprint, sourceTargetNodeIds: [targetId] });
+      if (!addresses.valid) throw new Error(addresses.failures.join(' | '));
+      return { findingId: `m5-vertical-stack-${index}`, sourceRuleId: 'BR_SAFE_VERTICAL_STACK_CANDIDATE', sourceRuleVersion: 1, targetNodeIds: [targetId],
+        targetAddresses: addresses.addresses, confidence: 99, remediationClass: 'P14_SAFE_CANDIDATE' as const, acceptedRecipeId: recipe.id,
+        acceptedRecipeVersion: recipe.version };
+    });
+    const plan = buildP14PreparationPlan({ p13RunId: 'p13-m5-two', sourceNodeId: source.id, sourceFingerprint: fingerprint, findings, recipes: [recipe] });
+    expect(plan.actions.filter((action) => action.decision === 'ELIGIBLE')).toHaveLength(2);
+    const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
+    const result = await runP14RetainedDuplicateTransaction({
+      plan, registry, confirmation: buildP14PreparationConfirmation(plan, fixedNow()), transactionId: 'p14-m5-two-actions',
+      preparedName: 'Approved Desktop — Prepared', allowPreparedWithReview: true, now: fixedNow,
+    }, adapter);
+    expect(result.terminalState, JSON.stringify(result.errors)).toBe('COMPLETE');
+    expect(result.appliedActions).toHaveLength(2);
+    expect(result.validation?.passed).toBe(true);
+    const candidate = runtime.nodes.get(result.candidate?.nodeId ?? '') as FakeFrame;
+    expect(candidate.children.map((child) => [(child as FakeFrame).layoutMode, (child as FakeFrame).itemSpacing])).toEqual([['VERTICAL', 40], ['VERTICAL', 40]]);
+  });
+
+  it('recovery M5.3: a repeated action on the same target is refused (the run rolls back)', async () => {
+    const { runtime, source } = fixture();
+    const plan = planFor(source);
+    const action = plan.actions[0]!;
+    const adapter = new FigmaP14VerticalStackRetainedDuplicateAdapter({ runtime, now: fixedNow });
+    const handle = await adapter.cloneSource(source.id, 'p14-m5-repeat');
+    await adapter.applyRecipe(handle, action);
+    await expect(adapter.applyRecipe(handle, action)).rejects.toThrow(/repeated action or a second mutation of the same target/);
+  });
+
   it('fails re-score on insufficient evidence and cleans up only the owned candidate', async () => {
     const { runtime, source } = fixture();
     const plan = planFor(source);

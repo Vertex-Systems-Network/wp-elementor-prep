@@ -202,7 +202,15 @@ const RENDERER_EXTENDED = `    function renderP15LocalTemplateDownload(message) 
         \${members.map((member) => \`<div class="row"><div class="name">\${escapeHtml(member.device)}</div><div class="meta">\${escapeHtml(member.name)} · \${escapeHtml(String(member.widthPx))}px</div></div>\`).join('')}
         \${issues.length ? \`<div class="sectionTitle">Review</div>\${issues.map((issue) => \`<div class="row"><div class="name">\${escapeHtml(issue.code)}</div><div class="meta">\${escapeHtml(issue.detail)}</div></div>\`).join('')}\` : ''}
         \${confirmable ? '<div class="inlineActions one"><button id="p15-breakpoints-confirm">Confirm breakpoint set</button></div>' : ''}
-        \${confirmed ? renderP15ResponsiveReport(message.report) : ''}\`;
+        \${confirmed ? renderP15ResponsiveReport(message.report) : ''}
+        \${confirmed ? '<div class="inlineActions one"><button id="p15-structure-align">Align tablet/mobile duplicates</button></div>' : ''}\`;
+      if (confirmed) {
+        document.getElementById('p15-structure-align').addEventListener('click', () => {
+          root.className = 'empty';
+          root.textContent = 'Aligning tablet/mobile duplicates with the desktop hierarchy and validating each at full resolution…';
+          post('p15-structure-alignment-request');
+        });
+      }
       if (confirmable) {
         const fingerprint = set.fingerprint;
         document.getElementById('p15-breakpoints-confirm').addEventListener('click', () => {
@@ -244,6 +252,24 @@ const MESSAGE_EXTENDED = `      if (message.type === 'p15-elementor-local-templa
       if (message.type === 'p15-breakpoint-set-result' || message.type === 'p15-breakpoint-set-confirmed') {
         exportPanel.hidden = true;
         renderP15BreakpointSet(message, message.type === 'p15-breakpoint-set-confirmed');
+        return;
+      }
+
+      if (message.type === 'p15-structure-alignment-result') {
+        const results = Array.isArray(message.results) ? message.results : [];
+        root.className = '';
+        root.innerHTML = \`
+          <div class="hero">
+            <div class="score">STRUCTURE ALIGNMENT</div>
+            <div class="status">Originals unchanged · duplicates kept only when identical at full resolution</div>
+          </div>
+          \${results.map((result) => \`<div class="row"><div class="name">\${escapeHtml(result.device)}: \${escapeHtml(result.status)}</div><div class="meta">\${escapeHtml(String(result.renames))} rename(s), \${escapeHtml(String(result.wraps))} wrapper(s) · \${escapeHtml(result.detail)}</div>\${(Array.isArray(result.reviews) ? result.reviews : []).map((review) => \`<div class="meta">Review: \${escapeHtml(review.reason)}</div>\`).join('')}</div>\`).join('') || '<div class="empty">Nothing to align.</div>'}\`;
+        return;
+      }
+
+      if (message.type === 'p15-structure-alignment-unavailable') {
+        root.className = 'empty';
+        root.textContent = message.message || 'Structure alignment is unavailable.';
         return;
       }
 
