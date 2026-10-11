@@ -8,7 +8,7 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
-> - Next task: **M3.6** (real-target asset import harness)
+> - Next task: **M3.6b** (real-target asset import harness step)
 > - Last completed task: **M3.1** (asset collector)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
@@ -406,7 +406,9 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - A vector layer, or a frame/group made only of vectors, whose SVG was collected becomes an Image widget on `assets/svg-<node>.svg`, sized like an image (width/height px, flex rules); the Image widget is used because it renders any SVG exactly, while the Icon widget's colour controls would only matter for recolouring. The coverage audit treats an image/SVG node as its whole rendered subtree.
   - The `ASSET_UPLOAD_REQUIRED` review for an SVG adds that WordPress blocks SVG uploads by default and how to allow them only for trusted files. Icons are decorative (empty alt text, no alt review). A vector without a collected SVG keeps its review.
   - Tests: `tests/m3-svg-icons.test.ts`.
-- [ ] **M3.6** Real-target harness. Import the asset pack into the disposable WordPress + Elementor instance (`p15-real-target-proof.yml`) and assert every image returns HTTP 200 in the render.
+- [ ] **M3.6** Real-target harness. Import the asset pack into the disposable WordPress + Elementor instance (`p15-real-target-proof.yml`) and assert every image returns HTTP 200 in the render (split into M3.6a–b).
+  - [x] **M3.6a** Asset relink _(done 2026-10-11)_: `src/targets/elementor/asset-relink.ts` rewrites every pack-relative `image` / `background_image` MEDIA value to an uploaded attachment (`id` + absolute http(s) `url`), leaves everything else (other URLs, text) untouched and reports any unresolved pack path (`RELINKED` / `INCOMPLETE`). The step `IMPORT.md` describes and the harness/companion automates. Pure and network-free. Tests: `tests/m3-asset-relink.test.ts`.
+  - [ ] **M3.6b** Harness: in an isolated step of `p15-real-target-proof.yml` (never altering the retained proof chain), build a pack from a fixture, `wp media import` its assets, relink, import the template, render, and assert every image returns HTTP 200 (`RQ-REC-M3-ASSET-IMPORT`).
 - [ ] **M3.7** Plugin UI: offer the asset pack (`buildP15ElementorPackFromFigmaFrame` with `figma` as the API) as a download beside the review list, labelled exactly as the manifest (`LOCAL CANDIDATE` / `REVIEW REQUIRED`), never as ready for import. Added during M3.3.
 
 ### M4 — Responsive breakpoint engine
