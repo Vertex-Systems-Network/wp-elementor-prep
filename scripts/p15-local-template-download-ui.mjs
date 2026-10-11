@@ -10,6 +10,7 @@ const BUTTON_SOURCE = `      <button id="p15-preview">Preview Elementor</button>
 
 const BUTTON_EXTENDED = `      <button id="p15-preview">Preview Elementor</button>
       <button id="p15-download">Download Elementor JSON</button>
+      <button id="p15-asset-pack">Download asset pack</button>
       <button id="plan">Preview safe fixes</button>`;
 
 const CLICK_SOURCE = `    document.getElementById('p15-preview').addEventListener('click', () => {
@@ -31,6 +32,12 @@ const CLICK_EXTENDED = `    document.getElementById('p15-preview').addEventListe
       root.textContent = 'Re-reading the current selected Frame and building a fresh locally validated Elementor Template JSON…';
       exportPanel.hidden = true;
       post('p15-elementor-local-template-download-request', { optionBankId: selectedOptionBankId });
+    });
+    document.getElementById('p15-asset-pack').addEventListener('click', () => {
+      root.className = 'empty';
+      root.textContent = 'Re-reading the current selected Frame and building a fresh Elementor asset pack (template, assets, manifest, IMPORT.md)…';
+      exportPanel.hidden = true;
+      post('p15-elementor-asset-pack-request');
     });
     document.getElementById('p15-profile').addEventListener('click', () => {`;
 
@@ -103,6 +110,56 @@ const RENDERER_EXTENDED = `    function renderP15LocalTemplateDownload(message) 
         </div>\`;
     }
 
+    function renderP15AssetPack(message) {
+      const result = message.result;
+      const label = result && result.label;
+      const downloadable = result
+        && result.version === 'p15-elementor-asset-pack-download-v1'
+        && result.status === 'PACK_READY'
+        && (label === 'LOCAL CANDIDATE' || label === 'REVIEW REQUIRED')
+        && result.targetImportReady === false
+        && typeof result.fileName === 'string'
+        && /^[a-z0-9-]{1,60}-elementor-pack\\.zip$/.test(result.fileName)
+        && result.bytes instanceof Uint8Array
+        && result.bytes.length > 0;
+      if (!downloadable) {
+        if (result) result.bytes = null;
+        root.className = '';
+        root.innerHTML = \`
+          <div class="hero">
+            <div class="score">ASSET PACK BLOCKED</div>
+            <div class="status">NO PACK WAS EXPOSED</div>
+            <div class="meta">\${escapeHtml((result && result.blockReason) || 'The result failed the asset-pack download contract.')}</div>
+          </div>\`;
+        return;
+      }
+
+      const bytes = result.bytes;
+      result.bytes = null;
+      const blob = new Blob([bytes], { type: 'application/zip' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = result.fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+      const reviews = Array.isArray(result.reviews) ? result.reviews : [];
+      const reviewCount = Number.isSafeInteger(result.reviewCount) ? result.reviewCount : reviews.length;
+      root.className = '';
+      root.innerHTML = \`
+        <div class="hero">
+          <div class="score">\${escapeHtml(label)}</div>
+          <div class="status">NOT READY FOR IMPORT</div>
+          <div class="meta">Downloaded \${escapeHtml(result.fileName)}: template.json, \${escapeHtml(String(result.assetCount))} asset(s), manifest.json and IMPORT.md.</div>
+          <div class="meta">Upload every asset to the Media Library and relink it as IMPORT.md describes before importing. Target import, editor and render remain unverified.</div>
+        </div>
+        <div class="sectionTitle">Review items (\${escapeHtml(String(reviewCount))})</div>
+        \${reviews.length ? reviews.map((review) => \`<div class="row"><div class="name">\${escapeHtml(review.reasonCode)}</div><div class="meta">\${escapeHtml(review.detail)}</div></div>\`).join('') : '<div class="empty">No review items.</div>'}
+        \${reviewCount > reviews.length ? \`<div class="meta">\${escapeHtml(String(reviewCount - reviews.length))} more in manifest.json.</div>\` : ''}\`;
+    }
+
     function renderP15TargetProfilePreview(message) {`;
 
 const MESSAGE_SOURCE = `      if (message.type === 'p15-elementor-target-profile-result') {`;
@@ -117,6 +174,19 @@ const MESSAGE_EXTENDED = `      if (message.type === 'p15-elementor-local-templa
         exportPanel.hidden = true;
         root.className = 'empty';
         root.textContent = message.message || 'P15 local Elementor Template JSON download is unavailable for the current selection.';
+        return;
+      }
+
+      if (message.type === 'p15-elementor-asset-pack-result') {
+        exportPanel.hidden = true;
+        renderP15AssetPack(message);
+        return;
+      }
+
+      if (message.type === 'p15-elementor-asset-pack-unavailable') {
+        exportPanel.hidden = true;
+        root.className = 'empty';
+        root.textContent = message.message || 'Elementor asset pack is unavailable for the current selection.';
         return;
       }
 

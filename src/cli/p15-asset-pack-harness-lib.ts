@@ -8,7 +8,7 @@ import { relinkP15PackAssets, type P15UploadedAsset } from '../targets/elementor
 /**
  * Real-target asset harness helper (recovery M3.6b), used by `p15-real-target-proof.yml`:
  * - `fixture --out-dir <dir>`: build a controlled Figma-shaped frame (an image layer and a frame with a background image,
- *   both backed by real, valid PNG bytes), run the plugin's frame → asset-pack path, and write the pack, its extracted
+ *   both backed by real, valid PNG bytes, and a vector icon exported as SVG), run the plugin's frame → asset-pack path, and write the pack, its extracted
  *   files and `harness-expectation.json` (every pack path the template references).
  * - `relink --pack-dir <dir> --uploads <uploads.json> --out <template.json>`: rewrite the pack template to the uploaded
  *   attachments with `relinkP15PackAssets`; exits non-zero unless every reference resolved.
@@ -50,6 +50,9 @@ export function solidPng(width: number, height: number, rgb: [number, number, nu
   return out;
 }
 
+export const HARNESS_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">'
+  + '<rect width="24" height="24" fill="#10b981"/><path d="M6 12l4 4 8-8" fill="none" stroke="#ffffff" stroke-width="2"/></svg>\n';
+
 const text = (id: string, characters: string) => ({ id, name: id, type: 'TEXT', visible: true, characters, textAlignHorizontal: 'LEFT', fills: [] });
 
 export function harnessFrame(): Record<string, unknown> {
@@ -60,13 +63,17 @@ export function harnessFrame(): Record<string, unknown> {
       const scale = settings.constraint?.value ?? 1;
       return solidPng(320 * scale, 200 * scale, [30, 99, 235]);
     } };
+  // Recovery M3 acceptance: an SVG icon (explicit width/height, as Figma's SVG export writes them).
+  const icon = { id: 'harness-icon', name: 'Check icon', type: 'VECTOR', visible: true, width: 24, height: 24,
+    layoutSizingHorizontal: 'FIXED', layoutSizingVertical: 'FIXED', fills: [], strokes: [], effects: [],
+    exportAsync: async () => new TextEncoder().encode(HARNESS_SVG) };
   const hero = { id: 'harness-hero', name: 'Hero banner', type: 'FRAME', visible: true, layoutMode: 'VERTICAL', layoutWrap: 'NO_WRAP',
     layoutPositioning: 'AUTO', itemSpacing: 0, paddingTop: 48, paddingRight: 48, paddingBottom: 48, paddingLeft: 48, primaryAxisAlignItems: 'MIN',
     counterAxisAlignItems: 'MIN', width: 800, height: 240, fills: [{ type: 'IMAGE', visible: true, imageHash: 'hero', scaleMode: 'FILL' }],
     strokes: [], effects: [], children: [text('harness-hero-title', 'Asset pack harness')] };
   return { id: 'harness-page', name: 'P15 Asset Pack Harness', type: 'FRAME', visible: true, layoutMode: 'VERTICAL', layoutWrap: 'NO_WRAP',
     layoutPositioning: 'AUTO', itemSpacing: 24, paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0, primaryAxisAlignItems: 'MIN',
-    counterAxisAlignItems: 'MIN', width: 800, height: 520, fills: [], strokes: [], effects: [], children: [hero, photo] };
+    counterAxisAlignItems: 'MIN', width: 800, height: 520, fills: [], strokes: [], effects: [], children: [hero, photo, icon] };
 }
 
 const ORIGINALS: Record<string, { bytes: Uint8Array; width: number; height: number }> = {
