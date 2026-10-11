@@ -191,8 +191,11 @@ class Collector {
     const images = imagePaints(node);
     if (images.length > 0) {
       for (const paint of images) await this.original(node, id, paint);
-      await this.rendered(node, id, 'PNG', 1);
-      await this.rendered(node, id, 'PNG', 2);
+      // A frame with content uses its original as a background (M3.4b); only image leaves need their appearance.
+      if (!children(node).some(visible)) {
+        await this.rendered(node, id, 'PNG', 1);
+        await this.rendered(node, id, 'PNG', 2);
+      }
     }
     for (const child of children(node)) await this.walk(child);
   }

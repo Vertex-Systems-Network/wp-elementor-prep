@@ -17,6 +17,8 @@ import {
   type P15NeutralWidgetSizing,
 } from './container-sizing';
 import { wrapProblems, type P15NeutralWrap } from './container-wrap';
+import { P15_ASSET_PATH_PATTERN } from './neutral-export-ir-asset-path';
+import { backgroundImageProblems, type P15NeutralBackgroundImage } from './container-background-image';
 import { gridProblems, type P15NeutralGrid } from './container-grid';
 import { marginProblems } from './container-spacing';
 import {
@@ -40,6 +42,8 @@ export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidge
 export type { P15NeutralAbsolutePosition, P15NeutralAxisOffset } from './absolute-position';
 export type { P15NeutralAlignContent, P15NeutralWrap } from './container-wrap';
 export type { P15NeutralGrid, P15NeutralGridTrack } from './container-grid';
+export type { P15NeutralBackgroundImage } from './container-background-image';
+export { P15_ASSET_PATH_PATTERN } from './neutral-export-ir-asset-path';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
@@ -92,6 +96,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   border?: P15NeutralBorder;
   /** The frame clips visible content (`overflow: hidden`, recovery M2.4a). */
   clipsContent?: true;
+  /** Background image on a Stored Original pack asset (recovery M3.4b); exclusive with colour and gradient. */
+  backgroundImage?: P15NeutralBackgroundImage;
   /** Two-stop linear or radial gradient background (recovery M2.4c); exclusive with `backgroundColorHex`. */
   gradient?: P15NeutralGradient;
   /** One drop or inner shadow (recovery M2.4b). */
@@ -190,8 +196,6 @@ export interface P15NeutralImageNode extends P15NeutralNodeBase {
   objectFit?: 'cover';
 }
 
-/** Pack-relative asset path, exactly as the M3.2 asset pack writes it. */
-export const P15_ASSET_PATH_PATTERN = /^assets\/[A-Za-z0-9@-]{1,80}\.(png|jpg|gif|webp|svg)$/;
 
 export interface P15NeutralReviewNode extends P15NeutralNodeBase {
   kind: 'review';
@@ -435,7 +439,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'fullContentWidth', 'wrap', 'grid', 'marginPx', 'position', 'zIndex', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'backgroundImage', 'sizing', 'fullContentWidth', 'wrap', 'grid', 'marginPx', 'position', 'zIndex', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -472,6 +476,12 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     ];
     for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);
     validatePlacement(value, path, state);
+    if (value.backgroundImage !== undefined) {
+      for (const issue of backgroundImageProblems(value.backgroundImage, `${path}.backgroundImage`)) pushIssue(state, 'P15_IR_URL_INVALID', issue.path, issue.message);
+      if (value.backgroundColorHex !== undefined || value.gradient !== undefined) {
+        pushIssue(state, 'P15_IR_COLOR_INVALID', `${path}.backgroundImage`, 'A background image is exclusive with a background colour or gradient.');
+      }
+    }
     if (value.fullContentWidth !== undefined && value.fullContentWidth !== true) {
       pushIssue(state, 'P15_IR_SIZING_INVALID', `${path}.fullContentWidth`, 'fullContentWidth must be true when provided.');
     }

@@ -97,7 +97,7 @@ class Audit {
     const button = ir.kind === 'button' ? ir : null;
     if (!container && !button) return;
     if (present(visiblePaints(node.fills))) {
-      this.need(id, 'fills', (container?.backgroundColorHex ?? container?.gradient ?? button?.backgroundColorHex) !== undefined,
+      this.need(id, 'fills', (container?.backgroundColorHex ?? container?.gradient ?? container?.backgroundImage ?? button?.backgroundColorHex) !== undefined,
         ['FILL', 'GRADIENT', 'BACKGROUND'], 'Visible frame fill.');
     }
     const strokeWeights = [node.strokeWeight, node.strokeTopWeight, node.strokeRightWeight, node.strokeBottomWeight, node.strokeLeftWeight];

@@ -41,6 +41,7 @@ import {
 } from '../targets/elementor/container-sizing';
 import { deriveP15Wrap, type P15NeutralWrap } from '../targets/elementor/container-wrap';
 import { deriveP15Grid, type P15NeutralGrid } from '../targets/elementor/container-grid';
+import { deriveP15BackgroundImage, type P15NeutralBackgroundImage } from '../targets/elementor/container-background-image';
 import { assignP15Overlap, BASELINE_REVIEW, DISTRIBUTED_JUSTIFICATIONS } from '../targets/elementor/container-spacing';
 import {
   ABSOLUTE_POSITION_REVIEW,
@@ -72,6 +73,8 @@ interface ExtractionState {
   sizingFacts: Map<string, P15ContainerSizingFacts>;
   /** Recovery M3.3: pack-relative asset path per image layer id, when assets were collected. */
   assetPaths: ReadonlyMap<string, string>;
+  /** Recovery M3.4b: Stored Original pack path and natural width per image hash. */
+  originals: ReadonlyMap<string, { path: string; widthPx: number }>;
 }
 
 interface ParsedContainerStyle<T> {
@@ -272,7 +275,7 @@ function solidOpaqueHex(paint: Record<string, unknown> | undefined): string | nu
   return `#${channels.map((channel) => byteHex(channel as number).toLowerCase()).join('')}`;
 }
 
-function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string> & { gradient?: P15NeutralGradient } {
+function parseContainerBackground(node: SceneNode, originals: ExtractionState['originals'] = new Map()): ParsedContainerStyle<string> & { gradient?: P15NeutralGradient; backgroundImage?: P15NeutralBackgroundImage } {
   const fills = recordOf(node).fills;
   if (fills === undefined) return {};
   if (!Array.isArray(fills)) {
@@ -310,12 +313,10 @@ function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string>
   }
   const paintRecord = paint as Record<string, unknown>;
   if (paintRecord.type === 'IMAGE') {
-    return {
-      review: {
-        reasonCode: 'CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW',
-        detail: 'Container background image requires a retained asset export/upload reference; the container and its children are preserved.',
-      },
-    };
+    // Recovery M3.4b: FILL / FIT / TILE on the collected Stored Original map exactly; anything else stays review.
+    const original = typeof paintRecord.imageHash === 'string' ? originals.get(paintRecord.imageHash) : undefined;
+    const derived = deriveP15BackgroundImage({ paint: paintRecord, originalPath: original?.path, originalWidthPx: original?.widthPx });
+    return derived.backgroundImage !== undefined ? { backgroundImage: derived.backgroundImage } : { review: derived.review! };
   }
   if (paintRecord.type === 'GRADIENT_LINEAR' || paintRecord.type === 'GRADIENT_RADIAL') {
     // Recovery M2.4c: two-stop axis-aligned linear and default radial gradients map exactly.
@@ -688,7 +689,7 @@ function extractContainer(
 
   // Style facts that cannot be mapped yet stay REVIEW on the container itself, so the
   // container's layout and children are still extracted instead of being dropped.
-  const background = parseContainerBackground(node);
+  const background = parseContainerBackground(node, state.originals);
   const radius = parseContainerRadius(node);
   // Recovery M2.4a: non-uniform radii, an INSIDE solid border (padding lowered by its width) and a visible clip.
   const radii = radius.radii === undefined ? {} : deriveP15CornerRadii(radius.radii, Number(record.width), Number(record.height));
@@ -762,6 +763,7 @@ function extractContainer(
     paddingPx: bordered.paddingPx ?? paddingPx,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
     ...(background.gradient !== undefined ? { gradient: background.gradient } : {}),
+    ...(background.backgroundImage !== undefined ? { backgroundImage: background.backgroundImage } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
     ...(radii.radii !== undefined ? { cornerRadiiPx: radii.radii } : {}),
     ...(bordered.border !== undefined ? { border: bordered.border } : {}),
@@ -954,8 +956,9 @@ export function extractP15NeutralExportDocumentFromFigmaFrame(
   frame: FrameNode,
   documentType: P15NeutralDocumentType = 'page',
   assetPaths: ReadonlyMap<string, string> = new Map(),
+  originals: ReadonlyMap<string, { path: string; widthPx: number }> = new Map(),
 ): P15NeutralExportDocumentV1 {
-  const state: ExtractionState = { visited: 0, boundsExceeded: null, sizingFacts: new Map(), assetPaths };
+  const state: ExtractionState = { visited: 0, boundsExceeded: null, sizingFacts: new Map(), assetPaths, originals };
   const extracted = extractNode(frame, 1, state);
   const nodes: P15NeutralExportNode[] = state.boundsExceeded
     ? [boundsReview(frame, state.boundsExceeded)]
@@ -984,8 +987,9 @@ export function buildP15ElementorV1PreviewFromFigmaFrame(
   frame: FrameNode,
   documentType: P15NeutralDocumentType = 'page',
   assetPaths: ReadonlyMap<string, string> = new Map(),
+  originals: ReadonlyMap<string, { path: string; widthPx: number }> = new Map(),
 ): P15FigmaNeutralExtractionResult {
-  const extracted = extractP15NeutralExportDocumentFromFigmaFrame(frame, documentType, assetPaths);
+  const extracted = extractP15NeutralExportDocumentFromFigmaFrame(frame, documentType, assetPaths, originals);
   const coverageAudit = auditP15PropertyCoverage(frame, extracted);
   // A silent drop the audit finds becomes an explicit review, so no candidate ever loses content unannounced.
   const document = withCoverageReviews(extracted, coverageAudit);

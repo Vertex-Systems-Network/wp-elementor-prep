@@ -39,7 +39,13 @@ export async function buildP15ElementorPackFromFigmaFrame(
       assetPaths.set(asset.sourceNodeIds[0], `assets/${asset.assetId}.${EXTENSIONS[asset.mimeType]}`);
     }
   }
-  const preview = buildP15ElementorV1PreviewFromFigmaFrame(frame, documentType, assetPaths);
+  const originals = new Map<string, { path: string; widthPx: number }>();
+  for (const asset of assets.assets) {
+    if (asset.kind === 'stored-original' && asset.imageHash !== undefined) {
+      originals.set(asset.imageHash, { path: `assets/${asset.assetId}.${EXTENSIONS[asset.mimeType]}`, widthPx: asset.widthPx });
+    }
+  }
+  const preview = buildP15ElementorV1PreviewFromFigmaFrame(frame, documentType, assetPaths, originals);
   const names = new Map<string, string>();
   layerNames(frame, names);
   const { generation } = preview;
