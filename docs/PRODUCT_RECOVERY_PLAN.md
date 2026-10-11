@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.9** (golden landing-page fixture)
-> - Last completed task: **M2.8** (font manifest)
+> - Next task: **M2.9b** (property-coverage auditor)
+> - Last completed task: **M2.9a** (D-049 review artifact)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -358,7 +358,14 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - `src/targets/elementor/font-manifest.ts` builds `p15-font-manifest-v1`: each family with its source (system / google / google-early-access / upload-required), sorted weights (`400`, `700italic` …), usage (control or span-only) and first node. The export pipeline result carries it as `fontManifest`.
   - REVIEW: a family outside the registry → `FONT_UPLOAD_REQUIRED` with an upload instruction (family and weights); a Google family used only inside styled runs → `FONT_NOT_LOADED_FOR_SPAN`. Either blocks the candidate instead of a silent fallback. Site-added fonts (`elementor/fonts/additional_fonts`) are not known here.
   - Tests: `tests/m2-font-manifest.test.ts` (registry counts and digest, exact classification, manifest, reviews, generator and pipeline).
-- [ ] **M2.9** Golden landing-page fixture. Every visible property is either mapped or listed as REVIEW, with no silent drop. A partial template is allowed only with an explicit `REVIEW_ITEMS` list, and the user sees exactly what is missing (D-049).
+- [ ] **M2.9** Golden landing-page fixture. Every visible property is either mapped or listed as REVIEW, with no silent drop. A partial template is allowed only with an explicit `REVIEW_ITEMS` list, and the user sees exactly what is missing (D-049). (split into M2.9a–c)
+  - [x] **M2.9a** D-049 review artifact _(done 2026-10-11)_ (`src/targets/elementor/review-artifact.ts`; R0: `element-base.php` blob `733769f` `hide_<device>` switchers → `elementor-hidden-<device>`, `_visibility.scss` blob `d5702c9` `display: none` per device range, `container.php` blob `3486766` `css_classes`).
+    - A valid document with review items still returns `template: null` and `candidate: null`, plus `reviewArtifact` (`p15-elementor-review-artifact-v1`, label `REVIEW REQUIRED`, `targetImportReady: false`): the partial template and `reviewItems` with every review entry, its element id and kind (`placeholder` or `unmapped-property`).
+    - Unmapped content stays an explicit placeholder: an empty Container hidden on desktop/tablet/mobile (no size or gap on the page, visible in the editor) with classes `p15-review-placeholder p15-review-<reason>`. Depth/node-limit failures are BLOCKED: no artifact.
+    - The export pipeline passes it through for `BLOCKED_GENERATION`; the CLI writes `elementor-review-artifact.json` (never `elementor-template.json`) and still exits 3. The plugin UI already lists every review entry with its reason and detail.
+    - Tests: `tests/m2-review-artifact.test.ts`.
+  - [ ] **M2.9b** Property-coverage auditor: for every visible Figma node and visual property, prove it is mapped into the IR or listed as review.
+  - [ ] **M2.9c** Golden landing-page fixture through the auditor, the generator and a recorded golden.
 - [ ] **M2.10** Content width of unsized Containers. Elementor 4.2.4 `container.php` (blob `3486766`) defaults `content_width` to `boxed`, and `_container.scss` (blob `d6c65cb`) caps a boxed inner at `--content-width: min(100%, var(--container-max-width, 1140px))`. A FILL or unsized frame wider than 1140px (for example a full-bleed section in a 1440px page) is therefore narrowed and centred. Write `content_width: full` on every generated Container (Figma has no boxed concept), re-record the affected goldens with a diff test, and re-bind the retained real-target reference/profile evidence that pins the candidate identity. Found during M2.6b.
 
 ### M3 — Assets

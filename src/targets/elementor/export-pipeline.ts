@@ -7,6 +7,7 @@ import {
 } from './page-composition';
 import type { ElementorTemplateV04 } from './template-v04';
 import { buildP15FontManifest, type P15FontManifestV1 } from './font-manifest';
+import type { P15ElementorReviewArtifactV1 } from './review-artifact';
 import { validateP15NeutralExportDocument, type P15NeutralExportDocumentV1 } from './neutral-export-ir';
 import { generateElementorV3TemplateCandidate, type P15ElementorV3GenerationResult } from './v3-template-generator';
 
@@ -43,6 +44,8 @@ export interface P15ElementorExportResultV1 {
   candidateIdentityDigest: string | null;
   /** Families and weights the source uses and whether Elementor 4.2.4 can load them (recovery M2.8); null for an invalid source. */
   fontManifest: P15FontManifestV1 | null;
+  /** D-049 partial export, labelled REVIEW REQUIRED, when generation needs review; never a ready candidate. */
+  reviewArtifact: P15ElementorReviewArtifactV1 | null;
   targetCompatibilityClaim: false;
   productionAcceptance: false;
   importValidationStatus: 'NOT_RUN';
@@ -60,6 +63,7 @@ function exportResult(status: P15ElementorExportStatus, generation: P15Elementor
     template,
     candidate,
     candidateIdentityDigest: candidate ? buildElementorTemplateCandidateIdentity(candidate).digest : null,
+    reviewArtifact: status === 'BLOCKED_GENERATION' ? generation.reviewArtifact : null,
     fontManifest: validateP15NeutralExportDocument(sourceValue).valid ? buildP15FontManifest(sourceValue as P15NeutralExportDocumentV1).manifest : null,
     targetCompatibilityClaim: false,
     productionAcceptance: false,
