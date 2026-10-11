@@ -103,7 +103,8 @@ $collect = static function ($nodes, array &$out) use (&$collect): void {
             continue;
         }
         foreach (['image', 'background_image'] as $key) {
-            if (isset($node['settings'][$key]['url'])) {
+            // An empty media value (Elementor stores `{ "url": "", "id": "" }` defaults) is not a media reference.
+            if (isset($node['settings'][$key]['url']) && $node['settings'][$key]['url'] !== '') {
                 $out[] = ['key' => $key, 'id' => (int) ($node['settings'][$key]['id'] ?? 0), 'url' => (string) $node['settings'][$key]['url']];
             }
         }
