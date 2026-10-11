@@ -11,7 +11,7 @@ The phase table below is unchanged. Execution order now follows [`docs/PRODUCT_R
 | M0 Critical correctness fixes | P5, P11/P12 release build, P13, P14, P15 | ACCEPTED — PR #895 merged `f18240e` |
 | M1 Table-driven Elementor mapping engine | P15 | ACCEPTED — PR #900 merged `47ada79` |
 | M2 Full single-frame extraction | P15 (and P17/P18 IR feed) | ACCEPTED — PRs #905, #906, #907 merged `850c517`; golden landing page with zero silent drops |
-| M3 Assets | P15, P19 | ACTIVE — M3.1 done, next M3.2 |
+| M3 Assets | P15, P19 | ACTIVE — M3.1–M3.4a done, next M3.4b |
 | M4 Responsive breakpoint engine | P13, P15 | QUEUED |
 | M5 Smart duplicate + structure alignment | P5, P6, P14 | QUEUED |
 | M6 Version-driven target profiles + v4 Atomic | R0/R1, P15 | QUEUED |

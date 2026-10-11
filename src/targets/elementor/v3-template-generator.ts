@@ -286,6 +286,22 @@ function ruleWidget(node: P15NeutralDividerNode | P15NeutralSpacerNode, state: G
   };
 }
 
+/**
+ * Image widget sizing (recovery M3.4). Elementor 4.2.4 `includes/widgets/image.php` (blob ec8d2ea9868f53db182221893748987fc433df3c):
+ * `width` / `height` sliders on `{{WRAPPER}} img`, `object-fit` (condition: a height) and the `image_size` group whose
+ * default `large` would serve a downscaled rendition once the image is relinked to an attachment, so `full` is written.
+ */
+function imageSizeSettings(node: P15NeutralImageNode): Record<string, unknown> {
+  if (node.sizing === undefined && node.heightPx === undefined) return {};
+  const settings: Record<string, unknown> = { image_size: 'full' };
+  if (node.sizing?.widthPx !== undefined) settings.width = { unit: 'px', size: node.sizing.widthPx, sizes: [] };
+  if (node.sizing?.fillWidth) settings.width = { unit: '%', size: 100, sizes: [] };
+  if (node.heightPx !== undefined) settings.height = { unit: 'px', size: node.heightPx, sizes: [] };
+  if (node.objectFit !== undefined) settings['object-fit'] = node.objectFit;
+  Object.assign(settings, widgetSizingSettings(node.sizing));
+  return settings;
+}
+
 function imageWidget(node: P15NeutralImageNode, state: GenerationState): ElementorWidgetV04 {
   // D-051: a pack asset cannot be fetched by Elementor's template import, so it is an explicit upload review.
   if (node.assetPath !== undefined) {
@@ -302,6 +318,7 @@ function imageWidget(node: P15NeutralImageNode, state: GenerationState): Element
         id: node.attachmentId ?? 0,
         url: node.url ?? node.assetPath,
       },
+      ...imageSizeSettings(node),
     },
     elements: [],
   };

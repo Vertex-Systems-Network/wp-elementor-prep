@@ -182,6 +182,12 @@ export interface P15NeutralImageNode extends P15NeutralNodeBase {
   /** A pack-relative asset path (`assets/<assetId>.<ext>`, recovery M3.3, D-051); exclusive with `url`. */
   assetPath?: string;
   attachmentId?: number;
+  /** Widget width and flex-item sizing (recovery M3.4). */
+  sizing?: P15NeutralWidgetSizing;
+  /** Exact image height in px (recovery M3.4). */
+  heightPx?: number;
+  /** `cover` keeps the render's crop when a FILL width differs from the design width (recovery M3.4). */
+  objectFit?: 'cover';
 }
 
 /** Pack-relative asset path, exactly as the M3.2 asset pack writes it. */
@@ -569,7 +575,13 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'image') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'url', 'assetPath', 'attachmentId'], path, state);
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'url', 'assetPath', 'attachmentId', 'sizing', 'heightPx', 'objectFit'], path, state);
+    validateWidgetSizing(value.sizing, `${path}.sizing`, state);
+    if (value.heightPx !== undefined && !(typeof value.heightPx === 'number' && Number.isFinite(value.heightPx) && value.heightPx > 0
+      && value.heightPx <= 16_384 && Math.round(value.heightPx * 100) / 100 === value.heightPx)) {
+      pushIssue(state, 'P15_IR_SIZING_INVALID', `${path}.heightPx`, 'Image height must be 0-16384px, non-zero, with at most two decimals.');
+    }
+    if (value.objectFit !== undefined && value.objectFit !== 'cover') pushIssue(state, 'P15_IR_SIZING_INVALID', `${path}.objectFit`, 'objectFit must be cover when provided.');
     if ((value.url === undefined) === (value.assetPath === undefined)) {
       pushIssue(state, 'P15_IR_URL_INVALID', path, 'An image has exactly one of url or assetPath.');
     } else if (value.url !== undefined && (typeof value.url !== 'string' || !validAbsoluteUrl(value.url, ['https:', 'http:']))) {

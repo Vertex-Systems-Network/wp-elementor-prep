@@ -8,7 +8,7 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
-> - Next task: **M3.4** (image widget sizing and container background images)
+> - Next task: **M3.4b** (container background images)
 > - Last completed task: **M3.1** (asset collector)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
@@ -393,7 +393,12 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - Extractor: with an asset map, an image layer with no unmapped visual facts becomes an Image widget on its @1x Rendered Appearance (natural size = layer size until M3.4 adds sizing); otherwise it keeps `IMAGE_ASSET_EXPORT_REQUIRED`.
   - `src/plugin/p15-elementor-pack-builder.ts`: frame → collect assets → extract with the asset map → generate (with coverage audit) → pack the candidate as `LOCAL CANDIDATE` or the review artifact as `REVIEW REQUIRED`. The pack gains `IMPORT.md`: upload steps, an asset table (path, kind, size, alt text, usage) and every review item, built only from the manifest.
   - No temporary Figma URL anywhere (root cause of #856; the issue's external evidence stays its own). Tests: `tests/m3-pack-builder.test.ts` (the golden landing page image end to end), `tests/m3-asset-pack.test.ts`.
-- [ ] **M3.4** Image widget sizing: width, height, object-fit and crop. Container background image: size, position and repeat.
+- [ ] **M3.4** Image widget sizing: width, height, object-fit and crop. Container background image: size, position and repeat (split into M3.4a–b).
+  - [x] **M3.4a** Image widget sizing _(done 2026-10-11)_. R0: `includes/widgets/image.php` (blob `ec8d2ea`) `width`/`height` sliders on `{{WRAPPER}} img`, `object-fit` (condition: a height), and the `image_size` group (`includes/controls/groups/image-size.php` blob `7aa9cd7`) whose default `large` would serve a downscaled rendition once relinked, so `full` is written.
+    - Image layers now use their @2x Rendered Appearance (crop, scale mode and filters baked in), shown at exactly the layer size: FIXED/HUG width → `width` px plus the widget's `_element_width`/`_element_custom_width`; FILL width → `width: 100%` with `object-fit: cover` and the widget's equal-share basis; height → `height` px; flex behaviour from the M2.3 widget rules.
+    - A FILL height, a size constraint or an unmapped visual fact (opacity, effects, …) keeps `IMAGE_ASSET_EXPORT_REQUIRED`.
+    - IR: image `sizing`, `heightPx`, `objectFit` (validated, in the identity). Tests: `tests/m3-image-sizing.test.ts`, `tests/m3-pack-builder.test.ts`.
+  - [ ] **M3.4b** Container background image: an image fill on a frame with children → `background_image` on its Stored Original with size, position and repeat from the scale mode.
 - [ ] **M3.5** SVG icons → Icon or Image widget (SVG).
 - [ ] **M3.6** Real-target harness. Import the asset pack into the disposable WordPress + Elementor instance (`p15-real-target-proof.yml`) and assert every image returns HTTP 200 in the render.
 - [ ] **M3.7** Plugin UI: offer the asset pack (`buildP15ElementorPackFromFigmaFrame` with `figma` as the API) as a download beside the review list, labelled exactly as the manifest (`LOCAL CANDIDATE` / `REVIEW REQUIRED`), never as ready for import. Added during M3.3.

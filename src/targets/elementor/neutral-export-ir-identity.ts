@@ -152,6 +152,9 @@ function canonicalImage(node: P15NeutralImageNode): Record<string, unknown> {
   };
   if (node.url !== undefined) value.url = node.url;
   if (node.assetPath !== undefined) value.assetPath = node.assetPath;
+  if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
+  if (node.heightPx !== undefined) value.heightPx = node.heightPx;
+  if (node.objectFit !== undefined) value.objectFit = node.objectFit;
   if (node.attachmentId !== undefined) value.attachmentId = node.attachmentId;
   return value;
 }

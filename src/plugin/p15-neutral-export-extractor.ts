@@ -13,6 +13,7 @@ import {
   type P15NeutralExportNode,
   type P15NeutralJustification,
   type P15NeutralPaddingPx,
+  type P15NeutralImageNode,
   type P15NeutralReviewNode,
   type P15NeutralStyleReview,
   type P15NeutralTextAlignment,
@@ -873,6 +874,30 @@ function extractAbsolute(
   return { ...container, position };
 }
 
+/**
+ * Recovery M3.4: an image layer on its @2x render, sized exactly: FIXED or HUG width → px, FILL width → 100% with
+ * `object-fit: cover` (the render keeps its crop), height → px. A FILL height or a size constraint keeps the review.
+ */
+function extractImage(node: SceneNode, assetPath: string, parent: ParentLayout): P15NeutralImageNode | null {
+  const record = recordOf(node);
+  const facts = sizingFacts(record, parent);
+  if (facts.vertical === 'FILL' || !Number.isFinite(facts.width) || !Number.isFinite(facts.height) || facts.height <= 0 || facts.width <= 0) return null;
+  // The image height is written on the <img>; the widget wrapper only takes width and flex behaviour.
+  const sized = deriveP15WidgetSizing({ ...facts, vertical: 'HUG', minHeight: null, maxHeight: null });
+  if (sized.reviews.length > 0 || facts.minHeight !== null || facts.maxHeight !== null) return null;
+  const width = facts.horizontal === 'FILL' ? null : Math.round(facts.width * 100) / 100;
+  const sizing = { ...(sized.sizing ?? {}), ...(width === null ? {} : { widthPx: width }) };
+  delete (sizing as { fillWidth?: true }).fillWidth;
+  return {
+    kind: 'image',
+    sourceNodeId: node.id,
+    assetPath,
+    sizing: width === null ? { ...sizing, fillWidth: true } : sizing,
+    heightPx: Math.round(facts.height * 100) / 100,
+    ...(width === null ? { objectFit: 'cover' as const } : {}),
+  };
+}
+
 function extractNode(
   node: SceneNode,
   depth: number,
@@ -894,7 +919,10 @@ function extractNode(
     // Recovery M3.3 (D-051): an image layer with a collected @1x render becomes an Image widget on that pack asset,
     // unless it carries effects or other facts the render's natural size would not lay out exactly.
     const assetPath = state.assetPaths.get(node.id);
-    if (assetPath !== undefined && unmappedVisualFactReviews(node).length === 0) return { kind: 'image', sourceNodeId: node.id, assetPath };
+    if (assetPath !== undefined && unmappedVisualFactReviews(node).length === 0) {
+      const image = extractImage(node, assetPath, parent);
+      if (image) return image;
+    }
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
   if (isAbsolute(node)) return extractAbsolute(node, depth, state, parent, absoluteParent);

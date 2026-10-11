@@ -14,14 +14,15 @@ function frameWithExports(): FrameNode {
   return frame as unknown as FrameNode;
 }
 
-describe('recovery M3.3 — frame to asset pack (D-051)', () => {
+describe('recovery M3.3/M3.4 — frame to asset pack (D-051)', () => {
   it('the landing page image becomes an Image widget on its pack asset, with an explicit upload review', async () => {
     const { preview, assets, pack } = await buildP15ElementorPackFromFigmaFrame(frameWithExports(), api);
     expect(assets.reviews).toEqual([]);
     expect(assets.assets.map((asset) => asset.assetId)).toEqual(['original-abc', 'render-product-shot@1x', 'render-product-shot@2x']);
     expect(preview.coverageAudit.status).toBe('COMPLETE');
     expect(preview.document.nodes[0]!.kind === 'container' && preview.document.nodes[0]!.children.find((child) => child.sourceNodeId === 'product-shot'))
-      .toEqual({ kind: 'image', sourceNodeId: 'product-shot', assetPath: 'assets/render-product-shot@1x.png' });
+      .toEqual({ kind: 'image', sourceNodeId: 'product-shot', assetPath: 'assets/render-product-shot@2x.png',
+        sizing: { widthPx: 1280, flex: 'fixed' }, heightPx: 640 });
     expect(preview.generation.reviewEntries.map((entry) => [entry.sourceNodeId, entry.reasonCode])).toEqual([
       ['hero-secondary', 'BUTTON_DETECTION_REQUIRES_REVIEW'], ['product-shot', 'ASSET_UPLOAD_REQUIRED']]);
 
@@ -33,7 +34,10 @@ describe('recovery M3.3 — frame to asset pack (D-051)', () => {
       'assets/render-product-shot@1x.png', 'assets/render-product-shot@2x.png']);
     const template = JSON.parse(files.get('template.json')!) as { content: Array<{ elements: Array<{ widgetType?: string; settings: Record<string, unknown> }> }> };
     const image = template.content[0]!.elements.find((element) => element.widgetType === 'image')!;
-    expect(image.settings).toEqual({ image: { id: 0, url: 'assets/render-product-shot@1x.png' } });
+    // Recovery M3.4: the @2x render shown at exactly the layer size, full rendition after relinking.
+    expect(image.settings).toEqual({ image: { id: 0, url: 'assets/render-product-shot@2x.png' }, image_size: 'full',
+      width: { unit: 'px', size: 1280, sizes: [] }, height: { unit: 'px', size: 640, sizes: [] },
+      _element_width: 'initial', _element_custom_width: { unit: 'px', size: 1280, sizes: [] }, _flex_size: 'none' });
     // No temporary Figma URL, and no URL at all, anywhere in the pack (root cause of #856).
     expect(new TextDecoder().decode(pack.bytes!)).not.toMatch(/https?:\/\/(?!example\.com\/privacy)/);
     expect(files.get('IMPORT.md')).toContain('ASSET_UPLOAD_REQUIRED (product-shot)');
