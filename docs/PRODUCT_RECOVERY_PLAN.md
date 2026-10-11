@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.6** (wrap and strict grids)
-> - Last completed task: **M2.5** (absolute positioning and layer stacking)
+> - Next task: **M2.6b** (strict grid → Grid Container)
+> - Last completed task: **M2.6a** (wrap)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -336,7 +336,13 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - Stacking: every Container child is a flex item, where `z-index` applies without positioning. From the first absolute child on, siblings get z-index 1, 2, 3… in layer order (this also overrides the default `z-index: 1` of absolute widgets); the parent gets z-index 0 so the stack stays inside it. A painted sibling that cannot carry a z-index → `ABSOLUTE_STACKING_REQUIRES_REVIEW` on the parent.
   - Headings and detected buttons keep the placement; an absolute label blocks the button shape. IR: optional `position` and `zIndex` (container, text, heading, button; divider `zIndex` only), validated (`P15_IR_POSITION_INVALID`) and in the identity only when present, so every golden is unchanged. Real-render confirmation belongs to the M6 proof.
   - Tests: `tests/m2-absolute-position.test.ts`.
-- [ ] **M2.6** Map wrap to `flex_wrap`. Map a strict grid to a v3 Grid container: columns, rows and gaps.
+- [ ] **M2.6** Map wrap to `flex_wrap`. Map a strict grid to a v3 Grid container: columns, rows and gaps (split into M2.6a–b).
+  - [x] **M2.6a** Wrap _(done 2026-10-11)_ (`src/targets/elementor/container-wrap.ts`; R0: `flex-container.php` blob `ce9e412` `wrap`/`gap`/`align_content` (condition `wrap = wrap`), `_container.scss` blob `d6c65cb` `flex-wrap`/`align-content` vars, whose unset default stretches the lines; Figma typings 1.140.0 `counterAxisAlignContent` documents AUTO as "align-content: start | center | end" by `counterAxisAlignItems`).
+    - A horizontal wrapped frame → `flex_wrap: wrap`, `flex_gap` column = item spacing and row = line spacing, `flex_align_content` start/center/end (AUTO, from the counter alignment) or space-between (SPACE_BETWEEN).
+    - REVIEW: all children stretching (CSS `stretch` is not an Elementor option), missing/out-of-range line spacing, vertical wrap → `WRAPPED_AUTO_LAYOUT_REQUIRES_REVIEW`; a FILL-width child (it would take a whole line) → `SIZE_FILL_IN_WRAP_REQUIRES_REVIEW` on the container.
+    - Note for M4: Elementor makes flex Containers wrap on mobile by default (`--flex-wrap-mobile: wrap`, `_container.scss`); cross-breakpoint alignment must account for it.
+    - IR: optional container `wrap` (row only), validated and in the identity only when present. Tests: `tests/m2-wrap.test.ts`.
+  - [ ] **M2.6b** Strict grid → Grid Container.
 - [ ] **M2.7** Map SPACE_BETWEEN, negative spacing (REVIEW where unsupported), baseline alignment, and child `layoutAlign`/`layoutGrow`.
 - [ ] **M2.8** Font manifest: the families and weights used, with Google Fonts availability flagged. Non-Google fonts → REVIEW with an upload instruction.
 - [ ] **M2.9** Golden landing-page fixture. Every visible property is either mapped or listed as REVIEW, with no silent drop. A partial template is allowed only with an explicit `REVIEW_ITEMS` list, and the user sees exactly what is missing (D-049).

@@ -1,5 +1,6 @@
 import { sha256Hex } from '../../core/sha256';
 import { canonicalButtonSizing, canonicalContainerSizing } from './container-sizing';
+import { canonicalWrap } from './container-wrap';
 import { canonicalAbsolutePosition, type P15NeutralAbsolutePosition } from './absolute-position';
 import { canonicalGradient } from './container-gradient';
 import { canonicalBoxShadow } from './container-shadow';
@@ -72,6 +73,7 @@ function canonicalContainer(node: P15NeutralContainerNode): Record<string, unkno
   if (node.boxShadow !== undefined) value.boxShadow = canonicalBoxShadow(node.boxShadow);
   if (node.gradient !== undefined) value.gradient = canonicalGradient(node.gradient);
   if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
+  if (node.wrap !== undefined) value.wrap = canonicalWrap(node.wrap);
   canonicalPlacement(value, node);
   canonicalStyleReviews(value, node.styleReviews);
   value.children = node.children.map(canonicalNode);

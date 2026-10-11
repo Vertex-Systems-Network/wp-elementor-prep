@@ -37,6 +37,7 @@ import {
   type P15ContainerSizingFacts,
   type P15FigmaSizingMode,
 } from '../targets/elementor/container-sizing';
+import { deriveP15Wrap, type P15NeutralWrap } from '../targets/elementor/container-wrap';
 import {
   ABSOLUTE_POSITION_REVIEW,
   assignP15StackOrder,
@@ -591,9 +592,6 @@ function extractContainer(
     const reason = mode === 'GRID' ? 'GRID_LAYOUT_REQUIRES_REVIEW' : 'MANUAL_LAYOUT_REQUIRES_REVIEW';
     return review(node, reason, `V1 extraction requires HORIZONTAL or VERTICAL Auto Layout; observed ${String(mode ?? 'NONE')}.`);
   }
-  if (record.layoutWrap === 'WRAP') {
-    return review(node, 'WRAPPED_AUTO_LAYOUT_REQUIRES_REVIEW', 'Wrapped Figma Auto Layout is not mapped by the bounded V1 Elementor generator.');
-  }
 
   const gapPx = finiteSpacing(record.itemSpacing);
   const paddingPx = boundedPadding(node);
@@ -609,6 +607,21 @@ function extractContainer(
       'UNSUPPORTED_AUTO_LAYOUT_ALIGNMENT',
       `V1 cannot safely map primary=${String(record.primaryAxisAlignItems)} counter=${String(record.counterAxisAlignItems)}.`,
     );
+  }
+
+  // Recovery M2.6a: a wrapped row writes flex wrap, the line gap and align-content.
+  let wrap: P15NeutralWrap | undefined;
+  if (record.layoutWrap === 'WRAP') {
+    const inFlow = childNodes(node).filter((child) => visible(child) && !isAbsolute(child));
+    const wrapped = deriveP15Wrap({
+      layoutMode: mode,
+      counterAxisSpacing: record.counterAxisSpacing,
+      counterAxisAlignContent: record.counterAxisAlignContent,
+      alignItems,
+      childLayoutAligns: inFlow.map((child) => recordOf(child).layoutAlign),
+    });
+    if (wrapped.review) return review(node, wrapped.review.reasonCode, wrapped.review.detail);
+    wrap = wrapped.wrap;
   }
 
   // Style facts that cannot be mapped yet stay REVIEW on the container itself, so the
@@ -661,6 +674,9 @@ function extractContainer(
     children.map((child) => (child.kind === 'container' || child.kind === 'text' || child.kind === 'heading' ? child.sizing : undefined)),
   );
   if (distribution) styleReviews.push(distribution);
+  if (wrap !== undefined && childNodes(node).some((child) => visible(child) && !isAbsolute(child) && recordOf(child).layoutSizingHorizontal === 'FILL')) {
+    styleReviews.push({ reasonCode: 'SIZE_FILL_IN_WRAP_REQUIRES_REVIEW', detail: 'A FILL-width child of a wrapped row would take a whole line in CSS.' });
+  }
   // Recovery M2.5: siblings from the first absolute child on carry their layer order; the stack stays inside this container.
   const stack = assignP15StackOrder(children);
   if (stack.review) styleReviews.push(stack.review);
@@ -681,6 +697,7 @@ function extractContainer(
     ...(clips ? { clipsContent: true as const } : {}),
     ...(shadowed.shadow !== undefined ? { boxShadow: shadowed.shadow } : {}),
     ...(sized.sizing ? { sizing: sized.sizing } : {}),
+    ...(wrap !== undefined ? { wrap } : {}),
     ...(stack.stacked ? { zIndex: 0 } : {}),
     ...(styleReviews.length > 0 ? { styleReviews } : {}),
     children: stack.children,

@@ -15,6 +15,7 @@ import {
   type P15NeutralContainerSizing,
   type P15NeutralWidgetSizing,
 } from './container-sizing';
+import { wrapProblems, type P15NeutralWrap } from './container-wrap';
 import {
   absolutePositionProblems,
   zIndexProblems,
@@ -34,6 +35,7 @@ export type { P15NeutralBoxShadow } from './container-shadow';
 export type { P15NeutralBorder, P15NeutralBoxPx, P15NeutralCornerRadii } from './container-visual-style';
 export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidgetSizing } from './container-sizing';
 export type { P15NeutralAbsolutePosition, P15NeutralAxisOffset } from './absolute-position';
+export type { P15NeutralAlignContent, P15NeutralWrap } from './container-wrap';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
@@ -92,6 +94,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   boxShadow?: P15NeutralBoxShadow;
   /** Exact width, minimum height and flex-item sizing (recovery M2.3a). */
   sizing?: P15NeutralContainerSizing;
+  /** Wrapped row: `gapPx` is the column gap, `wrap.rowGapPx` the gap between lines (recovery M2.6a). */
+  wrap?: P15NeutralWrap;
   /** Absolute placement in the parent (recovery M2.5). */
   position?: P15NeutralAbsolutePosition;
   /** Layer order among siblings (recovery M2.5). */
@@ -406,7 +410,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'position', 'zIndex', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'wrap', 'position', 'zIndex', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -443,6 +447,9 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     ];
     for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);
     validatePlacement(value, path, state);
+    if (value.wrap !== undefined) {
+      for (const issue of wrapProblems(value.wrap, `${path}.wrap`, value.direction)) pushIssue(state, 'P15_IR_SPACING_INVALID', issue.path, issue.message);
+    }
     if (value.sizing !== undefined) {
       for (const issue of containerSizingProblems(value.sizing, `${path}.sizing`)) pushIssue(state, 'P15_IR_SIZING_INVALID', issue.path, issue.message);
     }
