@@ -62,7 +62,7 @@ describe('recovery M3.2 — atomic asset pack', () => {
     expect(pack.status).toBe('PACK_READY');
     expect(pack.fileName).toBe('landing-page-elementor-pack.zip');
     expect(verifyP15AssetPack(pack.bytes!)).toBeNull();
-    expect(readP15Zip(pack.bytes!).map((entry) => entry.path)).toEqual(['manifest.json', 'template.json', 'assets/original-abc.png',
+    expect(readP15Zip(pack.bytes!).map((entry) => entry.path)).toEqual(['manifest.json', 'template.json', 'IMPORT.md', 'assets/original-abc.png',
       'assets/render-1-1@1x.png', 'assets/svg-2-2.svg', 'assets/original-def.jpg']);
     expect(pack.manifest).toMatchObject({ label: 'LOCAL CANDIDATE', targetImportReady: false, template: { path: 'template.json', sha256: sha(bytes('{"content":[]}')) } });
     expect(pack.manifest!.assets.map((entry) => [entry.assetId, entry.altText, entry.usage])).toEqual([
@@ -71,6 +71,10 @@ describe('recovery M3.2 — atomic asset pack', () => {
     expect(pack.manifest!.reviews).toEqual([expect.objectContaining({ sourceNodeId: '3:3', reasonCode: 'ASSET_ALT_TEXT_MISSING' })]);
     expect(new TextDecoder().decode(pack.bytes!)).not.toMatch(/https?:\/\//);
     expect(buildP15AssetPack(input()).bytes).toEqual(pack.bytes);
+    const guide = new TextDecoder().decode(readP15Zip(pack.bytes!).find((entry) => entry.path === 'IMPORT.md')!.bytes);
+    expect(guide).toContain('Label: **LOCAL CANDIDATE**');
+    expect(guide).toContain('| `assets/original-abc.png` | stored-original | 10×20 | Team photo | 1:1 |');
+    expect(guide).toContain('- ASSET_ALT_TEXT_MISSING (3:3)');
   });
 
   it('keeps a review label and never exposes a pack whose bytes do not match', () => {

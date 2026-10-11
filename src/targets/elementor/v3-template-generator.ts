@@ -287,6 +287,11 @@ function ruleWidget(node: P15NeutralDividerNode | P15NeutralSpacerNode, state: G
 }
 
 function imageWidget(node: P15NeutralImageNode, state: GenerationState): ElementorWidgetV04 {
+  // D-051: a pack asset cannot be fetched by Elementor's template import, so it is an explicit upload review.
+  if (node.assetPath !== undefined) {
+    state.reviewEntries.push({ sourceNodeId: node.sourceNodeId, reasonCode: 'ASSET_UPLOAD_REQUIRED',
+      detail: `Upload ${node.assetPath} from the asset pack to the Media Library and select it in this Image widget (see IMPORT.md).` });
+  }
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -295,7 +300,7 @@ function imageWidget(node: P15NeutralImageNode, state: GenerationState): Element
     settings: {
       image: {
         id: node.attachmentId ?? 0,
-        url: node.url,
+        url: node.url ?? node.assetPath,
       },
     },
     elements: [],

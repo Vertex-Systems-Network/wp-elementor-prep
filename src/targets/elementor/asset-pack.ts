@@ -57,6 +57,7 @@ export interface P15AssetPackManifestV1 {
   label: P15AssetPackLabel;
   targetImportReady: false;
   template: { path: 'template.json'; sha256: string; byteLength: number };
+  guide: 'IMPORT.md';
   assets: P15AssetPackManifestEntry[];
   reviews: P15AssetPackReview[];
 }
@@ -122,18 +123,39 @@ export function buildP15AssetPack(input: P15AssetPackInput): P15AssetPackResultV
     label: input.label,
     targetImportReady: false,
     template: { path: 'template.json', sha256: hash(template), byteLength: template.length },
+    guide: 'IMPORT.md',
     assets: entries,
     reviews,
   };
   let archive: Uint8Array;
   try {
-    archive = writeP15Zip([{ path: 'manifest.json', bytes: utf8(`${JSON.stringify(manifest, null, 2)}\n`) }, { path: 'template.json', bytes: template }, ...files]);
+    archive = writeP15Zip([{ path: 'manifest.json', bytes: utf8(`${JSON.stringify(manifest, null, 2)}\n`) }, { path: 'template.json', bytes: template },
+      { path: 'IMPORT.md', bytes: utf8(importGuide(input.title, manifest)) }, ...files]);
   } catch (error) {
     return blocked(error instanceof Error ? error.message : String(error));
   }
   const verdict = verifyP15AssetPack(archive);
   if (verdict !== null) return blocked(`The written pack failed verification: ${verdict}`);
   return { status: 'PACK_READY', fileName: `${slug(input.title)}-elementor-pack.zip`, bytes: archive, manifest, blockReason: null };
+}
+
+/** Plain-text import steps built only from the manifest (D-051): upload the assets, import the template, relink. */
+function importGuide(title: string, manifest: P15AssetPackManifestV1): string {
+  const safe = (value: string) => value.replace(/[\r\n`]/g, ' ');
+  const lines = [
+    `# Import: ${safe(title)}`, '',
+    `Label: **${manifest.label}**. This pack has been validated locally only; it is not ready for import until every item below is done.`, '',
+    '1. In WordPress, open Media → Add New and upload every file from `assets/` (the files the template uses are listed below).',
+    '2. In Elementor → Templates → Saved Templates, import `template.json`.',
+    '3. Open the template and, in each Image widget listed below, select the uploaded file.', '',
+    '## Assets', '',
+    '| File | Kind | Size | Alt text | Used by |', '|---|---|---|---|---|',
+    ...manifest.assets.map((asset) => `| \`${asset.path}\` | ${asset.kind} | ${asset.widthPx}×${asset.heightPx} | ${safe(asset.altText) || '(none)'} | ${asset.usage.map(safe).join(', ')} |`),
+  ];
+  if (manifest.reviews.length > 0) {
+    lines.push('', '## Review items', '', ...manifest.reviews.map((review) => `- ${safe(review.reasonCode)} (${safe(review.sourceNodeId)}): ${safe(review.detail)}`));
+  }
+  return `${lines.join('\n')}\n`;
 }
 
 /** Re-read a pack and check it against its own manifest; returns null when it is complete and intact. */
@@ -160,6 +182,7 @@ export function verifyP15AssetPack(archive: Uint8Array): string | null {
     const bytes = byPath.get(asset.path);
     if (!bytes || bytes.length !== asset.byteLength || hash(bytes) !== asset.sha256) return `${asset.path} does not match the manifest.`;
   }
-  if (entries.length !== manifest.assets.length + 2) return 'The pack holds files the manifest does not list.';
+  if (!byPath.has(manifest.guide)) return 'IMPORT.md is missing.';
+  if (entries.length !== manifest.assets.length + 3) return 'The pack holds files the manifest does not list.';
   return null;
 }

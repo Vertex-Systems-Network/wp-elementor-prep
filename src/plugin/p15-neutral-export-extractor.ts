@@ -69,6 +69,8 @@ interface ExtractionState {
   boundsExceeded: 'DEPTH_LIMIT_EXCEEDED' | 'NODE_LIMIT_EXCEEDED' | null;
   /** Figma sizing facts per extracted container, for button sizing after semantic detection (M2.3d). */
   sizingFacts: Map<string, P15ContainerSizingFacts>;
+  /** Recovery M3.3: pack-relative asset path per image layer id, when assets were collected. */
+  assetPaths: ReadonlyMap<string, string>;
 }
 
 interface ParsedContainerStyle<T> {
@@ -889,6 +891,10 @@ function extractNode(
     return null;
   }
   if (hasImageFill(node) && !isContainerLike(node)) {
+    // Recovery M3.3 (D-051): an image layer with a collected @1x render becomes an Image widget on that pack asset,
+    // unless it carries effects or other facts the render's natural size would not lay out exactly.
+    const assetPath = state.assetPaths.get(node.id);
+    if (assetPath !== undefined && unmappedVisualFactReviews(node).length === 0) return { kind: 'image', sourceNodeId: node.id, assetPath };
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
   if (isAbsolute(node)) return extractAbsolute(node, depth, state, parent, absoluteParent);
@@ -919,8 +925,9 @@ function boundsReview(frame: FrameNode, reason: NonNullable<ExtractionState['bou
 export function extractP15NeutralExportDocumentFromFigmaFrame(
   frame: FrameNode,
   documentType: P15NeutralDocumentType = 'page',
+  assetPaths: ReadonlyMap<string, string> = new Map(),
 ): P15NeutralExportDocumentV1 {
-  const state: ExtractionState = { visited: 0, boundsExceeded: null, sizingFacts: new Map() };
+  const state: ExtractionState = { visited: 0, boundsExceeded: null, sizingFacts: new Map(), assetPaths };
   const extracted = extractNode(frame, 1, state);
   const nodes: P15NeutralExportNode[] = state.boundsExceeded
     ? [boundsReview(frame, state.boundsExceeded)]
@@ -948,8 +955,9 @@ function collectLayerNames(node: SceneNode, names: Map<string, string>): void {
 export function buildP15ElementorV1PreviewFromFigmaFrame(
   frame: FrameNode,
   documentType: P15NeutralDocumentType = 'page',
+  assetPaths: ReadonlyMap<string, string> = new Map(),
 ): P15FigmaNeutralExtractionResult {
-  const extracted = extractP15NeutralExportDocumentFromFigmaFrame(frame, documentType);
+  const extracted = extractP15NeutralExportDocumentFromFigmaFrame(frame, documentType, assetPaths);
   const coverageAudit = auditP15PropertyCoverage(frame, extracted);
   // A silent drop the audit finds becomes an explicit review, so no candidate ever loses content unannounced.
   const document = withCoverageReviews(extracted, coverageAudit);

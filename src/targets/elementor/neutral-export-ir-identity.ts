@@ -149,8 +149,9 @@ function canonicalImage(node: P15NeutralImageNode): Record<string, unknown> {
   const value: Record<string, unknown> = {
     kind: 'image',
     sourceNodeId: node.sourceNodeId,
-    url: node.url,
   };
+  if (node.url !== undefined) value.url = node.url;
+  if (node.assetPath !== undefined) value.assetPath = node.assetPath;
   if (node.attachmentId !== undefined) value.attachmentId = node.attachmentId;
   return value;
 }

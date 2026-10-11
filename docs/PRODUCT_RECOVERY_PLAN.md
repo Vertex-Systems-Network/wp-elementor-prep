@@ -8,7 +8,7 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
-> - Next task: **M3.3** (pack-relative Elementor media references)
+> - Next task: **M3.4** (image widget sizing and container background images)
 > - Last completed task: **M3.1** (asset collector)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
@@ -388,10 +388,15 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - `src/targets/elementor/asset-pack.ts` (`p15-elementor-asset-pack-v1`): `manifest.json` + `template.json` + `assets/<assetId>.<ext>`. The manifest records the label (`LOCAL CANDIDATE` or `REVIEW REQUIRED`, always `targetImportReady: false`), the template SHA-256, and per asset its id, path, kind, MIME type, SHA-256, byte length, pixel size, alt text (the layer name unless it is a Figma default name; SVG icons are decorative) and usage (node ids). A picture without a descriptive name gets `ASSET_ALT_TEXT_MISSING`.
   - Atomic: the pack is built in memory, read back and verified against its own manifest before any bytes are returned; an asset whose bytes do not match its recorded SHA-256, an unsafe id or a failed verification returns no bytes (`PACK_BLOCKED`). Identical input gives byte-identical packs. No URL.
   - Tests: `tests/m3-asset-pack.test.ts`.
-- [ ] **M3.3** Elementor media references. The template references pack-relative asset ids, and an import guide plus an optional future WordPress companion handles media upload. The core stays network-free. Temporary Figma URLs are never emitted, which resolves the root cause of #856.
+- [x] **M3.3** Elementor media references. The template references pack-relative asset ids, and an import guide plus an optional future WordPress companion handles media upload. The core stays network-free. Temporary Figma URLs are never emitted, which resolves the root cause of #856. _(done 2026-10-11, decision D-051)_
+  - IR: an image node has exactly one of `url` (absolute, already on the target) or `assetPath` (pack-relative `assets/<assetId>.<ext>`), validated and in the identity. The generator writes the Image widget `image.url` as that path and adds `ASSET_UPLOAD_REQUIRED` naming the asset: Elementor's template import cannot fetch a pack path, so a template with pack images is a D-049 `REVIEW REQUIRED` artifact until M3.6 proves an upload-and-relink import.
+  - Extractor: with an asset map, an image layer with no unmapped visual facts becomes an Image widget on its @1x Rendered Appearance (natural size = layer size until M3.4 adds sizing); otherwise it keeps `IMAGE_ASSET_EXPORT_REQUIRED`.
+  - `src/plugin/p15-elementor-pack-builder.ts`: frame → collect assets → extract with the asset map → generate (with coverage audit) → pack the candidate as `LOCAL CANDIDATE` or the review artifact as `REVIEW REQUIRED`. The pack gains `IMPORT.md`: upload steps, an asset table (path, kind, size, alt text, usage) and every review item, built only from the manifest.
+  - No temporary Figma URL anywhere (root cause of #856; the issue's external evidence stays its own). Tests: `tests/m3-pack-builder.test.ts` (the golden landing page image end to end), `tests/m3-asset-pack.test.ts`.
 - [ ] **M3.4** Image widget sizing: width, height, object-fit and crop. Container background image: size, position and repeat.
 - [ ] **M3.5** SVG icons → Icon or Image widget (SVG).
 - [ ] **M3.6** Real-target harness. Import the asset pack into the disposable WordPress + Elementor instance (`p15-real-target-proof.yml`) and assert every image returns HTTP 200 in the render.
+- [ ] **M3.7** Plugin UI: offer the asset pack (`buildP15ElementorPackFromFigmaFrame` with `figma` as the API) as a download beside the review list, labelled exactly as the manifest (`LOCAL CANDIDATE` / `REVIEW REQUIRED`), never as ready for import. Added during M3.3.
 
 ### M4 — Responsive breakpoint engine
 

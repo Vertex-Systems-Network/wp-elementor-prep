@@ -88,12 +88,12 @@ sources_of_truth:
   next_action_options: .ai/state/NEXT-ACTION-OPTIONS.yaml
 recovery_program:
   canonical_backlog: docs/PRODUCT_RECOVERY_PLAN.md
-  decisions: [D-047, D-048, D-049, D-050]
+  decisions: [D-047, D-048, D-049, D-050, D-051]
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M3
-  next_task: M3.3
-  last_completed_task: M3.2
+  next_task: M3.4
+  last_completed_task: M3.3
   blocked_tasks: []
   branch: claude/busy-ride-1vztlb
   open_pr: null

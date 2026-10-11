@@ -177,9 +177,15 @@ export interface P15NeutralButtonNode extends P15NeutralNodeBase {
 
 export interface P15NeutralImageNode extends P15NeutralNodeBase {
   kind: 'image';
-  url: string;
+  /** An absolute http(s) URL already on the target; exclusive with `assetPath`. */
+  url?: string;
+  /** A pack-relative asset path (`assets/<assetId>.<ext>`, recovery M3.3, D-051); exclusive with `url`. */
+  assetPath?: string;
   attachmentId?: number;
 }
+
+/** Pack-relative asset path, exactly as the M3.2 asset pack writes it. */
+export const P15_ASSET_PATH_PATTERN = /^assets\/[A-Za-z0-9@-]{1,80}\.(png|jpg|gif|webp|svg)$/;
 
 export interface P15NeutralReviewNode extends P15NeutralNodeBase {
   kind: 'review';
@@ -563,9 +569,13 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'image') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'url', 'attachmentId'], path, state);
-    if (typeof value.url !== 'string' || !validAbsoluteUrl(value.url, ['https:', 'http:'])) {
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'url', 'assetPath', 'attachmentId'], path, state);
+    if ((value.url === undefined) === (value.assetPath === undefined)) {
+      pushIssue(state, 'P15_IR_URL_INVALID', path, 'An image has exactly one of url or assetPath.');
+    } else if (value.url !== undefined && (typeof value.url !== 'string' || !validAbsoluteUrl(value.url, ['https:', 'http:']))) {
       pushIssue(state, 'P15_IR_URL_INVALID', `${path}.url`, 'Image URL must be a bounded absolute http(s) URL.');
+    } else if (value.assetPath !== undefined && (typeof value.assetPath !== 'string' || !P15_ASSET_PATH_PATTERN.test(value.assetPath))) {
+      pushIssue(state, 'P15_IR_URL_INVALID', `${path}.assetPath`, 'assetPath must be a pack-relative assets/<assetId>.<png|jpg|gif|webp|svg> path.');
     }
     if (value.attachmentId !== undefined && (!Number.isSafeInteger(value.attachmentId) || Number(value.attachmentId) < 0)) {
       pushIssue(state, 'P15_IR_ATTACHMENT_ID_INVALID', `${path}.attachmentId`, 'attachmentId must be a safe non-negative integer when provided.');
