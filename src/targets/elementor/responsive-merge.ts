@@ -5,24 +5,34 @@ import { fingerprintP15NeutralExportDocument } from './neutral-export-ir-identit
 import { composeP15ElementorPage, P15_PAGE_COMPOSITION_VERSION, type P15PageCompositionResultV1 } from './page-composition';
 import { P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION } from './responsive-alignment-resolution';
 import { P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION } from './responsive-direction-resolution';
+import { P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_MANIFEST_VERSION } from './responsive-element-order-resolution';
 import { P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION } from './responsive-gap-resolution';
 import { P15_ELEMENTOR_RESPONSIVE_MARGIN_MANIFEST_VERSION } from './responsive-margin-resolution';
 import { P15_ELEMENTOR_RESPONSIVE_PADDING_MANIFEST_VERSION } from './responsive-padding-resolution';
+import { P15_ELEMENTOR_RESPONSIVE_VISIBILITY_MANIFEST_VERSION } from './responsive-visibility-resolution';
 import { generateElementorV3TemplateCandidate } from './v3-template-generator';
 
 /**
- * Responsive merge, container layout (recovery M4.3a). Desktop is the base; every matched tablet/mobile container
- * whose layout differs contributes explicit per-breakpoint values, and the M1 engine writes them as `_tablet` /
- * `_mobile` keys through one page composition (direction, alignment, gap, padding, margin families). Values are
- * taken from the matched variant IR, never inferred.
+ * Responsive merge (recovery M4.3a–b). Desktop is the base; matched tablet/mobile nodes contribute explicit
+ * per-breakpoint values, and the M1 engine writes them as `_tablet` / `_mobile` keys through one page composition.
+ * Values are taken from the matched variant IR, never inferred.
  *
- * What this step does not merge yet is an explicit review, never a silent drop: unmatched and ambiguous nodes
- * (presence → M4.3b), a changed child order (M4.3b), wrap and grid layout changes, an unset variant value whose
- * Elementor default would differ (padding, alignment), and any other differing container or widget property (M4.3c).
+ * - M4.3a, container layout: differing direction, alignment, gap, padding and margin (direction, alignment, gap,
+ *   padding, margin families).
+ * - M4.3b, presence: a desktop-only element is hidden on the breakpoint that lacks it (`hide_<device>`); a
+ *   variant-only element (with its subtree) is inserted into the desktop tree under its matched parent, right after
+ *   its nearest preceding matched sibling, and hidden on every other device (visibility family).
+ * - M4.3b, order: when a breakpoint reorders the visible children of a matched container, every child visible there
+ *   gets that breakpoint's custom flex order, its position in the variant (element order family).
+ *
+ * What is not merged is an explicit review, never a silent drop: ambiguous matches, a variant-only node that cannot
+ * be placed, wrap and grid layout changes, an unset variant value whose Elementor default would differ (padding,
+ * alignment), and any other differing container or widget property (M4.3c).
  */
 export const P15_RESPONSIVE_MERGE_VERSION = 'p15-elementor-responsive-merge-v1' as const;
 
 type VariantDevice = 'tablet' | 'mobile';
+type Device = 'desktop' | VariantDevice;
 
 export interface P15ResponsiveVariantInput {
   device: VariantDevice;
@@ -41,8 +51,10 @@ export interface P15ResponsiveMergeResultV1 {
   version: typeof P15_RESPONSIVE_MERGE_VERSION;
   /** MERGED: every difference is written. REVIEW: written, with explicit review items. BLOCKED: nothing written. */
   status: 'MERGED' | 'REVIEW' | 'BLOCKED';
+  /** The desktop IR with the inserted variant-only elements: the source the composition was bound to. */
+  document: P15NeutralExportDocumentV1 | null;
   composition: P15PageCompositionResultV1 | null;
-  /** Per family: the containers with responsive values (sorted by source node id). */
+  /** Per family: the elements with responsive values (sorted by source node id). */
   entries: Record<string, Array<Record<string, unknown>>>;
   reviews: P15ResponsiveMergeReview[];
   blockReason: string | null;
@@ -50,33 +62,53 @@ export interface P15ResponsiveMergeResultV1 {
 
 const FLAGS = { responsiveInferencePerformed: false, figmaMutation: false, networkAccess: false, responsiveClosureClaim: false,
   targetCompatibilityClaim: false, productionAcceptance: false, downloadEnabled: false } as const;
+const VERSIONS: Record<string, string> = {
+  direction: P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION, alignment: P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION,
+  gap: P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION, padding: P15_ELEMENTOR_RESPONSIVE_PADDING_MANIFEST_VERSION,
+  margin: P15_ELEMENTOR_RESPONSIVE_MARGIN_MANIFEST_VERSION, visibility: P15_ELEMENTOR_RESPONSIVE_VISIBILITY_MANIFEST_VERSION,
+  elementOrder: P15_ELEMENTOR_RESPONSIVE_ELEMENT_ORDER_MANIFEST_VERSION,
+};
+const ENTRIES_FIELD: Record<string, string> = { visibility: 'elements', elementOrder: 'elements' };
 /** Container keys this step handles (or that carry no layout value). */
 const HANDLED_KEYS = new Set(['kind', 'sourceNodeId', 'children', 'styleReviews', 'direction', 'alignItems', 'justifyContent', 'gapPx', 'paddingPx', 'marginPx', 'wrap', 'grid']);
 const ZERO_BOX = { top: 0, right: 0, bottom: 0, left: 0 };
+const HIDE_FIELD: Record<Device, string> = { desktop: 'hideDesktop', tablet: 'hideTablet', mobile: 'hideMobile' };
 
 const same = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
+const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 
-function index(nodes: readonly P15NeutralExportNode[], out = new Map<string, P15NeutralExportNode>()): Map<string, P15NeutralExportNode> {
+interface Indexed {
+  nodes: Map<string, P15NeutralExportNode>;
+  parents: Map<string, P15NeutralContainerNode | null>;
+}
+
+function index(nodes: readonly P15NeutralExportNode[], parent: P15NeutralContainerNode | null = null,
+  out: Indexed = { nodes: new Map(), parents: new Map() }): Indexed {
   for (const node of nodes) {
-    out.set(node.sourceNodeId, node);
-    if (node.kind === 'container') index(node.children, out);
+    out.nodes.set(node.sourceNodeId, node);
+    out.parents.set(node.sourceNodeId, parent);
+    if (node.kind === 'container') index(node.children, node, out);
   }
   return out;
 }
 
-function blocked(blockReason: string): P15ResponsiveMergeResultV1 {
-  return { version: P15_RESPONSIVE_MERGE_VERSION, status: 'BLOCKED', composition: null, entries: {}, reviews: [], blockReason };
+const containsReview = (node: P15NeutralExportNode): boolean =>
+  node.kind === 'review' || (node.kind === 'container' && node.children.some(containsReview));
+
+function blocked(blockReason: string, reviews: P15ResponsiveMergeReview[] = [], entries: Record<string, Array<Record<string, unknown>>> = {}): P15ResponsiveMergeResultV1 {
+  return { version: P15_RESPONSIVE_MERGE_VERSION, status: 'BLOCKED', document: null, composition: null, entries, reviews, blockReason };
 }
 
 export function buildP15ResponsiveMerge(desktop: P15NeutralExportDocumentV1, variants: readonly P15ResponsiveVariantInput[]): P15ResponsiveMergeResultV1 {
   if (variants.length === 0 || new Set(variants.map((variant) => variant.device)).size !== variants.length) {
     return blocked('One tablet and/or one mobile variant is required, each device at most once.');
   }
-  const generation = generateElementorV3TemplateCandidate(desktop);
-  if (generation.status !== 'GENERATED_LOCAL_CANDIDATE' || !generation.candidate) {
-    return blocked(`The desktop base must generate as a review-free local candidate (got ${generation.status}).`);
+  if (generateElementorV3TemplateCandidate(desktop).status !== 'GENERATED_LOCAL_CANDIDATE') {
+    return blocked('The desktop base must generate as a review-free local candidate.');
   }
-  const desktopNodes = index(desktop.nodes);
+  const merged = clone(desktop);
+  const original = index(desktop.nodes);
+  const devices = variants.map((variant) => variant.device);
   const reviews: P15ResponsiveMergeReview[] = [];
   const entries = new Map<string, Map<string, Record<string, unknown>>>();
   const put = (family: string, sourceNodeId: string, fields: Record<string, unknown>): void => {
@@ -84,18 +116,64 @@ export function buildP15ResponsiveMerge(desktop: P15NeutralExportDocumentV1, var
     byNode.set(sourceNodeId, { ...(byNode.get(sourceNodeId) ?? { sourceNodeId }), ...fields });
     entries.set(family, byNode);
   };
+  /** Inserted variant-only element id → the device it comes from. */
+  const inserted = new Map<string, VariantDevice>();
+  const prepared = variants.map((variant) => ({ ...variant, variantIndex: index(variant.document.nodes),
+    counterpart: new Map(variant.match.matches.map((entry) => [entry.desktopId, entry.variantId])),
+    reverse: new Map(variant.match.matches.map((entry) => [entry.variantId, entry.desktopId])) }));
 
-  for (const { device, document, match } of variants) {
+  // Presence (M4.3b): place every top-most variant-only element, then hide desktop-only elements on that device.
+  for (const { device, match, variantIndex, reverse } of prepared) {
     const review = (sourceNodeId: string, reasonCode: string, detail: string): void => { reviews.push({ device, sourceNodeId, reasonCode, detail }); };
-    const variantNodes = index(document.nodes);
-    const counterpart = new Map(match.matches.map((entry) => [entry.desktopId, entry.variantId]));
-    for (const id of match.unmatchedDesktop) review(id, 'RESPONSIVE_NODE_ONLY_ON_DESKTOP', `Not present on ${device}; presence (hide) is merged by M4.3b.`);
-    for (const id of match.unmatchedVariant) review(id, 'RESPONSIVE_NODE_ONLY_ON_VARIANT', `Present only on ${device}; presence (hide) is merged by M4.3b.`);
     for (const entry of match.ambiguous) review(entry.desktopId, 'RESPONSIVE_MATCH_AMBIGUOUS', entry.detail);
+    const mergedIndex = index(merged.nodes);
+    const placedParents = new Set<string>();
+    for (const id of match.unmatchedVariant) {
+      const node = variantIndex.nodes.get(id);
+      const parent = variantIndex.parents.get(id);
+      if (!node || parent === undefined) continue; // A Figma layer without its own IR node (already inside a parent's IR).
+      const desktopParentId = parent ? reverse.get(parent.sourceNodeId) : undefined;
+      if (parent && reverse.get(parent.sourceNodeId) === undefined) continue; // Inside another variant-only subtree.
+      const desktopParent = desktopParentId ? mergedIndex.nodes.get(desktopParentId) : undefined;
+      if (!desktopParent || desktopParent.kind !== 'container' || containsReview(node)) {
+        review(id, 'RESPONSIVE_NODE_NOT_PLACED', `Present only on ${device}, but it cannot be placed in the desktop tree.`);
+        continue;
+      }
+      placedParents.add(parent!.sourceNodeId);
+    }
+    // Insert per parent in variant order, each right after the desktop counterpart of its nearest preceding matched sibling.
+    for (const parentId of [...placedParents].sort()) {
+      const parent = variantIndex.nodes.get(parentId) as P15NeutralContainerNode;
+      const desktopParent = mergedIndex.nodes.get(reverse.get(parentId)!) as P15NeutralContainerNode;
+      let cursor = 0;
+      for (const child of parent.children) {
+        const counterpartId = reverse.get(child.sourceNodeId);
+        if (counterpartId !== undefined) {
+          const at = desktopParent.children.findIndex((entry) => entry.sourceNodeId === counterpartId);
+          if (at >= 0) cursor = at + 1;
+        } else if (match.unmatchedVariant.includes(child.sourceNodeId) && !containsReview(child)) {
+          desktopParent.children.splice(cursor, 0, clone(child));
+          cursor += 1;
+          inserted.set(child.sourceNodeId, device);
+          put('visibility', child.sourceNodeId, Object.fromEntries((['desktop', ...devices] as Device[])
+            .filter((other) => other !== device).map((other) => [HIDE_FIELD[other], true])));
+        }
+      }
+    }
+    for (const id of match.unmatchedDesktop) {
+      const parent = original.parents.get(id);
+      if (!original.nodes.has(id) || parent === undefined) continue;
+      if (parent && match.unmatchedDesktop.includes(parent.sourceNodeId)) continue; // Hidden with its parent.
+      put('visibility', id, { [HIDE_FIELD[device]]: true });
+    }
+  }
 
+  // Layout and order (M4.3a, M4.3b) for every matched pair.
+  for (const { device, variantIndex, counterpart } of prepared) {
+    const review = (sourceNodeId: string, reasonCode: string, detail: string): void => { reviews.push({ device, sourceNodeId, reasonCode, detail }); };
     for (const [desktopId, variantId] of counterpart) {
-      const d = desktopNodes.get(desktopId);
-      const v = variantNodes.get(variantId);
+      const d = original.nodes.get(desktopId);
+      const v = variantIndex.nodes.get(variantId);
       if (!d || !v) continue; // Figma layers without an IR node (merged into a parent, e.g. text runs).
       if (d.kind !== v.kind) {
         review(desktopId, 'RESPONSIVE_KIND_DIFFERS', `${d.kind} on desktop, ${v.kind} on ${device}.`);
@@ -106,7 +184,24 @@ export function buildP15ResponsiveMerge(desktop: P15NeutralExportDocumentV1, var
         if (differing.length > 0) review(desktopId, 'RESPONSIVE_WIDGET_PROPERTY_NOT_MERGED', `${differing.sort().join(', ')} differ on ${device} (M4.3c).`);
         continue;
       }
-      mergeContainer(d, v, device, counterpart, put, review);
+      mergeContainerLayout(d, v, device, put, review);
+    }
+    // Order: positions of the children visible on this device, in the merged desktop order.
+    for (const node of index(merged.nodes).nodes.values()) {
+      if (node.kind !== 'container') continue;
+      const variantParentId = counterpart.get(node.sourceNodeId);
+      const variantParent = variantParentId ? variantIndex.nodes.get(variantParentId) : undefined;
+      if (!variantParent || variantParent.kind !== 'container') continue;
+      const variantOrder = variantParent.children.map((child) => child.sourceNodeId);
+      const positions = node.children.map((child) => {
+        const id = inserted.get(child.sourceNodeId) === device ? child.sourceNodeId : counterpart.get(child.sourceNodeId);
+        return id === undefined ? -1 : variantOrder.indexOf(id);
+      });
+      const visible = positions.filter((position) => position >= 0);
+      if (visible.every((position, i) => i === 0 || position > visible[i - 1]!)) continue;
+      node.children.forEach((child, i) => {
+        if (positions[i]! >= 0) put('elementOrder', child.sourceNodeId, { [`${device}OrderCustom`]: true, [`${device}OrderValue`]: positions[i] });
+      });
     }
   }
 
@@ -115,37 +210,30 @@ export function buildP15ResponsiveMerge(desktop: P15NeutralExportDocumentV1, var
     families[family] = [...byNode.values()].sort((a, b) => (String(a.sourceNodeId) < String(b.sourceNodeId) ? -1 : 1));
   }
   reviews.sort((a, b) => (a.device + a.sourceNodeId + a.reasonCode < b.device + b.sourceNodeId + b.reasonCode ? -1 : 1));
-  const common = { schemaVersion: 1, sourceIrFingerprint: fingerprintP15NeutralExportDocument(desktop),
-    baseCandidateIdentityDigest: buildElementorTemplateCandidateIdentity(generation.candidate).digest, ...FLAGS };
-  const versions: Record<string, string> = {
-    direction: P15_ELEMENTOR_RESPONSIVE_DIRECTION_MANIFEST_VERSION, alignment: P15_ELEMENTOR_RESPONSIVE_ALIGNMENT_MANIFEST_VERSION,
-    gap: P15_ELEMENTOR_RESPONSIVE_GAP_MANIFEST_VERSION, padding: P15_ELEMENTOR_RESPONSIVE_PADDING_MANIFEST_VERSION,
-    margin: P15_ELEMENTOR_RESPONSIVE_MARGIN_MANIFEST_VERSION,
-  };
-  const manifests = Object.fromEntries(Object.entries(families).map(([family, containers]) => [family, { ...common, manifestVersion: versions[family], containers }]));
-  const composition = composeP15ElementorPage(desktop, { ...common, compositionVersion: P15_PAGE_COMPOSITION_VERSION, families: manifests });
-  if (composition.status !== 'RESOLVED') {
-    return { ...blocked(`The page composition refused the responsive values: ${composition.issues.map((issue) => issue.code).join(', ') || composition.status}.`), entries: families, reviews };
+  const generation = generateElementorV3TemplateCandidate(merged);
+  if (generation.status !== 'GENERATED_LOCAL_CANDIDATE' || !generation.candidate) {
+    return blocked(`The desktop tree with the inserted breakpoint-only elements does not generate review-free (${generation.status}).`, reviews, families);
   }
-  return { version: P15_RESPONSIVE_MERGE_VERSION, status: reviews.length === 0 ? 'MERGED' : 'REVIEW', composition, entries: families, reviews, blockReason: null };
+  const common = { schemaVersion: 1, sourceIrFingerprint: fingerprintP15NeutralExportDocument(merged),
+    baseCandidateIdentityDigest: buildElementorTemplateCandidateIdentity(generation.candidate).digest, ...FLAGS };
+  const manifests = Object.fromEntries(Object.entries(families).map(([family, list]) =>
+    [family, { ...common, manifestVersion: VERSIONS[family], [ENTRIES_FIELD[family] ?? 'containers']: list }]));
+  const composition = composeP15ElementorPage(merged, { ...common, compositionVersion: P15_PAGE_COMPOSITION_VERSION, families: manifests });
+  if (composition.status !== 'RESOLVED') {
+    return blocked(`The page composition refused the responsive values: ${composition.issues.map((issue) => issue.code).join(', ') || composition.status}.`, reviews, families);
+  }
+  return { version: P15_RESPONSIVE_MERGE_VERSION, status: reviews.length === 0 ? 'MERGED' : 'REVIEW', document: merged, composition,
+    entries: families, reviews, blockReason: null };
 }
 
-function mergeContainer(
+function mergeContainerLayout(
   d: P15NeutralContainerNode,
   v: P15NeutralContainerNode,
   device: VariantDevice,
-  counterpart: ReadonlyMap<string, string>,
   put: (family: string, sourceNodeId: string, fields: Record<string, unknown>) => void,
   review: (sourceNodeId: string, reasonCode: string, detail: string) => void,
 ): void {
   const id = d.sourceNodeId;
-  // Child order: the matched children must keep their relative order (order changes are merged by M4.3b).
-  const variantOrder = v.children.map((child) => child.sourceNodeId);
-  const mappedOrder = d.children.map((child) => counterpart.get(child.sourceNodeId)).filter((value): value is string => value !== undefined)
-    .map((variantId) => variantOrder.indexOf(variantId)).filter((position) => position >= 0);
-  if (mappedOrder.some((position, i) => i > 0 && position < mappedOrder[i - 1]!)) {
-    review(id, 'RESPONSIVE_ORDER_CHANGED', `Children are reordered on ${device}; order is merged by M4.3b.`);
-  }
   if (d.grid !== undefined || v.grid !== undefined) {
     if (!same(d.grid, v.grid) || d.direction !== v.direction) review(id, 'RESPONSIVE_GRID_DIFFERS', `Grid layout differs on ${device}.`);
   } else {

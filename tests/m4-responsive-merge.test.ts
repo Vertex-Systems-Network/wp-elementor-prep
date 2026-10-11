@@ -80,20 +80,55 @@ describe('recovery M4.3a — responsive container layout merge', () => {
     expect(result.entries.padding).toBeUndefined();
   });
 
-  it('reports unmatched nodes and reordered children for M4.3b', () => {
+  it('M4.3b: reordered children get the breakpoint custom order', () => {
     const m = tree('m', 390);
     const hero = m.children![0]! as unknown as { children: P15MatchNode[] };
     hero.children = [hero.children[1]!, hero.children[0]!];
     const mobile = mobileDoc();
     const mHero = mobile.nodes[0]!.kind === 'container' ? mobile.nodes[0]!.children[0]! : null;
     if (mHero?.kind === 'container') mHero.children.reverse();
-    const reordered = buildP15ResponsiveMerge(desktopDoc(), [{ device: 'mobile', document: mobile, match: matchP15Breakpoint(tree('d', 1440), m, 'mobile') }]);
-    expect(reordered.reviews.map((review) => review.reasonCode)).toContain('RESPONSIVE_ORDER_CHANGED');
+    const result = buildP15ResponsiveMerge(desktopDoc(), [{ device: 'mobile', document: mobile, match: matchP15Breakpoint(tree('d', 1440), m, 'mobile') }]);
+    expect(result.status).toBe('MERGED');
+    expect(result.entries.elementOrder).toEqual([
+      { sourceNodeId: 'd-copy', mobileOrderCustom: true, mobileOrderValue: 0 },
+      { sourceNodeId: 'd-title', mobileOrderCustom: true, mobileOrderValue: 1 },
+    ]);
+    const heroSettings = result.composition!.template!.content[0]!.elements[0]!;
+    expect(heroSettings.elements[0]!.settings).toMatchObject({ _flex_order_mobile: 'custom', _flex_order_custom_mobile: 1 });
+    expect(heroSettings.elements[1]!.settings).toMatchObject({ _flex_order_mobile: 'custom', _flex_order_custom_mobile: 0 });
+  });
 
-    const lonely = tree('m', 390);
-    (lonely.children![0]! as unknown as { children: P15MatchNode[] }).children.pop();
-    const missing = buildP15ResponsiveMerge(desktopDoc(), [{ device: 'mobile', document: mobileDoc(), match: matchP15Breakpoint(tree('d', 1440), lonely, 'mobile') }]);
-    expect(missing.reviews.map((review) => [review.sourceNodeId, review.reasonCode])).toContainEqual(['d-copy', 'RESPONSIVE_NODE_ONLY_ON_DESKTOP']);
+  it('M4.3b: a desktop-only element is hidden on mobile; a mobile-only element is inserted and hidden elsewhere', () => {
+    const m = tree('m', 390);
+    const hero = m.children![0]! as unknown as { children: P15MatchNode[] };
+    hero.children = [hero.children[0]!, { id: 'm-badge', name: 'Badge', type: 'TEXT', characters: 'New', x: 24, y: 100, width: 80, height: 20 }];
+    const mobile = mobileDoc();
+    const mHero = mobile.nodes[0]!.kind === 'container' ? mobile.nodes[0]!.children[0]! : null;
+    if (mHero?.kind === 'container') mHero.children.splice(1, 1, { kind: 'text', sourceNodeId: 'm-badge', text: 'New' });
+    const result = buildP15ResponsiveMerge(desktopDoc(), [
+      { device: 'mobile', document: mobile, match: matchP15Breakpoint(tree('d', 1440), m, 'mobile') },
+      { device: 'tablet', document: JSON.parse(JSON.stringify(desktopDoc()).replaceAll('"d-', '"t-')), match: matchP15Breakpoint(tree('d', 1440), tree('t', 1024), 'tablet') },
+    ]);
+    expect(result.status).toBe('MERGED');
+    expect(result.entries.visibility).toEqual([
+      { sourceNodeId: 'd-copy', hideMobile: true },
+      { sourceNodeId: 'm-badge', hideDesktop: true, hideTablet: true },
+    ]);
+    // Inserted right after the title (its preceding matched sibling) in the desktop tree.
+    const heroNode = result.document!.nodes[0]!.kind === 'container' ? result.document!.nodes[0]!.children[0]! : null;
+    expect(heroNode?.kind === 'container' && heroNode.children.map((child) => child.sourceNodeId)).toEqual(['d-title', 'm-badge', 'd-copy']);
+    const elements = result.composition!.template!.content[0]!.elements[0]!.elements;
+    expect(elements[1]!.settings).toMatchObject({ hide_desktop: 'hidden-desktop', hide_tablet: 'hidden-tablet' });
+    expect(elements[2]!.settings).toMatchObject({ hide_mobile: 'hidden-mobile' });
+    expect(elements[0]!.settings).not.toHaveProperty('hide_mobile');
+  });
+
+  it('M4.3b: a variant-only root-level element cannot be placed and is a review', () => {
+    const m = tree('m', 390);
+    const result = buildP15ResponsiveMerge(desktopDoc(), [{ device: 'mobile',
+      document: { ...mobileDoc(), nodes: [...mobileDoc().nodes, { kind: 'text', sourceNodeId: 'm-floating', text: 'x' }] },
+      match: { ...matchP15Breakpoint(tree('d', 1440), m, 'mobile'), unmatchedVariant: ['m-floating'] } }]);
+    expect(result.reviews.map((review) => [review.sourceNodeId, review.reasonCode])).toContainEqual(['m-floating', 'RESPONSIVE_NODE_NOT_PLACED']);
   });
 
   it('blocks without a variant, with a duplicate device, or on a desktop base that needs review', () => {
