@@ -39,6 +39,7 @@ import {
 } from '../targets/elementor/container-sizing';
 import { deriveP15Wrap, type P15NeutralWrap } from '../targets/elementor/container-wrap';
 import { deriveP15Grid, type P15NeutralGrid } from '../targets/elementor/container-grid';
+import { assignP15Overlap, BASELINE_REVIEW, DISTRIBUTED_JUSTIFICATIONS } from '../targets/elementor/container-spacing';
 import {
   ABSOLUTE_POSITION_REVIEW,
   assignP15StackOrder,
@@ -216,6 +217,8 @@ function mapPrimaryAlignment(value: unknown): P15NeutralJustification | null {
   if (value === 'CENTER') return 'center';
   if (value === 'MAX') return 'end';
   if (value === 'SPACE_BETWEEN') return 'space-between';
+  if (value === 'SPACE_AROUND') return 'space-around';
+  if (value === 'SPACE_EVENLY') return 'space-evenly';
   return null;
 }
 
@@ -567,11 +570,21 @@ function optionalNumber(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
+/**
+ * Recovery M2.7: without `layoutSizing*`, the older `layoutGrow: 1` (along the parent) and `layoutAlign: STRETCH`
+ * (across the parent) still mean FILL on that axis. Anything else stays unknown, as before.
+ */
+function legacyFill(record: Record<string, unknown>, parent: ParentLayout, axis: 'row' | 'column'): P15FigmaSizingMode | undefined {
+  if (!parent) return undefined;
+  if (parent.direction === axis) return record.layoutGrow === 1 ? 'FILL' : undefined;
+  return record.layoutAlign === 'STRETCH' ? 'FILL' : undefined;
+}
+
 function sizingFacts(record: Record<string, unknown>, parent: ParentLayout): P15ContainerSizingFacts {
   return {
     parent,
-    horizontal: sizingMode(record.layoutSizingHorizontal),
-    vertical: sizingMode(record.layoutSizingVertical),
+    horizontal: sizingMode(record.layoutSizingHorizontal) ?? legacyFill(record, parent, 'row'),
+    vertical: sizingMode(record.layoutSizingVertical) ?? legacyFill(record, parent, 'column'),
     width: typeof record.width === 'number' ? record.width : NaN,
     height: typeof record.height === 'number' ? record.height : NaN,
     minWidth: optionalNumber(record.minWidth),
@@ -623,14 +636,21 @@ function extractContainer(
     gridChildReview = gridded.childReview;
   }
 
-  const gapPx = grid ? 0 : finiteSpacing(record.itemSpacing);
+  // Recovery M2.7: negative spacing (an overlap) is checked after the children are extracted.
+  const spacing = grid ? 0 : finiteSpacing(typeof record.itemSpacing === 'number' ? Math.abs(record.itemSpacing) : record.itemSpacing);
   const paddingPx = boundedPadding(node);
-  if (gapPx === null || paddingPx === null) {
-    return review(node, 'SPACING_OUT_OF_RANGE', `Auto Layout spacing must be finite and within 0-${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px.`);
+  if (spacing === null || paddingPx === null) {
+    return review(node, 'SPACING_OUT_OF_RANGE', `Auto Layout spacing must be finite and within ±${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px (padding 0-${P15_NEUTRAL_EXPORT_MAX_SPACING_PX}px).`);
   }
 
   const justifyContent = grid ? 'start' : mapPrimaryAlignment(record.primaryAxisAlignItems);
-  const alignItems = grid ? 'stretch' : mapCounterAlignment(record.counterAxisAlignItems);
+  // Recovery M2.7: BASELINE has no Elementor option; it is laid out as start and flagged.
+  const baseline = !grid && record.counterAxisAlignItems === 'BASELINE';
+  const alignItems = grid ? 'stretch' : baseline ? 'start' : mapCounterAlignment(record.counterAxisAlignItems);
+  // A distributed main axis divides only the free space, as CSS does with no gap.
+  const distributed = justifyContent !== null && DISTRIBUTED_JUSTIFICATIONS.includes(justifyContent);
+  const overlapPx = !grid && !distributed && typeof record.itemSpacing === 'number' && record.itemSpacing < 0 ? -spacing : 0;
+  const gapPx = distributed || overlapPx < 0 ? 0 : spacing;
   if (justifyContent === null || alignItems === null) {
     return review(
       node,
@@ -681,6 +701,9 @@ function extractContainer(
       .map((entry) => ({ reasonCode: entry.reasonCode, detail: entry.detail })),
     ...unmappedVisualFactReviews(node, true),
   ];
+  if (baseline) {
+    styleReviews.push({ reasonCode: BASELINE_REVIEW, detail: 'Baseline alignment has no Elementor align-items option; it is laid out as start.' });
+  }
 
   // Recovery M2.3a: exact sizing; constraints without an exact mapping stay REVIEW on this container.
   const direction = mode === 'VERTICAL' ? 'column' : 'row';
@@ -708,8 +731,14 @@ function extractContainer(
   if (wrap !== undefined && childNodes(node).some((child) => visible(child) && !isAbsolute(child) && recordOf(child).layoutSizingHorizontal === 'FILL')) {
     styleReviews.push({ reasonCode: 'SIZE_FILL_IN_WRAP_REQUIRES_REVIEW', detail: 'A FILL-width child of a wrapped row would take a whole line in CSS.' });
   }
+  let flowChildren = children;
+  if (overlapPx < 0) {
+    const overlap = assignP15Overlap(children, overlapPx, { direction, wrapped: wrap !== undefined, reverseZIndex: record.itemReverseZIndex === true });
+    if (overlap.review) styleReviews.push(overlap.review);
+    flowChildren = overlap.children;
+  }
   // Recovery M2.5: siblings from the first absolute child on carry their layer order; the stack stays inside this container.
-  const stack = assignP15StackOrder(children);
+  const stack = assignP15StackOrder(flowChildren);
   if (stack.review) styleReviews.push(stack.review);
 
   const container: P15NeutralContainerNode = {

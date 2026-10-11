@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
 last_completed_milestone: product_recovery_m1_accepted_pr_900_merged_47ada79
-exact_next_safe_action: execute_recovery_task_M2_7_then_open_M2_5_to_M2_7_batch_pr
+exact_next_safe_action: pass_exact_head_gates_of_M2_5_to_M2_7_batch_pr_then_merge_and_continue_M2_8
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
@@ -92,8 +92,8 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M2
-  next_task: M2.7
-  last_completed_task: M2.6b
+  next_task: M2.8
+  last_completed_task: M2.7
   blocked_tasks: []
   branch: claude/busy-ride-1vztlb
   open_pr: null

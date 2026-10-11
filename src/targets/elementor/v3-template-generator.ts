@@ -2,6 +2,7 @@ import { buttonSizingSettings, containerSizingSettings, widgetSizingSettings } f
 import { absolutePositionSettings, zIndexSettings } from './absolute-position';
 import { wrapSettings } from './container-wrap';
 import { gridSettings } from './container-grid';
+import { containerMarginSettings } from './container-spacing';
 import { gradientSettings } from './container-gradient';
 import { boxShadowSettings } from './container-shadow';
 import { containerVisualStyleSettings } from './container-visual-style';
@@ -165,7 +166,7 @@ function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 
   Object.assign(settings, boxShadowSettings(node.boxShadow));
   Object.assign(settings, gradientSettings(node.gradient));
   Object.assign(settings, containerSizingSettings(node.sizing));
-  Object.assign(settings, wrapSettings(node.wrap, node.gapPx));
+  Object.assign(settings, wrapSettings(node.wrap, node.gapPx), containerMarginSettings(node.marginPx));
   Object.assign(settings, absolutePositionSettings(node.position, 'container'), zIndexSettings(node.zIndex, 'container'));
   return settings;
 }

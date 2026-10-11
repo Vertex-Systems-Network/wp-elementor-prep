@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
-> - Next task: **M2.7** (space-between, negative spacing, baseline, child layoutAlign/layoutGrow)
-> - Last completed task: **M2.6b** (strict grid → Grid Container); M2.6 is complete
+> - Next task: **M2.8** (font manifest)
+> - Last completed task: **M2.7** (spacing distribution, overlap, baseline, legacy fill)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -346,7 +346,13 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - A Figma GRID frame whose in-flow children each take one cell in row-major layer order (so CSS auto placement matches) → `container_type: grid`, column/row templates (equal 1fr tracks as the native `fr` count, otherwise a `custom` template built only from validated numbers), `grid_gaps`, and explicit `stretch` item alignment (the `--justify-items`/`--align-items` variables are not reset per Container, so a nested grid would inherit them). Rows are always written.
     - REVIEW: spans, out-of-order or skipped cells, more children than cells, unknown or unbounded tracks → `GRID_LAYOUT_REQUIRES_REVIEW`; children that do not FILL their cell with AUTO alignment → `GRID_CHILD_PLACEMENT_REQUIRES_REVIEW` on the grid.
     - IR: optional container `grid` (direction `row`, no flex gap/alignment/wrap), validated and in the identity only when present. Tests: `tests/m2-grid.test.ts`.
-- [ ] **M2.7** Map SPACE_BETWEEN, negative spacing (REVIEW where unsupported), baseline alignment, and child `layoutAlign`/`layoutGrow`.
+- [x] **M2.7** Map SPACE_BETWEEN, negative spacing (REVIEW where unsupported), baseline alignment, and child `layoutAlign`/`layoutGrow` _(done 2026-10-11)_.
+  - `src/targets/elementor/container-spacing.ts`; R0: `flex-container.php` blob `ce9e412` (`justify_content` incl. space-around/evenly; `align_items` has no baseline; `gap` non-negative), `container.php` blob `3486766` Container `margin` (`--margin-*`), `common-base.php` blob `77c497b` widget `_margin` targets the inner `.elementor-widget-container`; Figma typings 1.140.0 (`primaryAxisAlignItems` incl. SPACE_EVENLY/SPACE_AROUND, `layoutAlign`, `layoutGrow`, `itemReverseZIndex`).
+  - SPACE_BETWEEN / SPACE_EVENLY / SPACE_AROUND write gap 0, so CSS divides exactly the free space Figma divides (previously the item spacing was written as a CSS minimum gap).
+  - Negative item spacing → gap 0 plus a negative leading Container `margin` on every in-flow sibling after the first (later siblings paint on top, as in Figma). Overlapping widgets, a wrapped row or `itemReverseZIndex` → `NEGATIVE_SPACING_REQUIRES_REVIEW` with the layout kept at gap 0; beyond ±4096px stays `SPACING_OUT_OF_RANGE`.
+  - BASELINE counter alignment → laid out as start with `BASELINE_ALIGNMENT_REQUIRES_REVIEW`, instead of dropping the whole frame.
+  - Without `layoutSizing*`, `layoutGrow: 1` (along) and `layoutAlign: STRETCH` (across) still mean FILL.
+  - IR: optional container `marginPx`, validated and in the identity only when present. Tests: `tests/m2-spacing-alignment.test.ts`; two expectations in `tests/p15-figma-neutral-export-extractor.test.ts` changed on purpose (space-between gap 0, baseline flagged).
 - [ ] **M2.8** Font manifest: the families and weights used, with Google Fonts availability flagged. Non-Google fonts → REVIEW with an upload instruction.
 - [ ] **M2.9** Golden landing-page fixture. Every visible property is either mapped or listed as REVIEW, with no silent drop. A partial template is allowed only with an explicit `REVIEW_ITEMS` list, and the user sees exactly what is missing (D-049).
 - [ ] **M2.10** Content width of unsized Containers. Elementor 4.2.4 `container.php` (blob `3486766`) defaults `content_width` to `boxed`, and `_container.scss` (blob `d6c65cb`) caps a boxed inner at `--content-width: min(100%, var(--container-max-width, 1140px))`. A FILL or unsized frame wider than 1140px (for example a full-bleed section in a 1440px page) is therefore narrowed and centred. Write `content_width: full` on every generated Container (Figma has no boxed concept), re-record the affected goldens with a diff test, and re-bind the retained real-target reference/profile evidence that pins the candidate identity. Found during M2.6b.

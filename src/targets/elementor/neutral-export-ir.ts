@@ -5,6 +5,7 @@ import {
   borderProblems,
   cornerRadiiProblems,
   type P15NeutralBorder,
+  type P15NeutralBoxPx,
   type P15NeutralCornerRadii,
 } from './container-visual-style';
 import {
@@ -17,6 +18,7 @@ import {
 } from './container-sizing';
 import { wrapProblems, type P15NeutralWrap } from './container-wrap';
 import { gridProblems, type P15NeutralGrid } from './container-grid';
+import { marginProblems } from './container-spacing';
 import {
   absolutePositionProblems,
   zIndexProblems,
@@ -100,6 +102,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   wrap?: P15NeutralWrap;
   /** Strict grid (recovery M2.6b): direction is `row` and the flex gap/alignment fields are absent. */
   grid?: P15NeutralGrid;
+  /** Negative leading margin that reproduces an overlap with the previous sibling (recovery M2.7). */
+  marginPx?: P15NeutralBoxPx;
   /** Absolute placement in the parent (recovery M2.5). */
   position?: P15NeutralAbsolutePosition;
   /** Layer order among siblings (recovery M2.5). */
@@ -414,7 +418,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'wrap', 'grid', 'position', 'zIndex', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'wrap', 'grid', 'marginPx', 'position', 'zIndex', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -451,6 +455,9 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     ];
     for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);
     validatePlacement(value, path, state);
+    if (value.marginPx !== undefined) {
+      for (const issue of marginProblems(value.marginPx, `${path}.marginPx`)) pushIssue(state, 'P15_IR_SPACING_INVALID', issue.path, issue.message);
+    }
     if (value.grid !== undefined) {
       for (const issue of gridProblems(value.grid, `${path}.grid`)) pushIssue(state, 'P15_IR_SPACING_INVALID', issue.path, issue.message);
       if (value.direction !== 'row' || ['gapPx', 'alignItems', 'justifyContent', 'wrap'].some((key) => value[key] !== undefined)) {
