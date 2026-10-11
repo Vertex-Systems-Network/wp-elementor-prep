@@ -35,7 +35,8 @@ export async function buildP15ElementorPackFromFigmaFrame(
   const assetPaths = new Map<string, string>();
   // Recovery M3.4: the @2x render, shown at the layer size through explicit width and height (sharp on 2x screens).
   for (const asset of assets.assets) {
-    if (asset.kind === 'rendered-appearance' && asset.scale === 2 && asset.sourceNodeIds[0] !== undefined) {
+    // Recovery M3.5: vector layers and icons reference their SVG.
+    if ((asset.kind === 'vector-svg' || (asset.kind === 'rendered-appearance' && asset.scale === 2)) && asset.sourceNodeIds[0] !== undefined) {
       assetPaths.set(asset.sourceNodeIds[0], `assets/${asset.assetId}.${EXTENSIONS[asset.mimeType]}`);
     }
   }

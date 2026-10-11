@@ -181,6 +181,8 @@ class Audit {
       this.text(node, id, ir.kind === 'text' || ir.kind === 'heading' ? ir.typography : undefined, id);
       return;
     }
+    // An image or SVG asset is the rendered subtree itself (recovery M3.4/M3.5).
+    if (ir.kind === 'image') return;
     this.frame(node, id, ir);
     const folded = this.index.folded.has(id) ? ir : null;
     for (const child of childrenOf(node)) this.walk(child, folded);

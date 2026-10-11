@@ -928,6 +928,12 @@ function extractNode(
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
   if (isAbsolute(node)) return extractAbsolute(node, depth, state, parent, absoluteParent);
+  // Recovery M3.5: a vector layer or pure-vector icon with a collected SVG becomes an Image widget on that SVG.
+  const svgPath = state.assetPaths.get(node.id);
+  if (svgPath !== undefined && svgPath.endsWith('.svg') && unmappedVisualFactReviews(node, isContainerLike(node)).length === 0) {
+    const icon = extractImage(node, svgPath, parent);
+    if (icon) return icon;
+  }
   if (node.type === 'TEXT') return extractText(node, parent);
   const rule = extractRule(node, parent?.direction ?? null);
   if (rule) return rule.kind === 'divider' ? placeDivider(rule, node, parent) : rule;

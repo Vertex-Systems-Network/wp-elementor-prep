@@ -8,7 +8,7 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
-> - Next task: **M3.5** (SVG icons → Icon or Image widget)
+> - Next task: **M3.6** (real-target asset import harness)
 > - Last completed task: **M3.1** (asset collector)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
@@ -402,7 +402,10 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - One image fill on a frame → `background_background: classic` + `background_image` on the frame's Stored Original pack asset: FILL → `cover`, FIT → `contain` (both `center center`, `no-repeat`), TILE → `initial` with `background_bg_width` = natural width × `scalingFactor`, `top left`, `repeat`. CROP, a rotated paint, non-zero image filters, a translucent or blended paint and a missing original stay `CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW`; the upload is an `ASSET_UPLOAD_REQUIRED` review (D-051).
     - The collector renders only image leaves; a frame with content contributes its original. The coverage audit counts a background image as carrying the fill.
     - IR: container `backgroundImage` (exclusive with colour/gradient, validated, in the identity). Tests: `tests/m3-background-image.test.ts`.
-- [ ] **M3.5** SVG icons → Icon or Image widget (SVG).
+- [x] **M3.5** SVG icons → Icon or Image widget (SVG) _(done 2026-10-11)_.
+  - A vector layer, or a frame/group made only of vectors, whose SVG was collected becomes an Image widget on `assets/svg-<node>.svg`, sized like an image (width/height px, flex rules); the Image widget is used because it renders any SVG exactly, while the Icon widget's colour controls would only matter for recolouring. The coverage audit treats an image/SVG node as its whole rendered subtree.
+  - The `ASSET_UPLOAD_REQUIRED` review for an SVG adds that WordPress blocks SVG uploads by default and how to allow them only for trusted files. Icons are decorative (empty alt text, no alt review). A vector without a collected SVG keeps its review.
+  - Tests: `tests/m3-svg-icons.test.ts`.
 - [ ] **M3.6** Real-target harness. Import the asset pack into the disposable WordPress + Elementor instance (`p15-real-target-proof.yml`) and assert every image returns HTTP 200 in the render.
 - [ ] **M3.7** Plugin UI: offer the asset pack (`buildP15ElementorPackFromFigmaFrame` with `figma` as the API) as a download beside the review list, labelled exactly as the manifest (`LOCAL CANDIDATE` / `REVIEW REQUIRED`), never as ready for import. Added during M3.3.
 

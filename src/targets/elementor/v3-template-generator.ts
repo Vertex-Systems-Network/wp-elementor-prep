@@ -308,7 +308,8 @@ function imageWidget(node: P15NeutralImageNode, state: GenerationState): Element
   // D-051: a pack asset cannot be fetched by Elementor's template import, so it is an explicit upload review.
   if (node.assetPath !== undefined) {
     state.reviewEntries.push({ sourceNodeId: node.sourceNodeId, reasonCode: 'ASSET_UPLOAD_REQUIRED',
-      detail: `Upload ${node.assetPath} from the asset pack to the Media Library and select it in this Image widget (see IMPORT.md).` });
+      detail: `Upload ${node.assetPath} from the asset pack to the Media Library and select it in this Image widget (see IMPORT.md).${
+        node.assetPath.endsWith('.svg') ? ' WordPress blocks SVG uploads by default: enable them (for example Elementor → Settings → Advanced → Unfiltered File Uploads) only if you trust the file.' : ''}` });
   }
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
