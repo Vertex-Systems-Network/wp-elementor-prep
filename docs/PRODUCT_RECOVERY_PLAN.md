@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
-> - Next task: **M3.7** (plugin UI asset-pack download)
-> - Last completed task: **M3.1** (asset collector)
+> - Next task: **M3 acceptance** (exact-head real-target run with the SVG icon, then the canonical M3 sync; then M4.1)
+> - Last completed task: **M3.7** (plugin UI asset-pack download)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -413,7 +413,11 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - `scripts/p15-asset-pack-import-probe.php`: `upload` sideloads the referenced assets (`media_handle_sideload`) and sets `_elementor_source_image_hash = sha1(url)`, the meta Elementor 4.2.4 writes on its own image imports (`class-import-images.php` blob `379eb90`, `get_saved_image`), so the relinked import reuses the attachments instead of re-downloading them (a failed download becomes the placeholder image in `Control_Media::on_import`); `import` imports through the local source and checks every saved media reference kept its id and URL.
     - Bridge route `p15_asset_pack_render` (target A, header token) and `scripts/p15-asset-pack-render-probe.mjs` assert every uploaded asset renders (Image widget `<img>` loaded or Container background) and returns HTTP 200 `image/*`. Outputs go only to `dist-p15/p15-asset-pack-proof/` (uploaded, token-sanitized); a separate final step enforces them.
     - Tests: `tests/m3-asset-pack-harness.test.ts`.
-- [ ] **M3.7** Plugin UI: offer the asset pack (`buildP15ElementorPackFromFigmaFrame` with `figma` as the API) as a download beside the review list, labelled exactly as the manifest (`LOCAL CANDIDATE` / `REVIEW REQUIRED`), never as ready for import. Added during M3.3.
+- [x] **M3.7** Plugin UI: offer the asset pack (`buildP15ElementorPackFromFigmaFrame` with `figma` as the API) as a download beside the review list, labelled exactly as the manifest (`LOCAL CANDIDATE` / `REVIEW REQUIRED`), never as ready for import. Added during M3.3. _(done 2026-10-11)_.
+  - `src/plugin/p15-asset-pack-download.ts` turns the pack into a download envelope that carries the manifest label, the ZIP bytes, the asset count and the first 50 reviews, and always `targetImportReady: false`; a blocked pack, an unexpected label, empty bytes or a file name outside `<slug>-elementor-pack.zip` become `PACK_BLOCKED` with no bytes. `src/plugin/p15-asset-pack-download-controller.ts` (chained after the local-template controller in `entry.ts`) re-reads the selected frame on every `p15-elementor-asset-pack-request`.
+  - UI (`scripts/p15-local-template-download-ui.mjs`, development and release builds): a **Download asset pack** button; the renderer re-checks the envelope, saves the ZIP (`application/zip`), shows the label with **NOT READY FOR IMPORT**, points to IMPORT.md and lists the review items.
+  - For the M3 acceptance ("images and SVG … load in the real-target render") the M3.6b harness fixture now also carries an SVG icon; the import probe allows SVG uploads for that disposable upload only, as IMPORT.md tells users to do for trusted files.
+  - Tests: `tests/m3-asset-pack-download.test.ts`, `tests/m3-asset-pack-download-ui.test.mjs`, `tests/m3-asset-pack-harness.test.ts`.
 
 ### M4 — Responsive breakpoint engine
 

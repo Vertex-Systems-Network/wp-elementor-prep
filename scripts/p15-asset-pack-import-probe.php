@@ -3,7 +3,7 @@
  * Recovery M3.6b asset-pack import probe for exact WordPress 6.8 + Elementor 4.2.4.
  *
  *   upload <packDir> <expectation.json> <uploads.json>
- *     Sideloads every asset path the pack template references into the Media Library and records
+ *     Sideloads every asset path the pack template references (SVG allowed for this upload only) into the Media Library and records
  *     { "assets/...": { "id": <attachment id>, "url": <attachment URL> } }. Each attachment gets
  *     `_elementor_source_image_hash = sha1(url)`, the meta Elementor 4.2.4 writes on images it imports itself
  *     (includes/template-library/classes/class-import-images.php blob 379eb9092ec251ba23ffaf050b98089393654b53,
@@ -45,9 +45,12 @@ if ($mode === 'upload') {
         fwrite(STDERR, "Pack directory, expectation and output path are required.\n");
         exit(2);
     }
+    // WordPress blocks SVG uploads by default; the pack's IMPORT.md tells the user to allow them for trusted files only.
+    // This disposable target allows exactly the harness's own SVG, nothing else.
+    add_filter('upload_mimes', static fn(array $mimes): array => $mimes + ['svg' => 'image/svg+xml']);
     $uploads = [];
     foreach ($expectation['referencedAssetPaths'] as $assetPath) {
-        if (!is_string($assetPath) || !preg_match('#^assets/[A-Za-z0-9@-]{1,80}\.(png|jpg|gif|webp)$#', $assetPath)) {
+        if (!is_string($assetPath) || !preg_match('#^assets/[A-Za-z0-9@-]{1,80}\.(png|jpg|gif|webp|svg)$#', $assetPath)) {
             fwrite(STDERR, "Unsupported asset path.\n");
             exit(2);
         }

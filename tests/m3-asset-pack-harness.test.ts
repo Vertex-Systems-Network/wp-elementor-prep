@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { inflateSync } from 'node:zlib';
 import { afterAll, describe, expect, it, vi } from 'vitest';
-import { buildP15HarnessFixture, relinkP15HarnessPack, solidPng } from '../src/cli/p15-asset-pack-harness-lib';
+import { HARNESS_SVG, buildP15HarnessFixture, relinkP15HarnessPack, solidPng } from '../src/cli/p15-asset-pack-harness-lib';
 import { verifyP15AssetPack } from '../src/targets/elementor/asset-pack';
 
 const dir = mkdtempSync(join(tmpdir(), 'm3-harness-'));
@@ -21,7 +21,7 @@ describe('recovery M3.6b — asset-pack harness helper', () => {
     expect(solidPng(3, 2, [1, 2, 3])).toEqual(png);
   });
 
-  it('builds the fixture pack: an image widget and a background image, both upload reviews only', async () => {
+  it('builds the fixture pack: an image widget, a background image and an SVG icon, upload reviews only', async () => {
     const write = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
     try {
       await buildP15HarnessFixture(join(dir, 'out'));
@@ -31,13 +31,15 @@ describe('recovery M3.6b — asset-pack harness helper', () => {
     expect(verifyP15AssetPack(readFileSync(join(dir, 'out', 'asset-pack.zip')))).toBeNull();
     const expectation = JSON.parse(readFileSync(join(dir, 'out', 'harness-expectation.json'), 'utf8'));
     expect(expectation).toEqual({ schema: 'p15-asset-pack-harness-expectation-v1', label: 'REVIEW REQUIRED',
-      referencedAssetPaths: ['assets/original-hero.png', 'assets/render-harness-photo@2x.png'], sourceValuesAuthoredByHarness: true });
+      referencedAssetPaths: ['assets/original-hero.png', 'assets/render-harness-photo@2x.png', 'assets/svg-harness-icon.svg'], sourceValuesAuthoredByHarness: true });
     expect(readFileSync(join(dir, 'out', 'pack', 'assets', 'original-hero.png')).subarray(1, 4).toString()).toBe('PNG');
+    expect(readFileSync(join(dir, 'out', 'pack', 'assets', 'svg-harness-icon.svg'), 'utf8')).toBe(HARNESS_SVG);
   });
 
   it('relinks the fixture template to uploads and fails closed when one is missing', async () => {
     const uploads = { 'assets/original-hero.png': { id: 7, url: 'http://127.0.0.1:8080/wp-content/uploads/original-hero.png' },
-      'assets/render-harness-photo@2x.png': { id: 8, url: 'http://127.0.0.1:8080/wp-content/uploads/render-harness-photo@2x.png' } };
+      'assets/render-harness-photo@2x.png': { id: 8, url: 'http://127.0.0.1:8080/wp-content/uploads/render-harness-photo@2x.png' },
+      'assets/svg-harness-icon.svg': { id: 9, url: 'http://127.0.0.1:8080/wp-content/uploads/svg-harness-icon.svg' } };
     writeFileSync(join(dir, 'uploads.json'), JSON.stringify(uploads));
     const write = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
     try {
