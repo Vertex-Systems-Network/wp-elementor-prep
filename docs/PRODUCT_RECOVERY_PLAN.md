@@ -7,7 +7,7 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M2 — Full single-frame Figma extraction** (M1 accepted: PR #900, exact head `69ccfd1`, 11/11 checks green, merged as `47ada79`)
+> - Active milestone: **M2 — Full single-frame Figma extraction**: every task done; acceptance (§5: golden landing page with zero silent drops) holds in `tests/m2-golden-landing-page.test.ts` and closes when the final M2 PR passes its exact-head gates. M1 accepted: PR #900 merged as `47ada79`.
 > - Next task: **M2 acceptance** (all M2 tasks done; run §5 acceptance and the once-per-milestone canonical sync), then **M3.1**
 > - Last completed task: **M2.10** (content width of extracted Containers)
 

@@ -11,9 +11,8 @@ Canonical backlog: [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PL
 
 1. **M0 — Critical correctness fixes: ACCEPTED.** PR #895, exact head `e8672b0`, passed 10/10 required checks and was merged as `f18240e`.
 2. **M1 — table-driven Elementor mapping engine: ACCEPTED.** PRs #898, #899 and #900 are merged (`47ada79`).
-3. **Active: M2 — full single-frame Figma extraction.** M2.1 (typography) is done; **next task: M2.2** (semantic widgets).
-4. Then continue with:
-   - M2: full extraction;
+3. **M2 — full single-frame Figma extraction: IMPLEMENTED (M2.1–M2.10).** PRs #905 and #906 are merged; M2.10 and this sync ride the final M2 PR, whose exact-head gates accept the milestone. Acceptance evidence: the golden landing page exports with zero silent drops (`tests/m2-golden-landing-page.test.ts`).
+4. **Next: M3 — assets, starting at M3.1** (image bytes and rendered appearance). Then continue with:
    - M3: assets;
    - M4: responsive breakpoint engine;
    - M5: smart duplicate and breakpoint alignment;
