@@ -16,7 +16,11 @@ if (baseUrl !== 'http://127.0.0.1:8080' || !token || !chromePath || !outDir) {
   throw new Error('Exact local target, proof token, Chrome and output directory are required.');
 }
 const expectation = JSON.parse(await readFile(join(outDir, 'responsive-expectation.json'), 'utf8'));
-const checks = Array.isArray(expectation.checks) ? expectation.checks : [];
+// Elementor's import regenerates element ids; the import probe maps the harness ids to the imported ones.
+const idMap = JSON.parse(await readFile(join(outDir, 'responsive-id-map.json'), 'utf8'));
+const mapped = (id) => (id === undefined ? undefined : idMap[id] ?? `unmapped-${id}`);
+const checks = (Array.isArray(expectation.checks) ? expectation.checks : [])
+  .map((check) => ({ ...check, dataId: mapped(check.dataId), first: mapped(check.first), second: mapped(check.second) }));
 const url = baseUrl + '/?p15_responsive_render=1';
 const report = {
   schema: 'p15-responsive-render-observation-v1',

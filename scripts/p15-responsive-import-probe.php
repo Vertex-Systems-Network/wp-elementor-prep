@@ -5,7 +5,8 @@
  *   php p15-responsive-import-probe.php <responsive-template.json> <outDir>
  *
  * Imports the merged three-breakpoint template through Elementor's local source, stores its id for the render route,
- * and checks that every `_tablet` / `_mobile` / `hide_*` / `_flex_order*` setting the harness wrote survived the import.
+ * and checks that every `_tablet` / `_mobile` / `hide_*` / `_flex_order*` setting the harness wrote survived the import
+ * (compared by tree position: the import regenerates element ids; the old → new id map goes to responsive-id-map.json).
  * Source values are authored by the harness; no editor-generated serialization or compatibility claim follows.
  */
 declare(strict_types=1);
@@ -48,28 +49,42 @@ update_option('p15_responsive_template_id', $templateId, false);
 $raw = get_post_meta($templateId, '_elementor_data', true);
 $saved = is_string($raw) ? json_decode($raw, true, 512, JSON_THROW_ON_ERROR) : $raw;
 $expected = json_decode((string) file_get_contents($templatePath), true, 512, JSON_THROW_ON_ERROR);
-$responsive = static function ($nodes, array &$out) use (&$responsive): void {
-    foreach ((array) $nodes as $node) {
+// Elementor's import gives every element a new id (`match_site` import), so settings are compared by tree position and
+// the old → new id map is written for the render probe.
+$responsive = static function ($nodes, array &$out, array &$ids, string $path = '') use (&$responsive): void {
+    foreach (array_values((array) $nodes) as $index => $node) {
         if (!is_array($node)) {
             continue;
         }
+        $at = $path === '' ? (string) $index : $path . '.' . $index;
+        $ids[$at] = (string) ($node['id'] ?? '');
         foreach ((array) ($node['settings'] ?? []) as $key => $value) {
             if (preg_match('/(_tablet|_mobile)$|^hide_(desktop|tablet|mobile)$/', (string) $key)) {
-                $out[(string) ($node['id'] ?? '') . '.' . $key] = $value;
+                $out[$at . '.' . $key] = $value;
             }
         }
-        $responsive($node['elements'] ?? [], $out);
+        $responsive($node['elements'] ?? [], $out, $ids, $at);
     }
 };
 $savedKeys = [];
 $expectedKeys = [];
-$responsive($saved, $savedKeys);
-$responsive($expected['content'] ?? [], $expectedKeys);
+$savedIds = [];
+$expectedIds = [];
+$responsive($saved, $savedKeys, $savedIds);
+$responsive($expected['content'] ?? [], $expectedKeys, $expectedIds);
 ksort($savedKeys);
 ksort($expectedKeys);
+$idMap = [];
+foreach ($expectedIds as $at => $oldId) {
+    if (isset($savedIds[$at])) {
+        $idMap[$oldId] = $savedIds[$at];
+    }
+}
+file_put_contents($outDir . '/responsive-id-map.json', json_encode($idMap, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n");
 $report = [
     'schema' => 'p15-responsive-import-observation-v1',
     'templateId' => $templateId,
+    'sameShape' => array_keys($savedIds) === array_keys($expectedIds),
     'expectedResponsiveSettings' => count($expectedKeys),
     'missing' => array_values(array_diff(array_keys($expectedKeys), array_keys($savedKeys))),
     'changed' => array_values(array_filter(array_keys($expectedKeys), static fn($key) => isset($savedKeys[$key]) && $savedKeys[$key] != $expectedKeys[$key])),
@@ -77,7 +92,7 @@ $report = [
     'targetCompatibilityClaim' => false,
     'productionAcceptance' => false,
 ];
-$report['responsivePreserved'] = $report['expectedResponsiveSettings'] > 0 && $report['missing'] === [] && $report['changed'] === [];
+$report['responsivePreserved'] = $report['sameShape'] && $report['expectedResponsiveSettings'] > 0 && $report['missing'] === [] && $report['changed'] === [];
 file_put_contents($outDir . '/responsive-import-observation.json', json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n");
 echo json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
 exit($report['responsivePreserved'] ? 0 : 1);
