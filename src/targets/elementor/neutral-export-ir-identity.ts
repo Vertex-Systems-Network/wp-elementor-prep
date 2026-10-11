@@ -2,6 +2,7 @@ import { sha256Hex } from '../../core/sha256';
 import { canonicalButtonSizing, canonicalContainerSizing } from './container-sizing';
 import { canonicalWrap } from './container-wrap';
 import { canonicalGrid } from './container-grid';
+import { canonicalBackgroundImage } from './container-background-image';
 import { canonicalMargin } from './container-spacing';
 import { canonicalAbsolutePosition, type P15NeutralAbsolutePosition } from './absolute-position';
 import { canonicalGradient } from './container-gradient';
@@ -74,6 +75,7 @@ function canonicalContainer(node: P15NeutralContainerNode): Record<string, unkno
   if (node.clipsContent !== undefined) value.clipsContent = node.clipsContent;
   if (node.boxShadow !== undefined) value.boxShadow = canonicalBoxShadow(node.boxShadow);
   if (node.gradient !== undefined) value.gradient = canonicalGradient(node.gradient);
+  if (node.backgroundImage !== undefined) value.backgroundImage = canonicalBackgroundImage(node.backgroundImage);
   if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
   if (node.fullContentWidth !== undefined) value.fullContentWidth = true;
   if (node.wrap !== undefined) value.wrap = canonicalWrap(node.wrap);
@@ -149,8 +151,12 @@ function canonicalImage(node: P15NeutralImageNode): Record<string, unknown> {
   const value: Record<string, unknown> = {
     kind: 'image',
     sourceNodeId: node.sourceNodeId,
-    url: node.url,
   };
+  if (node.url !== undefined) value.url = node.url;
+  if (node.assetPath !== undefined) value.assetPath = node.assetPath;
+  if (node.sizing !== undefined) value.sizing = canonicalContainerSizing(node.sizing);
+  if (node.heightPx !== undefined) value.heightPx = node.heightPx;
+  if (node.objectFit !== undefined) value.objectFit = node.objectFit;
   if (node.attachmentId !== undefined) value.attachmentId = node.attachmentId;
   return value;
 }

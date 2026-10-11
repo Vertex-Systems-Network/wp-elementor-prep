@@ -1,4 +1,5 @@
 import type { ElementorTemplateV04 } from './template-v04';
+import { slugFragment } from '../../core/slug';
 
 /**
  * Partial export as an explicit REVIEW artifact (decision D-049, recovery M2.9a).
@@ -44,7 +45,7 @@ export interface P15ElementorReviewArtifactV1 {
 
 /** Lowercase CSS class fragment built only from [a-z0-9-]. */
 function classFragment(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 64) || 'unknown';
+  return slugFragment(value, { lowercase: true, maxLength: 64 }) || 'unknown';
 }
 
 export function reviewPlaceholderSettings(reasonCode: string): Record<string, unknown> {

@@ -13,6 +13,7 @@ import {
   type P15NeutralExportNode,
   type P15NeutralJustification,
   type P15NeutralPaddingPx,
+  type P15NeutralImageNode,
   type P15NeutralReviewNode,
   type P15NeutralStyleReview,
   type P15NeutralTextAlignment,
@@ -40,6 +41,7 @@ import {
 } from '../targets/elementor/container-sizing';
 import { deriveP15Wrap, type P15NeutralWrap } from '../targets/elementor/container-wrap';
 import { deriveP15Grid, type P15NeutralGrid } from '../targets/elementor/container-grid';
+import { deriveP15BackgroundImage, type P15NeutralBackgroundImage } from '../targets/elementor/container-background-image';
 import { assignP15Overlap, BASELINE_REVIEW, DISTRIBUTED_JUSTIFICATIONS } from '../targets/elementor/container-spacing';
 import {
   ABSOLUTE_POSITION_REVIEW,
@@ -69,6 +71,10 @@ interface ExtractionState {
   boundsExceeded: 'DEPTH_LIMIT_EXCEEDED' | 'NODE_LIMIT_EXCEEDED' | null;
   /** Figma sizing facts per extracted container, for button sizing after semantic detection (M2.3d). */
   sizingFacts: Map<string, P15ContainerSizingFacts>;
+  /** Recovery M3.3: pack-relative asset path per image layer id, when assets were collected. */
+  assetPaths: ReadonlyMap<string, string>;
+  /** Recovery M3.4b: Stored Original pack path and natural width per image hash. */
+  originals: ReadonlyMap<string, { path: string; widthPx: number }>;
 }
 
 interface ParsedContainerStyle<T> {
@@ -269,7 +275,7 @@ function solidOpaqueHex(paint: Record<string, unknown> | undefined): string | nu
   return `#${channels.map((channel) => byteHex(channel as number).toLowerCase()).join('')}`;
 }
 
-function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string> & { gradient?: P15NeutralGradient } {
+function parseContainerBackground(node: SceneNode, originals: ExtractionState['originals'] = new Map()): ParsedContainerStyle<string> & { gradient?: P15NeutralGradient; backgroundImage?: P15NeutralBackgroundImage } {
   const fills = recordOf(node).fills;
   if (fills === undefined) return {};
   if (!Array.isArray(fills)) {
@@ -307,12 +313,10 @@ function parseContainerBackground(node: SceneNode): ParsedContainerStyle<string>
   }
   const paintRecord = paint as Record<string, unknown>;
   if (paintRecord.type === 'IMAGE') {
-    return {
-      review: {
-        reasonCode: 'CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW',
-        detail: 'Container background image requires a retained asset export/upload reference; the container and its children are preserved.',
-      },
-    };
+    // Recovery M3.4b: FILL / FIT / TILE on the collected Stored Original map exactly; anything else stays review.
+    const original = typeof paintRecord.imageHash === 'string' ? originals.get(paintRecord.imageHash) : undefined;
+    const derived = deriveP15BackgroundImage({ paint: paintRecord, originalPath: original?.path, originalWidthPx: original?.widthPx });
+    return derived.backgroundImage !== undefined ? { backgroundImage: derived.backgroundImage } : { review: derived.review! };
   }
   if (paintRecord.type === 'GRADIENT_LINEAR' || paintRecord.type === 'GRADIENT_RADIAL') {
     // Recovery M2.4c: two-stop axis-aligned linear and default radial gradients map exactly.
@@ -685,7 +689,7 @@ function extractContainer(
 
   // Style facts that cannot be mapped yet stay REVIEW on the container itself, so the
   // container's layout and children are still extracted instead of being dropped.
-  const background = parseContainerBackground(node);
+  const background = parseContainerBackground(node, state.originals);
   const radius = parseContainerRadius(node);
   // Recovery M2.4a: non-uniform radii, an INSIDE solid border (padding lowered by its width) and a visible clip.
   const radii = radius.radii === undefined ? {} : deriveP15CornerRadii(radius.radii, Number(record.width), Number(record.height));
@@ -759,6 +763,7 @@ function extractContainer(
     paddingPx: bordered.paddingPx ?? paddingPx,
     ...(background.value !== undefined ? { backgroundColorHex: background.value } : {}),
     ...(background.gradient !== undefined ? { gradient: background.gradient } : {}),
+    ...(background.backgroundImage !== undefined ? { backgroundImage: background.backgroundImage } : {}),
     ...(radius.value !== undefined ? { cornerRadiusPx: radius.value } : {}),
     ...(radii.radii !== undefined ? { cornerRadiiPx: radii.radii } : {}),
     ...(bordered.border !== undefined ? { border: bordered.border } : {}),
@@ -871,6 +876,30 @@ function extractAbsolute(
   return { ...container, position };
 }
 
+/**
+ * Recovery M3.4: an image layer on its @2x render, sized exactly: FIXED or HUG width → px, FILL width → 100% with
+ * `object-fit: cover` (the render keeps its crop), height → px. A FILL height or a size constraint keeps the review.
+ */
+function extractImage(node: SceneNode, assetPath: string, parent: ParentLayout): P15NeutralImageNode | null {
+  const record = recordOf(node);
+  const facts = sizingFacts(record, parent);
+  if (facts.vertical === 'FILL' || !Number.isFinite(facts.width) || !Number.isFinite(facts.height) || facts.height <= 0 || facts.width <= 0) return null;
+  // The image height is written on the <img>; the widget wrapper only takes width and flex behaviour.
+  const sized = deriveP15WidgetSizing({ ...facts, vertical: 'HUG', minHeight: null, maxHeight: null });
+  if (sized.reviews.length > 0 || facts.minHeight !== null || facts.maxHeight !== null) return null;
+  const width = facts.horizontal === 'FILL' ? null : Math.round(facts.width * 100) / 100;
+  const sizing = { ...(sized.sizing ?? {}), ...(width === null ? {} : { widthPx: width }) };
+  delete (sizing as { fillWidth?: true }).fillWidth;
+  return {
+    kind: 'image',
+    sourceNodeId: node.id,
+    assetPath,
+    sizing: width === null ? { ...sizing, fillWidth: true } : sizing,
+    heightPx: Math.round(facts.height * 100) / 100,
+    ...(width === null ? { objectFit: 'cover' as const } : {}),
+  };
+}
+
 function extractNode(
   node: SceneNode,
   depth: number,
@@ -889,9 +918,22 @@ function extractNode(
     return null;
   }
   if (hasImageFill(node) && !isContainerLike(node)) {
+    // Recovery M3.3 (D-051): an image layer with a collected @1x render becomes an Image widget on that pack asset,
+    // unless it carries effects or other facts the render's natural size would not lay out exactly.
+    const assetPath = state.assetPaths.get(node.id);
+    if (assetPath !== undefined && unmappedVisualFactReviews(node).length === 0) {
+      const image = extractImage(node, assetPath, parent);
+      if (image) return image;
+    }
     return review(node, 'IMAGE_ASSET_EXPORT_REQUIRED', 'Image-backed Figma content requires a retained asset export/upload reference before Elementor generation.');
   }
   if (isAbsolute(node)) return extractAbsolute(node, depth, state, parent, absoluteParent);
+  // Recovery M3.5: a vector layer or pure-vector icon with a collected SVG becomes an Image widget on that SVG.
+  const svgPath = state.assetPaths.get(node.id);
+  if (svgPath !== undefined && svgPath.endsWith('.svg') && unmappedVisualFactReviews(node, isContainerLike(node)).length === 0) {
+    const icon = extractImage(node, svgPath, parent);
+    if (icon) return icon;
+  }
   if (node.type === 'TEXT') return extractText(node, parent);
   const rule = extractRule(node, parent?.direction ?? null);
   if (rule) return rule.kind === 'divider' ? placeDivider(rule, node, parent) : rule;
@@ -919,8 +961,10 @@ function boundsReview(frame: FrameNode, reason: NonNullable<ExtractionState['bou
 export function extractP15NeutralExportDocumentFromFigmaFrame(
   frame: FrameNode,
   documentType: P15NeutralDocumentType = 'page',
+  assetPaths: ReadonlyMap<string, string> = new Map(),
+  originals: ReadonlyMap<string, { path: string; widthPx: number }> = new Map(),
 ): P15NeutralExportDocumentV1 {
-  const state: ExtractionState = { visited: 0, boundsExceeded: null, sizingFacts: new Map() };
+  const state: ExtractionState = { visited: 0, boundsExceeded: null, sizingFacts: new Map(), assetPaths, originals };
   const extracted = extractNode(frame, 1, state);
   const nodes: P15NeutralExportNode[] = state.boundsExceeded
     ? [boundsReview(frame, state.boundsExceeded)]
@@ -948,8 +992,10 @@ function collectLayerNames(node: SceneNode, names: Map<string, string>): void {
 export function buildP15ElementorV1PreviewFromFigmaFrame(
   frame: FrameNode,
   documentType: P15NeutralDocumentType = 'page',
+  assetPaths: ReadonlyMap<string, string> = new Map(),
+  originals: ReadonlyMap<string, { path: string; widthPx: number }> = new Map(),
 ): P15FigmaNeutralExtractionResult {
-  const extracted = extractP15NeutralExportDocumentFromFigmaFrame(frame, documentType);
+  const extracted = extractP15NeutralExportDocumentFromFigmaFrame(frame, documentType, assetPaths, originals);
   const coverageAudit = auditP15PropertyCoverage(frame, extracted);
   // A silent drop the audit finds becomes an explicit review, so no candidate ever loses content unannounced.
   const document = withCoverageReviews(extracted, coverageAudit);

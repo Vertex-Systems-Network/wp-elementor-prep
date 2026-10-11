@@ -17,6 +17,8 @@ import {
   type P15NeutralWidgetSizing,
 } from './container-sizing';
 import { wrapProblems, type P15NeutralWrap } from './container-wrap';
+import { P15_ASSET_PATH_PATTERN } from './neutral-export-ir-asset-path';
+import { backgroundImageProblems, type P15NeutralBackgroundImage } from './container-background-image';
 import { gridProblems, type P15NeutralGrid } from './container-grid';
 import { marginProblems } from './container-spacing';
 import {
@@ -40,6 +42,8 @@ export type { P15NeutralButtonSizing, P15NeutralContainerSizing, P15NeutralWidge
 export type { P15NeutralAbsolutePosition, P15NeutralAxisOffset } from './absolute-position';
 export type { P15NeutralAlignContent, P15NeutralWrap } from './container-wrap';
 export type { P15NeutralGrid, P15NeutralGridTrack } from './container-grid';
+export type { P15NeutralBackgroundImage } from './container-background-image';
+export { P15_ASSET_PATH_PATTERN } from './neutral-export-ir-asset-path';
 export { P15_NEUTRAL_EXPORT_MAX_URL_LENGTH } from './link-url';
 export const P15_NEUTRAL_EXPORT_IR_VERSION = 'p15-neutral-export-ir-v2' as const;
 export const P15_NEUTRAL_EXPORT_MAX_NODES = 10_000;
@@ -92,6 +96,8 @@ export interface P15NeutralContainerNode extends P15NeutralNodeBase {
   border?: P15NeutralBorder;
   /** The frame clips visible content (`overflow: hidden`, recovery M2.4a). */
   clipsContent?: true;
+  /** Background image on a Stored Original pack asset (recovery M3.4b); exclusive with colour and gradient. */
+  backgroundImage?: P15NeutralBackgroundImage;
   /** Two-stop linear or radial gradient background (recovery M2.4c); exclusive with `backgroundColorHex`. */
   gradient?: P15NeutralGradient;
   /** One drop or inner shadow (recovery M2.4b). */
@@ -177,9 +183,19 @@ export interface P15NeutralButtonNode extends P15NeutralNodeBase {
 
 export interface P15NeutralImageNode extends P15NeutralNodeBase {
   kind: 'image';
-  url: string;
+  /** An absolute http(s) URL already on the target; exclusive with `assetPath`. */
+  url?: string;
+  /** A pack-relative asset path (`assets/<assetId>.<ext>`, recovery M3.3, D-051); exclusive with `url`. */
+  assetPath?: string;
   attachmentId?: number;
+  /** Widget width and flex-item sizing (recovery M3.4). */
+  sizing?: P15NeutralWidgetSizing;
+  /** Exact image height in px (recovery M3.4). */
+  heightPx?: number;
+  /** `cover` keeps the render's crop when a FILL width differs from the design width (recovery M3.4). */
+  objectFit?: 'cover';
 }
+
 
 export interface P15NeutralReviewNode extends P15NeutralNodeBase {
   kind: 'review';
@@ -423,7 +439,7 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   if (kind === 'container') {
     validateExactKeys(
       value,
-      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'sizing', 'fullContentWidth', 'wrap', 'grid', 'marginPx', 'position', 'zIndex', 'styleReviews', 'children'],
+      ['kind', 'sourceNodeId', 'direction', 'gapPx', 'paddingPx', 'alignItems', 'justifyContent', 'backgroundColorHex', 'cornerRadiusPx', 'cornerRadiiPx', 'border', 'clipsContent', 'boxShadow', 'gradient', 'backgroundImage', 'sizing', 'fullContentWidth', 'wrap', 'grid', 'marginPx', 'position', 'zIndex', 'styleReviews', 'children'],
       path,
       state,
     );
@@ -460,6 +476,12 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
     ];
     for (const issue of styleIssues) pushIssue(state, 'P15_IR_STYLE_INVALID', issue.path, issue.message);
     validatePlacement(value, path, state);
+    if (value.backgroundImage !== undefined) {
+      for (const issue of backgroundImageProblems(value.backgroundImage, `${path}.backgroundImage`)) pushIssue(state, 'P15_IR_URL_INVALID', issue.path, issue.message);
+      if (value.backgroundColorHex !== undefined || value.gradient !== undefined) {
+        pushIssue(state, 'P15_IR_COLOR_INVALID', `${path}.backgroundImage`, 'A background image is exclusive with a background colour or gradient.');
+      }
+    }
     if (value.fullContentWidth !== undefined && value.fullContentWidth !== true) {
       pushIssue(state, 'P15_IR_SIZING_INVALID', `${path}.fullContentWidth`, 'fullContentWidth must be true when provided.');
     }
@@ -563,9 +585,19 @@ function validateNode(value: unknown, path: string, depth: number, state: Valida
   }
 
   if (kind === 'image') {
-    validateExactKeys(value, ['kind', 'sourceNodeId', 'url', 'attachmentId'], path, state);
-    if (typeof value.url !== 'string' || !validAbsoluteUrl(value.url, ['https:', 'http:'])) {
+    validateExactKeys(value, ['kind', 'sourceNodeId', 'url', 'assetPath', 'attachmentId', 'sizing', 'heightPx', 'objectFit'], path, state);
+    validateWidgetSizing(value.sizing, `${path}.sizing`, state);
+    if (value.heightPx !== undefined && !(typeof value.heightPx === 'number' && Number.isFinite(value.heightPx) && value.heightPx > 0
+      && value.heightPx <= 16_384 && Math.round(value.heightPx * 100) / 100 === value.heightPx)) {
+      pushIssue(state, 'P15_IR_SIZING_INVALID', `${path}.heightPx`, 'Image height must be 0-16384px, non-zero, with at most two decimals.');
+    }
+    if (value.objectFit !== undefined && value.objectFit !== 'cover') pushIssue(state, 'P15_IR_SIZING_INVALID', `${path}.objectFit`, 'objectFit must be cover when provided.');
+    if ((value.url === undefined) === (value.assetPath === undefined)) {
+      pushIssue(state, 'P15_IR_URL_INVALID', path, 'An image has exactly one of url or assetPath.');
+    } else if (value.url !== undefined && (typeof value.url !== 'string' || !validAbsoluteUrl(value.url, ['https:', 'http:']))) {
       pushIssue(state, 'P15_IR_URL_INVALID', `${path}.url`, 'Image URL must be a bounded absolute http(s) URL.');
+    } else if (value.assetPath !== undefined && (typeof value.assetPath !== 'string' || !P15_ASSET_PATH_PATTERN.test(value.assetPath))) {
+      pushIssue(state, 'P15_IR_URL_INVALID', `${path}.assetPath`, 'assetPath must be a pack-relative assets/<assetId>.<png|jpg|gif|webp|svg> path.');
     }
     if (value.attachmentId !== undefined && (!Number.isSafeInteger(value.attachmentId) || Number(value.attachmentId) < 0)) {
       pushIssue(state, 'P15_IR_ATTACHMENT_ID_INVALID', `${path}.attachmentId`, 'attachmentId must be a safe non-negative integer when provided.');

@@ -97,7 +97,7 @@ class Audit {
     const button = ir.kind === 'button' ? ir : null;
     if (!container && !button) return;
     if (present(visiblePaints(node.fills))) {
-      this.need(id, 'fills', (container?.backgroundColorHex ?? container?.gradient ?? button?.backgroundColorHex) !== undefined,
+      this.need(id, 'fills', (container?.backgroundColorHex ?? container?.gradient ?? container?.backgroundImage ?? button?.backgroundColorHex) !== undefined,
         ['FILL', 'GRADIENT', 'BACKGROUND'], 'Visible frame fill.');
     }
     const strokeWeights = [node.strokeWeight, node.strokeTopWeight, node.strokeRightWeight, node.strokeBottomWeight, node.strokeLeftWeight];
@@ -181,6 +181,8 @@ class Audit {
       this.text(node, id, ir.kind === 'text' || ir.kind === 'heading' ? ir.typography : undefined, id);
       return;
     }
+    // An image or SVG asset is the rendered subtree itself (recovery M3.4/M3.5).
+    if (ir.kind === 'image') return;
     this.frame(node, id, ir);
     const folded = this.index.folded.has(id) ? ir : null;
     for (const child of childrenOf(node)) this.walk(child, folded);

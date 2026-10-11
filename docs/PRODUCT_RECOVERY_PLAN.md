@@ -7,9 +7,9 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M2 — Full single-frame Figma extraction**: every task done; acceptance (§5: golden landing page with zero silent drops) holds in `tests/m2-golden-landing-page.test.ts` and closes when the final M2 PR passes its exact-head gates. M1 accepted: PR #900 merged as `47ada79`.
-> - Next task: **M2 acceptance** (all M2 tasks done; run §5 acceptance and the once-per-milestone canonical sync), then **M3.1**
-> - Last completed task: **M2.10** (content width of extracted Containers)
+> - Active milestone: **M3 — Assets** (M2 accepted: PR #907, exact head `ff86754`, 10/10 checks green, merged as `850c517`; golden landing page with zero silent drops)
+> - Next task: **M3.6b** (real-target asset import harness step)
+> - Last completed task: **M3.1** (asset collector)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -379,12 +379,37 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 
 ### M3 — Assets
 
-- [ ] **M3.1** Image bytes. Read original bytes through `figma.getImageByHash(hash).getBytesAsync()`. Produce the rendered appearance through `exportAsync` (PNG @1x/@2x). Export vectors and icons as SVG.
-- [ ] **M3.2** Atomic asset-pack ZIP: Template JSON + `/assets/*` + manifest (hash, dimensions, alt text, usage).
-- [ ] **M3.3** Elementor media references. The template references pack-relative asset ids, and an import guide plus an optional future WordPress companion handles media upload. The core stays network-free. Temporary Figma URLs are never emitted, which resolves the root cause of #856.
-- [ ] **M3.4** Image widget sizing: width, height, object-fit and crop. Container background image: size, position and repeat.
-- [ ] **M3.5** SVG icons → Icon or Image widget (SVG).
-- [ ] **M3.6** Real-target harness. Import the asset pack into the disposable WordPress + Elementor instance (`p15-real-target-proof.yml`) and assert every image returns HTTP 200 in the render.
+- [x] **M3.1** Image bytes. Read original bytes through `figma.getImageByHash(hash).getBytesAsync()`. Produce the rendered appearance through `exportAsync` (PNG @1x/@2x). Export vectors and icons as SVG. _(done 2026-10-11)_
+  - `src/plugin/p15-asset-collector.ts` (`p15-asset-collector-v1`), with the Figma API injected (`getImageByHash` → `getBytesAsync`/`getSizeAsync`, `node.exportAsync`). **Stored Original**: one record per image hash (content-addressed `original-<hash>`, every using node listed, MIME sniffed from the PNG/JPEG/GIF/WebP signature, original pixel size). **Rendered Appearance**: every image layer as PNG @1x and @2x (`render-<node>@<scale>x`), capturing crop, scale mode, filters and effects. Vector layers and frames/groups made only of vectors (icons) → one SVG each (`svg-<node>`).
+  - Every record has a byte SHA-256 (new `sha256BytesHex` in `src/core/sha256.ts`, cross-checked against `node:crypto`), byte length and pixel size. Bounds: 500 assets, 20 MB per asset, 200 MB total. Missing hashes, unreadable or unsupported images, failed exports, empty or oversized assets and id collisions are explicit reviews. No Figma mutation, no network, no URL.
+  - Not yet wired into the plugin flow; the asset pack (M3.2) consumes it. Tests: `tests/m3-asset-collector.test.ts`, `tests/m3-sha256-bytes.test.ts`.
+- [x] **M3.2** Atomic asset-pack ZIP: Template JSON + `/assets/*` + manifest (hash, dimensions, alt text, usage). _(done 2026-10-11)_
+  - `src/core/zip.ts`: a minimal deterministic ZIP (STORE, fixed 1980-01-01 timestamp, UTF-8 names, CRC-32, safe relative paths only) and a reader that re-checks every CRC; cross-checked against Python `zipfile` in the tests. No dependency added.
+  - `src/targets/elementor/asset-pack.ts` (`p15-elementor-asset-pack-v1`): `manifest.json` + `template.json` + `assets/<assetId>.<ext>`. The manifest records the label (`LOCAL CANDIDATE` or `REVIEW REQUIRED`, always `targetImportReady: false`), the template SHA-256, and per asset its id, path, kind, MIME type, SHA-256, byte length, pixel size, alt text (the layer name unless it is a Figma default name; SVG icons are decorative) and usage (node ids). A picture without a descriptive name gets `ASSET_ALT_TEXT_MISSING`.
+  - Atomic: the pack is built in memory, read back and verified against its own manifest before any bytes are returned; an asset whose bytes do not match its recorded SHA-256, an unsafe id or a failed verification returns no bytes (`PACK_BLOCKED`). Identical input gives byte-identical packs. No URL.
+  - Tests: `tests/m3-asset-pack.test.ts`.
+- [x] **M3.3** Elementor media references. The template references pack-relative asset ids, and an import guide plus an optional future WordPress companion handles media upload. The core stays network-free. Temporary Figma URLs are never emitted, which resolves the root cause of #856. _(done 2026-10-11, decision D-051)_
+  - IR: an image node has exactly one of `url` (absolute, already on the target) or `assetPath` (pack-relative `assets/<assetId>.<ext>`), validated and in the identity. The generator writes the Image widget `image.url` as that path and adds `ASSET_UPLOAD_REQUIRED` naming the asset: Elementor's template import cannot fetch a pack path, so a template with pack images is a D-049 `REVIEW REQUIRED` artifact until M3.6 proves an upload-and-relink import.
+  - Extractor: with an asset map, an image layer with no unmapped visual facts becomes an Image widget on its @1x Rendered Appearance (natural size = layer size until M3.4 adds sizing); otherwise it keeps `IMAGE_ASSET_EXPORT_REQUIRED`.
+  - `src/plugin/p15-elementor-pack-builder.ts`: frame → collect assets → extract with the asset map → generate (with coverage audit) → pack the candidate as `LOCAL CANDIDATE` or the review artifact as `REVIEW REQUIRED`. The pack gains `IMPORT.md`: upload steps, an asset table (path, kind, size, alt text, usage) and every review item, built only from the manifest.
+  - No temporary Figma URL anywhere (root cause of #856; the issue's external evidence stays its own). Tests: `tests/m3-pack-builder.test.ts` (the golden landing page image end to end), `tests/m3-asset-pack.test.ts`.
+- [x] **M3.4** Image widget sizing: width, height, object-fit and crop. Container background image: size, position and repeat (split into M3.4a–b).
+  - [x] **M3.4a** Image widget sizing _(done 2026-10-11)_. R0: `includes/widgets/image.php` (blob `ec8d2ea`) `width`/`height` sliders on `{{WRAPPER}} img`, `object-fit` (condition: a height), and the `image_size` group (`includes/controls/groups/image-size.php` blob `7aa9cd7`) whose default `large` would serve a downscaled rendition once relinked, so `full` is written.
+    - Image layers now use their @2x Rendered Appearance (crop, scale mode and filters baked in), shown at exactly the layer size: FIXED/HUG width → `width` px plus the widget's `_element_width`/`_element_custom_width`; FILL width → `width: 100%` with `object-fit: cover` and the widget's equal-share basis; height → `height` px; flex behaviour from the M2.3 widget rules.
+    - A FILL height, a size constraint or an unmapped visual fact (opacity, effects, …) keeps `IMAGE_ASSET_EXPORT_REQUIRED`.
+    - IR: image `sizing`, `heightPx`, `objectFit` (validated, in the identity). Tests: `tests/m3-image-sizing.test.ts`, `tests/m3-pack-builder.test.ts`.
+  - [x] **M3.4b** Container background image _(done 2026-10-11)_ (`src/targets/elementor/container-background-image.ts`; R0: `groups/background.php` blob `ac8e1a5` `image`/`position`/`repeat`/`size`/`bg_width`).
+    - One image fill on a frame → `background_background: classic` + `background_image` on the frame's Stored Original pack asset: FILL → `cover`, FIT → `contain` (both `center center`, `no-repeat`), TILE → `initial` with `background_bg_width` = natural width × `scalingFactor`, `top left`, `repeat`. CROP, a rotated paint, non-zero image filters, a translucent or blended paint and a missing original stay `CONTAINER_BACKGROUND_IMAGE_REQUIRES_REVIEW`; the upload is an `ASSET_UPLOAD_REQUIRED` review (D-051).
+    - The collector renders only image leaves; a frame with content contributes its original. The coverage audit counts a background image as carrying the fill.
+    - IR: container `backgroundImage` (exclusive with colour/gradient, validated, in the identity). Tests: `tests/m3-background-image.test.ts`.
+- [x] **M3.5** SVG icons → Icon or Image widget (SVG) _(done 2026-10-11)_.
+  - A vector layer, or a frame/group made only of vectors, whose SVG was collected becomes an Image widget on `assets/svg-<node>.svg`, sized like an image (width/height px, flex rules); the Image widget is used because it renders any SVG exactly, while the Icon widget's colour controls would only matter for recolouring. The coverage audit treats an image/SVG node as its whole rendered subtree.
+  - The `ASSET_UPLOAD_REQUIRED` review for an SVG adds that WordPress blocks SVG uploads by default and how to allow them only for trusted files. Icons are decorative (empty alt text, no alt review). A vector without a collected SVG keeps its review.
+  - Tests: `tests/m3-svg-icons.test.ts`.
+- [ ] **M3.6** Real-target harness. Import the asset pack into the disposable WordPress + Elementor instance (`p15-real-target-proof.yml`) and assert every image returns HTTP 200 in the render (split into M3.6a–b).
+  - [x] **M3.6a** Asset relink _(done 2026-10-11)_: `src/targets/elementor/asset-relink.ts` rewrites every pack-relative `image` / `background_image` MEDIA value to an uploaded attachment (`id` + absolute http(s) `url`), leaves everything else (other URLs, text) untouched and reports any unresolved pack path (`RELINKED` / `INCOMPLETE`). The step `IMPORT.md` describes and the harness/companion automates. Pure and network-free. Tests: `tests/m3-asset-relink.test.ts`.
+  - [ ] **M3.6b** Harness: in an isolated step of `p15-real-target-proof.yml` (never altering the retained proof chain), build a pack from a fixture, `wp media import` its assets, relink, import the template, render, and assert every image returns HTTP 200 (`RQ-REC-M3-ASSET-IMPORT`).
+- [ ] **M3.7** Plugin UI: offer the asset pack (`buildP15ElementorPackFromFigmaFrame` with `figma` as the API) as a download beside the review list, labelled exactly as the manifest (`LOCAL CANDIDATE` / `REVIEW REQUIRED`), never as ready for import. Added during M3.3.
 
 ### M4 — Responsive breakpoint engine
 

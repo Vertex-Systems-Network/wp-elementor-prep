@@ -3,6 +3,7 @@ import { absolutePositionSettings, zIndexSettings } from './absolute-position';
 import { wrapSettings } from './container-wrap';
 import { gridSettings } from './container-grid';
 import { containerMarginSettings } from './container-spacing';
+import { backgroundImageSettings } from './container-background-image';
 import { buildP15FontManifest } from './font-manifest';
 import {
   P15_BLOCKING_REVIEW_CODES,
@@ -178,6 +179,7 @@ function containerSettings(node: P15NeutralContainerNode): ElementorSettingsV04 
   Object.assign(settings, containerVisualStyleSettings(node));
   Object.assign(settings, boxShadowSettings(node.boxShadow));
   Object.assign(settings, gradientSettings(node.gradient));
+  Object.assign(settings, backgroundImageSettings(node.backgroundImage));
   Object.assign(settings, containerSizingSettings(node.sizing));
   // Recovery M2.10: Elementor 4.2.4 defaults `content_width` to boxed (container.php blob 3486766), which caps the
   // inner box at `--content-width: min(100%, var(--container-max-width, 1140px))` (_container.scss blob d6c65cb).
@@ -286,7 +288,29 @@ function ruleWidget(node: P15NeutralDividerNode | P15NeutralSpacerNode, state: G
   };
 }
 
+/**
+ * Image widget sizing (recovery M3.4). Elementor 4.2.4 `includes/widgets/image.php` (blob ec8d2ea9868f53db182221893748987fc433df3c):
+ * `width` / `height` sliders on `{{WRAPPER}} img`, `object-fit` (condition: a height) and the `image_size` group whose
+ * default `large` would serve a downscaled rendition once the image is relinked to an attachment, so `full` is written.
+ */
+function imageSizeSettings(node: P15NeutralImageNode): Record<string, unknown> {
+  if (node.sizing === undefined && node.heightPx === undefined) return {};
+  const settings: Record<string, unknown> = { image_size: 'full' };
+  if (node.sizing?.widthPx !== undefined) settings.width = { unit: 'px', size: node.sizing.widthPx, sizes: [] };
+  if (node.sizing?.fillWidth) settings.width = { unit: '%', size: 100, sizes: [] };
+  if (node.heightPx !== undefined) settings.height = { unit: 'px', size: node.heightPx, sizes: [] };
+  if (node.objectFit !== undefined) settings['object-fit'] = node.objectFit;
+  Object.assign(settings, widgetSizingSettings(node.sizing));
+  return settings;
+}
+
 function imageWidget(node: P15NeutralImageNode, state: GenerationState): ElementorWidgetV04 {
+  // D-051: a pack asset cannot be fetched by Elementor's template import, so it is an explicit upload review.
+  if (node.assetPath !== undefined) {
+    state.reviewEntries.push({ sourceNodeId: node.sourceNodeId, reasonCode: 'ASSET_UPLOAD_REQUIRED',
+      detail: `Upload ${node.assetPath} from the asset pack to the Media Library and select it in this Image widget (see IMPORT.md).${
+        node.assetPath.endsWith('.svg') ? ' WordPress blocks SVG uploads by default: enable them (for example Elementor → Settings → Advanced → Unfiltered File Uploads) only if you trust the file.' : ''}` });
+  }
   return {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'widget',
@@ -295,8 +319,9 @@ function imageWidget(node: P15NeutralImageNode, state: GenerationState): Element
     settings: {
       image: {
         id: node.attachmentId ?? 0,
-        url: node.url,
+        url: node.url ?? node.assetPath,
       },
+      ...imageSizeSettings(node),
     },
     elements: [],
   };
@@ -346,6 +371,11 @@ function mapNode(
   if (node.kind === 'divider' || node.kind === 'spacer') return ruleWidget(node, state);
 
   pushStyleReviews(node.sourceNodeId, node.styleReviews, state);
+  // D-051: a pack background image is an explicit upload review, like an Image widget's.
+  if (node.backgroundImage !== undefined) {
+    state.reviewEntries.push({ sourceNodeId: node.sourceNodeId, reasonCode: 'ASSET_UPLOAD_REQUIRED',
+      detail: `Upload ${node.backgroundImage.assetPath} from the asset pack to the Media Library and select it as this Container's background image (see IMPORT.md).` });
+  }
   const container: ElementorContainerV04 = {
     id: stableElementorId(node.kind, node.sourceNodeId, state),
     elType: 'container',

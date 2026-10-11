@@ -385,3 +385,9 @@ Date: 2026-10-10
 Status: ACCEPTED (user decision)
 
 The M1 acceptance bar "resolution layer under 5k LOC" is replaced by: no family wrapper carries hand-written manifest/result/issue/status interfaces, and the layer keeps every Elementor evidence block, message and comment. Measured after M1.8, the layer is 9.3k lines (6.8k wrappers plus a 2.6k engine), down from about 36.0k at the audited baseline. Further reduction would only come from evidence, comments or dense code, which repeats the defect pattern M1.5 removed. Contract repairs that change accepted inputs or writes publish new manifest/result versions, with a diff test against the old write baseline.
+
+## D-051 — Pack-relative media references; images stay REVIEW until a real import proves upload
+Date: 2026-10-11  
+Status: ACCEPTED (recovery M3.3)
+
+An Elementor Image widget generated from a Figma image layer references the asset by its pack-relative path (`assets/<assetId>.<ext>` in the M3.2 asset pack), never a temporary Figma URL (the root cause of #856) and never a guessed site URL. Elementor's template import cannot fetch a pack-relative path, so every such image adds an explicit `ASSET_UPLOAD_REQUIRED` review naming the asset: a template with pack images is a D-049 `REVIEW REQUIRED` artifact, with the pack's `IMPORT.md` guide listing the uploads. This holds until the M3.6 real-target harness proves an import path that uploads and relinks the media; only then may such a template be labelled a local candidate. Until M3.4 adds explicit image sizing, the reference is the @1x Rendered Appearance, whose natural size equals the layer size (exact layout); the Stored Original stays in the pack for upload and provenance limits per D-037.
