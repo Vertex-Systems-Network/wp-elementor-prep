@@ -66,5 +66,5 @@ try {
 }
 if (!report.pass) {
   process.exitCode = 1;
-  console.error('Asset-pack render observation failed; see asset-pack-render-observation.json.');
+  console.error('Asset-pack render observation failed:\n' + JSON.stringify(report, null, 2));
 }

@@ -125,5 +125,6 @@ $report = [
     'productionAcceptance' => false,
 ];
 file_put_contents($outDir . '/asset-pack-import-observation.json', json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n");
-echo json_encode(['templateId' => $templateId, 'mediaPreserved' => $report['mediaPreserved']]) . "\n";
+// The full observation is also printed, so the job log shows exactly what Elementor saved (no URLs carry the token).
+echo json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
 exit($report['mediaPreserved'] ? 0 : 1);
