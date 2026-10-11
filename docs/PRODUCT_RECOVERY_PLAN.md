@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M4 — Responsive breakpoint engine** (M3 accepted: PR #910, exact head `0b8663f`, 10/10 checks green, merged as `a4ee8dd`; images and SVG load in the real-target render, run 38103090238)
-> - Next task: **M4.2** (deterministic node matcher)
-> - Last completed task: **M4.1** (breakpoint set)
+> - Next task: **M4.3b** (presence and order)
+> - Last completed task: **M4.3a** (container layout merge)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -426,8 +426,14 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
   - `src/core/breakpoint-set.ts`: widest first; `BREAKPOINT_SET` only for 2–3 distinct devices including desktop (the M4.3 base). Two frames on one device or no desktop → `REVIEW` with the reason; a wrong count, invalid width, duplicate frame or invalid thresholds → `BLOCKED`. Thresholds are a parameter (per profile) and part of the set's fingerprint.
   - Plugin: `p15-breakpoint-selection.ts` reads 2–3 selected frames or one Section's visible child frames; `p15-breakpoint-set-controller.ts` shows the set and records it only when the user confirms the exact fingerprint shown, re-checked against the current selection; any selection change clears it. UI: **Detect breakpoints**, the classified frames, review reasons and **Confirm breakpoint set**.
   - Tests: `tests/m4-breakpoint-set.test.ts`, `tests/m4-breakpoint-set-ui.test.mjs`.
-- [ ] **M4.2** Deterministic node matcher. Go top-down per section and score candidate pairs on type, name, text digest, image hash, sibling order and normalised relative geometry. Use greedy matching with a confidence score. The output is a match map plus unmatched nodes.
-- [ ] **M4.3** Merge. Desktop values form the base. Tablet and mobile diffs are emitted through the M1 engine as `_tablet`/`_mobile` keys. Order changes map to `_order_*`. Elements present on some breakpoints only map to `hide_desktop`/`hide_tablet`/`hide_mobile`.
+- [x] **M4.2** Deterministic node matcher. Go top-down per section and score candidate pairs on type, name, text digest, image hash, sibling order and normalised relative geometry. Use greedy matching with a confidence score. The output is a match map plus unmatched nodes. _(done 2026-10-11)_.
+  - `src/core/breakpoint-matcher.ts`: the confirmed roots are matched by definition; then, per matched pair, visible children are scored (same type class only: name 0.30, content 0.30 — text, image hash, shared child names or size class —, sibling order 0.20, normalised centre in the parent 0.20) and matched greedily (score ≥ 0.6, ties by index then id), recursing into each match. Nodes are only compared under counterpart parents.
+  - Never guesses: a candidate with a still-free rival within 0.05 is reported as ambiguous and both stay unmatched. Output: matches with confidence, unmatched desktop/variant nodes (with subtrees), ambiguous pairs; deterministic and independent of input order.
+  - Tests: `tests/m4-breakpoint-matcher.test.ts` (reflowed landing page with repeated cards, one-breakpoint-only nodes, ties, hidden layers).
+- [ ] **M4.3** Merge. Desktop values form the base. Tablet and mobile diffs are emitted through the M1 engine as `_tablet`/`_mobile` keys. Order changes map to `_order_*`. Elements present on some breakpoints only map to `hide_desktop`/`hide_tablet`/`hide_mobile`. (split into M4.3a–c).
+  - [x] **M4.3a** Container layout merge _(done 2026-10-11)_: `src/targets/elementor/responsive-merge.ts` compares every matched desktop/variant container and writes the differing direction, alignment, gap, padding and margin as explicit tablet/mobile values through one M1 page composition (`_tablet`/`_mobile` keys; the desktop base must be review-free). R0: `assets/dev/scss/frontend/_container.scss` (blob `d6c65cb`) `--margin-*: 0px` (absent margin = zero box) and `--padding-*: var(--container-default-padding-*, 10px)` (an unset variant padding is a review, not a value). Everything else is an explicit review: unmatched/ambiguous nodes and reordered children (→ M4.3b), wrap/grid changes, unset variant values and other differing container or widget properties (→ M4.3c). Tests: `tests/m4-responsive-merge.test.ts`.
+  - [ ] **M4.3b** Presence and order: desktop-only / variant-only elements → `hide_*`; reordered children → `_flex_order_*` (new composable steps for the flex-item order families).
+  - [ ] **M4.3c** Widget and remaining container properties per breakpoint (typography metrics, text/button alignment, sizing, min-height, width, radius) through their responsive families.
 - [ ] **M4.4** Mismatch policy. Nesting that differs in a way that cannot map → REVIEW with an explanation. The matcher never guesses.
 - [ ] **M4.5** UI responsive report: per-section match status and confidence.
 - [ ] **M4.6** Three-breakpoint golden fixture: the export renders at 1440, 1024 and 390 in the real-target harness.

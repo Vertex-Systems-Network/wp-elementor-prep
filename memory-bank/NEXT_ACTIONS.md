@@ -13,7 +13,7 @@ Canonical backlog: [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PL
 2. **M1 — table-driven Elementor mapping engine: ACCEPTED.** PRs #898, #899 and #900 are merged (`47ada79`).
 3. **M2 — full single-frame Figma extraction: ACCEPTED.** PRs #905, #906 and #907 are merged (`850c517`; #907 exact head `ff86754`, 10/10 checks). Acceptance evidence: the golden landing page exports with zero silent drops (`tests/m2-golden-landing-page.test.ts`).
 4. **M3 — assets: ACCEPTED.** PRs #908, #909 and #910 are merged (PR #910, exact head `0b8663f`, 10/10 checks, merged `a4ee8dd`). Acceptance evidence: images and SVG load in the real-target render (run 38103090238).
-5. **Active: M4 — responsive breakpoint engine.** M4.1 (breakpoint set) is done; **next task: M4.2** (node matcher). Then continue with:
+5. **Active: M4 — responsive breakpoint engine.** M4.1 (breakpoint set), M4.2 (node matcher) and M4.3a (container layout merge) are done; **next task: M4.3b** (presence and order). Then continue with:
    - M4: responsive breakpoint engine;
    - M5: smart duplicate and breakpoint alignment;
    - M6: target profiles and v4 Atomic;
