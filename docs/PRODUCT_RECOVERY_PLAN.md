@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M4 — Responsive breakpoint engine** (M3 accepted: PR #910, exact head `0b8663f`, 10/10 checks green, merged as `a4ee8dd`; images and SVG load in the real-target render, run 38103090238)
-> - Next task: **M4.4** (mismatch policy)
-> - Last completed task: **M4.3d** (sizes per breakpoint)
+> - Next task: **M4.5** (UI responsive report)
+> - Last completed task: **M4.4** (mismatch policy)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -445,7 +445,10 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
     - New `responsive-container-width` (`width_<device>`, condition `content_width: full`; R0 `container.php` blob `3486766`) and `responsive-widget-width` (`_element_custom_width_<device>` for Heading/Text/Button, condition `_element_width: initial`; R0 `common-base.php` blob `77c497b`) families at the neutral precision (two decimals). Image widgets are excluded: their picture is sized by the Image widget's own width/height.
     - Composition steps `minHeight` and `borderRadius` (existing integer families) and `containerWidth`, `widgetWidth`. The merge writes an exact width that differs on both sides, min height and uniform radius (absent radius = 0); a width mode change, hug/fill/flex sizing and values outside the existing families' integer domains are `RESPONSIVE_SIZING_NOT_MERGED` reviews.
     - Tests: `tests/m4-responsive-merge.test.ts`, `tests/m4-responsive-presence-families.test.ts`.
-- [ ] **M4.4** Mismatch policy. Nesting that differs in a way that cannot map → REVIEW with an explanation. The matcher never guesses.
+- [x] **M4.4** Mismatch policy. Nesting that differs in a way that cannot map → REVIEW with an explanation. The matcher never guesses. _(done 2026-10-11)_.
+  - The merge's reviews carry the explanation for every unmappable structure: `RESPONSIVE_MATCH_AMBIGUOUS` (matcher tie), `RESPONSIVE_KIND_DIFFERS`, `RESPONSIVE_NODE_NOT_PLACED` (variant-only node without a matched parent or with review content) and, new, `RESPONSIVE_NESTING_DIFFERS`: the same content (subtree identical apart from node ids) under a different parent on a breakpoint. That case still renders on every breakpoint (hidden original plus a breakpoint-only copy) but duplicates content, so it is a review.
+  - Fix found on the way: a variant-only copy is now hidden on every other device whether or not that device has its own frame (a device without a frame shows the desktop design).
+  - Tests: `tests/m4-responsive-merge.test.ts`.
 - [ ] **M4.5** UI responsive report: per-section match status and confidence.
 - [ ] **M4.6** Three-breakpoint golden fixture: the export renders at 1440, 1024 and 390 in the real-target harness.
 

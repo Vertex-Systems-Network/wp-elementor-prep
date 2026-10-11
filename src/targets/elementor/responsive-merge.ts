@@ -39,6 +39,10 @@ import { generateElementorV3TemplateCandidate } from './v3-template-generator';
  *   families), container min height and uniform corner radius (existing integer families; values outside them are a
  *   review).
  *
+ * - M4.4, mismatch policy: the matcher never guesses; nesting that cannot map is a review with its explanation —
+ *   ambiguous matches, a changed element kind, a variant-only node with no matched parent, and the same content under a
+ *   different parent (`RESPONSIVE_NESTING_DIFFERS`, rendered as a hidden original plus a breakpoint-only copy).
+ *
  * What is not merged is an explicit review, never a silent drop: ambiguous matches, a variant-only node that cannot
  * be placed, wrap and grid layout changes, an unset variant value whose Elementor default would differ (padding,
  * alignment, typography), other typography (family, weight, colour…), different text, and any other differing
@@ -114,6 +118,16 @@ function index(nodes: readonly P15NeutralExportNode[], parent: P15NeutralContain
   return out;
 }
 
+/** Content identity of a subtree, ignoring source node ids (M4.4 nesting detection). */
+function contentFingerprint(node: P15NeutralExportNode): string {
+  const strip = (value: unknown): unknown => {
+    if (Array.isArray(value)) return value.map(strip);
+    if (typeof value !== 'object' || value === null) return value;
+    return Object.fromEntries(Object.entries(value).filter(([key]) => key !== 'sourceNodeId').map(([key, entry]) => [key, strip(entry)]));
+  };
+  return JSON.stringify(strip(node));
+}
+
 const containsReview = (node: P15NeutralExportNode): boolean =>
   node.kind === 'review' || (node.kind === 'container' && node.children.some(containsReview));
 
@@ -130,7 +144,6 @@ export function buildP15ResponsiveMerge(desktop: P15NeutralExportDocumentV1, var
   }
   const merged = clone(desktop);
   const original = index(desktop.nodes);
-  const devices = variants.map((variant) => variant.device);
   const reviews: P15ResponsiveMergeReview[] = [];
   const entries = new Map<string, Map<string, Record<string, unknown>>>();
   const put = (family: string, sourceNodeId: string, fields: Record<string, unknown>): void => {
@@ -177,16 +190,29 @@ export function buildP15ResponsiveMerge(desktop: P15NeutralExportDocumentV1, var
           desktopParent.children.splice(cursor, 0, clone(child));
           cursor += 1;
           inserted.set(child.sourceNodeId, device);
-          put('visibility', child.sourceNodeId, Object.fromEntries((['desktop', ...devices] as Device[])
+          // Hidden on every other device, provided or not: a device without its own frame shows the desktop design.
+          put('visibility', child.sourceNodeId, Object.fromEntries((['desktop', 'tablet', 'mobile'] as Device[])
             .filter((other) => other !== device).map((other) => [HIDE_FIELD[other], true])));
         }
       }
     }
+    const hiddenDesktop: string[] = [];
     for (const id of match.unmatchedDesktop) {
       const parent = original.parents.get(id);
       if (!original.nodes.has(id) || parent === undefined) continue;
       if (parent && match.unmatchedDesktop.includes(parent.sourceNodeId)) continue; // Hidden with its parent.
       put('visibility', id, { [HIDE_FIELD[device]]: true });
+      hiddenDesktop.push(id);
+    }
+    // M4.4: the same content under a different parent is a nesting change the matcher does not map. The output still
+    // renders each breakpoint (hidden original + breakpoint-only copy), but duplicates content: an explicit review.
+    const insertedHere = [...inserted].filter(([, from]) => from === device).map(([id]) => id);
+    for (const desktopId of hiddenDesktop) {
+      const fingerprint = contentFingerprint(original.nodes.get(desktopId)!);
+      const moved = insertedHere.find((variantId) => contentFingerprint(variantIndex.nodes.get(variantId)!) === fingerprint);
+      if (moved !== undefined) {
+        review(desktopId, 'RESPONSIVE_NESTING_DIFFERS', `Same content sits under another parent on ${device} (${moved}); kept as a hidden original plus a ${device}-only copy.`);
+      }
     }
   }
 

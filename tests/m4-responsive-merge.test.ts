@@ -198,6 +198,24 @@ describe('recovery M4.3a — responsive container layout merge', () => {
     ]);
   });
 
+  it('M4.4: content moved to another parent is a nesting review, still rendered on every breakpoint', () => {
+    // Mobile moves the copy out of the hero into the page root.
+    const m: P15MatchNode = { ...tree('m', 390), children: [
+      { ...tree('m', 390).children![0]!, children: [tree('m', 390).children![0]!.children![0]!] },
+      { id: 'm-copy', name: 'Copy', type: 'TEXT', characters: 'Ship it today', x: 24, y: 720, width: 300, height: 40 },
+    ] };
+    const mobile = mobileDoc();
+    if (mobile.nodes[0]!.kind === 'container') {
+      const hero = mobile.nodes[0]!.children[0]!;
+      if (hero.kind === 'container') hero.children.pop();
+      mobile.nodes[0]!.children.push({ kind: 'text', sourceNodeId: 'm-copy', text: 'Ship it today' });
+    }
+    const result = buildP15ResponsiveMerge(desktopDoc(), [{ device: 'mobile', document: mobile, match: matchP15Breakpoint(tree('d', 1440), m, 'mobile') }]);
+    expect(result.status).toBe('REVIEW');
+    expect(result.reviews.filter((review) => review.reasonCode === 'RESPONSIVE_NESTING_DIFFERS').map((review) => review.sourceNodeId)).toEqual(['d-copy']);
+    expect(result.entries.visibility).toEqual([{ sourceNodeId: 'd-copy', hideMobile: true }, { sourceNodeId: 'm-copy', hideDesktop: true, hideTablet: true }]);
+  });
+
   it('blocks without a variant, with a duplicate device, or on a desktop base that needs review', () => {
     expect(buildP15ResponsiveMerge(desktopDoc(), []).status).toBe('BLOCKED');
     const match = matchP15Breakpoint(tree('d', 1440), tree('m', 390), 'mobile');
