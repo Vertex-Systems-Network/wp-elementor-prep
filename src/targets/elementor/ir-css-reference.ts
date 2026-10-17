@@ -56,6 +56,10 @@ function typography(t: P15NeutralTypography | undefined): Record<string, string 
   };
 }
 
+/** Flex-item behaviour the exporter writes (`fixed`: keep own size, never shrink; `grow`: take free space). */
+const flexItem = (sizing: { flex?: 'fixed' | 'grow' } | undefined): string | undefined =>
+  (sizing?.flex === 'fixed' ? '0 0 auto' : sizing?.flex === 'grow' ? '1 1 auto' : undefined);
+
 const CONTAINER_UNRENDERED = ['cornerRadiiPx', 'backgroundImage', 'gradient', 'boxShadow', 'wrap', 'grid', 'marginPx', 'position'] as const;
 
 function node(item: P15NeutralExportNode, unrendered: P15IrCssReference['unrendered']): string {
@@ -64,7 +68,7 @@ function node(item: P15NeutralExportNode, unrendered: P15IrCssReference['unrende
     case 'container': return container(item, unrendered);
     case 'heading':
     case 'text':
-      return `<div ${source} style="${css({ margin: 0, 'white-space': 'pre-wrap', 'text-align': item.align ? TEXT_ALIGN[item.align] : undefined, width: item.sizing?.widthPx, ...typography(item.typography) })}">${escapeHtml(item.text)}</div>`;
+      return `<div ${source} style="${css({ margin: 0, 'white-space': 'pre-wrap', 'text-align': item.align ? TEXT_ALIGN[item.align] : undefined, width: item.sizing?.widthPx, flex: flexItem(item.sizing), ...typography(item.typography) })}">${escapeHtml(item.text)}</div>`;
     case 'button':
       return `<div ${source} style="${css({ display: 'inline-block', 'align-self': 'flex-start', background: item.backgroundColorHex, 'border-radius': item.cornerRadiusPx,
         padding: item.paddingPx ? `${item.paddingPx.top}px ${item.paddingPx.right}px ${item.paddingPx.bottom}px ${item.paddingPx.left}px` : undefined, ...typography(item.typography) })}">${escapeHtml(item.text)}</div>`;
@@ -97,6 +101,7 @@ function container(item: P15NeutralContainerNode, unrendered: P15IrCssReference[
     overflow: item.clipsContent ? 'hidden' : undefined,
     // Elementor's Container fills its parent unless it has an exact or hug width (content_width full, recovery M2.10).
     width: item.sizing?.widthPx ?? (item.sizing?.hugWidth ? 'fit-content' : '100%'),
+    flex: flexItem(item.sizing),
     'min-height': item.sizing?.minHeightPx,
     'box-sizing': 'border-box',
   });

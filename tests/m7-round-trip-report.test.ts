@@ -72,6 +72,18 @@ describe('recovery M7.2 — IR→CSS reference', () => {
     expect(reference.html).toContain('width:fit-content');
   });
 
+  it('maps exporter flex-item behaviour: fixed never shrinks, grow takes free space (M7.4)', () => {
+    const reference = buildP15IrCssReference({
+      schemaVersion: 1, irVersion: 'p15-neutral-export-ir-v2', title: 'T', documentType: 'section',
+      nodes: [{ kind: 'container', sourceNodeId: 'p', direction: 'row', children: [
+        { kind: 'text', sourceNodeId: 'a', text: 'A', sizing: { flex: 'fixed' } },
+        { kind: 'text', sourceNodeId: 'b', text: 'B', sizing: { flex: 'grow' } },
+      ] }],
+    }, 1024);
+    expect(reference.html).toContain('data-source="a" style="margin:0px;white-space:pre-wrap;flex:0 0 auto"');
+    expect(reference.html).toContain('data-source="b" style="margin:0px;white-space:pre-wrap;flex:1 1 auto"');
+  });
+
   it('renders containers and text with escaped content, lists sections and unrendered facts', () => {
     const reference = buildP15IrCssReference({
       schemaVersion: 1, irVersion: 'p15-neutral-export-ir-v2', title: 'T<1>', documentType: 'section',

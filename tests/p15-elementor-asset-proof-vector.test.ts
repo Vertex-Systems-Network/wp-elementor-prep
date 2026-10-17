@@ -82,7 +82,7 @@ describe('P15 controlled URL-only Image asset proof vector', () => {
     expect(manifest.internalReviewRequired).toBe(true);
   });
 
-  it('pins the first-proof vector identity (re-derived by recovery M7.4; #483 re-binding follows a real-target run)', () => {
+  it('pins the first-proof vector identity bound to the retained reference proof (re-bound by recovery M7.4)', () => {
     const firstProof = buildP15ElementorFirstProofVector();
     expect(firstProof.candidateIdentity.digest)
       .toBe('sha256:39e197e0f63efb808486f4a403b3fb929b8d6a5710d2000efabdce22c05283f2');
