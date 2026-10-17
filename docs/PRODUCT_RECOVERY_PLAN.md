@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M7 — Round-trip visual proof** (M6.1–M6.4 implemented on `claude/elementor-repo-audit-plan-u2sjz6`; M6 acceptance = exact-head CI on its PR; the real atomic import is `PROJECT_FINAL` `RQ-REC-M6-ATOMIC-IMPORT`; M5.7 stays `[!] MANUAL`)
-> - Next task: **M7.1** (plugin "Export reference PNGs")
-> - Last completed task: **M6.4** (v4 Atomic adapter with its own validator)
+> - Next task: **M7.2** (CI round-trip: render the imported template per breakpoint and compare with the reference PNGs)
+> - Last completed task: **M7.1** (Export reference PNGs)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -474,7 +474,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 
 ### M7 — Round-trip visual proof
 
-- [ ] **M7.1** Plugin "Export reference PNGs": per-breakpoint Figma frame renders at 1×, bundled with the export receipt.
+- [x] **M7.1** _(done 2026-10-17: **Export reference PNGs** renders each confirmed breakpoint frame, or the one selected Frame as desktop, at 1× (`exportAsync` SCALE 1, read-only). `src/core/reference-png-bundle.ts` checks the PNG signature and that the IHDR size equals the frame size, then writes a deterministic ZIP: `reference/<device>.png` plus `reference-receipt.json` with sha256s and `roundTripStatus: NOT_RUN`. Tests in `m7-reference-png-*`.)_ Plugin "Export reference PNGs": per-breakpoint Figma frame renders at 1×, bundled with the export receipt.
 - [ ] **M7.2** CI round-trip: render the imported template at each breakpoint width in the real-target harness, then compare it with the reference PNGs (`src/core/pixel-diff.ts` plus a structural metric) and produce a per-section report.
 - [ ] **M7.3** Calibrate the thresholds on golden fixtures. Emit `ROUND-TRIP VERIFIED` only within threshold. Otherwise emit REVIEW with the diff regions.
 
