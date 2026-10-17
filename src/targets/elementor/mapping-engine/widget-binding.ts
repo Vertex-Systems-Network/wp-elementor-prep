@@ -139,12 +139,12 @@ export function headingBaseSettingsMatch(node: P15NeutralHeadingNode, settings: 
 }
 
 /** The generator's exact text-editor HTML for a node (shared with `v3-template-generator.ts`). */
-export function expectedTextEditorHtml(value: string, paragraphs?: P15NeutralTextNode['paragraphs'], href?: string): string {
-  return textEditorHtml(value, paragraphs, href);
+export function expectedTextEditorHtml(value: string, paragraphs?: P15NeutralTextNode['paragraphs'], href?: string, paragraphSpacingPx?: number): string {
+  return textEditorHtml(value, paragraphs, href, paragraphSpacingPx);
 }
 
 export function textEditorBaseSettingsMatch(node: P15NeutralTextNode, settings: Record<string, unknown>): boolean {
-  if (settings.editor !== expectedTextEditorHtml(node.text, node.paragraphs, node.href)) return false;
+  if (settings.editor !== expectedTextEditorHtml(node.text, node.paragraphs, node.href, node.paragraphSpacingPx)) return false;
   return desktopAlignMatches(node.align, settings);
 }
 

@@ -40,14 +40,14 @@ export interface P15ElementorReferenceProofV1 {
   retainedBinding: {
     candidateIdentity: ElementorTemplateCandidateIdentityV1;
     targetProfileFingerprint: 'sha256:8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676';
-    templateSha256: 'sha256:bf2c229441f93486af7152f9196c265f09ee9e3cefab67d11ecb6765f583e4ad';
+    templateSha256: 'sha256:3d0c419d9ccd59faaabbb9eb772f18c976bf1d3d13469e4734908eaa9d5e6f0b';
   };
   evidence: {
-    exactHeadSha: '4f09efda101e5a2771df9bfc3ac8960a43655e96';
-    workflowRunId: 35403469986;
-    artifactId: 10570709987;
-    artifactDigest: 'sha256:206b703ab8185f1e5b1a83346074accb23cc458b9fdcb94f5eaad0c4752e33aa';
-    evidenceReference: 'https://github.com/Vertex-Systems-Network/wp-elementor-prep/actions/runs/35403469986';
+    exactHeadSha: 'e9b24d2059b1f4121225856c0d67e3f5414ef17c';
+    workflowRunId: 39075130914;
+    artifactId: 12117242275;
+    artifactDigest: 'sha256:c2fb1cab8c0dde3062c7ea1d21488fabb75bbcc47445791edb34ad77c4674f2a';
+    evidenceReference: 'https://github.com/Vertex-Systems-Network/wp-elementor-prep/actions/runs/39075130914';
   };
   classifications: {
     environment: 'QUALIFIED_FOR_BOUND_TARGET_PROOF';
@@ -61,6 +61,13 @@ export interface P15ElementorReferenceProofV1 {
   productionAcceptance: false;
 }
 
+/**
+ * Re-bound by recovery M7.4 (owner-approved, 2026-10-17). The text-editor paragraph-margin fix changed the canonical
+ * first-proof candidate, so the retained proof now points at the real-target run that proved the new candidate:
+ * PR #928 head e9b24d2, run 39075130914 (QUALIFIED_FOR_BOUND_TARGET_PROOF, BOUND_FULL_PASS, CHAIN_FULL_PASS). The
+ * original #483 binding (PR #518 head 4f09efd, run 35403469986, candidate 96ffe8a1…, template bf2c2294…) stays in
+ * the history in memory-bank/CHANGELOG.md; nothing about its scope or authority changed.
+ */
 const REFERENCE_PROOF: P15ElementorReferenceProofV1 = Object.freeze({
   proofId: P15_ELEMENTOR_WP68_E424_PROOF_ID,
   architecture: 'CONTAINER',
@@ -76,17 +83,17 @@ const REFERENCE_PROOF: P15ElementorReferenceProofV1 = Object.freeze({
       targetContractVersion: 'elementor-template-v0.4-container-v1',
       capabilityRegistryVersion: 'elementor-core-widget-capabilities-v1',
       algorithm: 'SHA-256',
-      digest: 'sha256:96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26',
+      digest: 'sha256:39e197e0f63efb808486f4a403b3fb929b8d6a5710d2000efabdce22c05283f2',
     }),
     targetProfileFingerprint: 'sha256:8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676',
-    templateSha256: 'sha256:bf2c229441f93486af7152f9196c265f09ee9e3cefab67d11ecb6765f583e4ad',
+    templateSha256: 'sha256:3d0c419d9ccd59faaabbb9eb772f18c976bf1d3d13469e4734908eaa9d5e6f0b',
   }),
   evidence: Object.freeze({
-    exactHeadSha: '4f09efda101e5a2771df9bfc3ac8960a43655e96',
-    workflowRunId: 35403469986,
-    artifactId: 10570709987,
-    artifactDigest: 'sha256:206b703ab8185f1e5b1a83346074accb23cc458b9fdcb94f5eaad0c4752e33aa',
-    evidenceReference: 'https://github.com/Vertex-Systems-Network/wp-elementor-prep/actions/runs/35403469986',
+    exactHeadSha: 'e9b24d2059b1f4121225856c0d67e3f5414ef17c',
+    workflowRunId: 39075130914,
+    artifactId: 12117242275,
+    artifactDigest: 'sha256:c2fb1cab8c0dde3062c7ea1d21488fabb75bbcc47445791edb34ad77c4674f2a',
+    evidenceReference: 'https://github.com/Vertex-Systems-Network/wp-elementor-prep/actions/runs/39075130914',
   }),
   classifications: Object.freeze({
     environment: 'QUALIFIED_FOR_BOUND_TARGET_PROOF',

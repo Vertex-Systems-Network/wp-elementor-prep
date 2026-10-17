@@ -159,14 +159,22 @@ export function spanCss(style: P15NeutralTypography): string {
 /**
  * Text-editor HTML. Without paragraphs this is the original single `<p>` with `<br>` line breaks; with
  * paragraphs each one is its own `<p>`, and only styled spans are wrapped in `<span style>`.
+ *
+ * Recovery M7.4: Elementor does not reset paragraph margins, so the browser's default 1em above and below every
+ * `<p>` made each text widget taller than its Figma frame (measured on the real target, run 39065547695). Every
+ * paragraph therefore carries an explicit zero block margin; the gap between paragraphs stays with the native
+ * `paragraph_spacing` control (`margin-block-end`) when the design has one.
  */
-export function textEditorHtml(text: string, paragraphs?: readonly P15NeutralParagraph[], href?: string): string {
+export function textEditorHtml(text: string, paragraphs?: readonly P15NeutralParagraph[], href?: string, paragraphSpacingPx?: number): string {
   const link = (content: string, url: string | undefined): string =>
     (url === undefined || content === '' ? content : `<a href="${escapeHtml(url)}">${content}</a>`);
+  const open = (last: boolean): string => (paragraphSpacingPx === undefined || last
+    ? '<p style="margin-block: 0">'
+    : '<p style="margin-block-start: 0">');
   if (paragraphs === undefined) {
-    return `<p>${link(escapeHtml(text.replace(/\r\n?/g, '\n')).replaceAll('\n', '<br>'), href)}</p>`;
+    return `${open(true)}${link(escapeHtml(text.replace(/\r\n?/g, '\n')).replaceAll('\n', '<br>'), href)}</p>`;
   }
-  return paragraphs.map((paragraph) => `<p>${link(paragraph.spans.map((span) => {
+  return paragraphs.map((paragraph, index) => `${open(index === paragraphs.length - 1)}${link(paragraph.spans.map((span) => {
     const content = escapeHtml(span.text).replaceAll('\u2028', '<br>');
     return link(span.style === undefined ? content : `<span style="${spanCss(span.style)}">${content}</span>`, span.href);
   }).join(''), href)}</p>`).join('');

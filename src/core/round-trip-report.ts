@@ -63,6 +63,9 @@ export interface P15RoundTripStructuralSection {
   /** Largest absolute difference between the four edges, px; null when missing. */
   maxEdgeDeltaPx: number | null;
   iou: number | null;
+  /** Both boxes, so a structural gap can be diagnosed from the report alone (recovery M7.4). */
+  referenceBox: P15Box;
+  renderBox: P15Box | null;
 }
 
 export interface P15RoundTripDiffRegion extends P15Box {
@@ -126,8 +129,9 @@ function breakpointReport(input: P15RoundTripBreakpointInput, thresholds: P15Rou
     settings.maxChangedPct,
   );
   const structural = input.sections.map((section): P15RoundTripStructuralSection => (section.render
-    ? { id: section.id, present: true, maxEdgeDeltaPx: boxEdgeDelta(section.reference, section.render), iou: boxIou(section.reference, section.render) }
-    : { id: section.id, present: false, maxEdgeDeltaPx: null, iou: null }));
+    ? { id: section.id, present: true, maxEdgeDeltaPx: boxEdgeDelta(section.reference, section.render), iou: boxIou(section.reference, section.render),
+      referenceBox: section.reference, renderBox: section.render }
+    : { id: section.id, present: false, maxEdgeDeltaPx: null, iou: null, referenceBox: section.reference, renderBox: null }));
 
   const diffRegions: P15RoundTripDiffRegion[] = [];
   input.sections.forEach((section, index) => {

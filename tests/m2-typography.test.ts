@@ -114,26 +114,36 @@ describe('recovery M2.1 — Elementor text-editor typography', () => {
   it('writes the typography group, text colour and paragraph spacing with slider encoding', () => {
     const settings = widgetSettings(source({ text: 'Hello', typography: { fontFamily: 'Open Sans', fontWeight: '600', fontStyle: 'italic', fontSizePx: 20,
       lineHeightPx: 30, letterSpacingPx: -0.5, textTransform: 'capitalize', textDecoration: 'line-through', colorHex: '#112233' }, paragraphSpacingPx: 8 }));
-    expect(settings).toEqual({ editor: '<p>Hello</p>', typography_typography: 'custom', typography_font_family: 'Open Sans',
+    expect(settings).toEqual({ editor: '<p style="margin-block: 0">Hello</p>', typography_typography: 'custom', typography_font_family: 'Open Sans',
       typography_font_size: slider(20), typography_font_weight: '600', typography_text_transform: 'capitalize', typography_font_style: 'italic',
       typography_text_decoration: 'line-through', typography_line_height: slider(30), typography_letter_spacing: slider(-0.5),
       text_color: '#112233', paragraph_spacing: slider(8) });
   });
 
   it('colour-only typography writes text_color without the typography starter', () => {
-    expect(widgetSettings(source({ text: 'Hi', typography: { colorHex: '#000000' } }))).toEqual({ editor: '<p>Hi</p>', text_color: '#000000' });
+    expect(widgetSettings(source({ text: 'Hi', typography: { colorHex: '#000000' } }))).toEqual({ editor: '<p style="margin-block: 0">Hi</p>', text_color: '#000000' });
   });
 
-  it('renders paragraphs as <p> and styled runs as escaped <span style>, matching the family binding helper', () => {
+  it('renders paragraphs as <p style="margin-block: 0"> and styled runs as escaped <span style>, matching the family binding helper', () => {
     const document = source({ text: 'A <b> & bold\n\nEnd\u2028line', paragraphs: [
       { spans: [{ text: 'A <b> & ' }, { text: 'bold', style: { fontWeight: '700', colorHex: '#ff0000' } }] }, { spans: [] }, { spans: [{ text: 'End\u2028line' }] },
     ] });
     const settings = widgetSettings(document);
-    expect(settings.editor).toBe('<p>A &lt;b&gt; &amp; <span style="font-weight: 700; color: #ff0000">bold</span></p><p></p><p>End<br>line</p>');
+    expect(settings.editor).toBe('<p style="margin-block: 0">A &lt;b&gt; &amp; <span style="font-weight: 700; color: #ff0000">bold</span></p><p style="margin-block: 0"></p><p style="margin-block: 0">End<br>line</p>');
     expect(textEditorBaseSettingsMatch(textOf(document), settings)).toBe(true);
   });
 
-  it('text without typography generates exactly what it did before', () => {
-    expect(widgetSettings(source({ text: 'Line one\nLine two', align: 'center' }))).toEqual({ editor: '<p>Line one<br>Line two</p>', align: 'center' });
+  it('text without typography writes the single paragraph with an explicit zero margin (recovery M7.4)', () => {
+    expect(widgetSettings(source({ text: 'Line one\nLine two', align: 'center' }))).toEqual({ editor: '<p style="margin-block: 0">Line one<br>Line two</p>', align: 'center' });
+  });
+});
+
+describe('recovery M7.4 — text-editor paragraph margins match the Figma frame', () => {
+  it('zeroes the block margin; with Figma paragraph spacing only the gap between paragraphs is left to paragraph_spacing', () => {
+    const paragraphs = [{ spans: [{ text: 'One' }] }, { spans: [{ text: 'Two' }] }];
+    expect(widgetSettings(source({ text: 'One\nTwo', paragraphs })).editor)
+      .toBe('<p style="margin-block: 0">One</p><p style="margin-block: 0">Two</p>');
+    expect(widgetSettings(source({ text: 'One\nTwo', paragraphs, paragraphSpacingPx: 12 })).editor)
+      .toBe('<p style="margin-block-start: 0">One</p><p style="margin-block: 0">Two</p>');
   });
 });

@@ -77,8 +77,8 @@ describe('recovery M2.2c — hyperlinks', () => {
     const document = extractP15NeutralExportDocumentFromFigmaFrame(frame([textLayer('a', [segment('Read more', url('https://example.com/a'))]),
       textLayer('b', [segment('See '), segment('docs', url('/docs')), segment(' now')])]), 'section');
     const [wa, wb] = generateElementorV3TemplateCandidate(document).template!.content[0]!.elements;
-    expect((wa!.settings as Record<string, unknown>).editor).toBe('<p><a href="https://example.com/a">Read more</a></p>');
-    expect((wb!.settings as Record<string, unknown>).editor).toBe('<p>See <a href="/docs">docs</a> now</p>');
+    expect((wa!.settings as Record<string, unknown>).editor).toBe('<p style="margin-block: 0"><a href="https://example.com/a">Read more</a></p>');
+    expect((wb!.settings as Record<string, unknown>).editor).toBe('<p style="margin-block: 0">See <a href="/docs">docs</a> now</p>');
   });
 
   it('links to Figma nodes or unsafe URLs become reviews and are not exported', () => {

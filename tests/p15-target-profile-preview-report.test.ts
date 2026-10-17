@@ -109,8 +109,8 @@ describe('P15 declared TargetProfile plugin preview report', () => {
     expect(report.assessment?.referenceProof.exactVersionMatch).toBe(true);
     expect(report.assessment?.referenceProof.referenceProof).toEqual(expect.objectContaining({
       proofId: 'p15-wp6.8-elementor4.2.4-container-proof-v1',
-      workflowRunId: 35403469986,
-      artifactId: 10570709987,
+      workflowRunId: 39075130914,
+      artifactId: 12117242275,
       acceptanceAuthority: false,
       targetCompatibilityClaim: false,
       productionAcceptance: false,

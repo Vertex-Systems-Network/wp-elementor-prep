@@ -128,7 +128,7 @@ describe('P15 exact source-bound Text Editor normal text color resolution', () =
     expect(result.candidate?.status).toBe('READY_FOR_TARGET_IMPORT_VALIDATION');
 
     const settings = settingsOf(result.template?.content[0]?.elements[0]);
-    expect(settings.editor).toBe('<p>PRIVATE TEXT COPY</p>');
+    expect(settings.editor).toBe('<p style="margin-block: 0">PRIVATE TEXT COPY</p>');
     expect(settings.align).toBe('center');
     expect(settings.text_color).toBe('#1a2b3c');
     expect(settings).not.toHaveProperty('link_color');
@@ -165,7 +165,7 @@ describe('P15 exact source-bound Text Editor normal text color resolution', () =
     expect(settingsOf(firstText)).not.toHaveProperty('text_color');
     expect(settingsOf(heading)).not.toHaveProperty('text_color');
     expect(settingsOf(button)).not.toHaveProperty('text_color');
-    expect(settingsOf(nestedText).editor).toBe('<p>PRIVATE &lt;NESTED&gt;<br>COPY</p>');
+    expect(settingsOf(nestedText).editor).toBe('<p style="margin-block: 0">PRIVATE &lt;NESTED&gt;<br>COPY</p>');
     expect(settingsOf(nestedText)).not.toHaveProperty('align');
     expect(settingsOf(nestedText).text_color).toBe('#abcdef');
     expect(settingsOf(nestedText)).not.toHaveProperty('link_color');

@@ -145,7 +145,10 @@ function normalized(value: unknown, repairWrites: boolean): unknown {
   if (value === null || typeof value !== 'object') return value;
   const out: Record<string, unknown> = {};
   for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
-    if (key === 'resolvedCandidateIdentityDigest') out[key] = typeof entry === 'string' ? 'DIGEST' : entry;
+    // Candidate digests depend on the whole template, including the M7.4 text-editor paragraph margin change.
+    if (key === 'resolvedCandidateIdentityDigest' || key === 'baseCandidateIdentityDigest') out[key] = typeof entry === 'string' ? 'DIGEST' : entry;
+    // Recovery M7.4: the v1 "before" record predates the explicit zero paragraph margin in text-editor HTML.
+    else if (key === 'editor' && repairWrites && typeof entry === 'string') out[key] = entry.replaceAll('<p>', '<p style="margin-block: 0">');
     else if (key === 'templateJson' && typeof entry === 'string') out[key] = normalized(JSON.parse(entry), repairWrites);
     else out[key] = normalized(entry, repairWrites);
   }

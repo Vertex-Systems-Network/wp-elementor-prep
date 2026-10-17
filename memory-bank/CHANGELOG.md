@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-17 — Recovery M7.4: round-trip gap explained and fixed; retained first-proof reference re-bound (PR #928)
+
+- **Reference renderer fixes:**
+  - a double-quoted `font-family` broke the style attribute;
+  - Containers now fill their parent like Elementor's;
+  - `flex: fixed` items no longer shrink.
+- **Export fidelity fix:** text-editor paragraphs carry an explicit zero block margin. Elementor keeps the browser's 1em `<p>` margins, so text widgets had rendered 2× font-size taller than their Figma frames.
+- **Re-bind (owner-approved):** the fix changed the canonical first-proof candidate.
+  - Old binding: candidate `96ffe8a1…`, template `bf2c2294…`, proved by PR #518 head `4f09efd`, run 35403469986.
+  - New binding: candidate `39e197e0…`, template `3d0c419d…`, proved on PR #928 head `e9b24d2`, run 39075130914 (`QUALIFIED_FOR_BOUND_TARGET_PROOF`, `BOUND_FULL_PASS`, `CHAIN_FULL_PASS`), artifact 12117242275 (`sha256:c2fb1cab…`).
+  - Scope and authority are unchanged.
+
 ## 2026-10-17 — Recovery M7.1–M7.2 and M8 (Gutenberg) implemented (PR #927)
 
 - **M7.1:** the **Export reference PNGs** action renders each breakpoint frame at 1× and packs them with a receipt into a deterministic ZIP.

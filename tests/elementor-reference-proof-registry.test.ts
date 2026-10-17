@@ -28,12 +28,12 @@ describe('P15 retained Elementor reference-proof alignment', () => {
       architecture: 'CONTAINER',
       outputMode: 'TEMPLATE_JSON',
       documentDataVersion: '0.4',
-      workflowRunId: 35403469986,
-      artifactId: 10570709987,
-      artifactDigest: 'sha256:206b703ab8185f1e5b1a83346074accb23cc458b9fdcb94f5eaad0c4752e33aa',
-      retainedCandidateIdentityDigest: 'sha256:96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26',
+      workflowRunId: 39075130914,
+      artifactId: 12117242275,
+      artifactDigest: 'sha256:c2fb1cab8c0dde3062c7ea1d21488fabb75bbcc47445791edb34ad77c4674f2a',
+      retainedCandidateIdentityDigest: 'sha256:39e197e0f63efb808486f4a403b3fb929b8d6a5710d2000efabdce22c05283f2',
       retainedTargetProfileFingerprint: 'sha256:8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676',
-      retainedTemplateSha256: 'sha256:bf2c229441f93486af7152f9196c265f09ee9e3cefab67d11ecb6765f583e4ad',
+      retainedTemplateSha256: 'sha256:3d0c419d9ccd59faaabbb9eb772f18c976bf1d3d13469e4734908eaa9d5e6f0b',
       acceptanceAuthority: false,
       targetCompatibilityClaim: false,
       productionAcceptance: false,
@@ -57,19 +57,20 @@ describe('P15 retained Elementor reference-proof alignment', () => {
     expect(result.internalReviewRequired).toBe(true);
   });
 
-  it('binds the exact first-proof candidate identity to the retained reference profile', () => {
+  it('binds the exact first-proof candidate identity to the retained reference profile (re-bound by M7.4)', () => {
     const vector = buildP15ElementorFirstProofVector();
     const candidate = buildElementorTemplateCandidateArtifact(JSON.parse(vector.files['template.json']));
     const result = assessP15ElementorReferenceProofAlignment(vector.profile, candidate);
 
     expect(vector.candidateIdentity.digest)
-      .toBe('sha256:96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26');
+      .toBe('sha256:39e197e0f63efb808486f4a403b3fb929b8d6a5710d2000efabdce22c05283f2');
     expect(vector.targetProfileFingerprint)
       .toBe('sha256:8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676');
     expect(result.status).toBe('EXACT_REFERENCE_PROFILE_MATCH');
     expect(result.candidateBinding).toBe('EXACT_REFERENCE_CANDIDATE_MATCH');
     expect(result.currentCandidateIdentityDigest).toBe(vector.candidateIdentity.digest);
     expect(result.referenceProof?.retainedCandidateIdentityDigest).toBe(vector.candidateIdentity.digest);
+    expect(result.referenceProof?.workflowRunId).toBe(39075130914);
     expect(result.referenceProof?.retainedTargetProfileFingerprint).toBe(vector.targetProfileFingerprint);
     expect(result.targetCompatibilityClaim).toBe(false);
     expect(result.productionAcceptance).toBe(false);

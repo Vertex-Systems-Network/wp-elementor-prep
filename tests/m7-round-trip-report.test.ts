@@ -38,7 +38,10 @@ describe('recovery M7.2 — round-trip report', () => {
     const bp = report.breakpoints[0]!;
     expect(bp.pixel.metrics.changedPixelPct).toBe(25);
     expect(bp.pixel.sections.map((s) => s.changedPct)).toEqual([100, 0]);
-    expect(bp.structural).toEqual([{ id: 'a', present: true, maxEdgeDeltaPx: 0, iou: 1 }, { id: 'b', present: false, maxEdgeDeltaPx: null, iou: null }]);
+    expect(bp.structural).toEqual([
+      { id: 'a', present: true, maxEdgeDeltaPx: 0, iou: 1, referenceBox: { x: 0, y: 0, width: 10, height: 10 }, renderBox: { x: 0, y: 0, width: 10, height: 10 } },
+      { id: 'b', present: false, maxEdgeDeltaPx: null, iou: null, referenceBox: { x: 10, y: 10, width: 10, height: 10 }, renderBox: null },
+    ]);
     expect(bp.diffRegions.map((r) => r.reason)).toEqual(['STRUCTURE_MISSING', 'PIXEL_WORST_TILE']);
     expect(report.targetCompatibilityClaim).toBe(false);
   });
@@ -55,6 +58,32 @@ describe('recovery M7.2 — round-trip report', () => {
 });
 
 describe('recovery M7.2 — IR→CSS reference', () => {
+  it('keeps every declaration after font-family (no double quote inside the style attribute) and fills containers by default', () => {
+    const reference = buildP15IrCssReference({
+      schemaVersion: 1, irVersion: 'p15-neutral-export-ir-v2', title: 'T', documentType: 'section',
+      nodes: [{ kind: 'container', sourceNodeId: 'p', direction: 'row', children: [
+        { kind: 'heading', sourceNodeId: 't', text: 'Hi', level: 'h1', typography: { fontFamily: 'Arial "Bold"', fontSizePx: 64, lineHeightPx: 80, colorHex: '#0f1729' } },
+        { kind: 'container', sourceNodeId: 'h', direction: 'row', sizing: { hugWidth: true }, children: [] },
+      ] }],
+    }, 1440);
+    expect(reference.html).toContain("font-family:'Arial Bold';font-size:64px;line-height:80px;color:#0f1729");
+    expect(reference.html).not.toMatch(/style="[^"]*font-family:"/);
+    expect(reference.html).toContain('data-source="p" style="display:flex;flex-direction:row;width:100%;box-sizing:border-box"');
+    expect(reference.html).toContain('width:fit-content');
+  });
+
+  it('maps exporter flex-item behaviour: fixed never shrinks, grow takes free space (M7.4)', () => {
+    const reference = buildP15IrCssReference({
+      schemaVersion: 1, irVersion: 'p15-neutral-export-ir-v2', title: 'T', documentType: 'section',
+      nodes: [{ kind: 'container', sourceNodeId: 'p', direction: 'row', children: [
+        { kind: 'text', sourceNodeId: 'a', text: 'A', sizing: { flex: 'fixed' } },
+        { kind: 'text', sourceNodeId: 'b', text: 'B', sizing: { flex: 'grow' } },
+      ] }],
+    }, 1024);
+    expect(reference.html).toContain('data-source="a" style="margin:0px;white-space:pre-wrap;flex:0 0 auto"');
+    expect(reference.html).toContain('data-source="b" style="margin:0px;white-space:pre-wrap;flex:1 1 auto"');
+  });
+
   it('renders containers and text with escaped content, lists sections and unrendered facts', () => {
     const reference = buildP15IrCssReference({
       schemaVersion: 1, irVersion: 'p15-neutral-export-ir-v2', title: 'T<1>', documentType: 'section',
