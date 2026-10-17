@@ -21,6 +21,15 @@ A full code audit at main `9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6` (see `docs/
 
 The active priority is the recovery program (D-047). Phase rows and authority boundaries below are unchanged.
 
+**M8 status (2026-10-17): DONE (M8.1–M8.5, PR #927).** IR → WordPress 6.9 core-block markup that matches core `save` output. Evidence:
+
+- a pinned validity gate (byte-exact parse/serialize, run 39064806768);
+- a real-editor proof on WP 6.9.10 (run 39064806813): every block valid, render HTTP 200, `core/columns` stack at 390 px.
+
+Per-breakpoint styles have no core equivalent and stay REVIEW. No compatibility claim beyond this harness.
+
+**M7 status (2026-10-17): M7.1–M7.2 DONE, M7.3 `[!]` provisional.** Reference PNG export, plus a per-section round-trip report on the real target. The first run measured large structural gaps against the IR→CSS reference, so verdicts are REVIEW. M7.4 is next.
+
 **M6 status (2026-10-17): IMPLEMENTED (M6.1–M6.4).** Every Elementor bank carries a version-driven profile:
 
 - v3-Container profiles for 4.3 and for 3.16+;

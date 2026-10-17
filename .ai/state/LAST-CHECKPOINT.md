@@ -4,7 +4,7 @@ Status: IN_PROGRESS
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
 Observed main: `c298e269d5c1941bb45688f6ce46b42b07496fc1` (PR #918 merged; M5.1–M5.6 implemented)
 Canonical active program: Product Recovery Program (`docs/PRODUCT_RECOVERY_PLAN.md`, D-047…D-051)
-Branch: `claude/elementor-repo-audit-plan-u2sjz6`
+Branch: `claude/elementor-repo-audit-plan-u2sjz6`, PR #927 (M6, M7.1–M7.2, M8.1–M8.5)
 
 ## Verified work
 
@@ -25,4 +25,4 @@ Local artifact validation only. The v4 Atomic bank stays `RUNTIME_REQUIRED`, and
 
 ## Exact next safe action
 
-Merge the M6 PR once exact-head checks are green, then M7.1 (Export reference PNGs).
+Merge PR #927 once its final head is green (`aed71f4`: 12/12 checks). Then M7.4: the structural gap between the Elementor render and the IR→CSS reference (run 39063092003).

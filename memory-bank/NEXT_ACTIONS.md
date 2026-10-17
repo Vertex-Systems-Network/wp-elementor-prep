@@ -16,8 +16,8 @@ Canonical backlog: [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PL
 5. **M4 — responsive breakpoint engine: ACCEPTED.** PRs #911–#917 are merged (`ccf81f0`; #917 exact head `0a0ab3b`, 11/11 checks). Acceptance evidence: real-target run 38105960139 — 15/15 viewport checks at 1440/1024/390.
 6. **M5 — smart duplicate and structure alignment: M5.1–M5.6 IMPLEMENTED** (one release train); **M5.7 needs manual Figma Desktop evidence from the operator** before M5 acceptance and P14 release activation. Then continue with:
 7. **M6 — version-driven target profiles: M6.1–M6.4 IMPLEMENTED** (2026-10-17, branch `claude/elementor-repo-audit-plan-u2sjz6`). It needs exact-head CI on its PR (`RQ-REC-M6-TRAIN`). The real v4 Atomic import is `RQ-REC-M6-ATOMIC-IMPORT` (`PROJECT_FINAL`). Then continue with:
-   - M7: round-trip proof;
-   - M8: Gutenberg.
+8. **M7: M7.1/M7.2 DONE, M7.3 `[!]` provisional.** M7.4 comes next: explain the structural gap between the Elementor render and the IR→CSS reference (run 39063092003).
+9. **M8 — Gutenberg: M8.1–M8.5 DONE** (PR #927). WordPress 6.9 only; per-breakpoint styles stay REVIEW.
 
 The older sections below remain valid history and authority-boundary truth. Where they say "continue P15/P16/P17 evidence slices", that is superseded in priority by this queue (D-047).
 

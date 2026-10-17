@@ -7,9 +7,9 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M7 — Round-trip visual proof** (M6.1–M6.4 implemented on `claude/elementor-repo-audit-plan-u2sjz6`; M6 acceptance = exact-head CI on its PR; the real atomic import is `PROJECT_FINAL` `RQ-REC-M6-ATOMIC-IMPORT`; M5.7 stays `[!] MANUAL`)
-> - Next task: **M7.4** (explain the Elementor-vs-reference structural gap; it unblocks M7.3) after **M8.5** acceptance (editor-proof run on the PR head with the content-scoped probe)
-> - Last completed task: **M7.2** (round-trip report on the real target, run 39063092003); M8.1–M8.4 done; M7.3 `[!]` provisional
+> - Active milestone: **M7 — Round-trip visual proof**. M6 is implemented; M8.1–M8.5 are done on PR #927; M7.1/M7.2 are done; M7.3 is `[!]` provisional; M5.7 is still `[!] MANUAL`.
+> - Next task: **M7.4** (explain the gap between the Elementor render and the IR→CSS reference; it unblocks M7.3)
+> - Last completed task: **M8.5** (real WordPress 6.9 editor import and render proof)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -486,7 +486,12 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 - [x] **M8.2** _(done 2026-10-17: `src/targets/gutenberg/block-markup-generator.ts`. It reproduces core `save` output (class names, style-engine CSS order, `serializeAttributes` escaping) for group (flex/grid layouts, wrap, child `selfStretch`/`flexSize`), heading, paragraph (links, line breaks), buttons/button, image, separator and spacer. Every unmapped fact is REVIEW and there is no HTML fallback. The golden `tests/golden/m8-gutenberg-golden.html` is VALID against core 6.9.)_ Neutral IR → block markup for group/row/stack, columns, heading, paragraph, image, buttons, spacer and cover, using the `style`/`layout` attributes.
 - [x] **M8.3** _(done 2026-10-17: `tools/gutenberg-validator` is an isolated workspace with every `@wordpress/*` package pinned to `wp-6.9` and a committed lockfile. The gate: every block registered and `isValid`, no deprecation migration, and byte-exact `serialize(parse())`. Invalid markup is BLOCKED. CI: `.github/workflows/gutenberg-validity.yml`. Locally VALID for both goldens; it rejects tampered markup and a deprecation-migrated paragraph.)_ Validity: parse/serialise round-trip with pinned `@wordpress/blocks` in Node. Invalid → BLOCKED.
 - [x] **M8.4** _(done 2026-10-17: `planGutenbergResponsive` maps the M4 merge entries onto core limits. A row whose children grow equally and that becomes a column on mobile only is rendered as `core/columns` (stacks below 782 px; golden `m8-gutenberg-responsive.html` VALID). The root frame's per-device width is the canvas. Per-breakpoint styles, visibility, order and tablet direction changes are REVIEW.)_ Responsive strategy: document the core limits, use stack-on-mobile where possible, and mark the rest REVIEW.
-- [ ] **M8.5** Real WordPress editor import and render harness in CI.
+- [x] **M8.5** _(done 2026-10-17: `gutenberg-editor-proof.yml`. Disposable WordPress 6.9.10 with the official checksum. On PR #927 head `aed71f4` (run 39064806813) both goldens:
+  - have exact stored content and a byte-exact server `parse_blocks`/`serialize_blocks` round trip;
+  - show every editor block valid with no warnings;
+  - render with front-end HTTP 200.
+
+  The responsive golden's columns sit side by side at 1440 px and stack at 390 px. The first head failed only because the probe counted the theme footer's columns; it is now scoped to the post content.)_ Real WordPress editor import and render harness in CI.
 
 ### M9+ — Remaining roadmap phases
 
