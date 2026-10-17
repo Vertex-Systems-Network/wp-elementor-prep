@@ -58,6 +58,20 @@ describe('recovery M7.2 — round-trip report', () => {
 });
 
 describe('recovery M7.2 — IR→CSS reference', () => {
+  it('keeps every declaration after font-family (no double quote inside the style attribute) and fills containers by default', () => {
+    const reference = buildP15IrCssReference({
+      schemaVersion: 1, irVersion: 'p15-neutral-export-ir-v2', title: 'T', documentType: 'section',
+      nodes: [{ kind: 'container', sourceNodeId: 'p', direction: 'row', children: [
+        { kind: 'heading', sourceNodeId: 't', text: 'Hi', level: 'h1', typography: { fontFamily: 'Arial "Bold"', fontSizePx: 64, lineHeightPx: 80, colorHex: '#0f1729' } },
+        { kind: 'container', sourceNodeId: 'h', direction: 'row', sizing: { hugWidth: true }, children: [] },
+      ] }],
+    }, 1440);
+    expect(reference.html).toContain("font-family:'Arial Bold';font-size:64px;line-height:80px;color:#0f1729");
+    expect(reference.html).not.toMatch(/style="[^"]*font-family:"/);
+    expect(reference.html).toContain('data-source="p" style="display:flex;flex-direction:row;width:100%;box-sizing:border-box"');
+    expect(reference.html).toContain('width:fit-content');
+  });
+
   it('renders containers and text with escaped content, lists sections and unrendered facts', () => {
     const reference = buildP15IrCssReference({
       schemaVersion: 1, irVersion: 'p15-neutral-export-ir-v2', title: 'T<1>', documentType: 'section',

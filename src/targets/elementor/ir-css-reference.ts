@@ -43,7 +43,8 @@ function css(rules: Record<string, string | number | undefined>): string {
 function typography(t: P15NeutralTypography | undefined): Record<string, string | number | undefined> {
   if (!t) return {};
   return {
-    'font-family': t.fontFamily === undefined ? undefined : `"${t.fontFamily.replace(/"/g, '')}"`,
+    // Single quotes: the declaration lives inside a double-quoted style attribute (a `"` there ends the attribute).
+    'font-family': t.fontFamily === undefined ? undefined : `'${t.fontFamily.replace(/['"\\]/g, '')}'`,
     'font-weight': t.fontWeight,
     'font-style': t.fontStyle,
     'font-size': t.fontSizePx,
@@ -94,7 +95,8 @@ function container(item: P15NeutralContainerNode, unrendered: P15IrCssReference[
     'border-radius': item.cornerRadiusPx,
     border: item.border ? `${item.border.widthPx.top}px solid ${item.border.colorHex}` : undefined,
     overflow: item.clipsContent ? 'hidden' : undefined,
-    width: item.sizing?.widthPx,
+    // Elementor's Container fills its parent unless it has an exact or hug width (content_width full, recovery M2.10).
+    width: item.sizing?.widthPx ?? (item.sizing?.hugWidth ? 'fit-content' : '100%'),
     'min-height': item.sizing?.minHeightPx,
     'box-sizing': 'border-box',
   });
