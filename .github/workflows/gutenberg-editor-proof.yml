@@ -1,0 +1,140 @@
+name: Gutenberg Real Editor Proof
+
+# Recovery M8.5: import the M8 golden block markup into a disposable WordPress 6.9 (loopback only), check the server
+# parse/serialize round trip, open each page in the real block editor (every block valid, no validation warning) and
+# render it on the front end (HTTP 200; the responsive golden's columns stack at 390 px). Evidence only; no claim.
+on:
+  pull_request:
+    paths:
+      - 'src/targets/gutenberg/**'
+      - 'tests/golden/m8-*'
+      - 'scripts/m8-gutenberg-*'
+      - '.github/workflows/gutenberg-editor-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gutenberg-editor-proof-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  editor-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      mariadb:
+        image: mariadb@sha256:70cc072b29b4a89ae07abb2d4da2c64678a7f2dfe092751bb51c87d67dc1338b
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: wordpress
+          MARIADB_USER: wordpress
+          MARIADB_PASSWORD: wordpress
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    env:
+      WP_VERSION: '6.9.10'
+      P16_BASE_URL: http://127.0.0.1:8090
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22.12.0
+      - name: Install repository dependencies and PHP
+        run: |
+          set -euo pipefail
+          npm ci
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq php-cli php-mysql php-curl php-zip php-mbstring php-xml
+          echo "P16_OUT_DIR=$GITHUB_WORKSPACE/dist-p16/gutenberg-editor-proof" >> "$GITHUB_ENV"
+          mkdir -p "$GITHUB_WORKSPACE/dist-p16/gutenberg-editor-proof"
+      - name: Provision WordPress ${{ env.WP_VERSION }} (official checksum)
+        run: |
+          set -euo pipefail
+          WP_ROOT="$RUNNER_TEMP/p16-wordpress"
+          curl --retry 3 --fail --silent --show-error "https://wordpress.org/wordpress-$WP_VERSION.tar.gz" -o "$RUNNER_TEMP/wp.tar.gz"
+          curl --retry 3 --fail --silent --show-error "https://wordpress.org/wordpress-$WP_VERSION.tar.gz.sha1" -o "$RUNNER_TEMP/wp.sha1"
+          printf '%s  %s\n' "$(tr -d '[:space:]' < "$RUNNER_TEMP/wp.sha1")" "$RUNNER_TEMP/wp.tar.gz" | sha1sum --check --strict -
+          # Not yet pinned in the repository (the session that wrote this could not reach wordpress.org): record it.
+          echo "{\"wordpressTarGzSha256\":\"$(sha256sum "$RUNNER_TEMP/wp.tar.gz" | awk '{print $1}')\"}" > "$P16_OUT_DIR/upstream-download-sha256.json"
+          tar -xzf "$RUNNER_TEMP/wp.tar.gz" -C "$RUNNER_TEMP" && mv "$RUNNER_TEMP/wordpress" "$WP_ROOT"
+          cat > "$WP_ROOT/wp-config.php" <<'PHP'
+          <?php
+          define( 'DB_NAME', 'wordpress' );
+          define( 'DB_USER', 'wordpress' );
+          define( 'DB_PASSWORD', 'wordpress' );
+          define( 'DB_HOST', '127.0.0.1:3306' );
+          define( 'DB_CHARSET', 'utf8mb4' );
+          define( 'DB_COLLATE', '' );
+          define( 'AUTH_KEY', 'p16-proof-auth-key' );
+          define( 'SECURE_AUTH_KEY', 'p16-proof-secure-auth-key' );
+          define( 'LOGGED_IN_KEY', 'p16-proof-logged-in-key' );
+          define( 'NONCE_KEY', 'p16-proof-nonce-key' );
+          define( 'AUTH_SALT', 'p16-proof-auth-salt' );
+          define( 'SECURE_AUTH_SALT', 'p16-proof-secure-auth-salt' );
+          define( 'LOGGED_IN_SALT', 'p16-proof-logged-in-salt' );
+          define( 'NONCE_SALT', 'p16-proof-nonce-salt' );
+          define( 'WP_DEBUG', false );
+          define( 'DISABLE_WP_CRON', true );
+          define( 'WP_HOME', 'http://127.0.0.1:8090' );
+          define( 'WP_SITEURL', 'http://127.0.0.1:8090' );
+          $table_prefix = 'wp_';
+          if ( ! defined( 'ABSPATH' ) ) {
+              define( 'ABSPATH', __DIR__ . '/' );
+          }
+          require_once ABSPATH . 'wp-settings.php';
+          PHP
+          nohup php -S 127.0.0.1:8090 -t "$WP_ROOT" > "$P16_OUT_DIR/php-server.log" 2>&1 &
+          for attempt in $(seq 1 40); do
+            curl --fail --silent --show-error "$P16_BASE_URL/wp-admin/install.php" > /dev/null && break
+            sleep 1
+          done
+          ADMIN_PASSWORD="$(openssl rand -hex 24)"
+          echo "::add-mask::$ADMIN_PASSWORD"
+          echo "P16_ADMIN_USER=p16proofadmin" >> "$GITHUB_ENV"
+          echo "P16_ADMIN_PASSWORD=$ADMIN_PASSWORD" >> "$GITHUB_ENV"
+          echo "P16_WP_ROOT=$WP_ROOT" >> "$GITHUB_ENV"
+          curl --fail --silent --show-error --location --request POST \
+            --data-urlencode "weblog_title=P16 Gutenberg Editor Proof" --data-urlencode "user_name=p16proofadmin" \
+            --data-urlencode "admin_password=$ADMIN_PASSWORD" --data-urlencode "admin_password2=$ADMIN_PASSWORD" \
+            --data-urlencode "admin_email=p16-proof@example.invalid" --data-urlencode "blog_public=0" \
+            --data-urlencode "Submit=Install WordPress" "$P16_BASE_URL/wp-admin/install.php?step=2" -o "$P16_OUT_DIR/install-response.html"
+          # Pretty permalinks are not needed: the probe uses the permalink WordPress reports.
+      - name: Import the golden markup and check the server round trip
+        run: php scripts/m8-gutenberg-import-probe.php "$P16_OUT_DIR" tests/golden/m8-gutenberg-golden.html tests/golden/m8-gutenberg-responsive.html
+      - name: Resolve Chrome
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome || command -v google-chrome-stable || true)"
+          test -n "$CHROME_PATH"
+          echo "P16_CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+      - name: Observe the block editor and the front-end render
+        continue-on-error: true
+        run: node scripts/m8-gutenberg-editor-probe.mjs
+      - name: Retain proof files
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: p16-gutenberg-editor-proof
+          path: dist-p16/gutenberg-editor-proof/
+          if-no-files-found: error
+      - name: Enforce editor validity and render
+        if: always()
+        run: |
+          set -euo pipefail
+          OUT="$P16_OUT_DIR"
+          for file in gutenberg-import-observation.json gutenberg-editor-observation.json; do
+            echo "::group::$file"; cat "$OUT/$file" 2>/dev/null || echo "(missing)"; echo "::endgroup::"
+          done
+          jq -e '.pass == true and (.wordpressVersion | startswith("6.9")) and (.pages | length) == 2' "$OUT/gutenberg-import-observation.json"
+          jq -e '.pass == true and (.pages | length) == 2 and all(.pages[]; .editor.invalid == [] and .editor.warnings == 0 and .render.http == 200)
+            and ([.pages[] | select(.render.widths["1440"].columns == 2)] | length) == 1
+            and .targetCompatibilityClaim == false' "$OUT/gutenberg-editor-observation.json"
