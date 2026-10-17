@@ -23,7 +23,7 @@ next_action_options:
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
 last_completed_milestone: product_recovery_m5_implemented_pr_918_merged_c298e26_m5_7_manual
-exact_next_safe_action: continue_M6_2_on_branch_then_M6_3_M6_4_M5_7_awaits_operator
+exact_next_safe_action: continue_M6_3_on_branch_then_M6_3_M6_4_M5_7_awaits_operator
 pending_runner_ids: [RQ-852-FINAL]
 blocked_runner_ids: []
 current_blockers:
@@ -92,8 +92,8 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M6
-  next_task: M6.2
-  last_completed_task: M6.1
+  next_task: M6.3
+  last_completed_task: M6.2
   blocked_tasks: [M5.7-manual]
   branch: claude/elementor-repo-audit-plan-u2sjz6
   open_pr: null

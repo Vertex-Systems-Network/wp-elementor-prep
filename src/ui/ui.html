@@ -157,7 +157,18 @@
       exportPanel.hidden = true;
       post('p15-elementor-target-profile-request', { wordpressVersion, elementorVersion });
     });
-    document.getElementById('elementor-option-bank').addEventListener('change', (event) => { selectedOptionBankId = event.target.value; document.getElementById('option-bank-status').textContent = `Selected bank: ${selectedOptionBankId}`; post('option-bank-selection', { optionBankId: selectedOptionBankId }); });
+    // M6.2: a result built for another target is stale; it is cleared on change and dropped if it arrives late.
+    function targetResultBankId(message) {
+      if (message.type === 'p15-elementor-preview-result') return message.optionBank && message.optionBank.id;
+      if (message.type === 'p15-elementor-local-template-download-result') return message.result && message.result.source && message.result.source.optionBankId;
+      return undefined;
+    }
+    function clearStaleTargetResults() {
+      root.className = 'empty';
+      root.textContent = 'Target changed. The previous Elementor preview and validation results were cleared; run the preview again for this target.';
+      exportPanel.hidden = true;
+    }
+    document.getElementById('elementor-option-bank').addEventListener('change', (event) => { selectedOptionBankId = event.target.value; document.getElementById('option-bank-status').textContent = `Selected bank: ${selectedOptionBankId}`; clearStaleTargetResults(); post('option-bank-selection', { optionBankId: selectedOptionBankId }); });
     document.getElementById('gutenberg-option-bank').addEventListener('change', (event) => { document.getElementById('option-bank-status').textContent = `Gutenberg bank: ${event.target.value} · Gutenberg export is not available yet`; post('option-bank-selection', { optionBankId: event.target.value }); });
     document.getElementById('plan').addEventListener('click', () => {
       root.className = 'empty';
@@ -922,6 +933,8 @@
     window.onmessage = async (event) => {
       const message = event.data.pluginMessage;
       if (!message) return;
+      const resultBankId = targetResultBankId(message);
+      if (resultBankId !== undefined && resultBankId !== selectedOptionBankId) return;
 
       if (message.type === 'audit-error' || message.type === 'validation-error' || message.type === 'safe-fix-error' || message.type === 'batch-error') {
         root.className = 'empty';
