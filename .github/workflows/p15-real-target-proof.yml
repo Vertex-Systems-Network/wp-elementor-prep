@@ -478,6 +478,16 @@ jobs:
         continue-on-error: true
         run: node scripts/p15-responsive-render-probe.mjs
 
+      # Recovery M7.2: render the imported responsive template and the Elementor-independent IR→CSS reference at each
+      # breakpoint, then build the per-section round-trip report (pixel + structure). Uncalibrated until M7.3.
+      - name: Observe recovery round-trip renders at 1440, 1024 and 390
+        continue-on-error: true
+        run: node scripts/p15-round-trip-probe.mjs
+
+      - name: Build recovery round-trip report
+        continue-on-error: true
+        run: npm run -s p15:responsive-harness -- round-trip-report --out-dir "$P15_RESPONSIVE_OUT_DIR"
+
       - name: Run repository P15 evidence intakes
         id: p15-intakes
         if: always()
@@ -753,3 +763,15 @@ jobs:
             and .productionAcceptance == false' "$OUT/responsive-import-observation.json"
           jq -e '.pass == true and (.observed | length) == 15 and all(.observed[]; .pass == true)
             and .targetCompatibilityClaim == false and .productionAcceptance == false' "$OUT/responsive-render-observation.json"
+
+      - name: Enforce recovery round-trip report
+        if: always()
+        run: |
+          set -euo pipefail
+          OUT="$GITHUB_WORKSPACE/dist-p15/p15-responsive-proof"
+          echo "::group::round-trip-report.json"; cat "$OUT/round-trip-report.json" 2>/dev/null || echo "(missing)"; echo "::endgroup::"
+          # A report per breakpoint with per-section pixel and structural metrics against the IR→CSS reference.
+          jq -e '.version == "p15-round-trip-report-v1" and .referenceSource == "IR_CSS_REFERENCE"
+            and .targetCompatibilityClaim == false and ([.breakpoints[].widthPx] | sort) == [390, 1024, 1440]
+            and all(.breakpoints[]; (.structural | length) > 0 and (.pixel.sections | length) == (.structural | length)
+              and .pixel.metrics.sameDimensions == true)' "$OUT/round-trip-report.json"
