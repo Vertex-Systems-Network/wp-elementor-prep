@@ -479,7 +479,7 @@ jobs:
         run: node scripts/p15-responsive-render-probe.mjs
 
       # Recovery M7.2: render the imported responsive template and the Elementor-independent IR→CSS reference at each
-      # breakpoint, then build the per-section round-trip report (pixel + structure). Uncalibrated until M7.3.
+      # breakpoint, then build the per-section round-trip report (pixel + structure) with the M7.3 provisional thresholds.
       - name: Observe recovery round-trip renders at 1440, 1024 and 390
         continue-on-error: true
         run: node scripts/p15-round-trip-probe.mjs
@@ -774,4 +774,7 @@ jobs:
           jq -e '.version == "p15-round-trip-report-v1" and .referenceSource == "IR_CSS_REFERENCE"
             and .targetCompatibilityClaim == false and ([.breakpoints[].widthPx] | sort) == [390, 1024, 1440]
             and all(.breakpoints[]; (.structural | length) > 0 and (.pixel.sections | length) == (.structural | length)
-              and .pixel.metrics.sameDimensions == true)' "$OUT/round-trip-report.json"
+              and .pixel.metrics.sameDimensions == true)
+            and .calibrated == true
+            and (.verdict == "REVIEW" or .verdict == "ROUND_TRIP_VERIFIED")
+            and all(.breakpoints[]; .verdict == "ROUND_TRIP_VERIFIED" or (.diffRegions | length) > 0)' "$OUT/round-trip-report.json"

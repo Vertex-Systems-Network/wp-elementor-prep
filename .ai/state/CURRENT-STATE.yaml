@@ -92,8 +92,9 @@ recovery_program:
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
   active_milestone: M7
-  next_task: M7.2-ci-acceptance_then_M7.3_parallel_M8.5
-  last_completed_task: M8.4
+  next_task: M8.5-acceptance_then_M7.4
+  last_completed_task: M7.2
+  blocked_tasks_note: M7.3_provisional_until_M7.4
   blocked_tasks: [M5.7-manual]
   branch: claude/elementor-repo-audit-plan-u2sjz6
   open_pr: null

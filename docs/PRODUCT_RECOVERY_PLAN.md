@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M7 — Round-trip visual proof** (M6.1–M6.4 implemented on `claude/elementor-repo-audit-plan-u2sjz6`; M6 acceptance = exact-head CI on its PR; the real atomic import is `PROJECT_FINAL` `RQ-REC-M6-ATOMIC-IMPORT`; M5.7 stays `[!] MANUAL`)
-> - Next task: **M7.2 acceptance** (exact-head real-target run of the round-trip report) → **M7.3** (calibration from that run's metrics); meanwhile **M8.5** (real WordPress editor import and render harness)
-> - Last completed task: **M8.4** (Gutenberg responsive strategy); M8.1–M8.4 done, M7.2 implemented and awaiting its CI run
+> - Next task: **M7.4** (explain the Elementor-vs-reference structural gap; it unblocks M7.3) after **M8.5** acceptance (editor-proof run on the PR head with the content-scoped probe)
+> - Last completed task: **M7.2** (round-trip report on the real target, run 39063092003); M8.1–M8.4 done; M7.3 `[!]` provisional
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -475,8 +475,10 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 ### M7 — Round-trip visual proof
 
 - [x] **M7.1** _(done 2026-10-17: **Export reference PNGs** renders each confirmed breakpoint frame, or the one selected Frame as desktop, at 1× (`exportAsync` SCALE 1, read-only). `src/core/reference-png-bundle.ts` checks the PNG signature and that the IHDR size equals the frame size, then writes a deterministic ZIP: `reference/<device>.png` plus `reference-receipt.json` with sha256s and `roundTripStatus: NOT_RUN`. Tests in `m7-reference-png-*`.)_ Plugin "Export reference PNGs": per-breakpoint Figma frame renders at 1×, bundled with the export receipt.
-- [ ] **M7.2** CI round-trip: render the imported template at each breakpoint width in the real-target harness, then compare it with the reference PNGs (`src/core/pixel-diff.ts` plus a structural metric) and produce a per-section report.
-- [ ] **M7.3** Calibrate the thresholds on golden fixtures. Emit `ROUND-TRIP VERIFIED` only within threshold. Otherwise emit REVIEW with the diff regions.
+- [x] **M7.2** _(done 2026-10-17: `src/core/round-trip-report.ts` gives a tiled pixel comparison plus section-box IoU and edge offsets per breakpoint, with diff regions. The reference is an Elementor-independent IR→CSS render (`ir-css-reference.ts`, labelled `IR_CSS_REFERENCE`, not Figma). Node PNG decoder, browser probe, and an enforced report step in `p15-real-target-proof.yml`. PR #927 head `978a936`, real-target-proof run 39063092003: report produced at 1440/1024/390.)_ CI round-trip: render the imported template at each breakpoint width in the real-target harness, then compare it with the reference PNGs (`src/core/pixel-diff.ts` plus a structural metric) and produce a per-section report.
+- [!] **M7.3** _(partial 2026-10-17: provisional thresholds are wired (`P15_ROUND_TRIP_PROVISIONAL_THRESHOLDS`: 2% frame, 5% section, 4 px edge, IoU ≥ 0.9), and the harness now emits REVIEW with diff regions. Blocked: no golden fixture is within threshold yet. Run 39063092003 measured 10.4% changed and a hero offset of 704 px (IoU 0.31), so calibration cannot be confirmed until M7.4 explains the gap. Thresholds must not be loosened to pass.)_ Calibrate the thresholds on golden fixtures. Emit `ROUND-TRIP VERIFIED` only within threshold. Otherwise emit REVIEW with the diff regions.
+
+- [ ] **M7.4** Explain the structural gap between the imported Elementor render and the IR→CSS reference on the responsive fixture (run 39063092003: hero edge offset 704/320/120 px at 1440/1024/390, text sections IoU about 0). Fix whichever side is wrong (reference renderer or exporter), with a test, then re-run the harness. *Accept:* every section of the fixture is within the M7.3 thresholds, or each remaining difference is an explained, documented REVIEW.
 
 ### M8 — Gutenberg native export
 

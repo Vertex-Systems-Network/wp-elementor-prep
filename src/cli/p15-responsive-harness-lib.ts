@@ -7,7 +7,7 @@ import type { P15NeutralExportDocumentV1, P15NeutralExportNode } from '../target
 import { buildP15ResponsiveMerge } from '../targets/elementor/responsive-merge';
 import type { ElementorElementV04 } from '../targets/elementor/template-v04';
 import { buildP15IrCssReference } from '../targets/elementor/ir-css-reference';
-import { buildP15RoundTripReport, type P15Box } from '../core/round-trip-report';
+import { buildP15RoundTripReport, P15_ROUND_TRIP_PROVISIONAL_THRESHOLDS, type P15Box } from '../core/round-trip-report';
 // @ts-expect-error Node-only harness helper without type declarations; bundled by esbuild.
 import { decodePngRgba } from '../../scripts/png-rgba.mjs';
 
@@ -163,7 +163,7 @@ export async function buildP15RoundTripHarnessReport(outDir: string): Promise<vo
       .map(([id, box]) => ({ id, reference: box, render: entry.render[id] ?? null }));
     inputs.push({ device, widthPx: entry.widthPx, reference, render, sections });
   }
-  const report = buildP15RoundTripReport(inputs, observation.referenceSource);
+  const report = buildP15RoundTripReport(inputs, observation.referenceSource, P15_ROUND_TRIP_PROVISIONAL_THRESHOLDS);
   await writeFile(join(root, 'round-trip-report.json'), `${JSON.stringify(report, null, 2)}\n`);
   process.stdout.write(`${JSON.stringify({ verdict: report.verdict, breakpoints: report.breakpoints.map((b) => ({ device: b.device,
     changedPixelPct: b.pixel.metrics.changedPixelPct, sections: b.structural.length })) })}\n`);

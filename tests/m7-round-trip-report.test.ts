@@ -71,3 +71,16 @@ describe('recovery M7.2 — IR→CSS reference', () => {
     expect(reference.unrendered).toEqual([{ sourceNodeId: 'h', fact: 'boxShadow' }]);
   });
 });
+
+describe('recovery M7.3 — provisional thresholds', () => {
+  it('are frozen and strict; an identical render verifies, the first real-run gap does not', async () => {
+    const { P15_ROUND_TRIP_PROVISIONAL_THRESHOLDS: t } = await import('../src/core/round-trip-report');
+    expect(Object.isFrozen(t)).toBe(true);
+    expect(t).toEqual({ channelTolerance: 16, tileSize: 32, maxChangedPct: 2, maxSectionChangedPct: 5, maxEdgeDeltaPx: 4, minIou: 0.9 });
+    const box = { x: 0, y: 0, width: 10, height: 10 };
+    const ok = buildP15RoundTripReport([{ device: 'd', widthPx: 20, reference: solid(20, 20), render: solid(20, 20), sections: [{ id: 'a', reference: box, render: box }] }], 'r', t);
+    expect(ok.verdict).toBe('ROUND_TRIP_VERIFIED');
+    const gap = buildP15RoundTripReport([{ device: 'd', widthPx: 20, reference: solid(20, 20), render: solid(20, 20), sections: [{ id: 'a', reference: box, render: { ...box, x: 704 } }] }], 'r', t);
+    expect(gap.verdict).toBe('REVIEW');
+  });
+});

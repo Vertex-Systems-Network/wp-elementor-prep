@@ -44,6 +44,16 @@ export interface P15RoundTripThresholds {
   minIou: number;
 }
 
+/**
+ * Provisional verdict thresholds (recovery M7.3). Pixel budgets allow font anti-aliasing between two renders of the
+ * same layout; structural budgets allow sub-pixel rounding. They are PROVISIONAL: no golden fixture has passed them
+ * yet (first real run 39063092003: desktop 10.4% changed, hero edge offset 704 px, IoU 0.31), so every current
+ * report is REVIEW with diff regions. They must never be loosened to make a fixture pass.
+ */
+export const P15_ROUND_TRIP_PROVISIONAL_THRESHOLDS: Readonly<P15RoundTripThresholds> = Object.freeze({
+  channelTolerance: 16, tileSize: 32, maxChangedPct: 2, maxSectionChangedPct: 5, maxEdgeDeltaPx: 4, minIou: 0.9,
+});
+
 /** Comparison settings used when no calibrated thresholds are supplied; they shape the metrics, not a verdict. */
 export const P15_ROUND_TRIP_METRIC_DEFAULTS = Object.freeze({ channelTolerance: 16, tileSize: 32 });
 
