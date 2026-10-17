@@ -82,14 +82,14 @@ describe('P15 controlled URL-only Image asset proof vector', () => {
     expect(manifest.internalReviewRequired).toBe(true);
   });
 
-  it('does not change the retained #483 first-proof vector identity', () => {
+  it('pins the first-proof vector identity (re-derived by recovery M7.4; #483 re-binding follows a real-target run)', () => {
     const firstProof = buildP15ElementorFirstProofVector();
     expect(firstProof.candidateIdentity.digest)
-      .toBe('sha256:96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26');
+      .toBe('sha256:39e197e0f63efb808486f4a403b3fb929b8d6a5710d2000efabdce22c05283f2');
     expect(firstProof.targetProfileFingerprint)
       .toBe('sha256:8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676');
     expect(firstProof.manifest.fileSha256.template)
-      .toBe('sha256:bf2c229441f93486af7152f9196c265f09ee9e3cefab67d11ecb6765f583e4ad');
+      .toBe('sha256:3d0c419d9ccd59faaabbb9eb772f18c976bf1d3d13469e4734908eaa9d5e6f0b');
   });
 
   it('writes once, verifies exact existing bytes, rejects drift and never prints the raw URL', () => {

@@ -109,7 +109,7 @@ describe('P15 read-only Figma neutral export extractor', () => {
       elType: 'widget',
       widgetType: 'text-editor',
       settings: {
-        editor: '<p>&lt;Launch&gt; &amp; learn<br>Safely</p>',
+        editor: '<p style="margin-block: 0">&lt;Launch&gt; &amp; learn<br>Safely</p>',
         align: 'center',
       },
     }));

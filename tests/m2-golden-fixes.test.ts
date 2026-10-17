@@ -13,7 +13,7 @@ describe('recovery M2.9c — span resets', () => {
   it('a span may reset italic and case; the CSS is the exact inherited reset', () => {
     const generation = generateElementorV3TemplateCandidate(doc({ fontStyle: 'normal', textTransform: 'none' }));
     expect(generation.status).toBe('GENERATED_LOCAL_CANDIDATE');
-    expect((generation.template!.content[0]!.elements[0]!.settings as Record<string, unknown>).editor).toBe('<p>Quote by <span style="font-style: normal; text-transform: none">Jane</span></p>');
+    expect((generation.template!.content[0]!.elements[0]!.settings as Record<string, unknown>).editor).toBe('<p style="margin-block: 0">Quote by <span style="font-style: normal; text-transform: none">Jane</span></p>');
   });
 
   it('resets are span-only, and an underline reset stays invalid (decorations propagate)', () => {

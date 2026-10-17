@@ -213,7 +213,7 @@ function headingWidget(node: P15NeutralHeadingNode, state: GenerationState): Ele
 
 function textEditorWidget(node: P15NeutralTextNode, state: GenerationState): ElementorWidgetV04 {
   const settings: Record<string, unknown> = {
-    editor: textEditorHtml(node.text, node.paragraphs, node.href),
+    editor: textEditorHtml(node.text, node.paragraphs, node.href, node.paragraphSpacingPx),
   };
   const align = mapTextAlignment(node.align);
   if (align !== undefined) settings.align = align;

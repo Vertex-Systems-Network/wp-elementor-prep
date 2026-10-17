@@ -164,7 +164,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Product</p>",
+                        "editor": "<p style=\"margin-block: 0\">Product</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -190,7 +190,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Pricing</p>",
+                        "editor": "<p style=\"margin-block: 0\">Pricing</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -216,7 +216,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Docs</p>",
+                        "editor": "<p style=\"margin-block: 0\">Docs</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -525,7 +525,7 @@
                           "widgetType": "text-editor",
                           "isInner": false,
                           "settings": {
-                            "editor": "<p>Book a demo</p>",
+                            "editor": "<p style=\"margin-block: 0\">Book a demo</p>",
                             "align": "start",
                             "typography_typography": "custom",
                             "typography_font_family": "Inter",
@@ -615,7 +615,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>New in 2026</p>",
+                        "editor": "<p style=\"margin-block: 0\">New in 2026</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -764,7 +764,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Nothing in your file changes.</p>",
+                        "editor": "<p style=\"margin-block: 0\">Nothing in your file changes.</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -875,7 +875,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Headings, text and buttons.</p>",
+                        "editor": "<p style=\"margin-block: 0\">Headings, text and buttons.</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -986,7 +986,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Every gap is listed.</p>",
+                        "editor": "<p style=\"margin-block: 0\">Every gap is listed.</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -1086,7 +1086,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Northwind</p>",
+                        "editor": "<p style=\"margin-block: 0\">Northwind</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -1155,7 +1155,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Globex</p>",
+                        "editor": "<p style=\"margin-block: 0\">Globex</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -1224,7 +1224,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Initech</p>",
+                        "editor": "<p style=\"margin-block: 0\">Initech</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -1293,7 +1293,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Umbrella</p>",
+                        "editor": "<p style=\"margin-block: 0\">Umbrella</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -1362,7 +1362,7 @@
                       "widgetType": "text-editor",
                       "isInner": false,
                       "settings": {
-                        "editor": "<p>Hooli</p>",
+                        "editor": "<p style=\"margin-block: 0\">Hooli</p>",
                         "align": "start",
                         "typography_typography": "custom",
                         "typography_font_family": "Inter",
@@ -1638,7 +1638,7 @@
                   "widgetType": "text-editor",
                   "isInner": false,
                   "settings": {
-                    "editor": "<p>“Acme changed how we ship.” — <span style=\"font-weight: 700; font-style: normal\">Jane Doe</span></p>",
+                    "editor": "<p style=\"margin-block: 0\">“Acme changed how we ship.” — <span style=\"font-weight: 700; font-style: normal\">Jane Doe</span></p>",
                     "align": "start",
                     "typography_typography": "custom",
                     "typography_font_family": "Inter",
@@ -1728,7 +1728,7 @@
                   "widgetType": "text-editor",
                   "isInner": false,
                   "settings": {
-                    "editor": "<p>© 2026 Acme</p>",
+                    "editor": "<p style=\"margin-block: 0\">© 2026 Acme</p>",
                     "align": "start",
                     "typography_typography": "custom",
                     "typography_font_family": "Inter",
@@ -1754,7 +1754,7 @@
                   "widgetType": "text-editor",
                   "isInner": false,
                   "settings": {
-                    "editor": "<p><a href=\"https://example.com/privacy\">Privacy</a></p>",
+                    "editor": "<p style=\"margin-block: 0\"><a href=\"https://example.com/privacy\">Privacy</a></p>",
                     "align": "start",
                     "typography_typography": "custom",
                     "typography_font_family": "Inter",

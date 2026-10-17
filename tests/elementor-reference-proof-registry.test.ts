@@ -57,19 +57,22 @@ describe('P15 retained Elementor reference-proof alignment', () => {
     expect(result.internalReviewRequired).toBe(true);
   });
 
-  it('binds the exact first-proof candidate identity to the retained reference profile', () => {
+  it('reports the M7.4 first-proof vector as a mismatch against the retained #483 binding until it is re-bound', () => {
+    // Recovery M7.4 changed the text-editor paragraph markup, so the first-proof candidate identity changed. The
+    // retained #483 evidence proved the previous candidate; it is re-bound only to a real-target run of this one.
     const vector = buildP15ElementorFirstProofVector();
     const candidate = buildElementorTemplateCandidateArtifact(JSON.parse(vector.files['template.json']));
     const result = assessP15ElementorReferenceProofAlignment(vector.profile, candidate);
 
     expect(vector.candidateIdentity.digest)
-      .toBe('sha256:96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26');
+      .toBe('sha256:39e197e0f63efb808486f4a403b3fb929b8d6a5710d2000efabdce22c05283f2');
     expect(vector.targetProfileFingerprint)
       .toBe('sha256:8c93e6c2c4635f7da845ef737bbce8810bbf4e46334f7496a54b682673a1b676');
     expect(result.status).toBe('EXACT_REFERENCE_PROFILE_MATCH');
-    expect(result.candidateBinding).toBe('EXACT_REFERENCE_CANDIDATE_MATCH');
+    expect(result.candidateBinding).toBe('REFERENCE_CANDIDATE_MISMATCH');
     expect(result.currentCandidateIdentityDigest).toBe(vector.candidateIdentity.digest);
-    expect(result.referenceProof?.retainedCandidateIdentityDigest).toBe(vector.candidateIdentity.digest);
+    expect(result.referenceProof?.retainedCandidateIdentityDigest)
+      .toBe('sha256:96ffe8a19b0c4d05eccd1e3d28d8b453f41464450ebd6c3f69decc1ab2543f26');
     expect(result.referenceProof?.retainedTargetProfileFingerprint).toBe(vector.targetProfileFingerprint);
     expect(result.targetCompatibilityClaim).toBe(false);
     expect(result.productionAcceptance).toBe(false);
@@ -144,9 +147,10 @@ describe('P15 retained Elementor reference-proof alignment', () => {
     const vector = buildP15ElementorFirstProofVector();
     const candidate = buildElementorTemplateCandidateArtifact(JSON.parse(vector.files['template.json']));
     const bound = assessP15ElementorReferenceProofAlignment(vector.profile, candidate);
+    // A mismatch may not be relabelled as an exact retained-candidate match.
     const tamperedBinding = {
       ...bound,
-      currentCandidateIdentityDigest: 'sha256:' + '0'.repeat(64),
+      candidateBinding: 'EXACT_REFERENCE_CANDIDATE_MATCH',
     } as P15ElementorReferenceProofAlignmentV1;
     expect(() => serializeP15ElementorReferenceProofAlignment(tamperedBinding))
       .toThrow(/authority-inflated/);
