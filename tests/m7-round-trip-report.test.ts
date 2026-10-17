@@ -38,7 +38,10 @@ describe('recovery M7.2 — round-trip report', () => {
     const bp = report.breakpoints[0]!;
     expect(bp.pixel.metrics.changedPixelPct).toBe(25);
     expect(bp.pixel.sections.map((s) => s.changedPct)).toEqual([100, 0]);
-    expect(bp.structural).toEqual([{ id: 'a', present: true, maxEdgeDeltaPx: 0, iou: 1 }, { id: 'b', present: false, maxEdgeDeltaPx: null, iou: null }]);
+    expect(bp.structural).toEqual([
+      { id: 'a', present: true, maxEdgeDeltaPx: 0, iou: 1, referenceBox: { x: 0, y: 0, width: 10, height: 10 }, renderBox: { x: 0, y: 0, width: 10, height: 10 } },
+      { id: 'b', present: false, maxEdgeDeltaPx: null, iou: null, referenceBox: { x: 10, y: 10, width: 10, height: 10 }, renderBox: null },
+    ]);
     expect(bp.diffRegions.map((r) => r.reason)).toEqual(['STRUCTURE_MISSING', 'PIXEL_WORST_TILE']);
     expect(report.targetCompatibilityClaim).toBe(false);
   });
