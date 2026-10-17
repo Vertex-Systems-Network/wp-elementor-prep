@@ -480,7 +480,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 
 ### M8 — Gutenberg native export
 
-- [ ] **M8.1** R0 refresh: the WordPress 6.8/6.9 core blocks, layout support and style engine.
+- [x] **M8.1** _(done 2026-10-17: `docs/R0_GUTENBERG_WP69_2026-10-17.md`; block contracts from `@wordpress/block-library@9.33.11`; Node validity harness feasibility proven with every `@wordpress/*` package pinned to `wp-6.9`)_ R0 refresh: the WordPress 6.8/6.9 core blocks, layout support and style engine.
 - [ ] **M8.2** Neutral IR → block markup for group/row/stack, columns, heading, paragraph, image, buttons, spacer and cover, using the `style`/`layout` attributes.
 - [ ] **M8.3** Validity: parse/serialise round-trip with pinned `@wordpress/blocks` in Node. Invalid → BLOCKED.
 - [ ] **M8.4** Responsive strategy: document the core limits, use stack-on-mobile where possible, and mark the rest REVIEW.
