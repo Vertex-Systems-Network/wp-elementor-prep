@@ -8,8 +8,8 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
 > - Active milestone: **M7 — Round-trip visual proof** (M6.1–M6.4 implemented on `claude/elementor-repo-audit-plan-u2sjz6`; M6 acceptance = exact-head CI on its PR; the real atomic import is `PROJECT_FINAL` `RQ-REC-M6-ATOMIC-IMPORT`; M5.7 stays `[!] MANUAL`)
-> - Next task: **M7.2** (CI round-trip: render the imported template per breakpoint and compare with the reference PNGs)
-> - Last completed task: **M7.1** (Export reference PNGs)
+> - Next task: **M7.2 acceptance** (exact-head real-target run of the round-trip report) → **M7.3** (calibration from that run's metrics); meanwhile **M8.5** (real WordPress editor import and render harness)
+> - Last completed task: **M8.4** (Gutenberg responsive strategy); M8.1–M8.4 done, M7.2 implemented and awaiting its CI run
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -481,9 +481,9 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 ### M8 — Gutenberg native export
 
 - [x] **M8.1** _(done 2026-10-17: `docs/R0_GUTENBERG_WP69_2026-10-17.md`; block contracts from `@wordpress/block-library@9.33.11`; Node validity harness feasibility proven with every `@wordpress/*` package pinned to `wp-6.9`)_ R0 refresh: the WordPress 6.8/6.9 core blocks, layout support and style engine.
-- [ ] **M8.2** Neutral IR → block markup for group/row/stack, columns, heading, paragraph, image, buttons, spacer and cover, using the `style`/`layout` attributes.
-- [ ] **M8.3** Validity: parse/serialise round-trip with pinned `@wordpress/blocks` in Node. Invalid → BLOCKED.
-- [ ] **M8.4** Responsive strategy: document the core limits, use stack-on-mobile where possible, and mark the rest REVIEW.
+- [x] **M8.2** _(done 2026-10-17: `src/targets/gutenberg/block-markup-generator.ts`. It reproduces core `save` output (class names, style-engine CSS order, `serializeAttributes` escaping) for group (flex/grid layouts, wrap, child `selfStretch`/`flexSize`), heading, paragraph (links, line breaks), buttons/button, image, separator and spacer. Every unmapped fact is REVIEW and there is no HTML fallback. The golden `tests/golden/m8-gutenberg-golden.html` is VALID against core 6.9.)_ Neutral IR → block markup for group/row/stack, columns, heading, paragraph, image, buttons, spacer and cover, using the `style`/`layout` attributes.
+- [x] **M8.3** _(done 2026-10-17: `tools/gutenberg-validator` is an isolated workspace with every `@wordpress/*` package pinned to `wp-6.9` and a committed lockfile. The gate: every block registered and `isValid`, no deprecation migration, and byte-exact `serialize(parse())`. Invalid markup is BLOCKED. CI: `.github/workflows/gutenberg-validity.yml`. Locally VALID for both goldens; it rejects tampered markup and a deprecation-migrated paragraph.)_ Validity: parse/serialise round-trip with pinned `@wordpress/blocks` in Node. Invalid → BLOCKED.
+- [x] **M8.4** _(done 2026-10-17: `planGutenbergResponsive` maps the M4 merge entries onto core limits. A row whose children grow equally and that becomes a column on mobile only is rendered as `core/columns` (stacks below 782 px; golden `m8-gutenberg-responsive.html` VALID). The root frame's per-device width is the canvas. Per-breakpoint styles, visibility, order and tablet direction changes are REVIEW.)_ Responsive strategy: document the core limits, use stack-on-mobile where possible, and mark the rest REVIEW.
 - [ ] **M8.5** Real WordPress editor import and render harness in CI.
 
 ### M9+ — Remaining roadmap phases
