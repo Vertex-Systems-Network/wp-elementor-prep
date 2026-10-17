@@ -57,11 +57,11 @@ Every settings value and every style prop is a typed envelope `{ "$$type": <key>
 
 ## Stability and risk
 
-- Atomic is evolving. The text prop key has moved between `escaped-html` and `html-v3` across 4.x releases. The adapter emits `string` for text props and records this as a REVIEW limit until a real-target import proves which key 4.x accepts.
+- Atomic is evolving. The text prop key has moved between `escaped-html` and `html-v3` across 4.x releases. The adapter emits the source-pinned `escaped-html` key for text props. Which key 4.x accepts on import stays unproven until a real-target import (REVIEW limit).
 - Not in scope for this adapter, so explicitly UNSUPPORTED: Pro atomic elements, `e-grid`, components, interactions and global classes and variables.
 - Privacy and network: there are no network calls and no licensing constraint. The facts were read from GPL source; no code was copied.
 
 ## Acceptance impact
 
 - The `elementor-v4-atomic@4` profile gains an adapter (`elementor-v4-atomic-v1`) in M6.4.
-- The output label stays `LOCAL_ARTIFACT_VALIDATED` / `REVIEW REQUIRED`. Real import proof is a `PROJECT_FINAL` real-target harness run (Runner row `RQ-M6-ATOMIC-IMPORT`).
+- The output label stays `LOCAL_ARTIFACT_VALIDATED` / `REVIEW REQUIRED`. Real import proof is a `PROJECT_FINAL` real-target harness run (Runner row `RQ-REC-M6-ATOMIC-IMPORT`).

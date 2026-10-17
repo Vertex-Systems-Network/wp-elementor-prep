@@ -29,10 +29,10 @@ describe('recovery M6.1 — version-driven Elementor target profiles', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('v4-Atomic has no adapter yet, so its export is declared unsupported (never silently emitted as v3)', () => {
+  it('v4-Atomic carries its own adapter version and stays RUNTIME_REQUIRED until a real import proof', () => {
     const atomic = OPTION_BANK_REGISTRY.elementor.find((e) => e.profile?.structure === 'V4_ATOMIC')!;
-    expect(atomic.status).toBe('UNSUPPORTED');
-    expect(atomic.profile).toEqual(expect.objectContaining({ adapterVersion: null, exportSupported: false, propertyFamilies: [] }));
+    expect(atomic.status).toBe('RUNTIME_REQUIRED');
+    expect(atomic.profile).toEqual(expect.objectContaining({ adapterVersion: 'elementor-v4-atomic-v1', exportSupported: true }));
   });
 
   it('classifies setting keys into families deterministically', () => {
@@ -57,14 +57,17 @@ describe('recovery M6.1 — version-driven Elementor target profiles', () => {
     expect(filterElementorSettingsByFamilies(template, ELEMENTOR_PROPERTY_FAMILIES)).toEqual(template);
   });
 
-  it('download receipt carries profile id and adapter version; v4-Atomic download is blocked', () => {
+  it('download receipt carries profile id and adapter version; an unsupported profile download is blocked', () => {
     const extraction = buildP15ElementorV1PreviewFromFigmaFrame(simpleFrame());
     const v3 = OPTION_BANK_REGISTRY.elementor.find((e) => e.id === 'elementor:v3-container:3.16+')!;
     const ok = buildP15LocalTemplateDownloadResult({ id: '1:1' }, extraction, v3.id);
     expect(ok.status).toBe('LOCAL_ARTIFACT_VALIDATED');
     expect(ok.receipt).toEqual(expect.objectContaining({ profileId: 'elementor-v3-container@3.16', adapterVersion: v3.profile!.adapterVersion }));
-    const atomic = OPTION_BANK_REGISTRY.elementor.find((e) => e.profile?.structure === 'V4_ATOMIC')!;
-    const blocked = buildP15LocalTemplateDownloadResult({ id: '1:1' }, extraction, atomic.id);
+    const unsupported = { id: 'elementor:test-unsupported', label: 't', snapshot: 't', status: 'UNSUPPORTED' as const, generatedAt: '2026-10-17',
+      profile: { profileId: 'test@0', structure: 'V3_CONTAINER' as const, elementorVersionRange: '*', adapterVersion: null, exportSupported: false, propertyFamilies: [] } };
+    OPTION_BANK_REGISTRY.elementor.push(unsupported);
+    let blocked;
+    try { blocked = buildP15LocalTemplateDownloadResult({ id: '1:1' }, extraction, unsupported.id); } finally { OPTION_BANK_REGISTRY.elementor.pop(); }
     expect(blocked.status).toBe('DOWNLOAD_BLOCKED');
     expect(blocked.blockReasonCodes).toContain('P15_DOWNLOAD_PROFILE_EXPORT_UNSUPPORTED');
     expect(blocked.templateJson).toBeNull();

@@ -10,7 +10,7 @@ active_pr: null
 active_branch: claude/elementor-repo-audit-plan-u2sjz6
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: product_recovery_m6_target_profiles
+current_milestone: product_recovery_m7_round_trip
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -22,9 +22,9 @@ next_action_options:
   recommended_slot_fixed: false
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
-last_completed_milestone: product_recovery_m5_implemented_pr_918_merged_c298e26_m5_7_manual
-exact_next_safe_action: continue_M6_4_on_branch_then_M6_3_M6_4_M5_7_awaits_operator
-pending_runner_ids: [RQ-852-FINAL]
+last_completed_milestone: product_recovery_m6_implemented_awaiting_exact_head_ci
+exact_next_safe_action: open_M6_PR_run_exact_head_gates_then_M7_1_M5_7_awaits_operator
+pending_runner_ids: [RQ-852-FINAL, RQ-REC-M6-TRAIN, RQ-REC-M6-ATOMIC-IMPORT]
 blocked_runner_ids: []
 current_blockers:
   - p15_retained_operator_approval_not_supplied_for_broader_compatibility_claims
@@ -91,9 +91,9 @@ recovery_program:
   decisions: [D-047, D-048, D-049, D-050, D-051]
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
-  active_milestone: M6
-  next_task: M6.4
-  last_completed_task: M6.3
+  active_milestone: M7
+  next_task: M7.1
+  last_completed_task: M6.4
   blocked_tasks: [M5.7-manual]
   branch: claude/elementor-repo-audit-plan-u2sjz6
   open_pr: null

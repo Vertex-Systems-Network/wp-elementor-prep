@@ -7,9 +7,9 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M6 — Real version-driven target profiles** (M5.1–M5.6 merged via PR #918 at `c298e26`; M5.7 stays `[!] MANUAL` operator evidence)
-> - Next task: **M6.4** (v4 Atomic adapter with its own validator)
-> - Last completed task: **M6.3** (R0 refresh for Elementor v4 Atomic)
+> - Active milestone: **M7 — Round-trip visual proof** (M6.1–M6.4 implemented on `claude/elementor-repo-audit-plan-u2sjz6`; M6 acceptance = exact-head CI on its PR; the real atomic import is `PROJECT_FINAL` `RQ-REC-M6-ATOMIC-IMPORT`; M5.7 stays `[!] MANUAL`)
+> - Next task: **M7.1** (plugin "Export reference PNGs")
+> - Last completed task: **M6.4** (v4 Atomic adapter with its own validator)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -470,7 +470,7 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 - [x] **M6.1** _(done 2026-10-17: every Elementor bank carries a `profile` descriptor — `elementor-v3-container@4.3`, `elementor-v3-container@3.16` (>=3.16 <4.0) and `elementor-v4-atomic@4` (no adapter, `UNSUPPORTED`, download blocked with `P15_DOWNLOAD_PROFILE_EXPORT_UNSUPPORTED`). `propertyFamilies` strips omitted families via a deterministic key classifier; the receipt carries `profileId`/`adapterVersion`. Tests in `m6-target-profiles`.)_ Option bank: Elementor v3-Container profile (3.16+/4.x) and v4-Atomic profile entries. Each profile's capability descriptor controls which property families export.
 - [x] **M6.2** _(done 2026-10-17: changing the Elementor bank clears the preview/validation view; late preview/download results whose bank id differs from the current selection are dropped before any renderer. Receipt carries `profileId`/`adapterVersion` (M6.1). Tests in `m6-target-change-staleness`.)_ Changing the target clears stale preview and validation results. The receipt carries the profile id and adapter version.
 - [x] **M6.3** _(done 2026-10-17: `docs/R0_ELEMENTOR_V4_ATOMIC_2026-10-17.md`, from Elementor source `a1680ca`; the developers host is unreachable from the session network)_ R0 refresh for Elementor v4 Atomic.
-- [ ] **M6.4** v4 Atomic adapter (`e-flexbox`, `e-div-block`, atomic heading/paragraph/image/button) over the same neutral IR, with its own validator.
+- [x] **M6.4** _(done 2026-10-17: `src/targets/elementor/v4-atomic-generator.ts` maps container/heading/text/button/URL image to `e-flexbox`/`e-heading`/`e-paragraph`/`e-button`/`e-image` with typed `$$type` props and one desktop local style per element; every unmapped fact is REVIEW with no template exposed. Its own validator is in `v4-atomic-template.ts`. The v4 profile downloads through it (`adapterVersion: elementor-v4-atomic-v1`, bank `RUNTIME_REQUIRED`). The real import proof is `RQ-REC-M6-ATOMIC-IMPORT` (`PROJECT_FINAL`). Tests in `m6-v4-atomic-adapter`.)_ v4 Atomic adapter (`e-flexbox`, `e-div-block`, atomic heading/paragraph/image/button) over the same neutral IR, with its own validator.
 
 ### M7 — Round-trip visual proof
 

@@ -15,8 +15,7 @@ Canonical backlog: [`docs/PRODUCT_RECOVERY_PLAN.md`](../docs/PRODUCT_RECOVERY_PL
 4. **M3 — assets: ACCEPTED.** PRs #908, #909 and #910 are merged (PR #910, exact head `0b8663f`, 10/10 checks, merged `a4ee8dd`). Acceptance evidence: images and SVG load in the real-target render (run 38103090238).
 5. **M4 — responsive breakpoint engine: ACCEPTED.** PRs #911–#917 are merged (`ccf81f0`; #917 exact head `0a0ab3b`, 11/11 checks). Acceptance evidence: real-target run 38105960139 — 15/15 viewport checks at 1440/1024/390.
 6. **M5 — smart duplicate and structure alignment: M5.1–M5.6 IMPLEMENTED** (one release train); **M5.7 needs manual Figma Desktop evidence from the operator** before M5 acceptance and P14 release activation. Then continue with:
-   - M5: smart duplicate and breakpoint alignment;
-   - M6: target profiles and v4 Atomic;
+7. **M6 — version-driven target profiles: M6.1–M6.4 IMPLEMENTED** (2026-10-17, branch `claude/elementor-repo-audit-plan-u2sjz6`). It needs exact-head CI on its PR (`RQ-REC-M6-TRAIN`). The real v4 Atomic import is `RQ-REC-M6-ATOMIC-IMPORT` (`PROJECT_FINAL`). Then continue with:
    - M7: round-trip proof;
    - M8: Gutenberg.
 

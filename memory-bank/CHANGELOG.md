@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-17 — Recovery M6 (version-driven target profiles, v4 Atomic) implemented
+
+- **Profiles (M6.1):** Elementor option-bank entries carry a profile:
+  - structure (v3 Container or v4 Atomic);
+  - version range;
+  - adapter version;
+  - export support;
+  - property families, with a deterministic key-family filter.
+
+  The receipt carries `profileId`/`adapterVersion`.
+- **Staleness (M6.2):** changing the target clears the view; late results built for another bank are dropped.
+- **R0 (M6.3):** `docs/R0_ELEMENTOR_V4_ATOMIC_2026-10-17.md`, from Elementor source `a1680ca`.
+- **Atomic adapter (M6.4):** neutral IR → `e-flexbox`/`e-heading`/`e-paragraph`/`e-button`/`e-image`, with typed `$$type` props, local styles and its own validator. Unmapped facts are REVIEW, with no v3 fallback. The real import proof is `PROJECT_FINAL`.
+
 ## 2026-10-11 — Recovery M4 (responsive breakpoint engine) accepted (PR #917, `ccf81f0`)
 
 - **Breakpoints and matching (PRs #911, #912):** breakpoint set by width with Elementor 4.2.4 defaults and user confirmation; deterministic top-down matcher with explainable scores; near-ties stay unmatched.

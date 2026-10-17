@@ -21,6 +21,15 @@ A full code audit at main `9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6` (see `docs/
 
 The active priority is the recovery program (D-047). Phase rows and authority boundaries below are unchanged.
 
+**M6 status (2026-10-17): IMPLEMENTED (M6.1–M6.4).** Every Elementor bank carries a version-driven profile:
+
+- v3-Container profiles for 4.3 and for 3.16+;
+- a v4-Atomic profile whose descriptor and adapter drive the export.
+
+Changing the target clears stale preview/download results. The receipt carries the profile id and the adapter version. The v4 Atomic R0 is pinned to Elementor source `a1680ca` (`docs/R0_ELEMENTOR_V4_ATOMIC_2026-10-17.md`). A bounded atomic adapter maps to `e-flexbox`/`e-heading`/`e-paragraph`/`e-button`/`e-image` with typed props and local styles, has its own validator, and turns every unmapped fact into REVIEW. Output is a local artifact only. The real atomic import proof is queued as `PROJECT_FINAL` (`RQ-REC-M6-ATOMIC-IMPORT`), and the bank stays `RUNTIME_REQUIRED`.
+
+**M5 status (2026-10-17): IMPLEMENTED (M5.1–M5.6, PR #918 merged `c298e26`).** M5.7 (manual Figma Desktop evidence) is pending with the operator.
+
 **M4 status (2026-10-11): ACCEPTED** (PR #917, exact head `0a0ab3b`, 11/11 checks, merged `ccf81f0`; with PRs #911–#916). Responsive engine: breakpoint set by width (Elementor 4.2.4 defaults, user-confirmed), deterministic top-down matcher that never guesses, responsive merge through the M1 engine (container layout, presence via `hide_*`, order via custom flex order, widget typography and alignment, container/widget widths, min height, radius; new engine families with Elementor 4.2.4 source evidence), explicit mismatch reviews (ambiguous, kind change, unplaceable, nesting differs) and a per-section responsive report in the plugin. Real-target evidence (run 38105960139): a three-breakpoint export keeps every responsive setting through the import and renders correctly at 1440/1024/390. No broad compatibility or production claim.
 
 **M3 status (2026-10-11): ACCEPTED** (PR #910, exact head `0b8663f`, 10/10 checks, merged `a4ee8dd`; with PR #908 for M3.1–M3.5 and PR #909 for the real-target harness). Assets: an asset collector (Stored Originals, @1x/@2x Rendered Appearance, SVG icons), a deterministic atomic STORE ZIP pack with manifest and IMPORT.md, pack-relative media references with an `ASSET_UPLOAD_REQUIRED` review per asset (D-051), Image widget and Container background-image sizing, SVG icons as sized Image widgets, a pure relink step, and a plugin **Download asset pack** action labelled exactly as the manifest and never import-ready. Real-target evidence (run 38103090238): two PNGs and one SVG uploaded, kept their attachments through Elementor's import and rendered with HTTP 200 (`image/png`, `image/svg+xml`). Users still upload and relink by hand from IMPORT.md, so packs stay `REVIEW REQUIRED`; no broad compatibility or production claim.

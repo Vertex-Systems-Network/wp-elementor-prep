@@ -38,6 +38,7 @@ export interface ElementorTargetProfileDescriptor {
 }
 
 const V3_CONTAINER_ADAPTER_VERSION = 'elementor-template-v0.4-container-v1';
+const V4_ATOMIC_ADAPTER_VERSION = 'elementor-v4-atomic-v1';
 const ALL_FAMILIES: readonly ElementorPropertyFamily[] = ELEMENTOR_PROPERTY_FAMILIES;
 export const OPTION_BANK_REGISTRY: {
   schemaVersion: 1;
@@ -55,8 +56,9 @@ export const OPTION_BANK_REGISTRY: {
       profile: { profileId: 'elementor-v3-container@3.16', structure: 'V3_CONTAINER', elementorVersionRange: '>=3.16 <4.0', adapterVersion: V3_CONTAINER_ADAPTER_VERSION, exportSupported: true, propertyFamilies: ALL_FAMILIES },
     },
     {
-      id: 'elementor:v4-atomic:4.x', label: 'Elementor 4.x Atomic (v4 editor)', snapshot: 'elementor-4.3.2-4.3.0.json', status: 'UNSUPPORTED', generatedAt: '2026-10-17',
-      profile: { profileId: 'elementor-v4-atomic@4', structure: 'V4_ATOMIC', elementorVersionRange: '>=4.0 <5.0', adapterVersion: null, exportSupported: false, propertyFamilies: [] },
+      id: 'elementor:v4-atomic:4.x', label: 'Elementor 4.x Atomic (v4 editor)', snapshot: 'elementor-4.3.2-4.3.0.json', status: 'RUNTIME_REQUIRED', generatedAt: '2026-10-17',
+      // M6.4 bounded adapter; real import proof is a PROJECT_FINAL harness run, so the bank stays RUNTIME_REQUIRED.
+      profile: { profileId: 'elementor-v4-atomic@4', structure: 'V4_ATOMIC', elementorVersionRange: '>=4.0 <5.0', adapterVersion: V4_ATOMIC_ADAPTER_VERSION, exportSupported: true, propertyFamilies: ['spacing', 'typography', 'background', 'border'] },
     },
   ],
   gutenberg: [
