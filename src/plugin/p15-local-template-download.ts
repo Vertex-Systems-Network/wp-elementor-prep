@@ -8,6 +8,7 @@ import {
   assessP15ElementorCompatibilityReadiness,
   type P15ElementorTargetReadyStatus,
 } from '../targets/elementor/compatibility-readiness';
+import { filterElementorSettingsByFamilies, findElementorOptionBank, ELEMENTOR_PROPERTY_FAMILIES } from '../core/option-bank';
 import type { P15FigmaNeutralExtractionResult } from './p15-neutral-export-extractor';
 
 export const P15_LOCAL_TEMPLATE_DOWNLOAD_RESULT_VERSION = 'p15-elementor-local-template-download-result-v1' as const;
@@ -25,7 +26,8 @@ export type P15LocalTemplateDownloadBlockReasonCode =
   | 'P15_DOWNLOAD_GENERATION_NOT_READY'
   | 'P15_DOWNLOAD_CANDIDATE_NOT_READY'
   | 'P15_DOWNLOAD_LOCAL_REVALIDATION_FAILED'
-  | 'P15_DOWNLOAD_CANDIDATE_REVALIDATION_MISMATCH';
+  | 'P15_DOWNLOAD_CANDIDATE_REVALIDATION_MISMATCH'
+  | 'P15_DOWNLOAD_PROFILE_EXPORT_UNSUPPORTED';
 
 export interface P15LocalTemplateDownloadReceiptV1 {
   schemaVersion: 1;
@@ -33,6 +35,9 @@ export interface P15LocalTemplateDownloadReceiptV1 {
   sourceFrameId: string;
   /** Elementor option-bank (target version inventory) selected for this artifact; never a Gutenberg bank. */
   optionBankId: string | null;
+  /** Version-driven target profile of the selected bank, and the adapter that emitted the artifact. */
+  profileId: string | null;
+  adapterVersion: string | null;
   extractorVersion: P15FigmaNeutralExtractionResult['extractorVersion'];
   generatorVersion: P15FigmaNeutralExtractionResult['generation']['generatorVersion'];
   candidateStatus: 'READY_FOR_TARGET_IMPORT_VALIDATION';
@@ -127,6 +132,8 @@ export function buildP15LocalTemplateDownloadResult(
   const compatibility = assessP15ElementorCompatibilityReadiness(extraction.document);
   const generationCandidate = extraction.generation.candidate;
   const reasons: P15LocalTemplateDownloadBlockReasonCode[] = [];
+  const profile = optionBankId === null ? undefined : findElementorOptionBank(optionBankId)?.profile;
+  if (profile && !profile.exportSupported) reasons.push('P15_DOWNLOAD_PROFILE_EXPORT_UNSUPPORTED');
 
   if (!extraction.validation.valid) reasons.push('P15_DOWNLOAD_EXTRACTION_INVALID');
   if (extraction.validation.reviewNodeCount > 0) reasons.push('P15_DOWNLOAD_EXTRACTION_REVIEW_PRESENT');
@@ -154,6 +161,14 @@ export function buildP15LocalTemplateDownloadResult(
       reasons.push('P15_DOWNLOAD_LOCAL_REVALIDATION_FAILED');
     } else if (freshCandidate.templateJson !== generationCandidate?.templateJson) {
       reasons.push('P15_DOWNLOAD_CANDIDATE_REVALIDATION_MISMATCH');
+    } else if (profile && profile.propertyFamilies.length < ELEMENTOR_PROPERTY_FAMILIES.length) {
+      // The profile's capability descriptor decides which property families export.
+      freshCandidate = buildElementorTemplateCandidateArtifact(
+        filterElementorSettingsByFamilies(extraction.generation.template, profile.propertyFamilies),
+      );
+      if (freshCandidate.status !== 'READY_FOR_TARGET_IMPORT_VALIDATION' || !freshCandidate.validation.valid) {
+        reasons.push('P15_DOWNLOAD_LOCAL_REVALIDATION_FAILED');
+      }
     }
   }
 
@@ -197,6 +212,8 @@ export function buildP15LocalTemplateDownloadResult(
     receiptVersion: P15_LOCAL_TEMPLATE_DOWNLOAD_RECEIPT_VERSION,
     sourceFrameId: frame.id,
     optionBankId,
+    profileId: profile?.profileId ?? null,
+    adapterVersion: profile?.adapterVersion ?? null,
     extractorVersion: extraction.extractorVersion,
     generatorVersion: extraction.generation.generatorVersion,
     candidateStatus: 'READY_FOR_TARGET_IMPORT_VALIDATION',

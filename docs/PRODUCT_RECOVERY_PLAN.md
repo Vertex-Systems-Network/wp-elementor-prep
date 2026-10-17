@@ -7,9 +7,9 @@ Owner branch for the first train: `claude/youthful-ritchie-uch0qp`
 
 > **RESUME POINTER**: the machine copy is in `.ai/state/CURRENT-STATE.yaml` under `recovery_program`.
 >
-> - Active milestone: **M5 — Smart target-ready duplicate and structure alignment** (M4 accepted: PR #917 exact head `0a0ab3b`, 11/11 checks, real-target-proof run 38105960139, merged `ccf81f0`; three-breakpoint export renders correctly at 1440/1024/390)
-> - Next task: **M5.7** (`[!] MANUAL` Figma Desktop verification of a prepared duplicate — operator evidence required; M5.1–M5.6 implemented)
-> - Last completed task: **M5.6** (golden acceptance)
+> - Active milestone: **M6 — Real version-driven target profiles** (M5.1–M5.6 merged via PR #918 at `c298e26`; M5.7 stays `[!] MANUAL` operator evidence)
+> - Next task: **M6.2** (changing the target clears stale preview/validation results)
+> - Last completed task: **M6.1** (Elementor v3-Container / v4-Atomic profile descriptors)
 
 This file is the single backlog that turns the repository into the product described in §1. Every AI agent or developer resumes from the RESUME POINTER above, takes the first unchecked task of the active milestone and continues from there. Chat history is never required.
 
@@ -463,11 +463,11 @@ Legend: `[ ]` todo · `[x]` done · `[!]` blocked (with reason) · `[~]` in prog
 - [x] **M5.4** P14 pixel validation at full resolution, tiled with no downscale, with per-section budgets. Reuse `src/core/pixel-diff.ts`. _(done 2026-10-11)_: `compareTiledPixelBuffers` (pure, compiled into the UI runtime with `comparePixelBuffers`) compares at full resolution in 512 px tiles with a budget per section; `FullFrameValidator.validateFullResolution` renders both frames at scale 1 (no downscale; frames beyond 16384 px or 64 M pixels fail closed), the secure UI bounds full-resolution requests separately, and `mergeTiledPixelValidation` adds `PIXEL_SECTION_BUDGET_EXCEEDED`. The P14 adapter's optional `pixelValidator` gates every candidate (wired in the dev P14 flow with one 0.5 % budget per top-level section). Tests: `tests/m5-tiled-pixel-validation.test.ts`, `tests/m0-ui-pixel-diff-runtime.test.mjs`.
 - [x] **M5.5** Cross-breakpoint structure alignment of duplicates. Using the M4 match map, rename and wrap tablet and mobile duplicates so they share the desktop hierarchy. Visual geometry is never moved. _(done 2026-10-11)_: `src/core/breakpoint-structure-alignment.ts` plans renames (matched layers take the desktop name; the breakpoint frame keeps its own) and wrappers (a missing desktop group whose children exist consecutively, in order, under the matched parent; never under Auto Layout) by child-index path. `src/plugin/p15-structure-alignment.ts` applies the plan to a duplicate beside the breakpoint frame, keeps it as `<frame> — Aligned` only when it renders identically at full resolution, else removes it; the original is never touched. UI: **Align tablet/mobile duplicates** after a confirmed breakpoint set. Tests: `tests/m5-structure-alignment*.test.ts`.
 - [x] **M5.6** Golden acceptance: at least 60% of the eligible containers on the golden fixtures are converted, with 0 pixel violations. _(done 2026-10-11)_: on the golden fixtures, recipes v2 convert 7 of 10 eligible containers (70 % ≥ 60 %) with 0 simulated violations; the 3 left are genuine REVIEW cases (overlap, irregular gaps, mixed alignment). Real pixel proof on a Figma file is M5.7. Test: `tests/m5-stack-recipe-v2.test.ts`.
-- [ ] **M5.7** `[!] MANUAL` Figma Desktop verification of the prepared duplicate on a real file. This is required before enabling the release activation of P14 duplicates.
+- [!] **M5.7** `[!] MANUAL` _(blocked: operator Figma Desktop evidence required)_ Figma Desktop verification of the prepared duplicate on a real file. This is required before enabling the release activation of P14 duplicates.
 
 ### M6 — Real version-driven target profiles
 
-- [ ] **M6.1** Option bank: Elementor v3-Container profile (3.16+/4.x) and v4-Atomic profile entries. Each profile's capability descriptor controls which property families export.
+- [x] **M6.1** _(done 2026-10-17: every Elementor bank carries a `profile` descriptor — `elementor-v3-container@4.3`, `elementor-v3-container@3.16` (>=3.16 <4.0) and `elementor-v4-atomic@4` (no adapter, `UNSUPPORTED`, download blocked with `P15_DOWNLOAD_PROFILE_EXPORT_UNSUPPORTED`). `propertyFamilies` strips omitted families via a deterministic key classifier; the receipt carries `profileId`/`adapterVersion`. Tests in `m6-target-profiles`.)_ Option bank: Elementor v3-Container profile (3.16+/4.x) and v4-Atomic profile entries. Each profile's capability descriptor controls which property families export.
 - [ ] **M6.2** Changing the target clears stale preview and validation results. The receipt carries the profile id and adapter version.
 - [ ] **M6.3** R0 refresh for Elementor v4 Atomic.
 - [ ] **M6.4** v4 Atomic adapter (`e-flexbox`, `e-div-block`, atomic heading/paragraph/image/button) over the same neutral IR, with its own validator.
