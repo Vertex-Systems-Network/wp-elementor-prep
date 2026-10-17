@@ -45,9 +45,13 @@ try {
       const response = await page.goto(entry.permalink, { waitUntil: 'networkidle', timeout: 90000 });
       render.http = response?.status() ?? null;
       render.widths[width] = await page.evaluate(() => {
-        const columns = [...document.querySelectorAll('.wp-block-columns > .wp-block-column')].slice(0, 2).map((el) => el.getBoundingClientRect());
+        // Only the imported post content counts; the active theme's header/footer patterns use core blocks too.
+        const content = document.querySelector('.wp-block-post-content, .entry-content');
+        if (!content) return { groups: 0, columns: 0, sideBySide: null, stacked: null, contentFound: false };
+        const columns = [...content.querySelectorAll('.wp-block-columns > .wp-block-column')].slice(0, 2).map((el) => el.getBoundingClientRect());
         return {
-          groups: document.querySelectorAll('.wp-block-group').length,
+          contentFound: true,
+          groups: content.querySelectorAll('.wp-block-group').length,
           columns: columns.length,
           sideBySide: columns.length === 2 ? Math.abs(columns[0].top - columns[1].top) < 1 && columns[1].left > columns[0].left : null,
           stacked: columns.length === 2 ? columns[1].top >= columns[0].bottom - 1 : null,
@@ -57,6 +61,7 @@ try {
     result.render = render;
     const hasColumns = render.widths[1440].columns === 2;
     result.pass = result.editor.blocks > 0 && result.editor.invalid.length === 0 && result.editor.warnings === 0 && render.http === 200
+      && render.widths[1440].contentFound === true && render.widths[1440].groups > 0
       && (!hasColumns || (render.widths[1440].sideBySide === true && render.widths[390].stacked === true));
     report.pages.push(result);
   }
