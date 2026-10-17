@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { matchP15Breakpoint, type P15MatchNode } from '../core/breakpoint-matcher';
 import { buildP15BreakpointSet } from '../core/breakpoint-set';
@@ -6,6 +6,10 @@ import { buildP15ElementorV1PreviewFromFigmaFrame } from '../plugin/p15-neutral-
 import type { P15NeutralExportDocumentV1, P15NeutralExportNode } from '../targets/elementor/neutral-export-ir';
 import { buildP15ResponsiveMerge } from '../targets/elementor/responsive-merge';
 import type { ElementorElementV04 } from '../targets/elementor/template-v04';
+import { buildP15IrCssReference } from '../targets/elementor/ir-css-reference';
+import { buildP15RoundTripReport, P15_ROUND_TRIP_PROVISIONAL_THRESHOLDS, type P15Box } from '../core/round-trip-report';
+// @ts-expect-error Node-only harness helper without type declarations; bundled by esbuild.
+import { decodePngRgba } from '../../scripts/png-rgba.mjs';
 
 /**
  * Real-target responsive harness helper (recovery M4.6), used by `p15-real-target-proof.yml`:
@@ -127,5 +131,40 @@ export async function buildP15ResponsiveHarnessFixture(outDir: string): Promise<
   await writeFile(join(root, 'responsive-template.json'), `${JSON.stringify(merge.composition.template, null, 2)}\n`);
   await writeFile(join(root, 'responsive-expectation.json'), `${JSON.stringify({ schema: 'p15-responsive-harness-expectation-v1',
     entries: merge.entries, checks, sourceValuesAuthoredByHarness: true }, null, 2)}\n`);
+  // Recovery M7.2: an Elementor-independent IR→CSS reference per breakpoint, plus the target element for each section.
+  const roundTrip: Record<string, unknown> = {};
+  for (const [device, width] of [['desktop', 1440], ['tablet', 1024], ['mobile', 390]] as const) {
+    const reference = buildP15IrCssReference(documents[device]!, width);
+    await writeFile(join(root, `round-trip-reference-${device}.html`), reference.html);
+    // Fixture naming: a tablet/mobile node `t-x`/`m-x` is merged into the desktop element `d-x` unless it is its own.
+    const target = (sourceId: string): string | null => ids.get(sourceId) ?? ids.get(`d-${sourceId.slice(2)}`) ?? null;
+    roundTrip[device] = { widthPx: width, sections: reference.sectionIds.map((sourceId) => ({ id: sourceId, targetDataId: target(sourceId) })),
+      unrendered: reference.unrendered };
+  }
+  await writeFile(join(root, 'round-trip-sections.json'), `${JSON.stringify({ schema: 'p15-round-trip-sections-v1',
+    referenceSource: 'IR_CSS_REFERENCE', breakpoints: roundTrip }, null, 2)}\n`);
   process.stdout.write(`${JSON.stringify({ outDir: root, families: Object.keys(merge.entries), checks: checks.length })}\n`);
+}
+
+/** Recovery M7.2: turn the round-trip probe's crops and boxes into the per-section report (`round-trip-report.json`). */
+export async function buildP15RoundTripHarnessReport(outDir: string): Promise<void> {
+  const root = resolve(outDir);
+  const observation = JSON.parse(await readFile(join(root, 'round-trip-observation.json'), 'utf8')) as {
+    referenceSource: string; complete: boolean;
+    breakpoints: Record<string, { widthPx: number; reference: Record<string, P15Box | null>; render: Record<string, P15Box | null> }>;
+  };
+  if (!observation.complete) fail('round-trip observation is incomplete');
+  const inputs = [];
+  for (const [device, entry] of Object.entries(observation.breakpoints)) {
+    const reference = decodePngRgba(await readFile(join(root, `round-trip-${device}-reference.png`)));
+    const render = decodePngRgba(await readFile(join(root, `round-trip-${device}-render.png`)));
+    const sections = Object.entries(entry.reference)
+      .filter((pair): pair is [string, P15Box] => pair[1] !== null)
+      .map(([id, box]) => ({ id, reference: box, render: entry.render[id] ?? null }));
+    inputs.push({ device, widthPx: entry.widthPx, reference, render, sections });
+  }
+  const report = buildP15RoundTripReport(inputs, observation.referenceSource, P15_ROUND_TRIP_PROVISIONAL_THRESHOLDS);
+  await writeFile(join(root, 'round-trip-report.json'), `${JSON.stringify(report, null, 2)}\n`);
+  process.stdout.write(`${JSON.stringify({ verdict: report.verdict, breakpoints: report.breakpoints.map((b) => ({ device: b.device,
+    changedPixelPct: b.pixel.metrics.changedPixelPct, sections: b.structural.length })) })}\n`);
 }

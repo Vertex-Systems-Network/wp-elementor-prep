@@ -2,15 +2,15 @@ schema_version: 2
 mode: delivery-resilient-ai-engineering-supervisor
 repository: Vertex-Systems-Network/wp-elementor-prep
 compact_state_path: .ai/state
-observed_main_sha: ccf81f0ce0c751a3fd0195aeb319a50f292601a3
-observed_main_sha_semantics: exact_main_tip_observed_after_pr_917_merge_2026_10_11
+observed_main_sha: c298e269d5c1941bb45688f6ce46b42b07496fc1
+observed_main_sha_semantics: exact_main_tip_observed_after_pr_918_merge_2026_10_17
 observed_main_branch: main
 active_issue: 846
-active_pr: null
-active_branch: claude/busy-ride-1vztlb
+active_pr: 927
+active_branch: claude/elementor-repo-audit-plan-u2sjz6
 candidate_head_source: github_pull_request_head
 readme_progress_sync_required: true
-current_milestone: product_recovery_m5_smart_duplicate
+current_milestone: product_recovery_m7_round_trip_m7_4
 next_action_options:
   source: .ai/state/NEXT-ACTION-OPTIONS.yaml
   render_required: true
@@ -22,9 +22,9 @@ next_action_options:
   recommended_slot_fixed: false
   recommended_action_id: verify-pre-p19-gate-846
 milestone_status: IN_PROGRESS
-last_completed_milestone: product_recovery_m4_accepted_pr_917_merged_ccf81f0
-exact_next_safe_action: merge_M5_release_train_then_await_M5_7_manual_figma_evidence_and_start_M6
-pending_runner_ids: [RQ-852-FINAL]
+last_completed_milestone: product_recovery_m6_implemented_awaiting_exact_head_ci
+exact_next_safe_action: merge_PR_927_after_exact_head_green_then_M7_4_M5_7_awaits_operator
+pending_runner_ids: [RQ-852-FINAL, RQ-REC-M6-TRAIN, RQ-REC-M6-ATOMIC-IMPORT]
 blocked_runner_ids: []
 current_blockers:
   - p15_retained_operator_approval_not_supplied_for_broader_compatibility_claims
@@ -91,12 +91,13 @@ recovery_program:
   decisions: [D-047, D-048, D-049, D-050, D-051]
   established: 2026-10-08
   audited_baseline_main_sha: 9fdbe6f16d56f77cbfaa179cda0b0ace25f307f6
-  active_milestone: M5
-  next_task: M5.7-manual
-  last_completed_task: M5.6
-  blocked_tasks: []
-  branch: claude/busy-ride-1vztlb
-  open_pr: null
+  active_milestone: M7
+  next_task: M7.4
+  last_completed_task: M8.5
+  blocked_tasks_note: M7.3_provisional_until_M7.4
+  blocked_tasks: [M5.7-manual]
+  branch: claude/elementor-repo-audit-plan-u2sjz6
+  open_pr: 927
   resume_rule: take_first_unchecked_task_of_active_milestone_then_tick_advance_both_pointers_commit_push
   doc_sync_cadence: plan_and_current_state_per_task_canonical_docs_once_per_milestone
   milestone_order: [M0, M1, M2, M3, M4, M5, M6, M7, M8, M9]

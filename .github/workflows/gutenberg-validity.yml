@@ -1,0 +1,54 @@
+name: Gutenberg Block Validity
+
+# Recovery M8.3: the generated core-block markup must parse and re-serialise byte for byte with the pinned WordPress
+# 6.9 block library (every @wordpress/* package at its wp-6.9 dist-tag). Invalid markup is BLOCKED, never shipped.
+on:
+  pull_request:
+    paths:
+      - 'src/targets/gutenberg/**'
+      - 'src/targets/elementor/neutral-export-ir*.ts'
+      - 'tests/golden/m8-*'
+      - 'tests/fixtures/m8-*'
+      - 'tests/m8-*'
+      - 'tools/gutenberg-validator/**'
+      - '.github/workflows/gutenberg-validity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gutenberg-validity-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22.12.0
+      - name: Regenerate the golden markup from the adapter
+        run: |
+          npm ci
+          npx vitest run tests/m8-gutenberg-generator.test.ts tests/m8-gutenberg-responsive.test.ts
+          git diff --exit-code -- tests/golden/m8-gutenberg-golden.html tests/golden/m8-gutenberg-responsive.html
+      - name: Install the pinned WordPress 6.9 block library
+        working-directory: tools/gutenberg-validator
+        run: npm ci --no-audit --no-fund
+      - name: Validate generated markup (parse, isValid, byte-exact re-serialisation)
+        working-directory: tools/gutenberg-validator
+        run: |
+          set -euo pipefail
+          node validate.cjs check ../../tests/golden/m8-gutenberg-golden.html ../../tests/golden/m8-gutenberg-responsive.html | tee gutenberg-validity.json
+          jq -e '.wordpress == "6.9" and .blocks == "15.6.3" and .blockLibrary == "9.33.11"
+            and (.results | length) == 2 and all(.results[]; .status == "VALID")' gutenberg-validity.json
+      - name: The gate rejects invalid markup
+        working-directory: tools/gutenberg-validator
+        run: |
+          printf '<!-- wp:paragraph -->\n<div>x</div>\n<!-- /wp:paragraph -->' > invalid.html
+          if node validate.cjs check invalid.html > /dev/null; then echo 'Invalid markup was accepted' >&2; exit 1; fi

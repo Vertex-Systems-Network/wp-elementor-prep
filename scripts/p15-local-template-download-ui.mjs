@@ -12,6 +12,7 @@ const BUTTON_EXTENDED = `      <button id="p15-preview">Preview Elementor</butto
       <button id="p15-download">Download Elementor JSON</button>
       <button id="p15-asset-pack">Download asset pack</button>
       <button id="p15-breakpoints">Detect breakpoints</button>
+      <button id="p15-reference-pngs">Export reference PNGs</button>
       <button id="plan">Preview safe fixes</button>`;
 
 const CLICK_SOURCE = `    document.getElementById('p15-preview').addEventListener('click', () => {
@@ -45,6 +46,12 @@ const CLICK_EXTENDED = `    document.getElementById('p15-preview').addEventListe
       root.textContent = 'Classifying the selected Frames (or the selected Section) into desktop, tablet and mobile…';
       exportPanel.hidden = true;
       post('p15-breakpoint-set-request');
+    });
+    document.getElementById('p15-reference-pngs').addEventListener('click', () => {
+      root.className = 'empty';
+      root.textContent = 'Rendering each confirmed breakpoint frame (or the selected Frame) at 1× for the round-trip reference…';
+      exportPanel.hidden = true;
+      post('p15-reference-png-request');
     });
     document.getElementById('p15-profile').addEventListener('click', () => {`;
 
@@ -219,6 +226,51 @@ const RENDERER_EXTENDED = `    function renderP15LocalTemplateDownload(message) 
       }
     }
 
+    function renderP15ReferencePngs(message) {
+      const result = message.result;
+      const receipt = result && result.receipt;
+      const downloadable = result
+        && result.version === 'p15-reference-png-bundle-v1'
+        && result.status === 'BUNDLE_READY'
+        && typeof result.fileName === 'string'
+        && /^reference-pngs-[0-9a-f]{16}\\.zip$/.test(result.fileName)
+        && result.bytes instanceof Uint8Array
+        && result.bytes.length > 0
+        && receipt
+        && receipt.roundTripStatus === 'NOT_RUN'
+        && receipt.targetCompatibilityClaim === false
+        && Array.isArray(receipt.frames);
+      if (!downloadable) {
+        if (result) result.bytes = null;
+        root.className = '';
+        root.innerHTML = \`
+          <div class="hero">
+            <div class="score">REFERENCE PNGS BLOCKED</div>
+            <div class="status">NO BUNDLE WAS EXPOSED</div>
+            <div class="meta">\${escapeHtml((result && result.blockReason) || 'The result failed the reference-bundle contract.')}</div>
+          </div>\`;
+        return;
+      }
+      const bytes = result.bytes;
+      result.bytes = null;
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/zip' }));
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = result.fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+      root.className = '';
+      root.innerHTML = \`
+        <div class="hero">
+          <div class="score">REFERENCE PNGS EXPORTED</div>
+          <div class="status">ROUND TRIP NOT RUN</div>
+          <div class="meta">Downloaded \${escapeHtml(result.fileName)}: 1× renders plus reference-receipt.json. No target was contacted.</div>
+        </div>
+        \${receipt.frames.map((frame) => \`<div class="row"><div class="name">\${escapeHtml(frame.device)}</div><div class="meta">\${escapeHtml(frame.name)} · \${escapeHtml(String(frame.widthPx))}×\${escapeHtml(String(frame.heightPx))}px</div></div>\`).join('')}\`;
+    }
+
     function renderP15TargetProfilePreview(message) {`;
 
 const MESSAGE_SOURCE = `      if (message.type === 'p15-elementor-target-profile-result') {`;
@@ -270,6 +322,19 @@ const MESSAGE_EXTENDED = `      if (message.type === 'p15-elementor-local-templa
       if (message.type === 'p15-structure-alignment-unavailable') {
         root.className = 'empty';
         root.textContent = message.message || 'Structure alignment is unavailable.';
+        return;
+      }
+
+      if (message.type === 'p15-reference-png-result') {
+        exportPanel.hidden = true;
+        renderP15ReferencePngs(message);
+        return;
+      }
+
+      if (message.type === 'p15-reference-png-unavailable') {
+        exportPanel.hidden = true;
+        root.className = 'empty';
+        root.textContent = message.message || 'Reference PNG export is unavailable.';
         return;
       }
 

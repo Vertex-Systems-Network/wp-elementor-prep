@@ -8,6 +8,8 @@ import {
   assessP15ElementorCompatibilityReadiness,
   type P15ElementorTargetReadyStatus,
 } from '../targets/elementor/compatibility-readiness';
+import { filterElementorSettingsByFamilies, findElementorOptionBank, ELEMENTOR_PROPERTY_FAMILIES } from '../core/option-bank';
+import { generateElementorV4AtomicTemplate } from '../targets/elementor/v4-atomic-generator';
 import type { P15FigmaNeutralExtractionResult } from './p15-neutral-export-extractor';
 
 export const P15_LOCAL_TEMPLATE_DOWNLOAD_RESULT_VERSION = 'p15-elementor-local-template-download-result-v1' as const;
@@ -25,7 +27,9 @@ export type P15LocalTemplateDownloadBlockReasonCode =
   | 'P15_DOWNLOAD_GENERATION_NOT_READY'
   | 'P15_DOWNLOAD_CANDIDATE_NOT_READY'
   | 'P15_DOWNLOAD_LOCAL_REVALIDATION_FAILED'
-  | 'P15_DOWNLOAD_CANDIDATE_REVALIDATION_MISMATCH';
+  | 'P15_DOWNLOAD_CANDIDATE_REVALIDATION_MISMATCH'
+  | 'P15_DOWNLOAD_PROFILE_EXPORT_UNSUPPORTED'
+  | 'P15_DOWNLOAD_ATOMIC_REVIEW_PRESENT';
 
 export interface P15LocalTemplateDownloadReceiptV1 {
   schemaVersion: 1;
@@ -33,6 +37,9 @@ export interface P15LocalTemplateDownloadReceiptV1 {
   sourceFrameId: string;
   /** Elementor option-bank (target version inventory) selected for this artifact; never a Gutenberg bank. */
   optionBankId: string | null;
+  /** Version-driven target profile of the selected bank, and the adapter that emitted the artifact. */
+  profileId: string | null;
+  adapterVersion: string | null;
   extractorVersion: P15FigmaNeutralExtractionResult['extractorVersion'];
   generatorVersion: P15FigmaNeutralExtractionResult['generation']['generatorVersion'];
   candidateStatus: 'READY_FOR_TARGET_IMPORT_VALIDATION';
@@ -127,6 +134,11 @@ export function buildP15LocalTemplateDownloadResult(
   const compatibility = assessP15ElementorCompatibilityReadiness(extraction.document);
   const generationCandidate = extraction.generation.candidate;
   const reasons: P15LocalTemplateDownloadBlockReasonCode[] = [];
+  const profile = optionBankId === null ? undefined : findElementorOptionBank(optionBankId)?.profile;
+  if (profile && !profile.exportSupported) reasons.push('P15_DOWNLOAD_PROFILE_EXPORT_UNSUPPORTED');
+  if (profile?.structure === 'V4_ATOMIC' && profile.exportSupported) {
+    return buildAtomicDownloadResult(frame, extraction, optionBankId, profile.profileId, reasons);
+  }
 
   if (!extraction.validation.valid) reasons.push('P15_DOWNLOAD_EXTRACTION_INVALID');
   if (extraction.validation.reviewNodeCount > 0) reasons.push('P15_DOWNLOAD_EXTRACTION_REVIEW_PRESENT');
@@ -154,6 +166,14 @@ export function buildP15LocalTemplateDownloadResult(
       reasons.push('P15_DOWNLOAD_LOCAL_REVALIDATION_FAILED');
     } else if (freshCandidate.templateJson !== generationCandidate?.templateJson) {
       reasons.push('P15_DOWNLOAD_CANDIDATE_REVALIDATION_MISMATCH');
+    } else if (profile && profile.propertyFamilies.length < ELEMENTOR_PROPERTY_FAMILIES.length) {
+      // The profile's capability descriptor decides which property families export.
+      freshCandidate = buildElementorTemplateCandidateArtifact(
+        filterElementorSettingsByFamilies(extraction.generation.template, profile.propertyFamilies),
+      );
+      if (freshCandidate.status !== 'READY_FOR_TARGET_IMPORT_VALIDATION' || !freshCandidate.validation.valid) {
+        reasons.push('P15_DOWNLOAD_LOCAL_REVALIDATION_FAILED');
+      }
     }
   }
 
@@ -197,6 +217,8 @@ export function buildP15LocalTemplateDownloadResult(
     receiptVersion: P15_LOCAL_TEMPLATE_DOWNLOAD_RECEIPT_VERSION,
     sourceFrameId: frame.id,
     optionBankId,
+    profileId: profile?.profileId ?? null,
+    adapterVersion: profile?.adapterVersion ?? null,
     extractorVersion: extraction.extractorVersion,
     generatorVersion: extraction.generation.generatorVersion,
     candidateStatus: 'READY_FOR_TARGET_IMPORT_VALIDATION',
@@ -219,4 +241,62 @@ export function buildP15LocalTemplateDownloadResult(
     templateJson,
     authority: authority(true),
   };
+}
+
+/** v4 Atomic profile (recovery M6.4): the atomic adapter replaces the v3 mapping/candidate gates with its own. */
+function buildAtomicDownloadResult(
+  frame: { id: string },
+  extraction: P15FigmaNeutralExtractionResult,
+  optionBankId: string | null,
+  profileId: string,
+  inherited: P15LocalTemplateDownloadBlockReasonCode[],
+): P15LocalTemplateDownloadResultV1 {
+  const reasons = [...inherited];
+  if (!extraction.validation.valid) reasons.push('P15_DOWNLOAD_EXTRACTION_INVALID');
+  if (extraction.validation.reviewNodeCount > 0) reasons.push('P15_DOWNLOAD_EXTRACTION_REVIEW_PRESENT');
+  const atomic = generateElementorV4AtomicTemplate(extraction.document);
+  if (atomic.status === 'REVIEW_REQUIRED') reasons.push('P15_DOWNLOAD_ATOMIC_REVIEW_PRESENT');
+  if (atomic.status !== 'GENERATED_LOCAL_CANDIDATE' || atomic.templateJson === null) reasons.push('P15_DOWNLOAD_GENERATION_NOT_READY');
+  // Fresh revalidation of the exact bytes about to be exposed.
+  const revalidated = atomic.templateJson === null ? null : generateElementorV4AtomicTemplate(extraction.document);
+  if (revalidated && revalidated.templateJson !== atomic.templateJson) reasons.push('P15_DOWNLOAD_CANDIDATE_REVALIDATION_MISMATCH');
+
+  const base = {
+    schemaVersion: 1 as const,
+    resultVersion: P15_LOCAL_TEMPLATE_DOWNLOAD_RESULT_VERSION,
+    source: { frameId: frame.id, optionBankId, extractorVersion: extraction.extractorVersion, generatorVersion: extraction.generation.generatorVersion },
+    compatibility: {
+      status: (atomic.status === 'GENERATED_LOCAL_CANDIDATE' ? 'READY' : 'NOT_READY') as P15ElementorTargetReadyStatus,
+      compatibilityCoverage: atomic.status === 'GENERATED_LOCAL_CANDIDATE' ? 1 : 0,
+      eligibleNodeCount: atomic.templateValidation?.elementCount ?? 0,
+      blockerCount: 0,
+      reviewItemCount: atomic.reviews.length,
+    },
+    generation: { status: extraction.generation.status, candidateStatus: null },
+  };
+  const templateJson = atomic.templateJson;
+  if (reasons.length > 0 || templateJson === null) {
+    return { ...base, status: 'DOWNLOAD_BLOCKED', blockReasonCodes: uniqueReasons(reasons), receipt: null, templateJson: null, authority: authority(false) };
+  }
+  const receipt: P15LocalTemplateDownloadReceiptV1 = {
+    schemaVersion: 1,
+    receiptVersion: P15_LOCAL_TEMPLATE_DOWNLOAD_RECEIPT_VERSION,
+    sourceFrameId: frame.id,
+    optionBankId,
+    profileId,
+    adapterVersion: atomic.adapterVersion,
+    extractorVersion: extraction.extractorVersion,
+    generatorVersion: extraction.generation.generatorVersion,
+    candidateStatus: 'READY_FOR_TARGET_IMPORT_VALIDATION',
+    candidateFingerprint: `sha256:${sha256Hex(JSON.stringify({ generatorVersion: atomic.generatorVersion, templateJson }))}`,
+    artifactFingerprint: `sha256:${sha256Hex(templateJson)}`,
+    fileName: safeFileName(templateJson),
+    localValidationStatus: 'PASS',
+    targetCompatibilityClaim: false,
+    productionAcceptance: false,
+    importValidationStatus: 'NOT_RUN',
+    targetEnvironmentValidationStatus: 'NOT_RUN',
+    environmentObserved: false,
+  };
+  return { ...base, status: 'LOCAL_ARTIFACT_VALIDATED', blockReasonCodes: [], receipt, templateJson, authority: authority(true) };
 }

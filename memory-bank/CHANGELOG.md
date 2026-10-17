@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-10-17 — Recovery M7.1–M7.2 and M8 (Gutenberg) implemented (PR #927)
+
+- **M7.1:** the **Export reference PNGs** action renders each breakpoint frame at 1× and packs them with a receipt into a deterministic ZIP.
+- **M7.2:** a per-section round-trip report (pixel + structure) against an Elementor-independent IR→CSS reference, run on the real target. The first run found large structural gaps, so verdicts stay REVIEW. M7.3 thresholds are provisional, and M7.4 investigates the gap.
+- **M8.1–M8.5:** WordPress 6.9 core-block export:
+  - markup that reproduces core `save` output;
+  - a pinned validity gate (byte-exact parse/serialize);
+  - stack-on-mobile through `core/columns` only where it keeps the desktop design;
+  - a real-editor proof: WP 6.9.10, every block valid, render HTTP 200, columns stack at 390 px.
+
+## 2026-10-17 — Recovery M6 (version-driven target profiles, v4 Atomic) implemented
+
+- **Profiles (M6.1):** Elementor option-bank entries carry a profile:
+  - structure (v3 Container or v4 Atomic);
+  - version range;
+  - adapter version;
+  - export support;
+  - property families, with a deterministic key-family filter.
+
+  The receipt carries `profileId`/`adapterVersion`.
+- **Staleness (M6.2):** changing the target clears the view; late results built for another bank are dropped.
+- **R0 (M6.3):** `docs/R0_ELEMENTOR_V4_ATOMIC_2026-10-17.md`, from Elementor source `a1680ca`.
+- **Atomic adapter (M6.4):** neutral IR → `e-flexbox`/`e-heading`/`e-paragraph`/`e-button`/`e-image`, with typed `$$type` props, local styles and its own validator. Unmapped facts are REVIEW, with no v3 fallback. The real import proof is `PROJECT_FINAL`.
+
 ## 2026-10-11 — Recovery M4 (responsive breakpoint engine) accepted (PR #917, `ccf81f0`)
 
 - **Breakpoints and matching (PRs #911, #912):** breakpoint set by width with Elementor 4.2.4 defaults and user confirmation; deterministic top-down matcher with explainable scores; near-ties stay unmatched.

@@ -2,24 +2,27 @@
 
 Status: IN_PROGRESS
 Repository: `Vertex-Systems-Network/wp-elementor-prep`
-Observed main: `ccf81f0ce0c751a3fd0195aeb319a50f292601a3` (PR #917 merged; M4 accepted)
+Observed main: `c298e269d5c1941bb45688f6ce46b42b07496fc1` (PR #918 merged; M5.1–M5.6 implemented)
 Canonical active program: Product Recovery Program (`docs/PRODUCT_RECOVERY_PLAN.md`, D-047…D-051)
-Branch: `claude/busy-ride-1vztlb`, restarted from `a4ee8dd`, carrying the M3 acceptance sync.
+Branch: `claude/elementor-repo-audit-plan-u2sjz6`, PR #927 (M6, M7.1–M7.2, M8.1–M8.5)
 
 ## Verified work
 
-- M3 (assets) accepted: PRs #908 (M3.1–M3.5), #909 (real-target harness), #910 (plugin asset-pack download; SVG in the harness).
-- PR #910 exact head `0b8663f`: 10/10 checks; real-target-proof run 38103090238 PASS — two PNGs and one SVG uploaded, preserved by Elementor's import, rendered with HTTP 200.
-- Local gates: typecheck, 367 files / 2160 tests, `status:verify`, release-package, release-contract PASS.
+- M6.1–M6.4 implemented:
+  - version-driven Elementor profiles;
+  - stale-result clearing;
+  - v4 Atomic R0;
+  - atomic adapter with its own validator.
+- Local gates: status:verify, typecheck, 382 files / 2233 tests, build, build:cli, verify:release-contract, test:release-package, community:verify all PASS.
 
 ## Authority boundary
 
-Disposable-target harness evidence only. Packs stay `REVIEW REQUIRED` (D-051 note). No broad compatibility or production claim. #84/#159/#182/#287/#846/#856 stay open.
+Local artifact validation only. The v4 Atomic bank stays `RUNTIME_REQUIRED`, and the real import is `RQ-REC-M6-ATOMIC-IMPORT` (`PROJECT_FINAL`). Issues #84, #159, #182, #287, #846 and #856 stay open. M5.7 is manual operator evidence.
 
 ## Open queue
 
-- No open PR at checkpoint time. Pending Runner: RQ-852-FINAL (unchanged).
+- M6 PR: exact-head gates (`RQ-REC-M6-TRAIN`). Dependabot PRs #919–#926 are open and untouched.
 
 ## Exact next safe action
 
-Recovery M5 as one release train (classifier v2, recipes v2, multi-action P14, tiled pixel validation, cross-breakpoint duplicate alignment, golden acceptance); M5.7 stays manual.
+Merge PR #927 once its final head is green (`aed71f4`: 12/12 checks). Then M7.4: the structural gap between the Elementor render and the IR→CSS reference (run 39063092003).
